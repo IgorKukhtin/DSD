@@ -12,31 +12,24 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_JuridicalGroup(
   RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
- 
+   DECLARE vbCode Integer;   
 BEGIN
-   
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
+   -- UserId := lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
    UserId := inSession;
 
    -- Если код не установлен, определяем его как последний+1
-   IF COALESCE (inCode, 0) = 0
-   THEN 
-       SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_JuridicalGroup();
-   ELSE
-       Code_max := inCode;
-   END IF; 
+   vbCode:= lfGet_ObjectCode (inCode, zc_Object_JuridicalGroup()); 
    
    -- Проверем уникальности для свойства <Название Группы юр лиц>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_JuridicalGroup(), inName);
    -- проверка прав уникальности для свойства <Код Группы юр лиц>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_JuridicalGroup(), vbCode);
    -- Проверем цикл у дерева
    PERFORM lpCheck_Object_CycleLink(ioId, zc_ObjectLink_JuridicalGroup_Parent(), inParentId);
 
    -- Вставляем объект
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_JuridicalGroup(), inCode, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_JuridicalGroup(), vbCode, inName);
    -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_JuridicalGroup_Parent(), ioId, inParentId);
    
@@ -44,11 +37,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
  
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION gpInsertUpdate_Object_JuridicalGroup(Integer, Integer, TVarChar, Integer, tvarchar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------*/
 /*
@@ -56,7 +45,6 @@ ALTER FUNCTION gpInsertUpdate_Object_JuridicalGroup(Integer, Integer, TVarChar, 
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  13.06.13          *
  14.05.13                                        * 1251Cyr
-
 */
 
 -- тест

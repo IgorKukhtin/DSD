@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalAccount(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, OperDate TDateTime
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -29,6 +29,7 @@ BEGIN
             , MIDate_OperDate.ValueData   AS OperDate
            
             , View_InfoMoney.InfoMoneyId
+            , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
             
             , Object_Contract.Id          AS ContractId
@@ -95,6 +96,7 @@ ALTER FUNCTION gpSelect_MovementItem_PersonalAccount (Integer, Boolean, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.01.14                                        * add InfoMoneyCode
  19.12.13         *
 */
 

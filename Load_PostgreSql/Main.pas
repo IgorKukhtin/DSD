@@ -2287,7 +2287,150 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_PartnerTwo (isBill:Boolean);
+var ParentId_PG_in,ParentId_PG_out,ParentId_PG_service:String;
 begin
+     fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=2');//02-Поставщики
+     ParentId_PG_in:=toSqlQuery.FieldByName('Id').AsString;
+     fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=3');//03-ПОКУПАТЕЛИ
+     ParentId_PG_out:=toSqlQuery.FieldByName('Id').AsString;
+     fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=4');//04-Услуги
+     ParentId_PG_service:=toSqlQuery.FieldByName('Id').AsString;
+
+     if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
+     //
+     myEnabledCB(cbPartner);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+                  Add('select 0 as ObjectId');
+                  Add('     , 0 as ObjectCode');
+                  Add('     , trim(_pgPartner.Name) as ObjectName');
+                  Add('     , case when _pgInfoMoney.Id3_Postgres in (8952) then '+ParentId_PG_service); // 'Общефирменные','Маркетинг','Реклама'
+                  Add('            when _pgPartner.NumberSheet in (1,2) or _pgInfoMoney.Id1_Postgres in (8854) then '+ParentId_PG_out); // Доходы
+                  Add('            when _pgPartner.NumberSheet=3 and (_pgInfoMoney.Id1_Postgres in (8855, 8856) or _pgInfoMoney.Id2_Postgres in (8875, 8877) ) then '+ParentId_PG_service); //Финансовая деятельность OR Расчеты с бюджетом OR услуги полученные OR Коммунальные услуги
+                  Add('            when _pgPartner.NumberSheet=3 then '+ParentId_PG_in); //02-Поставщики
+                  Add('       end as ParentId_Postgres');
+                  Add('     , null as GoodsPropertyId_PG');
+                  Add('     , '+FormatToVarCharServer_notNULL('')+' as GLNCode');
+                  Add('     , _pgInfoMoney.Id3_Postgres AS InfoMoneyId_PG');
+                  Add('     , null as inBankId');
+                  Add('     , case when trim(isnull(NameAll,FirmName)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(NameAll,FirmName)) else trim(FirmName) end as inFullName');
+                  Add('     , case when trim(isnull(AddressFirm,Adr)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(AddressFirm,Adr)) else trim(Adr) end as inJuridicalAddress');
+                  Add('     , case when trim(isnull(KodNalog,Inn)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodNalog,Inn)) else trim(Inn) end as inINN');
+                  Add('     , case when trim(isnull(KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
+                  Add('     , case when trim(isnull(FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(FioBuh,FioB)) else trim(FioB) end as inAccounterName');
+                  Add('     , null as inBankAccount');
+                  Add('     , _pgPartner_find.Id, _pgPartner_find_two.Id as Id_two');
+                  Add('     , _pgPartner_find.OKPO as inOKPO');
+                  Add('     , _pgPartner_find.JuridicalDetailsId_pg as JuridicalDetailsId_Postgres');
+                  Add('     , _pgPartner_find.JuridicalId_pg as Id_Postgres');
+                  Add('from (select min (_pgPartner.Id) as Id'
+                    + '           , max (isnull(_pgPartner.JuridicalId_pg,0)) as '
+                    + '           , max (isnull(_pgPartner.JuridicalDetailsId_pg,0)) as JuridicalDetailsId_pg'
+                    + '           , trim (_pgPartner.OKPO)as OKPO'
+                    + '      from dba._pgPartner'
+                    + '      where JuridicalId_pg<>0'
+                    + '      group by OKPO'
+                    + '     ) as _pgPartner_find'
+                    + '     left join (select max (_pgPartner.Id) as Id'
+                    + '                     , trim (_pgPartner.OKPO)as OKPO'
+                    + '                from dba._pgPartner'
+                    + '                where trim (_pgPartner.OKPO)<>' + FormatToVarCharServer_notNULL('')
+                    + '                  and _pgPartner.NumberSheet = 1'
+                    + '                group by OKPO'
+                    + '               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
+                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
+                  Add('     left join (select trim(ClientInformation.OKPO) as OKPO, max (ClientInformation.ClientId) as ClientId'
+                     +'                from dba.ClientInformation'
+                     +'                where trim(OKPO) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                  and trim(KodNalog) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                  and trim(KodSvid) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                group by OKPO'
+                     +'               ) as ClientInformation_find on ClientInformation_find.OKPO = _pgPartner_find.OKPO'
+                     +'     left join dba.ClientInformation on ClientInformation.ClientId = ClientInformation_find.ClientId');
+                  Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _pgPartner.CodeIM');
+                  Add('order by ObjectName, ObjectId');
+        Open;
+        cbJuridical.Caption:='3.2. ('+IntToStr(RecordCount)+') Юридические лица';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_object_juridical';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectHistory_JuridicalDetails';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inOperDate',ftDateTime,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inBankId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inFullName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inJuridicalAddress',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inOKPO',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inINN',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inNumberVAT',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inAccounterName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inBankAccount',ftString,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
+             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
+             toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+
+                       toStoredProc_two.Params.ParamByName('ioId').Value:=FieldByName('JuridicalDetailsId_Postgres').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inJuridicalId').Value:=toStoredProc.Params.ParamByName('ioId').Value;
+                       toStoredProc_two.Params.ParamByName('inOperDate').Value:='01.01.2000';
+                       toStoredProc_two.Params.ParamByName('inBankId').Value:=FieldByName('inBankId').AsInteger;
+                       toStoredProc_two.Params.ParamByName('inFullName').Value:=FieldByName('inFullName').AsString;
+                       toStoredProc_two.Params.ParamByName('inJuridicalAddress').Value:=FieldByName('inJuridicalAddress').AsString;
+                       toStoredProc_two.Params.ParamByName('inOKPO').Value:=FieldByName('inOKPO').AsString;
+                       toStoredProc_two.Params.ParamByName('inINN').Value:=FieldByName('inINN').AsString;
+                       toStoredProc_two.Params.ParamByName('inNumberVAT').Value:=FieldByName('inNumberVAT').AsString;
+                       toStoredProc_two.Params.ParamByName('inAccounterName').Value:=FieldByName('inAccounterName').AsString;
+                       toStoredProc_two.Params.ParamByName('inBankAccount').Value:=FieldByName('inBankAccount').AsString;
+                       if not myExecToStoredProc_two then ;
+             //
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
+             then fExecFlSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                    +'                         , JuridicalDetailsId_pg='+IntToStr(toStoredProc_two.Params.ParamByName('ioId').Value)
+                                    +' where trim(OKPO) = '+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString));
+
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbPartner);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner (isBill:Boolean);

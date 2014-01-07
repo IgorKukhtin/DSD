@@ -33,6 +33,7 @@ type
     PaidKindChoiceForm: TOpenChoiceForm;
     clContractName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
+    clInfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

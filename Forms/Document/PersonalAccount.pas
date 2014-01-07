@@ -52,10 +52,10 @@ type
     cxTabSheetEntry: TcxTabSheet;
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
-    colJuridicalCode: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    colAmount: TcxGridDBColumn;
-    colInfoMoneyName1: TcxGridDBColumn;
+    clJuridicalCode: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMIContainer: TdsdStoredProc;
     cxGridEntryDBTableView: TcxGridDBTableView;
@@ -97,9 +97,8 @@ type
     GuidesFiller: TGuidesFiller;
     actInsertUpdateMovement: TdsdExecStoredProc;
     bbInsertUpdateMovement: TdxBarButton;
-    colRouteName: TcxGridDBColumn;
-    colCarName: TcxGridDBColumn;
-    JuridicalChoiceForm: TOpenChoiceForm;
+    clRouteName: TcxGridDBColumn;
+    clCarName: TcxGridDBColumn;
     InsertRecord: TInsertRecord;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
@@ -114,8 +113,8 @@ type
     ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
-    colIsErased: TcxGridDBColumn;
-    colCarModelName: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    clCarModelName: TcxGridDBColumn;
     colBusinessCode: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;
     ceStatus: TcxButtonEdit;
@@ -126,8 +125,9 @@ type
     DeleteMovement: TChangeGuidesStatus;
     clOperDate: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
-    colContractName: TcxGridDBColumn;
+    clContractName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
+    clInfoMoneyCode: TcxGridDBColumn;
   private
   public
   end;
