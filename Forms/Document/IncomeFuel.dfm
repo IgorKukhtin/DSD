@@ -975,7 +975,7 @@ object IncomeFuelForm: TIncomeFuelForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormName = 'TPartnerForm'
+    FormName = 'TSourceFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

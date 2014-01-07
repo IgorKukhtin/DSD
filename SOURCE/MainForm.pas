@@ -233,6 +233,10 @@ type
     bbPersonalAccount: TdxBarButton;
     actTransportService: TdsdOpenForm;
     bbTransportService: TdxBarButton;
+    actJuridical_List: TdsdOpenForm;
+    bbJuridical_List: TdxBarButton;
+    actUnit_List: TdsdOpenForm;
+    bbUnit_List: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

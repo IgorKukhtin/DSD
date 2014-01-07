@@ -4,7 +4,7 @@
   ClientWidth = 595
   AddOnFormData.isSingle = False
   ExplicitWidth = 601
-  ExplicitHeight = 374
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -72,6 +72,7 @@
   object cePaidKind: TcxButtonEdit [10]
     Left = 184
     Top = 178
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -127,6 +128,7 @@
   object ceJuridical: TcxButtonEdit [16]
     Left = 8
     Top = 178
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -690,7 +692,7 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

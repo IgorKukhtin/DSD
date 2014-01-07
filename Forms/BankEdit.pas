@@ -10,7 +10,7 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction, cxButtonEdit, dsdAddOn;
+  dsdDB, dsdAction, cxButtonEdit, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TBankEditForm = class(TParentForm)

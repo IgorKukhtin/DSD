@@ -25,7 +25,7 @@
   object cxLabel1: TcxLabel
     Left = 280
     Top = 3
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 118
@@ -110,7 +110,7 @@
   object cxLabel5: TcxLabel
     Left = 280
     Top = 113
-    Caption = #1070#1088'. '#1083#1080#1094#1086
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceJuridical: TcxButtonEdit
     Left = 280
@@ -435,7 +435,7 @@
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
-    FormName = 'TBusinessForm'
+    FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
@@ -445,7 +445,7 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

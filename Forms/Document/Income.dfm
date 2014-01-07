@@ -694,8 +694,8 @@ object IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1015,7 +1015,7 @@ object IncomeForm: TIncomeForm
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormName = 'TPartnerForm'
+    FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

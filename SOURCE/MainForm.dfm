@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -298,6 +298,10 @@ object MainForm: TMainForm
       Action = actGoodsProperty
       Category = 0
     end
+    object bbJuridical_List: TdxBarButton
+      Action = actJuridical_List
+      Category = 0
+    end
     object bbJuridical: TdxBarButton
       Action = actJuridical
       Category = 0
@@ -379,6 +383,10 @@ object MainForm: TMainForm
       Category = 0
       Hint = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
       Visible = ivAlways
+    end
+    object bbUnit_List: TdxBarButton
+      Action = actUnit_List
+      Category = 0
     end
     object bbUnit: TdxBarButton
       Action = actUnit
@@ -1275,6 +1283,14 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actJuridical_List: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      FormName = 'TJuridicalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actJuridical: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
@@ -1312,6 +1328,14 @@ object MainForm: TMainForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       FormName = 'TPartnerForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUnit_List: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      FormName = 'TUnitForm'
       GuiParams = <>
       isShowModal = False
     end

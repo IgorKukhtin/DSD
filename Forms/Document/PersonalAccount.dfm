@@ -551,8 +551,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -867,7 +867,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      FormName = 'TJuridicalForm'
+      FormName = 'TJuridical_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'

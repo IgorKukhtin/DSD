@@ -62,6 +62,7 @@ BEGIN
                             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
 
+        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
    WHERE Object_Contract_View.JuridicalId = inJuridicalId;
@@ -81,4 +82,4 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractJuridical (1, inSession := zfCalc_UserAdmin())

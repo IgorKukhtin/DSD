@@ -81,7 +81,7 @@ object SourceFuel_ObjectForm: TSourceFuel_ObjectForm
         Width = 40
       end
       object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'.'#1083#1080#1094#1086
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
