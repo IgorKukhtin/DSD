@@ -28,18 +28,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode Integer;   
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
+   -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
    vbUserId := inSession;
 
    IF ioId <> 0 
         -- пытаемся найти код
-   THEN vbCode_calc := (SELECT ObjectCode FROM Object WHERE Id = ioId); 
+   THEN vbCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); 
         -- Иначе, определяем его как последний+1
-   ELSE vbCode_calc:=lfGet_ObjectCode (vbCode_calc, zc_Object_Contract()); 
+   ELSE vbCode:= inCode; -- lfGet_ObjectCode (inCode, zc_Object_Contract()); 
    END IF;
 
 
@@ -63,7 +62,7 @@ BEGIN
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode_calc, inInvNumber);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode, inInvNumber);
 
    -- сохранили свойство <Номер договора>
    -- PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumber(), ioId, inInvNumber);
@@ -113,7 +112,7 @@ $BODY$
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица
  04.01.14                                        * add !!!inInvNumber not unique!!!
  14.11.13         * add from redmaine               
- 21.10.13                                        * add vbCode_calc
+ 21.10.13                                        * add vbCode
  20.10.13                                        * add from redmaine
  19.10.13                                        * del zc_ObjectString_Contract_InvNumber()
  22.07.13         * add  SigningDate, StartDate, EndDate              

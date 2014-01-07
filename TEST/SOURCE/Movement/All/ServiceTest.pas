@@ -16,7 +16,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;Comment:String;
+        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
         BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
     constructor Create; override;
   end;
@@ -39,14 +39,15 @@ function TService.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
-    Amount: Double;
+    AmountIn, AmountOut: Double;
     Comment:String;
     BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  Amount := 265.68;
+  AmountIn := 123.45;
+  AmountOut := 0;
   Comment:='';
   BusinessId := 0;
   ContractId:=0;
@@ -56,19 +57,20 @@ begin
   UnitId := 0;
   PaidKindId:=0;
 
-  result := InsertUpdateService(Id, InvNumber, OperDate, Amount,Comment,
+  result := InsertUpdateService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
               BusinessId, ContractId,InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId);
 end;
 
 function TService.InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; Amount: Double;Comment:String;
+        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
         BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountIn', ftFloat, ptInput, AmountIn);
+  FParams.AddParam('inAmountOut', ftFloat, ptInput, AmountOut);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
   FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);

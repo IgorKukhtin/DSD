@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_JuridicalGroup()
 
---DROP FUNCTION gpSelect_Object_JuridicalGroup();
+-- DROP FUNCTION gpSelect_Object_JuridicalGroup();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_JuridicalGroup(
     IN inSession     TVarChar       -- сессия пользователя
@@ -26,8 +26,6 @@ LEFT JOIN ObjectLink
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_JuridicalGroup(TVarChar);
-
 
 /*-------------------------------------------------------------------------------*/
 /*
