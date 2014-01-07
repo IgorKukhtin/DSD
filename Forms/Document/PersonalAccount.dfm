@@ -146,7 +146,7 @@ object PersonalAccountForm: TPersonalAccountForm
               Format = ',0.00;-,0.00;'
               Kind = skSum
               Position = spFooter
-              Column = colAmount
+              Column = clAmount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -159,7 +159,7 @@ object PersonalAccountForm: TPersonalAccountForm
             item
               Format = ',0.00;-,0.00;'
               Kind = skSum
-              Column = colAmount
+              Column = clAmount
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -183,7 +183,7 @@ object PersonalAccountForm: TPersonalAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colJuridicalCode: TcxGridDBColumn
+          object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
@@ -191,7 +191,43 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 30
           end
-          object colContractName: TcxGridDBColumn
+          object clJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 108
+          end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = InfoMoneyChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 141
+          end
+          object clContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -203,45 +239,17 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 91
           end
-          object colJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = JuridicalChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
-            Width = 108
-          end
-          object colInfoMoneyName1: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = InfoMoneyChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 141
-          end
-          object colCarModelName: TcxGridDBColumn
+          object clCarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 109
           end
-          object colCarName: TcxGridDBColumn
+          object clCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
             DataBinding.FieldName = 'CarName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -255,7 +263,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 93
           end
-          object colRouteName: TcxGridDBColumn
+          object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
             DataBinding.FieldName = 'RouteName'
             PropertiesClassName = 'TcxButtonEditProperties'
@@ -269,7 +277,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 109
           end
-          object colAmount: TcxGridDBColumn
+          object clAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
@@ -281,7 +289,7 @@ object PersonalAccountForm: TPersonalAccountForm
             HeaderAlignmentVert = vaCenter
             Width = 108
           end
-          object colIsErased: TcxGridDBColumn
+          object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
             Visible = False
@@ -812,8 +820,8 @@ object PersonalAccountForm: TPersonalAccountForm
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
       Action = ContractChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -859,34 +867,6 @@ object PersonalAccountForm: TPersonalAccountForm
         end
         item
           Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object JuridicalChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      FormName = 'TJuridical_ObjectForm'
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString

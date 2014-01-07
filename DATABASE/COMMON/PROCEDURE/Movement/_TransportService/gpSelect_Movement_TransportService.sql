@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , Amount TFloat, Distance TFloat, Price TFloat, CountPoint TFloat, TrevelTime TFloat
              , Comment TVarChar
              , ContractId Integer, ContractName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -38,7 +38,7 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
-           --------------- 
+
            , CAST((MIFloat_Distance.ValueData*MIFloat_Price.ValueData) AS TFloat) AS Amount
            , MIFloat_Distance.ValueData     AS Distance
            , MIFloat_Price.ValueData        AS Price
@@ -50,8 +50,9 @@ BEGIN
            , Object_Contract.Id          AS ContractId
            , Object_Contract.ValueData   AS ContractName
 
-           , Object_InfoMoney.Id         AS InfoMoneyId
-           , Object_InfoMoney.ValueData  AS InfoMoneyName
+           , View_InfoMoney.InfoMoneyId
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
      
            , MovementItem.ObjectId       AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
@@ -109,7 +110,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id 
@@ -149,8 +150,8 @@ ALTER FUNCTION gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.01.14                                        * add InfoMoneyCode
  22.12.13         *
-
 */
 
 -- ÚÂÒÚ
