@@ -99,9 +99,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Options.Moving = False
           Width = 50
         end>
-      object BandcolPersonalCode: TcxGridDBBandedColumn
+      object BandcolMemberlCode: TcxGridDBBandedColumn
         Caption = #1050#1086#1076
-        DataBinding.FieldName = 'PersonalCode'
+        DataBinding.FieldName = 'MemberCode'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Options.Moving = False
@@ -110,9 +110,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         Position.ColIndex = 0
         Position.RowIndex = 0
       end
-      object BandcolPersonalName: TcxGridDBBandedColumn
+      object BandcolMemberName: TcxGridDBBandedColumn
         Caption = #1060#1048#1054
-        DataBinding.FieldName = 'PersonalName'
+        DataBinding.FieldName = 'MemberName'
         HeaderAlignmentVert = vaCenter
         MinWidth = 67
         Options.Editing = False
@@ -272,6 +272,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -303,6 +311,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
+      Category = 0
+    end
+    object bbInsert: TdxBarButton
+      Action = InsertAction
       Category = 0
     end
   end
@@ -406,6 +418,43 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Action = actUpdateMasterDS
         end>
     end
+    object InsertAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TSheetWorkTimeAddRecordForm'
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Value = '0'
+        end
+        item
+          Name = 'MemberName'
+          Value = ''
+          DataType = ftString
+        end
+        item
+          Name = 'PositionId'
+          Value = 0
+        end
+        item
+          Name = 'PositionName'
+          Value = ''
+          DataType = ftString
+        end
+        item
+          Name = 'PositionLevelId'
+          Value = 0
+        end
+        item
+          Name = 'PositionLevelName'
+          Value = ''
+          DataType = ftString
+        end>
+      isShowModal = True
+      DataSetRefresh = actRefresh
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -449,10 +498,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioPersonalId'
+        Name = 'inMemberId'
         Component = MasterCDS
-        ComponentItem = 'PersonalId'
-        ParamType = ptInputOutput
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
       end
       item
         Name = 'inPositionId'

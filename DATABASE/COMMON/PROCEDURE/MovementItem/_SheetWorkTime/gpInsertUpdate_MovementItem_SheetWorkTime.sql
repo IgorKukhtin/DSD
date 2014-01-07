@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEG
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_SheetWorkTime(INTEGER, INTEGER, INTEGER, INTEGER, INTEGER, TDateTime, TVarChar, INTEGER, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
- INOUT ioPersonalId          Integer   , -- Ключ Сотрудник
+    IN inMemberId            Integer   , -- Ключ физ. лицо
     IN inPositionId          Integer   , -- Должность
     IN inPositionLevelId     Integer   , -- Разряд
     IN inUnitId              Integer   , -- Подразделение
@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_SheetWorkTime(
     IN inTypeId              Integer   , 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS RECORD
+RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -58,7 +58,7 @@ BEGIN
                               ON MIObject_PersonalGroup.MovementItemId = MI_SheetWorkTime.Id 
                              AND ((MIObject_PersonalGroup.ObjectId IS NULL) OR (MIObject_PersonalGroup.ObjectId = inPersonalGroupId))
                              AND MIObject_PersonalGroup.DescId = zc_MILinkObject_PersonalGroup() 
-                           WHERE MI_SheetWorkTime.ObjectId = ioPersonalId AND MI_SheetWorkTime.MovementId = vbMovementId);
+                           WHERE MI_SheetWorkTime.ObjectId = inMemberId AND MI_SheetWorkTime.MovementId = vbMovementId);
     IF ioValue = '0' THEN
        inTypeId := 0;
        ioValue := '0';
@@ -69,7 +69,7 @@ BEGIN
     PERFORM lpInsertUpdate_MovementItem_SheetWorkTime(
        inMovementItemId      := vbMovementItemId , -- Ключ объекта <Элемент документа>
        inMovementId          := vbMovementId     , -- ключ Документа
-       inPersonalId          := ioPersonalId     , -- Сотрудник
+       inMemberId            := inMemberId       , -- Физ. лицо
        inPositionId          := inPositionId     , -- Должность
        inPositionLevelId     := inPositionLevelId, -- Разряд
        inPersonalGroupId     := inPersonalGroupId, -- Группировка Сотрудника
@@ -90,6 +90,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.01.14                         * Replace inPersonalId <> inMemberId
  25.11.13                         * Add inPositionLevelId
  17.10.13                         *
  03.10.13         *

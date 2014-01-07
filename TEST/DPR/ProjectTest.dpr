@@ -310,7 +310,8 @@ uses
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
-  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas';
+  TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
+  SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm};
 
 {$R *.RES}
 

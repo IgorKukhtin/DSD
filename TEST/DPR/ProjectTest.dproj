@@ -43,7 +43,7 @@
 			<DCC_UnitSearchPath>$(BDS)\Source\DUnit\src;$(DCC_UnitSearchPath)</DCC_UnitSearchPath>
 			<DCC_Define>_CONSOLE_TESTRUNNER;$(DCC_Define)</DCC_Define>
 			<DCC_Namespace>System;Xml;Data;Datasnap;Web;Soap;Vcl;Vcl.Imaging;Vcl.Touch;Vcl.Samples;Vcl.Shell;$(DCC_Namespace)</DCC_Namespace>
-			<DCC_UsePackage>bindcompfmx;fmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;IndySystem;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapProviderClient;xmlrtl;ibxpress;DbxCommonDriver;IndyProtocols;dbxcds;DBXMySQLDriver;bindengine;soaprtl;DBXOracleDriver;CustomIPTransport;dsnap;DBXInformixDriver;fmxase;IndyCore;DBXFirebirdDriver;inet;fmxobj;inetdbxpress;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;$(DCC_UsePackage)</DCC_UsePackage>
+			<DCC_UsePackage>bindcompfmx;fmx;rtl;dbrtl;DbxClientDriver;bindcomp;inetdb;IndySystem;DataSnapServer;DBXInterBaseDriver;DataSnapCommon;DataSnapClient;DataSnapProviderClient;xmlrtl;ibxpress;DbxCommonDriver;IndyProtocols;dbxcds;DBXMySQLDriver;bindengine;soaprtl;DBXOracleDriver;CustomIPTransport;dsnap;DBXInformixDriver;fmxase;IndyCore;DBXFirebirdDriver;inet;fmxobj;inetdbxpress;DBXSybaseASADriver;fmxdae;dbexpress;DataSnapIndy10ServerTransport;JvCrypt;$(DCC_UsePackage)</DCC_UsePackage>
 			<DCC_DcuOutput>.</DCC_DcuOutput>
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
@@ -889,6 +889,11 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
+			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
+				<Form>SheetWorkTimeAddRecordForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
@@ -934,10 +939,11 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\bcboffice2k160.bpl">Embarcadero C++Builder Office 2000 Servers Package</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\bcbofficexp160.bpl">Embarcadero C++Builder Office XP Servers Package</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\ip3000dcl_XE2.bpl">File c:\program files (x86)\embarcadero\rad studio\9.0\bin\ip3000dcl_XE2.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Program Files (x86)\FastReports\FastReport 4\LibD16\dclfsDB16.bpl">FastScript 1.9 DB Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl">File C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dcldxCoreD7.bpl not found</Excluded_Packages>
+						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
 					</Excluded_Packages>
 					<Source>

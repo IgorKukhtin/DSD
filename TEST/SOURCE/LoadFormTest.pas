@@ -348,6 +348,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSheetWorkTimeAddRecordForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSheetWorkTimeAddRecordForm');
 end;
 
 procedure TLoadFormTest.LoadSaleFormTest;

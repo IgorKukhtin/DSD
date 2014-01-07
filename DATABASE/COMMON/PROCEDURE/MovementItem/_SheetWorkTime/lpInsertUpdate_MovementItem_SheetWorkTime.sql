@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_SheetWorkTime (Integer, Inte
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_SheetWorkTime(
     IN inMovementItemId      Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
-    IN inPersonalId          Integer   , -- Сотрудник
+    IN inMemberId            Integer   , -- физлицо
     IN inPositionId          Integer   , -- Должность
     IN inPositionLevelId     Integer   , -- Разряд
     IN inPersonalGroupId     Integer   , -- Группировка Сотрудника
@@ -19,7 +19,7 @@ $BODY$
 BEGIN
      
      -- сохранили <Элемент документа>
-     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inPersonalId, inMovementId, inAmount, NULL);
+     inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inMemberId, inMovementId, inAmount, NULL);
      
      -- сохранили связь с <Группировки Сотрудников>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PersonalGroup(), InMovementItemId, inPersonalGroupId);
@@ -39,6 +39,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 07.01.14                         * Replace inPersonalId <> inMemberId
  25.11.13                         * 
  03.10.13         * 
 

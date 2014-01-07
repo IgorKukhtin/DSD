@@ -52,9 +52,9 @@ BEGIN
      END LOOP;
 
      vbQueryText := '
-          SELECT View_Personal.PersonalId   AS PersonalId
-               , View_Personal.PersonalCode AS PersonalCode
-               , View_Personal.PersonalName AS PersonalName
+          SELECT Object_Member.Id           AS MemberId
+               , Object_Member.ObjectCode   AS MemberCode
+               , Object_Member.ValueData    AS MemberName
                , Object_Position.Id         AS PositionId
                , Object_Position.ValueData  AS PositionName
                , Object_PositionLevel.Id         AS PositionLevelId
@@ -64,7 +64,7 @@ BEGIN
                || vbFieldNameText ||
         ' FROM
          (SELECT * FROM CROSSTAB (''
-                                    SELECT ARRAY[COALESCE (Movement_Data.PersonalId, Object_Data.PersonalId)           -- AS PersonalId
+                                    SELECT ARRAY[COALESCE (Movement_Data.MemberId, Object_Data.MemberId)               -- AS MemberId
                                                , COALESCE (Movement_Data.PositionId, Object_Data.PositionId)           -- AS PositionId
                                                , COALESCE (Movement_Data.PositionLevelId, Object_Data.PositionLevelId) -- AS PositionLevelId
                                                , COALESCE (Movement_Data.PersonalGroupId, Object_Data.PersonalGroupId) -- AS PersonalGroupId
@@ -75,7 +75,7 @@ BEGIN
                                                 ] :: TVarChar
                                     FROM (SELECT tmpOperDate.operdate
                                                , MI_SheetWorkTime.Amount
-                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS PersonalId
+                                               , COALESCE(MI_SheetWorkTime.ObjectId, 0) AS MemberId
                                                , COALESCE(MIObject_Position.ObjectId, 0) AS PositionId
                                                , COALESCE(MIObject_PositionLevel.ObjectId, 0) AS PositionLevelId
                                                , COALESCE(MIObject_PersonalGroup.ObjectId, 0) AS PersonalGroupId
@@ -107,7 +107,7 @@ BEGIN
                                         ') AS Movement_Data
                                         FULL JOIN  
                                          (SELECT tmpOperDate.operdate, 0, 
-                                                 COALESCE(PersonalId, 0) AS PersonalId, 
+                                                 COALESCE(MemberId, 0) AS MemberId, 
                                                  COALESCE(ObjectLink_Personal_Position.ChildObjectId, 0) AS PositionId, 
                                                  COALESCE(ObjectLink_Personal_PositionLevel.ChildObjectId, 0) AS PositionLevelId, 
                                                  COALESCE(ObjectLink_Personal_PersonalGroup.ChildObjectId, 0)  AS PersonalGroupId  
@@ -128,7 +128,7 @@ BEGIN
                                               AND ObjectLink_Personal_Unit.ChildObjectId = ' || inUnitId :: TVarChar ||
                                         ') AS Object_Data
                                            ON Object_Data.OperDate = Movement_Data.OperDate
-                                          AND Object_Data.PersonalId = Movement_Data.PersonalId
+                                          AND Object_Data.MemberId = Movement_Data.MemberId
                                           AND Object_Data.PositionId = Movement_Data.PositionId
                                           AND Object_Data.PositionLevelId = Movement_Data.PositionLevelId
                                           AND Object_Data.PersonalGroupId = Movement_Data.PersonalGroupId
@@ -136,7 +136,7 @@ BEGIN
                                 , ''SELECT OperDate FROM tmpOperDate
                                   '') AS CT (' || vbCrossString || ')
          ) AS D
-         LEFT JOIN Object_Personal_View AS View_Personal ON View_Personal.PersonalId = D.Key[1]
+         LEFT JOIN Object AS Object_Member ON Object_Member.Id = D.Key[1]
          LEFT JOIN Object AS Object_Position ON Object_Position.Id = D.Key[2]
          LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = D.Key[3]
          LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = D.Key[4]';
@@ -153,6 +153,7 @@ ALTER FUNCTION gpSelect_MovementItem_SheetWorkTime (TDateTime, Integer, TVarChar
 /*   
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 07.01.14                         * Replace inPersonalId <> inMemberId
  30.11.13                                        * add isErased = FALSE
  30.11.13                                        * parse
  25.11.13                         * Add PositionLevel
