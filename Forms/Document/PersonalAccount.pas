@@ -124,7 +124,6 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    colOperDate: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     colContractName: TcxGridDBColumn;

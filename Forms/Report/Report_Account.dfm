@@ -463,16 +463,16 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 75
       end
-      object BusinesCode_inf: TcxGridDBColumn
+      object BusinessCode_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1073#1080#1079#1085'.  ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'BusinesCode_inf'
+        DataBinding.FieldName = 'BusinessCode_inf'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
       end
-      object BusinesName_inf: TcxGridDBColumn
+      object BusinessName_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'.  '#1041#1080#1079#1085#1077#1089'  ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'BusinesName_inf'
+        DataBinding.FieldName = 'BusinessName_inf'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

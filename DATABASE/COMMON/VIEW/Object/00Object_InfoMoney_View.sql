@@ -1,6 +1,6 @@
 -- View: Object_InfoMoney_View
 
--- DROP VIEW IF EXISTS Object_InfoMoney_View;
+-- DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_InfoMoney_View AS
   SELECT Object_InfoMoneyGroup.Id               AS InfoMoneyGroupId
@@ -13,11 +13,11 @@ CREATE OR REPLACE VIEW Object_InfoMoney_View AS
        , Object_InfoMoney.ObjectCode            AS InfoMoneyCode
        , Object_InfoMoney.ValueData             AS InfoMoneyName
 
-       , (   '(' || Object_InfoMoney.ObjectCode :: TVarChar
-          || ') '|| Object_InfoMoneyGroup.ValueData
-          || ' ' || Object_InfoMoneyDestination.ValueData
-          || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
-         ) :: TVarChar AS InfoMoneyName_all
+       , CAST ('(' || CAST (Object_InfoMoney.ObjectCode AS TVarChar)
+           || ') '|| Object_InfoMoneyGroup.ValueData
+           || ' ' || Object_InfoMoneyDestination.ValueData
+           || CASE WHEN Object_InfoMoneyDestination.ValueData <> Object_InfoMoney.ValueData THEN ' ' || Object_InfoMoney.ValueData ELSE '' END
+              AS TVarChar)  AS InfoMoneyName_all
 
        , Object_InfoMoney.isErased              AS isErased
   FROM Object AS Object_InfoMoney

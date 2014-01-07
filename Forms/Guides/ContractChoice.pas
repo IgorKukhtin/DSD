@@ -10,7 +10,8 @@ uses
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  Vcl.Menus;
 
 type
   TContractChoiceForm = class(TAncestorEnumForm)
@@ -22,6 +23,11 @@ type
     colPaidKindName: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colisErased: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
+    clEndDate: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

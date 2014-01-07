@@ -104,7 +104,7 @@
   object cxLabel7: TcxLabel [13]
     Left = 8
     Top = 50
-    Caption = #1057#1091#1084#1084#1072', '#1087#1088#1080#1093#1086#1076
+    Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object ceObject: TcxButtonEdit [14]
     Left = 288
@@ -152,7 +152,7 @@
   object cxLabel3: TcxLabel [20]
     Left = 148
     Top = 50
-    Caption = #1057#1091#1084#1084#1072', '#1088#1072#1089#1093#1086#1076
+    Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
   object ceAmountOut: TcxCurrencyEdit [21]
     Left = 148

@@ -270,7 +270,7 @@ inherited ContractEditForm: TContractEditForm
         OptionsView.Indicator = True
         Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         object cContractConditionKindName: TcxGridDBColumn
-          Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
+          Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
           DataBinding.FieldName = 'ContractConditionKindName'
           PropertiesClassName = 'TcxButtonEditProperties'
           Properties.Buttons = <

@@ -66,6 +66,9 @@ BEGIN
      -- сохранили связь с <Статьи назначения>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
 
+     -- пересчитали Итоговые суммы по документу
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 

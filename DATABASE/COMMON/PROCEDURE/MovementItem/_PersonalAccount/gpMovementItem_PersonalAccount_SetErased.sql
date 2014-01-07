@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpMovementItem_PersonalAccount_SetErased (Integer, Integ
 
 CREATE OR REPLACE FUNCTION gpMovementItem_PersonalAccount_SetErased(
     IN inMovementId          Integer              , -- ключ Документа
-    IN inPersonalId          Integer              , -- Сотрудник
+    IN inJuridicalId         Integer              , -- Юр.лицо
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
 )                              
@@ -33,7 +33,7 @@ BEGIN
   -- Обязательно меняем 
   UPDATE MovementItem SET isErased = outIsErased
   WHERE MovementItem.MovementId = inMovementId
-    AND MovementItem.ObjectId = inPersonalId
+    AND MovementItem.ObjectId = inJuridicalId
     AND MovementItem.DescId = zc_MI_Master();
 
   -- пересчитали Итоговые суммы по накладной
@@ -55,4 +55,4 @@ ALTER FUNCTION gpMovementItem_PersonalAccount_SetErased (Integer, Integer, TVarC
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_PersonalAccount_SetErased (inMovementId:= 55, inPersonalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_PersonalAccount_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

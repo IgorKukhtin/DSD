@@ -31,7 +31,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
+           , CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)  AS InvNumber
            , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
@@ -91,35 +91,36 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-                 JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
 
-                 JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
+            LEFT JOIN Object AS Object_Cash ON Object_Cash.Id = MovementItem.ObjectId
  
-            LEFT JOIN MovementItemString AS MIString_Comment 
-                   ON MIString_Comment.MovementItemId = MovementItem.Id AND MIString_Comment.DescId = zc_MIString_Comment()
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
             
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                             ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
-                                         ON MILinkObject_Contract.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                         ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
-
        WHERE Movement.Id =  inMovementId;
-    END IF;
+
+   END IF;  
   
 END;
 $BODY$
@@ -130,6 +131,7 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 26.12.13                                        * add View_InfoMoney
  23.12.13                         *
  19.11.13                         *
  09.08.13         *

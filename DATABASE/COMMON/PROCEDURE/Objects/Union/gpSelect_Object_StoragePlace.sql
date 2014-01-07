@@ -45,7 +45,7 @@ BEGIN
           JOIN Object_Personal_View AS View_Personal ON View_Personal.UnitId = lfObject_Unit_byProfitLossDirection.UnitId
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = View_Personal.DescId
      WHERE vbUserId IN (SELECT UserId FROM tmpUserTransport)
-       AND (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitDirection_40100() -- Содержание транспорта
+       AND (lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100() -- Содержание транспорта
          OR lfObject_Unit_byProfitLossDirection.UnitCode IN (23020)) -- Отдел логистики
     ;
 

@@ -24,8 +24,6 @@ type
     ceRoute: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
     ceOperDate: TcxDateEdit;
-    ceAmount: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
     ceCar: TcxButtonEdit;
     cxLabel9: TcxLabel;
     ContractConditionKindGuides: TdsdGuides;

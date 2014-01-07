@@ -1,14 +1,14 @@
-п»ї-- Function: gpSelect_Object_Juridical_Tree()
+-- Function: gpSelect_Object_Juridical_Tree()
 
 --DROP FUNCTION gpSelect_Object_Juridical_Tree();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical_Tree(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ParentId Integer, isErased boolean) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_JuridicalGroup());
 
      RETURN QUERY 
@@ -26,7 +26,7 @@ LEFT JOIN ObjectLink
 UNION SELECT
           0 AS Id,
           0 AS Code,
-          CAST('Р’РЎР•' AS TVarChar) AS Name,
+          CAST('ВСЕ' AS TVarChar) AS Name,
           NULL AS ParentId,
           false AS isErased;
   
@@ -39,11 +39,10 @@ ALTER FUNCTION gpSelect_Object_Juridical_Tree(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  18.07.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_JuridicalGroup('2')

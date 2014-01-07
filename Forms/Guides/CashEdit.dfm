@@ -192,7 +192,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inMainJuridicalId'
+        Name = 'inJuridicalBasisId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
@@ -266,13 +266,13 @@
         ComponentItem = 'TextValue'
       end
       item
-        Name = 'MainJuridicalId'
+        Name = 'JuridicalBasisId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'MainJuridicalName'
+        Name = 'JuridicalBasisName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'

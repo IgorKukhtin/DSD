@@ -39,7 +39,7 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            --------------- 
-           , MovementItem.Amount            AS Amount
+           , CAST((MIFloat_Distance.ValueData*MIFloat_Price.ValueData) AS TFloat) AS Amount
            , MIFloat_Distance.ValueData     AS Distance
            , MIFloat_Price.ValueData        AS Price
            , MIFloat_CountPoint.ValueData   AS CountPoint

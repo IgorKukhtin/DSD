@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_PartnerJuridical(
     IN inJuridicalId       Integer,            --
     IN inSession           TVarChar            -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Address TVarChar, isErased Boolean
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar, isErased Boolean
               )
 AS
 $BODY$
@@ -17,17 +17,20 @@ BEGIN
 
    RETURN QUERY 
      SELECT 
-           Object_Partner.Id             AS Id
-         , Object_Partner.ObjectCode     AS Code
-         , Object_Partner.ValueData      AS Address
-         , Object_Partner.isErased       AS isErased
+           Object_Partner.Id               AS Id
+         , Object_Partner.ObjectCode       AS Code
+         , Object_Partner.ValueData        AS Name
+         , ObjectString_Address.ValueData  AS Address
+         , Object_Partner.isErased         AS isErased
          
      FROM Object AS Object_Partner
-     JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                     ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
-                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                    AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId
-         
+          JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                          ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
+                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                         AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId
+          LEFT JOIN ObjectString AS ObjectString_Address
+                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
+                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
@@ -39,8 +42,9 @@ ALTER FUNCTION gpSelect_Object_PartnerJuridical (Integer, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                        * add zc_ObjectString_Partner_Address
  27.11.13                          *  
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner ('2')
+-- SELECT * FROM gpSelect_Object_PartnerJuridical (1, '2')

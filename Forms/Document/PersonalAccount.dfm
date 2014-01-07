@@ -127,38 +127,28 @@ object PersonalAccountForm: TPersonalAccountForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
-              Kind = skSum
-              Position = spFooter
-              Column = colInfoMoneyName1
-            end
-            item
               Kind = skSum
               Position = spFooter
             end
             item
+              Format = ',0.###;-,0.###; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.###;-,0.###; ;'
+              Kind = skSum
+            end
+            item
+              Format = ',0.###;-,0.###; ;'
+              Kind = skSum
+            end
+            item
               Format = ',0.00;-,0.00;'
               Kind = skSum
+              Position = spFooter
               Column = colAmount
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00;-,0.00;'
-              Kind = skSum
-              Column = colInfoMoneyName1
-            end
             item
               Kind = skSum
             end
@@ -201,6 +191,20 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 30
           end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 91
+          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -213,13 +217,29 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 108
+          end
+          object colInfoMoneyName1: TcxGridDBColumn
+            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = InfoMoneyChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Width = 141
           end
           object colCarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Options.Editing = False
+            Width = 109
           end
           object colCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -233,8 +253,7 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+            Width = 93
           end
           object colRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -248,13 +267,7 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074#1099#1076#1072#1095#1080
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 109
           end
           object colAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -266,34 +279,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colInfoMoneyName1: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = InfoMoneyChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
-            DataBinding.FieldName = 'ContractName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = ContractChoiceForm
-                Default = True
-                Kind = bkEllipsis
-              end>
-            HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 108
           end
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -520,6 +506,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'Id'
+        Value = Null
         ParamType = ptInputOutput
       end
       item
@@ -540,6 +527,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -823,9 +811,9 @@ object PersonalAccountForm: TPersonalAccountForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
-      Action = CarChoiceForm
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
+      Action = ContractChoiceForm
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
       ShortCut = 45
       ImageIndex = 0
     end
@@ -837,8 +825,8 @@ object PersonalAccountForm: TPersonalAccountForm
         item
           StoredProc = spErasedMIMaster
         end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
-      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
+      Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
+      Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
       ImageIndex = 2
       ShortCut = 46
       ErasedFieldName = 'isErased'
@@ -891,12 +879,23 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
         end>
       isShowModal = True
     end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
-      FormName = 'TContractForm'
+      FormName = 'TContractChoiceForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -907,6 +906,28 @@ object PersonalAccountForm: TPersonalAccountForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
       isShowModal = True
@@ -1054,6 +1075,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1085,6 +1107,7 @@ object PersonalAccountForm: TPersonalAccountForm
       end
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
@@ -1177,9 +1200,10 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumber'
@@ -1206,6 +1230,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 177
   end
   object HeaderSaver: THeaderSaver
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
@@ -1230,12 +1255,14 @@ object PersonalAccountForm: TPersonalAccountForm
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inId'
+        Value = Null
         Component = FormParams
         ComponentItem = 'Id'
       end
@@ -1286,6 +1313,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 253
   end
   object GuidesFiller: TGuidesFiller
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
@@ -1301,6 +1329,7 @@ object PersonalAccountForm: TPersonalAccountForm
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
+    IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
@@ -1311,7 +1340,26 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpMovementItem_PersonalAccount_SetErased'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+      end>
     Left = 574
     Top = 200
   end
@@ -1319,7 +1367,26 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpMovementItem_PersonalAccount_SetUnErased'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outIsErased'
+        Component = MasterCDS
+        ComponentItem = 'IsErased'
+        DataType = ftBoolean
+      end>
     Left = 630
     Top = 224
   end
@@ -1335,8 +1402,22 @@ object PersonalAccountForm: TPersonalAccountForm
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
     DataSets = <>
     OutputType = otResult
-    Params = <>
-    Left = 76
-    Top = 8
+    Params = <
+      item
+        Name = 'Id'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 156
+    Top = 16
   end
 end

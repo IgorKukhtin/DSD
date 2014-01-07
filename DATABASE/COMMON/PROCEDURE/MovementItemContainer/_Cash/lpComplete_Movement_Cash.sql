@@ -24,7 +24,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT Movement.OperDate
@@ -47,8 +47,10 @@ BEGIN
                -- Бизнес: из кассы или по св-ву ObjectLink_Unit_Business
              , COALESCE (ObjectLink_Cash_Business.ChildObjectId, COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)) AS BusinessId
                -- Главное Юр.лицо всегда из кассы
-             , COALESCE (ObjectLink_Cash_MainJuridical.ChildObjectId, 0) AS JuridicalId_Basis
+             , COALESCE (ObjectLink_Cash_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
+               -- Филиал: всегда по подразделению
+             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_SecondForm() AS PaidKindId
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END
@@ -66,12 +68,14 @@ BEGIN
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
 
              LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Cash_MainJuridical ON ObjectLink_Cash_MainJuridical.ObjectId = MovementItem.ObjectId
-                                                                  AND ObjectLink_Cash_MainJuridical.DescId = zc_ObjectLink_Cash_MainJuridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Cash_JuridicalBasis ON ObjectLink_Cash_JuridicalBasis.ObjectId = MovementItem.ObjectId
+                                                                   AND ObjectLink_Cash_JuridicalBasis.DescId = zc_ObjectLink_Cash_JuridicalBasis()
              LEFT JOIN ObjectLink AS ObjectLink_Cash_Business ON ObjectLink_Cash_Business.ObjectId = MovementItem.ObjectId
                                                              AND ObjectLink_Cash_Business.DescId = zc_ObjectLink_Cash_Business()
              LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
                                                              AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
+             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
+                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
@@ -100,7 +104,7 @@ BEGIN
                          , ProfitLossGroupId, ProfitLossDirectionId
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
-                         , UnitId, ContractId, PaidKindId
+                         , UnitId, BranchId, ContractId, PaidKindId
                          , IsActive
                           )
         SELECT _tmpItem.OperDate
@@ -116,7 +120,10 @@ BEGIN
              , CASE WHEN Object.Id IS NULL THEN COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) ELSE _tmpItem.BusinessId END AS BusinessId
                -- Главное Юр.лицо всегда из кассы
              , _tmpItem.JuridicalId_Basis
-             , _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId
+             , _tmpItem.UnitId
+               -- Филиал: всегда по подразделению
+             , _tmpItem.BranchId
+             , _tmpItem.ContractId, _tmpItem.PaidKindId
              , NOT _tmpItem.IsActive
         FROM _tmpItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
@@ -145,6 +152,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis
  26.12.13                                        *
 */
 

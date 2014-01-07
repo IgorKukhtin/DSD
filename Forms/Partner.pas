@@ -58,6 +58,8 @@ type
     ceName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceAddress: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

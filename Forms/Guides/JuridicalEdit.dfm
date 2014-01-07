@@ -1,5 +1,5 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1075#1086' '#1083#1080#1094#1072
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 364
   ClientWidth = 851
   ExplicitWidth = 857
@@ -60,14 +60,14 @@
   object cbisCorporate: TcxCheckBox [8]
     Left = 167
     Top = 114
-    Caption = #1053#1072#1096#1077' '#1102#1088'. '#1083#1080#1094#1086
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083'.'
     TabOrder = 2
     Width = 111
   end
   object cxLabel3: TcxLabel [9]
     Left = 5
     Top = 138
-    Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088'. '#1083#1080#1094
+    Caption = #1043#1088#1091#1087#1087#1072' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
   end
   object cxLabel4: TcxLabel [10]
     Left = 5
@@ -132,7 +132,7 @@
       Height = 364
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = JuridicalDetailTS
+      Properties.ActivePage = ContractTS
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 364
       ClientRectRight = 565
@@ -315,7 +315,7 @@
               Options.Editing = False
             end
             object colPartnerAddress: TcxGridDBColumn
-              Caption = #1040#1076#1088#1077#1089
+              Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
               DataBinding.FieldName = 'Address'
               Options.Editing = False
               Width = 423
@@ -358,6 +358,7 @@
             DataController.Summary.SummaryGroups = <>
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
+            OptionsView.HeaderAutoHeight = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
             object clInvNumber: TcxGridDBColumn
               Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -365,7 +366,14 @@
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 171
+              Width = 80
+            end
+            object clPaidKindName: TcxGridDBColumn
+              Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+              DataBinding.FieldName = 'PaidKindName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 40
             end
             object clStartDate: TcxGridDBColumn
               Caption = #1044#1077#1081#1089#1090#1074'. '#1089
@@ -373,19 +381,42 @@
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 129
+              Width = 60
+            end
+            object clEndDate: TcxGridDBColumn
+              Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+              DataBinding.FieldName = 'EndDate'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 60
+            end
+            object clInfoMoneyCode: TcxGridDBColumn
+              Caption = #1050#1086#1076' '#1059#1055
+              DataBinding.FieldName = 'InfoMoneyCode'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 50
+            end
+            object clInfoMoneyName: TcxGridDBColumn
+              Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+              DataBinding.FieldName = 'InfoMoneyName'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 100
             end
             object clContractKindName: TcxGridDBColumn
               Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
               DataBinding.FieldName = 'ContractKindName'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 171
+              Width = 70
             end
             object clIsErased: TcxGridDBColumn
               Caption = #1059#1076#1072#1083#1077#1085
               DataBinding.FieldName = 'isErased'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False

@@ -97,6 +97,10 @@ type
     bbContractUpdate: TdxBarButton;
     actMultiContractInsert: TMultiAction;
     actMultiPartnerInsert: TMultiAction;
+    clEndDate: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

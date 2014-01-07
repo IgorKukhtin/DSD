@@ -26,23 +26,34 @@ BEGIN
              Period.OperDate::TDateTime
            , Object_Unit.Id           AS UnitId
            , Object_Unit.ValueData    AS UnitName
-       FROM Object AS Object_Unit,
-            (SELECT generate_series(vbStartDate, vbEndDate, '1 MONTH'::interval) OperDate) AS Period  
-       WHERE Object_Unit.DescId = zc_Object_Unit();
+       FROM (SELECT generate_series(vbStartDate, vbEndDate, '1 MONTH'::interval) OperDate) AS Period
+          , (SELECT ChildObjectId AS UnitId FROM ObjectLink WHERE DescId = zc_ObjectLink_StaffList_Unit() AND ChildObjectId > 0 GROUP BY ChildObjectId
+            UNION
+             SELECT MovementLinkObject_Unit.ObjectId AS UnitId
+             FROM Movement
+                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
+                                               ON MovementLinkObject_Unit.MovementId = Movement.Id
+                                              AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
+             WHERE Movement.DescId = zc_Movement_SheetWorkTime()
+               AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+             GROUP BY MovementLinkObject_Unit.ObjectId
+            ) AS ObjectLink_StaffList_Unit
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = ObjectLink_StaffList_Unit.UnitId
+      ;
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_SheetWorkTime_Period (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.12.13                                        * add zc_ObjectLink_StaffList_Unit
  01.10.13         *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SheetWorkTime (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')/
+-- SELECT * FROM gpSelect_Movement_SheetWorkTime (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_SheetWorkTime_Period (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')

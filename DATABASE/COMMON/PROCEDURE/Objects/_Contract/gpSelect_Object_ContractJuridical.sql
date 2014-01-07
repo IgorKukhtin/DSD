@@ -7,8 +7,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractJuridical(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
-             , InvNumber TVarChar, StartDate TDateTime
+             , InvNumber TVarChar
+             , StartDate TDateTime, EndDate TDateTime
+             , PaidKindName TVarChar
              , ContractKindName TVarChar, ContractArticleName TVarChar, ContractStateKindName TVarChar
+             , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , isErased Boolean 
               )
 AS
@@ -25,10 +30,19 @@ BEGIN
        , Object_Contract_View.InvNumber
        
        , Object_Contract_View.StartDate
+       , Object_Contract_View.EndDate
        
-       , Object_ContractKind.ValueData AS ContractKindName
+       , Object_PaidKind.ValueData          AS PaidKindName
+       , Object_ContractKind.ValueData      AS ContractKindName
        , Object_ContractArticle.ValueData   AS ContractArticleName
        , Object_ContractStateKind.ValueData AS ContractStateKindName
+
+       , Object_InfoMoney_View.InfoMoneyGroupCode
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationCode
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
+       , Object_InfoMoney_View.InfoMoneyName
 
        , Object_Contract_View.isErased
        
@@ -47,12 +61,14 @@ BEGIN
                              ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
+
+        LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+
    WHERE Object_Contract_View.JuridicalId = inJuridicalId;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO postgres;
 
 
@@ -60,6 +76,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.01.14                                         * add Object_InfoMoney_View
  26.11.13                         *
 */
 

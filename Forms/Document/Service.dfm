@@ -1,34 +1,34 @@
 ﻿inherited ServiceForm: TServiceForm
-  ActiveControl = ceAmountIn
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
+  ActiveControl = ceAmountDebet
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientHeight = 265
-  ClientWidth = 593
+  ClientWidth = 606
   AddOnFormData.isSingle = False
-  ExplicitWidth = 599
+  ExplicitWidth = 612
   ExplicitHeight = 290
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 183
-    Top = 216
+    Top = 222
     ExplicitLeft = 183
-    ExplicitTop = 216
+    ExplicitTop = 222
   end
   inherited bbCancel: TcxButton
     Left = 327
-    Top = 216
+    Top = 222
     ExplicitLeft = 327
-    ExplicitTop = 216
+    ExplicitTop = 222
   end
   object cxLabel1: TcxLabel [2]
     Left = 152
     Top = 11
-    Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = #1044#1072#1090#1072
   end
   object Код: TcxLabel [3]
     Left = 8
     Top = 11
-    Caption = #1053#1086#1084#1077#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+    Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceInvNumber: TcxCurrencyEdit [4]
     Left = 8
@@ -50,9 +50,9 @@
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [7]
-    Left = 314
+    Left = 295
     Top = 61
-    Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cePaidKind: TcxButtonEdit [8]
     Left = 184
@@ -66,7 +66,7 @@
     Width = 97
   end
   object ceUnit: TcxButtonEdit [9]
-    Left = 314
+    Left = 295
     Top = 134
     Properties.Buttons = <
       item
@@ -74,10 +74,10 @@
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 273
+    Width = 304
   end
   object ceInfoMoney: TcxButtonEdit [10]
-    Left = 314
+    Left = 295
     Top = 84
     Properties.Buttons = <
       item
@@ -85,7 +85,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 9
-    Width = 273
+    Width = 304
   end
   object ceOperDate: TcxDateEdit [11]
     Left = 152
@@ -93,18 +93,18 @@
     TabOrder = 3
     Width = 129
   end
-  object ceAmountIn: TcxCurrencyEdit [12]
-    Left = 312
+  object ceAmountDebet: TcxCurrencyEdit [12]
+    Left = 293
     Top = 34
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 7
-    Width = 130
+    Width = 142
   end
   object cxLabel7: TcxLabel [13]
-    Left = 312
+    Left = 293
     Top = 11
-    Caption = #1059#1089#1083#1091#1075#1080' '#1087#1086#1083#1091#1095#1077#1085#1085#1099#1077
+    Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
   end
   object ceJuridical: TcxButtonEdit [14]
     Left = 8
@@ -120,7 +120,7 @@
   object cxLabel6: TcxLabel [15]
     Left = 8
     Top = 111
-    Caption = #1070#1088'. '#1083#1080#1094#1086
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceContract: TcxButtonEdit [16]
     Left = 8
@@ -141,26 +141,26 @@
   object cxLabel10: TcxLabel [18]
     Left = 7
     Top = 163
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
     Left = 7
     Top = 184
     TabOrder = 11
-    Width = 578
+    Width = 592
   end
-  object ceAmountOut: TcxCurrencyEdit [20]
-    Left = 455
+  object ceAmountKredit: TcxCurrencyEdit [20]
+    Left = 447
     Top = 34
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 8
-    Width = 130
+    Width = 152
   end
   object cxLabel3: TcxLabel [21]
-    Left = 455
+    Left = 447
     Top = 11
-    Caption = #1059#1089#1083#1091#1075#1080' '#1086#1082#1072#1079#1072#1085#1085#1099#1077
+    Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -211,14 +211,14 @@
       item
         Name = 'inamountIn'
         Value = 0.000000000000000000
-        Component = ceAmountIn
+        Component = ceAmountDebet
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inamountOut'
         Value = 0.000000000000000000
-        Component = ceAmountOut
+        Component = ceAmountKredit
         DataType = ftFloat
         ParamType = ptInput
       end
@@ -301,13 +301,13 @@
       item
         Name = 'AmountIn'
         Value = 0.000000000000000000
-        Component = ceAmountIn
+        Component = ceAmountDebet
         DataType = ftFloat
       end
       item
         Name = 'AmountOut'
         Value = 0.000000000000000000
-        Component = ceAmountOut
+        Component = ceAmountKredit
         DataType = ftFloat
       end
       item
@@ -323,11 +323,11 @@
         ComponentItem = 'TextValue'
       end
       item
-        Name = 'MainJuridicalId'
+        Name = 'JuridicalBasisId'
         Value = ''
       end
       item
-        Name = 'MainJuridicalName'
+        Name = 'JuridicalBasisName'
         Value = ''
         DataType = ftString
       end
@@ -470,7 +470,7 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -521,11 +521,7 @@
         Guides = UnitGuides
       end
       item
-      end
-      item
         Guides = InfoMoneyGuides
-      end
-      item
       end>
     ActionItemList = <>
     Left = 408

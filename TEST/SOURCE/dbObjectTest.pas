@@ -142,7 +142,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePartner(const Id: integer; Code: Integer;
-        Name, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
+        inAddress, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
         JuridicalId, RouteId, RouteSortingId, PersonalTakeId: integer): integer;
     constructor Create; override;
   end;
@@ -788,7 +788,7 @@ begin
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
   PersonalTakeId := 0; //TPersonalTest.Create.GetDefault;
-  result := InsertUpdatePartner(0, -6, 'Контрагенты', 'GLNCode', 15, 15, JuridicalId, RouteId, RouteSortingId, PersonalTakeId);
+  result := InsertUpdatePartner(0, -6, 'город такой улица такая', 'GLNCode', 15, 15, JuridicalId, RouteId, RouteSortingId, PersonalTakeId);
   inherited;
 end;
 
@@ -797,7 +797,7 @@ begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('inAddress', ftString, ptInput, inAddress);
   FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);
   FParams.AddParam('inPrepareDayCount', ftFloat, ptInput, PrepareDayCount);
   FParams.AddParam('inDocumentDayCount', ftFloat, ptInput, DocumentDayCount);

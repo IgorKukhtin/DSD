@@ -7,6 +7,9 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_GuideAll() RETURNS Integer 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_CashKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_CashKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_ServiceKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+
 DO $$
 BEGIN
 
@@ -31,19 +34,33 @@ BEGIN
                                    , inName:= 'Транспорт все (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_TrasportAll');
 
- -- zc_Object_Goods, по Филиалу ограничиваются Документы для Кассы
+ -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashDnepr()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 21
                                    , inName:= 'Касса Днепр (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashDnepr');
 
- -- zc_Object_Goods, по Филиалу ограничиваются Документы для Кассы
+ -- по Филиалу ограничиваются Документы для Кассы
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_CashKiev()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 22
-                                   , inName:= 'Касса Днепр (доступ просмотра)'
+                                   , inName:= 'Касса Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_CashKiev');
+
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceDnepr()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 31
+                                   , inName:= 'Услуги Днепр (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceDnepr');
+
+ -- по Филиалу ограничиваются Документы для Услуг
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_ServiceKiev()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 32
+                                   , inName:= 'Услуги Киев (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_ServiceKiev');
 
  -- ALL, нет ограничения в справочниках
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_GuideAll()
@@ -83,6 +100,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.12.13                                        * add zc_Enum_Process_AccessKey_Service...
  26.12.13                                        * add zc_Enum_Process_AccessKey_Cash...
  14.12.13                                        * add zc_Enum_Process_AccessKey_GuideAll
  07.12.13                                        *

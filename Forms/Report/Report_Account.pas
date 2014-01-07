@@ -81,8 +81,8 @@ type
     UnitName_inf: TcxGridDBColumn;
     BranchName_inf: TcxGridDBColumn;
     BranchCode_inf: TcxGridDBColumn;
-    BusinesCode_inf: TcxGridDBColumn;
-    BusinesName_inf: TcxGridDBColumn;
+    BusinessCode_inf: TcxGridDBColumn;
+    BusinessName_inf: TcxGridDBColumn;
     AccountGroupCode: TcxGridDBColumn;
     AccountGroupName: TcxGridDBColumn;
     AccountDirectionCode: TcxGridDBColumn;

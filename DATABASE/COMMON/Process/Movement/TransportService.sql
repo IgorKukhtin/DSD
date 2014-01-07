@@ -4,10 +4,10 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_TransportService() RETUR
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_TransportService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Status
-CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_Transport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_Transport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_Transport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_Transport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_Transport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_Transport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_Transport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_Transport' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_TransportService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_TransportService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_TransportService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_TransportService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_TransportService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -33,29 +33,29 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Trans
 
                                   
 -- Status_Transport
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_Transport()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
                                   , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_UnComplete_Transport');
+                                  , inEnumName:= 'zc_Enum_Process_UnComplete_TransportService');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_Transport()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
                                   , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_Complete_Transport');
+                                  , inEnumName:= 'zc_Enum_Process_Complete_TransportService');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Transport()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
                                   , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_SetErased_Transport');
+                                  , inEnumName:= 'zc_Enum_Process_SetErased_TransportService');
 
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Transport()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
                                   , inName:= 'Проведение за период - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
-                                  , inEnumName:= 'zc_Enum_Process_CompletePeriod_Transport');
+                                  , inEnumName:= 'zc_Enum_Process_CompletePeriod_TransportService');
 
 
  -- Документ <Начисления наемный транспорт>
@@ -115,13 +115,13 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Transp
                                           , inSession   := zfCalc_UserAdmin())
  -- select  tmpData.RoleRightId, tmpRole.RoleId, tmpProcess.ProcessId
  FROM (SELECT Id AS RoleId FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode in (-1)) AS tmpRole
-      JOIN (SELECT zc_Enum_Process_UnComplete_Transport() AS ProcessId
+      JOIN (SELECT zc_Enum_Process_UnComplete_TransportService() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_SetErased_Transport() AS ProcessId
+            SELECT zc_Enum_Process_SetErased_TransportService() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_Complete_Transport() AS ProcessId
+            SELECT zc_Enum_Process_Complete_TransportService() AS ProcessId
           UNION ALL
-            SELECT zc_Enum_Process_CompletePeriod_Transport() AS ProcessId
+            SELECT zc_Enum_Process_CompletePeriod_TransportService() AS ProcessId
            ) AS tmpProcess ON 1=1
 
       -- находим уже существующие права

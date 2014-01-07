@@ -44,7 +44,23 @@ BEGIN
 
 
    -- проверка уникальности для свойства <Номер договора>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
+   -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
+
+   -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица
+   IF inInvNumber <> '' and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
+   THEN
+       IF EXISTS (SELECT ObjectLink.ChildObjectId
+                  FROM ObjectLink
+                       JOIN Object ON Object.Id = ObjectLink.ObjectId
+                                  AND Object.ValueData = inInvNumber
+                  WHERE ObjectLink.ChildObjectId = inJuridicalId
+                    AND ObjectLink.ObjectId <> COALESCE (ioId, 0)
+                    AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical())
+       THEN
+           RAISE EXCEPTION 'Ошибка. Номер договора <%> уже установлено у <%>.', inInvNumber, lfGet_Object_ValueData (inJuridicalId);
+       END IF;
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode_calc, inInvNumber);
@@ -94,6 +110,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица
+ 04.01.14                                        * add !!!inInvNumber not unique!!!
  14.11.13         * add from redmaine               
  21.10.13                                        * add vbCode_calc
  20.10.13                                        * add from redmaine

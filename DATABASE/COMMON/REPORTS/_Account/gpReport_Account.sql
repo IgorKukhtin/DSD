@@ -20,7 +20,7 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , RouteCode_inf Integer, RouteName_inf TVarChar
               , UnitCode_inf Integer, UnitName_inf TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
-              , BusinesCode_inf Integer, BusinesName_inf TVarChar
+              , BusinessCode_inf Integer, BusinessName_inf TVarChar
               , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, OperPrice TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
@@ -71,8 +71,8 @@ BEGIN
          , Object_Unit_inf.ValueData      AS UnitName_inf
          , Object_Branch_inf.ObjectCode   AS BranchCode_inf
          , Object_Branch_inf.ValueData    AS BranchName_inf
-         , Object_Busines_inf.ObjectCode  AS BusinesCode_inf
-         , Object_Busines_inf.ValueData   AS BusinesName_inf
+         , Object_Business_inf.ObjectCode AS BusinessCode_inf
+         , Object_Business_inf.ValueData  AS BusinessName_inf
 
          , Object_Destination.ObjectCode AS ObjectCode_Destination
          , Object_Destination.ValueData  AS ObjectName_Destination
@@ -132,7 +132,7 @@ BEGIN
              , tmpReport_All.RouteId_inf
              , tmpReport_All.UnitId_inf
              , tmpReport_All.BranchId_inf
-             , ContainerLO_Busines.ObjectId AS BusinesId_inf -- tmpReport_All.BusinesId_inf
+             , ContainerLO_Business.ObjectId AS BusinessId_inf -- tmpReport_All.BusinessId_inf
              , tmpReport_All.ProfitLossId_inf
         FROM
             (SELECT tmpContainer.ContainerId
@@ -152,7 +152,7 @@ BEGIN
                   , 0 AS RouteId_inf
                   , 0 AS UnitId_inf
                   , 0 AS BranchId_inf
-                  , 0 AS BusinesId_inf
+                  , 0 AS BusinessId_inf
                   , 0 AS ProfitLossId_inf
                   , 0 AS InfoMoneyId_inf
                   , 0 AS GoodsId_inf
@@ -180,7 +180,7 @@ BEGIN
                   , COALESCE (/*MI_Route.ObjectId,*/tmpMIReport.RouteId_inf, tmpMIReport.RouteId_inf) AS RouteId_inf
                   , tmpMIReport.UnitId_inf
                   , tmpMIReport.BranchId_inf
-                  , ContainerLO_Busines.ObjectId AS BusinesId_inf
+                  , ContainerLO_Business.ObjectId AS BusinessId_inf
                   , ContainerLO_ProfitLoss.ObjectId AS ProfitLossId_inf
                   , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId_inf
                   , ContainerLO_Goods.ObjectId     AS GoodsId_inf
@@ -263,9 +263,9 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpMIReport.ContainerId_inf
                                                                      AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                                      AND ContainerLO_Car.ObjectId > 0
-                     LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpMIReport.ContainerId_ProfitLoss
-                                                                         AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Business()
-                                                                         AND ContainerLO_Busines.ObjectId > 0
+                     LEFT JOIN ContainerLinkObject AS ContainerLO_Business ON ContainerLO_Business.ContainerId = tmpMIReport.ContainerId_ProfitLoss
+                                                                         AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                                                         AND ContainerLO_Business.ObjectId > 0
                      LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss ON ContainerLO_ProfitLoss.ContainerId = tmpMIReport.ContainerId_ProfitLoss
                                                                             AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                                                                             AND ContainerLO_ProfitLoss.ObjectId > 0
@@ -295,15 +295,15 @@ BEGIN
                     , tmpMIReport.RouteId_inf
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
-                    , ContainerLO_Busines.ObjectId
+                    , ContainerLO_Business.ObjectId
                     , ContainerLO_ProfitLoss.ObjectId
                     , ContainerLO_InfoMoney.ObjectId
                     , ContainerLO_Goods.ObjectId
 
             ) AS tmpReport_All
-            LEFT JOIN ContainerLinkObject AS ContainerLO_Busines ON ContainerLO_Busines.ContainerId = tmpReport_All.ContainerId
-                                                                AND ContainerLO_Busines.DescId = zc_ContainerLinkObject_Business()
-                                                                AND ContainerLO_Busines.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Business ON ContainerLO_Business.ContainerId = tmpReport_All.ContainerId
+                                                                AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                                                AND ContainerLO_Business.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                   AND ContainerLO_Juridical.ObjectId > 0
@@ -328,7 +328,7 @@ BEGIN
         GROUP BY ContainerLO_Member.ObjectId
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
-               , ContainerLO_Busines.ObjectId
+               , ContainerLO_Business.ObjectId
                , ContainerLO_Juridical.ObjectId
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
@@ -345,7 +345,7 @@ BEGIN
                , tmpReport_All.RouteId_inf
                , tmpReport_All.UnitId_inf
                , tmpReport_All.BranchId_inf
-               , tmpReport_All.BusinesId_inf
+               , tmpReport_All.BusinessId_inf
                , tmpReport_All.ProfitLossId_inf
                , tmpReport_All.InfoMoneyId_inf
                , tmpReport_All.GoodsId_inf
@@ -391,7 +391,7 @@ BEGIN
 
        LEFT JOIN Object AS Object_Unit_inf ON Object_Unit_inf.Id = tmpReport.UnitId_inf
        LEFT JOIN Object AS Object_Branch_inf ON Object_Branch_inf.Id = tmpReport.BranchId_inf
-       LEFT JOIN Object AS Object_Busines_inf ON Object_Busines_inf.Id = tmpReport.BusinesId_inf
+       LEFT JOIN Object AS Object_Business_inf ON Object_Business_inf.Id = tmpReport.BusinessId_inf
 
        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
@@ -449,4 +449,4 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());

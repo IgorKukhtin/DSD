@@ -41,7 +41,6 @@ object InfoMoneyForm: TInfoMoneyForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 50
       OptionsView.Indicator = True

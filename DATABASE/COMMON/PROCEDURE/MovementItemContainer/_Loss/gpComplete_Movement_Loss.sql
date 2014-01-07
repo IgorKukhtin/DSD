@@ -316,15 +316,15 @@ BEGIN
 
                             , CASE WHEN vbMemberId_To = 0
                                     AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_10100())  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
-                                        THEN zc_Enum_ProfitDirection_10400() -- 10400; "Себестоимость реализации"
+                                        THEN zc_Enum_ProfitLossDirection_10400() -- 10400; "Себестоимость реализации"
                                    WHEN _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900()  -- Ирна      -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
                                                                           , zc_Enum_InfoMoneyDestination_30100()) -- Продукция -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
-                                        THEN zc_Enum_ProfitDirection_10400() -- 10400; "Себестоимость реализации"
+                                        THEN zc_Enum_ProfitLossDirection_10400() -- 10400; "Себестоимость реализации"
                                    WHEN vbMemberId_To <> 0
-                                        THEN zc_Enum_ProfitDirection_70300() -- 70300; "сотрудники (недостачи, порча)"
+                                        THEN zc_Enum_ProfitLossDirection_70300() -- 70300; "сотрудники (недостачи, порча)"
                                    WHEN vbIsCorporate_To = TRUE
-                                        THEN zc_Enum_ProfitDirection_70100() -- 70300; "Реализация нашим компаниям"
-                                   ELSE zc_Enum_ProfitDirection_70200() -- 70200; "Прочее"
+                                        THEN zc_Enum_ProfitLossDirection_70100() -- 70300; "Реализация нашим компаниям"
+                                   ELSE zc_Enum_ProfitLossDirection_70200() -- 70200; "Прочее"
                               END AS ProfitLossDirectionId
 
                             , _tmpItem.InfoMoneyDestinationId_calc

@@ -66,6 +66,7 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
+    clOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

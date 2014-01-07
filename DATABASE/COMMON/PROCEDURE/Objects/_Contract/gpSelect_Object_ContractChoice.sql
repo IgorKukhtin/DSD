@@ -7,11 +7,15 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractChoice(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar
-             , StartDate TDateTime
+             , StartDate TDateTime, EndDate TDateTime
              , ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , InfoMoneyId Integer
+             , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , OKPO TVarChar
              , isErased Boolean 
               )
 AS
@@ -27,6 +31,7 @@ BEGIN
        , Object_Contract_View.ContractCode AS Code
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
+       , Object_Contract_View.EndDate
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
@@ -34,7 +39,14 @@ BEGIN
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_InfoMoney_View.InfoMoneyId
+       , Object_InfoMoney_View.InfoMoneyGroupCode
+       , Object_InfoMoney_View.InfoMoneyGroupName
+       , Object_InfoMoney_View.InfoMoneyDestinationCode
+       , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+
+       , ObjectHistory_JuridicalDetails_View.OKPO
 
        , Object_Contract_View.isErased
        
@@ -78,22 +90,23 @@ BEGIN
                              ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
+
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
    ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_ContractChoice (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.01.14                                         * add OKPO
  18.11.13                         *                
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractChoice (inSession := zfCalc_UserAdmin())

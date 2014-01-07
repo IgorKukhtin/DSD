@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaName TVarChar
              , ContractArticleName TVarChar
              , ContractStateKindName TVarChar
-             
+             , OKPO TVarChar
              , isErased Boolean 
               )
 AS
@@ -61,6 +61,8 @@ BEGIN
        , Object_Area.ValueData              AS AreaName
        , Object_ContractArticle.ValueData   AS ContractArticleName
        , Object_ContractStateKind.ValueData AS ContractStateKindName
+
+       , ObjectHistory_JuridicalDetails_View.OKPO
 
        , Object_Contract_View.isErased
        
@@ -105,19 +107,20 @@ BEGIN
                             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
         
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+
    ;
   
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.01.14                                         * add OKPO
  14.11.13         * add from redmaine               
  20.10.13                                        * add Object_Contract_View
  20.10.13                                        * add from redmine

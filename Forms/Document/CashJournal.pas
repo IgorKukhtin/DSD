@@ -23,6 +23,7 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
     clContractInvNumber: TcxGridDBColumn;
+    clMoneyPlaceCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
