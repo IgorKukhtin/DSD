@@ -112,12 +112,12 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1044#1077#1081#1089#1090#1074#1091#1077#1090' '#1076#1086
   end
   object cxLabel9: TcxLabel [16]
-    Left = 16
+    Left = 183
     Top = 125
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object edInfoMoney: TcxButtonEdit [17]
-    Left = 16
+    Left = 183
     Top = 143
     Properties.Buttons = <
       item
@@ -125,7 +125,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 15
-    Width = 328
+    Width = 161
   end
   object edPaidKind: TcxButtonEdit [18]
     Left = 241
@@ -184,12 +184,12 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   object cxLabel8: TcxLabel [26]
-    Left = 186
+    Left = 183
     Top = 258
     Caption = #1056#1077#1075#1080#1086#1085
   end
   object edArea: TcxButtonEdit [27]
-    Left = 182
+    Left = 183
     Top = 275
     Properties.Buttons = <
       item
@@ -216,12 +216,12 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   object cxLabel14: TcxLabel [30]
-    Left = 186
+    Left = 183
     Top = 210
     Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractStateKind: TcxButtonEdit [31]
-    Left = 182
+    Left = 183
     Top = 231
     Properties.Buttons = <
       item
@@ -354,6 +354,22 @@ inherited ContractEditForm: TContractEditForm
         Version = 1
       end
     end
+  end
+  object cxLabel15: TcxLabel [33]
+    Left = 16
+    Top = 125
+    Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+  end
+  object edMainJuridical: TcxButtonEdit [34]
+    Left = 16
+    Top = 143
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 38
+    Width = 162
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 139
@@ -578,6 +594,13 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inJuridicalBasisId'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
@@ -763,6 +786,19 @@ inherited ContractEditForm: TContractEditForm
         Value = ''
         Component = ceComment
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 272
     Top = 320
@@ -789,8 +825,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 240
-    Top = 128
+    Left = 160
+    Top = 88
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -840,7 +876,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 112
-    Top = 135
+    Top = 183
   end
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1034,8 +1070,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1228,5 +1264,30 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 584
     Top = 232
+  end
+  object MainJuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMainJuridical
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 128
+    Top = 136
   end
 end

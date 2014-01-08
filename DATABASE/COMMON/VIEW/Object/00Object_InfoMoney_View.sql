@@ -1,6 +1,6 @@
 -- View: Object_InfoMoney_View
 
--- DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
+DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_InfoMoney_View AS
   SELECT Object_InfoMoneyGroup.Id               AS InfoMoneyGroupId

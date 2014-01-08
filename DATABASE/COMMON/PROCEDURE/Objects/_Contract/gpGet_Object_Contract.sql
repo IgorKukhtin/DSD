@@ -12,6 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
+             , JuridicalBasisId Integer, JuridicalBasisName TVarChar
+
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              
@@ -47,6 +49,9 @@ BEGIN
            , '' :: TVarChar AS ContractKindName
            , 0 :: Integer   AS JuridicalId
            , '' :: TVarChar AS JuridicalName
+           , 0 :: Integer   AS JuridicalBasisId
+           , '' :: TVarChar AS JuridicalBasisName
+
            , 0 :: Integer   AS PaidKindId
            , '' :: TVarChar AS PaidKindName
            , 0 :: Integer   AS InfoMoneyId
@@ -81,6 +86,8 @@ BEGIN
            , Object_ContractKind.ValueData AS ContractKindName
            , Object_Juridical.Id           AS JuridicalId
            , Object_Juridical.ValueData    AS JuridicalName
+           , Object_JuridicalBasis.Id           AS JuridicalBasisId
+           , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
            , Object_PaidKind.Id            AS PaidKindId
            , Object_PaidKind.ValueData     AS PaidKindName
 
@@ -137,6 +144,7 @@ BEGIN
             LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
                                 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
@@ -154,6 +162,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.11.14                        * 
  14.11.13         * add from redmaine
  20.10.13                                        * add from redmaine
  22.07.13         * add  SigningDate, StartDate, EndDate 

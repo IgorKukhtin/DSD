@@ -91,6 +91,9 @@ type
     MultiActionInsertContractCondition: TMultiAction;
     bbConditionRefresh: TdxBarButton;
     spInserUpdateContract: TdsdExecStoredProc;
+    cxLabel15: TcxLabel;
+    edMainJuridical: TcxButtonEdit;
+    MainJuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

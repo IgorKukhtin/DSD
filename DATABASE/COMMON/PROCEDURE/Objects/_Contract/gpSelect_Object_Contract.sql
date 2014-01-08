@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindName TVarChar
-             , JuridicalCode Integer, JuridicalName TVarChar
+             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
@@ -44,6 +44,7 @@ BEGIN
        , Object_Contract_View.EndDate
        
        , Object_ContractKind.ValueData AS ContractKindName
+       , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
        , Object_PaidKind.ValueData     AS PaidKindName

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inEndDate             TDateTime,     -- свойство Дата до которой действует договор    
     
     IN inJuridicalId         Integer  ,     -- Юридическое лицо
+    IN inJuridicalBasisId    Integer  ,     -- Главное юридическое лицо
     IN inInfoMoneyId         Integer  ,     -- Статьи назначения
     IN inContractKindId      Integer  ,     -- Виды договоров
     IN inPaidKindId          Integer  ,     -- Виды форм оплаты
@@ -82,6 +84,8 @@ BEGIN
 
    -- сохранили связь с <Юридическое лицо>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <Главным юридическим лицом>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_JuridicalBasis(), ioId, inJuridicalBasisId);
    -- сохранили связь с <Статьи назначения>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_InfoMoney(), ioId, inInfoMoneyId);
    -- сохранили связь с <Виды договоров>
@@ -109,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.11.14                        * 
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица
  04.01.14                                        * add !!!inInvNumber not unique!!!
  14.11.13         * add from redmaine               

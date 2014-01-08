@@ -1,6 +1,6 @@
 -- View: Object_Contract_View
 
--- DROP VIEW IF EXISTS Object_Contract_View;
+DROP VIEW IF EXISTS Object_Contract_View;
 
 CREATE OR REPLACE VIEW Object_Contract_View AS
   SELECT Object_Contract.Id                          AS ContractId
@@ -11,6 +11,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectDate_End.ValueData                    AS EndDate
 
        , ObjectLink_Contract_Juridical.ChildObjectId         AS JuridicalId
+       , ObjectLink_Contract_JuridicalBasis.ChildObjectId    AS JuridicalBasisId
        , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
        , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
 
@@ -30,6 +31,10 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                             ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id 
                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                            ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Contract.Id 
+                           AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
        LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                             ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract.Id 
@@ -57,6 +62,7 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 08.01.14                        * 
  18.11.13                                        * !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
  14.11.13         * add ContractCode      
  20.10.13                                        *
