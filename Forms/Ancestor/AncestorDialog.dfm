@@ -4,7 +4,7 @@ inherited AncestorDialogForm: TAncestorDialogForm
   ClientWidth = 378
   AddOnFormData.Params = FormParams
   ExplicitWidth = 384
-  ExplicitHeight = 345
+  ExplicitHeight = 352
   PixelsPerInch = 96
   TextHeight = 13
   object bbOk: TcxButton [0]

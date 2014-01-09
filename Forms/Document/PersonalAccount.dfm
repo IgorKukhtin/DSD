@@ -203,14 +203,14 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 101
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 66
           end
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -225,7 +225,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 141
+            Width = 129
           end
           object clContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -240,14 +240,14 @@ object PersonalAccountForm: TPersonalAccountForm
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 91
+            Width = 82
           end
           object clCarModelName: TcxGridDBColumn
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 109
+            Width = 99
           end
           object clCarName: TcxGridDBColumn
             Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
@@ -261,7 +261,7 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 93
+            Width = 84
           end
           object clRouteName: TcxGridDBColumn
             Caption = #1052#1072#1088#1096#1088#1091#1090
@@ -275,7 +275,7 @@ object PersonalAccountForm: TPersonalAccountForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 109
+            Width = 100
           end
           object clAmount: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
@@ -287,7 +287,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 98
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -559,8 +559,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

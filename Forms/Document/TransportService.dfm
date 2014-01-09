@@ -4,7 +4,7 @@
   ClientWidth = 595
   AddOnFormData.isSingle = False
   ExplicitWidth = 601
-  ExplicitHeight = 367
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -128,7 +128,6 @@
   object ceJuridical: TcxButtonEdit [16]
     Left = 8
     Top = 178
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -145,6 +144,7 @@
   object ceContract: TcxButtonEdit [18]
     Left = 8
     Top = 78
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -691,7 +691,6 @@
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridical
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -837,5 +836,66 @@
       end>
     Left = 432
     Top = 211
+  end
+  object ContractJuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceJuridical
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = ContractJuridicalGuides
+        ComponentItem = 'JuridicalId'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = ContractJuridicalGuides
+        ComponentItem = 'JuridicalName'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'ContractId'
+      end
+      item
+        Name = 'ContractName'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'ContractName'
+        DataType = ftString
+      end>
+    Left = 24
+    Top = 175
   end
 end

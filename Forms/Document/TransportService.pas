@@ -51,6 +51,7 @@ type
     cxLabel14: TcxLabel;
     ceCarModel: TcxButtonEdit;
     CarModelGuides: TdsdGuides;
+    ContractJuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

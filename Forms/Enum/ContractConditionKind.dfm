@@ -13,7 +13,6 @@ object ContractConditionKindForm: TContractConditionKindForm
   KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
-  AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
@@ -25,8 +24,6 @@ object ContractConditionKindForm: TContractConditionKindForm
     Height = 354
     Align = alClient
     TabOrder = 0
-    ExplicitLeft = 8
-    ExplicitTop = 18
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
