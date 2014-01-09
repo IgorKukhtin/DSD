@@ -37,6 +37,8 @@ begin
   FileWriteString(ParamStr(0)+'.uTMP', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName(ParamStr(0))));
   if not FileExists(ExtractFileDir(ParamStr(0))+'\Upgrader4.exe') then
      FileWriteString(ExtractFileDir(ParamStr(0))+'\Upgrader4.exe', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('Upgrader4.exe')));
+  if not FileExists(ExtractFileDir(ParamStr(0))+'\midas.dll') then
+     FileWriteString(ExtractFileDir(ParamStr(0))+'\midas.dll', TdsdFormStorageFactory.GetStorage.LoadFile(ExtractFileName('midas.dll')));
   Execute(ExtractFileDir(ParamStr(0)) + '\Upgrader4.exe ' + ParamStr(0), ExtractFileDir(ParamStr(0)));
   ShowMessage('Программа успешно обновлена. Нажмите кнопку для перезапуска');
   Application.Terminate
