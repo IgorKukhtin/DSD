@@ -39,7 +39,7 @@ BEGIN
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
    SELECT ValueData INTO vbName FROM Object WHERE Id = inJuridicalId;
    -- !!!в название добавляем <Адрес точки доставки>!!!
-   vbName:= vbName || '' || inAddress;
+   vbName:= vbName || ' ' || inAddress;
 
 
    -- проверка уникальности <Наименование>
