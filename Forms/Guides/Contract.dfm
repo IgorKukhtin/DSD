@@ -40,7 +40,6 @@ object ContractForm: TContractForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.HeaderHeight = 40
@@ -51,7 +50,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 100
       end
       object clInvNumberArchive: TcxGridDBColumn
         Caption = #8470' '#1072#1088#1093#1080#1074'.'
@@ -66,55 +65,81 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'JuridicalCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Options.Editing = False
+        Width = 57
       end
       object clJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = JuridicalChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 139
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Options.Editing = False
+        Width = 56
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PaidKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 76
       end
       object clSigningDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'SigningDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 83
       end
       object clStartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 68
       end
       object clEndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 84
       end
       object clContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContractKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 106
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
@@ -127,16 +152,30 @@ object ContractForm: TContractForm
       object clInfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = InfoMoneyChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 61
       end
       object clInfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = InfoMoneyChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 113
       end
       object clInfoMoneyDestinationCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
@@ -157,9 +196,16 @@ object ContractForm: TContractForm
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = InfoMoneyChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 107
       end
       object clPersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
@@ -198,7 +244,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 106
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -446,6 +492,24 @@ object ContractForm: TContractForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object PaidKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'PaidKindChoiceForm'
+      FormName = 'TPaidKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PaidKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -490,6 +554,24 @@ object ContractForm: TContractForm
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
+    object ContractKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ContractKindChoiceForm'
+      FormName = 'TContractKindForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'ContractKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'ContractKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProc = spErasedUnErased
@@ -503,6 +585,80 @@ object ContractForm: TContractForm
       ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = DataSource
+    end
+    object InfoMoneyChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'InfoMoneyChoiceForm'
+      FormName = 'TInfoMoney_ObjectForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyCode'
+        end
+        item
+          Name = 'InfoMoneyGroupId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyGroupId'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyGroupName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object JuridicalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'JuridicalChoiceForm'
+      FormName = 'TJuridical_ObjectForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'OKPO'
+          Component = ClientDataSet
+          ComponentItem = 'OKPO'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalCode'
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalCode'
+        end>
+      isShowModal = True
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -585,6 +741,19 @@ object ContractForm: TContractForm
         end>
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
+    end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -697,5 +866,121 @@ object ContractForm: TContractForm
     Params = <>
     Left = 514
     Top = 397
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Contract'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumber'
+        Component = ClientDataSet
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberArchive'
+        Component = ClientDataSet
+        ComponentItem = 'InvNumberArchive'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Component = ClientDataSet
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSigningDate'
+        Component = ClientDataSet
+        ComponentItem = 'SigningDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartDate'
+        Component = ClientDataSet
+        ComponentItem = 'StartDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Component = ClientDataSet
+        ComponentItem = 'EndDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalBasisId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractKindId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Component = ClientDataSet
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalId'
+        Component = ClientDataSet
+        ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAreaId'
+        Component = ClientDataSet
+        ComponentItem = 'AreaId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractArticleId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractArticleId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractStateKindId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindId'
+        ParamType = ptInput
+      end>
+    Left = 432
+    Top = 176
   end
 end

@@ -119,8 +119,8 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -223,6 +223,17 @@ object InfoMoney_ObjectForm: TInfoMoney_ObjectForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'NameAll'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = ClientDataSet
+          ComponentItem = 'Code'
+        end
+        item
+          Name = 'InfoMoneyGroupName'
+          Component = ClientDataSet
+          ComponentItem = 'InfoMoneyGroupName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072

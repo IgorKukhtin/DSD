@@ -90,6 +90,12 @@ type
     bbInsertRecCCK: TdxBarButton;
     actContractCondition: TdsdUpdateDataSet;
     clOKPO: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    PaidKindChoiceForm: TOpenChoiceForm;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    JuridicalChoiceForm: TOpenChoiceForm;
+    ContractKindChoiceForm: TOpenChoiceForm;
+    InfoMoneyChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
