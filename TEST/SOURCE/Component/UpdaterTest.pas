@@ -56,6 +56,7 @@ end;
 
 procedure TUpdaterTest.Test;
 begin
+  SaveFile(ExtractFileDir(ParamStr(0))+'\midas.dll');
   SaveFile(ExtractFileDir(ParamStr(0))+'\Upgrader4.exe');
   SaveFile(ExtractFileDir(ParamStr(0))+'\Project.exe');
 end;

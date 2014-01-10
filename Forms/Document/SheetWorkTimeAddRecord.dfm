@@ -321,7 +321,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   object PersonalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cepersonalgroup
-    FormName = 'TpersonalgroupForm'
+    FormName = 'TPersonalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

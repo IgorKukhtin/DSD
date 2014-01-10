@@ -50,7 +50,7 @@ type
     actUpdate: TdsdInsertUpdateAction;
     dsdSetErased: TdsdUpdateErased;
     dsdSetUnErased: TdsdUpdateErased;
-    dsdGridToExcel1: TdsdGridToExcel;
+    dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
