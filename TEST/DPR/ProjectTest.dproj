@@ -164,7 +164,7 @@
 			<DCCReference Include="..\..\Forms\Status.pas">
 				<Form>StatusForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Partner.pas">
+			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
 				<Form>PartnerForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Currency.pas">
@@ -785,7 +785,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
-			<DCCReference Include="..\..\Forms\PartnerEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 394
   ClientWidth = 797
   ExplicitWidth = 803
-  ExplicitHeight = 419
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -372,8 +372,8 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 139
-    Top = 352
+    Left = 331
+    Top = 360
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 184
@@ -526,8 +526,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 112
-    Top = 360
+    Left = 96
+    Top = 328
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -850,8 +850,8 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 55
+    Left = 232
+    Top = 143
   end
   object ContractKindGuides: TdsdGuides
     KeyField = 'Id'
