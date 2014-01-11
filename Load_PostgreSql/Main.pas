@@ -180,11 +180,16 @@ type
 
     function pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
+    function pLoadDocument_Sale_Fl:Integer;
+    function pLoadDocumentItem_Sale_Fl(SaveCount:Integer):Integer;
+    procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1, SaveCount2:Integer);
 
     function pLoadDocument_ReturnOut:Integer;
     procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
     function pLoadDocument_ReturnIn:Integer;
     procedure pLoadDocumentItem_ReturnIn(SaveCount:Integer);
+    function pLoadDocument_ReturnIn_Fl:Integer;
+    procedure pLoadDocumentItem_ReturnIn_Fl(SaveCount:Integer);
 
     function pLoadDocument_ProductionUnion:Integer;
     function pLoadDocumentItem_ProductionUnionMaster(SaveCount:Integer):Integer;
@@ -212,13 +217,13 @@ type
     procedure pLoadGuide_Fuel;
     procedure pLoadGuide_TicketFuel;
     procedure pLoadGuide_PaidKind;
-    procedure pLoadGuide_Contract;
+    procedure pLoadGuide_Contract_Fl;
     procedure pLoadGuide_ContractKind;
     procedure pLoadGuide_JuridicalGroup;
     procedure pLoadGuide_Juridical (isBill:Boolean);
-    procedure pLoadGuide_JuridicalTwo (isBill:Boolean);
+    procedure pLoadGuide_Juridical_Fl (isBill:Boolean);
     procedure pLoadGuide_Partner (isBill:Boolean);
-    procedure pLoadGuide_PartnerTwo (isBill:Boolean);
+    procedure pLoadGuide_Partner_Fl (isBill:Boolean);
     procedure pLoadGuide_Branch;
     procedure pLoadGuide_Business;
     procedure pLoadGuide_UnitGroup;
@@ -526,9 +531,9 @@ begin
 
      //!!!FLOAT!!!
      DataSource.DataSet:=fromFlQuery;
-     if not fStop then pLoadGuide_JuridicalTwo(false);
-     if not fStop then pLoadGuide_PartnerTwo(false);
-     if not fStop then pLoadGuide_Contract;
+     if not fStop then pLoadGuide_Juridical_Fl(false);
+     if not fStop then pLoadGuide_Partner_Fl(false);
+     if not fStop then pLoadGuide_Contract_Fl;
      if not fStop then DataSource.DataSet:=fromQuery;
      //
      //!!!Integer!!!
@@ -630,9 +635,20 @@ begin
                                            end;
      //
      tmpDate1:=NOw;
+
+     //!!!FLOAT!!!
+     DataSource.DataSet:=fromFlQuery;
+
+     if not fStop then myRecordCount1:=pLoadDocument_Sale_Fl;
+     if not fStop then myRecordCount2:=pLoadDocumentItem_Sale_Fl(myRecordCount1);
+     if not fStop then pLoadDocumentItem_Sale_Fl_Int(myRecordCount1,myRecordCount2);
+
+     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn_Fl;
+     if not fStop then pLoadDocumentItem_ReturnIn_Fl(myRecordCount1);
+     //!!!Integer!!!
      //
-     if not fStop then pLoadGuide_Juridical(true);
-     if not fStop then pLoadGuide_Partner(true);
+     //Fl if not fStop then pLoadGuide_Juridical(true);
+     //Fl if not fStop then pLoadGuide_Partner(true);
      //
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
@@ -647,13 +663,13 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_SendUnitBranch;
      if not fStop then pLoadDocumentItem_SendUnitBranch(myRecordCount1);
 
-     if not fStop then myRecordCount1:=pLoadDocument_Sale;
-     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     //Fl if not fStop then myRecordCount1:=pLoadDocument_Sale;
+     //Fl if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
      if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
-     if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
-     if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
+     //Fl if not fStop then myRecordCount1:=pLoadDocument_ReturnIn;
+     //Fl if not fStop then pLoadDocumentItem_ReturnIn(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ProductionUnion;
      if not fStop then myRecordCount2:=pLoadDocumentItem_ProductionUnionMaster(myRecordCount1);
@@ -1794,7 +1810,7 @@ begin
      myDisabledCB(cbJuridical);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_JuridicalTwo (isBill:Boolean);
+procedure TMainForm.pLoadGuide_Juridical_Fl (isBill:Boolean);
 var ParentId_PG_in,ParentId_PG_out,ParentId_PG_service:String;
 begin
      fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=2');//02-Поставщики
@@ -1941,7 +1957,7 @@ begin
      myDisabledCB(cbJuridical);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_Contract;
+procedure TMainForm.pLoadGuide_Contract_Fl;
 var ContractKindID_15,ContractKindID_16,ContractKindID_17,ContractKindID_18:String;
     PaidKindBN,PaidKindNal:String;
     zc_Enum_ContractConditionKind_DelayDayCalendar,zc_Enum_ContractConditionKind_DelayDayBank,zc_Enum_ContractConditionKind_BonusPercentSaleReturn,zc_Enum_ContractConditionKind_BonusPercentAccount:Integer;
@@ -2286,7 +2302,7 @@ begin
      myDisabledCB(cbContract);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
-procedure TMainForm.pLoadGuide_PartnerTwo (isBill:Boolean);
+procedure TMainForm.pLoadGuide_Partner_Fl (isBill:Boolean);
 begin
      if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
      //
@@ -7346,6 +7362,7 @@ begin
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Sale:Integer;
+//!!!!INTEGER
 begin
      Result:=0;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
@@ -7447,6 +7464,7 @@ begin
      myDisabledCB(cbSale);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!INTEGER
 procedure TMainForm.pLoadDocumentItem_Sale (SaveCount:Integer);
 begin
 //exit;
@@ -7662,6 +7680,384 @@ begin
              then fExecSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
              if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
              then fExecSqFromQuery('update dba.fBillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if (FieldByName('errInvNumber').AsString<>'')
+             then begin
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
+                  if not myExecToStoredProc_two then;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbSale);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+function TMainForm.pLoadDocument_Sale_Fl:Integer;
+begin
+     Result:=0;
+     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     myEnabledCB(cbSale);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('call dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+        Open;
+        Result:=RecordCount;
+        cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_movement_sale';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
+
+        toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
+
+        toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
+
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, '');
+
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
+        //
+        toStoredProc_two.StoredProcName:='gpSetErased_Movement';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInputOutput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
+             //
+             {}
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
+
+             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
+
+             if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
+
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
+             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
+
+             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
+             toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then fExecFlSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             {}
+             //
+             //!!!УДАЛЕНИЕ!!!
+             {toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+             if not myExecToStoredProc_two then ;
+             if (FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
+             then fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);}
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbSale);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+function TMainForm.pLoadDocumentItem_Sale_Fl (SaveCount:Integer):Integer;
+begin
+//exit;
+     Result:=0;
+     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     myEnabledCB(cbSale);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+
+        Add('     , case when Bill.FromId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
+        Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as AmountChangePercent');
+        Add('     , 0  as ChangePercentAmount');
+
+        Add('     , BillItems.OperPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , zc_rvYes() as isFl');
+        Add('     , case when GoodsProperty.Id is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар')
+           +'            when GoodsProperty_Detail.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
+           +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad group by GoodsPropertyId, KindPackageId)');
+        Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
+        Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
+        Add('     left outer join dba.GoodsProperty_Detail_byServer on GoodsProperty_Detail_byServer.Id = GoodsProperty_Detail_byLoad.Id_byLoad');
+        Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
+        Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+        Add('     left outer join dba.BillItems_i as BillItems_find on BillItems_find.Id = BillItems.BillItemsId_byLoad'
+           +'                                                      and BillItems_find.GoodsPropertyId=GoodsProperty.Id'
+           +'                                                      and (BillItems_find.KindPackageId=isnull(KindPackageId,0) or BillItems.GoodsPropertyId=1921)'
+           +'                                                      and BillItems_find.OperPrice=BillItems.OperPrice');
+        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
+           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
+           +'                                                                           and Bill_find.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
+           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill_find.ToId'
+           +'                                                                           and 1=1');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
+           +'  and Bill.Id_Postgres>0'
+// +'  and 1=0'
+// +'  and MovementId_Postgres = 10154'
+           );
+        Add('order by 2,3,1');
+        Open;
+        Result:=RecordCount;
+        cbSale.Caption:='3.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_movementitem_sale';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
+             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
+             then fExecFlSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then fExecFlSqFromQuery('update dba.fBillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             if (FieldByName('errInvNumber').AsString<>'')
+             then begin
+                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
+                  if not myExecToStoredProc_two then;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbSale);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+procedure TMainForm.pLoadDocumentItem_Sale_Fl_Int (SaveCount1,SaveCount2:Integer);
+begin
+exit;
+     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     //
+     myEnabledCB(cbSale);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select BillItems.Id as ObjectId');
+        Add('     , Bill.BillDate as BillDate');
+        Add('     , Bill.BillNumber as BillNumber');
+        Add('     , Bill.Id_Postgres as MovementId_Postgres');
+        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
+        Add('     , case when Bill.FromId=5'
+           +'                 then -1* BillItems_find.OperCount'
+           +'                      case when isnull(tmpBI_byDiscountWeight.DiscountWeight,0)<>0'
+           +'                                then -1 * BillItems_find.OperCount / (1 - tmpBI_byDiscountWeight.DiscountWeight/100)'
+           +'                                else -1 * BillItems_find.OperCount'
+           +'                 else -1* BillItems.OperCount'
+           +'       end as Amount');
+        Add('     , -1 * BillItems.OperCount as AmountPartner');
+        Add('     , case when Bill.FromId=5 then -1* BillItems_find.OperCount else -1* BillItems.OperCount end  as AmountChangePercent');
+        Add('     , isnull(tmpBI_byDiscountWeight.DiscountWeight,0) as ChangePercentAmount');
+        Add('     , BillItems.OperPrice as Price');
+        Add('     , 1 as CountForPrice');
+        Add('     , BillItems.OperCount_sh as HeadCount');
+        Add('     , BillItems.PartionStr_MB as PartionGoods');
+        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
+        Add('     , 0 as AssetId_Postgres');
+        Add('     , zc_rvYes() as isFl');
+        Add('     , case when GoodsProperty.Id is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар')
+           +'            when GoodsProperty_Detail.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
+           +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
+        Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , BillItems.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad');
+        Add('     left outer join dba.Bill_i AS Bill_find_two on Bill_find_two.Id = Bill_find.BillId_pg');
+
+        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad group by GoodsPropertyId, KindPackageId)');
+        Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
+        Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
+        Add('     left outer join dba.GoodsProperty_Detail_byServer on GoodsProperty_Detail_byServer.Id = GoodsProperty_Detail_byLoad.Id_byLoad');
+        Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
+        Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+        Add('     left outer join dba.BillItems_i as BillItems_find on BillItems_find.Id = BillItems.BillItemsId_byLoad'
+           +'                                                      and BillItems_find.GoodsPropertyId=GoodsProperty.Id'
+           +'                                                      and (BillItems_find.KindPackageId=isnull(KindPackageId,0) or BillItems.GoodsPropertyId=1921)'
+           +'                                                      and BillItems_find.OperPrice=BillItems.OperPrice');
+        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
+           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
+           +'                                                                           and Bill_find.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
+           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill_find.ToId'
+           +'                                                                           and 1=1');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
+           +'  and Bill.Id_Postgres>0'
+// +'  and 1=0'
+// +'  and MovementId_Postgres = 10154'
+           );
+        Add('order by 2,3,1');
+        Open;
+        cbSale.Caption:='3.1. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpinsertupdate_movementitem_sale';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        //
+        //DisableControls;
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin {EnableControls;}exit;end;
+             //
+             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
+             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
+             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
+             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
+             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
+             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
+             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
+             if not myExecToStoredProc then ;//exit;
+             //
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
+             then fExecFlSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             then fExecFlSqFromQuery('update dba.fBillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
              //
              if (FieldByName('errInvNumber').AsString<>'')
              then begin
@@ -8353,11 +8749,23 @@ procedure TMainForm.pLoadDocumentItem_ReturnOut(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!INTEGER
 function TMainForm.pLoadDocument_ReturnIn:Integer;
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!INTEGER
 procedure TMainForm.pLoadDocumentItem_ReturnIn(SaveCount:Integer);
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+function TMainForm.pLoadDocument_ReturnIn_Fl:Integer;
+begin
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+procedure TMainForm.pLoadDocumentItem_ReturnIn_Fl(SaveCount:Integer);
 begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
