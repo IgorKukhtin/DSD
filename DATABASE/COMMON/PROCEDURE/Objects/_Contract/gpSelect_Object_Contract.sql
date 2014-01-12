@@ -10,16 +10,18 @@ RETURNS TABLE (Id Integer, Code Integer
              , Comment TVarChar 
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
-             , ContractKindName TVarChar
+             , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , PaidKindName TVarChar
+             , JuridicalBasisId Integer, JuridicalBasisName TVarChar
+             
+             , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
-             , InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , PersonalCode Integer, PersonalName TVarChar
-             , AreaName TVarChar
-             , ContractArticleName TVarChar
-             , ContractStateKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             , AreaId Integer, AreaName TVarChar
+             , ContractArticleId Integer, ContractArticleName TVarChar
+             , ContractStateKindId Integer, ContractStateKindName TVarChar
              , OKPO TVarChar
              , isErased Boolean 
               )
@@ -43,24 +45,37 @@ BEGIN
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
        
+       , Object_ContractKind.Id        AS ContractKindId 
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
        , Object_Juridical.ValueData    AS JuridicalName
+
+       , Object_JuridicalBasis.Id           AS JuridicalBasisId
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+
+       , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
 
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
        , Object_InfoMoney_View.InfoMoneyDestinationCode
        , Object_InfoMoney_View.InfoMoneyDestinationName
+       , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
 
+       , Object_Personal_View.PersonalId    AS PersonalId
        , Object_Personal_View.PersonalCode  AS PersonalCode
        , Object_Personal_View.PersonalName  AS PersonalName
 
+       , Object_Area.Id                     AS AreaId
        , Object_Area.ValueData              AS AreaName
+
+       , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
+
+       , Object_ContractStateKind.Id        AS ContractStateKindId
        , Object_ContractStateKind.ValueData AS ContractStateKindName
 
        , ObjectHistory_JuridicalDetails_View.OKPO
@@ -87,6 +102,7 @@ BEGIN
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+        LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
         
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
@@ -121,6 +137,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 09.01.14         * add PaidKindId
  06.01.14                                         * add OKPO
  14.11.13         * add from redmaine               
  20.10.13                                        * add Object_Contract_View
