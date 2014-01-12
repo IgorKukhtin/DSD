@@ -73,15 +73,14 @@ type
     colKreditAccountGroupName: TcxGridDBColumn;
     colKreditAccountDirectionName: TcxGridDBColumn;
     colGoodsGroupName: TcxGridDBColumn;
-    colByObjectCode: TcxGridDBColumn;
-    colByObjectName: TcxGridDBColumn;
-    colGoodsName: TcxGridDBColumn;
+    colDirectionObjectCode: TcxGridDBColumn;
+    colDirectionObjectName: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colHeadCount: TcxGridDBColumn;
     colPartionGoods: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colGoodsKindName_comlete: TcxGridDBColumn;
+    clenGoodsKindName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     cxCurrencyEdit2: TcxCurrencyEdit;
@@ -128,6 +127,14 @@ type
     colAmountChangePercent: TcxGridDBColumn;
     colChangePercentAmount: TcxGridDBColumn;
     BooleanStoredProcAction1: TBooleanStoredProcAction;
+    colInvNumber: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
+    colDestinationObjectCode: TcxGridDBColumn;
+    colDestinationObjectName: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyName_Detail: TcxGridDBColumn;
+    colenPrice: TcxGridDBColumn;
+    colBusinessName: TcxGridDBColumn;
   private
   public
   end;

@@ -6,11 +6,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseFl(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
+    IN inChangeAmount        Boolean   , -- 
+    IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
+    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
+    IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
-    IN inHeadCount           TFloat    , -- Количество голов
-    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -26,7 +28,7 @@ BEGIN
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
      THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = inMovementId );
+         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = inMovementId);
      END IF;
      -- проверка - удаленный элемент документа не может корректироваться
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
@@ -34,6 +36,12 @@ BEGIN
          RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
      END IF;
 
+     IF inChangeAmount = FALSE
+     THEN
+         inAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0);
+         inAmountChangePercent:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0);
+         inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0);
+     END IF;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -50,17 +58,8 @@ BEGIN
      -- сохранили свойство <Цена за количество>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
      IF inGoodsId <> 0
      THEN
@@ -71,25 +70,18 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 08.09.13                                        * add zc_MIFloat_AmountChangePercent
- 02.09.13                                        * add zc_MIFloat_ChangePercentAmount
- 13.08.13                                        * add RAISE EXCEPTION
- 09.07.13                                        * add IF inGoodsId <> 0
- 18.07.13         * add inAssetId               
- 13.07.13         * 
-
+ 10.01.14                                        *
 */
 
 -- тест

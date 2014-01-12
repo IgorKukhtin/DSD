@@ -104,7 +104,7 @@ type
     colDestinationObjectCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInfoMoneyName_Detail: TcxGridDBColumn;
-    colPrice_comlete: TcxGridDBColumn;
+    colenPrice: TcxGridDBColumn;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
     EntryToExcel: TdsdGridToExcel;

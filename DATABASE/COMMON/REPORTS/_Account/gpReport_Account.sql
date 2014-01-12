@@ -167,9 +167,9 @@ BEGIN
                   , tmpMIReport.AccountId
                   , 0 AS SummStart
                   , 0 AS SummEnd
-                  , SUM (tmpMIReport.SummIn)  AS SummIn
-                  , SUM (tmpMIReport.SummOut) AS SummOut
-                  , tmpMIReport.OperPrice
+                  , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN tmpMIReport.SummIn - tmpMIReport.SummOut ELSE tmpMIReport.SummIn END)  AS SummIn
+                  , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.SummOut END) AS SummOut
+                  , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.OperPrice END AS OperPrice
                   , Movement.DescId AS MovementDescId
                   , tmpMIReport.MovementId
                   , tmpMIReport.OperDate

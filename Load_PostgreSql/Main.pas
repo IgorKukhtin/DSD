@@ -162,6 +162,7 @@ type
     procedure pCompleteDocument_Send(isLastComplete:Boolean);
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
     procedure pCompleteDocument_Sale(isLastComplete:Boolean);
+    procedure pCompleteDocument_Sale_Fl(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
     procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
@@ -534,7 +535,9 @@ begin
      if not fStop then pLoadGuide_Juridical_Fl(false);
      if not fStop then pLoadGuide_Partner_Fl(false);
      if not fStop then pLoadGuide_Contract_Fl;
+
      if not fStop then DataSource.DataSet:=fromQuery;
+     //!!!end FLOAT!!!
      //
      //!!!Integer!!!
      if not fStop then pLoadGuide_Measure;
@@ -645,6 +648,10 @@ begin
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn_Fl;
      if not fStop then pLoadDocumentItem_ReturnIn_Fl(myRecordCount1);
+
+     if not fStop then DataSource.DataSet:=fromQuery;
+     //!!!end FLOAT!!!
+
      //!!!Integer!!!
      //
      //Fl if not fStop then pLoadGuide_Juridical(true);
@@ -736,12 +743,21 @@ begin
      //
      tmpDate1:=NOw;
      //
+     //!!!FLOAT!!!
+     DataSource.DataSet:=fromFlQuery;
+
+     if not fStop then pCompleteDocument_Sale_Fl(True);
+
+     if not fStop then DataSource.DataSet:=fromQuery;
+     //!!!end FLOAT!!!
+
+     //!!!Integer!!!
      if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
      begin
           if not fStop then pCompleteDocument_Income(FALSE);
           if not fStop then pCompleteDocument_Send(FALSE);
           if not fStop then pCompleteDocument_SendOnPrice(FALSE);
-          if not fStop then pCompleteDocument_Sale(FALSE);
+          //Fl if not fStop then pCompleteDocument_Sale(FALSE);
           if not fStop then pCompleteDocument_ProductionUnion(FALSE);
           if not fStop then pCompleteDocument_ProductionSeparate(FALSE);
           if not fStop then pCompleteDocument_Inventory(FALSE);
@@ -752,7 +768,7 @@ begin
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then pCompleteDocument_Income(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
-     if not fStop then pCompleteDocument_Sale(cbLastComplete.Checked);
+     //Fl if not fStop then pCompleteDocument_Sale(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
@@ -2424,7 +2440,12 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecFlSqFromQuery(' update dba._pgPartner set PartnerId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+             then fExecFlSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
+                                   + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
+                                   + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
+                                    +'                                                    then ' + FormatToVarCharServer_notNULL('0')
+                                    +'                                               else '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                    +'                                          end'
                                     +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                     +'   and Main = '+FieldByName('Main').AsString
                                     );
@@ -5959,13 +5980,13 @@ begin
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -6059,8 +6080,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPacker',ftFloat,ptInput, 0);
@@ -6175,13 +6196,13 @@ begin
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -6278,8 +6299,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPacker',ftFloat,ptInput, 0);
@@ -6466,8 +6487,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -6550,8 +6571,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
@@ -6809,13 +6830,13 @@ begin
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -6936,8 +6957,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
@@ -7090,13 +7111,13 @@ begin
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -7249,8 +7270,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
@@ -7294,6 +7315,7 @@ begin
      myDisabledCB(cbSendUnitBranch);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
+//!!!!INTEGER
 procedure TMainForm.pCompleteDocument_Sale(isLastComplete:Boolean);
 begin
      if (not cbCompleteSale.Checked)or(not cbCompleteSale.Enabled) then exit;
@@ -7361,8 +7383,76 @@ begin
      myDisabledCB(cbCompleteSale);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
-function TMainForm.pLoadDocument_Sale:Integer;
+//!!!!FLOAT
+procedure TMainForm.pCompleteDocument_Sale_Fl(isLastComplete:Boolean);
+begin
+     if (not cbCompleteSale.Checked)or(not cbCompleteSale.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteSale);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.ObjectId');
+        Add('     , Bill.OperDate');
+        Add('     , Bill.InvNumber');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
+        Add('     as Bill');
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+        cbCompleteSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_Sale';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteSale);
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
+function TMainForm.pLoadDocument_Sale:Integer;
 begin
      Result:=0;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
@@ -7396,16 +7486,16 @@ begin
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gpSetErased_Movement';
         toStoredProc_two.OutputType := otResult;
@@ -7636,8 +7726,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
@@ -7729,25 +7819,23 @@ begin
 
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
+        toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberOrder',ftString,ptInput, '');
 
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, '');
-        //
-        toStoredProc_two.StoredProcName:='gpSetErased_Movement';
-        toStoredProc_two.OutputType := otResult;
-        toStoredProc_two.Params.Clear;
-        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
+
+        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -7762,9 +7850,12 @@ begin
 
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
 
+             if FieldByName('StatusId').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
              if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
+
+             toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('BillNumberClient1').AsString;
 
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
@@ -7779,15 +7870,8 @@ begin
 
              if not myExecToStoredProc then ;//exit;
              //
-             if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
+             if (FieldByName('Id_Postgres').AsInteger=0)
              then fExecFlSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
-             {}
-             //
-             //!!!УДАЛЕНИЕ!!!
-             {toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-             if not myExecToStoredProc_two then ;
-             if (FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
-             then fExecSqFromQuery('update dba.Bill set Id_Postgres=null where Id = '+FieldByName('ObjectId').AsString);}
              //
              Next;
              Application.ProcessMessages;
@@ -7827,14 +7911,15 @@ begin
         Add('     , 1 as CountForPrice');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар')
-           +'            when GoodsProperty_Detail.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
-           +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар')
+           +'            when KindPackage.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
+           +'            else '+FormatToVarCharServer_notNULL('')
+           +'       end as errInvNumber');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
-        Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad group by GoodsPropertyId, KindPackageId)');
+        Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
         Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
         Add('     left outer join dba.GoodsProperty_Detail_byServer on GoodsProperty_Detail_byServer.Id = GoodsProperty_Detail_byLoad.Id_byLoad');
@@ -7844,13 +7929,8 @@ begin
         Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
         Add('     left outer join dba.BillItems_i as BillItems_find on BillItems_find.Id = BillItems.BillItemsId_byLoad'
            +'                                                      and BillItems_find.GoodsPropertyId=GoodsProperty.Id'
-           +'                                                      and (BillItems_find.KindPackageId=isnull(KindPackageId,0) or BillItems.GoodsPropertyId=1921)'
+           +'                                                      and (BillItems_find.KindPackageId=isnull(KindPackage.Id,0) or BillItems.GoodsPropertyId=1921)'
            +'                                                      and BillItems_find.OperPrice=BillItems.OperPrice');
-        Add('     left outer join dba._Client_byDiscountWeight as tmpBI_byDiscountWeight on tmpBI_byDiscountWeight.GoodsPropertyId = GoodsProperty.Id'
-           +'                                                                           and tmpBI_byDiscountWeight.KindPackageId = KindPackage.Id'
-           +'                                                                           and Bill_find.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
-           +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill_find.ToId'
-           +'                                                                           and 1=1');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.Id_Postgres>0'
@@ -7868,22 +7948,20 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpinsertupdate_movementitem_sale';
+        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Sale_SybaseFl';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inChangeAmount',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAssetId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
         toStoredProc_two.OutputType := otResult;
@@ -7900,22 +7978,18 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inChangeAmount').Value:=FieldByName('IsChangeAmount').AsInteger=zc_rvYes;
              toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
              toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
              toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
              toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
              toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inHeadCount').Value:=FieldByName('HeadCount').AsFloat;
-             toStoredProc.Params.ParamByName('inPartionGoods').Value:=FieldByName('PartionGoods').AsString;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inAssetId').Value:=FieldByName('AssetId_Postgres').AsInteger;
              if not myExecToStoredProc then ;//exit;
              //
-             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger<>FieldByName('zc_rvYes').AsInteger)
+             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
              then fExecFlSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
-             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))and(FieldByName('isFl').AsInteger=FieldByName('zc_rvYes').AsInteger)
-             then fExecFlSqFromQuery('update dba.fBillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
              //
              if (FieldByName('errInvNumber').AsString<>'')
              then begin
@@ -8014,8 +8088,8 @@ exit;
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
@@ -8204,8 +8278,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -8286,8 +8360,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inPartionClose',ftBoolean,ptInput,false);
         toStoredProc.Params.AddParam ('inCount',ftFloat,ptInput, 0);
@@ -8553,8 +8627,8 @@ begin
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inPartionGoods',ftString,ptInput, '');
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
@@ -8628,8 +8702,8 @@ begin
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inHeadCount',ftFloat,ptInput, 0);
 //        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
@@ -9007,8 +9081,8 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, '');
-        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, '');
+        toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         //
         // добавляем все накладные из одного периода
         while not EOF do
