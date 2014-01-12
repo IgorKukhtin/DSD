@@ -276,6 +276,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdate'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -317,6 +321,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Action = InsertAction
       Category = 0
     end
+    object bbUpdate: TdxBarButton
+      Action = UpdateAction
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -346,19 +354,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
-    end
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -408,6 +403,19 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       isShowModal = True
     end
+    object actRefresh: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 4
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
     object MultiAction: TMultiAction
       Category = 'DSDLib'
       ActionList = <
@@ -430,29 +438,73 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           Value = '0'
         end
         item
-          Name = 'MemberName'
-          Value = ''
-          DataType = ftString
-        end
-        item
           Name = 'PositionId'
           Value = 0
-        end
-        item
-          Name = 'PositionName'
-          Value = ''
-          DataType = ftString
         end
         item
           Name = 'PositionLevelId'
           Value = 0
         end
         item
-          Name = 'PositionLevelName'
+          Name = 'PersonalGroupId'
+          Value = '0'
+        end
+        item
+          Name = 'UnitId'
           Value = ''
-          DataType = ftString
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'OperDate'
+          Value = 0d
+          Component = edOperDate
+          DataType = ftDateTime
         end>
       isShowModal = True
+      DataSetRefresh = actRefresh
+    end
+    object UpdateAction: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TSheetWorkTimeAddRecordForm'
+      GuiParams = <
+        item
+          Name = 'MemberId'
+          Component = MasterCDS
+          ComponentItem = 'MemberId'
+        end
+        item
+          Name = 'PositionId'
+          Component = MasterCDS
+          ComponentItem = 'PositionId'
+        end
+        item
+          Name = 'PositionLevelId'
+          Component = MasterCDS
+          ComponentItem = 'PositionLevelId'
+        end
+        item
+          Name = 'PersonalGroupId'
+          Component = MasterCDS
+          ComponentItem = 'PersonalGroupId'
+        end
+        item
+          Name = 'UnitId'
+          Value = ''
+          Component = GuidesUnit
+          ComponentItem = 'Key'
+        end
+        item
+          Name = 'OperDate'
+          Value = 0d
+          Component = edOperDate
+          DataType = ftDateTime
+        end>
+      isShowModal = True
+      ActionType = acUpdate
       DataSetRefresh = actRefresh
     end
   end
