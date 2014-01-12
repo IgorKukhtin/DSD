@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
--- DROP FUNCTION gpInsertUpdate_Object_Juridical();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>
@@ -11,6 +12,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
     IN inJuridicalGroupId    Integer   ,    -- Группы юридических лиц
     IN inGoodsPropertyId     Integer   ,    -- Классификаторы свойств товаров
     IN inInfoMoneyId         Integer   ,    -- Статьи назначения
+    IN inPriceListId         Integer   ,    -- Прайс-лист
+    IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inStartPromo          TDateTime ,    -- Дата начала акции
+    IN inEndPromo            TDateTime ,    -- Дата окончания акции
     IN inSession             TVarChar       -- текущий пользователь
 )
   RETURNS Integer AS
@@ -47,19 +52,33 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_InfoMoney(), ioId, inInfoMoneyId);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_PriceList(), ioId, inPriceListId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_PriceListPromo(), ioId, inPriceListPromoId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Juridical_StartPromo(), ioId, inStartPromo);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Juridical_EndPromo(), ioId, inEndPromo);
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.14         * add PriceList,
+                        PriceListPromo,
+                        StartPromo,
+                        EndPromo               
  06.01.14                                        * add проверка уникальность <Код>
  06.01.14                                        * add проверка уникальность <Наименование>
  20.10.13                                        * vbCode_calc:=0
