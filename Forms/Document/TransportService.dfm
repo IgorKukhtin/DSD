@@ -4,7 +4,7 @@
   ClientWidth = 595
   AddOnFormData.isSingle = False
   ExplicitWidth = 601
-  ExplicitHeight = 374
+  ExplicitHeight = 367
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -339,8 +339,7 @@
       item
         Name = 'injuridicalid'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
+        Component = ContractJuridicalGuides
         ParamType = ptInput
       end
       item
@@ -495,13 +494,13 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
+        Component = ContractJuridicalGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
+        Component = ContractJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -689,40 +688,6 @@
     Left = 480
     Top = 170
   end
-  object JuridicalGuides: TdsdGuides
-    KeyField = 'Id'
-    FormName = 'TJuridical_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 104
-    Top = 169
-  end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
     IdParam.Value = Null
@@ -733,7 +698,6 @@
         Guides = ContractGuides
       end
       item
-        Guides = JuridicalGuides
       end
       item
         Guides = PaidKindGuides
@@ -776,14 +740,10 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
-        Component = JuridicalGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -847,13 +807,13 @@
         Name = 'JuridicalId'
         Value = ''
         Component = ContractJuridicalGuides
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Key'
       end
       item
         Name = 'JuridicalName'
         Value = ''
         Component = ContractJuridicalGuides
-        ComponentItem = 'JuridicalName'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -886,13 +846,13 @@
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
-        ComponentItem = 'ContractId'
+        ComponentItem = 'Key'
       end
       item
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
-        ComponentItem = 'ContractName'
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 24

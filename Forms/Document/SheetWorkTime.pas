@@ -68,6 +68,8 @@ type
     MultiAction: TMultiAction;
     InsertAction: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
+    UpdateAction: TdsdInsertUpdateAction;
+    bbUpdate: TdxBarButton;
   private
   public
   end;

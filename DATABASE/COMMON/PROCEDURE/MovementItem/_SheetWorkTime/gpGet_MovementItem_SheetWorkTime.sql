@@ -40,11 +40,11 @@ BEGIN
             Object_PersonalGroup.ValueData   AS PersonalGroupName,
             OperDate.OperDate
          FROM (SELECT inOperDate AS OperDate) AS OperDate
-         LEFT JOIN Object AS Object_Member ON Object_Member.Id = inMemberId
-         LEFT JOIN Object AS Object_Position ON Object_Position.Id = inPositionId
-         LEFT JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = inPositionLevelId
-         LEFT JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = inPersonalGroupId
-         LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId;
+         JOIN Object AS Object_Member ON Object_Member.Id = inMemberId
+         JOIN Object AS Object_Position ON Object_Position.Id = inPositionId
+         JOIN Object AS Object_PositionLevel ON Object_PositionLevel.Id = inPositionLevelId
+         JOIN Object AS Object_PersonalGroup ON Object_PersonalGroup.Id = inPersonalGroupId
+         JOIN Object AS Object_Unit ON Object_Unit.Id = inUnitId;
 
 END;
 $BODY$

@@ -15,6 +15,7 @@ object ContractConditionKindForm: TContractConditionKindForm
   Position = poDesigned
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid

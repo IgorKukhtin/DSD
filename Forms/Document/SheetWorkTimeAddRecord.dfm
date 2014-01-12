@@ -1,4 +1,5 @@
 inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
+  ActiveControl = ceMember
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100' '#1074' '#1090#1072#1073#1077#1083#1100' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
   ClientHeight = 219
   ClientWidth = 358
@@ -59,6 +60,7 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 5
     Width = 167
   end
@@ -118,8 +120,6 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
   inherited ActionList: TActionList
     Top = 167
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProc = nil
-      StoredProcList = <>
       Caption = ''
     end
   end
@@ -133,49 +133,35 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
       item
         Name = 'MemberId'
         Value = ''
-        Component = MemberGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'MemberName'
-        Value = ''
-        Component = MemberGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end
       item
         Name = 'PositionId'
         Value = ''
-        Component = PositionGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PositionName'
-        Value = ''
-        Component = PositionGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end
       item
         Name = 'PositionLevelId'
         Value = ''
-        Component = PositionLevelGuides
-        ComponentItem = 'Key'
       end
       item
-        Name = 'PositionLevelName'
-        Value = ''
-        Component = PositionLevelGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
+        Name = 'PersonalGroupId'
+        Value = Null
+      end
+      item
+        Name = 'UnitId'
+        Value = Null
+      end
+      item
+        Name = 'OperDate'
+        Value = Null
+        DataType = ftDateTime
       end>
     Top = 136
   end
   inherited spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTime'
+    StoredProcName = 'gpInsertUpdate_MovementItem_SheetWorkTimeGroup'
     Params = <
       item
-        Name = 'inMemberid'
+        Name = 'inmemberid'
         Value = ''
         Component = MemberGuides
         ComponentItem = 'Key'
@@ -210,26 +196,159 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         ParamType = ptInput
       end
       item
+        Name = 'inoldmemberid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inoldpositionid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inoldpositionlevelid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inoldpersonalgroupid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inoperdate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
-      end
-      item
-        Name = 'iovalue'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'intypeid'
-        Value = Null
-        ParamType = ptInput
       end>
     Top = 152
   end
   inherited spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_MovementItem_SheetWorkTime'
+    Params = <
+      item
+        Name = 'inunitid'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UnitId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inmemberid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'MemberId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inpositionid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PositionId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inpositionlevelid'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PositionLevelId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalGroupId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PersonalGroupId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inoperdate'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'unitid'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'unitname'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'memberid'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'membername'
+        Value = ''
+        Component = MemberGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'positionid'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'positionname'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'positionlevelid'
+        Value = ''
+        Component = PositionLevelGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'positionlevelname'
+        Value = ''
+        Component = PositionLevelGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'operdate'
+        Value = 0d
+        Component = ceOperDate
+        DataType = ftDateTime
+      end
+      item
+        Name = 'PersonalGroupId'
+        Value = ''
+        Component = PersonalGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalGroupName'
+        Value = ''
+        Component = PersonalGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Top = 152
   end
   object MemberGuides: TdsdGuides
@@ -338,6 +457,21 @@ inherited SheetWorkTimeAddRecordForm: TSheetWorkTimeAddRecordForm
         DataType = ftString
       end>
     Left = 80
+    Top = 152
+  end
+  object GuidesFiller: TGuidesFiller
+    IdParam.Value = ''
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'MemberId'
+    GuidesList = <
+      item
+        Guides = MemberGuides
+      end
+      item
+        Guides = PositionGuides
+      end>
+    ActionItemList = <>
+    Left = 160
     Top = 152
   end
 end

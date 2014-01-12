@@ -32,7 +32,6 @@ type
     InfoMoneyGuides: TdsdGuides;
     CarGuides: TdsdGuides;
     ceJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
     cxLabel6: TcxLabel;
     GuidesFiller: TGuidesFiller;
     ceContract: TcxButtonEdit;

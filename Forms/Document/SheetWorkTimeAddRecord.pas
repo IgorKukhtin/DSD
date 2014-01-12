@@ -30,6 +30,7 @@ type
     PositionLevelGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     PersonalGroupGuides: TdsdGuides;
+    GuidesFiller: TGuidesFiller;
   private
     { Private declarations }
   public
