@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_Sale()
 
--- DROP FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
     IN inStartDate   TDateTime , --
@@ -8,10 +8,13 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , Checked Boolean
+             , PriceWithVAT Boolean
              , OperDatePartner TDateTime
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -22,14 +25,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
+     vbUserId:= inSession;
 
+     --
      RETURN QUERY 
      SELECT
              Movement.Id
@@ -38,9 +40,11 @@ BEGIN
            , Object_Status.ObjectCode    AS StatusCode
            , Object_Status.ValueData     AS StatusName
 
+           , MovementBoolean_Checked.ValueData           AS Checked
+           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+
            , MovementDate_OperDatePartner.ValueData      AS OperDatePartner
 
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData          AS VATPercent
            , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
@@ -50,6 +54,8 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+
+           , MovementString_InvNumberOrder.ValueData     AS InvNumberOrder
 
            , Object_From.Id                    AS FromId
            , Object_From.ValueData             AS FromName
@@ -79,6 +85,17 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
                                           
+            LEFT JOIN MovementBoolean AS MovementBoolean_Checked
+                                      ON MovementBoolean_Checked.MovementId =  Movement.Id
+                                     AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -107,13 +124,9 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-
-            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+            LEFT JOIN MovementString AS MovementString_InvNumberOrder
+                                     ON MovementString_InvNumberOrder.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -165,18 +178,16 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.01.14                                        * add Checked, InvNumberOrder
  13.08.13                                        * add TotalCountPartner               
  13.07.13          *
-
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inSession:= '2')

@@ -157,8 +157,8 @@ object PriceListItemForm: TPriceListItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -340,7 +340,22 @@ object PriceListItemForm: TPriceListItemForm
     LookupControl = edPriceList
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 136
   end
 end

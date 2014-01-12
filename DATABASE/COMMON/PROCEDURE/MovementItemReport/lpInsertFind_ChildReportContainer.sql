@@ -154,18 +154,18 @@ BEGIN
      ELSE
      IF inAccountKindId_1 IS NOT NULL
      THEN
-         vbChildReportContainerId:=(SELECT ChildReportContainerLink_Active.ChildReportContainerId
-                                    FROM ChildReportContainerLink AS ChildReportContainerLink_Active
+         vbChildReportContainerId:=(SELECT ChildReportContainerLink_1.ChildReportContainerId
+                                    FROM ChildReportContainerLink AS ChildReportContainerLink_1
+                                         JOIN ChildReportContainerLink AS ChildReportContainerLink_Active
+                                                                       ON ChildReportContainerLink_Active.ChildReportContainerId = ChildReportContainerLink_1.ChildReportContainerId
+                                                                      AND ChildReportContainerLink_Active.ContainerId = inActiveContainerId
+                                                                      AND ChildReportContainerLink_Active.AccountKindId = zc_Enum_AccountKind_Active()
                                          JOIN ChildReportContainerLink AS ChildReportContainerLink_Passive
-                                                                       ON ChildReportContainerLink_Passive.ChildReportContainerId = ChildReportContainerLink_Active.ChildReportContainerId
+                                                                       ON ChildReportContainerLink_Passive.ChildReportContainerId = ChildReportContainerLink_1.ChildReportContainerId
                                                                       AND ChildReportContainerLink_Passive.ContainerId = inPassiveContainerId
                                                                       AND ChildReportContainerLink_Passive.AccountKindId = zc_Enum_AccountKind_Passive()
-                                         JOIN ChildReportContainerLink AS ChildReportContainerLink_1
-                                                                       ON ChildReportContainerLink_1.ChildReportContainerId = ChildReportContainerLink_Active.ChildReportContainerId
-                                                                      AND ChildReportContainerLink_1.ContainerId = inContainerId_1
-                                                                      AND ChildReportContainerLink_1.AccountKindId = inAccountKindId_1
-                                    WHERE ChildReportContainerLink_Active.ContainerId = inActiveContainerId
-                                      AND ChildReportContainerLink_Active.AccountKindId = zc_Enum_AccountKind_Active()
+                                    WHERE ChildReportContainerLink_1.ContainerId = inContainerId_1
+                                      AND ChildReportContainerLink_1.AccountKindId = inAccountKindId_1
                                    );
      ELSE
          vbChildReportContainerId:=(SELECT ChildReportContainerLink_Active.ChildReportContainerId
@@ -227,6 +227,7 @@ ALTER FUNCTION lpInsertFind_ChildReportContainer (Integer, Integer, Integer, Int
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.01.14                                        * optimize2
  19.09.13                                        * optimize
  29.08.13                                        *
 */
