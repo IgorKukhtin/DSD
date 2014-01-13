@@ -1,9 +1,9 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
-  ClientHeight = 394
+  ClientHeight = 295
   ClientWidth = 797
   ExplicitWidth = 803
-  ExplicitHeight = 426
+  ExplicitHeight = 320
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -235,10 +235,11 @@ inherited ContractEditForm: TContractEditForm
     Left = 364
     Top = 0
     Width = 433
-    Height = 394
+    Height = 295
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
+    ExplicitHeight = 394
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -318,7 +319,7 @@ inherited ContractEditForm: TContractEditForm
       Left = 0
       Top = 224
       Width = 433
-      Height = 170
+      Height = 71
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -334,6 +335,7 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
+      ExplicitHeight = 170
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
