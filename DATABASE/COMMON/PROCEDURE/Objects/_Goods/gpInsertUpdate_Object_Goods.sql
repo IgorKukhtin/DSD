@@ -18,26 +18,34 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer;   
+   DECLARE vbCode Integer;   
+   DECLARE vbGroupNameFull TVarChar;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Goods());
    
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Goods());
-   IF COALESCE (inCode, 0) = 0  THEN vbCode_calc := 0; ELSE vbCode_calc := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   -- !!! vbCode:=lfGet_ObjectCode (inCode, zc_Object_Goods());
+   IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
    
    -- !!! проверка уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
+
+
+   -- расчетно свойство <Полное название группы>
+   vbGroupNameFull:= lfGet_Object_TreeNameFull (inGoodsGroupId, zc_ObjectLink_GoodsGroup_Parent());
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode_calc, inName
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Goods(), vbCode, inName
                                 , inAccessKeyId:= CASE WHEN inFuelId <> 0 AND NOT EXISTS (SELECT 1 FROM ObjectLink WHERE DescId = zc_ObjectLink_TicketFuel_Goods() AND ChildObjectId = ioId)
                                                             THEN zc_Enum_Process_AccessKey_TrasportAll()
                                                   END);
+
+   -- сохранили свойство <Полное название группы>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Goods_GroupNameFull(), ioId, vbGroupNameFull);
    -- сохранили свойство <Вес>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Goods_Weight(), ioId, inWeight);
    -- сохранили связь с <Группой товара>
@@ -64,12 +72,13 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods (Integer, Integer, TVarChar, TFloat, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.01.14                                        * add vbGroupNameFull
  14.12.13                                        * add inAccessKeyId
- 20.10.13                                        * vbCode_calc:=0
+ 20.10.13                                        * vbCode:=0
  29.09.13                                        * add zc_ObjectLink_Goods_Fuel
  01.09.13                                        * add zc_ObjectLink_Goods_Business
  30.06.13                                        * add vb
- 20.06.13          * vbCode_calc:=lpGet_ObjectCode (inCode, zc_Object_Goods());
+ 20.06.13          * vbCode:=lpGet_ObjectCode (inCode, zc_Object_Goods());
  16.06.13                                        * IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL ...
  11.06.13          *
  11.05.13                                        * rem lpCheckUnique_Object_ValueData

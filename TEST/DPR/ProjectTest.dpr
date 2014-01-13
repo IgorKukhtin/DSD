@@ -283,7 +283,6 @@ uses
   MovementDesc in '..\..\Forms\Kind\MovementDesc.pas' {MovementDescForm: TParentForm},
   JuridicalEdit in '..\..\Forms\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   JuridicalDetailsTest in '..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas',
-  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
   WorkTimeKind_Object in '..\..\Forms\Enum\WorkTimeKind_Object.pas' {WorkTimeKind_ObjectForm: TParentForm},
   Calendar in '..\..\Forms\Guides\Calendar.pas' {CalendarForm: TParentForm},
   GoodsTree_Object in '..\..\Forms\Guides\GoodsTree_Object.pas' {GoodsTree_ObjectForm: TParentForm},
@@ -311,7 +310,8 @@ uses
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
-  SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm};
+  SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
+  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
 
 {$R *.RES}
 

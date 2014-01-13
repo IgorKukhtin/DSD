@@ -11,7 +11,8 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)
@@ -101,6 +102,16 @@ type
     clPaidKindName: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    cePriceList: TcxButtonEdit;
+    dsdPriceListGuides: TdsdGuides;
+    cxLabel15: TcxLabel;
+    cePriceListPromo: TcxButtonEdit;
+    dsdPriceListPromoGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    edEndPromo: TcxDateEdit;
+    edStartPromo: TcxDateEdit;
   private
     { Private declarations }
   public

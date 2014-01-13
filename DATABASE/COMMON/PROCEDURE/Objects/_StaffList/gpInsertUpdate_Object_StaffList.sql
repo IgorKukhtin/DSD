@@ -18,24 +18,23 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_StaffList(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbCode_calc Integer; 
+   DECLARE vbCode Integer; 
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffList());
+   -- vbUserId := lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_StaffList());
    vbUserId := inSession;
    
-      -- пытаемся найти код
+   -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
    -- Если код не установлен, определяем его как последний+1
-   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_StaffList());
+   vbCode:= lfGet_ObjectCode (inCode, zc_Object_StaffList());
 
    -- проверка уникальности для свойства <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StaffList(), vbCode_calc);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_StaffList(), vbCode);
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffList(), vbCode_calc, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_StaffList(), vbCode, '');
    
    -- сохранили свойство <Общий план часов за месяц на человека>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_StaffList_HoursPlan(), ioId, inHoursPlan);

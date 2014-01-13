@@ -265,6 +265,8 @@ type
     clComment: TcxGridDBColumn;
     colWeightTranspor: TcxGridDBColumn;
     colDistanceWeightTransport: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

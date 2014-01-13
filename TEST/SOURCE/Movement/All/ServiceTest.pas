@@ -52,6 +52,10 @@ begin
   BusinessId := 0;
   ContractId:=0;
   InfoMoneyId := 0;
+  with TInfoMoneyTest.Create.GetDataSet do begin
+     if Locate('Code', '21501', []) then
+        InfoMoneyId := FieldByName('Id').AsInteger;
+  end;
   JuridicalId := TJuridical.Create.GetDefault;
   JuridicalBasisId := TJuridical.Create.GetDefault;
   UnitId := 0;

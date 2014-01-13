@@ -70,8 +70,8 @@ inherited ContractEditForm: TContractEditForm
     Width = 215
   end
   object edSigningDate: TcxDateEdit [10]
-    Left = 16
-    Top = 63
+    Left = 18
+    Top = 58
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False

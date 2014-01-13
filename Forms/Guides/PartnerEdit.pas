@@ -7,7 +7,8 @@ uses
   Vcl.Menus, cxControls, cxContainer, cxEdit, dsdGuides, cxMaskEdit,
   cxButtonEdit, cxCurrencyEdit, cxLabel, Vcl.Controls, cxTextEdit, dsdDB,
   dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore, dsdAddOn,
-  Vcl.StdCtrls, cxButtons, dxSkinsCore, dxSkinsDefaultPainters;
+  Vcl.StdCtrls, cxButtons, dxSkinsCore, dxSkinsDefaultPainters, Vcl.ComCtrls,
+  dxCore, cxDateUtils, cxDropDownEdit, cxCalendar;
 
 type
   TPartnerEditForm = class(TAncestorEditDialogForm)
@@ -33,6 +34,16 @@ type
     dsdRouteGuides: TdsdGuides;
     cePrepareDayCount: TcxCurrencyEdit;
     ceDocumentDayCount: TcxCurrencyEdit;
+    cxLabel9: TcxLabel;
+    cxLabel10: TcxLabel;
+    cePriceList: TcxButtonEdit;
+    dsdPriceListGuides: TdsdGuides;
+    cePriceListPromo: TcxButtonEdit;
+    dsdPriceListPromoGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    cxLabel12: TcxLabel;
+    edStartPromo: TcxDateEdit;
+    edEndPromo: TcxDateEdit;
 
   private
     { Private declarations }

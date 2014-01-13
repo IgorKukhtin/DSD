@@ -13,6 +13,9 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
                RouteSortingId Integer, RouteSortingCode Integer, RouteSortingName TVarChar,
                PersonalTakeId Integer, PersonalTakeCode Integer, PersonalTakeName TVarChar,
                OKPO TVarChar,
+               PriceListId Integer, PriceListName TVarChar, 
+               PriceListPromoId Integer, PriceListPromoName TVarChar,
+               StartPromo TDateTime, EndPromo TDateTime,
                isErased Boolean
               )
 AS
@@ -54,6 +57,15 @@ BEGIN
          , CAST ('' as TVarChar)  AS PersonalTakeName
                   
          , CAST ('' as TVarChar)  AS OKPO
+
+         , CAST (0 as Integer)    AS PriceListId 
+         , CAST ('' as TVarChar)  AS PriceListName 
+
+         , CAST (0 as Integer)    AS PriceListPromoId 
+         , CAST ('' as TVarChar)  AS PriceListPromoName 
+       
+         , CURRENT_DATE :: TDateTime AS StartPromo
+         , CURRENT_DATE :: TDateTime AS EndPromo
 
          , Object_JuridicalGroup.isErased AS isErased
          
@@ -97,15 +109,24 @@ BEGIN
                   
          , ObjectHistory_JuridicalDetails_View.OKPO
 
+         , Object_PriceList.Id         AS PriceListId 
+         , Object_PriceList.ValueData  AS PriceListName 
+
+         , Object_PriceListPromo.Id         AS PriceListPromoId 
+         , Object_PriceListPromo.ValueData  AS PriceListPromoName 
+       
+         , ObjectDate_StartPromo.ValueData AS StartPromo
+         , ObjectDate_EndPromo.ValueData   AS EndPromo 
+       
          , Object_Partner.isErased   AS isErased
          
      FROM Object AS Object_Partner
-          LEFT JOIN ObjectString AS ObjectString_GLNCode 
-                                 ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
-                                AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
-          LEFT JOIN ObjectString AS ObjectString_Address
-                                 ON ObjectString_Address.ObjectId = Object_Partner.Id
-                                AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+         LEFT JOIN ObjectString AS ObjectString_GLNCode 
+                                ON ObjectString_GLNCode.ObjectId = Object_Partner.Id 
+                               AND ObjectString_GLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+         LEFT JOIN ObjectString AS ObjectString_Address
+                                ON ObjectString_Address.ObjectId = Object_Partner.Id
+                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
 
          LEFT JOIN ObjectFloat AS Partner_PrepareDayCount 
                                ON Partner_PrepareDayCount.ObjectId = Object_Partner.Id
@@ -114,6 +135,14 @@ BEGIN
          LEFT JOIN ObjectFloat AS Partner_DocumentDayCount 
                                ON Partner_DocumentDayCount.ObjectId = Object_Partner.Id
                               AND Partner_DocumentDayCount.DescId = zc_ObjectFloat_Partner_DocumentDayCount()                                                              
+
+         LEFT JOIN ObjectDate AS ObjectDate_StartPromo
+                              ON ObjectDate_StartPromo.ObjectId = Object_Partner.Id
+                             AND ObjectDate_StartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
+
+         LEFT JOIN ObjectDate AS ObjectDate_EndPromo
+                              ON ObjectDate_EndPromo.ObjectId = Object_Partner.Id
+                             AND ObjectDate_EndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
 
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_Partner.Id 
@@ -141,6 +170,16 @@ BEGIN
          
          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                              ON ObjectLink_Partner_PriceList.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Partner_PriceList.ChildObjectId
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo 
+                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_Partner.Id 
+                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
+         LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId         
+
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
@@ -152,6 +191,10 @@ ALTER FUNCTION gpSelect_Object_Partner (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.14         * add PriceList,
+                        PriceListPromo,
+                        StartPromo,
+                        EndPromo                
  06.01.14                                        * add zc_ObjectString_Partner_Address
  12.10.13                                        * !!!первого запроса быть не должно!!!
  30.09.13                                        * add Object_Personal_View

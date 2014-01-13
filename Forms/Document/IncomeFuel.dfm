@@ -578,7 +578,7 @@ object IncomeFuelForm: TIncomeFuelForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colPrice_comlete: TcxGridDBColumn
+          object colenPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'

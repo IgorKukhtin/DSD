@@ -1,6 +1,8 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
@@ -12,7 +14,13 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
     IN inRouteId             Integer   ,    -- Маршрут
     IN inRouteSortingId      Integer   ,    -- Сортировка маршрутов
-    IN inPersonalTakeId      Integer   ,    -- Сотрудник (экспедитор)  
+    IN inPersonalTakeId      Integer   ,    -- Сотрудник (экспедитор) 
+    
+    IN inPriceListId         Integer   ,    -- Прайс-лист
+    IN inPriceListPromoId    Integer   ,    -- Прайс-лист(Акционный)
+    IN inStartPromo          TDateTime ,    -- Дата начала акции
+    IN inEndPromo            TDateTime ,    -- Дата окончания акции     
+    
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -67,18 +75,33 @@ BEGIN
    -- сохранили связь с <Сотрудник (экспедитор)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTake(), ioId, inPersonalTakeId);
 
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceListPromo(), ioId, inPriceListPromoId);
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_StartPromo(), ioId, inStartPromo);
+      -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Partner_EndPromo(), ioId, inEndPromo);
+   
+   
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
    
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 12.01.14         * add PriceList,
+                        PriceListPromo,
+                        StartPromo,
+                        EndPromo
  06.01.14                                        * add inAddress
  06.01.14                                        * add проверка уникальность <Код>
  06.01.14                                        * add проверка уникальность <Наименование>

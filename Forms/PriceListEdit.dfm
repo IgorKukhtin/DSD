@@ -2,8 +2,8 @@
   Left = 0
   Top = 0
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
-  ClientHeight = 142
-  ClientWidth = 349
+  ClientHeight = 179
+  ClientWidth = 354
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 56
-    Top = 109
+    Left = 64
+    Top = 146
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 216
-    Top = 109
+    Top = 146
     Width = 75
     Height = 25
     Action = dsdFormClose1
@@ -61,6 +61,26 @@
     TabOrder = 1
     Width = 273
   end
+  object edPriceWithVAT: TcxCheckBox
+    Left = 40
+    Top = 106
+    Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
+    TabOrder = 6
+    Width = 89
+  end
+  object cxLabel2: TcxLabel
+    Left = 160
+    Top = 108
+    Caption = #1053#1044#1057
+  end
+  object ceVATPercent: TcxCurrencyEdit
+    Left = 192
+    Top = 106
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 8
+    Width = 57
+  end
   object ActionList: TActionList
     Left = 296
     Top = 72
@@ -74,6 +94,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
     end
@@ -111,6 +132,20 @@
         Component = edMeasureName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inPriceWithVAT'
+        Value = 'False'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inVATPercent'
+        Value = 0.000000000000000000
+        Component = ceVATPercent
+        DataType = ftFloat
+        ParamType = ptInput
       end>
     Left = 240
     Top = 48
@@ -147,9 +182,21 @@
         Value = ''
         Component = edMeasureName
         DataType = ftString
+      end
+      item
+        Name = 'PriceWithVAT'
+        Value = 'False'
+        Component = edPriceWithVAT
+        DataType = ftBoolean
+      end
+      item
+        Name = 'VATPercent'
+        Value = 0.000000000000000000
+        Component = ceVATPercent
+        DataType = ftFloat
       end>
     Left = 192
-    Top = 88
+    Top = 56
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

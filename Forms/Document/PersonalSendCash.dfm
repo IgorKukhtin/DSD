@@ -420,6 +420,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
             DataBinding.FieldName = 'DestinationObjectCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 50
@@ -428,6 +429,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'DestinationObjectName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
@@ -436,13 +438,29 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072
             DataBinding.FieldName = 'BusinessCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
           object colBusinessName: TcxGridDBColumn
             Caption = #1041#1080#1079#1085#1077#1089
             DataBinding.FieldName = 'BusinessName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            Width = 45
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
             Width = 70
           end
           object colAccountOnComplete: TcxGridDBColumn
@@ -478,6 +496,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 93
@@ -486,6 +505,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1057#1090#1072#1090#1100#1103' '#1076#1077#1090#1072#1083#1100#1085#1086
             DataBinding.FieldName = 'InfoMoneyName_Detail'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -541,8 +561,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

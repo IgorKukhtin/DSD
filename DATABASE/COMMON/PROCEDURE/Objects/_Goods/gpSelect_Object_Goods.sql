@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , GoodsGroupId Integer, GoodsGroupName TVarChar
+             , GoodsGroupId Integer, GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , MeasureName TVarChar
              , TradeMarkName TVarChar
              , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar, InfoMoneyId Integer
@@ -31,8 +31,9 @@ BEGIN
             , Object_Goods.ObjectCode     AS Code
             , Object_Goods.ValueData      AS Name
 
-            , Object_GoodsGroup.Id         AS GoodsGroupId
-            , Object_GoodsGroup.ValueData  AS GoodsGroupName 
+            , Object_GoodsGroup.Id        AS GoodsGroupId
+            , Object_GoodsGroup.ValueData AS GoodsGroupName 
+            , ObjectString_Goods_GoodsGroupFull.ValueData AS GoodsGroupNameFull
 
             , Object_Measure.ValueData     AS MeasureName
 
@@ -66,6 +67,10 @@ BEGIN
              LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                                                   AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
                  
+             LEFT JOIN ObjectString AS ObjectString_Goods_GoodsGroupFull
+                                    ON ObjectString_Goods_GoodsGroupFull.ObjectId = Object_Goods.Id
+                                   AND ObjectString_Goods_GoodsGroupFull.DescId = zc_ObjectString_Goods_GroupNameFull()
+
              LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                   ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
                                  AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -117,6 +122,7 @@ ALTER FUNCTION gpSelect_Object_Goods (TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 13.01.14                                        * add GoodsGroupNameFull
  14.12.13                                        * add inAccessKeyId
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport

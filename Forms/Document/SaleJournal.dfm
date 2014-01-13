@@ -53,15 +53,79 @@ object SaleJournalForm: TSaleJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummMVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSummPVAT
+        end>
       DataController.Summary.SummaryGroups = <>
+      Images = dmMain.SortImageList
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.Footer = True
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -98,7 +162,12 @@ object SaleJournalForm: TSaleJournalForm
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 50
+      end
+      object colOperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        DataBinding.FieldName = 'OperDatePartner'
+        Width = 50
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
@@ -177,6 +246,18 @@ object SaleJournalForm: TSaleJournalForm
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentVert = vaCenter
       end
+      object colInvNumberOrder: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080
+        DataBinding.FieldName = 'InvNumberOrder'
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object colChecked: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+        DataBinding.FieldName = 'Checked'
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
       object colCarName: TcxGridDBColumn
         Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
         DataBinding.FieldName = 'CarName'
@@ -247,8 +328,8 @@ object SaleJournalForm: TSaleJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -375,6 +456,7 @@ object SaleJournalForm: TSaleJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -493,7 +575,7 @@ object SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'inIsLastComplete'
-        Value = Null
+        Value = True
         DataType = ftBoolean
         ParamType = ptInput
       end>

@@ -85,6 +85,9 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     colTotalCount: TcxGridDBColumn;
+    colChecked: TcxGridDBColumn;
+    colInvNumberOrder: TcxGridDBColumn;
+    colOperDatePartner: TcxGridDBColumn;
   private
   public
   end;
