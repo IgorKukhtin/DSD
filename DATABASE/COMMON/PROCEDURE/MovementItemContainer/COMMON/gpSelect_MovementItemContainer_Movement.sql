@@ -12,6 +12,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , KreditAmount TFloat, KreditAccountGroupName TVarChar, KreditAccountDirectionName TVarChar, KreditAccountName  TVarChar
              , Price TFloat
              , AccountOnComplete Boolean, DirectionObjectCode Integer, DirectionObjectName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
@@ -45,6 +46,8 @@ BEGIN
            , Object_Account_View.onComplete AS AccountOnComplete
            , tmpMovementItemContainer.DirectionObjectCode
            , CAST (tmpMovementItemContainer.DirectionObjectName AS TVarChar) AS DirectionObjectName
+           , tmpMovementItemContainer.BranchCode
+           , tmpMovementItemContainer.BranchName
            , tmpMovementItemContainer.BusinessCode
            , tmpMovementItemContainer.BusinessName
            , tmpMovementItemContainer.GoodsGroupCode
@@ -76,6 +79,8 @@ BEGIN
                   END || Object_Direction.ValueData AS DirectionObjectName
 
 
+                , Object_Branch.ObjectCode    AS BranchCode
+                , Object_Branch.ValueData     AS BranchName
                 , Object_Business.ObjectCode  AS BusinessCode
                 , Object_Business.ValueData   AS BusinessName
 
@@ -144,6 +149,19 @@ BEGIN
                                               AND ContainerLinkObject_Car.ObjectId <> 0
                  LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = COALESCE (ContainerLinkObject_ProfitLoss.ObjectId, COALESCE (ContainerLinkObject_Juridical.ObjectId, COALESCE (ContainerLinkObject_Member.ObjectId, COALESCE (ContainerLinkObject_Car.ObjectId, ContainerLinkObject_Unit.ObjectId))))
 
+                 -- вот так "не просто" выбираем филиал
+                 LEFT JOIN (SELECT MAX (MovementItemReport.MovementItemId) AS MovementItemId, ReportContainerLink.ContainerId
+                            FROM MovementItemReport
+                                 JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MovementItemReport.ReportContainerId
+                                                         AND ReportContainerLink.AccountId = zc_Enum_Account_100301()
+                            WHERE MovementItemReport.MovementId = inMovementId
+                            GROUP BY ReportContainerLink.ContainerId
+                           ) AS MIReport_MI ON MIReport_MI.ContainerId = MovementItemContainer.ContainerId
+                 LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
+                                                  ON MILinkObject_Branch.MovementItemId = MIReport_MI.MovementItemId -- COALESCE (MovementItemContainer.MovementItemId, MIReport_MI.MovementItemId)
+                                                 AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
+                 LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
+
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Business
                                                ON ContainerLinkObject_Business.ContainerId = MovementItemContainer.ContainerId -- COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Business.DescId = zc_ContainerLinkObject_Business()
@@ -204,6 +222,8 @@ BEGIN
                    , Container.ObjectId
                    , MovementItemContainer.Id
                    , MovementItemContainer.isActive
+                   , Object_Branch.ObjectCode
+                   , Object_Branch.ValueData
                    , Object_Business.ObjectCode
                    , Object_Business.ValueData
                    , Object_Direction.ObjectCode
@@ -235,13 +255,14 @@ BEGIN
      
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.01.13                                        * add Branch : вот так "не просто" выбираем филиал
  21.12.13                                        * Personal -> Member
  01.11.13                                        * change DebetAccountName and KreditAccountName
  31.10.13                                        * add InvNumber and OperDate

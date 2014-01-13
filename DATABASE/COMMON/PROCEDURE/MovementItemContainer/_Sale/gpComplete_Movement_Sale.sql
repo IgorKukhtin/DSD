@@ -1,7 +1,7 @@
 -- Function: gpComplete_Movement_Sale()
 
--- DROP FUNCTION gpComplete_Movement_Sale (Integer, TVarChar);
--- DROP FUNCTION gpComplete_Movement_Sale (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_Sale (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_Sale(
     IN inMovementId        Integer               , -- ключ Документа
@@ -897,8 +897,8 @@ BEGIN
 
 
      -- 4.1.1. создаем контейнеры для Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная)
-     UPDATE _tmpItem SET ContainerId_ProfitLoss_10100       = _tmpItem_byDestination.ContainerId_ProfitLoss_10100
-                       , ContainerId_ProfitLoss_10400         = _tmpItem_byDestination.ContainerId_ProfitLoss_10400
+     UPDATE _tmpItem SET ContainerId_ProfitLoss_10100 = _tmpItem_byDestination.ContainerId_ProfitLoss_10100
+                       , ContainerId_ProfitLoss_10400 = _tmpItem_byDestination.ContainerId_ProfitLoss_10400
                        , ContainerId_ProfitLoss_10500 = _tmpItem_byDestination.ContainerId_ProfitLoss_10500
      FROM (SELECT -- для Сумма реализации
                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()

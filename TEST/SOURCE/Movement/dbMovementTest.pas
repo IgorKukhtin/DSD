@@ -93,8 +93,9 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
+             InvNumberOrder:String;
              FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalId, RouteId, RouteSortingId: Integer
              ): integer;
     constructor Create; override;
@@ -599,8 +600,9 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     OperDatePartner: TDateTime;
-    PriceWithVAT: Boolean;
+    Checked,PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
+    InvNumberOrder:String;
     FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalId,RouteId, RouteSortingId: Integer;
 begin
   Id:=0;
@@ -608,9 +610,12 @@ begin
   OperDate:= Date;
   OperDatePartner:= Date;
 
+  Checked:=true;
   PriceWithVAT:=true;
   VATPercent:=20;
   ChangePercent:=-10;
+
+  InvNumberOrder:='';
 
   FromId := TPartnerTest.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
@@ -623,18 +628,19 @@ begin
   RouteSortingId:=0;
   //
   result := InsertUpdateMovementSale(Id, InvNumber, OperDate,
-             OperDatePartner, PriceWithVAT,
+             OperDatePartner, Checked, PriceWithVAT,
              VATPercent, ChangePercent,
+             InvNumberOrder,
              FromId, ToId, PaidKindId, ContractId, CarId,
              PersonalDriverId, PersonalId, RouteId, RouteSortingId);
 
 end;
 
 function TMovementSaleTest.InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId,
-             PersonalDriverId, PersonalId, RouteId, RouteSortingId: Integer):Integer;
+             InvNumberOrder:String;
+             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId, PersonalId, RouteId, RouteSortingId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -643,9 +649,13 @@ begin
 
   FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
 
+  FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
+
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
+
+  FParams.AddParam('inInvNumberOrder', ftString, ptInput, InvNumberOrder);
 
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);

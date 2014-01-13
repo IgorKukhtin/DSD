@@ -69,7 +69,7 @@ begin
   JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
   GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
   InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;
-  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', 'GLNCode', true, JuridicalGroupId, GoodsPropertyId, InfoMoneyId);
+  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', 'GLNCode', false, JuridicalGroupId, GoodsPropertyId, InfoMoneyId);
   inherited;
 end;
 

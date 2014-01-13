@@ -128,6 +128,8 @@ type
     DeleteMovement: TChangeGuidesStatus;
     colOperDate: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

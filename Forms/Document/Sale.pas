@@ -135,6 +135,9 @@ type
     colInfoMoneyName_Detail: TcxGridDBColumn;
     colenPrice: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
+    colBusinessCode: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
   private
   public
   end;
