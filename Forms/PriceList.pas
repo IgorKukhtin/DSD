@@ -55,6 +55,8 @@ type
     spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clPriceWithVAT: TcxGridDBColumn;
+    Ò‰VATPercen: TcxGridDBColumn;
   private
     { Private declarations }
   public

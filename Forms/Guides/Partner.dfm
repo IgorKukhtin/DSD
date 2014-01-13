@@ -2,8 +2,8 @@ object PartnerForm: TPartnerForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
-  ClientHeight = 473
-  ClientWidth = 750
+  ClientHeight = 464
+  ClientWidth = 834
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,10 +20,13 @@ object PartnerForm: TPartnerForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 750
-    Height = 447
+    Width = 834
+    Height = 438
     Align = alClient
     TabOrder = 4
+    ExplicitLeft = 8
+    ExplicitTop = 18
+    ExplicitWidth = 804
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,33 +50,71 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 43
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 113
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
-        Width = 200
+        Width = 154
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 115
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 52
+      end
+      object clPriceListName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        DataBinding.FieldName = 'PriceListName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PriceListChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 84
+      end
+      object clPriceListPromoName: TcxGridDBColumn
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+        DataBinding.FieldName = 'PriceListPromoName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PriceListPromoChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 86
+      end
+      object clStartPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'StartPromo'
+        Width = 85
+      end
+      object clEndPromo: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+        DataBinding.FieldName = 'EndPromo'
+        Width = 88
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -300,6 +341,42 @@ object PartnerForm: TPartnerForm
       isSetErased = False
       DataSource = DataSource
     end
+    object PriceListPromoChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'PriceListPromoChoiceForm'
+      FormName = 'TPriceListForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PriceListPromoId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PriceListPromoName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object PriceListChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'PriceListChoiceForm'
+      FormName = 'TPriceListForm'
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ClientDataSet
+          ComponentItem = 'PriceListId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ClientDataSet
+          ComponentItem = 'PriceListName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <
@@ -457,6 +534,32 @@ object PartnerForm: TPartnerForm
         Name = 'inPersonalTakeId'
         Component = ClientDataSet
         ComponentItem = 'PersonalTakeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId'
+        Component = ClientDataSet
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListPromoId'
+        Component = ClientDataSet
+        ComponentItem = 'PriceListPromoId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartPromo'
+        Component = ClientDataSet
+        ComponentItem = 'StartPromo'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndPromo'
+        Component = ClientDataSet
+        ComponentItem = 'EndPromo'
+        DataType = ftDateTime
         ParamType = ptInput
       end>
     Left = 88

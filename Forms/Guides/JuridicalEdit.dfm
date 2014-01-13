@@ -3,7 +3,7 @@
   ClientHeight = 364
   ClientWidth = 851
   ExplicitWidth = 857
-  ExplicitHeight = 389
+  ExplicitHeight = 396
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -132,7 +132,7 @@
       Height = 364
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = ContractTS
+      Properties.ActivePage = PartnerTS
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 364
       ClientRectRight = 565
@@ -521,7 +521,7 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPartnerEditForm'
+      FormName = 'TPartnerJuridicalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -548,7 +548,7 @@
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPartnerEditForm'
+      FormName = 'TPartnerJuridicalEditForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -907,8 +907,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

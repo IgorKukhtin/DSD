@@ -18,7 +18,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dsdAddOn;
+  dxSkinXmas2008Blue, dsdAddOn, cxCheckBox;
 
 type
   TPriceListEditForm = class(TParentForm)
@@ -37,6 +37,9 @@ type
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn1: TdsdUserSettingsStorageAddOn;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    edPriceWithVAT: TcxCheckBox;
+    cxLabel2: TcxLabel;
+    ceVATPercent: TcxCurrencyEdit;
   private
     { Private declarations }
   public

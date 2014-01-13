@@ -88,8 +88,8 @@ BEGIN
            , Object_PriceListPromo.Id         AS PriceListPromoId 
            , Object_PriceListPromo.ValueData  AS PriceListPromoName 
        
-           , ObjectDate_StartPromo.ValueData AS StartPromo
-           , ObjectDate_EndPromo.ValueData   AS EndPromo            
+           , COALESCE (ObjectDate_StartPromo.ValueData,CAST (CURRENT_DATE as TDateTime)) AS StartPromo
+           , COALESCE (ObjectDate_EndPromo.ValueData,CAST (CURRENT_DATE as TDateTime))   AS EndPromo            
 
        FROM Object AS Object_Partner
            LEFT JOIN ObjectString AS Partner_GLNCode 
