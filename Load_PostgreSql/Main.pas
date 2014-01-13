@@ -7490,11 +7490,10 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
-
-        toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        //toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gpSetErased_Movement';
@@ -7523,11 +7522,10 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
-             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
-
-             toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
+             //toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
+             //toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             //toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
+             //toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
@@ -7830,11 +7828,10 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
+        {toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
-
         toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);}
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
         //
         while not EOF do
@@ -7861,11 +7858,11 @@ begin
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
-             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
+             {toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
              toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
-
              toStoredProc.Params.ParamByName('inRouteId').Value:=FieldByName('RouteId').AsInteger;
+             toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
+             }
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
 
              if not myExecToStoredProc then ;//exit;

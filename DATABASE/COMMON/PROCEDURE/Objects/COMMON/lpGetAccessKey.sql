@@ -18,15 +18,26 @@ BEGIN
   THEN
       IF inProcessId = zc_Enum_Process_InsertUpdate_Movement_Transport()
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
+      ELSE
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
                        , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                        , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
                         )
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
       ELSE
-          RAISE EXCEPTION 'У 1111Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service())
+      THEN
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 44));
+      ELSE
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash())
+      THEN
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54));
+      ELSE
+          RAISE EXCEPTION 'У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+      END IF;
+      END IF;
       END IF;
       END IF;
   END IF;

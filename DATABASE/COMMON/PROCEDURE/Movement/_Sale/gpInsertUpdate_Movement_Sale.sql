@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -17,10 +18,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
-    IN inCarId               Integer   , -- Автомобили
-    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
-    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
-    IN inRouteId             Integer   , -- Маршрут
+--    IN inCarId               Integer   , -- Автомобили
+--    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
+--    IN inRouteId             Integer   , -- Маршрут
+--    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -66,18 +67,16 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
+/*
      -- сохранили связь с <Автомобили>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-
      -- сохранили связь с <Сотрудник (водитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-     
-     -- сохранили связь с <Сотрудник (экспедитор)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
-
      -- сохранили связь с <Маршруты>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
+     -- сохранили связь с <Сотрудник (экспедитор)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
+*/
      -- сохранили связь с <Сортировки маршрутов>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
 
@@ -94,6 +93,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.01.14                                        * del property from redmain
  11.01.14                                        * add inChecked, inInvNumberOrder
  13.08.13                                        * add RAISE EXCEPTION
  13.07.13         *
