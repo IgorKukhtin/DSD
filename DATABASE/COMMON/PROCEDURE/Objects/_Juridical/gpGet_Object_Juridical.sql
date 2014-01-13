@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               GLNCode TVarChar, isCorporate Boolean, 
+               GLNCode TVarChar,
+               isCorporate Boolean, 
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,  
                GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
                InfoMoneyId Integer, InfoMoneyName TVarChar, 
@@ -28,7 +29,7 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Juridical()) AS Code
            , CAST ('' as TVarChar)  AS NAME
            
-           , CAST ('' as TVarChar)  AS GLNCode
+           , CAST ('' as TVarChar)    AS GLNCode
            , CAST (false as Boolean)  AS isCorporate
            
            , CAST (0 as Integer)    AS JuridicalGroupId
@@ -82,6 +83,7 @@ BEGIN
            LEFT JOIN ObjectString AS ObjectString_GLNCode 
                                   ON ObjectString_GLNCode.ObjectId = Object_Juridical.Id 
                                  AND ObjectString_GLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
            LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                    ON ObjectBoolean_isCorporate.ObjectId = Object_Juridical.Id 
                                   AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()

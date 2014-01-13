@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Juridical(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
+               GoodsPropertyId Integer, GoodsPropertyName TVarChar,
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
@@ -35,6 +36,9 @@ BEGIN
 
        , COALESCE (ObjectLink_Juridical_JuridicalGroup.ChildObjectId, 0)  AS JuridicalGroupId
        , Object_JuridicalGroup.ValueData  AS JuridicalGroupName
+
+       , Object_GoodsProperty.Id         AS GoodsPropertyId
+       , Object_GoodsProperty.ValueData  AS GoodsPropertyName
 
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -76,6 +80,11 @@ BEGIN
                              ON ObjectLink_Juridical_JuridicalGroup.ObjectId = Object_Juridical.Id 
                             AND ObjectLink_Juridical_JuridicalGroup.DescId = zc_ObjectLink_Juridical_JuridicalGroup()
         LEFT JOIN Object AS Object_JuridicalGroup ON Object_JuridicalGroup.Id = ObjectLink_Juridical_JuridicalGroup.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                             ON ObjectLink_Juridical_GoodsProperty.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                              ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id

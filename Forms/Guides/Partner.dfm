@@ -139,8 +139,8 @@ object PartnerForm: TPartnerForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 144
+    Left = 152
+    Top = 192
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <

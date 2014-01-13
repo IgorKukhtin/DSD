@@ -1,26 +1,26 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 364
-  ClientWidth = 851
-  ExplicitWidth = 857
-  ExplicitHeight = 396
+  ClientHeight = 446
+  ClientWidth = 863
+  ExplicitWidth = 869
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Left = 42
-    Top = 301
+    Left = 48
+    Top = 418
     Action = InsertUpdateGuides
     TabOrder = 7
-    ExplicitLeft = 42
-    ExplicitTop = 301
+    ExplicitLeft = 48
+    ExplicitTop = 418
   end
   inherited bbCancel: TcxButton
-    Left = 153
-    Top = 301
+    Left = 159
+    Top = 418
     Action = actFormClose
     TabOrder = 8
-    ExplicitLeft = 153
-    ExplicitTop = 301
+    ExplicitLeft = 159
+    ExplicitTop = 418
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -44,7 +44,7 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 6
-    Width = 273
+    Width = 272
   end
   object cxLabel2: TcxLabel [6]
     Left = 5
@@ -116,30 +116,35 @@
     Width = 273
   end
   object Panel: TPanel [15]
-    Left = 284
+    Left = 296
     Top = 0
     Width = 567
-    Height = 364
+    Height = 446
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
+    ExplicitLeft = 284
+    ExplicitHeight = 364
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
       Width = 565
-      Height = 364
+      Height = 446
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = PartnerTS
+      Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 364
+      ExplicitHeight = 364
+      ClientRectBottom = 446
       ClientRectRight = 565
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitLeft = 80
+        ExplicitTop = -13
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -168,9 +173,10 @@
           Left = 455
           Top = 0
           Width = 110
-          Height = 340
+          Height = 422
           Align = alRight
           TabOrder = 8
+          ExplicitHeight = 416
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -285,6 +291,7 @@
       object PartnerTS: TcxTabSheet
         Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         ImageIndex = 1
+        ExplicitHeight = 340
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -297,9 +304,10 @@
           Left = 0
           Top = 26
           Width = 565
-          Height = 314
+          Height = 396
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 314
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -335,6 +343,7 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
+        ExplicitHeight = 340
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -347,9 +356,10 @@
           Left = 0
           Top = 26
           Width = 565
-          Height = 314
+          Height = 396
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 390
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -430,7 +440,81 @@
       end
     end
   end
+  object cxLabel14: TcxLabel [16]
+    Left = 6
+    Top = 298
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+  end
+  object cePriceList: TcxButtonEdit [17]
+    Left = 74
+    Top = 297
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Width = 204
+  end
+  object cxLabel15: TcxLabel [18]
+    Left = 7
+    Top = 325
+    Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
+  end
+  object cePriceListPromo: TcxButtonEdit [19]
+    Left = 8
+    Top = 342
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Width = 270
+  end
+  object cxLabel16: TcxLabel [20]
+    Left = 13
+    Top = 365
+    Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
+  end
+  object cxLabel17: TcxLabel [21]
+    Left = 157
+    Top = 365
+    Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
+  end
+  object edEndPromo: TcxDateEdit [22]
+    Left = 157
+    Top = 388
+    EditValue = 0d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    Properties.ValidateOnEnter = False
+    TabOrder = 26
+    Width = 100
+  end
+  object edStartPromo: TcxDateEdit [23]
+    Left = 15
+    Top = 388
+    EditValue = 0d
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    Properties.ValidateOnEnter = False
+    TabOrder = 27
+    Width = 100
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 51
+    Top = 240
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 8
+    Top = 168
+  end
   inherited ActionList: TActionList
+    Left = 375
+    Top = 103
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -750,9 +834,37 @@
         Value = ''
         Component = InfoMoneyGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListId'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPriceListPromoId'
+        Value = ''
+        Component = dsdPriceListPromoGuides
+        ComponentItem = 'PriceListPromoId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartPromo'
+        Value = 0d
+        Component = edStartPromo
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndPromo'
+        Value = 0d
+        Component = edEndPromo
+        DataType = ftDateTime
+        ParamType = ptInput
       end>
-    Left = 32
-    Top = 320
+    Left = 240
+    Top = 96
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Juridical'
@@ -825,9 +937,47 @@
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'PriceListId'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PriceListPromoId'
+        Value = ''
+        Component = dsdPriceListPromoGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PriceListPromoName'
+        Value = ''
+        Component = dsdPriceListPromoGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'StartPromo'
+        Value = 0d
+        Component = edStartPromo
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndPromo'
+        Value = 0d
+        Component = edEndPromo
+        DataType = ftDateTime
       end>
-    Left = 64
-    Top = 320
+    Left = 240
+    Top = 144
   end
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1044,19 +1194,19 @@
   object PartnerCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 352
-    Top = 312
+    Left = 320
+    Top = 272
   end
   object ContractDS: TDataSource
     DataSet = ContractCDS
-    Left = 448
-    Top = 312
+    Left = 488
+    Top = 360
   end
   object ContractCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 432
-    Top = 312
+    Left = 408
+    Top = 328
   end
   object spJuridicalDetails: TdsdStoredProc
     StoredProcName = 'gpSelect_ObjectHistory_JuridicalDetails'
@@ -1091,8 +1241,8 @@
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 368
-    Top = 296
+    Left = 344
+    Top = 376
   end
   object spContract: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractJuridical'
@@ -1136,8 +1286,8 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 376
-    Top = 288
+    Left = 392
+    Top = 248
   end
   object ContractAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1231,5 +1381,55 @@
       end>
     Left = 280
     Top = 216
+  end
+  object dsdPriceListGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePriceList
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdPriceListGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 137
+    Top = 294
+  end
+  object dsdPriceListPromoGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = cePriceListPromo
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdPriceListPromoGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdPriceListPromoGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 40
+    Top = 318
   end
 end
