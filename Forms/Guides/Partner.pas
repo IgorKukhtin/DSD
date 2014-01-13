@@ -22,7 +22,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  dsdAddOn, cxCheckBox, dxSkinscxPCPainter;
+  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit;
 
 type
   TPartnerForm = class(TParentForm)
@@ -62,6 +62,12 @@ type
     clOKPO: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     actUpdateDataSet: TdsdUpdateDataSet;
+    clPriceListName: TcxGridDBColumn;
+    clPriceListPromoName: TcxGridDBColumn;
+    clStartPromo: TcxGridDBColumn;
+    clEndPromo: TcxGridDBColumn;
+    PriceListChoiceForm: TOpenChoiceForm;
+    PriceListPromoChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

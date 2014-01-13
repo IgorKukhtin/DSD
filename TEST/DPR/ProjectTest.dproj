@@ -785,10 +785,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\ObjectHistory\All\JuridicalDetailsTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
-				<Form>PartnerEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\WorkTimeKind_Object.pas">
 				<Form>WorkTimeKind_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -892,6 +888,10 @@
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
+				<Form>PartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

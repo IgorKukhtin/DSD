@@ -21,7 +21,7 @@ uses
   dxSkinsdxBarPainter, dsdDB, Datasnap.DBClient, dsdAddOn, dsdAction,
   Vcl.ActnList, dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxSplitter;
+  cxGrid, cxSplitter, cxButtonEdit;
 
 type
   TJuridicalForm = class(TParentForm)
@@ -67,6 +67,14 @@ type
     clOKPO: TcxGridDBColumn;
     clIsCorporate: TcxGridDBColumn;
     clJuridicalGroupName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    clPriceListName: TcxGridDBColumn;
+    PriceListChoiceForm: TOpenChoiceForm;
+    PriceListPromoChoiceForm: TOpenChoiceForm;
+    clPriceListPromoName: TcxGridDBColumn;
+    clStartPromo: TcxGridDBColumn;
+    clEndPromo: TcxGridDBColumn;
   private
     { Private declarations }
   public
