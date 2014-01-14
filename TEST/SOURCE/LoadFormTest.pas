@@ -34,6 +34,7 @@ type
     procedure LoadContractKindFormTest;
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
+    procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
@@ -50,6 +51,7 @@ type
     procedure LoadJuridicalGroupFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadLossFormTest;
+    procedure LoadLossDebtFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadModelServiceFormTest;
@@ -87,7 +89,6 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
-    procedure LoadCityFormTest;
   end;
 
 implementation
@@ -435,6 +436,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TLossJournalForm');
 end;
+procedure TLoadFormTest.LoadLossDebtFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLossDebtJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLossDebtJournalForm');
+end;
+
 procedure TLoadFormTest.LoadInventoryFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInventoryForm'));
