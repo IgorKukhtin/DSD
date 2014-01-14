@@ -73,14 +73,10 @@ type
     colTotalSumm: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
-    colCarName: TcxGridDBColumn;
-    colPersonalDriverName: TcxGridDBColumn;
-    colRouteName: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    colPersonalName: TcxGridDBColumn;
     dxBarStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
