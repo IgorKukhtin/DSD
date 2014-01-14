@@ -1,7 +1,7 @@
 object SaleForm: TSaleForm
   Left = 0
   Top = 0
-  Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 443
   ClientWidth = 1074
   Color = clBtnFace
@@ -157,7 +157,7 @@ object SaleForm: TSaleForm
     Height = 312
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheet1
+    Properties.ActivePage = cxTabSheet2
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 312
     ClientRectRight = 1074
@@ -247,6 +247,7 @@ object SaleForm: TSaleForm
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupByBox = False
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -295,6 +296,7 @@ object SaleForm: TSaleForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -311,6 +313,7 @@ object SaleForm: TSaleForm
           object colChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end

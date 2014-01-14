@@ -2,7 +2,7 @@ object ReturnInJournalForm: TReturnInJournalForm
   Left = 0
   Top = 0
   Hint = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -55,13 +55,46 @@ object ReturnInJournalForm: TReturnInJournalForm
       DataController.Filter.TranslateBetween = True
       DataController.Filter.TranslateIn = True
       DataController.Filter.TranslateLike = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
+      DataController.Summary.DefaultGroupSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
+        end>
+      DataController.Summary.FooterSummaryItems = <
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalSumm
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
+        end>
       DataController.Summary.SummaryGroups = <>
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
+      OptionsView.HeaderAutoHeight = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colStatus: TcxGridDBColumn
         Caption = #1057#1090#1072#1090#1091#1089
@@ -84,83 +117,129 @@ object ReturnInJournalForm: TReturnInJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
-        Width = 41
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 47
+      end
+      object colOperDatePartner: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        DataBinding.FieldName = 'OperDatePartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
-        Width = 140
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
-        Width = 140
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 120
+      end
+      object colTotalCountPartner: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086')'
+        DataBinding.FieldName = 'TotalCountPartner'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
       end
       object colTotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1083#1091#1095#1077#1085#1086')'
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
       object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1087#1086#1089#1090#1072#1074#1097'.'
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
-        Width = 80
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
         DataBinding.FieldName = 'ChangePercent'
-        Width = 90
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
         DataBinding.FieldName = 'PriceWithVAT'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
-        Width = 45
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
       end
       object colTotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 60
       end
       object colTotalSummMVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object colPaidKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 55
       end
-      object colCarName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'CarName'
-      end
-      object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1042#1086#1076#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'PersonalDriverName'
+      object colChecked: TcxGridDBColumn
+        Caption = #1055#1088#1086#1074#1077#1088#1077#1085
+        DataBinding.FieldName = 'Checked'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -231,8 +310,8 @@ object ReturnInJournalForm: TReturnInJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -346,6 +425,7 @@ object ReturnInJournalForm: TReturnInJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
