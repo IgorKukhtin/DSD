@@ -524,7 +524,7 @@ object ReturnInForm: TReturnInForm
       end
       item
         Name = 'inShowAll'
-        Value = Null
+        Value = False
         DataType = ftBoolean
         ParamType = ptInput
       end>

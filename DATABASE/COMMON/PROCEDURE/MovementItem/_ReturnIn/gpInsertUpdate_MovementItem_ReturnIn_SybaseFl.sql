@@ -1,16 +1,14 @@
--- Function: gpInsertUpdate_MovementItem_Sale_SybaseFl()
+-- Function: gpInsertUpdate_MovementItem_ReturnIn_SybaseFl()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseFl();
+-- DROP FUNCTION gpInsertUpdate_MovementItem_ReturnIn_SybaseFl();
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseFl(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_SybaseFl(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId          Integer   , -- Ключ объекта <Документ>
+    IN inMovementId          Integer   , -- Ключ объекта <Документ Возврат покупателя>
     IN inGoodsId             Integer   , -- Товары
     IN inChangeAmount        Boolean   , -- 
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
-    IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
     IN inCountForPrice       TFloat    , -- Цена за количество
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -21,8 +19,8 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Sale());
-     vbUserId := inSession;
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
+     vbUserId:= inSession;
 
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
@@ -38,8 +36,6 @@ BEGIN
      IF inChangeAmount = FALSE
      THEN
          inAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0);
-         inAmountChangePercent:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0);
-         inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0);
      END IF;
 
      -- сохранили <Элемент документа>
@@ -47,10 +43,6 @@ BEGIN
    
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-     -- сохранили свойство <Количество c учетом % скидки>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), ioId, inAmountChangePercent);
-     -- сохранили свойство <% скидки для кол-ва>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
@@ -79,8 +71,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 10.01.14                                        *
+ 13.01.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_Sale_SybaseFl (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inAmountPacker:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn_SybaseFl (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

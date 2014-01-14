@@ -698,7 +698,6 @@ object MainForm: TMainForm
       Width = 213
       Height = 17
       Caption = '3.2. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
