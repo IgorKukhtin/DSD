@@ -311,6 +311,7 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
+  PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
   PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
 
 {$R *.RES}

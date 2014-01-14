@@ -890,6 +890,10 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PartnerJuridicalEdit.pas">
+				<Form>PartnerJuridicalEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
