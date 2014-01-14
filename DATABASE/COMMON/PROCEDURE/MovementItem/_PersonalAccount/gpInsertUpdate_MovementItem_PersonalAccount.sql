@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_PersonalAccount ()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_PersonalAccount (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 
@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_PersonalAccount(
     IN inMovementId          Integer   , -- ключ Документа
     IN inJuridicalId         Integer   , -- Юр.лицо
     IN inAmount              TFloat    , -- Сумма
-    IN inOperDate            TDateTime , -- Дата выдачи
     IN inContractId          Integer   , -- Договора
     IN inRouteId             Integer   , -- Маршрут
     IN inCarId               Integer   , -- Автомобиль
@@ -20,9 +19,8 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalAccount());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_PersonalAccount());
      vbUserId := inSession;
 
      -- проверка
@@ -30,29 +28,10 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
      END IF;
-     -- проверка
-     IF EXISTS (SELECT MovementItem.ObjectId
-                FROM MovementItem 
-                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
-                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
-                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
-                WHERE MovementItem.MovementId = inMovementId
-                  AND MovementItem.ObjectId = inJuridicalId
-                  AND MovementItem.DescId = zc_MI_Master()
-                  AND MovementItem.Id <> COALESCE (ioId, 0)
-               )
-     THEN
-         -- RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> <%> <%> уже есть в документе.', inMovementId, inPersonalId, inInfoMoneyId;
-         RAISE EXCEPTION 'Ошибка при добавлении.Сотрудник <%> уже есть в документе.', (SELECT ValueData FROM Object where descid = zc_Object_Juridical() and Id = inJuridicalId);
-     END IF;
 
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Дата выдачи>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_OperDate(), ioId, inOperDate);
 
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);
@@ -74,11 +53,12 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.01.14                                        *
  19.12.13         *
 */
 

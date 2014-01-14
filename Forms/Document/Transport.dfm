@@ -289,7 +289,7 @@
     Height = 421
     Align = alClient
     TabOrder = 1
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 421
     ClientRectRight = 1200
@@ -316,11 +316,6 @@
             item
               Kind = skSum
               Position = spFooter
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-              Column = colWeight
             end
             item
               Kind = skSum

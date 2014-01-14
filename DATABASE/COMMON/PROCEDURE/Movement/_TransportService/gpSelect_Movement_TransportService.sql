@@ -47,8 +47,8 @@ BEGIN
 
            , MIString_Comment.ValueData  AS Comment
 
-           , Object_Contract.Id          AS ContractId
-           , Object_Contract.ValueData   AS ContractName
+           , Object_Contract_InvNumber_View.ContractId
+           , Object_Contract_InvNumber_View.InvNumber AS ContractName
 
            , View_InfoMoney.InfoMoneyId
            , View_InfoMoney.InfoMoneyCode
@@ -73,7 +73,7 @@ BEGIN
 
    
        FROM Movement
-            --JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -105,7 +105,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                              ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id 
@@ -150,6 +150,7 @@ ALTER FUNCTION gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.14                                        * add Object_Contract_InvNumber_View
  07.01.14                                        * add InfoMoneyCode
  22.12.13         *
 */

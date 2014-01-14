@@ -43,7 +43,7 @@ BEGIN
      END IF;
 
      -- расчет
-     IF inAmountIn > 0 THEN
+     IF inAmountIn <> 0 THEN
         vbAmount := inAmountIn;
      ELSE
         vbAmount := -1 * inAmountOut;

@@ -12,13 +12,11 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalAccount());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalAccount());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -50,10 +48,6 @@ BEGIN
   
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                          ON MovementLinkObject_Personal.MovementId = Movement.Id
@@ -68,13 +62,13 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_PersonalAccount (Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  18.12.13         *
 */
 

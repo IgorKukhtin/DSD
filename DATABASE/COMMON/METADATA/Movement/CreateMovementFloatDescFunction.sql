@@ -81,8 +81,7 @@ INSERT INTO MovementFloatDesc(Code, ItemName)
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  19.10.13                                        * add zc_MovementFloat_ChangePrice
  15.10.13                                        * add zc_MovementFloat_StartSummCash and zc_MovementFloat_StartAmountTicketFuel
  30.09.13                                        * restore :-) zc_MovementFloat_Amount - Сумма операции

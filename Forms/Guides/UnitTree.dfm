@@ -91,6 +91,7 @@ object UnitTreeForm: TUnitTreeForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object ceTreeState: TcxGridDBColumn
+        Caption = '_'
         DataBinding.FieldName = 'isLeaf'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Images = dmMain.TreeImageList
@@ -132,6 +133,7 @@ object UnitTreeForm: TUnitTreeForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
@@ -175,8 +177,8 @@ object UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

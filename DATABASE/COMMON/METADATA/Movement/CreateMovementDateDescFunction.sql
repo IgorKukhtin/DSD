@@ -37,7 +37,7 @@ INSERT INTO MovementDateDesc (Code, ItemName)
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  25.09.13         * del zc_MovementDate_WorkTime; add  StartRunPlan, EndRunPlan, StartRun, EndRun
  20.08.13         * add zc_MovementDate_WorkTime
  12.08.13         * add zc_MovementDate_ServiceDate

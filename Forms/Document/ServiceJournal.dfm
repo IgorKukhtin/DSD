@@ -8,25 +8,23 @@ inherited ServiceJournalForm: TServiceJournalForm
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
-    ExplicitWidth = 884
+    ExplicitWidth = 982
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 884
+      ExplicitWidth = 982
       inherited cxGrid: TcxGrid
         Width = 982
-        ExplicitWidth = 884
+        ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
               Column = clAmountIn
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
               Column = colAmountOut
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -40,6 +38,10 @@ inherited ServiceJournalForm: TServiceJournalForm
               Kind = skSum
               Column = colAmountOut
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -152,7 +154,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 982
-    ExplicitWidth = 884
+    ExplicitWidth = 982
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction

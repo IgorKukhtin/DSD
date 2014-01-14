@@ -18,6 +18,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
      vbUserId:= inSession;
+
      -- определяем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_PersonalAccount());
 
@@ -28,7 +29,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
      
      -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -37,11 +38,11 @@ END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.12.13         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.01.14                                        * rem lpInsertUpdate_MovementFloat_TotalSumm
+ 18.12.13          *
 */
 
 -- тест

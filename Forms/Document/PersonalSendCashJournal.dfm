@@ -74,7 +74,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
+          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -107,7 +108,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
+          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -139,6 +141,7 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.Footer = True
       OptionsView.GroupByBox = False
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -190,7 +193,8 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Width = 67
       end

@@ -26,7 +26,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 8
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -144,9 +143,8 @@ object PersonalAccountForm: TPersonalAccountForm
               Kind = skSum
             end
             item
-              Format = ',0.00;-,0.00;'
+              Format = ',0.####'
               Kind = skSum
-              Position = spFooter
               Column = clAmount
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -158,7 +156,7 @@ object PersonalAccountForm: TPersonalAccountForm
               Kind = skSum
             end
             item
-              Format = ',0.00;-,0.00;'
+              Format = ',0.####'
               Kind = skSum
               Column = clAmount
             end
@@ -284,7 +282,7 @@ object PersonalAccountForm: TPersonalAccountForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -560,8 +558,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1104,13 +1102,6 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = MasterCDS
         ComponentItem = 'Amount'
         DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
         ParamType = ptInput
       end
       item

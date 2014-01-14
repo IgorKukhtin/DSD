@@ -534,7 +534,7 @@
 			<DCCReference Include="..\..\Forms\Document\PersonalSendCashJournal.pas">
 				<Form>PersonalSendCashJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\PersonalAccountTest.pas">
+			<DCCReference Include="..\SOURCE\Movement\All\LossDebtTest.pas">
 				<Form>$R *.RES</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
@@ -826,12 +826,12 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalAccount.pas">
-				<Form>PersonalAccountForm</Form>
+			<DCCReference Include="..\..\Forms\Document\LossDebt.pas">
+				<Form>LossDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
-				<Form>PersonalAccountJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\LossDebtJournal.pas">
+				<Form>LossDebtJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BranchEdit.pas">
@@ -896,6 +896,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartnerEdit.pas">
 				<Form>PartnerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalAccountTest.pas"/>
+			<DCCReference Include="..\..\Forms\Document\PersonalAccount.pas">
+				<Form>PersonalAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
+				<Form>PersonalAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

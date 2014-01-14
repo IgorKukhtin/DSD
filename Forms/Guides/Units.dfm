@@ -78,7 +78,7 @@ object UnitForm: TUnitForm
         Width = 80
       end
       object ceJuridicalName: TcxGridDBColumn
-        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'. '#1083#1080#1094#1086
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalName'
         Visible = False
         HeaderAlignmentHorz = taCenter

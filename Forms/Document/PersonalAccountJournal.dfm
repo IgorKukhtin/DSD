@@ -74,7 +74,8 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
+          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -107,7 +108,8 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
+          Kind = skSum
           Column = colTotalSumm
         end
         item
@@ -190,7 +192,9 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Width = 67
       end
@@ -238,8 +242,8 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

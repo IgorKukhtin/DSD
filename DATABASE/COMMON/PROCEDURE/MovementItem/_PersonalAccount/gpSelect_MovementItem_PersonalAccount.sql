@@ -32,8 +32,8 @@ BEGIN
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
             
-            , Object_Contract.Id          AS ContractId
-            , Object_Contract.ValueData   AS ContractName           
+            , Object_Contract_InvNumber_View.ContractId
+            , Object_Contract_InvNumber_View.InvNumber AS ContractName
             
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
@@ -67,7 +67,7 @@ BEGIN
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+             LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
                  
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                               ON MILinkObject_Route.MovementItemId = MovementItem.Id
@@ -92,10 +92,10 @@ $BODY$
   LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_PersonalAccount (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.01.14                                        * add Object_Contract_InvNumber_View
  07.01.14                                        * add InfoMoneyCode
  19.12.13         *
 */

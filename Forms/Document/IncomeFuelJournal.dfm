@@ -71,22 +71,22 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Column = colTotalCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummPVAT
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummMVAT
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummVAT
         end>
@@ -97,22 +97,22 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Column = colTotalCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummPVAT
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummMVAT
         end
         item
-          Format = ',0.00'
+          Format = ',0.####'
           Kind = skSum
           Column = colTotalSummVAT
         end>
@@ -235,8 +235,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 3
-        Properties.DisplayFormat = ',0.###;-,0.###;;'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
@@ -244,7 +244,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
         DataBinding.FieldName = 'TotalSumm'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -252,7 +253,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -260,7 +262,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -269,7 +272,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
         PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 50

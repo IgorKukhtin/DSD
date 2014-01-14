@@ -21,13 +21,12 @@ inherited CashJournalForm: TCashJournalForm
               Format = ',0.00'
               Kind = skSum
               Position = spFooter
-              Column = clAmountIn
+              Column = clAmountOut
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
-              Column = clAmountOut
+              Column = clAmountIn
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -40,6 +39,10 @@ inherited CashJournalForm: TCashJournalForm
               Kind = skSum
               Column = clAmountOut
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil

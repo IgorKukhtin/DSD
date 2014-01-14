@@ -108,7 +108,7 @@ INSERT INTO MovementLinkObjectDesc (Code, ItemName)
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  22.12.13         * add zc_MovementLinkObject_ContractConditionKind   
  03.10.13                                         * rename to JuridicalBasis
  25.09.13         * del zc_MovementLinkObject_Member; add UnitForwarding, CarTrailer

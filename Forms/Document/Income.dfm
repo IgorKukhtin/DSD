@@ -220,7 +220,7 @@ object IncomeForm: TIncomeForm
     Height = 336
     Align = alClient
     TabOrder = 2
-    Properties.ActivePage = cxTabSheetEntry
+    Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
     ClientRectRight = 971
@@ -242,62 +242,67 @@ object IncomeForm: TIncomeForm
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.00;-,0.00;'
-              Kind = skSum
               Position = spFooter
               Column = colAmountSumm
             end
             item
-              Kind = skSum
-              Position = spFooter
-              Column = colLiveWeight
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmount
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountPartner
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountPacker
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
-            end>
-          DataController.Summary.FooterSummaryItems = <
+            end
             item
-              Format = ',0.00;-,0.00;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
             end
             item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colLiveWeight
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSumm
+            end
+            item
+              Format = ',0.####'
               Kind = skSum
               Column = colLiveWeight
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmount
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountPartner
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountPacker
             end>
@@ -346,8 +351,8 @@ object IncomeForm: TIncomeForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -356,8 +361,8 @@ object IncomeForm: TIncomeForm
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -366,8 +371,8 @@ object IncomeForm: TIncomeForm
             Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
             DataBinding.FieldName = 'AmountPacker'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 75
@@ -376,7 +381,8 @@ object IncomeForm: TIncomeForm
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-0.00;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -385,8 +391,8 @@ object IncomeForm: TIncomeForm
             Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0;;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
@@ -394,7 +400,8 @@ object IncomeForm: TIncomeForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -405,8 +412,8 @@ object IncomeForm: TIncomeForm
             Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089' '
             DataBinding.FieldName = 'LiveWeight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
@@ -414,8 +421,8 @@ object IncomeForm: TIncomeForm
             Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
             DataBinding.FieldName = 'HeadCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 0
-            Properties.DisplayFormat = '0;-0; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
           end
@@ -443,6 +450,9 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

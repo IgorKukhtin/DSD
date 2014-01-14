@@ -237,6 +237,8 @@ type
     bbJuridical_List: TdxBarButton;
     actUnit_List: TdsdOpenForm;
     bbUnit_List: TdxBarButton;
+    actLossDebt: TdsdOpenForm;
+    bbLossDebt: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

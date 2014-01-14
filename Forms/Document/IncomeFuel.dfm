@@ -267,7 +267,7 @@ object IncomeFuelForm: TIncomeFuelForm
               Position = spFooter
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmount
             end
@@ -282,10 +282,14 @@ object IncomeFuelForm: TIncomeFuelForm
             item
               Format = ',0.###;-,0.###; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Column = colAmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmountSumm
             end
@@ -297,7 +301,7 @@ object IncomeFuelForm: TIncomeFuelForm
               Kind = skSum
             end
             item
-              Format = ',0.###;-,0.###; ;'
+              Format = ',0.####'
               Kind = skSum
               Column = colAmount
             end
@@ -348,8 +352,8 @@ object IncomeFuelForm: TIncomeFuelForm
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 3
-            Properties.DisplayFormat = ',0.###;-,0.###; ;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -358,7 +362,8 @@ object IncomeFuelForm: TIncomeFuelForm
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-0.00;'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 80
@@ -378,7 +383,7 @@ object IncomeFuelForm: TIncomeFuelForm
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'AmountSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00;'
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.ReadOnly = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -403,6 +408,9 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0

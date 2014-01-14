@@ -54,7 +54,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
-           , Object_Contract.ValueData         AS ContractInvNumber
+           , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -79,7 +79,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -97,6 +97,7 @@ ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.14                                        * add Object_Contract_InvNumber_View
  26.12.13                                        * add Object_InfoMoney_View
  26.12.13                                        * add Object_RoleAccessKey_View
  23.12.13                          *

@@ -35,14 +35,8 @@ end;
 
 function TPersonalAccount.InsertDefault: integer;
 var Id: Integer;
-    InvNumber: String;
-    OperDate, StartRunPlan, EndRunPlan, StartRun, EndRun: TDateTime;
-    HoursAdd: Double;
-    Comment:String;
-    CarId, CarTrailerId, PersonalDriverId, PersonalDriverMoreId, UnitForwardingId: Integer;
 begin
   Id:=0;
-
   result := InsertUpdatePersonalAccount(Id);
 end;
 

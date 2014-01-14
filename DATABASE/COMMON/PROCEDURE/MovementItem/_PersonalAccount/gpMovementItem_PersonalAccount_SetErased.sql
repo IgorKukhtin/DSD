@@ -13,7 +13,6 @@ AS
 $BODY$
   DECLARE vbStatusId Integer;
 BEGIN
-
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_MovementItem());
 
   -- определяем <Статус>
@@ -50,7 +49,7 @@ ALTER FUNCTION gpMovementItem_PersonalAccount_SetErased (Integer, Integer, TVarC
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  19.12.13         *
 */
 

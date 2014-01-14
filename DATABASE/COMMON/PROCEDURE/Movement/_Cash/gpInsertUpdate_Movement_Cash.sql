@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash(Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Cash (Integer, TVarChar, TdateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Cash(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -39,7 +39,7 @@ BEGIN
      END IF;
 
      -- расчет
-     IF inAmountIn > 0 THEN
+     IF inAmountIn <> 0 THEN
         vbAmount := inAmountIn;
      ELSE
         vbAmount := -1 * inAmountOut;

@@ -208,7 +208,7 @@ uses
   PersonalGroupEdit in '..\..\Forms\Guides\PersonalGroupEdit.pas' {PersonalGroupEditForm},
   PersonalSendCash in '..\..\Forms\Document\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\Document\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
-  PersonalAccountTest in '..\SOURCE\Movement\All\PersonalAccountTest.pas' {$R *.RES},
+  LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas' {$R *.RES},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
@@ -293,8 +293,8 @@ uses
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
-  PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
-  PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
+  LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
+  LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   BranchEdit in '..\..\Forms\Guides\BranchEdit.pas' {BranchEditForm: TParentForm},
   Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
   Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm},
@@ -312,7 +312,10 @@ uses
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
-  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
+  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+  PersonalAccountTest in '..\SOURCE\Movement\All\PersonalAccountTest.pas',
+  PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
+  PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm};
 
 {$R *.RES}
 

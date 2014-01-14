@@ -62,8 +62,8 @@ BEGIN
            , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
 
-           , Object_Contract.Id                AS ContractId
-           , Object_Contract.ValueData         AS ContractName
+           , Object_Contract_InvNumber_View.ContractId
+           , Object_Contract_InvNumber_View.InvNumber AS ContractName
 
            , Object_RouteSorting.Id        AS RouteSortingId
            , Object_RouteSorting.ValueData AS RouteSortingName       
@@ -128,7 +128,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
@@ -146,6 +146,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.01.14                                        * add Object_Contract_InvNumber_View
  11.01.14                                        * add Checked, InvNumberOrder
  13.08.13                                        * add TotalCountPartner               
  13.07.13          *
