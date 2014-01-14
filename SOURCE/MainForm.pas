@@ -239,6 +239,10 @@ type
     bbUnit_List: TdxBarButton;
     actLossDebt: TdsdOpenForm;
     bbLossDebt: TdxBarButton;
+    actBankAccountDocument: TdsdOpenForm;
+    bbBankAccountDocument: TdxBarButton;
+    actCity: TdsdOpenForm;
+    bbCity: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

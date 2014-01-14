@@ -8,6 +8,8 @@ IN Session tvarchar)
   RETURNS void AS
 $BODY$BEGIN
 
+  DELETE FROM MovementItemReport WHERE MovementItemId = inId;
+  DELETE FROM MovementItemContainer WHERE MovementItemId = inId;
   DELETE FROM MovementItemLinkObject WHERE MovementItemId = inId;
   DELETE FROM MovementItemString WHERE MovementItemId = inId;
   DELETE FROM MovementItemDate WHERE MovementItemId = inId;

@@ -149,9 +149,6 @@
 			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
 				<Form>JuridicalGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
-				<Form>GoodsEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
 				<Form>GoodsTreeForm</Form>
 			</DCCReference>
@@ -905,6 +902,17 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
 				<Form>PersonalAccountJournalForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\City.pas">
+				<Form>CityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
+				<Form>GoodsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
+				<Form>CityEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
