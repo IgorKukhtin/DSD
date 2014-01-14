@@ -17,10 +17,7 @@ type
     function InsertDefault: integer; override;
   public
    function InsertUpdateJuridical(const Id: integer; Code: Integer;
-        Name, GLNCode: string; isCorporate: boolean;
-        JuridicalGroupId, GoodsPropertyId, InfoMoneyId: integer;
-        PriceListId, PriceListPromoId: Integer;
-        StartPromo, EndPromo: TDateTime): integer;
+        Name, GLNCode: string; isCorporate: boolean; JuridicalGroupId, GoodsPropertyId, InfoMoneyId: integer): integer;
     constructor Create; override;
   end;
 
@@ -68,20 +65,11 @@ end;
 function TJuridical.InsertDefault: integer;
 var
   JuridicalGroupId, GoodsPropertyId, InfoMoneyId: Integer;
-  PriceListId, PriceListPromoId: Integer;
-  StartPromo, EndPromo: TDateTime;
 begin
   JuridicalGroupId := TJuridicalGroupTest.Create.GetDefault;
   GoodsPropertyId := TGoodsPropertyTest.Create.GetDefault;
   InfoMoneyId:= TInfoMoneyTest.Create.GetDefault;
-  PriceListId := 0;
-  PriceListPromoId := 0;
-  StartPromo := Date;
-  EndPromo := Date;
-
-  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', 'GLNCode', false,
-          JuridicalGroupId, GoodsPropertyId, InfoMoneyId, PriceListId, PriceListPromoId,
-          StartPromo, EndPromo);
+  result := InsertUpdateJuridical(0, -1, 'ёр. лицо', 'GLNCode', false, JuridicalGroupId, GoodsPropertyId, InfoMoneyId);
   inherited;
 end;
 
@@ -96,10 +84,6 @@ begin
   FParams.AddParam('inJuridicalGroupId', ftInteger, ptInput, JuridicalGroupId);
   FParams.AddParam('inGoodsPropertyId', ftInteger, ptInput, GoodsPropertyId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
-  FParams.AddParam('inPriceListId', ftInteger, ptInput, PriceListId);
-  FParams.AddParam('inPriceListPromoId', ftInteger, ptInput, PriceListPromoId);
-  FParams.AddParam('inStartPromo', ftDateTime, ptInput, StartPromo);
-  FParams.AddParam('inEndPromo', ftDateTime, ptInput, EndPromo);
   result := InsertUpdate(FParams);
 end;
 

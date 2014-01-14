@@ -2,7 +2,7 @@ unit ClientBankLoad;
 
 interface
 
-uses dsdAction, DB, dsdDb, Classes;
+uses dsdAction, DB, dsdDb;
 
 type
 
@@ -14,8 +14,6 @@ type
     FInitializeDirectory: string;
     FActive: boolean;
     FOEM: boolean;
-    FStartDate: TDateTime;
-    FEndDate: TDateTime;
     function GetOperSumm: real; virtual; abstract;
     function GetDocNumber: string; virtual; abstract;
     function GetOperDate: TDateTime; virtual; abstract;
@@ -30,7 +28,7 @@ type
     function GetCurrencyCode: string; virtual; abstract;
     function GetCurrencyName: string; virtual; abstract;
   public
-    constructor Create(StartDate, EndDate: TDateTime); virtual;
+    constructor Create; virtual;
     destructor Destroy;
     function EOF: boolean;
     function RecordCount: integer;
@@ -57,24 +55,16 @@ type
   private
     FClientBankType: TClientBankType;
     FInitializeDirectory: string;
-    FEndDate: TdsdParam;
-    FStartDate: TdsdParam;
-    function StartDate: TDateTime;
-    function EndDate: TDateTime;
-    function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
+    function GetClientBankLoad(AClientBankType: TClientBankType): TClientBankLoad;
     function GetStoredProc: TdsdStoredProc;
     procedure ProcessingOneRow(AClientBankLoad: TClientBankLoad; AStoredProc: TdsdStoredProc);
   public
     function Execute: boolean; override;
-    constructor Create(Owner: TComponent); override;
-    destructor Destroy; override;
   published
     // Для какого банка осуществляется загрузка
     property ClientBankType: TClientBankType read FClientBankType write FClientBankType;
     // Директория загрузки. Сделана published что бы сохранять данные по стандартной схеме
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
-    property StartDateParam: TdsdParam read FStartDate write FStartDate;
-    property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
 
   procedure Register;
@@ -93,7 +83,7 @@ end;
 type
 
   TPrivatBankLoad = class(TClientBankLoad)
-    constructor Create(StartDate, EndDate: TDateTime); override;
+    constructor Create; override;
     function GetOperSumm: real; override;
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
@@ -178,31 +168,12 @@ type
     function GetCurrencyName: string; override;
   end;
 
-constructor TClientBankLoadAction.Create(Owner: TComponent);
-begin
-  inherited;
-  FStartDate := TdsdParam.Create(nil);
-  FEndDate := TdsdParam.Create(nil);
-end;
-
-destructor TClientBankLoadAction.Destroy;
-begin
-  FStartDate.Free;
-  FEndDate.Free;
-  inherited;
-end;
-
-function TClientBankLoadAction.EndDate: TDateTime;
-begin
-  result := EndDateParam.Value;
-end;
-
 function TClientBankLoadAction.Execute: boolean;
 var
    FClientBankLoad: TClientBankLoad;
    FStoredProc: TdsdStoredProc;
 begin
-  FClientBankLoad := GetClientBankLoad(ClientBankType, StartDate, EndDate);
+  FClientBankLoad := GetClientBankLoad(ClientBankType);
   try
     FClientBankLoad.InitializeDirectory := InitializeDirectory;
     FClientBankLoad.Activate;
@@ -234,14 +205,14 @@ begin
 end;
 
 function TClientBankLoadAction.GetClientBankLoad(
-  AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
+  AClientBankType: TClientBankType): TClientBankLoad;
 begin
   case AClientBankType of
-    cbPrivatBank: result := TPrivatBankLoad.Create(StartDate, EndDate);
-    cbForum: result := TForumBankLoad.Create(StartDate, EndDate);
-    cbVostok: result := TVostokBankLoad.Create(StartDate, EndDate);
-    cbFidoBank: result := TFidoBankLoad.Create(StartDate, EndDate);
-    cbOTPBank: result := TOTPBankLoad.Create(StartDate, EndDate);
+    cbPrivatBank: result := TPrivatBankLoad.Create;
+    cbForum: result := TForumBankLoad.Create;
+    cbVostok: result := TVostokBankLoad.Create;
+    cbFidoBank: result := TFidoBankLoad.Create;
+    cbOTPBank: result := TOTPBankLoad.Create;
   end;
 end;
 
@@ -286,11 +257,6 @@ begin
   end;
 end;
 
-function TClientBankLoadAction.StartDate: TDateTime;
-begin
-  result := StartDateParam.Value;
-end;
-
 { TClientBankLoad }
 
 procedure TClientBankLoad.Activate;
@@ -310,12 +276,6 @@ begin
        TMemDBFTable(FDataSet).OEM := FOEM;
        TMemDBFTable(FDataSet).Open;
        FActive := TMemDBFTable(FDataSet).Active;
-       // Установить на первую запись подходящей даты
-       while not TMemDBFTable(FDataSet).EOF do begin
-         if (FStartDate <= OperDate) and (OperDate <= FEndDate) then
-             break;
-         TMemDBFTable(FDataSet).Next;
-       end;
     end;
   finally
     Free;
@@ -326,8 +286,6 @@ constructor TClientBankLoad.Create;
 begin
   FActive := false;
   FOEM := false;
-  FStartDate := StartDate;
-  FEndDate := EndDate;
 end;
 
 destructor TClientBankLoad.Destroy;
@@ -343,9 +301,7 @@ end;
 
 procedure TClientBankLoad.Next;
 begin
-  repeat
-    FDataSet.Next;
-  until ((FStartDate <= OperDate) and (OperDate <= FEndDate)) or FDataSet.EOF;
+  FDataSet.Next;
 end;
 
 function TClientBankLoad.RecordCount: integer;
@@ -431,9 +387,9 @@ end;
 function TPrivatBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 1 then
-     result := trim(FDataSet.FieldByName('OKPO1_A').AsString)
+     result := FDataSet.FieldByName('OKPO1_A').AsString
   else
-     result := trim(FDataSet.FieldByName('OKPO2_B').AsString)
+     result := FDataSet.FieldByName('OKPO2_B').AsString
 end;
 
 function TPrivatBankLoad.GetOperDate: TDateTime;
@@ -519,9 +475,9 @@ end;
 function TForumBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
+     result := FDataSet.FieldByName('OKPO_DB').AsString
   else
-     result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
+     result := FDataSet.FieldByName('OKPO_CR').AsString;
 end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
@@ -661,7 +617,7 @@ end;
 
 function TFidoBankLoad.GetOKPO: string;
 begin
-  result := trim(FDataSet.FieldByName('KL_OKP_K').AsString)
+  result := FDataSet.FieldByName('KL_OKP_K').AsString
 end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
@@ -747,9 +703,9 @@ end;
 function TOTPBankLoad.GetOKPO: string;
 begin
   if FDataSet.FieldByName('OPERAT').AsInteger = 2 then
-     result := trim(FDataSet.FieldByName('OKPO_DB').AsString)
+     result := FDataSet.FieldByName('OKPO_DB').AsString
   else
-     result := trim(FDataSet.FieldByName('OKPO_CR').AsString);
+     result := FDataSet.FieldByName('OKPO_CR').AsString;
 end;
 
 function TOTPBankLoad.GetOperDate: TDateTime;

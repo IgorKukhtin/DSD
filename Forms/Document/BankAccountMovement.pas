@@ -16,11 +16,11 @@ type
     { Public declarations }
   end;
 
+var
+  BankAccountMovementForm: TBankAccountMovementForm;
+
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TBankAccountMovementForm);
 
 end.

@@ -12,9 +12,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inOperDate            TDateTime , -- Дата документа
     IN inAmount              TFloat    , -- Сумма операции 
 
-    IN inBankAccountId       Integer   , -- Расчетный счет 	
-    IN inComment             TVarChar  ,  
-    IN inMoneyPlaceId        Integer   , -- Юр лицо, счет, касса  	
+    IN inBankAccountId       Integer   , -- От кого (в документе) -- Расчетный счет 	
+    IN inJuridicalId         Integer   , -- Кому (в документе)  -- Юридическое лицо 	
     IN inCurrencyId          Integer   , -- Валюта 
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inBusinessId          Integer   , -- Бизнесс

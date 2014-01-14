@@ -143,8 +143,7 @@ type
   public
     function InsertUpdatePartner(const Id: integer; Code: Integer;
         inAddress, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
-        JuridicalId, RouteId, RouteSortingId, PersonalTakeId, PriceListId, PriceListPromoId: integer;
-        StartPromo, EndPromo: TDateTime): integer;
+        JuridicalId, RouteId, RouteSortingId, PersonalTakeId: integer): integer;
     constructor Create; override;
   end;
 
@@ -784,22 +783,12 @@ end;
 function TPartnerTest.InsertDefault: integer;
 var
   JuridicalId, RouteId, RouteSortingId, PersonalTakeId: Integer;
-  PriceListId, PriceListPromoId: Integer;
-  StartPromo, EndPromo: TDateTime;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
   PersonalTakeId := 0; //TPersonalTest.Create.GetDefault;
-
-  PriceListId := 0;
-  PriceListPromoId := 0;
-  StartPromo := Date;
-  EndPromo := Date;
-
-  result := InsertUpdatePartner(0, -6, 'город такой улица такая', 'GLNCode', 15, 15,
-     JuridicalId, RouteId, RouteSortingId, PersonalTakeId,PriceListId, PriceListPromoId,
-     StartPromo, EndPromo);
+  result := InsertUpdatePartner(0, -6, 'город такой улица такая', 'GLNCode', 15, 15, JuridicalId, RouteId, RouteSortingId, PersonalTakeId);
   inherited;
 end;
 
@@ -816,10 +805,6 @@ begin
   FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
   FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
   FParams.AddParam('inPersonalTakeId', ftInteger, ptInput, PersonalTakeId);
-  FParams.AddParam('inPriceListId', ftInteger, ptInput, PriceListId);
-  FParams.AddParam('inPriceListPromoId', ftInteger, ptInput, PriceListPromoId);
-  FParams.AddParam('inStartPromo', ftDateTime, ptInput, StartPromo);
-  FParams.AddParam('inEndPromo', ftDateTime, ptInput, EndPromo);
   result := InsertUpdate(FParams);
 end;
 { TDataBaseUsersObjectTest }

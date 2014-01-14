@@ -157,7 +157,7 @@ BEGIN
        -- Находим договор у Юр. Лица
        SELECT ObjectLink_Contract_Juridical.ObjectId INTO vbContractId
          FROM ObjectLink AS ObjectLink_Contract_Juridical 
-        WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
+        WHERE ObjectLink_Contract_Juridical.ChildObjectId = 10858
           AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
         LIMIT 1;
        IF COALESCE(vbContractId, 0) <> 0 THEN

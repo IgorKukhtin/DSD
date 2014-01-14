@@ -10,18 +10,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1056
     Height = 320
     TabOrder = 3
-    ExplicitWidth = 1056
-    ExplicitHeight = 320
     ClientRectBottom = 320
     ClientRectRight = 1056
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1056
-      ExplicitHeight = 320
       inherited cxGrid: TcxGrid
         Width = 1056
         Height = 320
-        ExplicitWidth = 1056
-        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -103,8 +97,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited Panel: TPanel
+    Top = 0
     Width = 1056
-    ExplicitWidth = 1056
+    ExplicitTop = 0
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -136,8 +131,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     end
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_BankAccount'
-    Params = <>
+    StoredProcName = 'gpSelect_Movement_BankStatement'
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

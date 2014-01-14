@@ -7,13 +7,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
   inherited PageControl: TcxPageControl
     Width = 843
     TabOrder = 3
-    ExplicitWidth = 843
     ClientRectRight = 843
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 843
       inherited cxGrid: TcxGrid
         Width = 843
-        ExplicitWidth = 843
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -62,8 +59,9 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
   end
   inherited Panel: TPanel
+    Top = 0
     Width = 843
-    ExplicitWidth = 843
+    ExplicitTop = 0
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -116,32 +114,14 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbPrivatBank
-      StartDateParam.Value = 41579d
-      StartDateParam.Component = deStart
-      StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
-      EndDateParam.Component = deEnd
-      EndDateParam.DataType = ftDateTime
     end
     object BankForumLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbForum
-      StartDateParam.Value = 41579d
-      StartDateParam.Component = deStart
-      StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
-      EndDateParam.Component = deEnd
-      EndDateParam.DataType = ftDateTime
     end
     object BankOTPLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbOTPBank
-      StartDateParam.Value = 41579d
-      StartDateParam.Component = deStart
-      StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
-      EndDateParam.Component = deEnd
-      EndDateParam.DataType = ftDateTime
     end
     object BankOTP: TMultiAction
       Category = 'DSDLib'
@@ -159,22 +139,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankVostokLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbVostok
-      StartDateParam.Value = 41579d
-      StartDateParam.Component = deStart
-      StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
-      EndDateParam.Component = deEnd
-      EndDateParam.DataType = ftDateTime
     end
     object BankFidoLoad: TClientBankLoadAction
       Category = 'DSDLib'
       ClientBankType = cbFidoBank
-      StartDateParam.Value = 41579d
-      StartDateParam.Component = deStart
-      StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
-      EndDateParam.Component = deEnd
-      EndDateParam.DataType = ftDateTime
     end
     object BankPrivat: TMultiAction
       Category = 'DSDLib'
