@@ -26,6 +26,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = 8
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -1259,12 +1260,15 @@ object PersonalAccountForm: TPersonalAccountForm
       item
         Name = 'Statuscode'
         Value = ''
-        Component = FormParams
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        DataType = ftString
       end
       item
         Name = 'statusname'
         Value = ''
-        Component = FormParams
+        Component = StatusGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -1375,8 +1379,8 @@ object PersonalAccountForm: TPersonalAccountForm
     LookupControl = ceStatus
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 52
-    Top = 8
+    Left = 60
+    Top = 16
   end
   object StatusStoredProc: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
@@ -1397,7 +1401,7 @@ object PersonalAccountForm: TPersonalAccountForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 156
+    Left = 92
     Top = 16
   end
 end
