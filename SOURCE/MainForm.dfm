@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -37,7 +37,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -245,6 +245,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCity'
         end
         item
           Visible = True
@@ -973,6 +977,16 @@ object MainForm: TMainForm
     end
     object bbTransportService: TdxBarButton
       Action = actTransportService
+      Category = 0
+    end
+    object dxBarSubItem1: TdxBarSubItem
+      Caption = 'New SubItem'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <>
+    end
+    object bbCity: TdxBarButton
+      Action = actCity
       Category = 0
     end
   end
@@ -1711,6 +1725,14 @@ object MainForm: TMainForm
       Caption = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
       Hint = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
       FormName = 'TSetUserDefaultsForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCity: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1086#1088#1086#1076#1072
+      Hint = #1041#1072#1085#1082#1080
+      FormName = 'TCityForm'
       GuiParams = <>
       isShowModal = False
     end

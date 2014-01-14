@@ -86,6 +86,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
+    procedure LoadCityFormTest;
   end;
 
 implementation
@@ -834,6 +835,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
 end;
+
+procedure TLoadFormTest.LoadCityFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
+end;
+
 
 procedure TLoadFormTest.SetUp;
 begin
