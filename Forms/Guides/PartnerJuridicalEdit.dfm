@@ -1,4 +1,4 @@
-﻿inherited PartnerEditForm: TPartnerEditForm
+﻿inherited PartnerJuridicalEditForm: TPartnerJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072'>'
   ClientHeight = 443
   ClientWidth = 384
@@ -299,7 +299,6 @@
         Name = 'inJuridicalId'
         Value = ''
         Component = dsdJuridicalGuides
-        ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
@@ -387,19 +386,6 @@
         Value = 0.000000000000000000
         Component = ceDocumentDayCount
         DataType = ftFloat
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = dsdJuridicalGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = dsdJuridicalGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end
       item
         Name = 'RouteId'

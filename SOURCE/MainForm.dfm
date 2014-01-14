@@ -37,7 +37,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -114,14 +114,6 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbSendOnPrice'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSend'
-        end
-        item
-          Visible = True
           ItemName = 'bbSale'
         end
         item
@@ -130,11 +122,11 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbLoss'
+          ItemName = 'bbSendOnPrice'
         end
         item
           Visible = True
-          ItemName = 'bbInventory'
+          ItemName = 'bbSend'
         end
         item
           Visible = True
@@ -143,6 +135,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbProductionUnion'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInventory'
         end
         item
           Visible = True
@@ -161,6 +161,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbJuridicalGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical_List'
         end
         item
           Visible = True
@@ -220,6 +224,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbUnit_List'
+        end
+        item
+          Visible = True
           ItemName = 'bbUnit'
         end
         item
@@ -237,6 +245,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCity'
         end
         item
           Visible = True
@@ -432,6 +444,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportProfitLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountReport'
         end
         item
           Visible = True
@@ -736,10 +752,6 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbAccountReport'
-        end
-        item
-          Visible = True
           ItemName = 'bbReport_Goods'
         end
         item
@@ -975,6 +987,10 @@ object MainForm: TMainForm
       Action = actBankAccountDocument
       Category = 0
     end
+    object bbCity: TdxBarButton
+      Action = actCity
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1059,14 +1075,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actContractArticle: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
-      Hint = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
-      FormName = 'TContractArticleForm'
-      GuiParams = <>
-      isShowModal = False
-    end
     object actSendTicketFuel: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
@@ -1147,7 +1155,7 @@ object MainForm: TMainForm
     end
     object actIncome: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1088#1080#1093#1086#1076#1085#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077
+      Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       FormName = 'TIncomeJournalForm'
       GuiParams = <>
       isShowModal = False
@@ -1166,10 +1174,52 @@ object MainForm: TMainForm
       ImageIndex = 43
       ShortCut = 16472
     end
-    object actInventory: TdsdOpenForm
+    object actReturnOut: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
-      FormName = 'TInventoryJournalForm'
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
+      FormName = 'TReturnOutJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSale: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      FormName = 'TSaleJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReturnIn: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      FormName = 'TReturnInJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSendOnPrice: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
+      FormName = 'TSendOnPriceJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSend: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
+      FormName = 'TSendJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionSeparate: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+      FormName = 'TProductionSeparateJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProductionUnion: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
+      FormName = 'TProductionUnionJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1180,18 +1230,18 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actInventory: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+      FormName = 'TInventoryJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
     object actBank: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1041#1072#1085#1082#1080
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actSendOnPrice: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
-      FormName = 'TSendOnPriceJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1240,6 +1290,14 @@ object MainForm: TMainForm
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       Hint = #1044#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TContractForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContractArticle: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractArticleForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1459,51 +1517,9 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actSend: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
-      FormName = 'TSendJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actSale: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-      FormName = 'TSaleJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReturnOut: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      FormName = 'TReturnOutJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actReturnIn: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TReturnInJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProductionSeparate: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-      FormName = 'TProductionSeparateJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actProductionUnion: TdsdOpenForm
-      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
-      FormName = 'TProductionUnionJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
     object actZakazExternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1047#1072#1103#1074#1082#1072' ('#1089#1090#1086#1088#1086#1085#1085#1103#1103')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TZakazExternalJournalForm'
       GuiParams = <>
       isShowModal = False
@@ -1518,7 +1534,7 @@ object MainForm: TMainForm
     end
     object actZakazInternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
-      Caption = #1047#1072#1103#1074#1082#1072' ('#1074#1085#1091#1090#1088#1077#1085#1085#1103#1103')'
+      Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
       FormName = 'TZakazInternalJournalForm'
       GuiParams = <>
       isShowModal = False
@@ -1718,6 +1734,14 @@ object MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
       FormName = 'TBankAccountJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCity: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1086#1088#1086#1076#1072
+      Hint = #1041#1072#1085#1082#1080
+      FormName = 'TCityForm'
       GuiParams = <>
       isShowModal = False
     end

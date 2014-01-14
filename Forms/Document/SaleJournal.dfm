@@ -1,7 +1,7 @@
 object SaleJournalForm: TSaleJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -123,6 +123,7 @@ object SaleJournalForm: TSaleJournalForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
+      OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupSummaryLayout = gslAlignWithColumns
       OptionsView.HeaderAutoHeight = True
@@ -150,75 +151,92 @@ object SaleJournalForm: TSaleJournalForm
             ImageIndex = 13
             Value = 3
           end>
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 54
+        Width = 70
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
       object colOperDatePartner: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
         DataBinding.FieldName = 'OperDatePartner'
-        Width = 50
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 120
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 140
+        Width = 120
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1086#1090#1087#1088#1072#1074#1083#1077#1085#1086')'
         DataBinding.FieldName = 'TotalCount'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 90
       end
       object colTotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1083#1091#1095#1077#1085#1086')'
         DataBinding.FieldName = 'TotalCountPartner'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090
-        DataBinding.FieldName = 'TotalSumm'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
+      end
+      object colTotalSumm: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+        DataBinding.FieldName = 'TotalSumm'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colChangePercent: TcxGridDBColumn
         Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
         DataBinding.FieldName = 'ChangePercent'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 65
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
         DataBinding.FieldName = 'PriceWithVAT'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
         DataBinding.FieldName = 'VATPercent'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
       end
       object colTotalSummVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummVAT'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
       end
@@ -226,63 +244,53 @@ object SaleJournalForm: TSaleJournalForm
         Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummMVAT'
         Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
       object colTotalSummPVAT: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
         DataBinding.FieldName = 'TotalSummPVAT'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
       object colPaidKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 55
       end
       object colContractName: TcxGridDBColumn
-        Caption = #1044#1086#1075#1086#1074#1086#1088
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object colInvNumberOrder: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080
         DataBinding.FieldName = 'InvNumberOrder'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object colChecked: TcxGridDBColumn
         Caption = #1055#1088#1086#1074#1077#1088#1077#1085
         DataBinding.FieldName = 'Checked'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 45
-      end
-      object colCarName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colPersonalDriverName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1074#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalDriverName'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colPersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1101#1082#1089#1087#1077#1076#1080#1090#1086#1088')'
-        HeaderAlignmentVert = vaCenter
-      end
-      object colRouteName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'RouteName'
-        HeaderAlignmentVert = vaCenter
       end
       object colRouteSortingName: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
         DataBinding.FieldName = 'RouteSortingName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel

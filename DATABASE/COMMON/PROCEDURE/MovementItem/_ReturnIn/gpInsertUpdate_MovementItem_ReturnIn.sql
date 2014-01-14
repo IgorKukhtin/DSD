@@ -20,10 +20,21 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
-     vbUserId := inSession;
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
+     vbUserId:= inSession;
+
+     -- проверка - проведенный/удаленный документ не может корректироваться
+     IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
+     THEN
+         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = inMovementId));
+     END IF;
+     -- проверка - удаленный элемент документа не может корректироваться
+     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
+     THEN
+         RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
+     END IF;
+
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -59,15 +70,14 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.01.14                                        * add RAISE EXCEPTION
  18.07.13         * add inAssetId                 
  17.07.13         * 
-
 */
 
 -- тест

@@ -1,4 +1,4 @@
-unit SaleJournal;
+unit City;
 
 interface
 
@@ -9,10 +9,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus, dsdAddOn, dxSkinsCore,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
   dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
   dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -24,68 +22,51 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems;
+  Vcl.Menus;
 
 type
-  TSaleJournalForm = class(TParentForm)
+  TCityForm = class(TParentForm)
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
-    dxBarManagerBar: TdxBar;
+    dxBarManagerBar1: TdxBar;
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
     actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    colStatus: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colOperDate: TcxGridDBColumn;
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    Panel1: TPanel;
-    deStart: TcxDateEdit;
-    deEnd: TcxDateEdit;
-    actComplete: TdsdChangeMovementStatus;
-    spMovementComplete: TdsdStoredProc;
-    PopupMenu: TPopupMenu;
-    N1: TMenuItem;
-    bbComplete: TdxBarButton;
-    actUnComplete: TdsdChangeMovementStatus;
-    spMovementUnComplete: TdsdStoredProc;
-    bbUnComplete: TdxBarButton;
-    N2: TMenuItem;
-    bbDelete: TdxBarButton;
-    actSetErased: TdsdChangeMovementStatus;
-    spMovementSetErased: TdsdStoredProc;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBViewAddOn: TdsdDBViewAddOn;
-    dxBarStatic: TdxBarStatic;
+    bbSetErased: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
     dsdGridToExcel: TdsdGridToExcel;
-    bbGridToExcel: TdxBarButton;
-    colTotalCount: TcxGridDBColumn;
-    colChecked: TcxGridDBColumn;
-    colInvNumberOrder: TcxGridDBColumn;
-    colOperDatePartner: TcxGridDBColumn;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    actInsert: TdsdInsertUpdateAction;
+    pmGrid: TPopupMenu;
+    pmAdd: TMenuItem;
+    N1: TMenuItem;
+    N2: TMenuItem;
+    dsdSetUnErased: TdsdUpdateErased;
+    dsdSetErased: TdsdUpdateErased;
+    N3: TMenuItem;
+    N4: TMenuItem;
   private
+    { Private declarations }
   public
+    { Public declarations }
   end;
 
 implementation
@@ -93,6 +74,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TSaleJournalForm);
+  RegisterClass(TCityForm);
 
 end.

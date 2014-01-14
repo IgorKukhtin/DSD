@@ -16,27 +16,26 @@ BEGIN
   -- для Админа  - Все Права
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
   THEN
-      IF inProcessId = zc_Enum_Process_InsertUpdate_Movement_Transport()
-      THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
-      ELSE
-      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Transport()
+                       , zc_Enum_Process_InsertUpdate_Movement_Income()
                        , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                        , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
+                       , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()
                         )
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24));
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
       ELSE
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service())
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 44));
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 44)); -- Начисления Днепр
       ELSE
-      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash())
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
+                       , zc_Enum_Process_Get_Movement_Cash()
+                        )
       THEN
-           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54));
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54)); -- Касса Днепр
       ELSE
           RAISE EXCEPTION 'У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
-      END IF;
       END IF;
       END IF;
       END IF;

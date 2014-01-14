@@ -518,9 +518,6 @@
         Guides = PaidKindGuides
       end
       item
-        Guides = UnitGuides
-      end
-      item
         Guides = InfoMoneyGuides
       end>
     ActionItemList = <>

@@ -59,7 +59,6 @@ uses
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm},
-  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
@@ -311,7 +310,11 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
-  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm};
+  PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
+  PartnerEdit in '..\..\Forms\Guides\PartnerEdit.pas' {PartnerEditForm: TParentForm},
+  City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
+  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm};
 
 {$R *.RES}
 

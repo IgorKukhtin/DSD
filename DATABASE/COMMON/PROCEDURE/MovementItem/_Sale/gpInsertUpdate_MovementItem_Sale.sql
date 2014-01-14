@@ -22,15 +22,14 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Sale());
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_Sale());
      vbUserId := inSession;
 
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
      THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', (SELECT Object_Status.ValueData FROM Movement JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId WHERE Movement.Id = inMovementId );
+         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = inMovementId));
      END IF;
      -- проверка - удаленный элемент документа не может корректироваться
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
@@ -66,23 +65,18 @@ BEGIN
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-     END IF;
+     -- создали объект <Связи Товары и Виды товаров>
+     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -93,7 +87,6 @@ LANGUAGE PLPGSQL VOLATILE;
  09.07.13                                        * add IF inGoodsId <> 0
  18.07.13         * add inAssetId               
  13.07.13         * 
-
 */
 
 -- тест
