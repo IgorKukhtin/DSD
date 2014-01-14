@@ -24,6 +24,7 @@ type
     procedure LoadAssetFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
+    procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
     procedure LoadBranchFormTest;
     procedure LoadBusinessFormTest;
@@ -86,6 +87,7 @@ type
     procedure LoadWorkTimeKindFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
+    procedure LoadCityFormTest;
   end;
 
 implementation
@@ -101,6 +103,14 @@ begin
   if GetClass(FormClass) = nil then
      raise Exception.Create('Не зарегистрирован класс: ' + FormClass);
   Application.CreateForm(TComponentClass(GetClass(FormClass)), Result);
+end;
+
+procedure TLoadFormTest.LoadBankAccountDocumentFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountJournalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBankAccountMovementForm');
 end;
 
 procedure TLoadFormTest.LoadBankAccountFormTest;
@@ -834,6 +844,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFreightEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFreightForm');
 end;
+
+procedure TLoadFormTest.LoadCityFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
+end;
+
 
 procedure TLoadFormTest.SetUp;
 begin
