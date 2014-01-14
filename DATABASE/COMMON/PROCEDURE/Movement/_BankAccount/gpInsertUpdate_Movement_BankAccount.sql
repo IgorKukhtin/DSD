@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
     IN inAmount              TFloat    , -- Сумма операции 
 
     IN inBankAccountId       Integer   , -- От кого (в документе) -- Расчетный счет 	
-    IN inJuridicalId         Integer   , -- Кому (в документе)  -- Юридическое лицо 	
+    IN inMoneyPlaceId        Integer   , -- Кому (в документе)  -- Юридическое лицо 	
     IN inCurrencyId          Integer   , -- Валюта 
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inBusinessId          Integer   , -- Бизнесс

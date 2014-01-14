@@ -653,8 +653,16 @@ end;
 { TdsdFormClose }
 
 function TdsdFormClose.LocalExecute: boolean;
+var i: integer;
 begin
   result := true;
+  // Для начала делаем отмену всем ДатаСетам
+  //
+  for I := 0 to Owner.ComponentCount - 1 do
+     if Owner.Components[i] is TDataSet then
+        if TDataSet(Owner.Components[i]).State in dsEditModes then
+           TDataSet(Owner.Components[i]).Cancel;
+
   if Owner is TForm then
      (Owner as TForm).Close;
 end;
@@ -1115,7 +1123,12 @@ function TdsdInsertUpdateGuides.LocalExecute: boolean;
 begin
   inherited;
   // Делаем post всем
-  PostDataSet;
+  try
+    PostDataSet;
+  except
+    TParentForm(Owner).ModalResult := mrNone;
+    raise;
+  end;
   result := true;
   TParentForm(Owner).Close(Self);
 end;

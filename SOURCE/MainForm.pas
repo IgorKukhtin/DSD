@@ -237,7 +237,7 @@ type
     bbJuridical_List: TdxBarButton;
     actUnit_List: TdsdOpenForm;
     bbUnit_List: TdxBarButton;
-    actBankAccountDocument: TdsdOpenFormAction;
+    actBankAccountDocument: TdsdOpenForm;
     bbBankAccountDocument: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);

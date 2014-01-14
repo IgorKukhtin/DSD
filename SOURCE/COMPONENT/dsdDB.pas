@@ -328,29 +328,31 @@ begin
      if Value <> FStoredProcName then
      begin
        FStoredProcName := Value;
-       Params.Clear;
-       lDataSet := TClientDataSet.Create(nil);
-       try
+       if ShiftDown then begin
+         Params.Clear;
+         lDataSet := TClientDataSet.Create(nil);
          try
-           lDataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [FStoredProcName]));
-         except
-         //  on E: Exception do
-         //  ShowMessage(E.Message);
-         end;
-         if lDataSet.Active then begin
-           while not lDataSet.Eof do begin
-             // ƒобавл€ем OUT параметры только если тип otResult
-             // и это не сесси€
-             if (lDataSet.FieldByName('Name').AsString <> 'insession')
-                and ((OutputType = otResult) or (PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString) <> ptOutput)) then
-                Params.AddParam(lDataSet.FieldByName('Name').AsString,
-                                PostgresDataTypeToDelphiDataType(lDataSet.FieldByName('TypeName').AsString),
-                                PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString), null);
-             lDataSet.Next;
+           try
+             lDataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [FStoredProcName]));
+           except
+           //  on E: Exception do
+           //  ShowMessage(E.Message);
            end;
+           if lDataSet.Active then begin
+             while not lDataSet.Eof do begin
+               // ƒобавл€ем OUT параметры только если тип otResult
+               // и это не сесси€
+               if (lDataSet.FieldByName('Name').AsString <> 'insession')
+                  and ((OutputType = otResult) or (PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString) <> ptOutput)) then
+                  Params.AddParam(lDataSet.FieldByName('Name').AsString,
+                                  PostgresDataTypeToDelphiDataType(lDataSet.FieldByName('TypeName').AsString),
+                                  PostgresParamTypeToDelphiParamType(lDataSet.FieldByName('Mode').AsString), null);
+               lDataSet.Next;
+             end;
+           end;
+         finally
+           lDataSet.Free;
          end;
-       finally
-         lDataSet.Free;
        end;
      end
   end

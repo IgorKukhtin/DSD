@@ -1714,10 +1714,12 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actBankAccountDocument: TdsdOpenFormAction
+    object actBankAccountDocument: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
       FormName = 'TBankAccountJournalForm'
+      GuiParams = <>
+      isShowModal = False
     end
   end
   object cxLocalizer: TcxLocalizer
