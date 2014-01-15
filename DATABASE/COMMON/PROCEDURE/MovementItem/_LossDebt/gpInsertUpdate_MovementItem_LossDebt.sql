@@ -3,6 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_LossDebt (Integer, Integer, Integer, TFloat, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_LossDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- ключ Документа
