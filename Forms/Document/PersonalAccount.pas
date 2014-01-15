@@ -110,7 +110,6 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
     cxLabel4: TcxLabel;
-    ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     clIsErased: TcxGridDBColumn;

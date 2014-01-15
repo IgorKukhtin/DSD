@@ -1302,15 +1302,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Left = 258
     Top = 178
   end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_PersonalAccount'
-    Left = 488
-    Top = 176
-  end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalAccount_SetErased'
     DataSets = <>

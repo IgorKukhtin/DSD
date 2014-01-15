@@ -25,8 +25,8 @@ $BODY$
    DECLARE vbSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
-     vbUserId := inSession;
+     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
+     vbUserId:= inSession;
 
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
