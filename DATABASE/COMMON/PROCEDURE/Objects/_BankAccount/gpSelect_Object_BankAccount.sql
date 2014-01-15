@@ -1,12 +1,12 @@
 ﻿-- Function: gpSelect_Object_BankAccount(TVarChar)
 
---DROP FUNCTION gpSelect_Object_BankAccount(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_BankAccount(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_BankAccount(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-               JuridicalName TVarChar, BankName TVarChar, CurrencyName TVarChar) AS
+               JuridicalName TVarChar, BankName TVarChar, CurrencyId Integer, CurrencyName TVarChar) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -20,6 +20,7 @@ $BODY$BEGIN
      , Object.isErased     AS isErased
      , Juridical.ValueData AS JuridicalName
      , Bank.ValueData      AS BankName
+     , BankAccount_Currency.ChildObjectId AS CurrencyId
      , Currency.ValueData  AS CurrencyName
      FROM Object
 LEFT JOIN ObjectLink AS BankAccount_Juridical
@@ -49,6 +50,7 @@ ALTER FUNCTION gpSelect_Object_BankAccount(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.01.14                         *
  10.06.13          *
  05.06.13          
 

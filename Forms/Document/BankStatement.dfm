@@ -298,7 +298,9 @@ inherited BankStatementForm: TBankStatementForm
     Top = 232
   end
   inherited ActionList: TActionList
-    Top = 231
+    Images = dmMain.ImageList
+    Left = 79
+    Top = 247
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -402,6 +404,16 @@ inherited BankStatementForm: TBankStatementForm
       Caption = 'actUpdateDataSet'
       DataSource = MasterDS
     end
+    object actSendToBankAccount: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spBankAccount_From_BankStatement
+      StoredProcList = <
+        item
+          StoredProc = spBankAccount_From_BankStatement
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089
+      ImageIndex = 27
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -431,6 +443,25 @@ inherited BankStatementForm: TBankStatementForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendToBankAccount'
+        end>
+    end
     object BarManagerBar1: TdxBar [1]
       Caption = #1056#1072#1079#1076#1077#1083#1077#1085#1085#1099#1077' '#1079#1072#1087#1080#1089#1080
       CaptionButtons = <>
@@ -448,6 +479,10 @@ inherited BankStatementForm: TBankStatementForm
       UseOwnFont = False
       Visible = True
       WholeRow = False
+    end
+    object bbSendToBankAccount: TdxBarButton
+      Action = actSendToBankAccount
+      Category = 0
     end
   end
   object FormParams: TdsdFormParams
@@ -536,5 +571,20 @@ inherited BankStatementForm: TBankStatementForm
       end>
     Left = 320
     Top = 128
+  end
+  object spBankAccount_From_BankStatement: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_BankAccount_From_BankStatement'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 208
+    Top = 120
   end
 end

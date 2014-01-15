@@ -12,14 +12,13 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, ClientBankLoad;
+  cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
     colBankName: TcxGridDBColumn;
     colBankAccount: TcxGridDBColumn;
     colJuridical: TcxGridDBColumn;
-    colBusiness: TcxGridDBColumn;
     colInfoMoney: TcxGridDBColumn;
     colUnit: TcxGridDBColumn;
     colContract: TcxGridDBColumn;

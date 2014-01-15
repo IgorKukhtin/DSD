@@ -17,24 +17,35 @@ BEGIN
     
      -- Выбираем все данные и сразу вызываем процедуры
 
-/*     PERFORM  SELECT
-             
-       lpInsertUpdate_Movement_BankAccount(ioId, 
-               inInvNumber, 
+     PERFORM             
+       lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
+               inInvNumber := Movement.InvNumber, 
                inOperDate := Movement.OperDate, 
                inAmount := MovementFloat_Amount.ValueData, 
-               inBankAccountId,  
-               inJuridicalId := MovementLinkObject_Juridical.ObjectId, 
-               inCurrencyId := MovementLinkObject_Currency.ObjectId, 
-               inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
-               inBusinessId := 0, 
+               inBankAccountId := MovementLinkObject_BankAccount.ObjectId,  
+               inComment := MovementString_Comment.ValueData, 
+               inMoneyPlaceId := MovementLinkObject_Juridical.ObjectId, 
                inContractId := MovementLinkObject_Contract.ObjectId, 
+               inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
                inUnitId := MovementLinkObject_Unit.ObjectId, 
+               inCurrencyId := MovementLinkObject_Currency.ObjectId, 
                inParentId := Movement.Id)
 
        FROM Movement
+            LEFT JOIN Movement AS Movement_BankAccount 
+                   ON Movement_BankAccount.ParentId = Movement.Id
+                  AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
+                                         ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
+                                        AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+
+
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+
             LEFT JOIN MovementFloat AS MovementFloat_Amount
                                     ON MovementFloat_Amount.MovementId =  Movement.Id
                                    AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
@@ -50,12 +61,10 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
                                          ON MovementLinkObject_Currency.MovementId = Movement.Id
                                         AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
-            LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MovementLinkObject_Currency.ObjectId
           
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
                                          ON MovementLinkObject_Unit.MovementId = Movement.Id
                                         AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
                                          ON MovementLinkObject_Juridical.MovementId = Movement.Id
@@ -63,7 +72,7 @@ BEGIN
  
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
- */
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

@@ -33,6 +33,22 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
      WHERE Object_Cash.DescId = zc_Object_Cash()
     UNION ALL
+     SELECT Object_BankAccount_View.Id
+          , Object_BankAccount_View.Code     
+          , Object_BankAccount_View.Name AS Name
+          , ObjectDesc.ItemName
+          , Object_BankAccount_View.isErased
+          , 0::Integer
+          , ''::TVarChar
+       --   , Object_BankAccount_View.BankName
+          , 0::Integer
+       --   , Object_BankAccount_View.CurrencyName
+          , ''::TVarChar
+          , NULL::TDateTime
+          , ''::TVarChar
+     FROM Object_BankAccount_View, ObjectDesc 
+     WHERE ObjectDesc.Id = zc_Object_BankAccount()
+    UNION ALL
      SELECT Object_Member.Id       
           , Object_Member.ObjectCode     
           , Object_Member.ValueData
@@ -80,6 +96,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 15.01.14                         * add BankAccount
  05.01.14                                        * add zc_Enum_PaidKind_SecondForm
  05.01.14                                        * View_Contract.InfoMoneyId
  18.12.13                         *

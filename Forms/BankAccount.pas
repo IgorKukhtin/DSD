@@ -18,7 +18,7 @@ type
     cxGrid: TcxGrid;
     clName: TcxGridDBColumn;
     DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;

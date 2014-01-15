@@ -23,6 +23,30 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         ExplicitWidth = 1056
         ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = colDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Position = spFooter
+              Column = colKredit
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDebet
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colKredit
+            end>
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -56,6 +80,9 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
+            DataBinding.FieldName = 'AmountIn'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -63,40 +90,41 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           end
           object colKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
+            DataBinding.FieldName = 'AmountOut'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 64
           end
-          object colContract: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 68
-          end
           object colJuridical: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1086
+            Caption = #1054#1073#1098#1077#1082#1090
+            DataBinding.FieldName = 'MoneyPlaceName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 103
           end
+          object colContract: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractInvNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 68
+          end
           object colInfoMoney: TcxGridDBColumn
             Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 110
           end
           object colUnit: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
-          end
-          object colBusiness: TcxGridDBColumn
-            Caption = #1041#1080#1079#1085#1077#1089
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 98
           end
         end
       end
@@ -137,7 +165,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
-    Params = <>
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
