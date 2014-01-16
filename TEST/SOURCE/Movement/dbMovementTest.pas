@@ -118,9 +118,9 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer
+             FromId, ToId, PaidKindId, ContractId: Integer
              ): integer;
     constructor Create; override;
   end;
@@ -751,16 +751,16 @@ var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
     OperDatePartner: TDateTime;
-    PriceWithVAT: Boolean;
+    Checked, PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer;
+    FromId, ToId, PaidKindId, ContractId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
 
   OperDatePartner:= Date;
-
+  Checked:=true;
   PriceWithVAT:=true;
   VATPercent:=20;
   ChangePercent:=-10;
@@ -769,20 +769,17 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=TPaidKindTest.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
-  CarId:=TCarTest.Create.GetDefault;
-  PersonalDriverId:=0;
   //
   result := InsertUpdateMovementReturnIn(Id, InvNumber, OperDate,
-             OperDatePartner, PriceWithVAT,
+             OperDatePartner, Checked, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId,
-             CarId, PersonalDriverId);
+             FromId, ToId, PaidKindId, ContractId);
 end;
 
 function TMovementReturnInTest.InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; PriceWithVAT: Boolean;
+             OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, CarId, PersonalDriverId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -791,6 +788,7 @@ begin
 
   FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
 
+  FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
@@ -799,9 +797,6 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-
-  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
 
   result := InsertUpdate(FParams);
 end;

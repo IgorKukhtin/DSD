@@ -1,6 +1,5 @@
 -- Function: gpComplete_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn(
@@ -180,7 +179,7 @@ BEGIN
        AND Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
-     
+/*     
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
      SELECT lfObject_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfObject_InfoMoney;
 
@@ -1378,7 +1377,7 @@ BEGIN
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ReturnIn() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
+*/
 
 END;
 $BODY$

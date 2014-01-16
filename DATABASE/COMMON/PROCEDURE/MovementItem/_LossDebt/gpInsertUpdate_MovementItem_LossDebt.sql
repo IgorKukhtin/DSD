@@ -37,7 +37,7 @@ BEGIN
 
      -- проверка
      IF (COALESCE (ioAmountDebet, 0) <> 0) AND (COALESCE (ioAmountKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет сумма> или <Кредит сумма>.';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
      -- проверка

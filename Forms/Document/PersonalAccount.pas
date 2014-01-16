@@ -118,7 +118,7 @@ type
     colBusinessName: TcxGridDBColumn;
     ceStatus: TcxButtonEdit;
     StatusGuides: TdsdGuides;
-    StatusStoredProc: TdsdStoredProc;
+    spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;

@@ -113,7 +113,6 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
     cxLabel4: TcxLabel;
-    ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
@@ -122,7 +121,7 @@ type
     colBusinessName: TcxGridDBColumn;
     ceStatus: TcxButtonEdit;
     StatusGuides: TdsdGuides;
-    StatusStoredProc: TdsdStoredProc;
+    spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;

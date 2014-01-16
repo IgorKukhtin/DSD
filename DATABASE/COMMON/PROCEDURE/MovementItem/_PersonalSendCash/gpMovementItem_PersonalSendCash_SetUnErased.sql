@@ -11,28 +11,27 @@ CREATE OR REPLACE FUNCTION gpMovementItem_PersonalSendCash_SetUnErased(
   RETURNS Boolean
 AS
 $BODY$
-  DECLARE vbStatusId Integer;
+   DECLARE vbStatusId Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-
-  -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_MovementItem());
+  -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PersonalSendCash());
 
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN
-      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <"%"> не возможно.', lfGet_Object_ValueData (vbStatusId);
+      RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
 
   -- проверка - связанные документы Изменять нельзя
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');
 
-
   -- устанавливаем новое значение
   outIsErased := FALSE;
 
   -- Обязательно меняем 
-  UPDATE MovementItem SET isErased = outIsErased
+  UPDATE MovementItem SET isErased = FALSE
   WHERE MovementItem.MovementId = inMovementId
     AND MovementItem.ObjectId = inPersonalId
     AND MovementItem.DescId = zc_MI_Master();
@@ -42,7 +41,6 @@ BEGIN
 
   -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
   -- outIsErased := TRUE;
-
 
 END;
 $BODY$

@@ -95,7 +95,7 @@ type
     colAssetName: TcxGridDBColumn;
     clenGoodsKindName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
-    bbBooleanAction: TdxBarButton;
+    bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
     actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
@@ -140,14 +140,18 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
-    ceStatus: TcxButtonEdit;
     cxLabel11: TcxLabel;
-    ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
+    StatusGuides: TdsdGuides;
+    spChangeStatus: TdsdStoredProc;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    DeleteMovement: TChangeGuidesStatus;
+    ceStatus: TcxButtonEdit;
   private
   public
   end;

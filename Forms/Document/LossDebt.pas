@@ -108,7 +108,6 @@ type
     RouteChoiceForm: TOpenChoiceForm;
     CarChoiceForm: TOpenChoiceForm;
     cxLabel4: TcxLabel;
-    ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     clIsErased: TcxGridDBColumn;
@@ -116,7 +115,7 @@ type
     colBusinessName: TcxGridDBColumn;
     ceStatus: TcxButtonEdit;
     StatusGuides: TdsdGuides;
-    StatusStoredProc: TdsdStoredProc;
+    spChangeStatus: TdsdStoredProc;
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
@@ -137,6 +136,7 @@ type
     clSummDebet: TcxGridDBColumn;
     clSummKredit: TcxGridDBColumn;
     clIsCalculated: TcxGridDBColumn;
+    bbShowAll: TdxBarButton;
   private
   public
   end;

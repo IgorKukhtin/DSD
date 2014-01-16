@@ -17,6 +17,7 @@ BEGIN
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
   THEN
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Transport()
+                       , zc_Enum_Process_Get_Movement_Transport()
                        , zc_Enum_Process_InsertUpdate_Movement_Income()
                        , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                        , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()

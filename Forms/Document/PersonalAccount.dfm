@@ -215,12 +215,14 @@ object PersonalAccountForm: TPersonalAccountForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
@@ -318,9 +320,6 @@ object PersonalAccountForm: TPersonalAccountForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -968,10 +967,10 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -984,10 +983,10 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -1000,10 +999,10 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -1264,14 +1263,14 @@ object PersonalAccountForm: TPersonalAccountForm
         Component = edOperDate
       end
       item
-        Name = 'Statuscode'
+        Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
-        Name = 'statusname'
+        Name = 'StatusName'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
@@ -1323,16 +1322,9 @@ object PersonalAccountForm: TPersonalAccountForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inMovementItemId'
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -1350,16 +1342,9 @@ object PersonalAccountForm: TPersonalAccountForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inMovementItemId'
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -1379,20 +1364,20 @@ object PersonalAccountForm: TPersonalAccountForm
     Left = 60
     Top = 16
   end
-  object StatusStoredProc: TdsdStoredProc
+  object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
-        Value = ''
-        Component = StatusGuides
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'StatusCode'
+        Name = 'inStatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'

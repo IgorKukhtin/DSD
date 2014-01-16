@@ -141,6 +141,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -148,6 +149,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoney: TcxGridDBColumn

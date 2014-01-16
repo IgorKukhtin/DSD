@@ -927,10 +927,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -943,10 +943,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -959,10 +959,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -1277,15 +1277,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     Left = 258
     Top = 178
   end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_PersonalSendCash'
-    Left = 488
-    Top = 176
-  end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_PersonalSendCash_SetErased'
     DataSets = <>
@@ -1348,20 +1339,20 @@ object PersonalSendCashForm: TPersonalSendCashForm
     Left = 52
     Top = 8
   end
-  object StatusStoredProc: TdsdStoredProc
+  object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_PersonalSendCash'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'StatusCode'
+        Name = 'inStatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
