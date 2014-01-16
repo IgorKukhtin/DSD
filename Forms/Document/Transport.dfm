@@ -1533,7 +1533,7 @@
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -1586,7 +1586,7 @@
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       StoredProc = spSelectMI
       StoredProcList = <
@@ -3141,7 +3141,7 @@
       Category = 0
     end
     object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
+      Action = actShowErased
       Category = 0
     end
     object bbAddIncome: TdxBarButton
@@ -3238,7 +3238,7 @@
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -3653,7 +3653,7 @@
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>

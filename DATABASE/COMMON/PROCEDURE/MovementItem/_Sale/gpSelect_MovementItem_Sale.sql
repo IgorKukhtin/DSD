@@ -231,7 +231,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  08.09.13                                        * add AmountChangePercent
  03.09.13                                        * add ChangePercentAmount
  21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem

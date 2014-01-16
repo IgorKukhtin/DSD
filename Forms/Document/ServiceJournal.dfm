@@ -121,7 +121,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

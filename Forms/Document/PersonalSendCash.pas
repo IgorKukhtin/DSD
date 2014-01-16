@@ -105,7 +105,7 @@ type
     InsertRecord: TInsertRecord;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbInsert: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;

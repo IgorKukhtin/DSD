@@ -211,6 +211,18 @@ object PersonalAccountForm: TPersonalAccountForm
             Options.Editing = False
             Width = 66
           end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            Width = 70
+          end
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
@@ -227,7 +239,7 @@ object PersonalAccountForm: TPersonalAccountForm
             Width = 129
           end
           object clContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -306,6 +318,9 @@ object PersonalAccountForm: TPersonalAccountForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -548,7 +563,7 @@ object PersonalAccountForm: TPersonalAccountForm
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -649,7 +664,7 @@ object PersonalAccountForm: TPersonalAccountForm
       Category = 0
     end
     object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
+      Action = actShowErased
       Category = 0
     end
     object bbRefresh: TdxBarButton
@@ -716,7 +731,7 @@ object PersonalAccountForm: TPersonalAccountForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI

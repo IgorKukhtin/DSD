@@ -37,12 +37,12 @@ BEGIN
 
      -- проверка
      IF (COALESCE (ioAmountDebet, 0) <> 0) AND (COALESCE (ioAmountKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма - или Дебет или Кредит.';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет сумма> или <Кредит сумма>.';
      END IF;
 
      -- проверка
      IF (COALESCE (ioSummDebet, 0) <> 0) AND (COALESCE (ioSummKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма - или Долг дебет Долг кредит.';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
      END IF;
 
      -- расчет
@@ -59,21 +59,18 @@ BEGIN
      END IF;
 
      -- расчет
-     ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0)
+     ioIsCalculated:= (vbSumm <> 0 OR vbAmount = 0);
      -- 
-     IF vbSumm <> 0 THEN ioAmountDebet: = 0; ioAmountKredit: = 0; END IF;
+     IF vbSumm <> 0 THEN ioAmountDebet := 0; ioAmountKredit := 0; END IF;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, vbAmount, NULL);
 
      -- сохранили свойство <Сумма рассчитывается по остатку (да/нет)>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MasterFuel(), ioId, inIsMasterFuel);
+     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_Calculated(), ioId, ioIsCalculated);
 
      -- сохранили свойство <Сумма остатка (долг)>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, vbSumm);
-
-     -- сохранили свойство < Сумма рассчитывается по остатку (да/нет)>
-     PERFORM lpInsertUpdate_MovementItemBoolean (zc_MIBoolean_MasterFuel(), ioId, inIsMasterFuel);
 
      -- сохранили связь с <Договор>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioId, inContractId);

@@ -54,7 +54,7 @@ type
     cxGridDBTableView: TcxGridDBTableView;
     clJuridicalCode: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clAmount: TcxGridDBColumn;
+    clAmountDebet: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     spSelectMIContainer: TdsdStoredProc;
@@ -100,7 +100,7 @@ type
     InsertRecord: TInsertRecord;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbInsert: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -128,6 +128,15 @@ type
     cxLabel5: TcxLabel;
     edBusiness: TcxButtonEdit;
     GuidesBusiness: TdsdGuides;
+    actShowAll: TBooleanStoredProcAction;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clUnitName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
+    clAmountKredit: TcxGridDBColumn;
+    clSummDebet: TcxGridDBColumn;
+    clSummKredit: TcxGridDBColumn;
+    clIsCalculated: TcxGridDBColumn;
   private
   public
   end;

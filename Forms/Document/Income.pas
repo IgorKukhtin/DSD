@@ -97,7 +97,7 @@ type
     colAccountOnComplete: TcxGridDBColumn;
     bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
-    BooleanStoredProcAction: TBooleanStoredProcAction;
+    actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
@@ -136,7 +136,7 @@ type
     PackerGuides: TdsdGuides;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;

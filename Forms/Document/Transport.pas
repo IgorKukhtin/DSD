@@ -161,7 +161,7 @@ type
     bbErased: TdxBarButton;
     SetUnErased: TdsdUpdateErased;
     bbUnErased: TdxBarButton;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     cxTabSheetIncome: TcxTabSheet;
     cxGridIncome: TcxGrid;

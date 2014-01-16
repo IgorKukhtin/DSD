@@ -102,7 +102,7 @@ type
     InsertRecord: TInsertRecord;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbInsert: TdxBarButton;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
@@ -127,6 +127,8 @@ type
     clContractName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
     clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
   private
   public
   end;

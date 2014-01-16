@@ -450,9 +450,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -687,14 +684,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -798,7 +795,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbBooleanAction: TdxBarButton
-      Action = BooleanStoredProcAction
+      Action = actShowAll
       Category = 0
     end
     object bbStatic: TdxBarStatic
@@ -827,7 +824,7 @@ object IncomeForm: TIncomeForm
       Category = 0
     end
     object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
+      Action = actShowErased
       Category = 0
     end
   end
@@ -862,7 +859,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI
@@ -881,7 +878,7 @@ object IncomeForm: TIncomeForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object BooleanStoredProcAction: TBooleanStoredProcAction
+    object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI

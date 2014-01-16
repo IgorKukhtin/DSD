@@ -36,16 +36,14 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , CASE WHEN MovementItem.Amount > 0 THEN
-                       MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountOut
+           , CASE WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount < 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountOut
 
            , MIString_Comment.ValueData        AS Comment
 

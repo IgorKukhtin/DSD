@@ -30,12 +30,12 @@ BEGIN
    
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму прихода или расхода';
+        RAISE EXCEPTION 'Введите сумму.';
      END IF;
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма - или прихода или расхода.';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Приход> или <Расход>.';
      END IF;
 
      -- расчет
