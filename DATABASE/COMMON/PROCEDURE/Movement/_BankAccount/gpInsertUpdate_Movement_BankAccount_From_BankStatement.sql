@@ -15,8 +15,8 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
      vbUserId := inSession;
     
-     -- Выбираем все данные и сразу вызываем процедуры
 
+     -- Выбираем все данные и сразу вызываем процедуры
      PERFORM             
        lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
                inInvNumber := Movement.InvNumber, 
@@ -73,19 +73,49 @@ BEGIN
        WHERE Movement.DescId = zc_Movement_BankStatementItem()
          AND Movement.ParentId = inMovementId;
 
+
+     -- 5.1. таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean
+                                ) ON COMMIT DROP;
+
+
+     -- 5.3. проводим Документ
+     PERFORM             
+       lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
+                                      , inUserId     := vbUserId)
+       FROM Movement
+            JOIN Movement AS Movement_BankAccount
+                   ON Movement_BankAccount.ParentId = Movement.Id
+                  AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+            JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
+            JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                        ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                       AND MILinkObject_MoneyPlace.ObjectId > 0
+       WHERE Movement.DescId = zc_Movement_BankStatementItem()
+         AND Movement.ParentId = inMovementId;
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.01.13                                        * add lpComplete_Movement_BankAccount
  06.12.13                          *
-
 */
 
 -- тест

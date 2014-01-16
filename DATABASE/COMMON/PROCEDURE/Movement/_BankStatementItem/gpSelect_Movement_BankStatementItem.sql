@@ -53,8 +53,8 @@ BEGIN
            , Object_Juridical.ValueData   AS LinkJuridicalName
            , Object_InfoMoney.Id          AS InfoMoneyId
            , Object_InfoMoney.ValueData   AS InfoMoneyName
-           , Object_Contract.Id           AS ContractId
-           , Object_Contract.ValueData    AS ContractName          
+           , View_Contract_InvNumber.ContractId
+           , View_Contract_InvNumber.InvNumber AS ContractName          
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
            , Object_Currency.ValueData    AS CurrencyName
@@ -107,7 +107,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
                                          ON MovementLinkObject_Currency.MovementId = Movement.Id
