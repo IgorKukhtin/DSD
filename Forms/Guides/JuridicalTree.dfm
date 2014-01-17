@@ -494,12 +494,14 @@ object JuridicalTreeForm: TJuridicalTreeForm
     ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
+        Action = dsdChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
+        Action = dsdChoiceGuides
         ShortCut = 13
       end
       item

@@ -11,10 +11,27 @@ uses
   Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
+  cxCurrencyEdit, DataModul, frxClass, frxDBSet;
 
 type
   TReport_JuridicalSoldForm = class(TAncestorReportForm)
+    colJuridicalName: TcxGridDBColumn;
+    colContractNumber: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
+    colAccountName: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colStartAmount: TcxGridDBColumn;
+    colSaleSumm: TcxGridDBColumn;
+    colMoneySumm: TcxGridDBColumn;
+    colServiceSumm: TcxGridDBColumn;
+    colOtherSumm: TcxGridDBColumn;
+    colEndAmount: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    dsdPrintAction: TdsdPrintAction;
+    frxDBDataset: TfrxDBDataset;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

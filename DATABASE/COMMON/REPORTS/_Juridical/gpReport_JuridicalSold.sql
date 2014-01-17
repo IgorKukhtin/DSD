@@ -2,7 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_Fuel(
+CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , --
     IN inAccountId        Integer,    -- Счет  
@@ -11,12 +11,9 @@ CREATE OR REPLACE FUNCTION gpReport_Fuel(
     IN inInfoMoneyDestinationId   Integer,    -- филиал
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (CarModelName TVarChar, CarId Integer, CarCode Integer, CarName TVarChar
-             , FuelCode Integer, FuelName TVarChar, KindId Integer
-             , BranchId Integer, BranchName TVarChar
-             , StartAmount TFloat, IncomeAmount TFloat, RateAmount TFloat, EndAmount TFloat
-             , StartSumm TFloat, IncomeSumm TFloat, RateSumm TFloat, EndSumm TFloat
-             )
+RETURNS TABLE (JuridicalName TVarChar, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
+               InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar,
+               StartAmount TFloat, SaleSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, OtherSumm TFloat, EndAmount TFloat)
 AS
 $BODY$
 BEGIN
@@ -27,16 +24,28 @@ BEGIN
      -- Один запрос, который считает остаток и движение. 
      -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400 для топлива и 30500 для денежных средств
   RETURN QUERY  
-     SELECT * 
+     SELECT 
+        Object_Juridical.ValueData AS JuridicalName,   
+        Object_Contract.ValueData AS ContractNumber,
+        Object_PaidKind.ValueData AS PaidKindName,
+        Object_Account.ValueData AS AccountName,
+        Object_InfoMoney_View.InfoMoneyGroupName,
+        Object_InfoMoney_View.InfoMoneyDestinationName,
+        Object_InfoMoney_View.InfoMoneyName,
+        Operation.StartAmount::TFloat,
+        Operation.SaleSumm::TFloat,
+        Operation.MoneySumm::TFloat,
+        Operation.ServiceSumm::TFloat,
+        Operation.OtherSumm::TFloat,
+        Operation.EndAmount::TFloat
      FROM 
-
      (         SELECT Container.Id AS ContainerId, Container.ObjectId, CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId,
                      Container.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount,
-                     SUM (CASE WHEN MIContainer.OperDate <= '2014-01-01'::TDateTime THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount1,
-                     SUM (CASE WHEN MIContainer.OperDate <= '2014-01-01'::TDateTime THEN CASE WHEN Movement.DescId in (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount2,
-                     SUM (CASE WHEN MIContainer.OperDate <= '2014-01-01'::TDateTime THEN CASE WHEN Movement.DescId in (zc_Movement_Service()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount3,
-                     SUM (CASE WHEN MIContainer.OperDate <= '2014-01-01'::TDateTime THEN CASE WHEN Movement.DescId not in (zc_Movement_Service(), zc_Movement_Sale(), zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount4,
-                     Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > '2014-01-01'::TDateTime THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SaleSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_Service()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId not in (zc_Movement_Service(), zc_Movement_Sale(), zc_Movement_Cash(), zc_Movement_BankAccount()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OtherSumm,
+                     Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                 FROM ContainerLinkObject AS CLO_Juridical 
                 JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
            LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
@@ -45,9 +54,10 @@ BEGIN
                                   
            LEFT JOIN MovementItemContainer AS MIContainer 
                   ON MIContainer.Containerid = Container.Id
+                 AND MIContainer.OperDate >= inStartDate
            LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
-                 --AND MIContainer.OperDate >= inStartDate
-               WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() --AND Object_InfoMoney_View.InfoMoneyDestinationId = 0
+               WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+              --AND Object_InfoMoney_View.InfoMoneyDestinationId = 0
             GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId) AS Operation
            LEFT JOIN ContainerLinkObject AS CLO_Contract 
                   ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
@@ -57,29 +67,21 @@ BEGIN
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId         
                 JOIN Object AS Object_Account ON Object_Account.Id = Operation.ObjectId
                 JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId   
-           LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = Operation.InfoMoneyId         
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId         
            
-           WHERE (StartAmount <> 0 OR EndAmount <> 0 OR OutComeAmount1 <> 0 OR OutComeAmount2 <> 0 OR OutComeAmount3 <> 0 OR OutComeAmount4 <> 0);
+           WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.SaleSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.ServiceSumm <> 0 OR Operation.OtherSumm <> 0);
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  15.01.14                        * 
- 21.12.13                                        * Personal -> Member
- 11.12.13         * add inBranchId              
- 30.11.13                        * Изменил подход к формированию
- 29.11.13                        * Ошибка с датой. Добавил талоны
- 28.11.13                                        * add CarModelName
- 14.11.13                        * add Денежные Средства
- 11.11.13                        * 
- 05.10.13         *
 */
 
 -- тест
