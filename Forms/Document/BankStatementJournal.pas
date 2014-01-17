@@ -12,7 +12,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, ClientBankLoad;
+  cxGrid, cxPC, ClientBankLoad, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankStatementJournalForm = class(TAncestorJournalForm)

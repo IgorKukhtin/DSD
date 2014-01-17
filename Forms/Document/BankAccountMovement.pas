@@ -9,7 +9,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
   cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, dsdGuides, cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxCurrencyEdit, cxLabel;
+  cxCurrencyEdit, cxLabel, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TBankAccountMovementForm = class(TAncestorEditDialogForm)

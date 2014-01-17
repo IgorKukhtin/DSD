@@ -1,8 +1,8 @@
--- Function: gpUnComplete_Movement_Cash (Integer, TVarChar)
+-- Function: gpUnComplete_Movement_BankAccount (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpUnComplete_Movement_Cash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUnComplete_Movement_BankAccount (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpUnComplete_Movement_Cash(
+CREATE OR REPLACE FUNCTION gpUnComplete_Movement_BankAccount(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
@@ -12,7 +12,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_Cash());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount());
+     vbUserId := lpGetUserBySession (inSession);
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId
@@ -25,8 +26,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 26.12.13                                        *
+ 17.01.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpUnComplete_Movement_Cash (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpUnComplete_Movement_BankAccount (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

@@ -1,11 +1,11 @@
 inherited BankStatementForm: TBankStatementForm
-  Caption = #1042#1099#1087#1080#1089#1082#1080' '#1073#1072#1085#1082#1072
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1041#1072#1085#1082#1086#1074#1089#1082#1072#1103' '#1074#1099#1087#1080#1089#1082#1072'>'
   ClientHeight = 416
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1092
-  ExplicitHeight = 443
+  ExplicitWidth = 1100
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -112,8 +112,28 @@ inherited BankStatementForm: TBankStatementForm
             HeaderAlignmentVert = vaCenter
             Width = 96
           end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colInfoMoney: TcxGridDBColumn
-            Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1072#1103' '#1089#1090#1072#1090#1100#1103
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -124,10 +144,10 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 111
+            Width = 80
           end
           object colContract: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -413,6 +433,8 @@ inherited BankStatementForm: TBankStatementForm
         end>
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089
       ImageIndex = 27
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099'.'
     end
   end
   inherited MasterDS: TDataSource

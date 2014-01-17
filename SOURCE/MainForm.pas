@@ -243,6 +243,7 @@ type
     bbBankAccountDocument: TdxBarButton;
     actCity: TdsdOpenForm;
     bbCity: TdxBarButton;
+    bbFinanceDocuments_Separator: TdxBarSeparator;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

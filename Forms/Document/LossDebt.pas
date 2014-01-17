@@ -137,6 +137,7 @@ type
     clSummKredit: TcxGridDBColumn;
     clIsCalculated: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
+    clOKPO: TcxGridDBColumn;
   private
   public
   end;

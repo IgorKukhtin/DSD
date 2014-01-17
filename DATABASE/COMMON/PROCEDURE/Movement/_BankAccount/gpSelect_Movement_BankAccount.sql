@@ -104,7 +104,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, TVarChar) OW
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  15.01.14                         * 
  */
 

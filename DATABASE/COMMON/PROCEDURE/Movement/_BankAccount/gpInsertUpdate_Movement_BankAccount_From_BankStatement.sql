@@ -16,6 +16,19 @@ BEGIN
      vbUserId := inSession;
     
 
+     -- распроводим Документы
+     PERFORM lpUnComplete_Movement (inMovementId := Movement_BankAccount.Id
+                                  , inUserId     := vbUserId)
+     FROM Movement
+          JOIN Movement AS Movement_BankAccount
+                        ON Movement_BankAccount.ParentId = Movement.Id
+                       AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                       AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
+     WHERE Movement.DescId = zc_Movement_BankStatementItem()
+       AND Movement.ParentId = inMovementId;
+
+
+
      -- Выбираем все данные и сразу вызываем процедуры
      PERFORM             
        lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
@@ -89,20 +102,19 @@ BEGIN
 
 
      -- 5.3. проводим Документ
-     PERFORM             
-       lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
-                                      , inUserId     := vbUserId)
-       FROM Movement
-            JOIN Movement AS Movement_BankAccount
-                   ON Movement_BankAccount.ParentId = Movement.Id
-                  AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-            JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
-            JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                        ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                       AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                       AND MILinkObject_MoneyPlace.ObjectId > 0
-       WHERE Movement.DescId = zc_Movement_BankStatementItem()
-         AND Movement.ParentId = inMovementId;
+     PERFORM lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
+                                            , inUserId     := vbUserId)
+     FROM Movement
+         JOIN Movement AS Movement_BankAccount
+                       ON Movement_BankAccount.ParentId = Movement.Id
+                      AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+         JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
+         JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                     ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                    AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                     AND MILinkObject_MoneyPlace.ObjectId > 0
+     WHERE Movement.DescId = zc_Movement_BankStatementItem()
+       AND Movement.ParentId = inMovementId;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -113,7 +125,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  16.01.13                                        * add lpComplete_Movement_BankAccount
  06.12.13                          *
 */

@@ -12,7 +12,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit;
+  cxGrid, cxPC, ClientBankLoad, cxCurrencyEdit, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankAccountJournalForm = class(TAncestorJournalForm)
@@ -24,6 +25,9 @@ type
     colContract: TcxGridDBColumn;
     colDebet: TcxGridDBColumn;
     colKredit: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

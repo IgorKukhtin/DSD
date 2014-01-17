@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -37,7 +37,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManager1Bar1: TdxBar
       Caption = 'MainMenu'
@@ -295,6 +295,13 @@ object MainForm: TMainForm
       Caption = 'bbGuides_Separator'
       Category = 0
       Hint = 'bbGuides_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbFinanceDocuments_Separator: TdxBarSeparator
+      Caption = 'bbFinanceDocuments_Separator'
+      Category = 0
+      Hint = 'bbFinanceDocuments_Separator'
       Visible = ivAlways
       ShowCaption = False
     end
@@ -592,6 +599,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbJuridicalService'
         end
         item
@@ -600,11 +611,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbLossDebt'
+          ItemName = 'bbBankAccountDocument'
         end
         item
           Visible = True
-          ItemName = 'bbBankAccountDocument'
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLossDebt'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -1725,8 +1740,15 @@ object MainForm: TMainForm
     end
     object actBankLoad: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1073#1072#1085#1082#1072
+      Caption = #1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080
       FormName = 'TBankStatementJournalForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankAccountDocument: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      FormName = 'TBankAccountJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1742,13 +1764,6 @@ object MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1102#1088'.'#1083#1080#1094#1072')'
       FormName = 'TLossDebtJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actBankAccountDocument: TdsdOpenForm
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
-      FormName = 'TBankAccountJournalForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1786,7 +1801,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

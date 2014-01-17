@@ -57,6 +57,7 @@ object LossDebtForm: TLossDebtForm
     object edJuridicalBasis: TcxButtonEdit
       Left = 380
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -106,6 +107,7 @@ object LossDebtForm: TLossDebtForm
     object edBusiness: TcxButtonEdit
       Left = 570
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -250,6 +252,12 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
@@ -325,6 +333,7 @@ object LossDebtForm: TLossDebtForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
@@ -1376,7 +1385,7 @@ object LossDebtForm: TLossDebtForm
     Top = 193
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalAccount'
+    StoredProcName = 'gpGet_Movement_LossDebt'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1399,7 +1408,7 @@ object LossDebtForm: TLossDebtForm
         Component = edInvNumber
       end
       item
-        Name = 'Operdate'
+        Name = 'OperDate'
         Value = 0d
         Component = edOperDate
       end
@@ -1418,17 +1427,29 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
       end
       item
-        Name = 'PersonalId'
+        Name = 'JuridicalBasisId'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
       end
       item
-        Name = 'PersonalName'
+        Name = 'JuridicalBasisName'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'BusinessName'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
       end>
     Left = 552
     Top = 48
