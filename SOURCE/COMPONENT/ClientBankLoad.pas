@@ -295,14 +295,17 @@ end;
 
 procedure TClientBankLoad.Activate;
 begin
-  with TFileOpenDialog.Create(nil) do
+  with {File}TOpenDialog.Create(nil) do
   try
-    DefaultFolder := InitializeDirectory;
-    with FileTypes.Add do
+    InitialDir := InitializeDirectory;
+//    DefaultFolder := InitializeDirectory;
+    DefaultExt := '*.dbf';
+    Filter := '*.dbf';
+    {with FileTypes.Add do
     begin
       DisplayName := 'Файлы загрузки';
       FileMask := '*.dbf';
-    end;
+    end;}
     if Execute then begin
        InitializeDirectory := ExtractFilePath(FileName);
        FDataSet := TMemDBFTable.Create(nil);

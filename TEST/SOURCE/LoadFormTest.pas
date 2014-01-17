@@ -565,6 +565,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

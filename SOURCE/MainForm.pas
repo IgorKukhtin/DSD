@@ -244,6 +244,8 @@ type
     actCity: TdsdOpenForm;
     bbCity: TdxBarButton;
     bbFinanceDocuments_Separator: TdxBarSeparator;
+    actReport_JuridicalSold: TdsdOpenForm;
+    bbReport_JuridicalSold: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

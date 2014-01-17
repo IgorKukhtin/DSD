@@ -317,7 +317,8 @@ uses
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
-  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm};
+  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+  Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm};
 
 {$R *.RES}
 

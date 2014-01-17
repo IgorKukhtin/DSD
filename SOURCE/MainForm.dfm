@@ -21,8 +21,8 @@ object MainForm: TMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -463,6 +463,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_MotionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalSold'
         end>
     end
     object bbBank: TdxBarButton
@@ -1012,6 +1016,10 @@ object MainForm: TMainForm
     end
     object bbCity: TdxBarButton
       Action = actCity
+      Category = 0
+    end
+    object bbReport_JuridicalSold: TdxBarButton
+      Action = actReport_JuridicalSold
       Category = 0
     end
   end
@@ -1775,6 +1783,13 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_JuridicalSold: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1054#1073#1086#1088#1086#1090#1082#1072' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
+      FormName = 'TReport_JuridicalSoldForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -1801,7 +1816,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
