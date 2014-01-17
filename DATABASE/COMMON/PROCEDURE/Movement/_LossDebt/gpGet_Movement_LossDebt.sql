@@ -31,7 +31,7 @@ BEGIN
 
            , Object_JuridicalBasis.Id        AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
-           , Object_Busines.Id               AS BusinesId
+           , Object_Business.Id              AS BusinesId
            , Object_Business.ValueData       AS BusinessName
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
@@ -49,7 +49,7 @@ BEGIN
 
            , Object_JuridicalBasis.Id        AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
-           , Object_Busines.Id               AS BusinesId
+           , Object_Business.Id              AS BusinesId
            , Object_Business.ValueData       AS BusinessName
   
        FROM Movement
