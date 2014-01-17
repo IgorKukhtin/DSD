@@ -695,9 +695,7 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = ContractGuides
-      end
-      item
+        Guides = ContractJuridicalGuides
       end
       item
         Guides = PaidKindGuides
@@ -843,13 +841,14 @@
         DataType = ftString
       end
       item
-        Name = 'ContractId'
+        Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        ParamType = ptResult
       end
       item
-        Name = 'ContractName'
+        Name = 'TextValue'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'

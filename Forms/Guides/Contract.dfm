@@ -50,6 +50,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 100
       end
       object clInvNumberArchive: TcxGridDBColumn
@@ -58,6 +59,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 45
       end
       object clJuridicalCode: TcxGridDBColumn
@@ -81,6 +83,7 @@ object ContractForm: TContractForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 139
       end
       object clOKPO: TcxGridDBColumn
@@ -103,6 +106,7 @@ object ContractForm: TContractForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 76
       end
       object clSigningDate: TcxGridDBColumn
@@ -147,6 +151,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clInfoMoneyCode: TcxGridDBColumn
@@ -161,6 +166,7 @@ object ContractForm: TContractForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 61
       end
       object clInfoMoneyGroupName: TcxGridDBColumn
@@ -175,6 +181,7 @@ object ContractForm: TContractForm
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 113
       end
       object clInfoMoneyDestinationCode: TcxGridDBColumn
@@ -183,6 +190,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -191,6 +199,7 @@ object ContractForm: TContractForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object clInfoMoneyName: TcxGridDBColumn
@@ -713,7 +722,7 @@ object ContractForm: TContractForm
       FormName = 'TContractConditionKindForm'
       GuiParams = <
         item
-          Name = 'key'
+          Name = 'Key'
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindId'
         end
@@ -722,6 +731,10 @@ object ContractForm: TContractForm
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
+        end
+        item
+          Name = 'inContractId'
+          Value = 0
         end>
       isShowModal = False
     end

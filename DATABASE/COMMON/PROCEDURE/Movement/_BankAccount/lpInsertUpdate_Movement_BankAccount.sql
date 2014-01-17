@@ -23,6 +23,17 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Должно быть введено <№ дог.>.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Должно быть введено <УП статья назначения>.';
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, inParentId);
