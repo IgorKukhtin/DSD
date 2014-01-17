@@ -902,6 +902,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
 				<Form>PersonalAccountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\City.pas">
 				<Form>CityForm</Form>
@@ -913,6 +914,11 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
 				<Form>CityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold.pas">
+				<Form>Report_JuridicalSoldForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
