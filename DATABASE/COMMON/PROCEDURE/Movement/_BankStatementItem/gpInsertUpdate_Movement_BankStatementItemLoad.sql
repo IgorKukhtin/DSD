@@ -37,7 +37,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbContractId Integer;
-   DECLARE vbJuridicalId Integer;
+   DECLARE vbObjectId Integer;
    DECLARE vbCurrencyId Integer;
 BEGIN
 
@@ -64,7 +64,7 @@ BEGIN
       FROM Object_BankAccount_View WHERE Object_BankAccount_View.Id = vbMainBankAccountId;
    END IF;
 
-   -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+   -- 2. Если такой валюты нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF COALESCE(vbCurrencyId, 0) = 0  THEN
       RAISE EXCEPTION 'Валюта "%" "%" не определена в справочнике валют.% Дальнейшая загрузка не возможна', inCurrencyCode, inCurrencyName, chr(13);
    END IF;
@@ -115,17 +115,26 @@ BEGIN
 
 
     -- Вычитываем свойство Юр. лица
-    SELECT ObjectId INTO vbJuridicalId FROM MovementLinkObject 
-    WHERE DescId = zc_MovementLinkObject_Juridical() AND MovementId = vbMovementItemId;
+    SELECT ObjectId INTO vbJuridicalId FROM MovementLinkObject  
+     WHERE DescId = zc_MovementLinkObject_Juridical() AND MovementId = vbMovementItemId;
+
+
 
     IF COALESCE(vbJuridicalId, 0) = 0 THEN
-       -- Пытаемся найти юр. лицо по OKPO
-       SELECT ObjectHistory.ObjectId INTO vbJuridicalId
-         FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
-         JOIN ObjectHistory ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
-        WHERE ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
-          AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
-          AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate;
+       -- Пытаемся найти расчетный счет
+       SELECT Object_BankAccount.Id INTO vbJuridicalId
+         FROM Object AS Object_BankAccount 
+        WHERE Object_BankAccount.DescId = zc_Object_BankAccount() AND Object_BankAccount.ValueData = inBankAccount;
+
+       IF COALESCE(vbJuridicalId, 0) = 0 THEN
+         -- Пытаемся найти юр. лицо по OKPO
+         SELECT ObjectHistory.ObjectId INTO vbJuridicalId
+           FROM ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_OKPO
+           JOIN ObjectHistory ON ObjectHistoryString_JuridicalDetails_OKPO.ObjectHistoryId = ObjectHistory.Id
+          WHERE ObjectHistoryString_JuridicalDetails_OKPO.DescId = zc_ObjectHistoryString_JuridicalDetails_OKPO()
+            AND ObjectHistoryString_JuridicalDetails_OKPO.ValueData = inOKPO
+            AND inOperDate BETWEEN ObjectHistory.StartDate AND ObjectHistory.EndDate;
+        END IF;
     
         IF COALESCE(vbJuridicalId, 0) <> 0 THEN
            -- сохранили связь с <Юр. лицо>

@@ -12,7 +12,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  cxCurrencyEdit, DataModul, frxClass, frxDBSet;
+  cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit;
 
 type
   TReport_JuridicalSoldForm = class(TAncestorReportForm)
@@ -32,6 +32,18 @@ type
     dsdPrintAction: TdsdPrintAction;
     frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
+    cxLabel3: TcxLabel;
+    ceInfoMoneyGroup: TcxButtonEdit;
+    dsdInfoMoneyGroupGuides: TdsdGuides;
+    dsdInfoMoneyDestinationGuides: TdsdGuides;
+    ceInfoMoneyDestination: TcxButtonEdit;
+    cxLabel4: TcxLabel;
+    InfoMoneyGuides: TdsdGuides;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    edAccount: TcxButtonEdit;
+    AccountGuides: TdsdGuides;
   private
     { Private declarations }
   public

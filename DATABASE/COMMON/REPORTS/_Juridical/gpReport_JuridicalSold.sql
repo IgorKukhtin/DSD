@@ -57,7 +57,10 @@ BEGIN
                  AND MIContainer.OperDate >= inStartDate
            LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-              --AND Object_InfoMoney_View.InfoMoneyDestinationId = 0
+                 AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
+                 AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
+                 AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
+                 AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId) AS Operation
            LEFT JOIN ContainerLinkObject AS CLO_Contract 
                   ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()

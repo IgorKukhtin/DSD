@@ -3,10 +3,10 @@
 DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_InfoMoney_View AS
-  SELECT ObjectLink_InfoMoney_InfoMoneyGroup.ObjectId               AS InfoMoneyGroupId
+  SELECT ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId               AS InfoMoneyGroupId
        , Object_InfoMoneyGroup.ObjectCode       AS InfoMoneyGroupCode
        , Object_InfoMoneyGroup.ValueData        AS InfoMoneyGroupName
-       , ObjectLink_InfoMoney_InfoMoneyDestination.ObjectId         AS InfoMoneyDestinationId
+       , ObjectLink_InfoMoney_InfoMoneyDestination.ChildObjectId         AS InfoMoneyDestinationId
        , Object_InfoMoneyDestination.ObjectCode AS InfoMoneyDestinationCode
        , Object_InfoMoneyDestination.ValueData  AS InfoMoneyDestinationName
        , Object_InfoMoney.Id                    AS InfoMoneyId
