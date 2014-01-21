@@ -1,5 +1,5 @@
-inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
-  Caption = #1054#1073#1088#1086#1090#1082#1072' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
+inherited Report_JuridicalColletionForm: TReport_JuridicalColletionForm
+  Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
   ClientHeight = 389
   ClientWidth = 863
   ExplicitWidth = 871
@@ -210,13 +210,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ExplicitLeft = 8
       ExplicitTop = 31
     end
-    object cxLabel3: TcxLabel
-      Left = 697
-      Top = 7
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081
+    object cxLabel6: TcxLabel
+      Left = 209
+      Top = 6
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
-    object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 697
+    object edJuridical: TcxButtonEdit
+      Left = 209
       Top = 30
       Properties.Buttons = <
         item
@@ -224,55 +224,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 160
-    end
-    object ceInfoMoneyDestination: TcxButtonEdit
-      Left = 531
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 6
-      Width = 160
-    end
-    object cxLabel4: TcxLabel
-      Left = 531
-      Top = 7
-      Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    end
-    object ceInfoMoney: TcxButtonEdit
-      Left = 365
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 8
-      Width = 160
-    end
-    object cxLabel5: TcxLabel
-      Left = 365
-      Top = 7
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-    end
-    object cxLabel6: TcxLabel
-      Left = 209
-      Top = 6
-      Caption = #1057#1095#1077#1090':'
-    end
-    object edAccount: TcxButtonEdit
-      Left = 209
-      Top = 30
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 11
-      Width = 150
+      Width = 280
     end
   end
   inherited ActionList: TActionList
@@ -303,7 +255,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Top = 48
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'JuridicalName'
+    IndexFieldNames = 'PaidKindName'
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
@@ -326,29 +278,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'inAccountId'
         Value = ''
-        Component = AccountGuides
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
-        Component = dsdInfoMoneyGroupGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
-        Component = dsdInfoMoneyDestinationGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Top = 48
@@ -397,95 +343,23 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Left = 184
     Top = 264
   end
-  object dsdInfoMoneyGroupGuides: TdsdGuides
+  object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceInfoMoneyGroup
-    FormName = 'TInfoMoneyGroupForm'
+    LookupControl = edJuridical
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = dsdInfoMoneyGroupGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = dsdInfoMoneyGroupGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 776
-    Top = 53
-  end
-  object dsdInfoMoneyDestinationGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceInfoMoneyDestination
-    FormName = 'TInfoMoneyDestinationForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = dsdInfoMoneyDestinationGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = dsdInfoMoneyDestinationGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 584
-    Top = 53
-  end
-  object InfoMoneyGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceInfoMoney
-    FormName = 'TInfoMoney_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 440
-    Top = 61
-  end
-  object AccountGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edAccount
-    FormName = 'TAccountForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = AccountGuides
+        Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValueAll'
         Value = ''
-        Component = AccountGuides
+        Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
