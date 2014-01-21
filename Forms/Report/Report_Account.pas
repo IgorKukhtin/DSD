@@ -105,6 +105,8 @@ type
     OperPrice: TcxGridDBColumn;
     ObjectCode_Destination: TcxGridDBColumn;
     ObjectName_Destination: TcxGridDBColumn;
+    ObjectCode_Direction: TcxGridDBColumn;
+    ObjectName_Direction: TcxGridDBColumn;
   private
   public
   end;
