@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitWidth = 1092
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -98,6 +98,20 @@ inherited BankStatementForm: TBankStatementForm
             Options.Editing = False
             Width = 27
           end
+          object colContract: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceContract
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
           object colLinkJuridicalName: TcxGridDBColumn
             Caption = #1070#1088' '#1083#1080#1094#1086' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
             DataBinding.FieldName = 'LinkJuridicalName'
@@ -145,20 +159,6 @@ inherited BankStatementForm: TBankStatementForm
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
             Width = 80
-          end
-          object colContract: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractName'
-            PropertiesClassName = 'TcxButtonEditProperties'
-            Properties.Buttons = <
-              item
-                Action = actChoiceContract
-                Default = True
-                Kind = bkEllipsis
-              end>
-            Properties.ReadOnly = True
-            HeaderAlignmentVert = vaCenter
-            Width = 65
           end
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -318,7 +318,6 @@ inherited BankStatementForm: TBankStatementForm
     Top = 232
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 79
     Top = 247
     inherited actRefresh: TdsdDataSetRefresh
@@ -334,7 +333,7 @@ inherited BankStatementForm: TBankStatementForm
     object actChoiceJuridical: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'actChoiceJuridical'
-      FormName = 'TJuridicalForm'
+      FormName = 'TMoneyPlace_ObjectForm'
       GuiParams = <
         item
           Name = 'Key'
@@ -345,17 +344,6 @@ inherited BankStatementForm: TBankStatementForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
-          DataType = ftString
-        end
-        item
-          Name = 'InfoMoneyId'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
-        end
-        item
-          Name = 'InfoMoneyName'
-          Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
       isShowModal = False
@@ -392,6 +380,28 @@ inherited BankStatementForm: TBankStatementForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'LinkJuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
           DataType = ftString
         end>
       isShowModal = False

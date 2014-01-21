@@ -270,11 +270,7 @@ end;
 
 procedure TdbProcedureTest.CreateReportProcedure;
 begin
-  ExecFile(ReportsPath + '_Balance\gpReport_Balance.sql', ZQuery);
-  ExecFile(ReportsPath + '_ProfitLoss\gpReport_ProfitLoss.sql', ZQuery);
-  ExecFile(ReportsPath + '_HistoryCost\gpReport_HistoryCost.sql', ZQuery);
-  ExecFile(ReportsPath + '_MotionGoods\gpReport_MotionGoods.sql', ZQuery);
-  ExecFile(ReportsPath + '_Transport\gpReport_TransportHoursWork.sql', ZQuery);
+  DirectoryLoad(ReportsPath);
 end;
 
 initialization

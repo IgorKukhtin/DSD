@@ -318,6 +318,7 @@ uses
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+  Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalColletionForm: TParentForm},
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm};
 
 {$R *.RES}

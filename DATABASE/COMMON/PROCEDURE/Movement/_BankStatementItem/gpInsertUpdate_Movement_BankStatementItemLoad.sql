@@ -37,7 +37,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbInfoMoneyId Integer;
    DECLARE vbContractId Integer;
-   DECLARE vbObjectId Integer;
+   DECLARE vbJuridicalId Integer;
    DECLARE vbCurrencyId Integer;
 BEGIN
 
@@ -52,7 +52,8 @@ BEGIN
 
    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF COALESCE(vbMainBankAccountId, 0) = 0  THEN
-      RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', inBankAccountMain, chr(13);
+      RETURN 0;
+--      RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', inBankAccountMain, chr(13);
    END IF;
 
    SELECT Object_Currency_View.Id INTO vbCurrencyId
