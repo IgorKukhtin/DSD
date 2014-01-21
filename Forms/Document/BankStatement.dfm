@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1092
-  ExplicitHeight = 443
+  ExplicitWidth = 1100
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -61,11 +61,11 @@ inherited BankStatementForm: TBankStatementForm
             Width = 69
           end
           object colJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1080#1079' '#1074#1099#1087#1080#1089#1082#1080
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1076#1086#1082#1091#1084#1077#1085#1090')'
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 81
+            Width = 100
           end
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
@@ -113,7 +113,7 @@ inherited BankStatementForm: TBankStatementForm
             Width = 65
           end
           object colLinkJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088' '#1083#1080#1094#1086' '#1074' '#1087#1088#1086#1075#1088#1072#1084#1084#1077
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091' ('#1085#1072#1081#1076#1077#1085#1086')'
             DataBinding.FieldName = 'LinkJuridicalName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -171,6 +171,7 @@ inherited BankStatementForm: TBankStatementForm
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 112
           end

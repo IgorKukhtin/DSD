@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar, 
-               AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
+RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
+             , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectName TVarChar, GoodsName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
