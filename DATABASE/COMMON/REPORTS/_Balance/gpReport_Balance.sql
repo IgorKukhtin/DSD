@@ -59,6 +59,7 @@ $BODY$BEGIN
                  , ContainerLinkObject_Member.ObjectId AS MemberId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
+                 , ContainerLinkObject_Car.ObjectId  AS CarId
                  , ContainerLinkObject_Goods.ObjectId AS GoodsId
 
                  , SUM (tmpMIContainer_Remains.AmountRemainsStart) AS AmountRemainsStart
@@ -122,6 +123,9 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Unit
                                               ON ContainerLinkObject_Unit.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Unit.DescId = zc_ContainerLinkObject_Unit()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Car
+                                              ON ContainerLinkObject_Car.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_Car.DescId = zc_ContainerLinkObject_Car()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
@@ -131,11 +135,12 @@ $BODY$BEGIN
                    , ContainerLinkObject_Member.ObjectId
                    , ContainerLinkObject_Juridical.ObjectId
                    , ContainerLinkObject_Unit.ObjectId
+                   , ContainerLinkObject_Car.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
-           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (MemberId, UnitId))
+           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
           ;
   
@@ -148,6 +153,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
  24.11.13                                        * add AccountCode
  21.10.13                        * add Code
