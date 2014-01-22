@@ -97,7 +97,7 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean
+                               , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
 
@@ -126,6 +126,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.01.14                                        * add IsMaster
  16.01.13                                        * add lpComplete_Movement_BankAccount
  06.12.13                          *
 */

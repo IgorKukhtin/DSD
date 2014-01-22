@@ -14,6 +14,8 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , JuridicalCode Integer, JuridicalName TVarChar
               , PaidKindName TVarChar, ContractName TVarChar
               , CarModelName TVarChar, CarCode Integer, CarName TVarChar
+              , ObjectCode_Direction Integer, ObjectName_Direction TVarChar
+              , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
 
               , PersonalCode_inf Integer, PersonalName_inf TVarChar
               , CarModelName_inf TVarChar, CarCode_inf Integer, CarName_inf TVarChar
@@ -21,7 +23,6 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , UnitCode_inf Integer, UnitName_inf TVarChar
               , BranchCode_inf Integer, BranchName_inf TVarChar
               , BusinessCode_inf Integer, BusinessName_inf TVarChar
-              , ObjectCode_Destination Integer, ObjectName_Destination TVarChar
               , SummStart TFloat, SummIn TFloat, SummOut TFloat, SummEnd TFloat, OperPrice TFloat
               , AccountGroupCode Integer, AccountGroupName TVarChar
               , AccountDirectionCode Integer, AccountDirectionName TVarChar
@@ -59,6 +60,11 @@ BEGIN
          , Object_Car.ObjectCode     AS CarCode
          , Object_Car.ValueData      AS CarName
 
+         , Object_Direction.ObjectCode   AS ObjectCode_Direction
+         , Object_Direction.ValueData    AS ObjectName_Direction
+         , Object_Destination.ObjectCode AS ObjectCode_Destination
+         , Object_Destination.ValueData  AS ObjectName_Destination
+
          , Object_Member_inf.ObjectCode   AS PersonalCode_inf
          , Object_Member_inf.ValueData    AS PersonalName_inf
          , Object_CarModel_inf.ValueData  AS CarModelName_inf
@@ -73,9 +79,6 @@ BEGIN
          , Object_Branch_inf.ValueData    AS BranchName_inf
          , Object_Business_inf.ObjectCode AS BusinessCode_inf
          , Object_Business_inf.ValueData  AS BusinessName_inf
-
-         , Object_Destination.ObjectCode AS ObjectCode_Destination
-         , Object_Destination.ValueData  AS ObjectName_Destination
 
          , tmpReport.SummStart :: TFloat AS SummStart
          , tmpReport.SummIn    :: TFloat AS SummIn
@@ -114,6 +117,7 @@ BEGIN
              , ContainerLO_Juridical.ObjectId AS JuridicalId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
              , ContainerLO_Contract.ObjectId  AS ContractId
+             , COALESCE (ContainerLO_ProfitLoss.ObjectId, COALESCE (ContainerLO_Cash.ObjectId, COALESCE (ContainerLO_BankAccount.ObjectId, COALESCE (ContainerLO_Juridical.ObjectId, COALESCE (ContainerLO_Member.ObjectId, COALESCE (ContainerLO_Car.ObjectId, ContainerLO_Unit.ObjectId)))))) AS ObjectId_Direction
              , COALESCE (ContainerLO_Goods.ObjectId, tmpReport_All.GoodsId_inf) AS ObjectId_Destination
 
              , SUM (tmpReport_All.SummStart)  AS SummStart
@@ -319,6 +323,23 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Car ON ContainerLO_Car.ContainerId = tmpReport_All.ContainerId
                                                             AND ContainerLO_Car.DescId = zc_ContainerLinkObject_Car()
                                                             AND ContainerLO_Car.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Unit
+                                          ON ContainerLO_Unit.ContainerId = tmpReport_All.ContainerId
+                                         AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()
+                                         AND ContainerLO_Unit.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
+                                          ON ContainerLO_ProfitLoss.ContainerId = tmpReport_All.ContainerId
+                                         AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                                         AND ContainerLO_ProfitLoss.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_Cash
+                                          ON ContainerLO_Cash.ContainerId = tmpReport_All.ContainerId
+                                         AND ContainerLO_Cash.DescId = zc_ContainerLinkObject_Cash()
+                                         AND ContainerLO_Cash.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_BankAccount
+                                          ON ContainerLO_BankAccount.ContainerId = tmpReport_All.ContainerId
+                                         AND ContainerLO_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
+                                         AND ContainerLO_BankAccount.ObjectId > 0
+
             LEFT JOIN ContainerLinkObject AS ContainerLO_InfoMoney ON ContainerLO_InfoMoney.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                                                                   AND ContainerLO_InfoMoney.ObjectId > 0
@@ -333,6 +354,10 @@ BEGIN
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
                , ContainerLO_Goods.ObjectId
+               , ContainerLO_Unit.ObjectId
+               , ContainerLO_ProfitLoss.ObjectId
+               , ContainerLO_Cash.ObjectId
+               , ContainerLO_BankAccount.ObjectId
                , tmpReport_All.MovementDescId
                , tmpReport_All.MovementId
                , tmpReport_All.OperDate
@@ -428,6 +453,7 @@ BEGIN
                            AND ObjectLink_ProfitLoss_ProfitLossDirection_inf.DescId = zc_ObjectLink_ProfitLoss_ProfitLossDirection()
        LEFT JOIN Object AS Object_ProfitLossDirection_inf ON Object_ProfitLossDirection_inf.Id = ObjectLink_ProfitLoss_ProfitLossDirection_inf.ChildObjectId
 
+       LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpReport.ObjectId_Direction
        LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_Destination
     ;
     
@@ -441,6 +467,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
  02.11.13                                        * add Account...
  01.11.13                                        * all

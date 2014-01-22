@@ -2,8 +2,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1073#1088#1086#1090#1082#1072' '#1087#1086' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072#1084
   ClientHeight = 389
   ClientWidth = 863
-  ExplicitWidth = 871
-  ExplicitHeight = 416
+  ExplicitWidth = 879
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -96,42 +96,51 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 142
           end
           object colContractNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 47
           end
           object colPaidKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1086#1087#1083#1072#1090
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 58
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 62
           end
-          object colInfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1087#1088'. '#1089#1090#1072#1090#1100#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            Width = 65
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colInfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1077#1081
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colInfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 70
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            Width = 95
           end
           object colStartAmount: TcxGridDBColumn
             Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
@@ -139,7 +148,39 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
-            Width = 75
+            Width = 80
+          end
+          object colSaleSumm: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072'/ '#1042#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SaleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
+            Width = 72
+          end
+          object colServiceSumm: TcxGridDBColumn
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103
+            DataBinding.FieldName = 'ServiceSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
+            Width = 84
+          end
+          object colMoneySumm: TcxGridDBColumn
+            Caption = #1044#1044#1057
+            DataBinding.FieldName = 'MoneySumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colOtherSumm: TcxGridDBColumn
+            Caption = '***'
+            DataBinding.FieldName = 'OtherSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00'
+            HeaderAlignmentVert = vaCenter
+            Width = 31
           end
           object colEndAmount: TcxGridDBColumn
             Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
@@ -147,39 +188,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00'
             HeaderAlignmentVert = vaCenter
-            Width = 69
-          end
-          object colSaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'SaleSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 69
-          end
-          object colServiceSumm: TcxGridDBColumn
-            Caption = #1059#1089#1083#1091#1075#1080
-            DataBinding.FieldName = 'ServiceSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 68
-          end
-          object colMoneySumm: TcxGridDBColumn
-            Caption = #1054#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'MoneySumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 69
-          end
-          object colOtherSumm: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1083#1100#1085#1086#1077
-            DataBinding.FieldName = 'OtherSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
-            HeaderAlignmentVert = vaCenter
-            Width = 69
+            Width = 108
           end
         end
       end
@@ -213,7 +222,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel3: TcxLabel
       Left = 697
       Top = 7
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081
+      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object ceInfoMoneyGroup: TcxButtonEdit
       Left = 697
@@ -240,7 +249,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel4: TcxLabel
       Left = 531
       Top = 7
-      Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object ceInfoMoney: TcxButtonEdit
       Left = 365

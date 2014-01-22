@@ -159,6 +159,22 @@ inherited ServiceJournalForm: TServiceJournalForm
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TServiceForm'

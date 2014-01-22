@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
-    IN inMovementId        Integer  , -- ключ Документа
+    IN inMovementId        Integer   , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -31,7 +33,8 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+--           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
@@ -124,11 +127,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Service (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.01.14                                        * add inOperDate
  28.12.13                                        * add View_InfoMoney
  24.12.13                         * -- MovItem
  18.11.13                         * -- Add other properties
@@ -138,4 +142,4 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_Service (inMovementId:= 1, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());

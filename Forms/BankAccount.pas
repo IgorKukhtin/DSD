@@ -9,7 +9,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdAction, dsdAddOn, dxBarExtItems;
+  Vcl.ActnList, DataModul, ParentForm, dsdAction, dsdAddOn, dxBarExtItems,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankAccountForm = class(TParentForm)

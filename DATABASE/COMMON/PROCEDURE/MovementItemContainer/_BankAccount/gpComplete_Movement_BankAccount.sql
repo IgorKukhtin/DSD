@@ -11,7 +11,8 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
+     vbUserId:= lpGetUserBySession (inSession);
 
      -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -23,7 +24,7 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean
+                               , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
      -- проводим Документ
@@ -36,6 +37,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.01.14                                        * add IsMaster
  16.01.13                                        * add lpComplete_Movement_BankAccount
  24.11.13                                        * add View_InfoMoney
  26.08.13                        *                
