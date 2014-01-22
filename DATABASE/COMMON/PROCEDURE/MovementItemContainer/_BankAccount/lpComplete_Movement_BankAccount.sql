@@ -25,7 +25,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
                          , UnitId, BranchId, ContractId, PaidKindId
-                         , IsActive
+                         , IsActive, IsMaster
                           )
         SELECT Movement.OperDate
              , COALESCE (MovementItem.ObjectId, 0) AS ObjectId
@@ -53,7 +53,8 @@ BEGIN
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , zc_Enum_PaidKind_FirstForm() AS PaidKindId
-             , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END
+             , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
+             , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -103,7 +104,7 @@ BEGIN
                          , InfoMoneyGroupId, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId, JuridicalId_Basis
                          , UnitId, BranchId, ContractId, PaidKindId
-                         , IsActive
+                         , IsActive, IsMaster
                           )
         SELECT _tmpItem.OperDate
              , COALESCE (MILinkObject_MoneyPlace.ObjectId, 0) AS ObjectId
@@ -123,6 +124,7 @@ BEGIN
              , _tmpItem.BranchId
              , _tmpItem.ContractId, _tmpItem.PaidKindId
              , NOT _tmpItem.IsActive
+             , NOT _tmpItem.IsMaster
         FROM _tmpItem
              LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                               ON MILinkObject_MoneyPlace.MovementItemId = _tmpItem.MovementItemId
@@ -147,6 +149,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.14                                        * add IsMaster
  16.01.13                                        *
 */
 

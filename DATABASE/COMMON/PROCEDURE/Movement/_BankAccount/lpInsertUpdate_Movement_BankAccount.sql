@@ -23,16 +23,16 @@ $BODY$
    DECLARE vbMovementItemId Integer;
 BEGIN
 
-     -- проверка
-     IF COALESCE (inContractId, 0) = 0
+     -- проверка (для юр.лица только)
+     IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Juridical())
      THEN
-        RAISE EXCEPTION 'Должно быть введено <№ дог.>.';
+        RAISE EXCEPTION 'Ошибка.<№ договора> не выбран.';
      END IF;
 
      -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
-        RAISE EXCEPTION 'Должно быть введено <УП статья назначения>.';
+        RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбранр.';
      END IF;
 
      -- сохранили <Документ>

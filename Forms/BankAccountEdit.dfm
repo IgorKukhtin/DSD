@@ -25,7 +25,8 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+    Cursor = crDrag
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
     Left = 72

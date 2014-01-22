@@ -52,7 +52,7 @@ object BankAccountForm: TBankAccountForm
         Width = 47
       end
       object clName: TcxGridDBColumn
-        Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 134
@@ -114,8 +114,8 @@ object BankAccountForm: TBankAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

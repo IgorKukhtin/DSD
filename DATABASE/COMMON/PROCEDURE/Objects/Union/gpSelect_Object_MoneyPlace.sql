@@ -18,6 +18,7 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode     
           , Object_Cash.Valuedata AS Name
@@ -85,7 +86,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
-       AND View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm();
+       AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport));
 
 END;
 $BODY$
@@ -96,6 +97,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.14                                        * add tmpUserTransport
  15.01.14                         * add BankAccount
  05.01.14                                        * add zc_Enum_PaidKind_SecondForm
  05.01.14                                        * View_Contract.InfoMoneyId

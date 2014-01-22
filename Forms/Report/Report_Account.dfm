@@ -314,7 +314,7 @@ object Report_AccountForm: TReport_AccountForm
         Width = 108
       end
       object InfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055' '#1089#1090'. '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1050#1086#1076' '#1059#1055
         DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
         HeaderAlignmentHorz = taCenter
