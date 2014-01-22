@@ -917,7 +917,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalCollation.pas">
-				<Form>Report_JuridicalColletionForm</Form>
+				<Form>Report_JuridicalCollationForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

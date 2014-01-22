@@ -467,6 +467,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_JuridicalSold'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalCollation'
         end>
     end
     object bbBank: TdxBarButton
@@ -1020,6 +1024,10 @@ object MainForm: TMainForm
     end
     object bbReport_JuridicalSold: TdxBarButton
       Action = actReport_JuridicalSold
+      Category = 0
+    end
+    object bbReport_JuridicalCollation: TdxBarButton
+      Action = actReport_JuridicalCollation
       Category = 0
     end
   end
@@ -1787,6 +1795,13 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1054#1073#1086#1088#1086#1090#1082#1072' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalCollation: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      FormName = 'TReport_JuridicalCollationForm'
       GuiParams = <>
       isShowModal = False
     end

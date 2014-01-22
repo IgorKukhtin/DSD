@@ -15,20 +15,12 @@ uses
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit;
 
 type
-  TReport_JuridicalColletionForm = class(TAncestorReportForm)
-    colJuridicalName: TcxGridDBColumn;
-    colContractNumber: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colAccountName: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colStartAmount: TcxGridDBColumn;
-    colSaleSumm: TcxGridDBColumn;
-    colMoneySumm: TcxGridDBColumn;
-    colServiceSumm: TcxGridDBColumn;
-    colOtherSumm: TcxGridDBColumn;
-    colEndAmount: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
+  TReport_JuridicalCollationForm = class(TAncestorReportForm)
+    colItemName: TcxGridDBColumn;
+    coInvNumber: TcxGridDBColumn;
+    colDebet: TcxGridDBColumn;
+    colKredit: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
     frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
@@ -48,6 +40,6 @@ implementation
 
 initialization
 
-  RegisterClass(TReport_JuridicalColletionForm)
+  RegisterClass(TReport_JuridicalCollationForm)
 
 end.

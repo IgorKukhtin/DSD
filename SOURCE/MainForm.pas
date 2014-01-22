@@ -246,6 +246,8 @@ type
     bbFinanceDocuments_Separator: TdxBarSeparator;
     actReport_JuridicalSold: TdsdOpenForm;
     bbReport_JuridicalSold: TdxBarButton;
+    actReport_JuridicalCollation: TdsdOpenForm;
+    bbReport_JuridicalCollation: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
