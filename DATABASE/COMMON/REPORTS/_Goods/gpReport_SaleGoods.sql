@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleGoods (
 RETURNS TABLE  (InvNumber Integer, OperDate TDateTime 
               , TradeMarkName TVarChar
               , GoodsGroupName TVarChar
-              , GoodsId Integer, GoodsName TVarChar
+              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
               , Amount_Summ TFloat, Amount_Count TFloat
               )   
 AS
@@ -35,6 +35,7 @@ BEGIN
          , Object_TradeMark.ValueData  AS TradeMarkName
          , Object_GoodsGroup.ValueData AS GoodsGroupName 
          , AllSale.GoodsId AS GoodsId
+         , Object_Goods.Code AS GoodsCode
          , Object_Goods.ValueData AS GoodsName
          , AllSale.Amount_Summ
          , AllSale.Amount_Count 
