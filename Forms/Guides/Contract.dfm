@@ -818,6 +818,7 @@ object ContractForm: TContractForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 272
     Top = 184
