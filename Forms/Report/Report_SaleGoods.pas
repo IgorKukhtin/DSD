@@ -21,10 +21,8 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clOperDate: TcxGridDBColumn;
     clAmount_Summ: TcxGridDBColumn;
     clAmount_Count: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;

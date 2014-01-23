@@ -8,8 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleGoods (
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (InvNumber Integer, OperDate TDateTime 
-              , TradeMarkName TVarChar
+RETURNS TABLE  (TradeMarkName TVarChar
               , GoodsGroupName TVarChar
               , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
               , Amount_Summ TFloat, Amount_Count TFloat
@@ -27,18 +26,17 @@ BEGIN
           FROM  lfSelect_Object_Goods_byGoodsGroup (inGoodsGroupId) AS lfObject_Goods_byGoodsGroup;
     ELSE 
        INSERT INTO _tmpGoods (GoodsId)
-          SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
+          SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
    END IF;
 
     RETURN QUERY
-    SELECT AllSale.invnumber, AllSale.OperDate
-         , Object_TradeMark.ValueData  AS TradeMarkName
+    SELECT Object_TradeMark.ValueData  AS TradeMarkName
          , Object_GoodsGroup.ValueData AS GoodsGroupName 
          , AllSale.GoodsId AS GoodsId
-         , Object_Goods.Code AS GoodsCode
+         , Object_Goods.ObjectCode AS GoodsCode
          , Object_Goods.ValueData AS GoodsName
-         , AllSale.Amount_Summ
-         , AllSale.Amount_Count 
+         , CAST (SUM(AllSale.Amount_Summ) AS TFloat) AS Amount_Summ
+         , CAST (SUM(AllSale.Amount_Count) AS TFloat) AS Amount_Count
     FROM (
            SELECT AllContainer.invnumber, AllContainer.OperDate, AllContainer.GoodsId
             , sum(AllContainer.Amount_Summ)  AS Amount_Summ
@@ -68,7 +66,7 @@ BEGIN
 
                    JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                                     AND MovementItem.descid =  zc_MI_MASter()
-                                    AND MovementItem.objectId in (SELECT GoodsId FROM _tmpGoods)
+                                    AND MovementItem.objectId in (SELECT _tmpGoods.GoodsId FROM _tmpGoods)
            
                  WHERE Movement.DescId = zc_Movement_Sale() 
                    AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
@@ -89,7 +87,7 @@ BEGIN
                                                 
                    JOIN Container ON Container.Id = MIContainer.ContainerId
                                  AND Container.DescId = zc_Container_Count()
-                                 AND Container.ObjectId in (SELECT GoodsId FROM _tmpGoods)
+                                 AND Container.ObjectId in (SELECT _tmpGoods.GoodsId FROM _tmpGoods)
                  WHERE Movement.DescId = zc_Movement_Sale() 
     
                  GROUP BY Movement.invnumber
@@ -117,6 +115,13 @@ BEGIN
          LEFT JOIN Object AS Object_GoodsGroup 
                           ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                          AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
+                         
+        GROUP BY
+           Object_TradeMark.ValueData 
+         , Object_GoodsGroup.ValueData
+         , AllSale.GoodsId
+         , Object_Goods.ObjectCode
+         , Object_Goods.ValueData
     ;
          
 END;

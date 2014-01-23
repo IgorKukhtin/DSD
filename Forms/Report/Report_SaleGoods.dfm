@@ -10,18 +10,18 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
     Width = 973
     Height = 287
     TabOrder = 3
-    ExplicitWidth = 754
-    ExplicitHeight = 284
+    ExplicitWidth = 973
+    ExplicitHeight = 287
     ClientRectBottom = 287
     ClientRectRight = 973
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 754
-      ExplicitHeight = 284
+      ExplicitWidth = 973
+      ExplicitHeight = 287
       inherited cxGrid: TcxGrid
         Width = 973
         Height = 287
-        ExplicitWidth = 754
-        ExplicitHeight = 284
+        ExplicitWidth = 973
+        ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -53,7 +53,12 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
               Format = ',0.####'
               Kind = skSum
             end>
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
@@ -82,20 +87,6 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object clOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'OperDate'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
           object clAmount_Count: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount_Count'
@@ -116,7 +107,7 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
   end
   inherited Panel: TPanel
     Width = 973
-    ExplicitWidth = 754
+    ExplicitWidth = 973
     inherited deStart: TcxDateEdit
       EditValue = 41579d
     end
@@ -168,6 +159,8 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
       item
         Name = 'inGoodsGroupId'
         Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -193,6 +186,16 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
+        Component = PeriodChoice
+      end
+      item
+        Component = GoodsGroupGuides
+      end
+      item
+        Component = deEnd
+      end
+      item
+        Component = deStart
       end>
     Left = 184
     Top = 136
