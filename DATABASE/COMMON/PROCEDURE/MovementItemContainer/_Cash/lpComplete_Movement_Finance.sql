@@ -181,8 +181,8 @@ BEGIN
                                                                             , inBusinessId        := _tmpItem.BusinessId
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
-                                                                            , inDescId_1          := CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
-                                                                            , inObjectId_1        := _tmpItem.ObjectId
+                                                                            , inDescId_1          := zc_ContainerLinkObject_InfoMoney() -- CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
+                                                                            , inObjectId_1        := _tmpItem.InfoMoneyId -- _tmpItem.ObjectId
                                                                              )
                                             WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()

@@ -476,6 +476,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_JuridicalCollation'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_SaleGoods'
         end>
     end
     object bbBank: TdxBarButton
@@ -1041,6 +1045,10 @@ object MainForm: TMainForm
     end
     object bbMovementDesc: TdxBarButton
       Action = actMovementDesc
+      Category = 0
+    end
+    object bbReport_SaleGoods: TdxBarButton
+      Action = actReport_SaleGoods
       Category = 0
     end
   end
@@ -2021,6 +2029,13 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_SaleGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_SaleGoodsForm'
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2047,7 +2062,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

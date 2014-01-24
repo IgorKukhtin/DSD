@@ -250,6 +250,8 @@ type
     bbReport_JuridicalCollation: TdxBarButton;
     actMovementDesc: TdsdOpenForm;
     bbMovementDesc: TdxBarButton;
+    actReport_SaleGoods: TdsdOpenForm;
+    bbReport_SaleGoods: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
