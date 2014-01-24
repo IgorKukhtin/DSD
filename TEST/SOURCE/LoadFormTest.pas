@@ -76,6 +76,7 @@ type
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadSendFormTest;
+    procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSheetWorkTimeFormTest;
@@ -309,6 +310,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
+end;
+procedure TLoadFormTest.LoadSendDebtFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtJournalForm');
 end;
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin

@@ -292,8 +292,7 @@ uses
   DefaultsKey in '..\..\Forms\System\DefaultsKey.pas' {DefaultsKeyForm: TParentForm},
   FormsUnit in '..\..\Forms\System\FormsUnit.pas' {FormsForm: TParentForm},
   UnionDesc in '..\..\Forms\System\UnionDesc.pas' {UnionDescForm: TParentForm},
-  LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
-  LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
+  SendDebtJournal in '..\..\Forms\Document\SendDebtJournal.pas' {SendDebtJournalForm: TParentForm},
   BranchEdit in '..\..\Forms\Guides\BranchEdit.pas' {BranchEditForm: TParentForm},
   Branch in '..\..\Forms\Guides\Branch.pas' {BranchForm: TParentForm},
   Branch_Object in '..\..\Forms\Guides\Branch_Object.pas' {Branch_ObjectForm: TParentForm},
@@ -325,7 +324,10 @@ uses
   Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
-  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  SendDebt in '..\..\Forms\Document\SendDebt.pas' {SendDebtForm: TParentForm},
+  LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
+  LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm};
 
 {$R *.RES}
 
