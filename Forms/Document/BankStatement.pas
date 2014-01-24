@@ -61,6 +61,8 @@ type
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
+    bbInsertJuridical: TdxBarButton;
+    InsertJuridical: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

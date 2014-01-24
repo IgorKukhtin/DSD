@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitWidth = 1092
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -335,6 +335,8 @@ inherited BankStatementForm: TBankStatementForm
       Category = 'DSDLib'
       Caption = 'actChoiceJuridical'
       FormName = 'TMoneyPlace_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -353,6 +355,8 @@ inherited BankStatementForm: TBankStatementForm
       Category = 'DSDLib'
       Caption = 'actChoiceInfoMoney'
       FormName = 'TInfoMoneyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -371,6 +375,8 @@ inherited BankStatementForm: TBankStatementForm
       Category = 'DSDLib'
       Caption = 'actChoiceContract'
       FormName = 'TContractChoiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -411,6 +417,8 @@ inherited BankStatementForm: TBankStatementForm
       Category = 'DSDLib'
       Caption = 'actUnitForm'
       FormName = 'TUnitForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -446,6 +454,34 @@ inherited BankStatementForm: TBankStatementForm
       ImageIndex = 27
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089'?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1086' '#1088'\'#1089' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1099'.'
+    end
+    object InsertJuridical: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
+      ImageIndex = 0
+      FormName = 'TJuridicalEditForm'
+      FormNameParam.Value = 'TJuridicalEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+          ParamType = ptInput
+        end
+        item
+          Name = 'OKPO'
+          Component = MasterCDS
+          ComponentItem = 'OKPO'
+          DataType = ftString
+        end
+        item
+          Name = 'Name'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = False
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -493,6 +529,14 @@ inherited BankStatementForm: TBankStatementForm
         item
           Visible = True
           ItemName = 'bbSendToBankAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertJuridical'
         end>
     end
     object BarManagerBar1: TdxBar [1]
@@ -517,6 +561,10 @@ inherited BankStatementForm: TBankStatementForm
       Action = actSendToBankAccount
       Category = 0
     end
+    object bbInsertJuridical: TdxBarButton
+      Action = InsertJuridical
+      Category = 0
+    end
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -526,7 +574,7 @@ inherited BankStatementForm: TBankStatementForm
         ParamType = ptInput
       end>
     Left = 112
-    Top = 232
+    Top = 224
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankStatement'
@@ -618,6 +666,6 @@ inherited BankStatementForm: TBankStatementForm
         ParamType = ptInput
       end>
     Left = 208
-    Top = 120
+    Top = 144
   end
 end

@@ -27,13 +27,11 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
               Column = colDebet
             end
             item
               Format = ',0.00'
               Kind = skSum
-              Position = spFooter
               Column = colKredit
             end>
           DataController.Summary.FooterSummaryItems = <

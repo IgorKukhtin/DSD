@@ -35,6 +35,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCityFormTest;
+    procedure ContractChoiceSaleFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
@@ -351,6 +352,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
@@ -519,6 +522,9 @@ procedure TLoadFormTest.LoadPartnerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 
@@ -571,6 +577,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
@@ -867,6 +875,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
 end;
+
+procedure TLoadFormTest.ContractChoiceSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoiceSaleForm');
+end;
+
 
 
 procedure TLoadFormTest.SetUp;

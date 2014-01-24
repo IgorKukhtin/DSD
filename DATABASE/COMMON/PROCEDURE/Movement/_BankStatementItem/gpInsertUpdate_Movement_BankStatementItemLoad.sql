@@ -52,8 +52,8 @@ BEGIN
 
    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF COALESCE(vbMainBankAccountId, 0) = 0  THEN
-      RETURN 0;
---      RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', inBankAccountMain, chr(13);
+--      RETURN 0;
+      RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', inBankAccountMain, chr(13);
    END IF;
 
    SELECT Object_Currency_View.Id INTO vbCurrencyId
@@ -84,12 +84,25 @@ BEGIN
        PERFORM lpInsertUpdate_MovementLinkObject(zc_MovementLinkObject_BankAccount(), vbMovementId, vbMainBankAccountId);
     END IF;
 
-    --6. Найти документ zc_Movement_BankStatementItem номеру. 
+    --6. Найти документ zc_Movement_BankStatementItem номеру, комментарию, ОКПО и р/c
     
     SELECT Movement.Id INTO vbMovementItemId 
      FROM Movement
-    WHERE Movement.ParentId = vbMovementId AND 
-          Movement.DescId = zc_Movement_BankStatementItem() AND Movement.InvNumber = inDocNumber;
+     JOIN MovementString AS MovementString_OKPO
+       ON MovementString_OKPO.MovementId =  Movement.Id
+      AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+     JOIN MovementString AS MovementString_BankAccount
+       ON MovementString_BankAccount.MovementId =  Movement.Id
+      AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
+     JOIN MovementString AS MovementString_Comment
+       ON MovementString_Comment.MovementId =  Movement.Id
+      AND MovementString_Comment.DescId = zc_MovementString_Comment()
+    WHERE Movement.ParentId = vbMovementId 
+      AND Movement.DescId = zc_Movement_BankStatementItem() 
+      AND Movement.InvNumber = inDocNumber
+      AND MovementString_OKPO.ValueData = inOKPO
+      AND MovementString_BankAccount.ValueData = inBankAccount
+      AND MovementString_Comment.ValueData = inComment;
 
     IF COALESCE(vbMovementItemId, 0) = 0 THEN
        -- 7. Если такого документа нет - создать его

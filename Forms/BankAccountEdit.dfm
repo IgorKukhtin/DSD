@@ -261,6 +261,8 @@
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -283,6 +285,8 @@
   object dsdBankGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -305,6 +309,8 @@
   object dsdCurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

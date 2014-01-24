@@ -529,7 +529,7 @@ end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT').AsDateTime
+  result := FDataSet.FieldByName('DAT_PR').AsDateTime
 end;
 
 function TForumBankLoad.GetOperSumm: real;
@@ -669,7 +669,7 @@ end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATA').AsDateTime
+  result := FDataSet.FieldByName('DATA_S').AsDateTime
 end;
 
 function TFidoBankLoad.GetOperSumm: real;
@@ -757,7 +757,7 @@ end;
 
 function TOTPBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT').AsDateTime
+  result := FDataSet.FieldByName('DAT_PR').AsDateTime
 end;
 
 function TOTPBankLoad.GetOperSumm: real;

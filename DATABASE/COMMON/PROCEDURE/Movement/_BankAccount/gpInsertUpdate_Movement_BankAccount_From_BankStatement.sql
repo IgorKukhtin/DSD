@@ -116,6 +116,11 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_BankStatementItem()
        AND Movement.ParentId = inMovementId;
 
+     -- Ставим статус у документа выписки
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
+         WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -126,6 +131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.01.14                        *  меняем статус после загрузки
  22.01.14                                        * add IsMaster
  16.01.13                                        * add lpComplete_Movement_BankAccount
  06.12.13                          *

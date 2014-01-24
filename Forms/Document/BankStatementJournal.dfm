@@ -1,8 +1,7 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 843
-  ExplicitWidth = 859
-  ExplicitHeight = 364
+  ExplicitWidth = 851
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -21,7 +20,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Styles.Footer = nil
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
-            Visible = False
             Options.Editing = False
             Width = 95
           end

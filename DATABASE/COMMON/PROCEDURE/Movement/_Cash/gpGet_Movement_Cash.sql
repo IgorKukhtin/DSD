@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Cash (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Cash(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -32,7 +34,8 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)  AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+--           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
            
@@ -75,8 +78,7 @@ BEGIN
                       0
                   END::TFloat AS AmountOut
 
-           --, MIString_Comment.ValueData        AS Comment
-           , ''::TVarChar                     AS Comment
+           , MIString_Comment.ValueData        AS Comment
 
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
@@ -125,7 +127,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_Cash (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

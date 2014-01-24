@@ -2,8 +2,9 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 446
   ClientWidth = 863
+  ExplicitTop = -52
   ExplicitWidth = 869
-  ExplicitHeight = 478
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -125,8 +126,6 @@
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
-    ExplicitLeft = 284
-    ExplicitHeight = 364
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
@@ -136,15 +135,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitHeight = 364
       ClientRectBottom = 446
       ClientRectRight = 565
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitLeft = 80
-        ExplicitTop = -13
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -176,7 +172,6 @@
           Height = 422
           Align = alRight
           TabOrder = 8
-          ExplicitHeight = 416
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -291,7 +286,6 @@
       object PartnerTS: TcxTabSheet
         Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         ImageIndex = 1
-        ExplicitHeight = 340
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -307,7 +301,6 @@
           Height = 396
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 314
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -343,7 +336,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitHeight = 340
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -359,7 +351,6 @@
           Height = 396
           Align = alClient
           TabOrder = 0
-          ExplicitHeight = 390
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -454,7 +445,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 21
+    TabOrder = 20
     Width = 204
   end
   object cxLabel15: TcxLabel [18]
@@ -471,7 +462,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 21
     Width = 270
   end
   object cxLabel16: TcxLabel [20]
@@ -491,7 +482,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 26
+    TabOrder = 25
     Width = 100
   end
   object edStartPromo: TcxDateEdit [23]
@@ -549,6 +540,8 @@
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TContractEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -576,6 +569,8 @@
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TContractEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -606,6 +601,8 @@
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TPartnerJuridicalEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -633,6 +630,8 @@
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPartnerJuridicalEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -710,6 +709,8 @@
       Category = 'DSDLib'
       Caption = 'actChoiceBank'
       FormName = 'TBankForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -774,6 +775,16 @@
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'Name'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'OKPO'
+        Value = Null
+        DataType = ftString
       end>
     Left = 8
     Top = 224
@@ -876,6 +887,14 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Name'
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -982,6 +1001,8 @@
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridicalGroup
+    FormNameParam.Value = 'TJuridicalGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1007,6 +1028,8 @@
   object GoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsProperty
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1032,6 +1055,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1222,6 +1247,22 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inFullName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OKPO'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 224
     Top = 304
@@ -1385,6 +1426,8 @@
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1410,6 +1453,8 @@
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceListPromo
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
