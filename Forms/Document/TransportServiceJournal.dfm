@@ -2,8 +2,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 336
   ClientWidth = 1212
-  ExplicitWidth = 1220
-  ExplicitHeight = 370
+  ExplicitLeft = -230
+  ExplicitWidth = 1228
+  ExplicitHeight = 371
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -101,7 +102,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             Width = 92
           end
           object clContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
@@ -112,7 +113,7 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 58
+            Width = 55
           end
           object clContractConditionKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -134,6 +135,22 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clInfoMoney: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

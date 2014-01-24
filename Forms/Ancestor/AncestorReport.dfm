@@ -1,4 +1,6 @@
 inherited AncestorReportForm: TAncestorReportForm
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -8,10 +10,10 @@ inherited AncestorReportForm: TAncestorReportForm
     ExplicitHeight = 251
     ClientRectBottom = 251
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 575
+      ExplicitHeight = 251
       inherited cxGrid: TcxGrid
-        Top = 57
         Height = 251
-        ExplicitTop = 57
         ExplicitHeight = 251
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -55,6 +57,19 @@ inherited AncestorReportForm: TAncestorReportForm
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end>
   end
   inherited spSelect: TdsdStoredProc
     Params = <

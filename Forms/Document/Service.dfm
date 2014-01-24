@@ -281,10 +281,17 @@
     StoredProcName = 'gpGet_Movement_Service'
     Params = <
       item
-        Name = 'Id'
+        Name = 'inMovementId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item

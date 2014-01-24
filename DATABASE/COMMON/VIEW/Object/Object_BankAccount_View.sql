@@ -12,6 +12,7 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_Bank.ValueData                       AS BankName
            , BankAccount_Currency.ChildObjectId          AS CurrencyId
            , Currency.ValueData                          AS CurrencyName
+           , Object_BankAccount.isErased                 AS isErased
 
 
        FROM Object AS Object_BankAccount

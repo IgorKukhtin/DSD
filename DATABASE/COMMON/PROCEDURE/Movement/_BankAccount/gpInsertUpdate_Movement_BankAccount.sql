@@ -2,37 +2,59 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer,
                       Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+                                                                  	
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer,
                       Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer,
+                      TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inAmount              TFloat    , -- Сумма операции 
+    IN inAmountIn            TFloat    , -- Сумма прихода
+    IN inAmountOut           TFloat    , -- Сумма расхода
 
     IN inBankAccountId       Integer   , -- Расчетный счет 	
-    IN inComment             TVarChar  ,  
+    IN inComment             TVarChar  , -- Комментарий 
     IN inMoneyPlaceId        Integer   , -- Юр лицо, счет, касса  	
-    IN inCurrencyId          Integer   , -- Валюта 
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inBusinessId          Integer   , -- Бизнесс
     IN inContractId          Integer   , -- Договора
+    IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inUnitId              Integer   , -- Подразделение
+    IN inCurrencyId          Integer   , -- Валюта 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAmount TFloat;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
      vbUserId := inSession;
+     -- проверка
+     IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
+        RAISE EXCEPTION 'Введите сумму прихода или расхода';
+     END IF;
 
-     PERFORM lpInsertUpdate_Movement_BankAccount(ioId, inInvNumber, inOperDate, inAmount, 
-             inBankAccountId,  inJuridicalId, inCurrencyId, inInfoMoneyId, inBusinessId, inContractId, inUnitId);
+     -- проверка
+     IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
+        RAISE EXCEPTION 'Должна быть введена только одна сумма - или прихода или расхода.';
+     END IF;
+
+     -- расчет
+     IF inAmountIn <> 0 THEN
+        vbAmount := inAmountIn;
+     ELSE
+        vbAmount := -1 * inAmountOut;
+     END IF;
+
+
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId, inInvNumber, inOperDate, vbAmount, 
+             inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -44,7 +66,7 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  06.12.13                          *
  09.08.13         *
 

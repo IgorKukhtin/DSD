@@ -218,7 +218,7 @@ begin
     MemoryStream.Position := 0;
 
     // Создаем форму
-    Result := TParentForm.Create(Application);
+    Application.CreateForm(TParentForm, Result);
     Result.FormClassName := FormName;
 
     // Прочитать компонент из потока

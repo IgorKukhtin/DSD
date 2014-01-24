@@ -255,7 +255,7 @@ uses
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  Report_SaleGoods in '..\..\Forms\Report\Report_SaleGoods.pas' {Report_SaleGoodsForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
@@ -321,7 +321,11 @@ uses
   Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
   ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
+  Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
+  MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
 
 {$R *.RES}
 

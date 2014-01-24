@@ -121,7 +121,7 @@ inherited ServiceJournalForm: TServiceJournalForm
             Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
-            Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -159,6 +159,22 @@ inherited ServiceJournalForm: TServiceJournalForm
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TServiceForm'

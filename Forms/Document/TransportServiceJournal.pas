@@ -35,6 +35,8 @@ type
     ContractChoiceForm: TOpenChoiceForm;
     clInfoMoneyCode: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

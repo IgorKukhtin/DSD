@@ -146,8 +146,8 @@ BEGIN
               -- Получаем оборотку по контейнерам. 
               (SELECT tmpContainer.Id, tmpContainer.CarId, tmpContainer.ObjectId, tmpContainer.DescId, tmpContainer.KindId,
                      tmpContainer.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount,
-                     SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeAmount,
-                     SUM (CASE WHEN MIContainer.OperDate < inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN - MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS IncomeAmount,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN - MIContainer.Amount ELSE 0 END ELSE 0 END) AS OutComeAmount,
                      tmpContainer.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                 FROM tmpContainer
            LEFT JOIN MovementItemContainer AS MIContainer 
@@ -184,6 +184,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, T
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.01.14                        * 
  21.12.13                                        * Personal -> Member
  11.12.13         * add inBranchId              
  30.11.13                        * Изменил подход к формированию

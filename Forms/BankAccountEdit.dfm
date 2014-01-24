@@ -25,7 +25,8 @@
   object cxLabel1: TcxLabel
     Left = 40
     Top = 48
-    Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+    Cursor = crDrag
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cxButton1: TcxButton
     Left = 72
@@ -260,6 +261,8 @@
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -282,6 +285,8 @@
   object dsdBankGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBank
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBankForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -304,6 +309,8 @@
   object dsdCurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

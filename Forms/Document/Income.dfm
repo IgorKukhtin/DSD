@@ -196,21 +196,32 @@ object IncomeForm: TIncomeForm
       TabOrder = 11
       Width = 130
     end
-    object ceStatus: TcxButtonEdit
-      Left = 8
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 23
-      Width = 95
-    end
     object cxLabel11: TcxLabel
       Left = 8
       Top = 45
       Caption = #1057#1090#1072#1090#1091#1089
+    end
+    object ceStatus: TcxButtonEdit
+      Left = 9
+      Top = 63
+      Properties.Buttons = <
+        item
+          Action = CompleteMovement
+          Kind = bkGlyph
+        end
+        item
+          Action = UnCompleteMovement
+          Default = True
+          Kind = bkGlyph
+        end
+        item
+          Action = DeleteMovement
+          Kind = bkGlyph
+        end>
+      Properties.Images = dmMain.ImageList
+      Properties.ReadOnly = True
+      TabOrder = 24
+      Width = 95
     end
   end
   object cxPageControl: TcxPageControl
@@ -437,6 +448,7 @@ object IncomeForm: TIncomeForm
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -685,14 +697,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -746,7 +758,7 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
-          ItemName = 'bbBooleanAction'
+          ItemName = 'bbShowAll'
         end
         item
           BeginGroup = True
@@ -787,6 +799,18 @@ object IncomeForm: TIncomeForm
       Visible = True
       WholeRow = False
     end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
@@ -794,15 +818,6 @@ object IncomeForm: TIncomeForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-    end
-    object bbBooleanAction: TdxBarButton
-      Action = BooleanStoredProcAction
-      Category = 0
-    end
-    object bbStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Visible = ivAlways
     end
     object bbGridToExel: TdxBarButton
       Action = GridToExcel
@@ -812,9 +827,10 @@ object IncomeForm: TIncomeForm
       Action = EntryToExcel
       Category = 0
     end
-    object bbInsertUpdateMovement: TdxBarButton
-      Action = actInsertUpdateMovement
+    object bbStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
+      Visible = ivAlways
     end
     object bbErased: TdxBarButton
       Action = SetErased
@@ -822,10 +838,6 @@ object IncomeForm: TIncomeForm
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
-      Category = 0
-    end
-    object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
       Category = 0
     end
   end
@@ -860,7 +872,7 @@ object IncomeForm: TIncomeForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI
@@ -879,7 +891,7 @@ object IncomeForm: TIncomeForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
-    object BooleanStoredProcAction: TBooleanStoredProcAction
+    object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI
@@ -1007,6 +1019,57 @@ object IncomeForm: TIncomeForm
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = MasterDS
+    end
+    object UnCompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      Hint = #1054#1090#1084#1077#1085#1080#1090#1100' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      ImageIndex = 11
+      Status = mtUncomplete
+      Guides = StatusGuides
+    end
+    object CompleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 12
+      Status = mtComplete
+      Guides = StatusGuides
+    end
+    object DeleteMovement: TChangeGuidesStatus
+      Category = 'DSDLib'
+      StoredProc = spChangeStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+        end
+        item
+        end>
+      Caption = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      Hint = #1057#1090#1072#1090#1091#1089' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091#1076#1072#1083#1077#1085
+      ImageIndex = 13
+      Status = mtDelete
+      Guides = StatusGuides
     end
   end
   object MasterDS: TDataSource
@@ -1505,14 +1568,13 @@ object IncomeForm: TIncomeForm
       item
         Name = 'StatusCode'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'Key'
-        DataType = ftString
       end
       item
         Name = 'StatusName'
         Value = ''
-        Component = ChangeStatus
+        Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1670,5 +1732,35 @@ object IncomeForm: TIncomeForm
       end>
     Left = 638
     Top = 288
+  end
+  object StatusGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceStatus
+    PositionDataSet = 'ClientDataSet'
+    Params = <>
+    Left = 47
+    Top = 24
+  end
+  object spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_Income'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 76
+    Top = 24
   end
 end

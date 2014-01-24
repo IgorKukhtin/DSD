@@ -393,7 +393,6 @@ object JuridicalTreeForm: TJuridicalTreeForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
       DataSource = GridDS
     end
@@ -494,12 +493,14 @@ object JuridicalTreeForm: TJuridicalTreeForm
     ErasedFieldName = 'isErased'
     OnDblClickActionList = <
       item
+        Action = dsdChoiceGuides
       end
       item
         Action = actUpdate
       end>
     ActionItemList = <
       item
+        Action = dsdChoiceGuides
         ShortCut = 13
       end
       item

@@ -3,7 +3,7 @@ object LossDebtForm: TLossDebtForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
   ClientHeight = 396
-  ClientWidth = 773
+  ClientWidth = 1002
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object LossDebtForm: TLossDebtForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 773
+    Width = 1002
     Height = 60
     Align = alTop
     BevelOuter = bvNone
@@ -57,6 +57,7 @@ object LossDebtForm: TLossDebtForm
     object edJuridicalBasis: TcxButtonEdit
       Left = 380
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -106,6 +107,7 @@ object LossDebtForm: TLossDebtForm
     object edBusiness: TcxButtonEdit
       Left = 570
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -119,14 +121,14 @@ object LossDebtForm: TLossDebtForm
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 86
-    Width = 773
+    Width = 1002
     Height = 310
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 310
-    ClientRectRight = 773
+    ClientRectRight = 1002
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -134,7 +136,7 @@ object LossDebtForm: TLossDebtForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 773
+        Width = 1002
         Height = 286
         Align = alClient
         TabOrder = 0
@@ -162,7 +164,22 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = clAmountDebet
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummDebet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -175,7 +192,7 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount
+              Column = clAmountDebet
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -184,6 +201,21 @@ object LossDebtForm: TLossDebtForm
             item
               Format = ',0.###;-,0.###; ;'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummKredit
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummDebet
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -202,7 +234,6 @@ object LossDebtForm: TLossDebtForm
           object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'JuridicalCode'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
@@ -221,12 +252,62 @@ object LossDebtForm: TLossDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 66
+            Width = 45
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -240,35 +321,70 @@ object LossDebtForm: TLossDebtForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 129
+            Width = 80
           end
-          object clContractName: TcxGridDBColumn
-            Caption = #1044#1086#1075#1086#1074#1086#1088
-            DataBinding.FieldName = 'ContractName'
+          object clUnitName: TcxGridDBColumn
+            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'UnitName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ContractChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
+            Visible = False
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 82
+            Width = 80
           end
-          object clAmount: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Amount'
+          object clIsCalculated: TcxGridDBColumn
+            Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
+            DataBinding.FieldName = 'isCalculated'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clSummDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'SummDebet'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clSummKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
+            DataBinding.FieldName = 'SummKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmountDebet: TcxGridDBColumn
+            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountDebet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Properties.UseDisplayFormatWhenEditing = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 98
+            Width = 60
+          end
+          object clAmountKredit: TcxGridDBColumn
+            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
+            DataBinding.FieldName = 'AmountKredit'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -291,7 +407,7 @@ object LossDebtForm: TLossDebtForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 773
+        Width = 1002
         Height = 286
         Align = alClient
         TabOrder = 0
@@ -507,7 +623,7 @@ object LossDebtForm: TLossDebtForm
     Top = 304
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_PersonalAccount'
+    StoredProcName = 'gpSelect_MovementItem_LossDebt'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -524,13 +640,14 @@ object LossDebtForm: TLossDebtForm
       item
         Name = 'inShowAll'
         Value = False
+        Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -583,6 +700,10 @@ object LossDebtForm: TLossDebtForm
           ItemName = 'bbShowErased'
         end
         item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
@@ -631,7 +752,11 @@ object LossDebtForm: TLossDebtForm
       Category = 0
     end
     object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
+      Action = actShowErased
+      Category = 0
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
       Category = 0
     end
     object bbRefresh: TdxBarButton
@@ -698,7 +823,7 @@ object LossDebtForm: TLossDebtForm
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       StoredProc = spSelectMI
@@ -716,6 +841,25 @@ object LossDebtForm: TLossDebtForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      TabSheet = cxTabSheetMain
+      StoredProc = spSelectMI
+      StoredProcList = <
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -935,10 +1079,10 @@ object LossDebtForm: TLossDebtForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -951,10 +1095,10 @@ object LossDebtForm: TLossDebtForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -967,10 +1111,10 @@ object LossDebtForm: TLossDebtForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -1056,7 +1200,7 @@ object LossDebtForm: TLossDebtForm
     Top = 296
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_PersonalAccount'
+    StoredProcName = 'gpInsertUpdate_MovementItem_LossDebt'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1080,18 +1224,39 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
+        Name = 'ioAmountDebet'
         Component = MasterCDS
-        ComponentItem = 'Amount'
+        ComponentItem = 'AmountDebet'
         DataType = ftFloat
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
+        Name = 'ioAmountKredit'
+        Component = MasterCDS
+        ComponentItem = 'AmountKredit'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioSummDebet'
+        Component = MasterCDS
+        ComponentItem = 'SummDebet'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioSummKredit'
+        Component = MasterCDS
+        ComponentItem = 'SummKredit'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioIsCalculated'
+        Component = MasterCDS
+        ComponentItem = 'isCalculated'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end
       item
         Name = 'inContractId'
@@ -1100,21 +1265,21 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end
       item
-        Name = 'inRouteId'
+        Name = 'inPaidKindId'
         Component = MasterCDS
-        ComponentItem = 'RouteId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inCarId'
-        Component = MasterCDS
-        ComponentItem = 'CarId'
+        ComponentItem = 'PaidKindId'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyId'
         Component = MasterCDS
         ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
         ParamType = ptInput
       end>
     Left = 86
@@ -1155,7 +1320,7 @@ object LossDebtForm: TLossDebtForm
     Top = 272
   end
   object spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_PersonalAccount'
+    StoredProcName = 'gpInsertUpdate_Movement_LossDebt'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1181,7 +1346,14 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end
       item
-        Name = 'inPersonalId'
+        Name = 'inBusinessId'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalBasisId'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
@@ -1204,13 +1376,16 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Control = edJuridicalBasis
+      end
+      item
+        Control = edBusiness
       end>
     GetStoredProc = spGet
     Left = 306
     Top = 193
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PersonalAccount'
+    StoredProcName = 'gpGet_Movement_LossDebt'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1233,36 +1408,48 @@ object LossDebtForm: TLossDebtForm
         Component = edInvNumber
       end
       item
-        Name = 'Operdate'
+        Name = 'OperDate'
         Value = 0d
         Component = edOperDate
       end
       item
-        Name = 'Statuscode'
+        Name = 'StatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
         DataType = ftString
       end
       item
-        Name = 'statusname'
+        Name = 'StatusName'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'PersonalId'
+        Name = 'JuridicalBasisId'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
       end
       item
-        Name = 'PersonalName'
+        Name = 'JuridicalBasisName'
         Value = ''
         Component = GuidesJuridicalBasis
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'BusinessName'
+        Value = ''
+        Component = GuidesBusiness
+        ComponentItem = 'TextValue'
       end>
     Left = 552
     Top = 48
@@ -1291,31 +1478,15 @@ object LossDebtForm: TLossDebtForm
     Left = 258
     Top = 178
   end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_PersonalAccount'
-    Left = 488
-    Top = 176
-  end
   object spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalAccount_SetErased'
+    StoredProcName = 'gpMovementItem_LossDebt_SetErased'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inMovementItemId'
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -1328,21 +1499,14 @@ object LossDebtForm: TLossDebtForm
     Top = 200
   end
   object spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_PersonalAccount_SetUnErased'
+    StoredProcName = 'gpMovementItem_LossDebt_SetUnErased'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
+        Name = 'inMovementItemId'
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
@@ -1362,19 +1526,23 @@ object LossDebtForm: TLossDebtForm
     Left = 60
     Top = 16
   end
-  object StatusStoredProc: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_PersonalAccount'
+  object spChangeStatus: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Status_LossDebt'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'instatuscode'
-        Value = Null
+        Name = 'inStatusCode'
+        Value = ''
+        Component = StatusGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 92

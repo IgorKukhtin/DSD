@@ -11,6 +11,7 @@ RETURNS VOID AS
 $BODY$
 BEGIN
 
+
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_Transport (inMovementId, inSession);

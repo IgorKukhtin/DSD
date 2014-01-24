@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_Movement_Service()
 
-DROP FUNCTION IF EXISTS gpinsertupdate_movement_service (integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpinsertupdate_movement_service (integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpinsertupdate_movement_service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -34,12 +34,12 @@ BEGIN
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
-        RAISE EXCEPTION 'Введите сумму оказанных или полученных услуг';
+        RAISE EXCEPTION 'Введите сумму.';
      END IF;
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) <> 0) AND (COALESCE(inAmountOut, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма - или оказанных или полученных услуг.';
+        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
      -- расчет
@@ -87,7 +87,7 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean
+                               , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
      -- 5.3. проводим Документ
@@ -107,7 +107,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.01.14                                        * add IsMaster
  26.12.13                                        * add lpComplete_Movement_Service
  24.12.13                        *
  11.08.13         *

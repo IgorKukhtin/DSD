@@ -295,14 +295,17 @@ end;
 
 procedure TClientBankLoad.Activate;
 begin
-  with TFileOpenDialog.Create(nil) do
+  with {File}TOpenDialog.Create(nil) do
   try
-    DefaultFolder := InitializeDirectory;
-    with FileTypes.Add do
+    InitialDir := InitializeDirectory;
+//    DefaultFolder := InitializeDirectory;
+    DefaultExt := '*.dbf';
+    Filter := '*.dbf';
+    {with FileTypes.Add do
     begin
       DisplayName := 'Файлы загрузки';
       FileMask := '*.dbf';
-    end;
+    end;}
     if Execute then begin
        InitializeDirectory := ExtractFilePath(FileName);
        FDataSet := TMemDBFTable.Create(nil);
@@ -526,7 +529,7 @@ end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT').AsDateTime
+  result := FDataSet.FieldByName('DAT_PR').AsDateTime
 end;
 
 function TForumBankLoad.GetOperSumm: real;
@@ -666,7 +669,7 @@ end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATA').AsDateTime
+  result := FDataSet.FieldByName('DATA_S').AsDateTime
 end;
 
 function TFidoBankLoad.GetOperSumm: real;
@@ -754,7 +757,7 @@ end;
 
 function TOTPBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT').AsDateTime
+  result := FDataSet.FieldByName('DAT_PR').AsDateTime
 end;
 
 function TOTPBankLoad.GetOperSumm: real;

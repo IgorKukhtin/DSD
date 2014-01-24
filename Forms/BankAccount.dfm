@@ -52,7 +52,7 @@ object BankAccountForm: TBankAccountForm
         Width = 47
       end
       object clName: TcxGridDBColumn
-        Caption = #1056#1072#1089#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+        Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Width = 134
@@ -87,11 +87,11 @@ object BankAccountForm: TBankAccountForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 96
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 96
@@ -240,6 +240,7 @@ object BankAccountForm: TBankAccountForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -247,6 +248,8 @@ object BankAccountForm: TBankAccountForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = 'TBankAccountEditForm'
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -262,10 +265,12 @@ object BankAccountForm: TBankAccountForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -308,17 +313,28 @@ object BankAccountForm: TBankAccountForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
           ParamType = ptInput
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'CurrencyId'
+          Component = MasterCDS
+          ComponentItem = 'CurrencyId'
+        end
+        item
+          Name = 'CurrencyName'
+          Component = MasterCDS
+          ComponentItem = 'CurrencyName'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -327,10 +343,10 @@ object BankAccountForm: TBankAccountForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_BankAccount'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <>
     Left = 152

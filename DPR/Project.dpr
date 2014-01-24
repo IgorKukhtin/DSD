@@ -29,21 +29,21 @@ uses
   MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
-  Document in '..\SOURCE\COMPONENT\Document.pas';
+  Document in '..\SOURCE\COMPONENT\Document.pas',
+  dialogs;
 
 {$R *.res}
 
 begin
   Application.Initialize;
-  Application.MainFormOnTaskbar := True;
-  //  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+//    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
   // Процесс аутентификации
   with TLoginForm.Create(Application) do
     //Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
        Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
-  end;
+       Application.CreateForm(TdmMain, dmMain);
+    end;
   Application.Run;
 end.

@@ -36,25 +36,23 @@ BEGIN
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
-           , CASE WHEN MovementItem.Amount > 0 THEN
-                       MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountOut
+           , CASE WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount < 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountOut
            , MIString_Comment.ValueData        AS Comment
            , Object_Cash.ValueData             AS CashName
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
-           , Object_InfoMoney_View.InfoMoneyGroupName
-           , Object_InfoMoney_View.InfoMoneyDestinationName
-           , Object_InfoMoney_View.InfoMoneyCode
-           , Object_InfoMoney_View.InfoMoneyName
-           , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
+           , View_Contract_InvNumber.InvNumber AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -74,12 +72,12 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                          ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -91,14 +89,14 @@ BEGIN
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Cash (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  14.01.14                                        * add Object_Contract_InvNumber_View
- 26.12.13                                        * add Object_InfoMoney_View
+ 26.12.13                                        * add View_InfoMoney
  26.12.13                                        * add Object_RoleAccessKey_View
  23.12.13                          *
  09.08.13         *

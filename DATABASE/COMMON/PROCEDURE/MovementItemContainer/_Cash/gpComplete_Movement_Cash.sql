@@ -25,7 +25,7 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean
+                               , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
      -- проводим Документ
@@ -38,7 +38,8 @@ END;$BODY$
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.01.14                                        * add IsMaster
  26.12.13                                        * add lpComplete_Movement_Cash
  23.12.13                                        * all
  24.11.13                                        * add View_InfoMoney

@@ -841,8 +841,8 @@ begin
       for I := 0 to ChildNodes.Count - 1 do begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
-//           if Assigned(GridView) then
-  //            GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+           if Assigned(GridView) then
+              GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;

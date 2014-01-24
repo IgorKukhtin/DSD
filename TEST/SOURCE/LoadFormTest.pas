@@ -352,6 +352,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
@@ -569,6 +571,14 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleGoodsForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleGoodsForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalCollationForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

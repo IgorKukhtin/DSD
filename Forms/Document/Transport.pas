@@ -135,13 +135,11 @@ type
     spInsertUpdateMIChild: TdsdStoredProc;
     GuidesFiller: TGuidesFiller;
     HeaderSaver: THeaderSaver;
-    BooleanStoredProcAction: TBooleanStoredProcAction;
     actInsertUpdateMovement: TdsdExecStoredProc;
     dxBarManager: TdxBarManager;
     dxBarManagerBar: TdxBar;
     bbRefresh: TdxBarButton;
     bbPrintFrom: TdxBarButton;
-    bbBooleanAction: TdxBarButton;
     bbStatic: TdxBarStatic;
     bbGridToExel: TdxBarButton;
     bbEntryToGrid: TdxBarButton;
@@ -161,7 +159,7 @@ type
     bbErased: TdxBarButton;
     SetUnErased: TdsdUpdateErased;
     bbUnErased: TdxBarButton;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     cxTabSheetIncome: TcxTabSheet;
     cxGridIncome: TcxGrid;
@@ -225,7 +223,7 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     StatusGuides: TdsdGuides;
-    StatusStoredProc: TdsdStoredProc;
+    spChangeStatus: TdsdStoredProc;
     clincChangePrice: TcxGridDBColumn;
     clincContractName: TcxGridDBColumn;
     colBusinessName: TcxGridDBColumn;

@@ -56,8 +56,8 @@ BEGIN
 
            , Object_PaidKind.Id                AS PaidKindId
            , Object_PaidKind.ValueData         AS PaidKindName
-           , Object_Contract_InvNumber_View.ContractId
-           , Object_Contract_InvNumber_View.InvNumber AS ContractName
+           , View_Contract_InvNumber.ContractId
+           , View_Contract_InvNumber.InvNumber AS ContractName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -114,7 +114,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
        WHERE Movement.DescId = zc_Movement_ReturnIn()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
@@ -126,7 +126,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, TVarChar) OWNER
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  14.01.14                                        * add Object_Contract_InvNumber_View
  11.01.14                                        * add Checked, TotalCountPartner
  17.07.13         *

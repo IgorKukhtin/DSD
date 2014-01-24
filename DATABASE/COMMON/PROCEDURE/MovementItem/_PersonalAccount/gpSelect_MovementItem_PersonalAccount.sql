@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PersonalAccount(
     IN inIsErased    Boolean      , -- 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime
+RETURNS TABLE (Id Integer
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId Integer, ContractName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -19,25 +21,27 @@ RETURNS TABLE (Id Integer, OperDate TDateTime
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalAccount());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_MI_PersonalAccount());
+     vbUserId:= inSession;
 
      RETURN QUERY 
        SELECT MovementItem.Id
-            , MIDate_OperDate.ValueData   AS OperDate
-           
+
+            , View_InfoMoney.InfoMoneyGroupName
+            , View_InfoMoney.InfoMoneyDestinationName
             , View_InfoMoney.InfoMoneyId
             , View_InfoMoney.InfoMoneyCode
             , View_InfoMoney.InfoMoneyName
-            
-            , Object_Contract_InvNumber_View.ContractId
-            , Object_Contract_InvNumber_View.InvNumber AS ContractName
-            
+
+            , View_Contract_InvNumber.ContractId
+            , View_Contract_InvNumber.InvNumber AS ContractName
+
             , Object_Juridical.Id         AS JuridicalId
             , Object_Juridical.ValueData  AS JuridicalName
-                  
+
             , Object_Route.Id             AS RouteId
             , Object_Route.ValueData      AS RouteName
 
@@ -45,29 +49,24 @@ BEGIN
             , Object_Car.ValueData        AS CarName
             , Object_CarModel.ValueData   AS CarModelName
 
-            
             , MovementItem.Amount         AS Amount
             , MovementItem.isErased       AS isErased
-                  
+
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
-       
+
              JOIN MovementItem ON MovementItem.MovementId = inMovementId
                               AND MovementItem.DescId     = zc_MI_Master()
                               AND MovementItem.isErased   = tmpIsErased.isErased
-                 
-             LEFT JOIN MovementItemDate AS MIDate_OperDate
-                                        ON MIDate_OperDate.MovementItemId = MovementItem.Id
-                                       AND MIDate_OperDate.DescId = zc_MIDate_OperDate()
-                 
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
-             
+
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-             LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
+             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
                  
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                               ON MILinkObject_Route.MovementItemId = MovementItem.Id
@@ -84,12 +83,11 @@ BEGIN
              LEFT JOIN ObjectLink AS Car_CarModel ON Car_CarModel.ObjectId = Object_Car.Id
                                                  AND Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
              LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = Car_CarModel.ChildObjectId
-
       ;
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_PersonalAccount (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*

@@ -36,16 +36,14 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , CASE WHEN MovementItem.Amount > 0 THEN
-                       MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountOut
+           , CASE WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount < 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountOut
 
            , MIString_Comment.ValueData        AS Comment
 
@@ -55,7 +53,7 @@ BEGIN
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
-           , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
+           , View_Contract_InvNumber.InvNumber AS ContractInvNumber
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.ValueData        AS PaidKindName
 
@@ -78,7 +76,7 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View ON Object_Contract_InvNumber_View.ContractId = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -95,12 +93,12 @@ BEGIN
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  14.01.14                                        * add Object_Contract_InvNumber_View
  28.12.13                                        * add Object_InfoMoney_View
  28.12.13                                        * add Object_RoleAccessKey_View

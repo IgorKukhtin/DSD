@@ -92,6 +92,8 @@ BEGIN
      -- 1.1.3. определяется Счет для проводок суммового учета
      UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
+                                          WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
+                                               THEN zc_Enum_Account_110101() -- Транзит
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов
@@ -102,7 +104,11 @@ BEGIN
                                                                           , inAccountDirectionId     := _tmpItem.AccountDirectionId
                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                           , inInfoMoneyId            := NULL
-                                                                          , inInsert                 := FALSE
+                                                                          , inInsert                 := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                                                                              AND _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30400() -- Прочие дебиторы
+                                                                                                                 THEN TRUE
+                                                                                                             ELSE FALSE
+                                                                                                        END
                                                                           , inUserId                 := inUserId
                                                                            )
                                      END;
@@ -167,7 +173,7 @@ BEGIN
     ;
 
      -- 2. определяется ContainerId для проводок суммового учета
-     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110101() -- Транзит
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -175,7 +181,18 @@ BEGIN
                                                                             , inBusinessId        := _tmpItem.BusinessId
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
-                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountId = zc_Enum_AccountDirection_40300() THEN zc_ContainerLinkObject_BankAccount () ELSE zc_ContainerLinkObject_Cash() END
+                                                                            , inDescId_1          := zc_ContainerLinkObject_InfoMoney() -- CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() THEN zc_ContainerLinkObject_BankAccount() WHEN _tmpItem.ObjectDescId = zc_Object_Cash() THEN zc_ContainerLinkObject_Cash() ELSE -1 END
+                                                                            , inObjectId_1        := _tmpItem.InfoMoneyId -- _tmpItem.ObjectId
+                                                                             )
+                                            WHEN _tmpItem.AccountGroupId = zc_Enum_AccountGroup_40000() -- Денежные средства
+                                                 THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                                            , inParentId          := NULL
+                                                                            , inObjectId          := _tmpItem.AccountId
+                                                                            , inJuridicalId_basis := _tmpItem.JuridicalId_Basis
+                                                                            , inBusinessId        := _tmpItem.BusinessId
+                                                                            , inObjectCostDescId  := NULL
+                                                                            , inObjectCostId      := NULL
+                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountId = zc_Enum_AccountDirection_40300() THEN zc_ContainerLinkObject_BankAccount() ELSE zc_ContainerLinkObject_Cash() END
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
                                             WHEN _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
@@ -308,6 +325,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.01.14                                        * add IsMaster
  29.12.13                                        *
  26.12.13                                        *
 */

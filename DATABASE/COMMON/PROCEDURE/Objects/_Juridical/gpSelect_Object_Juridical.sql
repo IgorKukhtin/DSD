@@ -49,7 +49,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyName
 
        , ObjectHistory_JuridicalDetails_View.OKPO
-       
+
        , Object_PriceList.Id         AS PriceListId 
        , Object_PriceList.ValueData  AS PriceListName 
 

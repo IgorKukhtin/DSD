@@ -91,7 +91,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  08.09.13                                        * add zc_MIFloat_AmountChangePercent
  02.09.13                                        * add zc_MIFloat_ChangePercentAmount
  13.08.13                                        * add RAISE EXCEPTION

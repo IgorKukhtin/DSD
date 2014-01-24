@@ -5,7 +5,7 @@ DROP VIEW IF EXISTS Object_Contract_InvNumber_View CASCADE;
 CREATE OR REPLACE VIEW Object_Contract_InvNumber_View AS
   SELECT Object_Contract.Id                          AS ContractId
        , Object_Contract.ObjectCode                  AS ContractCode  
-       , CAST(CASE WHEN Object_Contract.ValueData <> '' THEN Object_Contract.ValueData ELSE '**уп' || CAST(Object_InfoMoney.ObjectCode AS TVarChar) END AS TVarChar) AS InvNumber
+       , CAST(CASE WHEN Object_Contract.ValueData <> '' THEN Object_Contract.ValueData ELSE '**уп' || CAST (Object_InfoMoney.ObjectCode AS TVarChar) END AS TVarChar) AS InvNumber
        , ObjectLink_Contract_InfoMoney.ChildObjectId         AS InfoMoneyId
        , Object_Contract.isErased                    AS isErased
   FROM Object AS Object_Contract

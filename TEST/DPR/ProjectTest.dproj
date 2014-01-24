@@ -684,8 +684,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
-				<Form>Report_GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_SaleGoods.pas">
+				<Form>Report_SaleGoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -930,6 +930,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale.pas">
 				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalCollation.pas">
+				<Form>Report_JuridicalCollationForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalSold.pas">
+				<Form>Report_JuridicalSoldForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementDescForms.pas">
+				<Form>MovementDescDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

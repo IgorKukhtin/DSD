@@ -88,9 +88,9 @@ type
     colCountForPrice: TcxGridDBColumn;
     clenGoodsKindName: TcxGridDBColumn;
     colAccountOnComplete: TcxGridDBColumn;
-    bbBooleanAction: TdxBarButton;
+    bbShowAll: TdxBarButton;
     bbStatic: TdxBarStatic;
-    BooleanStoredProcAction: TBooleanStoredProcAction;
+    actShowAll: TBooleanStoredProcAction;
     MasterViewAddOn: TdsdDBViewAddOn;
     UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     EntryViewAddOn: TdsdDBViewAddOn;
@@ -127,15 +127,13 @@ type
     colFuelName: TcxGridDBColumn;
     SetErased: TdsdUpdateErased;
     SetUnErased: TdsdUpdateErased;
-    ShowErasedAction: TBooleanStoredProcAction;
+    actShowErased: TBooleanStoredProcAction;
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
     cxLabel6: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     cxLabel8: TcxLabel;
-    ceStatus: TcxButtonEdit;
-    ChangeStatus: TChangeStatus;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;
     colIsErased: TcxGridDBColumn;
@@ -145,6 +143,12 @@ type
     cxLabel13: TcxLabel;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
+    StatusGuides: TdsdGuides;
+    spChangeStatus: TdsdStoredProc;
+    UnCompleteMovement: TChangeGuidesStatus;
+    CompleteMovement: TChangeGuidesStatus;
+    DeleteMovement: TChangeGuidesStatus;
+    ceStatus: TcxButtonEdit;
   private
   public
   end;

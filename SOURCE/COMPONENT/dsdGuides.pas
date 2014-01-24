@@ -69,6 +69,7 @@ type
     FKeyField: string;
     FOnChange: TNotifyEvent;
     FChoiceAction: TObject;
+    FFormNameParam: TdsdParam;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -78,9 +79,13 @@ type
     procedure OpenGuides;
     procedure OnButtonClick(Sender: TObject; AButtonIndex: Integer);
     procedure SetOwner(Owner: TObject);
+    procedure SetFormName(const Value: string);
+    function GetFormName: string;
+    function GetFormNameParam: TdsdParam;
   protected
     // имя формы
-    property FormName: string read FFormName write FFormName;
+    property FormName: string read GetFormName write SetFormName;
+    property FormNameParam: TdsdParam read GetFormNameParam write FFormNameParam;
     // Где позиционируемся по ParentId
     property ParentDataSet: string read FParentDataSet write FParentDataSet;
     // Где позиционируемся по ИД
@@ -126,6 +131,7 @@ type
     property Key;
     // Текстовое значение
     property TextValue;
+    property FormNameParam;
     property FormName;
     // Родитель для древовидных справочников
     property ParentId;
@@ -227,6 +233,9 @@ constructor TdsdGuides.Create(AOwner: TComponent);
 var MenuItem: TMenuItem;
 begin
   inherited;
+  FFormNameParam := TdsdParam.Create(nil);
+  FFormNameParam.DataType := ftString;
+  FFormNameParam.Value := '';
   FParams := TdsdParams.Create(Self, TdsdParam);
   FPopupMenu := TPopupMenu.Create(nil);
   MenuItem := TMenuItem.Create(FPopupMenu);
@@ -242,6 +251,7 @@ destructor TdsdGuides.Destroy;
 begin
   FreeAndNil(FParams);
   FreeAndNil(FPopupMenu);
+  FreeAndNil(FFormNameParam);
   inherited;
 end;
 
@@ -541,6 +551,20 @@ begin
   inherited;
 end;
 
+function TCustomGuides.GetFormName: string;
+begin
+  result := FFormNameParam.AsString;
+  if result = '' then
+     result := FFormName
+end;
+
+function TCustomGuides.GetFormNameParam: TdsdParam;
+begin
+  if FFormNameParam.AsString = '' then
+     FFormNameParam.Value := FormName;
+  Result := FFormNameParam;
+end;
+
 function TCustomGuides.GetKey: String;
 begin
   if Assigned(LookupControl) then begin
@@ -570,6 +594,14 @@ begin
       if (AComponent = FLookupControl) then
          FLookupControl := nil;
     end;
+end;
+
+procedure TCustomGuides.SetFormName(const Value: string);
+begin
+  if (Value <> '') and (csDesigning in ComponentState) and not (csLoading in ComponentState) then
+     ShowMessage('Используйте FormNameParam')
+  else
+     FFormName := Value;
 end;
 
 procedure TCustomGuides.SetKey(const Value: String);

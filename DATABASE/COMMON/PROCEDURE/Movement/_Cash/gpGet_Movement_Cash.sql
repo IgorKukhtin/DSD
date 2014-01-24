@@ -75,8 +75,7 @@ BEGIN
                       0
                   END::TFloat AS AmountOut
 
-           --, MIString_Comment.ValueData        AS Comment
-           , ''::TVarChar                     AS Comment
+           , MIString_Comment.ValueData        AS Comment
 
            , Object_Cash.Id                    AS CashId
            , Object_Cash.ValueData             AS CashName
@@ -124,13 +123,12 @@ BEGIN
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_Cash (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  26.12.13                                        * add View_InfoMoney
  23.12.13                         *
  19.11.13                         *

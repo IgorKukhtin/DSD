@@ -56,7 +56,7 @@
   object cxLabel5: TcxLabel [8]
     Left = 312
     Top = 106
-    Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceContractConditionKind: TcxButtonEdit [9]
     Left = 8
@@ -695,9 +695,7 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = ContractGuides
-      end
-      item
+        Guides = ContractJuridicalGuides
       end
       item
         Guides = PaidKindGuides
@@ -843,13 +841,14 @@
         DataType = ftString
       end
       item
-        Name = 'ContractId'
+        Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        ParamType = ptResult
       end
       item
-        Name = 'ContractName'
+        Name = 'TextValue'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'

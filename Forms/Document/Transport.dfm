@@ -1527,14 +1527,13 @@
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -1587,7 +1586,7 @@
       ImageIndex = 14
       ShortCut = 113
     end
-    object ShowErasedAction: TBooleanStoredProcAction
+    object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       StoredProc = spSelectMI
       StoredProcList = <
@@ -1607,25 +1606,6 @@
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
-    end
-    object BooleanStoredProcAction: TBooleanStoredProcAction
-      Category = 'DSDLib'
-      TabSheet = cxTabSheetMain
-      StoredProc = spSelectMI
-      StoredProcList = <
-        item
-          StoredProc = spSelectMI
-        end>
-      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndex = 63
-      Value = False
-      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
-      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
-      ImageIndexTrue = 62
-      ImageIndexFalse = 63
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -2133,10 +2113,10 @@
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -2152,10 +2132,10 @@
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -2171,10 +2151,10 @@
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
-      StoredProc = StatusStoredProc
+      StoredProc = spChangeStatus
       StoredProcList = <
         item
-          StoredProc = StatusStoredProc
+          StoredProc = spChangeStatus
         end
         item
           StoredProc = spSelectMIContainer
@@ -3092,6 +3072,14 @@
       Visible = True
       WholeRow = False
     end
+    object bbInsertUpdateMovement: TdxBarButton
+      Action = actInsertUpdateMovement
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
+      Category = 0
+    end
     object bbRefresh: TdxBarButton
       Action = actRefresh
       Category = 0
@@ -3108,8 +3096,8 @@
       Action = actPrintAdmin
       Category = 0
     end
-    object bbBooleanAction: TdxBarButton
-      Action = BooleanStoredProcAction
+    object bbGridToExel: TdxBarButton
+      Action = GridToExcel
       Category = 0
     end
     object bbStatic: TdxBarStatic
@@ -3117,17 +3105,9 @@
       Category = 0
       Visible = ivAlways
     end
-    object bbGridToExel: TdxBarButton
-      Action = GridToExcel
-      Category = 0
-    end
     object bbEntryToGrid: TdxBarButton
       Category = 0
       Visible = ivAlways
-    end
-    object bbInsertUpdateMovement: TdxBarButton
-      Action = actInsertUpdateMovement
-      Category = 0
     end
     object bbAddRoute: TdxBarButton
       Action = InsertRecord
@@ -3139,10 +3119,6 @@
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
-      Category = 0
-    end
-    object bbShowErased: TdxBarButton
-      Action = ShowErasedAction
       Category = 0
     end
     object bbAddIncome: TdxBarButton
@@ -3232,14 +3208,13 @@
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -3596,20 +3571,20 @@
     Left = 40
     Top = 16
   end
-  object StatusStoredProc: TdsdStoredProc
+  object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Transport'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'StatusCode'
+        Name = 'inStatusCode'
         Value = ''
         Component = StatusGuides
         ComponentItem = 'Key'
@@ -3647,14 +3622,13 @@
       item
         Name = 'inShowAll'
         Value = False
-        Component = BooleanStoredProcAction
         DataType = ftBoolean
         ParamType = ptInput
       end
       item
         Name = 'inIsErased'
         Value = False
-        Component = ShowErasedAction
+        Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
       end>

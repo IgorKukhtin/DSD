@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
-  ClientHeight = 350
+  ClientHeight = 407
   ClientWidth = 838
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -10,6 +10,7 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   Position = poDesigned
   OnCloseQuery = FormCloseQuery
@@ -19,6 +20,7 @@ object MainForm: TMainForm
   PixelsPerInch = 96
   TextHeight = 13
   object dxBarManager: TdxBarManager
+    AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
     Font.Height = -11
@@ -37,9 +39,12 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
-    object dxBarManager1Bar1: TdxBar
+    object dxBar: TdxBar
+      AllowClose = False
+      AllowCustomizing = False
+      AllowReset = False
       Caption = 'MainMenu'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -298,6 +303,13 @@ object MainForm: TMainForm
       Visible = ivAlways
       ShowCaption = False
     end
+    object bbFinanceDocuments_Separator: TdxBarSeparator
+      Caption = 'bbFinanceDocuments_Separator'
+      Category = 0
+      Hint = 'bbFinanceDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
     object bbMeasure: TdxBarButton
       Action = actMeasure
       Category = 0
@@ -456,6 +468,18 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_MotionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalSold'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalCollation'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_SaleGoods'
         end>
     end
     object bbBank: TdxBarButton
@@ -592,6 +616,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbJuridicalService'
         end
         item
@@ -600,11 +628,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbLossDebt'
+          ItemName = 'bbBankAccountDocument'
         end
         item
           Visible = True
-          ItemName = 'bbBankAccountDocument'
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLossDebt'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -659,6 +691,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementDesc'
         end
         item
           Visible = True
@@ -999,6 +1035,22 @@ object MainForm: TMainForm
       Action = actCity
       Category = 0
     end
+    object bbReport_JuridicalSold: TdxBarButton
+      Action = actReport_JuridicalSold
+      Category = 0
+    end
+    object bbReport_JuridicalCollation: TdxBarButton
+      Action = actReport_JuridicalCollation
+      Category = 0
+    end
+    object bbMovementDesc: TdxBarButton
+      Action = actMovementDesc
+      Category = 0
+    end
+    object bbReport_SaleGoods: TdxBarButton
+      Action = actReport_SaleGoods
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1008,6 +1060,8 @@ object MainForm: TMainForm
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
       Hint = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
       FormName = 'TTransportJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1016,6 +1070,8 @@ object MainForm: TMainForm
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
       Hint = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1079#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086') '
       FormName = 'TIncomeFuelJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1024,6 +1080,8 @@ object MainForm: TMainForm
       Caption = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       Hint = #1056#1072#1089#1093#1086#1076' '#1076#1077#1085#1077#1075' '#1089' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1085#1072' '#1087#1086#1076#1086#1090#1095#1077#1090
       FormName = 'TPersonalSendCashJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1032,6 +1090,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
       Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
       FormName = 'TPersonalGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1040,6 +1100,8 @@ object MainForm: TMainForm
       Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
       Hint = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' '
       FormName = 'TPersonalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1048,6 +1110,8 @@ object MainForm: TMainForm
       Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
       Hint = #1044#1086#1083#1078#1085#1086#1089#1090#1080' '
       FormName = 'TPositionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1056,6 +1120,8 @@ object MainForm: TMainForm
       Caption = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       Hint = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       FormName = 'TCalendarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1064,6 +1130,8 @@ object MainForm: TMainForm
       Caption = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
       Hint = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
       FormName = 'TPersonalAccountJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1072,6 +1140,8 @@ object MainForm: TMainForm
       Caption = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1060#1080#1079#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TMemberForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1080,6 +1150,8 @@ object MainForm: TMainForm
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090
       Hint = #1056#1072#1089#1095#1077#1090#1099' '#1087#1086#1076#1086#1090#1095#1077#1090#1072' '#1089' '#1102#1088'.'#1083#1080#1094#1086#1084
       FormName = 'TTransportServiceJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1088,6 +1160,8 @@ object MainForm: TMainForm
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
       Hint = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' ('#1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086')'
       FormName = 'TSendTicketFuelJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1096,6 +1170,8 @@ object MainForm: TMainForm
       Caption = #1064#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
       Hint = #1096#1090#1072#1090#1085#1086#1077' '#1088#1072#1089#1087#1080#1089#1072#1085#1080#1077
       FormName = 'TStaffListDataForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1104,6 +1180,8 @@ object MainForm: TMainForm
       Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
       Hint = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1080
       FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1112,6 +1190,8 @@ object MainForm: TMainForm
       Caption = #1052#1072#1088#1096#1088#1091#1090#1099
       Hint = #1052#1072#1088#1096#1088#1091#1090#1099
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1120,6 +1200,8 @@ object MainForm: TMainForm
       Caption = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
       Hint = #1052#1072#1088#1082#1080' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1077#1081
       FormName = 'TCarModelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1128,6 +1210,8 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
       Hint = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
       FormName = 'TFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1136,6 +1220,8 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1090#1086#1087#1083#1080#1074#1072
       Hint = #1042#1080#1076#1099' '#1085#1086#1088#1084' '#1090#1086#1087#1083#1080#1074#1072
       FormName = 'TRateFuelKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1143,6 +1229,8 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TReport_BalanceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1150,6 +1238,8 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
       FormName = 'TReport_ProfitLossForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1158,6 +1248,8 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1094#1077#1089#1089#1099
       Hint = #1055#1088#1086#1094#1077#1089#1089#1099
       FormName = 'TProcessForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1165,6 +1257,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       FormName = 'TIncomeJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1172,6 +1266,8 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
       FormName = 'TReport_HistoryCostForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1186,6 +1282,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
       FormName = 'TReturnOutJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1193,6 +1291,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       FormName = 'TSaleJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1200,6 +1300,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TReturnInJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1207,6 +1309,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
       FormName = 'TSendOnPriceJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1214,6 +1318,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077
       FormName = 'TSendJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1221,6 +1327,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
       FormName = 'TProductionSeparateJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1228,6 +1336,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' - '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
       FormName = 'TProductionUnionJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1235,6 +1345,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1057#1087#1080#1089#1072#1085#1080#1077
       FormName = 'TLossJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1242,6 +1354,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
       FormName = 'TInventoryJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1250,6 +1364,8 @@ object MainForm: TMainForm
       Caption = #1041#1072#1085#1082#1080
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1258,6 +1374,8 @@ object MainForm: TMainForm
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
       Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
       FormName = 'TBankAccountForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1266,6 +1384,8 @@ object MainForm: TMainForm
       Caption = #1060#1080#1083#1080#1072#1083#1099
       Hint = #1060#1080#1083#1080#1072#1083#1099
       FormName = 'TBranchForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1274,6 +1394,8 @@ object MainForm: TMainForm
       Caption = #1041#1080#1079#1085#1077#1089#1099
       Hint = #1041#1080#1079#1085#1077#1089#1099
       FormName = 'TBusinessForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1282,6 +1404,8 @@ object MainForm: TMainForm
       Caption = #1050#1072#1089#1089#1072
       Hint = #1050#1072#1089#1089#1072
       FormName = 'TCashForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1290,6 +1414,8 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       Hint = #1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       FormName = 'TContractKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1298,6 +1424,8 @@ object MainForm: TMainForm
       Caption = #1044#1086#1075#1086#1074#1086#1088#1072
       Hint = #1044#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TContractForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1306,6 +1434,8 @@ object MainForm: TMainForm
       Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
       Hint = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TContractArticleForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1314,6 +1444,8 @@ object MainForm: TMainForm
       Caption = #1056#1077#1075#1080#1086#1085#1099
       Hint = #1056#1077#1075#1080#1086#1085#1099
       FormName = 'TAreaForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1322,6 +1454,8 @@ object MainForm: TMainForm
       Caption = #1042#1072#1083#1102#1090#1099
       Hint = #1042#1072#1083#1102#1090#1099
       FormName = 'TCurrencyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1330,6 +1464,8 @@ object MainForm: TMainForm
       Caption = #1058#1086#1074#1072#1088#1099
       Hint = #1058#1086#1074#1072#1088#1099
       FormName = 'TGoodsTreeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1338,6 +1474,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TGoodsGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1346,6 +1484,8 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1354,6 +1494,8 @@ object MainForm: TMainForm
       Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TGoodsPropertyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1362,6 +1504,8 @@ object MainForm: TMainForm
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072' ('#1089#1087#1080#1089#1086#1082')'
       Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TJuridicalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1370,6 +1514,8 @@ object MainForm: TMainForm
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       Hint = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
       FormName = 'TJuridicalTreeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1378,6 +1524,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
       Hint = #1043#1088#1091#1087#1087#1099' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1080#1093' '#1083#1080#1094
       FormName = 'TJuridicalGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1386,6 +1534,8 @@ object MainForm: TMainForm
       Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       Hint = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
       FormName = 'TMeasureForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1394,6 +1544,8 @@ object MainForm: TMainForm
       Caption = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       Hint = #1042#1080#1076#1099' '#1092#1086#1088#1084' '#1086#1087#1083#1072#1090#1099
       FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1402,6 +1554,8 @@ object MainForm: TMainForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
       FormName = 'TPartnerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1410,6 +1564,8 @@ object MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103' ('#1089#1087#1080#1089#1086#1082')'
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1418,6 +1574,8 @@ object MainForm: TMainForm
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       Hint = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
       FormName = 'TUnitTreeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1426,6 +1584,8 @@ object MainForm: TMainForm
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       Hint = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
       FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1434,6 +1594,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
       Hint = #1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1081
       FormName = 'TInfoMoneyGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1442,6 +1604,8 @@ object MainForm: TMainForm
       Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       Hint = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       FormName = 'TInfoMoneyDestinationForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1450,6 +1614,8 @@ object MainForm: TMainForm
       Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       Hint = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
       FormName = 'TInfoMoneyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1458,6 +1624,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
       Hint = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
       FormName = 'TAccountGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1466,6 +1634,8 @@ object MainForm: TMainForm
       Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       FormName = 'TAccountDirectionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1474,6 +1644,8 @@ object MainForm: TMainForm
       Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       Hint = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       FormName = 'TProfitLossGroupForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1482,6 +1654,8 @@ object MainForm: TMainForm
       Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       Hint = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
       FormName = 'TProfitLossDirectionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1490,6 +1664,8 @@ object MainForm: TMainForm
       Caption = #1057#1095#1077#1090#1072
       Hint = #1057#1095#1077#1090#1072
       FormName = 'TAccountForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1498,6 +1674,8 @@ object MainForm: TMainForm
       Caption = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       Hint = #1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
       FormName = 'TProfitLossForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1506,6 +1684,8 @@ object MainForm: TMainForm
       Caption = #1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
       Hint = #1058#1086#1088#1075#1086#1074#1099#1077' '#1084#1072#1088#1082#1080
       FormName = 'TTradeMarkForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1514,6 +1694,8 @@ object MainForm: TMainForm
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       Hint = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       FormName = 'TAssetForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1522,6 +1704,8 @@ object MainForm: TMainForm
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
       Hint = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
       FormName = 'TRouteSortingForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1529,6 +1713,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       FormName = 'TZakazExternalJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1537,6 +1723,8 @@ object MainForm: TMainForm
       Caption = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       Hint = #1048#1089#1090#1086#1088#1080#1080' '#1094#1077#1085' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TPriceListItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1544,6 +1732,8 @@ object MainForm: TMainForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
       FormName = 'TZakazInternalJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1552,6 +1742,8 @@ object MainForm: TMainForm
       Caption = #1050#1072#1089#1089#1072', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
       Hint = #1054#1087#1077#1088#1072#1094#1080#1080' '#1089' '#1082#1072#1089#1089#1086#1081
       FormName = 'TCashJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1559,6 +1751,8 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_MotionGoodsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1566,6 +1760,8 @@ object MainForm: TMainForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1056#1086#1083#1080' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       FormName = 'TRoleForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1574,6 +1770,8 @@ object MainForm: TMainForm
       Caption = #1044#1077#1081#1089#1090#1074#1080#1103
       Hint = #1044#1077#1081#1089#1090#1074#1080#1103
       FormName = 'TActionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1582,6 +1780,8 @@ object MainForm: TMainForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       Hint = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       FormName = 'TUserForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1590,6 +1790,8 @@ object MainForm: TMainForm
       Caption = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
       Hint = #1053#1086#1088#1084#1099' '#1090#1086#1087#1083#1080#1074#1072
       FormName = 'TRateFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1598,6 +1800,8 @@ object MainForm: TMainForm
       Caption = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
       Hint = #1053#1072#1079#1074#1072#1085#1080#1103' '#1075#1088#1091#1079#1086#1074
       FormName = 'TFreightForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1606,6 +1810,8 @@ object MainForm: TMainForm
       Caption = #1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
       Hint = #1058#1086#1087#1083#1080#1074#1085#1099#1077' '#1082#1072#1088#1090#1099
       FormName = 'TCardFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1614,6 +1820,8 @@ object MainForm: TMainForm
       Caption = #1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086' '
       Hint = #1058#1072#1083#1086#1085#1099' '#1085#1072' '#1090#1086#1087#1083#1080#1074#1086' '
       FormName = 'TTicketFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1622,6 +1830,8 @@ object MainForm: TMainForm
       Caption = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
       Hint = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
       FormName = 'TReport_FuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1630,6 +1840,8 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1091#1090#1077#1074#1099#1084' '#1083#1080#1089#1090#1072#1084
       FormName = 'TReport_TransportForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1638,6 +1850,8 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' ('#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103')'
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1074#1086#1076#1080#1090#1077#1083#1103#1084' ('#1088#1072#1073#1086#1095#1077#1077' '#1074#1088#1077#1084#1103')'
       FormName = 'TReport_TransportHoursWorkForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1646,6 +1860,8 @@ object MainForm: TMainForm
       Caption = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       Hint = #1058#1080#1087#1099' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       FormName = 'TWorkTimeKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1654,6 +1870,8 @@ object MainForm: TMainForm
       Caption = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       Hint = #1058#1072#1073#1077#1083#1100' '#1091#1095#1077#1090#1072' '#1088#1072#1073#1086#1095#1077#1075#1086' '#1074#1088#1077#1084#1077#1085#1080
       FormName = 'TSheetWorkTimeJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1662,6 +1880,8 @@ object MainForm: TMainForm
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
       Hint = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1079#1072#1088#1087#1083#1072#1090#1099
       FormName = 'TPersonalServiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1670,6 +1890,8 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1086#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       FormName = 'TReport_AccountForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1678,6 +1900,8 @@ object MainForm: TMainForm
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1686,6 +1910,8 @@ object MainForm: TMainForm
       Caption = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
       Hint = #1056#1072#1079#1088#1103#1076#1099' '#1076#1086#1083#1078#1085#1086#1089#1090#1077#1081' '
       FormName = 'TPositionLevelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1700,6 +1926,8 @@ object MainForm: TMainForm
       Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
       Hint = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
       FormName = 'TModelServiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1713,6 +1941,8 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1090#1086#1082#1086#1083
       Hint = #1055#1088#1086#1090#1086#1082#1086#1083
       FormName = 'TProtocolForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1720,13 +1950,26 @@ object MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075
       FormName = 'TServiceJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
     object actBankLoad: TdsdOpenForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1073#1072#1085#1082#1072
+      Caption = #1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080
       FormName = 'TBankStatementJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankAccountDocument: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076
+      FormName = 'TBankAccountJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1735,6 +1978,8 @@ object MainForm: TMainForm
       Caption = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
       Hint = #1044#1077#1092#1086#1083#1090#1099' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
       FormName = 'TSetUserDefaultsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1742,13 +1987,8 @@ object MainForm: TMainForm
       Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1102#1088'.'#1083#1080#1094#1072')'
       FormName = 'TLossDebtJournalForm'
-      GuiParams = <>
-      isShowModal = False
-    end
-    object actBankAccountDocument: TdsdOpenForm
-      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1088#1072#1089#1095#1077#1090#1085#1099#1084' '#1089#1095#1077#1090#1086#1084
-      FormName = 'TBankAccountJournalForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -1757,6 +1997,42 @@ object MainForm: TMainForm
       Caption = #1043#1086#1088#1086#1076#1072
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TCityForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalSold: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1054#1073#1086#1088#1086#1090#1082#1072' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
+      FormName = 'TReport_JuridicalSoldForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_JuridicalCollation: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      FormName = 'TReport_JuridicalCollationForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actMovementDesc: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      FormName = 'TMovementDescDataForm'
+      FormNameParam.Value = 'TMovementDescDataForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_SaleGoods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_SaleGoodsForm'
       GuiParams = <>
       isShowModal = False
     end
@@ -1786,7 +2062,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

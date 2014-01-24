@@ -12,7 +12,8 @@ uses
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, Vcl.ExtCtrls, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxButtonEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, cxTextEdit, cxLabel,
-  cxMemo, cxSplitter;
+  cxMemo, cxSplitter, Vcl.Menus, DataModul, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TBankStatementForm = class(TAncestorDBGridForm)
@@ -54,6 +55,14 @@ type
     cxDetailGrid: TcxGrid;
     BarManagerBar1: TdxBar;
     colCurrency: TcxGridDBColumn;
+    actSendToBankAccount: TdsdExecStoredProc;
+    spBankAccount_From_BankStatement: TdsdStoredProc;
+    bbSendToBankAccount: TdxBarButton;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    bbInsertJuridical: TdxBarButton;
+    InsertJuridical: TdsdInsertUpdateAction;
   private
     { Private declarations }
   public

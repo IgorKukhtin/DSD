@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankStatement(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , BankId Integer, BankName TVarChar
               )
@@ -26,6 +27,8 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
+           , Object_Status.ObjectCode   AS StatusCode
+           , Object_Status.ValueData    AS StatusName
 
            , Object_BankAccount_View.Id          AS BankAccountId
            , Object_BankAccount_View.Name        AS BankAccountName
@@ -52,6 +55,7 @@ ALTER FUNCTION gpSelect_Movement_BankStatement (TDateTime, TDateTime, TVarChar) 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.01.14                        *              
  15.11.13                        *              
  08.08.13         *
 

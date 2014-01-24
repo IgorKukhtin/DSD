@@ -9,40 +9,55 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inOperDate            TDateTime , -- Дата документа
     IN inAmount              TFloat    , -- Сумма операции 
 
-    IN inBankAccountId       Integer   , -- От кого (в документе) -- Юридическое лицо, Расчетный счет 	
-    IN inJuridicalId         Integer   , -- Кому (в документе)  -- Юридическое лицо, Расчетный счет 	
-    IN inCurrencyId          Integer   , -- Валюта 
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inBusinessId          Integer   , -- Бизнесс
+    IN inBankAccountId       Integer   , -- Расчетный счет 	
+    IN inComment             TVarChar  , -- Комментарий 
+    IN inMoneyPlaceId        Integer   , -- Юр лицо, счет, касса  	
     IN inContractId          Integer   , -- Договора
+    IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inUnitId              Integer   , -- Подразделение
+    IN inCurrencyId          Integer   , -- Валюта 
     IN inParentId            Integer   DEFAULT  NULL
 )                              
 RETURNS Integer AS
 $BODY$
+   DECLARE vbMovementItemId Integer;
 BEGIN
 
+     -- проверка (для юр.лица только)
+     IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Juridical())
+     THEN
+        RAISE EXCEPTION 'Ошибка.<№ договора> не выбран.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+        RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбранр.';
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_BankAccount(), inInvNumber, inOperDate, inParentId);
 
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+     -- определяем <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
-     -- сохранили связь с <Банковский счет>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_BankAccount(), ioId, inBankAccountId);
-     -- сохранили связь с <Юр лицом>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inJuridicalId);
-     -- сохранили связь с <валютой>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inCurrencyId);
-     -- сохранили связь с <Статьи назначения>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     -- сохранили связь с <Бизнесом>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
+     -- сохранили <Элемент документа>
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, ioId, inAmount, NULL);
+
+     -- сохранили связь с <Объект>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_MoneyPlace(), vbMovementItemId, inMoneyPlaceId);
+    
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
+
+     -- сохранили связь с <Управленческие статьи>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-     -- сохранили связь с <Подразделение>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
+     -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+     -- сохранили связь с <Валютой>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
 
 END;
 $BODY$
@@ -51,7 +66,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.01.14                         *
  06.12.13                         *
 
 */

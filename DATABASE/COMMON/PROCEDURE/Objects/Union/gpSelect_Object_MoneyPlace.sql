@@ -18,6 +18,7 @@ BEGIN
      vbUserId := inSession;
 
      RETURN QUERY
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
      SELECT Object_Cash.Id
           , Object_Cash.ObjectCode     
           , Object_Cash.Valuedata AS Name
@@ -32,6 +33,22 @@ BEGIN
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
      WHERE Object_Cash.DescId = zc_Object_Cash()
+    UNION ALL
+     SELECT Object_BankAccount_View.Id
+          , Object_BankAccount_View.Code     
+          , Object_BankAccount_View.Name AS Name
+          , ObjectDesc.ItemName
+          , Object_BankAccount_View.isErased
+          , 0::Integer
+          , ''::TVarChar
+       --   , Object_BankAccount_View.BankName
+          , 0::Integer
+       --   , Object_BankAccount_View.CurrencyName
+          , ''::TVarChar
+          , NULL::TDateTime
+          , ''::TVarChar
+     FROM Object_BankAccount_View, ObjectDesc 
+     WHERE ObjectDesc.Id = zc_Object_BankAccount()
     UNION ALL
      SELECT Object_Member.Id       
           , Object_Member.ObjectCode     
@@ -69,7 +86,7 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
-       AND View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm();
+       AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport));
 
 END;
 $BODY$
@@ -80,6 +97,8 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.01.14                                        * add tmpUserTransport
+ 15.01.14                         * add BankAccount
  05.01.14                                        * add zc_Enum_PaidKind_SecondForm
  05.01.14                                        * View_Contract.InfoMoneyId
  18.12.13                         *
