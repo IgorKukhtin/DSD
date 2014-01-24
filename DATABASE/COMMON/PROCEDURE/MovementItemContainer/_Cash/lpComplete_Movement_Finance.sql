@@ -61,6 +61,13 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_80200() -- Прочие кредиты
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
                                                            THEN zc_Enum_AccountDirection_80400() -- проценты по кредитам
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20800() -- Алан
+                                                                                                                                               , zc_Enum_InfoMoneyDestination_20900() -- Ирна
+                                                                                                                                               , zc_Enum_InfoMoneyDestination_21000() -- Чапли
+                                                                                                                                               , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
+                                                                                                                                               , zc_Enum_InfoMoneyDestination_40900() -- Финансовая помощь
+                                                                                                                                                )
+                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_40000() -- Финансовая деятельность
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
 
@@ -325,6 +332,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
  22.01.14                                        * add IsMaster
  29.12.13                                        *
  26.12.13                                        *
