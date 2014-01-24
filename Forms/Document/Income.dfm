@@ -226,24 +226,25 @@ object IncomeForm: TIncomeForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 128
     Width = 971
-    Height = 336
+    Height = 334
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 336
-    ClientRectRight = 971
-    ClientRectTop = 24
+    ClientRectBottom = 330
+    ClientRectLeft = 2
+    ClientRectRight = 967
+    ClientRectTop = 22
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
-        Height = 312
+        Width = 965
+        Height = 308
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -465,8 +466,8 @@ object IncomeForm: TIncomeForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
-        Height = 312
+        Width = 965
+        Height = 308
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -675,8 +676,8 @@ object IncomeForm: TIncomeForm
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 238
-    Top = 359
+    Left = 262
+    Top = 375
   end
   object spSelectMI: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Income'
@@ -707,14 +708,14 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 112
-    Top = 303
+    Left = 192
+    Top = 111
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -732,7 +733,7 @@ object IncomeForm: TIncomeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -1104,8 +1105,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 344
-    Top = 88
+    Left = 272
+    Top = 8
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1129,13 +1130,13 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
-    Top = 88
+    Left = 416
+    Top = 8
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
-    Left = 216
-    Top = 304
+    Left = 768
+    Top = 216
     object N1: TMenuItem
       Action = actRefresh
     end
@@ -1155,8 +1156,8 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 75
-    Top = 384
+    Left = 819
+    Top = 312
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
@@ -1166,7 +1167,7 @@ object IncomeForm: TIncomeForm
   end
   object EntryDS: TDataSource
     DataSet = EntryCDS
-    Left = 45
+    Left = 61
     Top = 384
   end
   object spInsertUpdateMIMaster: TdsdStoredProc
@@ -1260,16 +1261,16 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'AssetId'
         ParamType = ptInput
       end>
-    Left = 78
-    Top = 303
+    Left = 150
+    Top = 287
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
     CloseDataSource = False
     DataSet = MasterCDS
     BCDToCurrency = False
-    Left = 141
-    Top = 304
+    Left = 477
+    Top = 336
   end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1282,12 +1283,12 @@ object IncomeForm: TIncomeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 299
-    Top = 345
+    Left = 347
+    Top = 337
   end
   object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 110
-    Top = 231
+    Left = 806
+    Top = 263
   end
   object EntryViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1296,8 +1297,8 @@ object IncomeForm: TIncomeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 108
-    Top = 384
+    Left = 180
+    Top = 360
   end
   object spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Income'
@@ -1393,8 +1394,8 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 378
-    Top = 240
+    Left = 282
+    Top = 96
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1440,7 +1441,7 @@ object IncomeForm: TIncomeForm
       end>
     GetStoredProc = spGet
     Left = 296
-    Top = 257
+    Top = 217
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1604,8 +1605,8 @@ object IncomeForm: TIncomeForm
       item
         Action = actInsertUpdateMovement
       end>
-    Left = 248
-    Top = 240
+    Left = 144
+    Top = 200
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1682,6 +1683,16 @@ object IncomeForm: TIncomeForm
     Left = 784
     Top = 88
   end
+  object ChangeStatus: TChangeStatus
+    KeyField = 'Code'
+    LookupControl = ceStatus
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProcName = 'gpUpdate_Status_Income'
+    Left = 488
+    Top = 88
+  end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
     DataSets = <>
@@ -1699,8 +1710,8 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
-    Left = 574
-    Top = 232
+    Left = 630
+    Top = 224
   end
   object spUnErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem'
@@ -1720,7 +1731,7 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
       end>
     Left = 638
-    Top = 248
+    Top = 288
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
