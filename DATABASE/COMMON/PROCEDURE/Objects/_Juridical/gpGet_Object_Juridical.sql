@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpGet_Object_Juridical (Integer, TVarChar, TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
     IN inId          Integer,       -- Юридические лица 
     IN inName        TVarChar,
+--    IN inOKPO        TVarChar,
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
@@ -29,7 +30,7 @@ BEGIN
        SELECT
              CAST (0 as Integer)    AS Id
            , lfGet_ObjectCode(0, zc_Object_Juridical()) AS Code
-           , inName                AS NAME
+           , inName                 AS NAME
            
            , CAST ('' as TVarChar)    AS GLNCode
            , CAST (false as Boolean)  AS isCorporate
@@ -129,7 +130,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Juridical (Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
