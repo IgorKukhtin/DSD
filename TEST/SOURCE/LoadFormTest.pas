@@ -351,6 +351,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TUnionDescForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemContainerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;

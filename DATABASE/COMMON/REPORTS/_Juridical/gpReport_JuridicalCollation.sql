@@ -22,7 +22,7 @@ BEGIN
   SELECT 
           Operation.MovementSumm::TFloat,
           (CASE WHEN Operation.MovementSumm > 0 THEN Operation.MovementSumm ELSE 0 END)::TFloat AS Debet,
-          (CASE WHEN Operation.MovementSumm > 0 THEN 0 ELSE Operation.MovementSumm END)::TFloat AS Kredit,
+          (CASE WHEN Operation.MovementSumm > 0 THEN 0 ELSE - Operation.MovementSumm END)::TFloat AS Kredit,
           Movement.OperDate,
           Movement.InvNumber, 
           MovementDesc.ItemName

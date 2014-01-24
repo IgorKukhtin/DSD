@@ -19,12 +19,12 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
   dsdDB, Data.DB, Datasnap.DBClient, frxExportRTF, frxExportPDF, frxExportXML,
-  frxExportXLS;
+  frxExportXLS, Vcl.Menus;
 
 type
   TMainForm = class(TForm)
     dxBarManager: TdxBarManager;
-    dxBarManager1Bar1: TdxBar;
+    dxBar: TdxBar;
     bbExit: TdxBarButton;
     bbGoodsDocuments: TdxBarSubItem;
     bbGuides: TdxBarSubItem;
@@ -248,6 +248,8 @@ type
     bbReport_JuridicalSold: TdxBarButton;
     actReport_JuridicalCollation: TdsdOpenForm;
     bbReport_JuridicalCollation: TdxBarButton;
+    actMovementDesc: TdsdOpenForm;
+    bbMovementDesc: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -265,7 +267,7 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData, MessagesUnit, Menus, UtilConst, Math,
+uses ParentForm, Storage, CommonData, MessagesUnit, UtilConst, Math,
      AboutBoxUnit;
 
 {$R DevExpressRus.res}

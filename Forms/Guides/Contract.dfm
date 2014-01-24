@@ -362,8 +362,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -505,6 +505,8 @@ object ContractForm: TContractForm
       Category = 'DSDLib'
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -525,6 +527,8 @@ object ContractForm: TContractForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TContractEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -540,6 +544,8 @@ object ContractForm: TContractForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TContractEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -567,6 +573,8 @@ object ContractForm: TContractForm
       Category = 'DSDLib'
       Caption = 'ContractKindChoiceForm'
       FormName = 'TContractKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -599,6 +607,8 @@ object ContractForm: TContractForm
       Category = 'DSDLib'
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -633,6 +643,8 @@ object ContractForm: TContractForm
       Category = 'DSDLib'
       Caption = 'JuridicalChoiceForm'
       FormName = 'TJuridical_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -720,6 +732,8 @@ object ContractForm: TContractForm
       Category = 'DSDLib'
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -818,6 +832,7 @@ object ContractForm: TContractForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 272
     Top = 184

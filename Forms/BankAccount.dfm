@@ -114,8 +114,8 @@ object BankAccountForm: TBankAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -248,6 +248,8 @@ object BankAccountForm: TBankAccountForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = 'TBankAccountEditForm'
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -263,6 +265,8 @@ object BankAccountForm: TBankAccountForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TBankAccountEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

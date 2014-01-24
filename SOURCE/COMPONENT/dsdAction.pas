@@ -271,6 +271,9 @@ type
     FParams: TdsdParams;
     FFormName: string;
     FisShowModal: boolean;
+    FFormNameParam: TdsdParam;
+    procedure SetFormName(const Value: string);
+    function GetFormName: string;
   protected
     procedure BeforeExecute(Form: TForm); virtual;
     procedure OnFormClose(Params: TdsdParams); virtual;
@@ -286,7 +289,8 @@ type
     property ShortCut;
     property ImageIndex;
     property SecondaryShortCuts;
-    property FormName: string read FFormName write FFormName;
+    property FormName: string read GetFormName write SetFormName;
+    property FormNameParam: TdsdParam read FFormNameParam write FFormNameParam;
     property GuiParams: TdsdParams read FParams write FParams;
     property isShowModal: boolean read FisShowModal write FisShowModal;
   end;
@@ -297,6 +301,8 @@ type
     // Вызыввем процедуру после выбора элемента из справочника
     procedure SetOwner(Owner: TObject);
     procedure AfterChoice(Params: TdsdParams; Form: TForm);
+  public
+    constructor Create(AOwner: TComponent); override;
   end;
 
   TDSAction = class(TdsdCustomAction)
@@ -307,6 +313,8 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ChangeDSState; virtual; abstract;
     function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
   published
     property View: TcxGridDBTableView read FView write FView;
     property Action: TCustomAction read FAction write FAction;
@@ -604,13 +612,24 @@ constructor TdsdOpenForm.Create(AOwner: TComponent);
 begin
   inherited;
   FParams := TdsdParams.Create(Self, TdsdParam);
+  FFormNameParam := TdsdParam.Create(nil);
+  FFormNameParam.DataType := ftString;
+  FFormNameParam.Value := '';
 end;
 
 destructor TdsdOpenForm.Destroy;
 begin
   FParams.Free;
   FParams := nil;
+  FFormNameParam.Free;
   inherited;
+end;
+
+function TdsdOpenForm.GetFormName: string;
+begin
+  result := FFormNameParam.AsString;
+  if result = '' then
+     result := FFormName
 end;
 
 function TdsdOpenForm.LocalExecute: boolean;
@@ -635,6 +654,14 @@ end;
 procedure TdsdOpenForm.OnFormClose(Params: TdsdParams);
 begin
 
+end;
+
+procedure TdsdOpenForm.SetFormName(const Value: string);
+begin
+  if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
+     ShowMessage('Используйте FormNameParam')
+  else
+     FFormName := Value;
 end;
 
 function TdsdOpenForm.ShowForm: TForm;
@@ -1218,7 +1245,7 @@ end;
 constructor TdsdCustomAction.Create(AOwner: TComponent);
 begin
   inherited;
-  FPostDataSetBeforeExecute := false;
+  FPostDataSetBeforeExecute := true;
 end;
 
 function TdsdCustomAction.Execute: boolean;
@@ -1318,6 +1345,12 @@ end;
 
 { TDataSetAction }
 
+constructor TDSAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPostDataSetBeforeExecute := false;
+end;
+
 function TDSAction.LocalExecute: boolean;
 var i: integer;
 begin
@@ -1352,6 +1385,12 @@ begin
     if AComponent = FAction then
        FAction := nil;
   end;
+end;
+
+constructor TOpenChoiceForm.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPostDataSetBeforeExecute := false;
 end;
 
 procedure TOpenChoiceForm.SetOwner(Owner: TObject);

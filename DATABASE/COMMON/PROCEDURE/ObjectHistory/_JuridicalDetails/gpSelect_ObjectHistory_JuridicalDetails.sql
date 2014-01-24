@@ -1,9 +1,11 @@
 -- Function: gpSelect_ObjectHistory_JuridicalDetails ()
 
-DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
     IN inJuridicalId        Integer   , -- Юр.лицо 
+    IN inFullName           TVarChar  , -- Название 
+    IN inOKPO               TVarChar  , -- ОКПО 
     IN inSession            TVarChar    -- сессия пользователя
 )                              
 RETURNS TABLE (Id Integer, StartDate TDateTime, BankName TVarChar, BankId Integer,
@@ -24,9 +26,9 @@ BEGIN
            , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate) AS StartDate
            , Object_Bank.ValueData AS BankName
            , Object_Bank.Id        AS BankId
-           , ObjectHistoryString_JuridicalDetails_FullName.ValueData AS FullName
+           , COALESCE(ObjectHistoryString_JuridicalDetails_FullName.ValueData, inFullName) AS FullName
            , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData AS JuridicalAddress
-           , ObjectHistoryString_JuridicalDetails_OKPO.ValueData AS OKPO
+           , COALESCE(ObjectHistoryString_JuridicalDetails_OKPO.ValueData, inOKPO) AS OKPO
            , ObjectHistoryString_JuridicalDetails_INN.ValueData AS INN
            , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData AS NumberVAT
            , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData AS AccounterName
@@ -65,12 +67,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarChar, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.01.14                        *
  28.11.13                        *
 */
 

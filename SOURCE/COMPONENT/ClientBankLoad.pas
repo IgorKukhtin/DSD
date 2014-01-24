@@ -669,7 +669,7 @@ end;
 
 function TFidoBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DATA').AsDateTime
+  result := FDataSet.FieldByName('DATA_S').AsDateTime
 end;
 
 function TFidoBankLoad.GetOperSumm: real;

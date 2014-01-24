@@ -1,26 +1,26 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
   ClientHeight = 389
-  ClientWidth = 863
-  ExplicitWidth = 871
+  ClientWidth = 674
+  ExplicitWidth = 682
   ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 863
+    Width = 674
     Height = 306
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 863
     ExplicitHeight = 306
     ClientRectBottom = 306
-    ClientRectRight = 863
+    ClientRectRight = 674
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 863
       ExplicitHeight = 306
       inherited cxGrid: TcxGrid
-        Width = 863
+        Width = 674
         Height = 306
         ExplicitWidth = 863
         ExplicitHeight = 306
@@ -88,33 +88,38 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object coInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            Options.Editing = False
             Width = 65
           end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'Debet'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 75
           end
           object colKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'Kredit'
             PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.00;-,0.00'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 69
           end
         end
@@ -122,7 +127,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 863
+    Width = 674
     Height = 57
     ExplicitWidth = 863
     ExplicitHeight = 57
