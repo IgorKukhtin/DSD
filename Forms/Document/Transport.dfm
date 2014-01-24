@@ -284,24 +284,25 @@
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 126
+    Top = 128
     Width = 1200
-    Height = 421
+    Height = 419
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 421
-    ClientRectRight = 1200
-    ClientRectTop = 24
+    ClientRectBottom = 415
+    ClientRectLeft = 2
+    ClientRectRight = 1196
+    ClientRectTop = 22
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 252
+        Width = 1194
+        Height = 248
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -534,8 +535,8 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 257
-        Width = 1200
+        Top = 253
+        Width = 1194
         Height = 140
         Align = alBottom
         TabOrder = 1
@@ -812,8 +813,8 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 252
-        Width = 1200
+        Top = 248
+        Width = 1194
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
@@ -822,14 +823,11 @@
     object cxTabSheetIncome: TcxTabSheet
       Caption = #1047#1072#1087#1088#1072#1074#1082#1072
       ImageIndex = 2
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 397
+        Width = 1194
+        Height = 393
         Align = alClient
         TabOrder = 0
         object cxGridIncomeDBTableView: TcxGridDBTableView
@@ -1116,14 +1114,11 @@
     object cxTabSheetReport: TcxTabSheet
       Caption = #1048#1090#1086#1075#1080
       ImageIndex = 3
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 397
+        Width = 1194
+        Height = 393
         Align = alClient
         TabOrder = 0
         object cxGridReportDBTableView: TcxGridDBTableView
@@ -1268,8 +1263,8 @@
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1200
-        Height = 397
+        Width = 1194
+        Height = 393
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -2975,8 +2970,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2994,7 +2989,7 @@
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False

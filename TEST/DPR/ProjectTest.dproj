@@ -161,8 +161,8 @@
 			<DCCReference Include="..\..\Forms\Status.pas">
 				<Form>StatusForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
-				<Form>PartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Partner_Object.pas">
+				<Form>Partner_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Currency.pas">
 				<Form>CurrencyForm</Form>
@@ -330,11 +330,11 @@
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SaleOldJournal.pas">
+				<Form>SaleJournalOldForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale.pas">
-				<Form>SaleForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SaleOld.pas">
+				<Form>SaleOldForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
@@ -741,8 +741,8 @@
 				<Form>BankStatementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContractChoice.pas">
-				<Form>ContractChoiceForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoiceSale.pas">
+				<Form>ContractChoiceSaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
@@ -902,6 +902,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalAccountJournal.pas">
 				<Form>PersonalAccountJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\City.pas">
 				<Form>CityForm</Form>
@@ -913,6 +914,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
 				<Form>CityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
+				<Form>PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoice.pas">
+				<Form>ContractChoiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale.pas">
+				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

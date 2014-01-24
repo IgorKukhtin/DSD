@@ -63,7 +63,7 @@ uses
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm},
+  Partner_Object in '..\..\Forms\Guides\Partner_Object.pas' {Partner_ObjectForm},
   Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
   PriceListGoodsItem in '..\..\Forms\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
@@ -124,8 +124,8 @@ uses
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
-  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm},
+  SaleOldJournal in '..\..\Forms\Document\SaleOldJournal.pas' {SaleJournalOldForm},
+  SaleOld in '..\..\Forms\Document\SaleOld.pas' {SaleOldForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm},
@@ -271,7 +271,7 @@ uses
   Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
-  ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
+  ContractChoiceSale in '..\..\Forms\Guides\ContractChoiceSale.pas' {ContractChoiceSaleForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
@@ -317,7 +317,11 @@ uses
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
-  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm};
+  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
+  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
 
 {$R *.RES}
 
