@@ -43,8 +43,6 @@ object MainForm: TMainForm
       0)
     object dxBar: TdxBar
       AllowClose = False
-      AllowCustomizing = False
-      AllowReset = False
       Caption = 'MainMenu'
       CaptionButtons = <>
       DockedDockingStyle = dsTop
@@ -2033,6 +2031,8 @@ object MainForm: TMainForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_SaleGoodsForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -2062,7 +2062,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

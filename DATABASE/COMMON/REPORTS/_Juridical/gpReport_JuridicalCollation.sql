@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inJuridicalId      Integer,    -- Юридическое лицо  
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (MovementSumm TFloat, Debet TFloat, Kredit TFloat, OperDate TDateTime, InvNumber TVarChar, ItemName TVarChar)
+RETURNS TABLE (MovementSumm TFloat, Debet TFloat, Kredit TFloat, OperDate TDateTime, InvNumber TVarChar, MovementId Integer, ItemName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -25,6 +25,7 @@ BEGIN
           (CASE WHEN Operation.MovementSumm > 0 THEN 0 ELSE - Operation.MovementSumm END)::TFloat AS Kredit,
           Movement.OperDate,
           Movement.InvNumber, 
+          Movement.Id AS MovementId, 
           MovementDesc.ItemName
     FROM (SELECT MIContainer.MovementId, SUM(MIContainer.Amount) AS MovementSumm
       FROM ContainerLinkObject AS CLO_Juridical 
@@ -48,6 +49,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.01.14                        * 
  15.01.14                        * 
 */
 

@@ -10,7 +10,7 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit;
+  cxGrid, cxPC, cxButtonEdit, DataModul;
 
 type
   TMovementDescDataForm = class(TAncestorDBGridForm)
