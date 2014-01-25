@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_PersonalSendCash (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_PersonalSendCash (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalSendCash (Integer, TDateTime , TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalSendCash(
     IN inMovementId        Integer  , -- êëþ÷ Äîêóìåíòà
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -26,7 +28,8 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_PersonalSendCash_seq') AS TVarChar) AS InvNumber
-           , CAST (CURRENT_DATE as TDateTime) AS OperDate
+--           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
 
@@ -68,13 +71,14 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Movement_PersonalSendCash (Integer, TDateTime , TVarChar) OWNER TO postgres;
 
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 25.01.14                                        * add inOperDate
  09.11.13                                        * View_Personal -> Object_Personal
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE

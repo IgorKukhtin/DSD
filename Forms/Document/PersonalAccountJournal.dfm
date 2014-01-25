@@ -386,15 +386,18 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TPersonalAccountForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
         end
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -405,6 +408,8 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TPersonalAccountForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -413,9 +418,10 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -534,7 +540,7 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     end
   end
   object spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_PersonalAccount'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -548,7 +554,7 @@ object PersonalAccountJournalForm: TPersonalAccountJournalForm
     Top = 272
   end
   object spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_PersonalAccount'
     DataSet = ClientDataSet
     DataSets = <
       item

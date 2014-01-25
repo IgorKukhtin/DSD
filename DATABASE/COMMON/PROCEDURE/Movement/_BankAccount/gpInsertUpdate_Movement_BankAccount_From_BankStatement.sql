@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount_From_BankStatement(Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_BankAccount_From_BankStatement (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankAccount_From_BankStatement(
  INOUT inMovementId          Integer   , -- Ключ объекта <Документ> BankStatement
@@ -10,23 +10,23 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
-     vbUserId := inSession;
-    
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount_From_BankS());
+
 
      -- распроводим Документы
-     PERFORM lpUnComplete_Movement (inMovementId := Movement_BankAccount.Id
-                                  , inUserId     := vbUserId)
-     FROM Movement
-          JOIN Movement AS Movement_BankAccount
-                        ON Movement_BankAccount.ParentId = Movement.Id
-                       AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-                       AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
-     WHERE Movement.DescId = zc_Movement_BankStatementItem()
-       AND Movement.ParentId = inMovementId;
-
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_BankAccount())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := Movement_BankAccount.Id
+                                      , inUserId     := vbUserId)
+         FROM Movement
+              JOIN Movement AS Movement_BankAccount
+                            ON Movement_BankAccount.ParentId = Movement.Id
+                           AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                           AND Movement_BankAccount.StatusId = zc_Enum_Status_Complete()
+         WHERE Movement.DescId = zc_Movement_BankStatementItem()
+           AND Movement.ParentId = inMovementId;
+     END IF;
 
 
      -- Выбираем все данные и сразу вызываем процедуры
@@ -101,20 +101,23 @@ BEGIN
                                 ) ON COMMIT DROP;
 
 
-     -- 5.3. проводим Документ
-     PERFORM lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
-                                            , inUserId     := vbUserId)
-     FROM Movement
-         JOIN Movement AS Movement_BankAccount
-                       ON Movement_BankAccount.ParentId = Movement.Id
-                      AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-         JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
-         JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                     ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                    AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                     AND MILinkObject_MoneyPlace.ObjectId > 0
-     WHERE Movement.DescId = zc_Movement_BankStatementItem()
-       AND Movement.ParentId = inMovementId;
+     -- 5.3. проводим Документы
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount())
+     THEN
+         PERFORM lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
+                                                , inUserId     := vbUserId)
+         FROM Movement
+             JOIN Movement AS Movement_BankAccount
+                           ON Movement_BankAccount.ParentId = Movement.Id
+                          AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+             JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
+             JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+                                         AND MILinkObject_MoneyPlace.ObjectId > 0
+         WHERE Movement.DescId = zc_Movement_BankStatementItem()
+           AND Movement.ParentId = inMovementId;
+     END IF;
 
      -- Ставим статус у документа выписки
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 

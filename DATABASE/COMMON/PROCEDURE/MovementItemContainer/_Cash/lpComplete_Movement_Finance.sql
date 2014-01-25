@@ -111,7 +111,8 @@ BEGIN
                                                                           , inAccountDirectionId     := _tmpItem.AccountDirectionId
                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
                                                                           , inInfoMoneyId            := NULL
-                                                                          , inInsert                 := CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                                          , inInsert                 := CASE WHEN 1=0
+                                                                                                              AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
                                                                                                               AND _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30400() -- Прочие дебиторы
                                                                                                                  THEN TRUE
                                                                                                              ELSE FALSE

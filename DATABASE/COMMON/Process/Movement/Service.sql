@@ -15,44 +15,44 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'сохранение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Service');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'выбор данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - выбор данных.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Movement_Service');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'получение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_Service');
                                   
 -- Status_Service
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - Распроведение.'
                                   , inEnumName:= 'zc_Enum_Process_UnComplete_Service');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - Проведение.'
                                   , inEnumName:= 'zc_Enum_Process_Complete_Service');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_Service');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Service()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Проведение за период - документы <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Service())||'> - Проведение за период.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_Service');
 
 

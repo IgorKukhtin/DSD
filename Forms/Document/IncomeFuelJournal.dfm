@@ -190,7 +190,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 50
       end
       object colFromName: TcxGridDBColumn
-        Caption = #1054#1090' '#1082#1086#1075#1086' ('#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
+        Caption = #1054#1090' '#1082#1086#1075#1086' ('#1048#1089#1090#1086#1095#1085#1080#1082' '#1079#1072#1087#1088#1072#1074#1082#1080')'
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
         Width = 100
@@ -486,6 +486,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -500,6 +502,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TIncomeFuelForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

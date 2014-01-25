@@ -11,8 +11,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
-     vbUserId:= lpGetUserBySession (inSession);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount());
 
      -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;

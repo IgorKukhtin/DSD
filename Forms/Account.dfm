@@ -100,6 +100,12 @@ object AccountForm: TAccountForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
+      object InfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object InfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
@@ -120,6 +126,12 @@ object AccountForm: TAccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object onComplete: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'onComplete'
+        HeaderAlignmentVert = vaCenter
+        Width = 25
       end
       object isErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -164,8 +176,8 @@ object AccountForm: TAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -298,6 +310,8 @@ object AccountForm: TAccountForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TAccountEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -313,6 +327,8 @@ object AccountForm: TAccountForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TAccountEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

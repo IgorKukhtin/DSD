@@ -386,10 +386,18 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TPersonalSendCashForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -400,12 +408,20 @@ object PersonalSendCashJournalForm: TPersonalSendCashJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TPersonalSendCashForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
           ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate

@@ -89,7 +89,6 @@ BEGIN
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
-
      -- 5.3. проводим Документ
      IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
      THEN
@@ -102,8 +101,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

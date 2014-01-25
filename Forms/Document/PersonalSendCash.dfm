@@ -866,6 +866,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -888,6 +890,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -911,6 +915,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -988,6 +994,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1208,10 +1216,17 @@ object PersonalSendCashForm: TPersonalSendCashForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -1334,6 +1349,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 52

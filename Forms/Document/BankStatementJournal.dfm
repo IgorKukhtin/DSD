@@ -1,19 +1,25 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 843
-  ExplicitWidth = 851
+  ExplicitWidth = 859
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 843
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 843
+    ExplicitHeight = 272
     ClientRectRight = 843
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 843
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 843
+        Height = 272
         ExplicitWidth = 843
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -241,15 +247,6 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -285,6 +282,12 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           Visible = True
           ItemName = 'bbGridToExcel'
         end>
+    end
+    inherited bbInsert: TdxBarButton
+      Enabled = False
+    end
+    inherited bbEdit: TdxBarButton
+      Enabled = False
     end
     inherited bbComplete: TdxBarButton
       Action = nil

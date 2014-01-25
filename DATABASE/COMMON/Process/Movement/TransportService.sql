@@ -16,19 +16,19 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'сохранение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_TransportService');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'выбор данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - выбор данных.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Movement_TransportService');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'получение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_TransportService');
 
                                   
@@ -36,25 +36,25 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Trans
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - Распроведение.'
                                   , inEnumName:= 'zc_Enum_Process_UnComplete_TransportService');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - Проведение.'
                                   , inEnumName:= 'zc_Enum_Process_Complete_TransportService');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_TransportService');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_TransportService()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Проведение за период - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_TransportService())||'>. - Проведение за период'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_TransportService');
 
 

@@ -47,10 +47,10 @@ type
     ceCountPoint: TcxCurrencyEdit;
     cxLabel13: TcxLabel;
     ceTrevelTime: TcxCurrencyEdit;
-    cxLabel14: TcxLabel;
-    ceCarModel: TcxButtonEdit;
-    CarModelGuides: TdsdGuides;
     ContractJuridicalGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

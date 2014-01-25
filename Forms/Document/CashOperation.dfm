@@ -90,6 +90,8 @@
   object ceOperDate: TcxDateEdit [11]
     Left = 148
     Top = 23
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 3
     Width = 120
   end
@@ -271,10 +273,17 @@
     StoredProcName = 'gpGet_Movement_Cash'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -378,6 +387,8 @@
   object CashGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCash
+    FormNameParam.Value = 'TCash_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCash_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -400,6 +411,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -422,6 +435,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -444,6 +459,8 @@
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
+    FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMoneyPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -508,6 +525,8 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <

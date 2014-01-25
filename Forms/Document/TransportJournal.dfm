@@ -268,8 +268,8 @@ object TransportJournalForm: TTransportJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -411,6 +411,8 @@ object TransportJournalForm: TTransportJournalForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TTransportForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -427,6 +429,8 @@ object TransportJournalForm: TTransportJournalForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TTransportForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

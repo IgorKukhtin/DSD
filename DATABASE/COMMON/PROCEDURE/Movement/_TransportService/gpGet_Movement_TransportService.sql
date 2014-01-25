@@ -1,10 +1,11 @@
 -- Function: gpGet_Movement_TransportService()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TrasportService (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_TransportService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TransportService (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_TransportService(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
@@ -17,8 +18,8 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar
-             , CarModelId Integer, CarModelName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
+             , UnitId Integer, UnitName TVarChar
              )
 AS
 $BODY$
@@ -37,7 +38,8 @@ BEGIN
              0 AS Id
            , 0 AS MIId  
            , CAST (NEXTVAL ('Movement_PersonalAccount_seq') as Integer) AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+--           , CAST (CURRENT_DATE AS TDateTime) AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
@@ -66,16 +68,17 @@ BEGIN
            
            , 0                                AS CarId
            , CAST ('' as TVarChar)            AS CarName
-           , 0                                AS CarModelId
-           , CAST ('' as TVarChar)            AS CarModelName
 
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
 
+           , View_Unit.Id   AS UnitId
+           , View_Unit.Name AS UnitName
+
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
- -- LEFT JOIN Object AS Object_Business
- --        ON Object_Business.Id = lpGet_DefaultValue(lpGetMovementLinkObjectCodeById(zc_MovementLinkObject_Business()), vbUserId)::Integer
-;
+            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_TransportService()))
+                                                   AND View_Unit.Id IN (SELECT lfObject_Unit_byProfitLossDirection.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection WHERE lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100())
+       ;
 
      ELSE
 
@@ -88,7 +91,6 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
            
-           --------------- 
            , MovementItem.Amount            AS Amount
            , MIFloat_Distance.ValueData     AS Distance
            , MIFloat_Price.ValueData        AS Price
@@ -114,15 +116,14 @@ BEGIN
 
            , Object_Car.Id               AS CarId
            , Object_Car.ValueData        AS CarName
-           , Object_CarModel.Id          AS CarModelId
-           , Object_CarModel.ValueData   AS CarModelName
 
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
+           , Object_Unit.Id            AS UnitId
+           , Object_Unit.ValueData     AS UnitName
    
        FROM Movement
-            --JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -176,27 +177,31 @@ BEGIN
                                             AND MILinkObject_Car.DescId = zc_MILinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MILinkObject_Car.ObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
-                                                           AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
-            LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
-
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-    
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransportService();
-   END IF;  
+
+   END IF;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_TransportService (Integer, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.01.14                                        * add inOperDate
  23.12.13         *
  */
 

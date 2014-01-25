@@ -984,6 +984,8 @@ object LossDebtForm: TLossDebtForm
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TInfoMoneyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1001,6 +1003,8 @@ object LossDebtForm: TLossDebtForm
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TContractChoiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1033,46 +1037,6 @@ object LossDebtForm: TLossDebtForm
           Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object CarChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      FormName = 'TCarForm'
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'CarId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'CarName'
-          DataType = ftString
-        end
-        item
-          Name = 'CarModelName'
-          Component = MasterCDS
-          ComponentItem = 'CarModelName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object RouteChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      FormName = 'TRouteForm'
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'RouteId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'RouteName'
           DataType = ftString
         end>
       isShowModal = True
@@ -1140,6 +1104,8 @@ object LossDebtForm: TLossDebtForm
   object GuidesJuridicalBasis: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridicalBasis
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1397,6 +1363,13 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end
       item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inId'
         Value = Null
         Component = FormParams
@@ -1521,6 +1494,8 @@ object LossDebtForm: TLossDebtForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 60
@@ -1551,6 +1526,8 @@ object LossDebtForm: TLossDebtForm
   object GuidesBusiness: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBusiness
+    FormNameParam.Value = 'TBusiness_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

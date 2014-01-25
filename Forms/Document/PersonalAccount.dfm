@@ -872,6 +872,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TInfoMoneyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -889,6 +891,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TContractChoiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -928,6 +932,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -951,6 +957,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1028,6 +1036,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1247,6 +1257,13 @@ object PersonalAccountForm: TPersonalAccountForm
         ParamType = ptInput
       end
       item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inId'
         Value = Null
         Component = FormParams
@@ -1359,6 +1376,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 60

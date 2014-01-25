@@ -54,6 +54,7 @@
     object edBranchForwarding: TcxButtonEdit
       Left = 1011
       Top = 63
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -78,7 +79,7 @@
     object cxLabel3: TcxLabel
       Left = 1012
       Top = 45
-      Caption = #1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
     end
     object cxLabel4: TcxLabel
       Left = 200
@@ -284,25 +285,24 @@
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 128
+    Top = 126
     Width = 1200
-    Height = 419
+    Height = 421
     Align = alClient
     TabOrder = 1
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 415
-    ClientRectLeft = 2
-    ClientRectRight = 1196
-    ClientRectTop = 22
+    ClientRectBottom = 421
+    ClientRectRight = 1200
+    ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1194
-        Height = 248
+        Width = 1200
+        Height = 252
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -535,8 +535,8 @@
       end
       object cxGridChild: TcxGrid
         Left = 0
-        Top = 253
-        Width = 1194
+        Top = 257
+        Width = 1200
         Height = 140
         Align = alBottom
         TabOrder = 1
@@ -813,8 +813,8 @@
       end
       object cxSplitterChild: TcxSplitter
         Left = 0
-        Top = 248
-        Width = 1194
+        Top = 252
+        Width = 1200
         Height = 5
         AlignSplitter = salBottom
         Control = cxGridChild
@@ -826,8 +826,8 @@
       object cxGridIncome: TcxGrid
         Left = 0
         Top = 0
-        Width = 1194
-        Height = 393
+        Width = 1200
+        Height = 397
         Align = alClient
         TabOrder = 0
         object cxGridIncomeDBTableView: TcxGridDBTableView
@@ -1117,8 +1117,8 @@
       object cxGridReport: TcxGrid
         Left = 0
         Top = 0
-        Width = 1194
-        Height = 393
+        Width = 1200
+        Height = 397
         Align = alClient
         TabOrder = 0
         object cxGridReportDBTableView: TcxGridDBTableView
@@ -1263,8 +1263,8 @@
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1194
-        Height = 393
+        Width = 1200
+        Height = 397
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -1770,6 +1770,8 @@
       Category = 'DSDLib'
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1826,6 +1828,8 @@
       Category = 'DSDLib'
       Caption = 'FreightChoiceForm'
       FormName = 'TFreightForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1843,6 +1847,8 @@
       Category = 'DSDLib'
       Caption = 'RouteKindFreightChoiceForm'
       FormName = 'TRouteKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1902,6 +1908,8 @@
       Category = 'DSDLib'
       Caption = 'ObjectFrom_byIncomeFuelChoiceForm'
       FormName = 'TSourceFuel_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1981,6 +1989,8 @@
       Category = 'DSDLib'
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1999,6 +2009,8 @@
       Category = 'DSDLib'
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -2028,6 +2040,8 @@
       Category = 'DSDLib'
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -2196,6 +2210,8 @@
   object GuidesCar: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2654,6 +2670,8 @@
   object GuidesCarTrailer: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCarTrailer
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2678,6 +2696,8 @@
   object GuidesPersonalDriver: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2702,6 +2722,8 @@
   object GuidesPersonalDriverMore: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriverMore
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2726,6 +2748,8 @@
   object GuidesBranchForwarding: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranchForwarding
+    FormNameParam.Value = 'TBranch_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -2950,8 +2974,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2969,7 +2993,7 @@
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -3566,6 +3590,8 @@
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 40
@@ -3670,6 +3696,8 @@
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

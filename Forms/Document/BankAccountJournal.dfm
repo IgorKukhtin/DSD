@@ -10,6 +10,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1056
     Height = 320
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1056
     ExplicitHeight = 320
     ClientRectBottom = 320
@@ -45,6 +46,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
               Kind = skSum
               Column = colKredit
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -140,6 +145,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           object colUnit: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101

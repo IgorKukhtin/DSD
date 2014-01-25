@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_Account(
     IN inAccountDirectionId     Integer               , -- Аналитики счетов - направления
     IN inInfoMoneyDestinationId Integer               , -- Управленческие назначения
     IN inInfoMoneyId            Integer               , -- Статьи назначения
-    IN inInsert                 Boolean  DEFAULT TRUE , -- 
+    IN inInsert                 Boolean  DEFAULT FALSE , -- 
     IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
   RETURNS Integer AS
@@ -151,6 +151,7 @@ ALTER FUNCTION lpInsertFind_Object_Account (Integer, Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.01.14                                        * add !!!запрет вставки счета!!!, т.е. inInsert = FALSE
  22.12.13                                        * add inInsert
  26.08.13                                        * error - vbAccountDirectionId
  08.07.13                                        * add vbAccountKindId and zc_ObjectBoolean_Account_onComplete

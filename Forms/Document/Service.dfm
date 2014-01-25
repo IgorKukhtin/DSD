@@ -90,6 +90,8 @@
   object ceOperDate: TcxDateEdit [11]
     Left = 152
     Top = 34
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 3
     Width = 129
   end
@@ -411,6 +413,8 @@
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -433,6 +437,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -455,6 +461,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -477,6 +485,8 @@
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -534,6 +544,8 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <

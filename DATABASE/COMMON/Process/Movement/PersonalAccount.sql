@@ -20,32 +20,32 @@ BEGIN
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'сохранение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'выбор данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - выбор данных.'
                                   , inEnumName:= 'zc_Enum_Process_Get_Movement_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'получение данных - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_PersonalAccount');
                                   
 -- Строки Документа <Расчеты подотчета с юр.лицом>
  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'сохранение данных - строки документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'получение данных - строки документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_MI_PersonalAccount');                                 
  
                                                                   
@@ -53,25 +53,25 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_PersonalAcc
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
-                                  , inName:= 'Распроведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - Распроведение.'
                                   , inEnumName:= 'zc_Enum_Process_UnComplete_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Complete_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
-                                  , inName:= 'Проведение - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - Проведение.'
                                   , inEnumName:= 'zc_Enum_Process_Complete_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 3
-                                  , inName:= 'Удаление - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_PersonalAccount');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_PersonalAccount()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
-                                  , inName:= 'Проведение за период - документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'>.'
+                                  , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalAccount())||'> - Проведение за период.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_PersonalAccount');
 
 

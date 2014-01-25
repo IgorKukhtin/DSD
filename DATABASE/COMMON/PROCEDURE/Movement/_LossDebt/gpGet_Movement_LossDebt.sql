@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_LossDebt (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpGet_Movement_LossDebt (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_LossDebt (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_LossDebt(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
@@ -25,7 +27,8 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_LossDebt_seq') as Integer) AS InvNumber
-           , CAST (CURRENT_DATE as TDateTime) AS OperDate
+--           , CAST (CURRENT_DATE as TDateTime) AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
 
@@ -70,16 +73,15 @@ BEGIN
 
      END IF;
 
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_LossDebt (Integer, TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpGet_Movement_LossDebt (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.01.14                                        * add inOperDate
  14.01.14                                        *
 */
 

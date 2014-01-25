@@ -444,7 +444,7 @@ $BODY$
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  21.12.13                                        * Personal -> Member
  14.11.13                                        * add calc ActiveContainerId and PassiveContainerId
  04.11.13                                        * add OperDate

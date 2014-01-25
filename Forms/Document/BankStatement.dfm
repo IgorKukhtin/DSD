@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1092
-  ExplicitHeight = 443
+  ExplicitWidth = 1100
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -48,6 +48,9 @@ inherited BankStatementForm: TBankStatementForm
               Kind = skSum
               Column = colKredit
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           OptionsView.CellAutoHeight = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -305,6 +308,9 @@ inherited BankStatementForm: TBankStatementForm
         DataController.Summary.DefaultGroupSummaryItems = <>
         DataController.Summary.FooterSummaryItems = <>
         DataController.Summary.SummaryGroups = <>
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Inserting = False
         OptionsView.GroupByBox = False
       end
       object cxDetailGridLevel: TcxGridLevel

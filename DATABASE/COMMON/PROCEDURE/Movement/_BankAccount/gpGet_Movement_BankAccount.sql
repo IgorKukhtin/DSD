@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Cash()
 
 DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankAccount(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -33,7 +35,8 @@ BEGIN
        SELECT
              0 AS Id
            , CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)  AS InvNumber
-           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+--           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
+           , inOperDate AS OperDate
            , lfObject_Status.Code                              AS StatusCode
            , lfObject_Status.Name                              AS StatusName
            
@@ -133,12 +136,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_BankAccount (Integer, TVarChar) OWNER TO postgres;
-
+ALTER FUNCTION gpGet_Movement_BankAccount (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.01.14                                        * add inOperDate
  17.01.14                                        *
 */
 

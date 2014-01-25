@@ -66,13 +66,16 @@ BEGIN
            , 0                     AS PersonalId
            , CAST ('' as TVarChar) AS PersonalName
 
-           , Object_UnitForwarding.Id        AS UnitForwardingId
-           , Object_UnitForwarding.ValueData AS UnitForwardingName
+           , View_Unit.Id   AS UnitForwardingId
+           , View_Unit.Name AS UnitForwardingName
    
            , CAST ('' as TVarChar) AS JuridicalName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
-            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()));
+            -- LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_Transport()))
+            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_TransportService()))
+                                                   AND View_Unit.Id IN (SELECT lfObject_Unit_byProfitLossDirection.UnitId FROM lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection WHERE lfObject_Unit_byProfitLossDirection.ProfitLossDirectionId = zc_Enum_ProfitLossDirection_40100())
+       ;
 
      ELSE
 
