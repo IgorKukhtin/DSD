@@ -529,7 +529,7 @@ end;
 
 function TForumBankLoad.GetOperDate: TDateTime;
 begin
-  result := FDataSet.FieldByName('DAT_PR').AsDateTime
+  result := FDataSet.FieldByName('DAT_ARC').AsDateTime //'DAT_PR
 end;
 
 function TForumBankLoad.GetOperSumm: real;
