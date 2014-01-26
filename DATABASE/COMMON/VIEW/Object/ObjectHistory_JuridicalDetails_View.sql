@@ -3,7 +3,8 @@
 -- DROP VIEW IF EXISTS ObjectHistory_JuridicalDetails_View;
 
 CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_View AS
-  SELECT ObjectHistory_JuridicalDetails.ObjectId AS JuridicalId
+  SELECT ObjectHistory_JuridicalDetails.Id AS ObjectHistoryId
+       , ObjectHistory_JuridicalDetails.ObjectId AS JuridicalId
        , ObjectHistoryString_OKPO.ValueData AS OKPO
   FROM ObjectHistory AS ObjectHistory_JuridicalDetails
        LEFT JOIN ObjectHistoryString AS ObjectHistoryString_OKPO

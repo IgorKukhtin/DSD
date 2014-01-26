@@ -166,8 +166,9 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-                       *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.01.14                                                        *
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())

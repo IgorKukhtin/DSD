@@ -45,41 +45,70 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: всегда по Подразделение (Место отправки)
-             , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
+               -- Бизнес: всегда по принадлежности маршрута к подразделению
+             , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId
                -- Главное Юр.лицо: всегда по Подразделение (Место отправки)
-             , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
-             , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
-               -- Филиал: всегда по подразделению
-             , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
+             , COALESCE (ObjectLink_UnitForwarding_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
+
+             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
+                    WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                         THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
+                    ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
+               END AS UnitId
+             , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                         THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению и к филиалу
+                    ELSE 0 -- иначе затраты без принадлежности к филиалу
+               END AS BranchId
+
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
              , MILinkObject_PaidKind.ObjectId AS PaidKindId
              , FALSE AS IsActive
              , TRUE AS IsMaster
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                          ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                         AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
-                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                               ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                              ON MILinkObject_Route.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
 
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical ON ObjectLink_Unit_Juridical.ObjectId = MILinkObject_Unit.ObjectId
-                                                              AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Business ON ObjectLink_Unit_Business.ObjectId = MILinkObject_Unit.ObjectId
-                                                             AND ObjectLink_Unit_Business.DescId = zc_ObjectLink_Unit_Business()
-             LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = MILinkObject_Unit.ObjectId
-                                                           AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Branch
+                                  ON ObjectLink_Route_Branch.ObjectId = MILinkObject_Route.ObjectId
+                                 AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                  ON ObjectLink_Route_Unit.ObjectId = MILinkObject_Route.ObjectId
+                                 AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Branch
+                                  ON ObjectLink_UnitRoute_Branch.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                 AND ObjectLink_UnitRoute_Branch.DescId = zc_ObjectLink_Unit_Branch()
+             LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
+                                  ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                 AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
+
+             LEFT JOIN ObjectLink AS ObjectLink_UnitForwarding_Juridical ON ObjectLink_UnitForwarding_Juridical.ObjectId = MovementLinkObject_UnitForwarding.ObjectId
+                                                                        AND ObjectLink_UnitForwarding_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+
+             LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
+                   = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
+                          WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
+                          ELSE MovementLinkObject_UnitForwarding.ObjectId -- иначе Подразделение (Место отправки)
+                     END
+
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_TransportService()

@@ -389,7 +389,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inUnitForwardingId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
@@ -556,13 +556,13 @@
         DataType = ftString
       end
       item
-        Name = 'UnitId'
+        Name = 'UnitForwardingId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'UnitName'
+        Name = 'UnitForwardingName'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'TextValue'

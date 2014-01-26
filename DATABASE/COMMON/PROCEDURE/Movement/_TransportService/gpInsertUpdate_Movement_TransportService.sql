@@ -27,7 +27,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransportService(
     IN inRouteId                  Integer   , -- Маршрут
     IN inCarId                    Integer   , -- Автомобиль
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
-    IN inUnitId                   Integer   , -- Подразделение (Место отправки)
+    IN inUnitForwardingId         Integer   , -- Подразделение (Место отправки)
 
     IN inSession                  TVarChar    -- сессия пользователя
 
@@ -144,6 +144,9 @@ BEGIN
       -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TransportService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
+     -- сохранили связь с <Подразделение (Место отправки)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_UnitForwarding(), ioId, inUnitForwardingId);
+
      -- сохранили <Элемент документа>
      ioMIId := lpInsertUpdate_MovementItem (ioMIId, zc_MI_Master(), inJuridicalId, ioId, ioAmount, NULL);
 
@@ -171,8 +174,6 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Car(), ioMIId, inCarId);
      -- сохранили связь с <Типы условий договоров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), ioMIId, inContractConditionKindId);
-     -- сохранили связь с <Подразделение (Место отправки)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioMIId, inUnitId);
 
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -204,6 +205,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.01.14                                        * add inUnitForwardingId
  25.01.14                                        * add lpComplete_Movement_TransportService
  23.12.13         *
 */

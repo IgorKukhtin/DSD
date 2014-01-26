@@ -199,6 +199,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colCarName: TcxGridDBColumn
@@ -336,6 +337,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'

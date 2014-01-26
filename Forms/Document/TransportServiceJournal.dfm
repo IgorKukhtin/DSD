@@ -2,7 +2,6 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 336
   ClientWidth = 1212
-  ExplicitLeft = -230
   ExplicitWidth = 1228
   ExplicitHeight = 371
   PixelsPerInch = 96
@@ -226,9 +225,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 82
           end
-          object cUnitName: TcxGridDBColumn
+          object clUnitForwardingName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
-            DataBinding.FieldName = 'UnitName'
+            DataBinding.FieldName = 'UnitForwardingName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -611,9 +610,9 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inUnitForwardingId'
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'UnitForwardingId'
         ParamType = ptInput
       end>
     Left = 504

@@ -34,7 +34,13 @@ BEGIN
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
      THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
+         RAISE EXCEPTION 'Ошибка.Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
+     END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
      -- сохранили <Документ>

@@ -248,6 +248,13 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object clJuridicalBasisName: TcxGridDBColumn
+        Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalBasisName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -307,8 +314,8 @@ object ContractForm: TContractForm
             Default = True
             Kind = bkEllipsis
           end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Options.Editing = False
         Width = 300
       end
       object clValue: TcxGridDBColumn
@@ -534,6 +541,15 @@ object ContractForm: TContractForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'JuridicalId'
+          Value = 0
+        end
+        item
+          Name = 'JuridicalName'
+          Value = ''
+          DataType = ftString
         end>
       isShowModal = True
       DataSource = DataSource

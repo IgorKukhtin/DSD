@@ -122,13 +122,16 @@ type
     UnCompleteMovement: TChangeGuidesStatus;
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
-    clOperDate: TcxGridDBColumn;
+    colOperDate: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     clContractName: TcxGridDBColumn;
     ContractChoiceForm: TOpenChoiceForm;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

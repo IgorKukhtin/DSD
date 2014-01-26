@@ -24,9 +24,6 @@ object PartnerForm: TPartnerForm
     Height = 438
     Align = alClient
     TabOrder = 4
-    ExplicitLeft = 8
-    ExplicitTop = 18
-    ExplicitWidth = 804
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -56,12 +53,14 @@ object PartnerForm: TPartnerForm
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 113
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 154
       end
       object ceJuridicalName: TcxGridDBColumn
@@ -159,8 +158,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -293,6 +292,8 @@ object PartnerForm: TPartnerForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TPartnerEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -308,6 +309,8 @@ object PartnerForm: TPartnerForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPartnerEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -345,6 +348,8 @@ object PartnerForm: TPartnerForm
       Category = 'DSDLib'
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -363,6 +368,8 @@ object PartnerForm: TPartnerForm
       Category = 'DSDLib'
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
