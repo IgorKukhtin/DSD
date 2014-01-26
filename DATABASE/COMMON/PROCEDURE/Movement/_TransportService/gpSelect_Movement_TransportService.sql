@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , CarId Integer, CarName TVarChar
              , CarModelId Integer, CarModelName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
               )
 AS
 $BODY$
@@ -72,8 +72,8 @@ BEGIN
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
-           , Object_Unit.Id            AS UnitId
-           , Object_Unit.ValueData     AS UnitName
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
 
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -138,10 +138,10 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
        WHERE Movement.DescId = zc_Movement_TransportService()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -149,14 +149,14 @@ BEGIN
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_TransportService (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
- 25.01.14                                        * add zc_MILinkObject_Unit
+ 25.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  14.01.14                                        * add Object_Contract_InvNumber_View
  07.01.14                                        * add InfoMoneyCode
  22.12.13         *

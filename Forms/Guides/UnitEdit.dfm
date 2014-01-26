@@ -387,6 +387,8 @@
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -411,6 +413,8 @@
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -435,16 +439,35 @@
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
-    FormName = 'TBusiness_ObjectForm'
+    FormNameParam.Value = 'TBusinessForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBusinessForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 160
     Top = 120
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -469,6 +492,8 @@
   object AccountDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountDirection
+    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
@@ -479,6 +504,8 @@
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossDirection
+    FormNameParam.Value = 'TProfitLossDirectionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'

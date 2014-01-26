@@ -86,10 +86,22 @@ from dba.Bill
                       group by _pgPartner.PartnerId_pg
                      ) as _pgContract on _pgContract.PartnerId_pg = _pgPartner.PartnerId_pg
 
-     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
+     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = case when Bill.FromId in (1388, -- '√–»¬¿ –.'
+                                                                                     1799, -- 'ƒ–Œ¬Œ–”¡'
+                                                                                     1288, -- '»Ÿ»   .'
+                                                                                     956, -- ' Œ∆”ÿ Œ —.'
+                                                                                     1390, -- 'Õﬂ… Œ ¬.'
+                                                                                     5460, -- 'ŒÀ≈…Õ»  Ã.¬.'
+                                                                                     324, -- '—≈Ã≈Õ≈¬ —.'
+                                                                                     3010, -- '“¿“¿–◊≈Õ Œ ≈.'
+                                                                                     5446, -- '“ ¿◊≈Õ Œ Àﬁ¡Œ¬‹'
+                                                                                     4792, -- '“–≈“‹ﬂ Œ¬ Œ.Õ.'
+                                                                                     980, -- '“”À≈Õ Œ —.'
+                                                                                     2436  -- 'ÿ≈¬÷Œ¬ ».'
+                                                                                     )
+                                                                     then 5 else Bill.FromId end 
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
      left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
-
 where Bill.BillDate between @inStartDate and @inEndDate
 -- and Bill.BillNumber = 121710
   and Bill.BillKind in (zc_bkSaleToClient())
@@ -99,6 +111,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
   and Bill.ToId<>1037 -- ¬»«¿–ƒ 1037
   and Bill.ToId<>1037 -- ¬»«¿–ƒ 1037
   and Bill.MoneyKindId = zc_mkBN()
+  and Bill.Id <> 1634846
 -- and 1=0
 ;
 

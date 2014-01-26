@@ -129,6 +129,7 @@ type
     clOperDate: TcxGridDBColumn;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    colInvNumber: TcxGridDBColumn;
   private
   public
   end;

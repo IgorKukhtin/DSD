@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, MIId Integer, InvNumber Integer, OperDate TDateTime
              , RouteId Integer, RouteName TVarChar
              , CarId Integer, CarName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-             , UnitId Integer, UnitName TVarChar
+             , UnitForwardingId Integer, UnitForwardingName TVarChar
              )
 AS
 $BODY$
@@ -72,8 +72,8 @@ BEGIN
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
 
-           , View_Unit.Id   AS UnitId
-           , View_Unit.Name AS UnitName
+           , View_Unit.Id   AS UnitForwardingId
+           , View_Unit.Name AS UnitForwardingName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
             LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.BranchId IN (SELECT Object.Id FROM Object WHERE Object.DescId = zc_Object_Branch() AND Object.AccessKeyId = lpGetAccessKey (vbUserId, zc_Enum_Process_Get_Movement_TransportService()))
@@ -120,8 +120,8 @@ BEGIN
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
-           , Object_Unit.Id            AS UnitId
-           , Object_Unit.ValueData     AS UnitName
+           , Object_UnitForwarding.Id        AS UnitForwardingId
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
    
        FROM Movement
 
@@ -182,10 +182,10 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
-                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransportService();
@@ -201,6 +201,7 @@ ALTER FUNCTION gpGet_Movement_TransportService (Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 26.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  25.01.14                                        * add inOperDate
  23.12.13         *
  */

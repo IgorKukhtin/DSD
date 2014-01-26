@@ -71,7 +71,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object edSigningDate: TcxDateEdit [10]
     Left = 18
-    Top = 58
+    Top = 63
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -239,7 +239,6 @@ inherited ContractEditForm: TContractEditForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitLeft = 414
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -364,6 +363,7 @@ inherited ContractEditForm: TContractEditForm
   object edMainJuridical: TcxButtonEdit [34]
     Left = 16
     Top = 143
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -408,6 +408,8 @@ inherited ContractEditForm: TContractEditForm
       Category = 'DSDLib'
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'key'
@@ -807,6 +809,8 @@ inherited ContractEditForm: TContractEditForm
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -832,6 +836,8 @@ inherited ContractEditForm: TContractEditForm
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -857,6 +863,8 @@ inherited ContractEditForm: TContractEditForm
   object ContractKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractKind
+    FormNameParam.Value = 'TContractKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -886,6 +894,8 @@ inherited ContractEditForm: TContractEditForm
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -911,6 +921,8 @@ inherited ContractEditForm: TContractEditForm
   object AreaGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edArea
+    FormNameParam.Value = 'TAreaForm'
+    FormNameParam.DataType = ftString
     FormName = 'TAreaForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -936,6 +948,8 @@ inherited ContractEditForm: TContractEditForm
   object ContractArticleGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractArticle
+    FormNameParam.Value = 'TContractArticleForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractArticleForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -961,6 +975,8 @@ inherited ContractEditForm: TContractEditForm
   object ContractStateKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContractStateKind
+    FormNameParam.Value = 'TContractStateKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractStateKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -986,6 +1002,8 @@ inherited ContractEditForm: TContractEditForm
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1075,8 +1093,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1273,6 +1291,8 @@ inherited ContractEditForm: TContractEditForm
   object MainJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMainJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
