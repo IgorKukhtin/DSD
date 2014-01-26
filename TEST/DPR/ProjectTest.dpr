@@ -299,7 +299,7 @@ uses
   Cash in '..\..\Forms\Guides\Cash.pas' {CashForm: TParentForm},
   CashEdit in '..\..\Forms\Guides\CashEdit.pas' {CashEditForm: TParentForm},
   Cash_Object in '..\..\Forms\Guides\Cash_Object.pas' {Cash_ObjectForm: TParentForm},
-  TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
+  SendDebt in '..\..\Forms\Document\SendDebt.pas' {SendDebtForm: TParentForm},
   TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
@@ -325,9 +325,10 @@ uses
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
-  SendDebt in '..\..\Forms\Document\SendDebt.pas' {SendDebtForm: TParentForm},
+  SendDebt_old in '..\..\Forms\Document\SendDebt_old.pas' {SendDebtOLDForm: TParentForm},
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
-  LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm};
+  LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
+  TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm};
 
 {$R *.RES}
 
