@@ -2,8 +2,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   Caption = #1042#1099#1073#1086#1088' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  ExplicitWidth = 861
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,6 +164,11 @@ inherited ContractChoiceForm: TContractChoiceForm
           Name = 'InfoMoneyId'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
         end
         item
           Name = 'InfoMoneyName'

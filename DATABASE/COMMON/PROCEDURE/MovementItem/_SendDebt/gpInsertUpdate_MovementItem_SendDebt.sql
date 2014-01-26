@@ -42,7 +42,7 @@ BEGIN
      ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, inMovementId, inAmount, NULL);
 
      -- сохранили <Второй Элемент документа>
-     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Master(), inJuridicalToId, ioMasterId, inAmount, NULL);
+     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioMasterId, inAmount, NULL);
 
      -- сохранили связь с <Договор ОТ >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioMasterId, inContractFromId);

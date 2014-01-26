@@ -12,7 +12,7 @@ RETURNS TABLE (MI_MasterId Integer, MI_ChildId Integer
              , InfoMoneyDestinationFromName TVarChar
              , InfoMoneyFromId Integer, InfoMoneyFromCode Integer, InfoMoneyFromName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar
-             , JuridicalFromId Integer, JuridicalFromName TVarChar
+             , JuridicalFromId Integer, JuridicalFromCode Integer, JuridicalFromName TVarChar
              , FromOKPO TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar
 
@@ -20,7 +20,7 @@ RETURNS TABLE (MI_MasterId Integer, MI_ChildId Integer
              , InfoMoneyDestinationToName TVarChar
              , InfoMoneyToId Integer, InfoMoneyToCode Integer, InfoMoneyToName TVarChar
              , ContractToId Integer, ContractToName TVarChar
-             , JuridicalToId Integer, JuridicalToName TVarChar
+             , JuridicalToId Integer, JuridicalToCode Integer, JuridicalToName TVarChar
              , ToOKPO TVarChar
              , PaidKindToId Integer, PaidKindToName TVarChar
              
@@ -51,6 +51,7 @@ BEGIN
             , View_Contract_InvNumber_From.InvNumber   AS ContractFromName
 
             , Object_Juridical_From.Id                 AS JuridicalFromId
+            , Object_Juridical_From.ObjectCode         AS JuridicalFromCode
             , Object_Juridical_From.ValueData          AS JuridicalFromName
             , ObjectHistory_JuridicalDetails_From.OKPO AS FromOKPO
             , Object_PaidKind_From.Id                  AS PaidKindFromId
@@ -67,6 +68,7 @@ BEGIN
             , View_Contract_InvNumber_To.InvNumber   AS ContractToName
 
             , Object_Juridical_To.Id                 AS JuridicalToId
+            , Object_Juridical_To.ObjectCode         AS JuridicalToCode
             , Object_Juridical_To.ValueData          AS JuridicalToName
             , ObjectHistory_JuridicalDetails_To.OKPO AS ToOKPO
             , Object_PaidKind_To.Id                  AS PaidKindToId

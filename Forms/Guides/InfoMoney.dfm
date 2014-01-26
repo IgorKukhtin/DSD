@@ -118,8 +118,8 @@ object InfoMoneyForm: TInfoMoneyForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -252,6 +252,8 @@ object InfoMoneyForm: TInfoMoneyForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TInfoMoneyEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -267,6 +269,8 @@ object InfoMoneyForm: TInfoMoneyForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TInfoMoneyEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -322,6 +326,11 @@ object InfoMoneyForm: TInfoMoneyForm
           Component = ClientDataSet
           ComponentItem = 'Name'
           DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Component = ClientDataSet
+          ComponentItem = 'Code'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
