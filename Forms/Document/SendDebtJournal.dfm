@@ -2,8 +2,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 427
-  ClientWidth = 711
+  ClientHeight = 391
+  ClientWidth = 827
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,10 +19,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 711
+    Width = 827
     Height = 31
     Align = alTop
     TabOrder = 1
+    ExplicitWidth = 711
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
@@ -52,11 +53,13 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 711
-    Height = 370
+    Width = 827
+    Height = 334
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 711
+    ExplicitHeight = 370
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -169,31 +172,31 @@ object SendDebtJournalForm: TSendDebtJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 134
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 98
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 95
       end
       object colJuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 219
       end
       object colBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 136
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
@@ -203,7 +206,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 131
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -399,6 +402,12 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -419,9 +428,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
           ParamType = ptInput
         end
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
+          Name = 'inOperDate'
+          Component = ClientDataSet
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
         end>
       isShowModal = False
       ActionType = acUpdate

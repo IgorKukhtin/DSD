@@ -164,22 +164,19 @@ object SendDebtForm: TSendDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountDebet
+              Column = clAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDebet
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -192,7 +189,7 @@ object SendDebtForm: TSendDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountDebet
+              Column = clAmount
             end
             item
               Format = ',0.###;-,0.###; ;'
@@ -205,17 +202,14 @@ object SendDebtForm: TSendDebtForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummKredit
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummDebet
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -231,20 +225,20 @@ object SendDebtForm: TSendDebtForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clJuridicalCode: TcxGridDBColumn
+          object clJuridicalFromCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'JuridicalCode'
+            DataBinding.FieldName = 'JuridicalFromCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
           end
-          object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object clJuridicalFromName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1086#1090')'
+            DataBinding.FieldName = 'JuridicalFromName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ContractChoiceForm
+                Action = ContractFromChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -252,15 +246,15 @@ object SendDebtForm: TSendDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 101
           end
-          object clOKPO: TcxGridDBColumn
+          object clFromOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
-            DataBinding.FieldName = 'OKPO'
+            DataBinding.FieldName = 'FromOKPO'
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
+          object clPaidKindFromName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1086#1090')'
+            DataBinding.FieldName = 'PaidKindFromName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -271,13 +265,13 @@ object SendDebtForm: TSendDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clContractName: TcxGridDBColumn
+          object clContractFromName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
-            DataBinding.FieldName = 'ContractName'
+            DataBinding.FieldName = 'ContractFromName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
-                Action = ContractChoiceForm
+                Action = ContractFromChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
@@ -286,32 +280,32 @@ object SendDebtForm: TSendDebtForm
             Options.Editing = False
             Width = 50
           end
-          object clInfoMoneyCode: TcxGridDBColumn
+          object clInfoMoneyFromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
+            DataBinding.FieldName = 'InfoMoneyFromCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clInfoMoneyGroupName: TcxGridDBColumn
+          object clInfoMoneyGroupFromName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
+            DataBinding.FieldName = 'InfoMoneyGroupFromName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
+          object cInfoMoneyDestinationFromName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            DataBinding.FieldName = 'InfoMoneyDestinationFromName'
             Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object cInfoMoneyFromName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
+            DataBinding.FieldName = 'InfoMoneyFromName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -323,50 +317,70 @@ object SendDebtForm: TSendDebtForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object clJuridicalToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'JuridicalToCode'
+            Width = 30
+          end
+          object clJuridicalToName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'JuridicalToName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
+                Action = ContractToChoiceForm
                 Default = True
                 Kind = bkEllipsis
               end>
             Properties.ReadOnly = True
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clIsCalculated: TcxGridDBColumn
-            Caption = #1087#1086' '#1076#1086#1083#1075#1091' ('#1076#1072'/'#1085#1077#1090') '
-            DataBinding.FieldName = 'isCalculated'
-            HeaderAlignmentHorz = taCenter
+          object clToOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'ToOKPO'
+            HeaderAlignmentVert = vaCenter
+            Width = 30
+          end
+          object clPaidKindToName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'PaidKindToName'
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clSummDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummDebet'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
+          object clContractToName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractToName'
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object clInfoMoneyToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyToCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clInfoMoneyGroupToName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupToName'
+            Visible = False
+            Width = 60
+          end
+          object clInfoMoneyDestinationToName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationToName'
+            Visible = False
+            Width = 60
+          end
+          object clInfoMoneyToName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyToName'
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSummKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1076#1086#1083#1075' '#1085#1072' '#1076#1072#1090#1091
-            DataBinding.FieldName = 'SummKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountDebet: TcxGridDBColumn
-            Caption = #1044#1077#1073#1077#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountDebet'
+          object clAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.AssignedValues.EditFormat = True
             Properties.DecimalPlaces = 4
@@ -374,17 +388,7 @@ object SendDebtForm: TSendDebtForm
             Properties.UseDisplayFormatWhenEditing = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountKredit: TcxGridDBColumn
-            Caption = #1050#1088#1077#1076#1080#1090' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountKredit'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 40
           end
           object clIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
@@ -618,7 +622,7 @@ object SendDebtForm: TSendDebtForm
     Top = 304
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_LossDebt'
+    StoredProcName = 'gpSelect_MovementItem_SendDebt'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -630,13 +634,6 @@ object SendDebtForm: TSendDebtForm
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -939,11 +936,64 @@ object SendDebtForm: TSendDebtForm
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
-      Action = ContractChoiceForm
+      Action = ContractFromChoiceForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       ShortCut = 45
       ImageIndex = 0
+    end
+    object ContractToChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'ContractToChoiceForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ContractToId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ContractToName'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalToId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalToName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyToId'
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyToCode'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyToName'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Component = MasterCDS
+          ComponentItem = 'PaidKindToName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -985,17 +1035,17 @@ object SendDebtForm: TSendDebtForm
         item
           Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
+          ComponentItem = 'InfoMoneyFromId'
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
+          ComponentItem = 'InfoMoneyFromName'
           DataType = ftString
         end>
       isShowModal = True
     end
-    object ContractChoiceForm: TOpenChoiceForm
+    object ContractFromChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
@@ -1004,78 +1054,45 @@ object SendDebtForm: TSendDebtForm
         item
           Name = 'Key'
           Component = MasterCDS
-          ComponentItem = 'ContractId'
+          ComponentItem = 'ContractFromId'
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'ContractName'
+          ComponentItem = 'ContractFromName'
           DataType = ftString
         end
         item
           Name = 'JuridicalId'
           Component = MasterCDS
-          ComponentItem = 'JuridicalId'
+          ComponentItem = 'JuridicalFromId'
         end
         item
           Name = 'JuridicalName'
           Component = MasterCDS
-          ComponentItem = 'JuridicalName'
+          ComponentItem = 'JuridicalFromName'
           DataType = ftString
         end
         item
           Name = 'InfoMoneyId'
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyId'
+          ComponentItem = 'InfoMoneyFromId'
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyFromCode'
         end
         item
           Name = 'InfoMoneyName'
           Component = MasterCDS
-          ComponentItem = 'InfoMoneyName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object CarChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      FormName = 'TCarForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'CarId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'CarName'
+          ComponentItem = 'InfoMoneyFromName'
           DataType = ftString
         end
         item
-          Name = 'CarModelName'
+          Name = 'PaidKindName'
           Component = MasterCDS
-          ComponentItem = 'CarModelName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object RouteChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      FormName = 'TRouteForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = MasterCDS
-          ComponentItem = 'RouteId'
-        end
-        item
-          Name = 'TextValue'
-          Component = MasterCDS
-          ComponentItem = 'RouteName'
+          ComponentItem = 'PaidKindFromName'
           DataType = ftString
         end>
       isShowModal = True
@@ -1210,9 +1227,17 @@ object SendDebtForm: TSendDebtForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId'
-        Component = MasterCDS
-        ComponentItem = 'id'
+        Name = 'ioMasterId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MI_MasterId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioChildId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MI_ChildId'
         ParamType = ptInputOutput
       end
       item
@@ -1223,68 +1248,58 @@ object SendDebtForm: TSendDebtForm
         ParamType = ptInput
       end
       item
-        Name = 'inJuridicalId'
+        Name = 'inAmount'
         Component = MasterCDS
-        ComponentItem = 'JuridicalId'
+        ComponentItem = 'Amount'
+        DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'ioAmountDebet'
+        Name = 'inJuridicalFromId'
         Component = MasterCDS
-        ComponentItem = 'AmountDebet'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioAmountKredit'
-        Component = MasterCDS
-        ComponentItem = 'AmountKredit'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioSummDebet'
-        Component = MasterCDS
-        ComponentItem = 'SummDebet'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioSummKredit'
-        Component = MasterCDS
-        ComponentItem = 'SummKredit'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ioIsCalculated'
-        Component = MasterCDS
-        ComponentItem = 'isCalculated'
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inContractId'
-        Component = MasterCDS
-        ComponentItem = 'ContractId'
+        ComponentItem = 'JuridicalFromId'
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inContractfromId'
         Component = MasterCDS
-        ComponentItem = 'PaidKindId'
+        ComponentItem = 'ContractFromId'
         ParamType = ptInput
       end
       item
-        Name = 'inInfoMoneyId'
+        Name = 'inPaidKindFromId'
         Component = MasterCDS
-        ComponentItem = 'InfoMoneyId'
+        ComponentItem = 'PaidKindFromId'
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inInfoMoneyFromId'
         Component = MasterCDS
-        ComponentItem = 'UnitId'
+        ComponentItem = 'InfoMoneyFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalToId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractToId'
+        Component = MasterCDS
+        ComponentItem = 'ContractToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindToId '
+        Component = MasterCDS
+        ComponentItem = 'PaidKindToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyToId'
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyToId'
         ParamType = ptInput
       end>
     Left = 86
@@ -1402,10 +1417,23 @@ object SendDebtForm: TSendDebtForm
         ParamType = ptInput
       end
       item
-        Name = 'inId'
-        Value = Null
+        Name = 'inOperDate'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'MI_MasterId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MI_MasterId'
+      end
+      item
+        Name = 'MI_ChildId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'MI_ChildId'
       end
       item
         Name = 'Invnumber'
@@ -1416,6 +1444,7 @@ object SendDebtForm: TSendDebtForm
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
+        DataType = ftDateTime
       end
       item
         Name = 'StatusCode'
