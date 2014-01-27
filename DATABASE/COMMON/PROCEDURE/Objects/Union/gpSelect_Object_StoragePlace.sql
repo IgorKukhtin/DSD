@@ -27,6 +27,16 @@ BEGIN
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Unit_View.DescId
      WHERE vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
     UNION ALL
+     SELECT Object_Car.Id
+          , Object_Car.ObjectCode AS Code     
+          , Object_Car.ValueData AS Name
+          , ObjectDesc.ItemName
+          , Object_Car.isErased
+     FROM Object AS Object_Car
+          LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Car.DescId
+     WHERE Object_Car.DescId = zc_Object_Car()
+       AND vbUserId NOT IN (SELECT UserId FROM tmpUserTransport)
+    UNION ALL
      SELECT View_Personal.PersonalId AS Id       
           , View_Personal.PersonalCode     
           , View_Personal.PersonalName
@@ -58,6 +68,7 @@ ALTER FUNCTION gpSelect_Object_StoragePlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 26.01.14                                        * add zc_Object_Car
  07.12.13                                        * rename UserRole_View -> ObjectLink_UserRole_View
  09.11.13                                        * add tmpUserTransport
  09.11.13                                        * add ItemName
