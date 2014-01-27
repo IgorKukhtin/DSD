@@ -169,4 +169,4 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (TVarChar) OWNER TO postgre
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())
