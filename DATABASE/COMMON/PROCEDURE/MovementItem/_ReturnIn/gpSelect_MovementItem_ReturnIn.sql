@@ -1,16 +1,21 @@
 -- Function: gpSelect_MovementItem_ReturnIn()
 
 -- DROP FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarChar);
+
+
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , -- 
+    IN inShowAll     Boolean      , --
+    IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindName  TVarChar
-             , AssetId Integer, AssetName TVarChar 
+             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+             , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, isErased Boolean
              )
 AS
@@ -22,30 +27,31 @@ BEGIN
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN 
+     IF inShowAll THEN
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              MovementItem.Id
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
-           , CAST (NULL AS TFloat) AS Amount
-           , CAST (NULL AS TFloat) AS AmountPartner
+           , Object_Goods.Id            AS GoodsId
+           , Object_Goods.ObjectCode    AS GoodsCode
+           , Object_Goods.ValueData     AS GoodsName
+           , CAST (NULL AS TFloat)      AS Amount
+           , CAST (NULL AS TFloat)      AS AmountPartner
 
-           , CAST (NULL AS TFloat) AS Price
-           , CAST (NULL AS TFloat) AS CountForPrice
+           , CAST (NULL AS TFloat)      AS Price
+           , CAST (NULL AS TFloat)      AS CountForPrice
 
-           , CAST (NULL AS TFloat) AS HeadCount
+           , CAST (NULL AS TFloat)      AS HeadCount
 
-           , CAST (NULL AS TVarChar) AS PartionGoods
+           , CAST (NULL AS TVarChar)    AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
-           , Object_Asset.Id         AS AssetId
-           , Object_Asset.ValueData  AS AssetName           
+           , Object_Asset.Id            AS AssetId
+           , Object_Asset.ValueData     AS AssetName
 
-           , CAST (NULL AS TFloat) AS AmountSumm
+           , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE AS isErased
 
        FROM Object AS Object_Goods
@@ -83,11 +89,11 @@ BEGIN
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
-
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
-           , Object_Asset.ValueData  AS AssetName           
+           , Object_Asset.ValueData  AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -131,8 +137,8 @@ BEGIN
          AND MovementItem.DescId =  zc_MI_Master();
 
      ELSE
-  
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              MovementItem.Id
            , Object_Goods.Id          AS GoodsId
@@ -151,7 +157,7 @@ BEGIN
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
-           , Object_Asset.ValueData  AS AssetName           
+           , Object_Asset.ValueData  AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -169,7 +175,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
-          
+
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                        AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
@@ -194,19 +200,20 @@ BEGIN
 
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId =  zc_MI_Master();
- 
+
      END IF;
 
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.07.13         * add Object_Asset               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 27.01.14														*  + inisErased (затычка)
+ 18.07.13         * add Object_Asset
  17.07.13         *
 
 */

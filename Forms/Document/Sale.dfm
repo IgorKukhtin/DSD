@@ -1014,9 +1014,9 @@ inherited SaleForm: TSaleForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoiceSaleForm'
+    FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceSaleForm'
+    FormName = 'TContractChoicePartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
