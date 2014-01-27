@@ -130,6 +130,8 @@ type
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
+    colJuridicalBasisCode: TcxGridDBColumn;
+    colJuridicalBasisName: TcxGridDBColumn;
   private
   public
   end;

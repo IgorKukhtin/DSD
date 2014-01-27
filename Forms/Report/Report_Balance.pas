@@ -60,6 +60,8 @@ type
     pvObjectDestination: TcxDBPivotGridField;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
+    pvJuridicalBasisName: TcxDBPivotGridField;
+    pvBusinessName: TcxDBPivotGridField;
   private
   public
   end;

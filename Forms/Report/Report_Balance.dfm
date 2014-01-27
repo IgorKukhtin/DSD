@@ -26,14 +26,18 @@ object Report_BalanceForm: TReport_BalanceForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41548d
+      EditValue = 41640d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41578d
+      EditValue = 41670d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 1
       Width = 85
     end
@@ -116,6 +120,22 @@ object Report_BalanceForm: TReport_BalanceForm
       DataBinding.FieldName = 'GoodsName'
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+    end
+    object pvJuridicalBasisName: TcxDBPivotGridField
+      AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
+      DataBinding.FieldName = 'JuridicalBasisName'
+      Visible = True
+      UniqueName = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
+    end
+    object pvBusinessName: TcxDBPivotGridField
+      AreaIndex = 4
+      IsCaptionAssigned = True
+      Caption = #1041#1080#1079#1085#1077#1089
+      DataBinding.FieldName = 'BusinessName'
+      Visible = True
+      UniqueName = #1041#1080#1079#1085#1077#1089
     end
     object pvAmountDebetStart: TcxDBPivotGridField
       Area = faData
@@ -321,14 +341,14 @@ object Report_BalanceForm: TReport_BalanceForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41548d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41578d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

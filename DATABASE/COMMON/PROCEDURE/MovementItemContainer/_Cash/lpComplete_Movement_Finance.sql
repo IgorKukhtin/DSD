@@ -79,6 +79,9 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_90300() -- Налоговые платежи по ЗП
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет*
                                                           THEN zc_Enum_AccountDirection_90400() -- штрафы в бюджет*
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
+                                                          THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                  END
      FROM Object
           LEFT JOIN ObjectLink AS ObjectLink_Cash_Branch

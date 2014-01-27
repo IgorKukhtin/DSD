@@ -39,7 +39,7 @@ BEGIN
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
-               LEFT JOIN Object AS Object_Business ON Object_Business.Id = 8370
+               LEFT JOIN Object AS Object_Business ON Object_Business.Id = 0
        ;
      ELSE
      RETURN QUERY 

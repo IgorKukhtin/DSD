@@ -40,6 +40,17 @@ BEGIN
        PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode);
    END IF;
 
+   -- проверка
+   IF COALESCE (inInfoMoneyId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
+   END IF;
+   -- проверка
+   IF COALESCE (inJuridicalGroupId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<Группа юридических лиц> не выбрана.';
+   END IF;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), vbCode, inName);
 

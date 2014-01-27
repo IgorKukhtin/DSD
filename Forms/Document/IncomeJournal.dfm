@@ -26,16 +26,19 @@ object IncomeJournalForm: TIncomeJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41275d
+      EditValue = 41640d
       Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41639d
+      EditValue = 41670d
       Properties.ReadOnly = True
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -347,20 +350,179 @@ object IncomeJournalForm: TIncomeJournalForm
       item
         Component = deEnd
         Properties.Strings = (
-          'Date')
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
       end
       item
         Component = deStart
         Properties.Strings = (
-          'Date')
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'BiDiMode'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'Date'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'EditValue'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentBiDiMode'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
       end
       item
         Component = Owner
         Properties.Strings = (
+          'Action'
+          'ActiveControl'
+          'AddOnFormData'
+          'Align'
+          'AlignWithMargins'
+          'AlphaBlend'
+          'AlphaBlendValue'
+          'Anchors'
+          'AutoScroll'
+          'AutoSize'
+          'BiDiMode'
+          'BorderIcons'
+          'BorderStyle'
+          'BorderWidth'
+          'Caption'
+          'ClientHeight'
+          'ClientWidth'
+          'Color'
+          'Constraints'
+          'Ctl3D'
+          'Cursor'
+          'CustomHint'
+          'DefaultMonitor'
+          'DockSite'
+          'DoubleBuffered'
+          'DragKind'
+          'DragMode'
+          'Enabled'
+          'Font'
+          'FormStyle'
+          'GlassFrame'
           'Height'
+          'HelpContext'
+          'HelpFile'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'HorzScrollBar'
+          'Icon'
+          'KeyPreview'
           'Left'
+          'Margins'
+          'Menu'
+          'Name'
+          'ObjectMenuItem'
+          'OldCreateOrder'
+          'Padding'
+          'ParentBiDiMode'
+          'ParentCustomHint'
+          'ParentFont'
+          'PixelsPerInch'
+          'PopupMenu'
+          'PopupMode'
+          'PopupParent'
+          'Position'
+          'PrintScale'
+          'Scaled'
+          'ScreenSnap'
+          'ShowHint'
+          'SnapBuffer'
+          'Tag'
           'Top'
-          'Width')
+          'Touch'
+          'TransparentColor'
+          'TransparentColorValue'
+          'UseDockManager'
+          'VertScrollBar'
+          'Visible'
+          'Width'
+          'WindowMenu'
+          'WindowState')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -518,10 +680,17 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
         end>
       isShowModal = False
       DataSource = DataSource
@@ -532,12 +701,18 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TIncomeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -607,14 +782,14 @@ object IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -728,14 +903,14 @@ object IncomeJournalForm: TIncomeJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41275d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndtDate'
-        Value = 41639d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

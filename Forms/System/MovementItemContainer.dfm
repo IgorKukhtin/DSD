@@ -47,6 +47,10 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
               Kind = skSum
               Column = colKreditAmount
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -147,6 +151,20 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
+          end
+          object colJuridicalBasisCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.('#1075#1083'.)'
+            DataBinding.FieldName = 'JuridicalBasisCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colJuridicalBasisName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
+            DataBinding.FieldName = 'JuridicalBasisName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colBusinessCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072

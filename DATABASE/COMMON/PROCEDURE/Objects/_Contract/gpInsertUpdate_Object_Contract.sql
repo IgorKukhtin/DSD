@@ -62,6 +62,27 @@ BEGIN
        END IF;
    END IF;
 
+   -- проверка
+   IF COALESCE (inJuridicalBasisId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<Главное юридическое лицо> не выбрано.';
+   END IF;
+   -- проверка
+   IF COALESCE (inJuridicalId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<Юридическое лицо> не выбрано.';
+   END IF;
+   -- проверка
+   IF COALESCE (inInfoMoneyId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
+   END IF;
+   -- проверка
+   IF COALESCE (inPaidKindId, 0) = 0
+   THEN
+      RAISE EXCEPTION 'Ошибка.<Форма оплаты> не выбрана.';
+   END IF;
+
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode, inInvNumber);

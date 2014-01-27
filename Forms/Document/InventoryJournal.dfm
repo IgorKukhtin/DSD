@@ -2,7 +2,7 @@ object InventoryJournalForm: TInventoryJournalForm
   Left = 0
   Top = 0
   Hint = #1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1080#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103'>'
   ClientHeight = 427
   ClientWidth = 778
   Color = clBtnFace
@@ -28,14 +28,14 @@ object InventoryJournalForm: TInventoryJournalForm
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
-      EditValue = 41395d
+      EditValue = 41640d
       TabOrder = 0
       Width = 121
     end
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41670d
       TabOrder = 1
       Width = 121
     end
@@ -87,43 +87,45 @@ object InventoryJournalForm: TInventoryJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088
+        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 63
+        Width = 70
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 47
+        Width = 55
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
-        Width = 194
+        Width = 150
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentVert = vaCenter
-        Width = 218
+        Width = 150
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086
         DataBinding.FieldName = 'TotalCount'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Width = 70
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -169,8 +171,8 @@ object InventoryJournalForm: TInventoryJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -297,16 +299,30 @@ object InventoryJournalForm: TInventoryJournalForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TInventoryForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41670d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -317,12 +333,24 @@ object InventoryJournalForm: TInventoryJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TInventoryForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41670d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -386,14 +414,14 @@ object InventoryJournalForm: TInventoryJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41760d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

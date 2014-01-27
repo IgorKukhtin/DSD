@@ -1,9 +1,11 @@
 -- Function: gpGet_Movement_Inventory()
 
--- DROP FUNCTION gpGet_Movement_Inventory (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Inventory (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Inventory (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Inventory(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -17,7 +19,30 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Inventory());
 
-     RETURN QUERY 
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RETURN QUERY 
+         SELECT
+               0 AS Id
+             , CAST (NEXTVAL ('Movement_Inventory_seq') AS TVarChar) AS InvNumber
+--             , CAST (CURRENT_DATE as TDateTime) AS OperDate
+             , inOperDate AS OperDate
+             , Object_Status.Code               AS StatusCode
+             , Object_Status.Name               AS StatusName
+
+
+             , 0 :: TFloat AS TotalCount
+                                                                   
+             , 0 :: TFloat AS TotalSumm
+
+             , 0                     AS FromId
+             , CAST ('' as TVarChar) AS FromName
+             , 0                     AS ToId
+             , CAST ('' as TVarChar) AS ToName
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+
+     ELSE
+       RETURN QUERY 
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -58,18 +83,18 @@ BEGIN
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Inventory();
   
+   END IF;  
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Inventory (Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Movement_Inventory (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.01.14                                        * all
  18.07.13         *
-
 */
 
 -- тест

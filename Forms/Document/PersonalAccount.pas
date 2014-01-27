@@ -132,6 +132,8 @@ type
     colInvNumber: TcxGridDBColumn;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    colJuridicalBasisCode: TcxGridDBColumn;
+    colJuridicalBasisName: TcxGridDBColumn;
   private
   public
   end;

@@ -23,7 +23,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  DataModul, dsdAddOn;
+  DataModul, dsdAddOn, cxCurrencyEdit, dxBarExtItems;
 
 type
   TInventoryForm = class(TParentForm)
@@ -104,6 +104,16 @@ type
     HeaderSaver: THeaderSaver;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    bbShowAll: TdxBarButton;
+    bbShowErased: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    actInsertUpdateMovement: TdsdExecStoredProc;
+    spInsertUpdateMovement: TdsdStoredProc;
+    actShowAll: TBooleanStoredProcAction;
+    bbInsertUpdateMovement: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    GuidesFiller: TGuidesFiller;
+    colPartionGoodsDate: TcxGridDBColumn;
   private
   public
   end;

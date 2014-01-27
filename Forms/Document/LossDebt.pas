@@ -136,6 +136,11 @@ type
     clIsCalculated: TcxGridDBColumn;
     bbShowAll: TdxBarButton;
     clOKPO: TcxGridDBColumn;
+    colJuridicalBasisCode: TcxGridDBColumn;
+    colJuridicalBasisName: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
+    PaidKindChoiceForm: TOpenChoiceForm;
   private
   public
   end;

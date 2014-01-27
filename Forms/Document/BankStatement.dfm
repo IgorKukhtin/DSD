@@ -127,6 +127,7 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 96
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -673,5 +674,14 @@ inherited BankStatementForm: TBankStatementForm
       end>
     Left = 208
     Top = 144
+  end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'BankStatementJournalForm'
+    DataSet = 'MasterCDS'
+    KeyField = 'Id'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 427
+    Top = 253
   end
 end

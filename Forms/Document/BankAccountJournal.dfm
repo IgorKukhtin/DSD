@@ -157,6 +157,13 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited Panel: TPanel
     Width = 1056
     ExplicitWidth = 1056
+    inherited deStart: TcxDateEdit
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+    end
+    inherited deEnd: TcxDateEdit
+      Properties.SaveTime = False
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
