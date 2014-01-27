@@ -2,7 +2,7 @@ unit CashOperationTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, DB;
 
 type
   TCashOperationTest = class (TdbMovementTestNew)
@@ -19,11 +19,12 @@ type
         OperDate: TDateTime; Amount: Double; Comment: string;
         CashId, ObjectId, ContractId, InfoMoneyId, UnitId: integer): integer;
     constructor Create; override;
+    function GetRecord(Id: integer): TDataSet; override;
   end;
 
 implementation
 
-uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework,
+uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, TestFramework,
      DBClient, dsdDB, CashTest;
 
 { TIncomeCashJuridical }
@@ -35,6 +36,20 @@ begin
   spSelect := 'gpSelect_Movement_Cash';
   spGet := 'gpGet_Movement_Cash';
   spCompleteProcedure := 'gpComplete_Movement_Cash';
+end;
+
+function TCashOperation.GetRecord(Id: integer): TDataSet;
+begin
+  with FdsdStoredProc do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := spGet;
+    OutputType := otDataSet;
+    Params.Clear;
+    Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
+    Params.AddParam('inOperDate', ftDateTime, ptInput, Date);
+    Execute;
+    result := DataSets[0].DataSet;
+  end;
 end;
 
 function TCashOperation.InsertDefault: integer;
