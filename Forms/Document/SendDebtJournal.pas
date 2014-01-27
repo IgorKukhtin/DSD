@@ -47,7 +47,6 @@ type
     colStatus: TcxGridDBColumn;
     colInvNumber: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
-    colJuridicalBasisName: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -75,8 +74,6 @@ type
     cxLabel2: TcxLabel;
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
-    actReCompleteAll: TdsdExecStoredProc;
-    colBusinessName: TcxGridDBColumn;
     spInsertUpdate: TdsdStoredProc;
     clJuridicalFromCode: TcxGridDBColumn;
     clJuridicalFromName: TcxGridDBColumn;
@@ -97,6 +94,8 @@ type
     clInfoMoneyDestinationToName: TcxGridDBColumn;
     clInfoMoneyToName: TcxGridDBColumn;
     actUpdateDataSet: TdsdUpdateDataSet;
+    actMovementItemContainer: TdsdOpenForm;
+    bbMovementItemContainer: TdxBarButton;
   private
   public
   end;

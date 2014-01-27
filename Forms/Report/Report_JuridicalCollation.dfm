@@ -12,17 +12,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 306
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 863
+    ExplicitWidth = 674
     ExplicitHeight = 306
     ClientRectBottom = 306
     ClientRectRight = 674
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 863
+      ExplicitWidth = 674
       ExplicitHeight = 306
       inherited cxGrid: TcxGrid
         Width = 674
         Height = 306
-        ExplicitWidth = 863
+        ExplicitWidth = 674
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -129,7 +129,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 674
     Height = 57
-    ExplicitWidth = 863
+    ExplicitWidth = 674
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -191,13 +191,49 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
     end
-  end
-  inherited MasterDS: TDataSource
-    Top = 48
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormName = 'NULL'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'MovementId'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
+    object actGetForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actGetForm'
+    end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actGetForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 28
+      ShortCut = 13
+    end
   end
   inherited MasterCDS: TClientDataSet
     IndexFieldNames = 'ItemName;OperDate'
-    Top = 48
+    Top = 24
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalCollation'
@@ -223,11 +259,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Top = 48
+    Top = 24
   end
   inherited BarManager: TdxBarManager
     Left = 112
-    Top = 48
+    Top = 24
     DockControlHeights = (
       0
       0
@@ -254,10 +290,18 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOpenDocument'
         end>
     end
     object bbPrint: TdxBarButton
       Action = dsdPrintAction
+      Category = 0
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = actOpenDocument
       Category = 0
     end
   end
@@ -281,6 +325,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -301,5 +347,36 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 312
     Top = 48
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+      end>
+    Left = 296
+    Top = 120
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 208
+    Top = 160
   end
 end

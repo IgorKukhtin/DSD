@@ -10,9 +10,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_SendDebt(
 RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
-             , JuridicalBasisId Integer, JuridicalBasisName TVarChar
-             , BusinessId Integer, BusinessName TVarChar
-
+ 
              , InfoMoneyGroupFromName TVarChar
              , InfoMoneyFromId Integer, InfoMoneyFromCode Integer, InfoMoneyFromName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar
@@ -28,7 +26,7 @@ RETURNS TABLE (Id Integer, MI_MasterId Integer, MI_ChildId Integer
              , PaidKindToId Integer, PaidKindToName TVarChar
              
              , Amount TFloat
-
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -42,19 +40,13 @@ BEGIN
      THEN
      RETURN QUERY 
        SELECT
-             0 AS Id
-           , 0 AS MI_MasterId
-           , 0 AS MI_ChildId
-           , CAST (NEXTVAL ('Movement_SendDebt_seq') as Integer) AS InvNumber
-           , inOperDate    AS OperDate
-           , 0             AS StatusCode
-           , ''::TVarChar  AS StatusName
-
-           , 0             AS JuridicalBasisId
-           , ''::TVarChar  AS JuridicalBasisName
-           , 0             AS BusinesId
-           , ''::TVarChar  AS BusinessName
-
+              0 AS Id
+            , 0 AS MI_MasterId
+            , 0 AS MI_ChildId
+            , CAST (NEXTVAL ('Movement_SendDebt_seq') as Integer) AS InvNumber
+            , inOperDate    AS OperDate
+            , 0             AS StatusCode
+            , ''::TVarChar  AS StatusName
 
             , ''::TVarChar AS InfoMoneyGroupFromName
             , 0            AS InfoMoneyFromId
@@ -88,7 +80,7 @@ BEGIN
             , ''::TVarChar AS PaidKindToName
 
             , 0::TFloat  AS Amount
-      
+            , ''::TVarChar AS Comment
 
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
@@ -97,20 +89,14 @@ BEGIN
      ELSE
      RETURN QUERY 
        SELECT
-             Movement.Id
-           , MI_Master.Id AS MI_MasterId
-           , MI_Child.Id  AS MI_ChildId
+              Movement.Id
+            , MI_Master.Id AS MI_MasterId
+            , MI_Child.Id  AS MI_ChildId
            
-           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
-
-           , Object_JuridicalBasis.Id        AS JuridicalBasisId
-           , Object_JuridicalBasis.ValueData AS JuridicalBasisName
-           , Object_Business.Id              AS BusinesId
-           , Object_Business.ValueData       AS BusinessName
-
+             , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+            , Movement.OperDate
+            , Object_Status.ObjectCode   AS StatusCode
+            , Object_Status.ValueData    AS StatusName
 
             , View_InfoMoney_From.InfoMoneyGroupName       AS InfoMoneyGroupFromName
             , View_InfoMoney_From.InfoMoneyId              AS InfoMoneyFromId
@@ -144,21 +130,11 @@ BEGIN
             , Object_PaidKind_To.ValueData           AS PaidKindToName
 
             , MI_Master.Amount         AS Amount
-   
+            , MovementString_Comment.ValueData      AS Comment
+           
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_JuridicalBasis
-                                         ON MovementLinkObject_JuridicalBasis.MovementId = Movement.Id
-                                        AND MovementLinkObject_JuridicalBasis.DescId = zc_MovementLinkObject_JuridicalBasis()
-            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = MovementLinkObject_JuridicalBasis.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                         ON MovementLinkObject_Business.MovementId = Movement.Id
-                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
-            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
-
-            
+                       
             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
                                          AND MI_Master.DescId     = zc_MI_Master()
 
@@ -181,7 +157,7 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
             
-            JOIN MovementItem AS MI_Child ON MI_Child.ParentId = MI_Master.Id
+            LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
                                          AND MI_Child.DescId     = zc_MI_Child()
                                          
             LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = MI_Child.ObjectId
@@ -202,7 +178,10 @@ BEGIN
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
 
-
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+                                    
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendDebt();
 

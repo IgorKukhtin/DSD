@@ -736,7 +736,8 @@ begin
   // —обытие вызываетс€ в момент закрыти€ формы добавлени€ изменени€ справочника.
   // Ќеобходимо в таком случае перечитать запрос и отпозиционироватьс€ в нем
   // тут перечитаем запрос и спозиционируемс€ на нем
-  DataSetRefresh.Execute;
+  if Assigned(DataSetRefresh) then
+     DataSetRefresh.Execute;
   if Assigned(DataSource) then
      if Assigned(DataSource.DataSet) then
         if Assigned(Params) then

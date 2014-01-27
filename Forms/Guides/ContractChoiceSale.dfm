@@ -19,8 +19,6 @@ inherited ContractChoiceSaleForm: TContractChoiceSaleForm
       inherited cxGrid: TcxGrid
         Width = 847
         Height = 462
-        ExplicitLeft = 16
-        ExplicitTop = 3
         ExplicitWidth = 847
         ExplicitHeight = 462
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -103,7 +101,6 @@ inherited ContractChoiceSaleForm: TContractChoiceSaleForm
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -111,7 +108,6 @@ inherited ContractChoiceSaleForm: TContractChoiceSaleForm
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
@@ -119,7 +115,6 @@ inherited ContractChoiceSaleForm: TContractChoiceSaleForm
           object clInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -127,7 +122,6 @@ inherited ContractChoiceSaleForm: TContractChoiceSaleForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90

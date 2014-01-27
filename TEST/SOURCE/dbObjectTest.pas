@@ -25,7 +25,7 @@ type
     procedure DeleteRecord(Id: Integer); virtual;
     function GetDefault: integer;
     function GetDataSet: TDataSet; virtual;
-    function GetRecord(Id: integer): TDataSet;
+    function GetRecord(Id: integer): TDataSet; virtual;
     procedure Delete(Id: Integer); virtual;
     constructor Create; virtual;
     destructor Destoy;
@@ -454,7 +454,7 @@ function TObjectTest.GetRecord(Id: integer): TDataSet;
 begin
   with FdsdStoredProc do begin
     DataSets.Add.DataSet := TClientDataSet.Create(nil);
-    StoredProcName := FspGet;
+    StoredProcName := spGet;
     OutputType := otDataSet;
     Params.Clear;
     Params.AddParam('ioId', ftInteger, ptInputOutput, Id);

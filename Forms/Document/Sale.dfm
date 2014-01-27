@@ -16,7 +16,7 @@ inherited SaleForm: TSaleForm
     ClientRectBottom = 598
     ClientRectRight = 1045
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
+      ExplicitLeft = 2
       ExplicitWidth = 1043
       ExplicitHeight = 576
       inherited cxGrid: TcxGrid
@@ -212,6 +212,8 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitLeft = 2
+      ExplicitTop = 22
       ExplicitWidth = 1043
       ExplicitHeight = 576
       inherited cxGridEntry: TcxGrid
@@ -268,7 +270,7 @@ inherited SaleForm: TSaleForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitHeight = 21
+      ExplicitHeight = 24
     end
     object cxLabel3: TcxLabel
       Left = 227
@@ -447,10 +449,30 @@ inherited SaleForm: TSaleForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actUnCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+    end
     object actGoodsKindChoice: TOpenChoiceForm [13]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -938,6 +960,8 @@ inherited SaleForm: TSaleForm
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
     LookupControl = edRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -963,6 +987,8 @@ inherited SaleForm: TSaleForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -988,6 +1014,8 @@ inherited SaleForm: TSaleForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    FormNameParam.Value = 'TContractChoiceSaleForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceSaleForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1018,13 +1046,13 @@ inherited SaleForm: TSaleForm
         DataType = ftString
       end
       item
-        Name = 'ContractId'
+        Name = 'Key'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'ContractName'
+        Name = 'TextValue'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
@@ -1049,6 +1077,8 @@ inherited SaleForm: TSaleForm
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -1073,6 +1103,8 @@ inherited SaleForm: TSaleForm
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1097,6 +1129,8 @@ inherited SaleForm: TSaleForm
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

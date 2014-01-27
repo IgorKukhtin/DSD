@@ -2,14 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_SendDebt (Integer, TVarChar, TDateTime, Integer, Integer, Tfloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inBusinessId          Integer   , -- Бизнес
-    IN inJuridicalBasisId    Integer   , -- Главное юр. лицо
 
  INOUT ioMasterId            Integer   , -- Ключ объекта <Элемент документа>
  INOUT ioChildId             Integer   , -- Ключ объекта <Элемент документа>
@@ -26,6 +24,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_SendDebt(
     IN inPaidKindToId        Integer   , -- Вид форм оплаты
     IN inInfoMoneyToId       Integer   , -- Статьи назначения
 
+    IN inComment             TVarChar  , -- Примечание
+    
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS record AS
@@ -46,26 +46,16 @@ BEGIN
          RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
      END IF;
 
-
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL);
 
+     -- сохранили свойство <Примечание>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+     
      -- сохранили <Главный Элемент документа>
      ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
 
-     -- сохранили <Второй Элемент документа>
-     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioMasterId, inAmount, NULL);
-
-
-
-     -- сохранили связь с <Бизнес>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
-     
-     -- сохранили связь с <Главное юр. лицо>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
-
-
-     -- сохранили связь с <Договор ОТ >
+    -- сохранили связь с <Договор ОТ >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioMasterId, inContractFromId);
 
      -- сохранили связь с <Вид форм оплаты ОТ>
@@ -74,6 +64,11 @@ BEGIN
      -- сохранили связь с <Статьи назначения ОТ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioMasterId, inInfoMoneyFromId);
 
+
+
+
+     -- сохранили <Второй Элемент документа>
+     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioId, inAmount, NULL);
 
      -- сохранили связь с <Договор КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioChildId, inContractToId);

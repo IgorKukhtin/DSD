@@ -45,12 +45,6 @@ type
     ceContractTo: TcxButtonEdit;
     PaidKindToGuides: TdsdGuides;
     ContractJuridicalToGuides: TdsdGuides;
-    cxLabel14: TcxLabel;
-    ceJuridicalBasis: TcxButtonEdit;
-    JuridicalBasisGuides: TdsdGuides;
-    cxLabel15: TcxLabel;
-    ceBusiness: TcxButtonEdit;
-    BusinessGuides: TdsdGuides;
   private
     { Private declarations }
   public
