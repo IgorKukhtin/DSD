@@ -2,8 +2,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   Left = 0
   Top = 0
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 391
-  ClientWidth = 827
+  ClientHeight = 395
+  ClientWidth = 1219
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,7 +19,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object Panel1: TPanel
     Left = 0
     Top = 26
-    Width = 827
+    Width = 1219
     Height = 31
     Align = alTop
     TabOrder = 1
@@ -53,8 +53,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 57
-    Width = 827
-    Height = 334
+    Width = 1219
+    Height = 338
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
@@ -79,7 +79,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = clAmount
         end
         item
           Format = ',0.00'
@@ -113,7 +113,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
+          Column = clAmount
         end
         item
           Format = ',0.00'
@@ -172,41 +172,149 @@ object SendDebtJournalForm: TSendDebtJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
-        Width = 134
+        Width = 46
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 98
+        Width = 76
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 95
+        Width = 56
       end
       object colJuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentVert = vaCenter
-        Width = 219
+        Width = 100
       end
       object colBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentVert = vaCenter
-        Width = 136
+        Width = 62
       end
-      object colTotalSumm: TcxGridDBColumn
+      object clJuridicalFromCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'JuridicalFromCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 57
+      end
+      object clJuridicalFromName: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1086#1090')'
+        DataBinding.FieldName = 'JuridicalFromName'
+        HeaderAlignmentVert = vaCenter
+        Width = 110
+      end
+      object clFromOKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'FromOKPO'
+        HeaderAlignmentVert = vaCenter
+        Width = 61
+      end
+      object clPaidKindFromName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1086#1090')'
+        DataBinding.FieldName = 'PaidKindFromName'
+        HeaderAlignmentVert = vaCenter
+        Width = 49
+      end
+      object clContractFromName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractFromName'
+        HeaderAlignmentVert = vaCenter
+        Width = 44
+      end
+      object clInfoMoneyFromCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyFromCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 78
+      end
+      object clInfoMoneyGroupFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupFromName'
+        Visible = False
+        Width = 60
+      end
+      object clInfoMoneyDestinationFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationFromName'
+        Visible = False
+        Width = 60
+      end
+      object clInfoMoneyFromName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyFromName'
+        HeaderAlignmentVert = vaCenter
+        Width = 87
+      end
+      object clJuridicalToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'JuridicalToCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 38
+      end
+      object clJuridicalToName: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1082#1086#1084#1091')'
+        DataBinding.FieldName = 'JuridicalToName'
+        HeaderAlignmentVert = vaCenter
+        Width = 72
+      end
+      object clToOKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'ToOKPO'
+        HeaderAlignmentVert = vaCenter
+        Width = 34
+      end
+      object clPaidKindToName: TcxGridDBColumn
+        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099' ('#1082#1086#1084#1091')'
+        DataBinding.FieldName = 'PaidKindToName'
+        HeaderAlignmentVert = vaCenter
+        Width = 47
+      end
+      object clContractToName: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractToName'
+        HeaderAlignmentVert = vaCenter
+        Width = 37
+      end
+      object clInfoMoneyToCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyToCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object clInfoMoneyGroupToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupToName'
+        Visible = False
+        Width = 60
+      end
+      object clInfoMoneyDestinationToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationToName'
+        Visible = False
+        Width = 60
+      end
+      object clInfoMoneyToName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyToName'
+        HeaderAlignmentVert = vaCenter
+        Width = 54
+      end
+      object clAmount: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
-        DataBinding.FieldName = 'TotalSumm'
+        DataBinding.FieldName = 'Amount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 131
+        Width = 52
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -499,6 +607,17 @@ object SendDebtJournalForm: TSendDebtJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+        end>
+      Caption = 'actUpdateDataSet'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_SendDebt'
@@ -637,5 +756,112 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end>
     Left = 240
     Top = 288
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_SendDebt'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumber'
+        Component = ClientDataSet
+        ComponentItem = 'InvNumber'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = ClientDataSet
+        ComponentItem = 'OperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBusinessId'
+        Component = ClientDataSet
+        ComponentItem = 'BusinessId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalBasisId'
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalBasisId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioMasterId'
+        Component = ClientDataSet
+        ComponentItem = 'MI_MasterId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ioChildId'
+        Component = ClientDataSet
+        ComponentItem = 'MI_ChildId'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inAmount'
+        Component = ClientDataSet
+        ComponentItem = 'Amount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalFromId'
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractfromId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindFromId'
+        Component = ClientDataSet
+        ComponentItem = 'PaidKindFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyFromId'
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyFromId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalToId'
+        Component = ClientDataSet
+        ComponentItem = 'JuridicalToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractToId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindToId'
+        Component = ClientDataSet
+        ComponentItem = 'PaidKindToId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyToId'
+        Component = ClientDataSet
+        ComponentItem = 'InfoMoneyToId'
+        ParamType = ptInput
+      end>
+    Left = 526
+    Top = 168
   end
 end

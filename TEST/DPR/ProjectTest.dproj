@@ -851,8 +851,8 @@
 				<Form>Cash_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransportService.pas">
-				<Form>TransportServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SendDebt.pas">
+				<Form>SendDebtForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TransportServiceJournal.pas">
@@ -944,8 +944,8 @@
 				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendDebt.pas">
-				<Form>SendDebtForm</Form>
+			<DCCReference Include="..\..\Forms\Document\SendDebt_old.pas">
+				<Form>SendDebtOLDForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossDebtJournal.pas">
@@ -954,6 +954,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossDebt.pas">
 				<Form>LossDebtForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransportService.pas">
+				<Form>TransportServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

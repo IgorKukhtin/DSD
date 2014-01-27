@@ -63,7 +63,7 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colTotalSumm: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -77,6 +77,26 @@ type
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
     colBusinessName: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    clJuridicalFromCode: TcxGridDBColumn;
+    clJuridicalFromName: TcxGridDBColumn;
+    clFromOKPO: TcxGridDBColumn;
+    clPaidKindFromName: TcxGridDBColumn;
+    clContractFromName: TcxGridDBColumn;
+    clInfoMoneyFromCode: TcxGridDBColumn;
+    clInfoMoneyGroupFromName: TcxGridDBColumn;
+    clInfoMoneyDestinationFromName: TcxGridDBColumn;
+    clInfoMoneyFromName: TcxGridDBColumn;
+    clJuridicalToCode: TcxGridDBColumn;
+    clJuridicalToName: TcxGridDBColumn;
+    clToOKPO: TcxGridDBColumn;
+    clPaidKindToName: TcxGridDBColumn;
+    clContractToName: TcxGridDBColumn;
+    clInfoMoneyToCode: TcxGridDBColumn;
+    clInfoMoneyGroupToName: TcxGridDBColumn;
+    clInfoMoneyDestinationToName: TcxGridDBColumn;
+    clInfoMoneyToName: TcxGridDBColumn;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
   public
   end;
