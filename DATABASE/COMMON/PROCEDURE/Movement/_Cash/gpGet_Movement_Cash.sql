@@ -132,6 +132,7 @@ ALTER FUNCTION gpGet_Movement_Cash (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.01.14                                        * add inOperDate
  26.12.13                                        * add View_InfoMoney
  23.12.13                         *
  19.11.13                         *

@@ -237,12 +237,12 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.01.14                                                        * PriceList
  08.09.13                                        * add AmountChangePercent
  03.09.13                                        * add ChangePercentAmount
  21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem
  18.07.13         * add Object_Asset
  13.07.13         *
- 21.01.14 + PriceList. Dima
 */
 
 -- тест

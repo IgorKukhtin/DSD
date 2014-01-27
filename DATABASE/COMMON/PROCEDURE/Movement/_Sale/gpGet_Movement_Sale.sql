@@ -163,17 +163,16 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.01.14                                                        * MovementBoolean_Checked
  29.07.13         * add zc_MovementLinkObject_Personal
  14.07.13         *
-
- 16.01.14 +  MovementBoolean_Checked /Dima/.
 */
 
 -- тест

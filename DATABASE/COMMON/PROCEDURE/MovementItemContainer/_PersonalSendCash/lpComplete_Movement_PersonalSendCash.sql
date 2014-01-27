@@ -12,6 +12,7 @@ RETURNS VOID
 AS
 $BODY$
   DECLARE vbMemberId_From Integer;
+  DECLARE vbUnitId_Forwarding Integer;
 
   DECLARE vbJuridicalId_Basis Integer;
   DECLARE vbBusinessId_PersonalFrom Integer;
@@ -24,14 +25,18 @@ BEGIN
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
-     SELECT _tmp.MemberId_From
+     SELECT _tmp.MemberId_From, _tmp.UnitId_Forwarding
           , _tmp.JuridicalId_Basis, _tmp.BusinessId_PersonalFrom
-            INTO vbMemberId_From
+            INTO vbMemberId_From, vbUnitId_Forwarding
                , vbJuridicalId_Basis, vbBusinessId_PersonalFrom -- эти аналитики берутся у подразделения за которым числится сотрудник (кто выдавал деньги)
-     FROM (SELECT COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0) AS MemberId_From
-                , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0)  AS JuridicalId_Basis
-                , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)   AS BusinessId_PersonalFrom
+     FROM (SELECT COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0)   AS MemberId_From
+                , COALESCE (MovementLinkObject_UnitForwarding.ObjectId, 0) AS UnitId_Forwarding
+                , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, 0)    AS JuridicalId_Basis
+                , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)     AS BusinessId_PersonalFrom
            FROM Movement
+                LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                             ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                            AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_Personal
                                              ON MovementLinkObject_Personal.MovementId = Movement.Id
                                             AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
@@ -90,8 +95,18 @@ BEGIN
         FROM (SELECT
                      MovementItem.Id AS MovementItemId
                    , MIDate_OperDate.ValueData AS OperDate
-                   , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_ProfitLoss   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_Car_Unit, тогда затраты будут по принадлежности авто к подразделению
-                   , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_UnitCar_Branch, тогда затраты будут по принадлежности авто к подразделению
+                   -- , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_ProfitLoss   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_Car_Unit, тогда затраты будут по принадлежности авто к подразделению
+                   -- , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_ProfitLoss -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_UnitCar_Branch, тогда затраты будут по принадлежности авто к подразделению
+                   , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
+                          WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
+                          ELSE vbUnitId_Forwarding -- иначе Подразделение (Место отправки)
+                     END AS UnitId_ProfitLoss
+                   , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                               THEN COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению и к филиалу
+                          ELSE 0 -- иначе затраты без принадлежности к филиалу
+                     END AS BranchId_ProfitLoss
                    , COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0)       AS UnitId_Route
                    , COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, 0) AS BranchId_Route
                    , COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0)  AS MemberId_To
@@ -144,6 +159,9 @@ BEGIN
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
                                                     ON MILinkObject_Route.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
+                   LEFT JOIN ObjectLink AS ObjectLink_Route_Branch
+                                        ON ObjectLink_Route_Branch.ObjectId = MILinkObject_Route.ObjectId
+                                       AND ObjectLink_Route_Branch.DescId = zc_ObjectLink_Route_Branch()
                    LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
                                         ON ObjectLink_Route_Unit.ObjectId = MILinkObject_Route.ObjectId
                                        AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
@@ -153,8 +171,14 @@ BEGIN
                    LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
                                         ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                        AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
-                   -- сейчас затраты по принадлежности маршрута к подразделению, иначе надо изменить на ObjectLink_Car_Unit, тогда затраты будут по принадлежности авто к подразделению
-                   LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = ObjectLink_Route_Unit.ChildObjectId
+                   -- для затрат
+                   LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
+                   = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
+                          WHEN ObjectLink_UnitRoute_Branch.ChildObjectId  = COALESCE (ObjectLink_Route_Branch.ChildObjectId, 0)
+                               THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "собственный" маршрут, тогда затраты по принадлежности маршрута к подразделению
+                          ELSE vbUnitId_Forwarding -- иначе Подразделение (Место отправки)
+                     END
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_PersonalSendCash()
@@ -444,7 +468,8 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 26.01.14                                        * правильные проводки по филиалу
  21.12.13                                        * Personal -> Member
  14.11.13                                        * add calc ActiveContainerId and PassiveContainerId
  04.11.13                                        * add OperDate

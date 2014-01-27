@@ -89,13 +89,13 @@ BEGIN
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN
-         RAISE EXCEPTION 'В документе не определено <Юридическое лицо>. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>. Проведение невозможно.';
      END IF;
    
      -- проверка
      IF 1=0 and EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
-         RAISE EXCEPTION 'У договора не установлено главное юр лицо. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо. Проведение невозможно.';
      END IF;
 
 

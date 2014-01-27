@@ -28,7 +28,7 @@ BEGIN
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
   -- определяем <Статус>
-  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);
+  vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
   IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN
@@ -36,7 +36,7 @@ BEGIN
   END IF;
 
   -- пересчитали Итоговые суммы по накладной
-  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+  PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
   -- !!! НЕ ПОНЯТНО - ПОЧЕМУ НАДО ВОЗВРАЩАТЬ НАОБОРОТ!!!
   -- outIsErased := TRUE;

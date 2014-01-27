@@ -40,6 +40,8 @@
   object ceOperDate: TcxDateEdit [5]
     Left = 148
     Top = 23
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 4
     Width = 120
   end
@@ -286,38 +288,45 @@
     StoredProcName = 'gpGet_Movement_BankAccount'
     Params = <
       item
-        Name = 'inmovementid'
+        Name = 'inMovementId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
-        Name = 'invnumber'
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'InvNumber'
         Value = 0.000000000000000000
         Component = ceInvNumber
         DataType = ftString
       end
       item
-        Name = 'operdate'
+        Name = 'OperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
       end
       item
-        Name = 'amountin'
+        Name = 'AmountIn'
         Value = 0.000000000000000000
         Component = ceAmountIn
         DataType = ftFloat
       end
       item
-        Name = 'amountout'
+        Name = 'AmountOut'
         Value = 0.000000000000000000
         Component = ceAmountOut
         DataType = ftFloat
       end
       item
-        Name = 'comment'
+        Name = 'Comment'
         Value = ''
         Component = ceComment
         DataType = ftString
@@ -406,6 +415,8 @@
   object BankAccountGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBankAccount
+    FormNameParam.Value = 'TBankAccountForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBankAccountForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -441,6 +452,8 @@
   object ObjectlGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceObject
+    FormNameParam.Value = 'TMoneyPlace_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMoneyPlace_ObjectForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -489,6 +502,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -511,6 +526,8 @@
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -559,6 +576,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -581,6 +600,8 @@
   object CurrencyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCurrency
+    FormNameParam.Value = 'TCurrencyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCurrencyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

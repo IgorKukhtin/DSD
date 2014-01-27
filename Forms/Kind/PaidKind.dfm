@@ -1,13 +1,11 @@
 inherited PaidKindForm: TPaidKindForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1086#1088#1084#1099' '#1086#1087#1083#1072#1090'>'
-  ExplicitWidth = 583
-  ExplicitHeight = 342
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099'>'
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil

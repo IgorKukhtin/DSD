@@ -251,8 +251,8 @@ object LossDebtJournalForm: TLossDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -406,6 +406,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -429,6 +435,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate

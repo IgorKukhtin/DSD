@@ -1828,6 +1828,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Juridical_Fl (isBill:Boolean);
 var ParentId_PG_in,ParentId_PG_out,ParentId_PG_service:String;
+    JuridicalId_pg, JuridicalDetailsId_pg :Integer;
 begin
      fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=2');//02-Поставщики
      ParentId_PG_in:=toSqlQuery.FieldByName('Id').AsString;
@@ -1911,6 +1912,10 @@ begin
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inStartPromo',ftDateTime,ptInput, Date);
+        toStoredProc.Params.AddParam ('inEndPromo',ftDateTime,ptInput, Date);
         //
         toStoredProc_two.StoredProcName:='gpInsertUpdate_ObjectHistory_JuridicalDetails';
         toStoredProc_two.OutputType := otResult;
@@ -1931,7 +1936,15 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+
+             fOpenSqToQuery ('select JuridicalId, ObjectHistoryId from ObjectHistory_JuridicalDetails_View where OKPO='+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString));
+             JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             JuridicalDetailsId_pg:=toSqlQuery.FieldByName('ObjectHistoryId').AsInteger;
+
              //
+             if (1=0)or(JuridicalId_pg=0)
+             then begin
+
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
@@ -1956,10 +1969,14 @@ begin
                        toStoredProc_two.Params.ParamByName('inAccounterName').Value:=FieldByName('inAccounterName').AsString;
                        toStoredProc_two.Params.ParamByName('inBankAccount').Value:=FieldByName('inBankAccount').AsString;
                        if not myExecToStoredProc_two then ;
+
+                       JuridicalId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
+                       JuridicalDetailsId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
+             end;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-             then fExecFlSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
-                                    +'                         , JuridicalDetailsId_pg='+IntToStr(toStoredProc_two.Params.ParamByName('ioId').Value)
+             then fExecFlSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(JuridicalId_pg)
+                                    +'                         , JuridicalDetailsId_pg='+IntToStr(JuridicalDetailsId_pg)
                                     +' where trim(OKPO) = '+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString));
 
              //
@@ -1977,6 +1994,7 @@ procedure TMainForm.pLoadGuide_Contract_Fl;
 var ContractKindID_15,ContractKindID_16,ContractKindID_17,ContractKindID_18:String;
     PaidKindBN,PaidKindNal:String;
     zc_Enum_ContractConditionKind_DelayDayCalendar,zc_Enum_ContractConditionKind_DelayDayBank,zc_Enum_ContractConditionKind_BonusPercentSaleReturn,zc_Enum_ContractConditionKind_BonusPercentAccount:Integer;
+    ContractId_pg:Integer;
 begin
      if (not cbContract.Checked)or(not cbContract.Enabled) then exit;
      //
@@ -2204,6 +2222,7 @@ begin
         toStoredProc.Params.AddParam ('inStartDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inEndDate',ftDateTime,ptInput, 0);
         toStoredProc.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inJuridicalBasisId',ftInteger,ptInput, 9399);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
@@ -2225,6 +2244,17 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             if FieldByName('Id_Postgres').AsInteger<>0
+             then ContractId_pg:=FieldByName('Id_Postgres').AsInteger
+             else
+                 begin
+                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InvNumber='+FormatToVarCharServer_notNULL(FieldByName('inInvNumber').AsString)+' and JuridicalId='+FieldByName('inJuridicalId').AsString);
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+                 end;
+
+             if (1=0)or(ContractId_pg=0)
+             then begin
+
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
@@ -2288,25 +2318,28 @@ begin
                        toStoredProc_two.Params.ParamByName('inContractConditionKindId').Value:=zc_Enum_ContractConditionKind_BonusPercentAccount;
                        if not myExecToStoredProc_two then ;
              end;
+
+             ContractId_pg:=toStoredProc.Params.ParamByName('ioId').Value
+
+             end;
              //
 
              if (FieldByName('NumberSheet').AsInteger=2)
              then
                  if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-                 then fExecFlSqFromQuery(' update dba._pgPartner set ContractId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                 then fExecFlSqFromQuery(' update dba._pgPartner set ContractId_pg='+IntToStr(ContractId_pg)
                                         +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                         +'   and NumberSheet = 2'
                                         )
                  else
              else
                  if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
-                 then fExecFlSqFromQuery(' update dba._pgPartner set ContractId_pg='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                 then fExecFlSqFromQuery(' update dba._pgPartner set ContractId_pg='+IntToStr(ContractId_pg)
                                         +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                         +'   and CodeIM = '+FieldByName('CodeIM').AsString
                                         )
                  else
              ;
-
              //
              Next;
              Application.ProcessMessages;
@@ -2319,6 +2352,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner_Fl (isBill:Boolean);
+var PartnerId_pg:Integer;
 begin
      if (not cbPartner.Checked)or(not cbPartner.Enabled) then exit;
      //
@@ -2350,8 +2384,9 @@ begin
                   Add('     , null AS inPersonalTakeId');
                   Add('     , _pgPartner_find.PartnerId_pg as Id_Postgres');
                   Add('from (select min (_pgPartner.Id) as Id'
-                    + '           , max (_pgPartner.PartnerId_pg) as PartnerId_pg'
+                    + '           , max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg'
                     + '           , JuridicalId_pg'
+                    + '           , UnitId'
                     + '           , Main'
                     + '      from dba._pgPartner'
                     + '      where JuridicalId_pg<>0'
@@ -2360,11 +2395,14 @@ begin
                     + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('')
                     + '        and trim (Main) <> '+FormatToVarCharServer_notNULL('0')
                     + '        and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
+//                    + '        and _pgPartner.Id = 938'
                     + '      group by JuridicalId_pg'
+                    + '             , UnitId'
                     + '             , Main'
                     + '     ) as _pgPartner_find'
                     + '     left join (select min (_pgPartner.Id) as Id'
                     + '                     , JuridicalId_pg'
+                    + '                     , UnitId'
                     + '                     , Main'
                     + '                from dba._pgPartner'
                     + '                where JuridicalId_pg<>0'
@@ -2375,9 +2413,11 @@ begin
                     + '                  and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (AdrUnit) <> '+FormatToVarCharServer_notNULL('')
                     + '                group by JuridicalId_pg'
+                    + '                       , UnitId'
                     + '                       , Main'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
                     + '                                       and _pgPartner_find_two.Main = _pgPartner_find.Main'
+                    + '                                       and _pgPartner_find_two.UnitId = _pgPartner_find.UnitId'
                     + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
                   Add('          join (select Unit.Id AS Id_byLoad, Unit.Id, Unit.UnitName, ClientInformation.AddressFirm'
                      +'                from dba.Unit'
@@ -2424,6 +2464,9 @@ begin
         begin
              //!!!
              if fStop then begin exit;end;
+
+             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             then begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
@@ -2438,13 +2481,19 @@ begin
              toStoredProc.Params.ParamByName('inPersonalTakeId').Value:=FieldByName('inPersonalTakeId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
+
+
+                 PartnerId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
+             end
+             else
+                 PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecFlSqFromQuery(' update dba._pgPartner set PartnerId_pg = case when trim (UnitId) = '+FormatToVarCharServer_notNULL('')
                                    + '                                                 or trim (UnitId) = '+FormatToVarCharServer_notNULL('0')
                                    + '                                                 or trim (UnitName) = '+FormatToVarCharServer_notNULL('')
                                     +'                                                    then ' + FormatToVarCharServer_notNULL('0')
-                                    +'                                               else '+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)
+                                    +'                                               else '+IntToStr(PartnerId_pg)
                                     +'                                          end'
                                     +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                     +'   and Main = '+FieldByName('Main').AsString

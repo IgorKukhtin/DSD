@@ -31,10 +31,9 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAmount TFloat;
 BEGIN
-
      -- проверка прав пользовател€ на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
+
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
         RAISE EXCEPTION '¬ведите сумму прихода или расхода';

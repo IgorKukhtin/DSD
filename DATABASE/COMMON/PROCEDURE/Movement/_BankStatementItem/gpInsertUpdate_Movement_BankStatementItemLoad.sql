@@ -40,10 +40,9 @@ $BODY$
    DECLARE vbJuridicalId Integer;
    DECLARE vbCurrencyId Integer;
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItemLoad());
 
-     -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankStatementItem());
-    vbUserId := inSession;
 
    -- 1. Найти счет от кого и кому в справочнике счетов. 
    SELECT Object_BankAccount.Id INTO vbMainBankAccountId

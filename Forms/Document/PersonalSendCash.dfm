@@ -199,6 +199,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
             Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
             DataBinding.FieldName = 'CarModelName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colCarName: TcxGridDBColumn
@@ -336,6 +337,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
@@ -866,6 +874,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TPersonal_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -888,6 +898,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -911,6 +923,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -988,6 +1002,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1208,10 +1224,17 @@ object PersonalSendCashForm: TPersonalSendCashForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -1334,6 +1357,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 52

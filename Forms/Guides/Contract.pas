@@ -96,6 +96,7 @@ type
     JuridicalChoiceForm: TOpenChoiceForm;
     ContractKindChoiceForm: TOpenChoiceForm;
     InfoMoneyChoiceForm: TOpenChoiceForm;
+    clJuridicalBasisName: TcxGridDBColumn;
   private
     { Private declarations }
   public

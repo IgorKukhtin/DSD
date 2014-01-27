@@ -357,7 +357,14 @@ object PersonalAccountForm: TPersonalAccountForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clOperDate: TcxGridDBColumn
+          object colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
@@ -469,6 +476,20 @@ object PersonalAccountForm: TPersonalAccountForm
             Caption = #1041#1080#1079#1085#1077#1089
             DataBinding.FieldName = 'BusinessName'
             Options.Editing = False
+            Width = 70
+          end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colAccountOnComplete: TcxGridDBColumn
@@ -872,6 +893,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TInfoMoneyForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -889,6 +912,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TContractChoiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -928,6 +953,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TCarForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -951,6 +978,8 @@ object PersonalAccountForm: TPersonalAccountForm
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TRouteForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -1028,6 +1057,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1247,6 +1278,13 @@ object PersonalAccountForm: TPersonalAccountForm
         ParamType = ptInput
       end
       item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
         Name = 'inId'
         Value = Null
         Component = FormParams
@@ -1359,6 +1397,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 60

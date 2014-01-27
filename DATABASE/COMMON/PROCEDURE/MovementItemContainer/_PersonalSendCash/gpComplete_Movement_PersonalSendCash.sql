@@ -37,7 +37,7 @@ $BODY$
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  21.12.13                                        * Personal -> Member
  04.11.13                                        * add OperDate
  02.11.13                                        * add ContainerId_ProfitLoss, AccountId_ProfitLoss

@@ -105,8 +105,6 @@ type
     bbErased: TdxBarButton;
     bbUnErased: TdxBarButton;
     bbShowErased: TdxBarButton;
-    RouteChoiceForm: TOpenChoiceForm;
-    CarChoiceForm: TOpenChoiceForm;
     cxLabel4: TcxLabel;
     spErasedMIMaster: TdsdStoredProc;
     spUnErasedMIMaster: TdsdStoredProc;

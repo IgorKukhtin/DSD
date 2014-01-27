@@ -3,8 +3,8 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
   ClientHeight = 368
   ClientWidth = 854
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 862
-  ExplicitHeight = 395
+  ExplicitWidth = 870
+  ExplicitHeight = 403
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -134,14 +134,6 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentVert = vaCenter
             Width = 98
           end
-          object colGoodsGroupName: TcxGridDBColumn
-            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsGroupName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
-          end
           object colDestinationObjectCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1079#1085'.'
             DataBinding.FieldName = 'DestinationObjectCode'
@@ -156,13 +148,33 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object clenGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
+          object colBusinessCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1073#1080#1079#1085#1077#1089#1072
+            DataBinding.FieldName = 'BusinessCode'
             Visible = False
-            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 45
+          end
+          object colBusinessName: TcxGridDBColumn
+            Caption = #1041#1080#1079#1085#1077#1089
+            DataBinding.FieldName = 'BusinessName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colBranchCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+            DataBinding.FieldName = 'BranchCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colBranchName: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
           object colAccountOnComplete: TcxGridDBColumn
             Caption = '***'
@@ -189,16 +201,6 @@ inherited MovementItemContainerForm: TMovementItemContainerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
-          end
-          object colPrice_comlete: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.00##;,0.00##; ;'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 58
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

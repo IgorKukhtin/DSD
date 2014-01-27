@@ -49,11 +49,11 @@ BEGIN
            , '' :: TVarChar AS ContractKindName
            , 0 :: Integer   AS JuridicalId
            , '' :: TVarChar AS JuridicalName
-           , 0 :: Integer   AS JuridicalBasisId
-           , '' :: TVarChar AS JuridicalBasisName
+           , Object_JuridicalBasis.Id        AS JuridicalBasisId
+           , Object_JuridicalBasis.ValueData AS JuridicalBasisName
 
-           , 0 :: Integer   AS PaidKindId
-           , '' :: TVarChar AS PaidKindName
+           , Object_PaidKind.Id        AS PaidKindId
+           , Object_PaidKind.ValueData AS PaidKindName
            , 0 :: Integer   AS InfoMoneyId
            , '' :: TVarChar AS InfoMoneyName
 
@@ -66,7 +66,11 @@ BEGIN
            , 0 :: Integer   AS ContractStateKindId
            , '' :: TVarChar AS ContractStateKindName          
            
-           , NULL :: Boolean  AS isErased;
+           , NULL :: Boolean  AS isErased
+       FROM Object AS Object_PaidKind
+            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399 -- ŒŒŒ ¿À¿Õ
+       WHERE Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
+       ;
    ELSE
        RETURN QUERY
        SELECT

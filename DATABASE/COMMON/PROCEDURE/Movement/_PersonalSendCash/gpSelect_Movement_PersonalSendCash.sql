@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSumm TFloat
              , PersonalName TVarChar
+             , UnitForwardingName TVarChar
               )
 AS
 $BODY$
@@ -32,6 +33,7 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
                       
            , Object_Personal.ValueData AS PersonalName
+           , Object_UnitForwarding.ValueData AS UnitForwardingName
 
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -46,18 +48,24 @@ BEGIN
                                         AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementLinkObject_Personal.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_UnitForwarding
+                                         ON MovementLinkObject_UnitForwarding.MovementId = Movement.Id
+                                        AND MovementLinkObject_UnitForwarding.DescId = zc_MovementLinkObject_UnitForwarding()
+            LEFT JOIN Object AS Object_UnitForwarding ON Object_UnitForwarding.Id = MovementLinkObject_UnitForwarding.ObjectId
+
       WHERE Movement.DescId = zc_Movement_PersonalSendCash()
         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_PersonalSendCash (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 26.01.14                                        * add zc_MovementLinkObject_UnitForwarding
  14.12.13                                        * add Object_RoleAccessKey_View
  09.11.13                                        * View_Personal -> Object_Personal
  23.10.13                                        * add zfConvert_StringToNumber

@@ -37,6 +37,7 @@ type
     clJuridicalName: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
+    clUnitForwardingName: TcxGridDBColumn;
   private
     { Private declarations }
   public

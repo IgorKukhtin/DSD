@@ -1,23 +1,23 @@
 ﻿inherited TransportServiceForm: TTransportServiceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
-  ClientHeight = 342
-  ClientWidth = 595
+  ClientHeight = 338
+  ClientWidth = 594
   AddOnFormData.isSingle = False
-  ExplicitWidth = 601
-  ExplicitHeight = 367
+  ExplicitWidth = 600
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 184
-    Top = 308
+    Top = 306
     ExplicitLeft = 184
-    ExplicitTop = 308
+    ExplicitTop = 306
   end
   inherited bbCancel: TcxButton
     Left = 328
-    Top = 308
+    Top = 306
     ExplicitLeft = 328
-    ExplicitTop = 308
+    ExplicitTop = 306
   end
   object cxLabel1: TcxLabel [2]
     Left = 152
@@ -41,21 +41,21 @@
   object cxLabel3: TcxLabel [5]
     Left = 8
     Top = 106
-    Caption = #1058#1080#1087#1099' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+    Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel2: TcxLabel [6]
-    Left = 184
-    Top = 155
+    Left = 312
+    Top = 205
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel67: TcxLabel [7]
     Left = 8
-    Top = 209
+    Top = 156
     Caption = #1052#1072#1088#1096#1088#1091#1090
   end
   object cxLabel5: TcxLabel [8]
     Left = 312
-    Top = 106
+    Top = 156
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object ceContractConditionKind: TcxButtonEdit [9]
@@ -70,8 +70,8 @@
     Width = 273
   end
   object cePaidKind: TcxButtonEdit [10]
-    Left = 184
-    Top = 178
+    Left = 312
+    Top = 228
     Enabled = False
     Properties.Buttons = <
       item
@@ -79,11 +79,11 @@
         Kind = bkEllipsis
       end>
     TabOrder = 6
-    Width = 97
+    Width = 129
   end
   object ceRoute: TcxButtonEdit [11]
     Left = 8
-    Top = 232
+    Top = 178
     Properties.Buttons = <
       item
         Default = True
@@ -94,7 +94,8 @@
   end
   object ceInfoMoney: TcxButtonEdit [12]
     Left = 312
-    Top = 129
+    Top = 179
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -106,12 +107,14 @@
   object ceOperDate: TcxDateEdit [13]
     Left = 152
     Top = 34
+    Properties.SaveTime = False
+    Properties.ShowTime = False
     TabOrder = 3
     Width = 129
   end
   object ceCar: TcxButtonEdit [14]
-    Left = 312
-    Top = 177
+    Left = 8
+    Top = 228
     Properties.Buttons = <
       item
         Default = True
@@ -121,29 +124,29 @@
     Width = 273
   end
   object cxLabel9: TcxLabel [15]
-    Left = 312
-    Top = 154
+    Left = 8
+    Top = 205
     Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
   end
   object ceJuridical: TcxButtonEdit [16]
     Left = 8
-    Top = 178
+    Top = 79
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 170
+    Width = 273
   end
   object cxLabel6: TcxLabel [17]
     Left = 8
-    Top = 155
+    Top = 61
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceContract: TcxButtonEdit [18]
-    Left = 8
-    Top = 78
+    Left = 456
+    Top = 228
     Enabled = False
     Properties.Buttons = <
       item
@@ -151,17 +154,17 @@
         Kind = bkEllipsis
       end>
     TabOrder = 4
-    Width = 273
+    Width = 129
   end
   object cxLabel8: TcxLabel [19]
-    Left = 8
-    Top = 55
+    Left = 456
+    Top = 205
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [20]
     Left = 8
     Top = 255
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [21]
     Left = 8
@@ -170,12 +173,12 @@
     Width = 577
   end
   object cxLabel4: TcxLabel [22]
-    Left = 311
+    Left = 312
     Top = 16
     Caption = #1055#1088#1086#1073#1077#1075' '#1092#1072#1082#1090', '#1082#1084
   end
   object ceDistance: TcxCurrencyEdit [23]
-    Left = 311
+    Left = 312
     Top = 33
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
@@ -221,14 +224,15 @@
     TabOrder = 29
     Width = 129
   end
-  object cxLabel14: TcxLabel [30]
+  object cxLabel7: TcxLabel [30]
     Left = 312
-    Top = 209
-    Caption = #1052#1072#1088#1082#1072' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
+    Top = 106
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1052#1077#1089#1090#1086' '#1086#1090#1087#1088#1072#1074#1082#1080')'
   end
-  object ceCarModel: TcxButtonEdit [31]
+  object ceUnit: TcxButtonEdit [31]
     Left = 312
-    Top = 230
+    Top = 129
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -239,14 +243,14 @@
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
-    Top = 294
+    Top = 295
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Top = 294
+    Top = 295
   end
   inherited ActionList: TActionList
     Left = 95
-    Top = 293
+    Top = 294
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -262,7 +266,7 @@
         ParamType = ptInput
       end>
     Left = 136
-    Top = 294
+    Top = 295
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TransportService'
@@ -378,9 +382,16 @@
         ParamType = ptInput
       end
       item
-        Name = 'incontractconditionkindid'
+        Name = 'inContractConditionKindId'
         Value = ''
         Component = ContractConditionKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitForwardingId'
+        Value = ''
+        Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -398,10 +409,11 @@
         ParamType = ptInput
       end
       item
-        Name = 'id'
-        Value = Null
+        Name = 'inOperDate'
         Component = FormParams
-        ComponentItem = 'Id'
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
+        ParamType = ptInput
       end
       item
         Name = 'MIId'
@@ -544,15 +556,15 @@
         DataType = ftString
       end
       item
-        Name = 'CarModelId'
+        Name = 'UnitForwardingId'
         Value = ''
-        Component = CarModelGuides
+        Component = UnitGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'CarModelName'
+        Name = 'UnitForwardingName'
         Value = ''
-        Component = CarModelGuides
+        Component = UnitGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -575,6 +587,8 @@
   object ContractConditionKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContractConditionKind
+    FormNameParam.Value = 'TContractConditionKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractConditionKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -603,6 +617,8 @@
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -619,12 +635,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 208
-    Top = 177
+    Left = 402
+    Top = 217
   end
   object RouteGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRoute
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -641,12 +659,14 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 136
-    Top = 225
+    Left = 144
+    Top = 169
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -664,11 +684,13 @@
         DataType = ftString
       end>
     Left = 480
-    Top = 112
+    Top = 163
   end
   object CarGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -685,8 +707,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 480
-    Top = 170
+    Left = 96
+    Top = 202
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Name = 'Id'
@@ -714,11 +736,13 @@
       end>
     ActionItemList = <>
     Left = 280
-    Top = 268
+    Top = 286
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -773,31 +797,11 @@
     Left = 128
     Top = 63
   end
-  object CarModelGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceCarModel
-    FormName = 'TCarModelForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = CarModelGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = CarModelGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 432
-    Top = 211
-  end
   object ContractJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridical
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
@@ -854,7 +858,33 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 24
-    Top = 175
+    Left = 520
+    Top = 209
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 368
+    Top = 112
   end
 end

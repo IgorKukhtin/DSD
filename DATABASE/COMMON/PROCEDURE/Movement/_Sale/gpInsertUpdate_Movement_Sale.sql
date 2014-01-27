@@ -36,8 +36,15 @@ BEGIN
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
      THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
+         RAISE EXCEPTION 'Ошибка.Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
      END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+     END IF;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL);
@@ -92,7 +99,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  13.01.14                                        * del property from redmain
  11.01.14                                        * add inChecked, inInvNumberOrder
  13.08.13                                        * add RAISE EXCEPTION

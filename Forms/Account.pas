@@ -63,6 +63,8 @@ type
     AccountGroupCode: TcxGridDBColumn;
     AccountDirectionCode: TcxGridDBColumn;
     AccountName_All: TcxGridDBColumn;
+    onComplete: TcxGridDBColumn;
+    InfoMoneyCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
