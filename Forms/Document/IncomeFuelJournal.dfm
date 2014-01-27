@@ -27,6 +27,8 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Left = 101
       Top = 5
       EditValue = 41579d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
@@ -34,6 +36,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       Left = 310
       Top = 5
       EditValue = 41608d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85

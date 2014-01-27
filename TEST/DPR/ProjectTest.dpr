@@ -325,7 +325,6 @@ uses
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
-  SendDebt_old in '..\..\Forms\Document\SendDebt_old.pas' {SendDebtOLDForm: TParentForm},
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm};

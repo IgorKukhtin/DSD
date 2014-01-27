@@ -11,9 +11,6 @@ RETURNS void
 AS
 $BODY$
   DECLARE vbMemberId_From Integer;
-
-  DECLARE vbJuridicalId_Basis Integer;
-  DECLARE vbBusinessId_PersonalFrom Integer;
 BEGIN
 
      -- !!!обязательно!!! очистили таблицу проводок
@@ -24,9 +21,7 @@ BEGIN
 
      -- Эти параметры нужны для формирования Аналитик в проводках
      SELECT _tmp.MemberId_From
-          , _tmp.JuridicalId_Basis, _tmp.BusinessId_PersonalFrom
             INTO vbMemberId_From
-               , vbJuridicalId_Basis, vbBusinessId_PersonalFrom -- эти аналитики берутся у подразделения за которым числится сотрудник (кто выдавал деньги)
      FROM (SELECT COALESCE (ObjectLink_Personal_Member.ChildObjectId, 0) AS MemberId_From
                 , COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, zc_Juridical_Basis())  AS JuridicalId_Basis
                 , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0)   AS BusinessId_PersonalFrom
@@ -52,13 +47,6 @@ BEGIN
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              AND Movement.DescId = zc_Movement_PersonalAccount()
           ) AS _tmp;
-
-
-     -- проверка
-     IF COALESCE (vbJuridicalId_Basis, 0) = 0
-     THEN
-         RAISE EXCEPTION 'У сотрудника <%> не установлено главное юр лицо. Проведение невозможно.', lfGet_Object_ValueData (vbMemberId_From);
-     END IF;
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -88,10 +76,10 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0) AS InfoMoneyDestinationId
                -- Управленческие статьи назначения
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
-               -- Бизнес: по подразделению за которым числится сотрудник (кто выдавал деньги)
-             , vbBusinessId_PersonalFrom AS BusinessId
-               -- Главное Юр.лицо: по подразделению за которым числится сотрудник (кто выдавал деньги)
-             , vbJuridicalId_Basis AS JuridicalId_Basis
+               -- Бизнес: всегда по принадлежности маршрута к подразделению, а не по подразделению за которым числится сотрудник (кто выдавал деньги)
+             , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId
+               -- Главное Юр.лицо: всегда по договору, а не по подразделению за которым числится сотрудник (кто выдавал деньги)
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
              , 0 AS UnitId
              , 0 AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
@@ -101,14 +89,28 @@ BEGIN
         FROM Movement
              JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
                               AND MovementItem.isErased   = FALSE
+             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
 
+             LEFT JOIN MovementItemLinkObject AS MILinkObject_Route
+                                              ON MILinkObject_Route.MovementItemId = MovementItem.Id
+                                             AND MILinkObject_Route.DescId = zc_MILinkObject_Route()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                               ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                              AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
              LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                               ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                              AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-             LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+
+             LEFT JOIN ObjectLink AS ObjectLink_Route_Unit
+                                  ON ObjectLink_Route_Unit.ObjectId = MILinkObject_Route.ObjectId
+                                 AND ObjectLink_Route_Unit.DescId = zc_ObjectLink_Route_Unit()
+             LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Business
+                                  ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
+                                 AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
+
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
           AND Movement.DescId = zc_Movement_PersonalAccount()
@@ -116,6 +118,11 @@ BEGIN
        ;
 
 
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо. Проведение невозможно.';
+     END IF;
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN

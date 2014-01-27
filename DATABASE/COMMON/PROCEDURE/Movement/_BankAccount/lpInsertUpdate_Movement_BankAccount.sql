@@ -32,7 +32,7 @@ BEGIN
      -- проверка
      IF COALESCE (inInfoMoneyId, 0) = 0
      THEN
-        RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбранр.';
+        RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
      END IF;
 
      -- сохранили <Документ>

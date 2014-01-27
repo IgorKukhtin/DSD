@@ -28,6 +28,8 @@ object IncomeJournalForm: TIncomeJournalForm
       Top = 5
       EditValue = 41275d
       Properties.ReadOnly = True
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
@@ -36,6 +38,7 @@ object IncomeJournalForm: TIncomeJournalForm
       Top = 5
       EditValue = 41639d
       Properties.ReadOnly = True
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -518,6 +521,8 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -532,6 +537,8 @@ object IncomeJournalForm: TIncomeJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TIncomeForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

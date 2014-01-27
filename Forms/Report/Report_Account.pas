@@ -107,6 +107,8 @@ type
     ObjectName_Destination: TcxGridDBColumn;
     ObjectCode_Direction: TcxGridDBColumn;
     ObjectName_Direction: TcxGridDBColumn;
+    JuridicalBasisCode: TcxGridDBColumn;
+    JuridicalBasisName: TcxGridDBColumn;
   private
   public
   end;

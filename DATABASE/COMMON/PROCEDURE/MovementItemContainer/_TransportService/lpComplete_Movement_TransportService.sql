@@ -47,8 +47,8 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
                -- Бизнес: всегда по принадлежности маршрута к подразделению
              , COALESCE (ObjectLink_UnitRoute_Business.ChildObjectId, 0) AS BusinessId
-               -- Главное Юр.лицо: всегда по Подразделение (Место отправки)
-             , COALESCE (ObjectLink_UnitForwarding_Juridical.ChildObjectId, 0) AS JuridicalId_Basis
+               -- Главное Юр.лицо: всегда по договору, а не по Подразделению (Место отправки)
+             , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
 
              , CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
                          THEN COALESCE (ObjectLink_Route_Unit.ChildObjectId, 0) -- если "пустой" филиал, тогда затраты по принадлежности маршрута к подразделению
@@ -98,8 +98,8 @@ BEGIN
                                   ON ObjectLink_UnitRoute_Business.ObjectId = ObjectLink_Route_Unit.ChildObjectId
                                  AND ObjectLink_UnitRoute_Business.DescId = zc_ObjectLink_Unit_Business()
 
-             LEFT JOIN ObjectLink AS ObjectLink_UnitForwarding_Juridical ON ObjectLink_UnitForwarding_Juridical.ObjectId = MovementLinkObject_UnitForwarding.ObjectId
-                                                                        AND ObjectLink_UnitForwarding_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
+             LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MILinkObject_Contract.ObjectId
+                                                                       AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId
                    = CASE WHEN ObjectLink_UnitRoute_Branch.ChildObjectId IS NULL
@@ -124,7 +124,7 @@ BEGIN
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.У <Подразделение (Место отправки)> не установлено главное юр лицо. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо. Проведение невозможно.';
      END IF;
 
 

@@ -12,6 +12,7 @@ RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
               , PersonalCode Integer, PersonalName TVarChar
               , JuridicalCode Integer, JuridicalName TVarChar
+              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
               , PaidKindName TVarChar, ContractName TVarChar
               , CarModelName TVarChar, CarCode Integer, CarName TVarChar
               , ObjectCode_Direction Integer, ObjectName_Direction TVarChar
@@ -52,13 +53,15 @@ BEGIN
          , View_InfoMoney.ValueData              AS InfoMoneyName
          , Object_Member.ObjectCode AS PersonalCode
          , Object_Member.ValueData  AS PersonalName
-         , Object_Juridical.ObjectCode     AS JuridicalCode
-         , Object_Juridical.ValueData      AS JuridicalName
-         , Object_PaidKind.ValueData       AS PaidKindName
-         , Object_Contract.ValueData       AS ContractName
-         , Object_CarModel.ValueData AS CarModelName
-         , Object_Car.ObjectCode     AS CarCode
-         , Object_Car.ValueData      AS CarName
+         , Object_Juridical.ObjectCode      AS JuridicalCode
+         , Object_Juridical.ValueData       AS JuridicalName
+         , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+         , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
+         , Object_PaidKind.ValueData        AS PaidKindName
+         , Object_Contract.ValueData        AS ContractName
+         , Object_CarModel.ValueData        AS CarModelName
+         , Object_Car.ObjectCode            AS CarCode
+         , Object_Car.ValueData             AS CarName
 
          , Object_Direction.ObjectCode   AS ObjectCode_Direction
          , Object_Direction.ValueData    AS ObjectName_Direction
@@ -114,6 +117,7 @@ BEGIN
        (SELECT COALESCE (ContainerLO_InfoMoney.ObjectId, tmpReport_All.InfoMoneyId_inf) AS InfoMoneyId
              , ContainerLO_Member.ObjectId    AS MemberId
              , ContainerLO_Car.ObjectId       AS CarId
+             , ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
              , ContainerLO_Juridical.ObjectId AS JuridicalId
              , ContainerLO_PaidKind.ObjectId  AS PaidKindId
              , ContainerLO_Contract.ObjectId  AS ContractId
@@ -308,6 +312,9 @@ BEGIN
             LEFT JOIN ContainerLinkObject AS ContainerLO_Business ON ContainerLO_Business.ContainerId = tmpReport_All.ContainerId
                                                                 AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
                                                                 AND ContainerLO_Business.ObjectId > 0
+            LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = tmpReport_All.ContainerId
+                                                                       AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                                                       AND ContainerLO_JuridicalBasis.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Juridical ON ContainerLO_Juridical.ContainerId = tmpReport_All.ContainerId
                                                                   AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                                                                   AND ContainerLO_Juridical.ObjectId > 0
@@ -350,6 +357,7 @@ BEGIN
                , ContainerLO_InfoMoney.ObjectId
                , ContainerLO_Car.ObjectId
                , ContainerLO_Business.ObjectId
+               , ContainerLO_JuridicalBasis.ObjectId
                , ContainerLO_Juridical.ObjectId
                , ContainerLO_PaidKind.ObjectId
                , ContainerLO_Contract.ObjectId
@@ -376,6 +384,7 @@ BEGIN
                , tmpReport_All.GoodsId_inf
        ) AS tmpReport
 
+       LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpReport.JuridicalBasisId
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpReport.JuridicalId
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
        LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpReport.ContractId
@@ -466,7 +475,8 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
-               Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
  02.11.13                                        * add Account...

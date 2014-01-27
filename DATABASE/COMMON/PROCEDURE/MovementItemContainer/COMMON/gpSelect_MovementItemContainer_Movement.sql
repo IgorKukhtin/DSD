@@ -16,6 +16,7 @@ RETURNS TABLE (InvNumber Integer, OperDate TDateTime
              , BusinessCode Integer, BusinessName TVarChar
              , GoodsGroupCode Integer, GoodsGroupName TVarChar
              , DestinationObjectCode Integer, DestinationObjectName TVarChar
+             , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , GoodsKindName TVarChar
              , ObjectCostId Integer, MIId_Parent Integer, GoodsCode_Parent Integer, GoodsName_Parent TVarChar, GoodsKindName_Parent TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar, InfoMoneyCode_Detail Integer, InfoMoneyName_Detail TVarChar
@@ -54,6 +55,8 @@ BEGIN
            , tmpMovementItemContainer.GoodsGroupName
            , tmpMovementItemContainer.DestinationObjectCode
            , tmpMovementItemContainer.DestinationObjectName
+           , tmpMovementItemContainer.JuridicalBasisCode
+           , tmpMovementItemContainer.JuridicalBasisName
            , tmpMovementItemContainer.GoodsKindName
            , tmpMovementItemContainer.ObjectCostId
            , tmpMovementItemContainer.MIId_Parent
@@ -89,6 +92,9 @@ BEGIN
 
                 , Object_Destination.ObjectCode AS DestinationObjectCode
                 , Object_Destination.ValueData  AS DestinationObjectName
+
+                , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+                , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
 
                 , Object_GoodsKind.ValueData    AS GoodsKindName
                 , ContainerObjectCost.ObjectCostId
@@ -131,6 +137,9 @@ BEGIN
                                                ON ContainerLinkObject_ProfitLoss.ContainerId = MovementItemContainer.ContainerId
                                               AND ContainerLinkObject_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
                                               AND ContainerLinkObject_ProfitLoss.ObjectId <> 0
+                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis ON ContainerLO_JuridicalBasis.ContainerId = MovementItemContainer.ContainerId
+                                                                            AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                                                            AND ContainerLO_JuridicalBasis.ObjectId > 0
                  LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                                ON ContainerLinkObject_Juridical.ContainerId = COALESCE (MIContainer_Parent.ContainerId, MovementItemContainer.ContainerId)
                                               AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -203,6 +212,8 @@ BEGIN
                                               -- AND 1=0
                  LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = ContainerLinkObject_Goods.ObjectId
 
+                 LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ContainerLO_JuridicalBasis.ObjectId
+
                  LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
                                       ON ObjectLink_Goods_GoodsGroup.ObjectId = ContainerLinkObject_Goods.ObjectId
                                      AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
@@ -248,6 +259,8 @@ BEGIN
                    , Object_Goods_Parent.ObjectCode
                    , Object_Goods_Parent.ValueData
                    , Object_GoodsKind_Parent.ValueData
+                   , Object_JuridicalBasis.ObjectCode
+                   , Object_JuridicalBasis.ValueData
                    , lfObject_InfoMoney.InfoMoneyCode
                    , lfObject_InfoMoney.InfoMoneyName
                    , lfObject_InfoMoney_Detail.InfoMoneyCode
@@ -269,8 +282,9 @@ ALTER FUNCTION gpSelect_MovementItemContainer_Movement (Integer, TVarChar) OWNER
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.01.13                                        * add Branch : вот так "не просто" выбираем филиал
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
+ 13.01.14                                        * add Branch : вот так "не просто" выбираем филиал
  21.12.13                                        * Personal -> Member
  01.11.13                                        * change DebetAccountName and KreditAccountName
  31.10.13                                        * add InvNumber and OperDate

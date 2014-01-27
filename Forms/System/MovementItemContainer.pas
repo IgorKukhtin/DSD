@@ -20,6 +20,8 @@ type
     colBusinessName: TcxGridDBColumn;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    colJuridicalBasisCode: TcxGridDBColumn;
+    colJuridicalBasisName: TcxGridDBColumn;
   private
     { Private declarations }
   public

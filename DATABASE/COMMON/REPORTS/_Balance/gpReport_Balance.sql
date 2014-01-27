@@ -10,6 +10,8 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
 RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
              , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectName TVarChar, GoodsName TVarChar
+             , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
+             , BusinessCode Integer, BusinessName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
              , CountStart TFloat, CountDebet TFloat, CountKredit TFloat, CountEnd TFloat
               )
@@ -39,6 +41,11 @@ $BODY$BEGIN
            --, Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
 
+           , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
+           , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
+           , Object_Business.ObjectCode       AS BusinessCode
+           , Object_Business.ValueData        AS BusinessName
+
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart > 0 THEN tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountDebetStart
            , CAST (CASE WHEN tmpReportOperation.AmountRemainsStart < 0 THEN -tmpReportOperation.AmountRemainsStart ELSE 0 END AS TFloat) AS AmountKreditStart
            , CAST (tmpReportOperation.AmountDebet AS TFloat) AS AmountDebet
@@ -61,6 +68,9 @@ $BODY$BEGIN
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
                  , ContainerLinkObject_Car.ObjectId  AS CarId
                  , ContainerLinkObject_Goods.ObjectId AS GoodsId
+
+                 , ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
+                 , ContainerLO_Business.ObjectId AS BusinessId
 
                  , SUM (tmpMIContainer_Remains.AmountRemainsStart) AS AmountRemainsStart
                  , SUM (tmpMIContainer_Remains.AmountDebet) AS AmountDebet
@@ -129,6 +139,12 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
+                LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
+                                              ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                LEFT JOIN ContainerLinkObject AS ContainerLO_Business
+                                              ON ContainerLO_Business.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    , ContainerLinkObject_InfoMoneyDetail.ObjectId
@@ -137,11 +153,16 @@ $BODY$BEGIN
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Car.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
+                   , ContainerLO_JuridicalBasis.ObjectId
+                   , ContainerLO_Business.ObjectId
+
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
+           LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = JuridicalBasisId
+           LEFT JOIN Object AS Object_Business ON Object_Business.Id = BusinessId
           ;
   
 END;
@@ -153,6 +174,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis and zc_ContainerLinkObject_Business
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
  24.11.13                                        * add AccountCode

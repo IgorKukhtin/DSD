@@ -247,6 +247,13 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   inherited Panel: TPanel
     Width = 1212
     ExplicitWidth = 1212
+    inherited deStart: TcxDateEdit
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+    end
+    inherited deEnd: TcxDateEdit
+      Properties.SaveTime = False
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 99

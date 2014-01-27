@@ -127,6 +127,7 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 96
           end
           object clInfoMoneyCode: TcxGridDBColumn
