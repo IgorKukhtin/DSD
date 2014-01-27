@@ -1,5 +1,7 @@
 inherited MovementDescDataForm: TMovementDescDataForm
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+  ExplicitWidth = 583
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -80,6 +82,7 @@ inherited MovementDescDataForm: TMovementDescDataForm
   object InsertUpdateForm: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MovementDesc'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
         Name = 'inId'

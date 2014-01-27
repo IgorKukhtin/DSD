@@ -27,6 +27,12 @@ type
     cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    getMovementForm: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actOpenForm: TdsdOpenForm;
+    actGetForm: TdsdExecStoredProc;
+    actOpenDocument: TMultiAction;
+    bbOpenDocument: TdxBarButton;
   private
     { Private declarations }
   public

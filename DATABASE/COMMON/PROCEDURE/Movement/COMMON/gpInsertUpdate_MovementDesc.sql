@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementDesc(Integer, TVarChar, TDateTime, TFloat, TFloat, Integer,
-                      TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementDesc(Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementDesc(
@@ -9,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementDesc(
     IN inFormId              Integer   , -- Форма
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS VOID AS
 $BODY$
 BEGIN
 

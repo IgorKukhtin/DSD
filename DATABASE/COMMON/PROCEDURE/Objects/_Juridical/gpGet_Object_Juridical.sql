@@ -6,7 +6,6 @@ DROP FUNCTION IF EXISTS gpGet_Object_Juridical (Integer, TVarChar, TVarChar);
 CREATE OR REPLACE FUNCTION gpGet_Object_Juridical(
     IN inId          Integer,       -- ёридические лица 
     IN inName        TVarChar,
---    IN inOKPO        TVarChar,
     IN inSession     TVarChar       -- сесси€ пользовател€
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 

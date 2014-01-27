@@ -72,14 +72,15 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountIn', ftFloat, ptInput, Amount);
+  FParams.AddParam('inAmountOut', ftFloat, ptInput, 0);
   FParams.AddParam('inBankAccountId', ftInteger, ptInput, FromId);
+  FParams.AddParam('inComment', ftString, ptInput, '');
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, ToId);
-  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
-  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
-  FParams.AddParam('inBusinessId', ftInteger, ptInput, BusinessId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inCurrencyId', ftInteger, ptInput, CurrencyId);
 
   result := InsertUpdate(FParams);
 

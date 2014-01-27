@@ -2,7 +2,7 @@ unit JuridicalTest;
 
 interface
 
-uses dbTest, dbObjectTest;
+uses DB, dbTest, dbObjectTest;
 
 type
 
@@ -22,11 +22,12 @@ type
         PriceListId, PriceListPromoId: Integer;
         StartPromo, EndPromo: TDateTime): integer;
     constructor Create; override;
+    function GetRecord(Id: integer): TDataSet; override;
   end;
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils;
+uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB;
 
 { TdbUnitTest }
 
@@ -63,6 +64,20 @@ begin
   spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
   spSelect := 'gpSelect_Object_Juridical';
   spGet := 'gpGet_Object_Juridical';
+end;
+
+function TJuridical.GetRecord(Id: integer): TDataSet;
+begin
+  with FdsdStoredProc do begin
+    DataSets.Add.DataSet := TClientDataSet.Create(nil);
+    StoredProcName := spGet;
+    OutputType := otDataSet;
+    Params.Clear;
+    Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
+    Params.AddParam('inName', ftString, ptInput, '');
+    Execute;
+    result := DataSets[0].DataSet;
+  end;
 end;
 
 function TJuridical.InsertDefault: integer;

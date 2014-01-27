@@ -112,6 +112,7 @@ type
     cxLabel17: TcxLabel;
     edEndPromo: TcxDateEdit;
     edStartPromo: TcxDateEdit;
+    spClearDefaluts: TdsdStoredProc;
   private
     { Private declarations }
   public

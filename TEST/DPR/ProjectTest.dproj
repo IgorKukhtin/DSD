@@ -944,10 +944,6 @@
 				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendDebt_old.pas">
-				<Form>SendDebtOLDForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossDebtJournal.pas">
 				<Form>LossDebtJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>

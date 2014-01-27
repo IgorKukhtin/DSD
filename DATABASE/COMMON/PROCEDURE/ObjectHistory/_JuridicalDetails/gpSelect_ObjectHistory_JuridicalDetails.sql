@@ -10,7 +10,7 @@ CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
 )                              
 RETURNS TABLE (Id Integer, StartDate TDateTime, BankName TVarChar, BankId Integer,
                FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar, 
-               NumberVAT TVarChar, AccounterName TVarChar, BankAccount  TVarChar)
+               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar)
 AS
 $BODY$
 BEGIN
