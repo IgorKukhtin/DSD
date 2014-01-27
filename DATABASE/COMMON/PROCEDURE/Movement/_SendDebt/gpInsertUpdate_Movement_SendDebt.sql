@@ -48,24 +48,18 @@ BEGIN
 
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-
-     -- сохранили <Главный Элемент документа>
-     ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
-
-     -- сохранили <Второй Элемент документа>
-     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioMasterId, inAmount, NULL);
-
-
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL);
 
      -- сохранили связь с <Бизнес>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Business(), ioId, inBusinessId);
      
      -- сохранили связь с <Главное юр. лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
 
+     -- сохранили <Главный Элемент документа>
+     ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
 
-     -- сохранили связь с <Договор ОТ >
+    -- сохранили связь с <Договор ОТ >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioMasterId, inContractFromId);
 
      -- сохранили связь с <Вид форм оплаты ОТ>
@@ -74,6 +68,11 @@ BEGIN
      -- сохранили связь с <Статьи назначения ОТ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioMasterId, inInfoMoneyFromId);
 
+
+
+
+     -- сохранили <Второй Элемент документа>
+     ioChildId := lpInsertUpdate_MovementItem (ioChildId, zc_MI_Child(), inJuridicalToId, ioId, inAmount, NULL);
 
      -- сохранили связь с <Договор КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioChildId, inContractToId);

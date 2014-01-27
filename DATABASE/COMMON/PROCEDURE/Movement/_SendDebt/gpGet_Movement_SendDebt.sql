@@ -181,7 +181,7 @@ BEGIN
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
             
-            JOIN MovementItem AS MI_Child ON MI_Child.ParentId = MI_Master.Id
+            LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
                                          AND MI_Child.DescId     = zc_MI_Child()
                                          
             LEFT JOIN Object AS Object_Juridical_To ON Object_Juridical_To.Id = MI_Child.ObjectId

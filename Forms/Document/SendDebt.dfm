@@ -273,6 +273,7 @@
         Name = 'inInvNumber'
         Value = 0.000000000000000000
         Component = ceInvNumber
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -286,14 +287,14 @@
         Name = 'inBusinessId'
         Value = ''
         Component = BusinessGuides
-        ComponentItem = 'BusinessId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalBasisId'
         Value = ''
         Component = JuridicalBasisGuides
-        ComponentItem = 'JuridicalBasisId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -321,56 +322,56 @@
         Name = 'inJuridicalFromId'
         Value = ''
         Component = ContractJuridicalFromGuides
-        ComponentItem = 'JuridicalFromId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inContractfromId'
         Value = ''
         Component = ContractFromGuides
-        ComponentItem = 'ContractfromId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindFromId'
         Value = ''
         Component = PaidKindFromGuides
-        ComponentItem = 'PaidKindFromId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyFromId'
         Value = ''
         Component = InfoMoneyFromGuides
-        ComponentItem = 'InfoMoneyFromId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalToId'
         Value = ''
         Component = ContractJuridicalToGuides
-        ComponentItem = 'JuridicalToId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inContractToId'
         Value = ''
         Component = ContractToGuides
-        ComponentItem = 'ContractToId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inPaidKindToId'
         Value = ''
         Component = PaidKindToGuides
-        ComponentItem = 'PaidKindToId '
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyToId'
         Value = ''
         Component = InfoMoneyToGuides
-        ComponentItem = 'InfoMoneyToId'
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 280
@@ -384,7 +385,7 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inOperDate'
@@ -665,7 +666,12 @@
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = ContractFromGuides
+        Guides = ContractJuridicalFromGuides
+      end
+      item
+        Guides = ContractJuridicalToGuides
+      end
+      item
       end>
     ActionItemList = <>
     Left = 280
@@ -673,32 +679,36 @@
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceJuridicalFrom
+    LookupControl = ceContractFrom
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'Key'
+        Name = 'ContractFromId'
         Value = ''
         Component = ContractFromGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'TextValue'
+        Name = 'ContractFromName'
         Value = ''
         Component = ContractFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'JuridicalId'
+        Name = 'JuridicalFromId'
         Value = ''
+        Component = ContractJuridicalFromGuides
+        ComponentItem = 'JuridicalId'
       end
       item
-        Name = 'JuridicalName'
+        Name = 'JuridicalFromName'
         Value = ''
+        Component = ContractJuridicalFromGuides
+        ComponentItem = 'JuridicalName'
         DataType = ftString
       end
       item
@@ -727,8 +737,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 128
-    Top = 109
+    Left = 216
+    Top = 221
   end
   object ContractJuridicalFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -762,9 +772,33 @@
         Value = ''
         Component = ContractJuridicalFromGuides
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindFromGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindFromGuides
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyFromGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = InfoMoneyFromGuides
+        ComponentItem = 'TextValue'
       end>
-    Left = 209
-    Top = 224
+    Left = 129
+    Top = 112
   end
   object ContractToGuides: TdsdGuides
     KeyField = 'Id'
@@ -777,53 +811,18 @@
       item
         Name = 'Key'
         Value = ''
-        Component = ContractToGuides
+        Component = ContractJuridicalToGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyToGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = InfoMoneyToGuides
+        Component = ContractJuridicalToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 448
-    Top = 109
+    Left = 504
+    Top = 221
   end
   object InfoMoneyToGuides: TdsdGuides
     KeyField = 'Id'
@@ -888,14 +887,14 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicaName'
+        Name = 'JuridicalName'
         Value = ''
         Component = ContractJuridicalToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
-        Name = 'PaidKindToId'
+        Name = 'PaidKindId'
         Value = ''
         Component = PaidKindToGuides
         ComponentItem = 'Key'
@@ -925,7 +924,6 @@
         Value = ''
         Component = ContractToGuides
         ComponentItem = 'Key'
-        ParamType = ptResult
       end
       item
         Name = 'TextValue'
@@ -934,8 +932,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 481
-    Top = 208
+    Left = 465
+    Top = 104
   end
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
