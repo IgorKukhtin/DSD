@@ -28,14 +28,14 @@ object InventoryJournalForm: TInventoryJournalForm
     object deStart: TcxDateEdit
       Left = 208
       Top = 8
-      EditValue = 41395d
+      EditValue = 41640d
       TabOrder = 0
       Width = 121
     end
     object deEnd: TcxDateEdit
       Left = 352
       Top = 8
-      EditValue = 41760d
+      EditValue = 41670d
       TabOrder = 1
       Width = 121
     end
@@ -312,6 +312,17 @@ object InventoryJournalForm: TInventoryJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41670d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = DataSource
@@ -329,7 +340,17 @@ object InventoryJournalForm: TInventoryJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41670d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -393,14 +414,14 @@ object InventoryJournalForm: TInventoryJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41760d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

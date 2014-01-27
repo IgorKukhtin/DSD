@@ -63,6 +63,7 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     bbInsertJuridical: TdxBarButton;
     InsertJuridical: TdsdInsertUpdateAction;
+    RefreshAddOn: TRefreshAddOn;
   private
     { Private declarations }
   public

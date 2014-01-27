@@ -93,15 +93,12 @@ object InventoryForm: TInventoryForm
     TabOrder = 5
     Properties.ActivePage = cxTabSheet1
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 110
-    ExplicitHeight = 283
     ClientRectBottom = 314
     ClientRectRight = 806
     ClientRectTop = 24
     object cxTabSheet1: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitHeight = 259
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -109,7 +106,6 @@ object InventoryForm: TInventoryForm
         Height = 290
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 259
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
@@ -172,6 +168,7 @@ object InventoryForm: TInventoryForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
+          OptionsView.GroupByBox = False
           OptionsView.HeaderHeight = 40
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -263,7 +260,6 @@ object InventoryForm: TInventoryForm
     object cxTabSheet2: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitHeight = 259
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -271,7 +267,6 @@ object InventoryForm: TInventoryForm
         Height = 290
         Align = alClient
         TabOrder = 0
-        ExplicitHeight = 259
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -457,9 +452,16 @@ object InventoryForm: TInventoryForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
-    Left = 128
-    Top = 56
+    Left = 184
+    Top = 240
   end
   object spSelectMovementItem: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Inventory'
@@ -479,7 +481,8 @@ object InventoryForm: TInventoryForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = actShowAll
+        Component = dsdFormParams
+        ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -593,7 +596,82 @@ object InventoryForm: TInventoryForm
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
-    Components = <>
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Action'
+          'ActiveControl'
+          'AddOnFormData'
+          'Align'
+          'AlignWithMargins'
+          'AlphaBlend'
+          'AlphaBlendValue'
+          'Anchors'
+          'AutoScroll'
+          'AutoSize'
+          'BiDiMode'
+          'BorderIcons'
+          'BorderStyle'
+          'BorderWidth'
+          'Caption'
+          'ClientHeight'
+          'ClientWidth'
+          'Color'
+          'Constraints'
+          'Ctl3D'
+          'Cursor'
+          'CustomHint'
+          'DefaultMonitor'
+          'DockSite'
+          'DoubleBuffered'
+          'DragKind'
+          'DragMode'
+          'Enabled'
+          'Font'
+          'FormStyle'
+          'GlassFrame'
+          'Height'
+          'HelpContext'
+          'HelpFile'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'HorzScrollBar'
+          'Icon'
+          'KeyPreview'
+          'Left'
+          'Margins'
+          'Menu'
+          'Name'
+          'ObjectMenuItem'
+          'OldCreateOrder'
+          'Padding'
+          'ParentBiDiMode'
+          'ParentCustomHint'
+          'ParentFont'
+          'PixelsPerInch'
+          'PopupMenu'
+          'PopupMode'
+          'PopupParent'
+          'Position'
+          'PrintScale'
+          'Scaled'
+          'ScreenSnap'
+          'ShowHint'
+          'SnapBuffer'
+          'Tag'
+          'Top'
+          'Touch'
+          'TransparentColor'
+          'TransparentColorValue'
+          'UseDockManager'
+          'VertScrollBar'
+          'Visible'
+          'Width'
+          'WindowMenu'
+          'WindowState')
+      end>
     StorageName = 'cxPropertiesStore'
     Top = 216
   end
@@ -658,6 +736,7 @@ object InventoryForm: TInventoryForm
           StoredProc = spInsertUpdateMovementItem
         end>
       Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -771,6 +850,13 @@ object InventoryForm: TInventoryForm
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = dsdFormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -910,6 +996,7 @@ object InventoryForm: TInventoryForm
         Name = 'inPartionGoods'
         Component = ClientDataSet
         ComponentItem = 'PartionGoods'
+        DataType = ftString
         ParamType = ptInput
       end
       item

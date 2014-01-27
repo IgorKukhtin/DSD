@@ -1,13 +1,13 @@
 -- Function: gpSelect_Movement_Inventory()
 
--- DROP FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Inventory (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Inventory(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              )
@@ -24,7 +24,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , Movement.InvNumber
+           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
            , Movement.OperDate
            , Object_Status.ObjectCode          AS StatusCode
            , Object_Status.ValueData           AS StatusName
@@ -64,14 +64,13 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_Inventory (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.01.14                                        * all
  18.07.13         *
 */
 

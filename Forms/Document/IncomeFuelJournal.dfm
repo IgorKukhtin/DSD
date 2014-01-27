@@ -26,7 +26,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -35,7 +35,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41670d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -495,6 +495,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
         end>
       isShowModal = False
       DataSource = DataSource
@@ -512,7 +517,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
           Name = 'Id'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -582,14 +591,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -703,14 +712,14 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndtDate'
-        Value = 41608d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

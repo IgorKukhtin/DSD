@@ -675,4 +675,13 @@ inherited BankStatementForm: TBankStatementForm
     Left = 208
     Top = 144
   end
+  object RefreshAddOn: TRefreshAddOn
+    FormName = 'BankStatementJournalForm'
+    DataSet = 'MasterCDS'
+    KeyField = 'Id'
+    RefreshAction = 'actRefresh'
+    FormParams = 'FormParams'
+    Left = 427
+    Top = 253
+  end
 end

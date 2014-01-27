@@ -226,25 +226,24 @@ object IncomeForm: TIncomeForm
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 128
+    Top = 126
     Width = 971
-    Height = 334
+    Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 330
-    ClientRectLeft = 2
-    ClientRectRight = 967
-    ClientRectTop = 22
+    ClientRectBottom = 336
+    ClientRectRight = 971
+    ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 965
-        Height = 308
+        Width = 971
+        Height = 312
         Align = alClient
         TabOrder = 0
         object cxGridDBTableView: TcxGridDBTableView
@@ -466,8 +465,8 @@ object IncomeForm: TIncomeForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 965
-        Height = 308
+        Width = 971
+        Height = 312
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -675,6 +674,13 @@ object IncomeForm: TIncomeForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 262
     Top = 375
@@ -697,7 +703,8 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = actShowAll
+        Component = FormParams
+        ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -708,14 +715,14 @@ object IncomeForm: TIncomeForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 192
-    Top = 111
+    Left = 264
+    Top = 287
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -733,7 +740,7 @@ object IncomeForm: TIncomeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar: TdxBar
       AllowClose = False
@@ -1086,6 +1093,8 @@ object IncomeForm: TIncomeForm
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1111,6 +1120,8 @@ object IncomeForm: TIncomeForm
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1611,6 +1622,8 @@ object IncomeForm: TIncomeForm
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
     FormName = 'TContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1636,6 +1649,8 @@ object IncomeForm: TIncomeForm
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1661,6 +1676,8 @@ object IncomeForm: TIncomeForm
   object PackerGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPacker
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -1736,6 +1753,8 @@ object IncomeForm: TIncomeForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 47

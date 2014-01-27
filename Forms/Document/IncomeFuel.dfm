@@ -26,7 +26,6 @@ object IncomeFuelForm: TIncomeFuelForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 877
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -250,14 +249,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 877
     ClientRectBottom = 270
     ClientRectRight = 892
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 877
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -265,7 +262,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 877
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -423,7 +419,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 877
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -431,7 +426,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 877
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -637,6 +631,13 @@ object IncomeFuelForm: TIncomeFuelForm
         Name = 'Id'
         Value = Null
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 216
     Top = 327
@@ -659,7 +660,8 @@ object IncomeFuelForm: TIncomeFuelForm
       item
         Name = 'inShowAll'
         Value = False
-        Component = actShowAll
+        Component = FormParams
+        ComponentItem = 'ShowAll'
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -1574,7 +1576,7 @@ object IncomeFuelForm: TIncomeFuelForm
     Top = 221
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'IncomeJournalForm'
+    FormName = 'IncomeFuelJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
