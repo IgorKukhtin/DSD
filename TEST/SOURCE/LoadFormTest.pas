@@ -35,7 +35,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCityFormTest;
-    procedure ContractChoiceSaleFormTest;
+    procedure LoadChoicePartnerFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
@@ -884,10 +884,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
 end;
 
-procedure TLoadFormTest.ContractChoiceSaleFormTest;
+procedure TLoadFormTest.LoadChoicePartnerFormTest;
 begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceSaleForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContractChoiceSaleForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
 end;
 
 

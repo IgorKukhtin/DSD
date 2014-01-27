@@ -330,12 +330,6 @@
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleOldJournal.pas">
-				<Form>SaleJournalOldForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleOld.pas">
-				<Form>SaleOldForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
 				<Form>ReturnOutJournalForm</Form>
 			</DCCReference>
@@ -351,12 +345,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendOnPrice.pas">
 				<Form>SendOnPriceForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnInJournal.pas">
-				<Form>ReturnInJournalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnIn.pas">
-				<Form>ReturnInForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossJournal.pas">
 				<Form>LossJournalForm</Form>
@@ -741,8 +729,8 @@
 				<Form>BankStatementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\ContractChoiceSale.pas">
-				<Form>ContractChoiceSaleForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractChoicePartner.pas">
+				<Form>ContractChoicePartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
@@ -920,12 +908,12 @@
 				<Form>ContractChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnInJournal.pas">
+				<Form>ReturnInJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale.pas">
-				<Form>SaleForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnIn.pas">
+				<Form>ReturnInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalCollation.pas">
@@ -954,6 +942,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TransportService.pas">
 				<Form>TransportServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale.pas">
+				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
