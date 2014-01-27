@@ -13,12 +13,12 @@ RETURNS TABLE (Id Integer, Code Integer
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-/*
+
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
-*/
+
              , OKPO TVarChar
              , Address TVarChar
              , ChangePercent TFloat
@@ -34,7 +34,7 @@ BEGIN
 
    RETURN QUERY
    SELECT
-         Object_Contract_View.ContractId AS Id
+         Object_Contract_View.ContractId AS ContractId
        , Object_Contract_View.ContractCode AS Code
        , Object_Contract_View.InvNumber
        , Object_Contract_View.StartDate
@@ -51,7 +51,6 @@ BEGIN
        , Object_PriceList.Id           AS PriceListId
        , Object_PriceList.ValueData    AS PriceListName
 
-/*
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -59,7 +58,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
-*/
+
        , ObjectHistory_JuridicalDetails_View.OKPO
        , ObjectString_Address.ValueData  AS Address
        , COALESCE (tmpChangePercent.changepercent,0)::TFloat  AS ChangePercent
@@ -151,6 +150,8 @@ BEGIN
                              ON ObjectLink_Partner_PriceList.ObjectId = Object_Partner.Id
                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = ObjectLink_Partner_PriceList.ChildObjectId
+
+
         LEFT JOIN ObjectString AS ObjectString_Address
                                ON ObjectString_Address.ObjectId = Object_Partner.Id
                               AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
@@ -171,4 +172,4 @@ ALTER FUNCTION gpSelect_Object_ContractPartnerChoice (TVarChar) OWNER TO postgre
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())
+ SELECT * FROM gpSelect_Object_ContractPartnerChoice (inSession := zfCalc_UserAdmin())
