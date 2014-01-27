@@ -938,9 +938,9 @@
   object JuridicalBasisGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceJuridicalBasis
-    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
