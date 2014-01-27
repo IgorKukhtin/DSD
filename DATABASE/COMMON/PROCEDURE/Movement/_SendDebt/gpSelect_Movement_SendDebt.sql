@@ -10,8 +10,6 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_SendDebt(
 RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , TotalSumm TFloat
-             , JuridicalBasisName TVarChar
-             , BusinessName TVarChar
 
              , InfoMoneyGroupFromName TVarChar
              , InfoMoneyDestinationFromName TVarChar
@@ -30,6 +28,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , PaidKindToId Integer, PaidKindToName TVarChar
              
              , Amount TFloat
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -42,17 +41,14 @@ BEGIN
      -- Результат
      RETURN QUERY 
        SELECT
-             Movement.Id
-           , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
+              Movement.Id
+            , zfConvert_StringToNumber (Movement.InvNumber) AS InvNumber
+            , Movement.OperDate
+            , Object_Status.ObjectCode   AS StatusCode
+            , Object_Status.ValueData    AS StatusName
 
-           , MovementFloat_TotalSumm.ValueData AS TotalSumm
+            , MovementFloat_TotalSumm.ValueData AS TotalSumm
                       
-           , Object_JuridicalBasis.ValueData AS JuridicalBasisName
-           , Object_Business.ValueData AS BusinessName
-
             , View_InfoMoney_From.InfoMoneyGroupName       AS InfoMoneyGroupFromName
             , View_InfoMoney_From.InfoMoneyDestinationName AS InfoMoneyDestinationFromName
             , View_InfoMoney_From.InfoMoneyId              AS InfoMoneyFromId
@@ -87,7 +83,8 @@ BEGIN
             , Object_PaidKind_To.ValueData           AS PaidKindToName
 
             , MI_Master.Amount         AS Amount
-
+            , MovementString_Comment.ValueData      AS Comment
+            
        FROM Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -95,17 +92,6 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_JuridicalBasis
-                                         ON MovementLinkObject_JuridicalBasis.MovementId = Movement.Id
-                                        AND MovementLinkObject_JuridicalBasis.DescId = zc_MovementLinkObject_JuridicalBasis()
-            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = MovementLinkObject_JuridicalBasis.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Business
-                                         ON MovementLinkObject_Business.MovementId = Movement.Id
-                                        AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
-            LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
-
 
             LEFT JOIN MovementItem AS MI_Master ON MI_Master.MovementId = Movement.Id
                                          AND MI_Master.DescId     = zc_MI_Master()
@@ -149,6 +135,10 @@ BEGIN
                                              ON MILinkObject_PaidKind_To.MovementItemId = MI_Child.Id
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
+            
+            LEFT JOIN MovementString AS MovementString_Comment
+                                     ON MovementString_Comment.MovementId =  Movement.Id
+                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
 
       WHERE Movement.DescId = zc_Movement_SendDebt()
         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
