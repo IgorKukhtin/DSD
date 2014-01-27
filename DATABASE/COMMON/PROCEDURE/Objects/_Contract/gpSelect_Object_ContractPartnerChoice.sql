@@ -13,16 +13,13 @@ RETURNS TABLE (Id Integer, Code Integer
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-
              , InfoMoneyId Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
-
              , OKPO TVarChar
              , Address TVarChar
              , ChangePercent TFloat
-
              , isErased Boolean
               )
 AS
