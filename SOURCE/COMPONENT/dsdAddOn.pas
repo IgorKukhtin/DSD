@@ -981,7 +981,7 @@ begin
   if Sender is TcxCurrencyEdit then
      FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxCurrencyEdit).Text;
   if Sender is TcxDateEdit then
-     FEnterValue.Values[TComponent(Sender).Name] := (Sender as TcxDateEdit).Text;
+     FEnterValue.Values[TComponent(Sender).Name] := DateToStr((Sender as TcxDateEdit).Date);
   if Sender is TcxCheckBox then
      FEnterValue.Values[TComponent(Sender).Name] := BoolToStr((Sender as TcxCheckBox).Checked);
 end;
@@ -1001,7 +1001,7 @@ begin
   if Sender is TcxCurrencyEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxCurrencyEdit).Text;
   if Sender is TcxDateEdit then begin
-     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxDateEdit).Text;
+     isChanged := FEnterValue.Values[TComponent(Sender).Name] <> DateToStr((Sender as TcxDateEdit).Date);
   end;
   if Sender is TcxCheckBox then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> BoolToStr((Sender as TcxCheckBox).Checked);

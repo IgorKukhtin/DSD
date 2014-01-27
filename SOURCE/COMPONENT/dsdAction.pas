@@ -417,6 +417,9 @@ type
   private
     FReportName: String;
     FParams: TdsdParams;
+    FReportNameParam: TdsdParam;
+    function GetReportName: String;
+    procedure SetReportName(const Value: String);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -425,7 +428,8 @@ type
     destructor Destroy; override;
   published
     property Params: TdsdParams read FParams write FParams;
-    property ReportName: String read FReportName write FReportName;
+    property ReportName: String read GetReportName write SetReportName;
+    property ReportNameParam: TdsdParam read FReportNameParam write FReportNameParam;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -1089,13 +1093,24 @@ constructor TdsdPrintAction.Create(AOwner: TComponent);
 begin
   inherited;
   FParams := TdsdParams.Create(Self, TdsdParam);
-  PostDataSetBeforeExecute := true
+  PostDataSetBeforeExecute := true;
+  FReportNameParam := TdsdParam.Create(nil);
+  FReportNameParam.DataType := ftString;
+  FReportNameParam.Value := '';
 end;
 
 destructor TdsdPrintAction.Destroy;
 begin
   FreeAndNil(FParams);
+  FreeAndNil(FReportNameParam);
   inherited;
+end;
+
+function TdsdPrintAction.GetReportName: String;
+begin
+  result := FReportNameParam.AsString;
+  if result = '' then
+     result := FReportName
 end;
 
 function TdsdPrintAction.LocalExecute: boolean;
@@ -1143,6 +1158,14 @@ begin
        for i := 0 to Params.Count - 1 do
            if Params[i].Component = AComponent then
               Params[i].Component := nil;
+end;
+
+procedure TdsdPrintAction.SetReportName(const Value: String);
+begin
+  if (csDesigning in ComponentState) and not (csLoading in ComponentState) then
+     ShowMessage('Используйте ReportNameParam')
+  else
+     FReportName := Value;
 end;
 
 { TdsdInsertUpdateGuides }

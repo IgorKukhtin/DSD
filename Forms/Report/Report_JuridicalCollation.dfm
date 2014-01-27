@@ -80,10 +80,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Kind = skSum
             end>
           OptionsView.GroupByBox = True
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colItemName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
@@ -190,6 +186,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           DataType = ftDateTime
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
+      ReportNameParam.DataType = ftString
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'

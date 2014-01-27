@@ -109,6 +109,7 @@ object InventoryForm: TInventoryForm
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = DataSource
+          DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Kind = skSum
@@ -499,8 +500,8 @@ object InventoryForm: TInventoryForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -766,6 +767,8 @@ object InventoryForm: TInventoryForm
       ShortCut = 16464
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1057,6 +1060,8 @@ object InventoryForm: TInventoryForm
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
+    IdParam.Component = dsdFormParams
+    IdParam.ComponentItem = 'Id'
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
@@ -1117,6 +1122,7 @@ object InventoryForm: TInventoryForm
   end
   object GuidesFiller: TGuidesFiller
     IdParam.Value = Null
+    IdParam.Component = dsdFormParams
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item

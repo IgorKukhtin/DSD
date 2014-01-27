@@ -133,6 +133,20 @@ CREATE OR REPLACE FUNCTION zc_ObjectString_StaffListSummKind_Comment() RETURNS I
 INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectString_StaffListSummKind_Comment', zc_Object_StaffListSummKind(), 'StaffListSummKind_Comment' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_StaffListSummKind_Comment');
 
+--------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
+--------------------------- !!! ¬–≈Ã≈ÕÕ€≈ Œ¡⁄≈ “€ !!!
+--------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_Partner1CLink_Name() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner1CLink_Name'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_Partner1CLink_Name', zc_Object_Partner1CLink(), ' Ó‰' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_Partner1CLink_Name');
+
+CREATE OR REPLACE FUNCTION zc_ObjectString_GoodsByGoodsKind1CLink_Name() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind1CLink_Name'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectStringDesc (Code, DescId, ItemName)
+  SELECT 'zc_ObjectString_GoodsByGoodsKind1CLink_Name', zc_Object_GoodsByGoodsKind1CLink(), ' Ó‰' WHERE NOT EXISTS (SELECT * FROM ObjectStringDesc WHERE Code = 'zc_ObjectString_GoodsByGoodsKind1CLink_Name');
+
+
+
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
