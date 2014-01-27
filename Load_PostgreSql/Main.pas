@@ -5451,7 +5451,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgAccount set Id1_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')');
              //
              Next;
@@ -5507,7 +5507,7 @@ begin
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
              //
-             if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
+             if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba._pgAccount set Id2_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Name1 in (select Name1 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')'
                                                                                                                                     +'   and Name2 in (select Name2 from dba._pgAccount where Id = '+FieldByName('ObjectId').AsString+')'
                                   );

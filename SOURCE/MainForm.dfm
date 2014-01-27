@@ -635,6 +635,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbLossDebt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendDebt'
         end>
     end
     object bbIncomeCash: TdxBarButton
@@ -1047,6 +1051,11 @@ object MainForm: TMainForm
     end
     object bbReport_SaleGoods: TdxBarButton
       Action = actReport_SaleGoods
+      Category = 0
+    end
+    object bbSendDebt: TdxBarButton
+      Action = actSendDebt
+      Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1102#1088'. '#1083#1080#1094#1072')'
       Category = 0
     end
   end
@@ -2032,6 +2041,15 @@ object MainForm: TMainForm
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_SaleGoodsForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSendDebt: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088'. '#1083#1080#1094#1072')'
+      FormName = 'TSendDebtJournalForm'
+      FormNameParam.Value = 'TSendDebtJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

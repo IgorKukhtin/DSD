@@ -1,15 +1,19 @@
 -- Function: gpSelect_MovementItem_Sale()
 
--- DROP FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inShowAll     Boolean      , -- 
+    IN inPriceListId Integer      , -- ключ Прайс листа
+    IN inShowAll     Boolean      , --
+    IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountChangePercent TFloat, AmountPartner TFloat, ChangePercentAmount TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindName  TVarChar
+             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, isErased Boolean
               )
@@ -23,11 +27,11 @@ BEGIN
 
      -- inShowAll:= TRUE;
 
-     IF inShowAll THEN 
+     IF inShowAll THEN
 
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              MovementItem.Id
            , Object_Goods.Id          AS GoodsId
@@ -45,7 +49,7 @@ BEGIN
            , CAST (NULL AS TFloat) AS HeadCount
 
            , CAST (NULL AS TVarChar) AS PartionGoods
-
+           , Object_GoodsKind.Id     AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
@@ -72,7 +76,7 @@ BEGIN
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
 
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate)
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = Object_Goods.Id
 
        WHERE Object_Goods.DescId = zc_Object_Goods()
@@ -95,12 +99,12 @@ BEGIN
            , MIFloat_HeadCount.ValueData AS HeadCount
 
            , MIString_PartionGoods.ValueData AS PartionGoods
-
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
            , Object_Asset.ValueData  AS AssetName
-           
+
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
@@ -139,7 +143,7 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
-            
+
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
@@ -149,8 +153,8 @@ BEGIN
          AND MovementItem.DescId =  zc_MI_Master();
 
      ELSE
-  
-     RETURN QUERY 
+
+     RETURN QUERY
        SELECT
              MovementItem.Id
            , Object_Goods.Id          AS GoodsId
@@ -169,6 +173,7 @@ BEGIN
 
            , MIString_PartionGoods.ValueData AS PartionGoods
 
+           , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
            , Object_Asset.Id         AS AssetId
@@ -220,13 +225,13 @@ BEGIN
 
        WHERE MovementItem.MovementId = inMovementId
          AND MovementItem.DescId =  zc_MI_Master();
- 
+
      END IF;
 
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
@@ -235,11 +240,12 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar) OWNER TO 
  08.09.13                                        * add AmountChangePercent
  03.09.13                                        * add ChangePercentAmount
  21.07.13                                        * add lfSelect_ObjectHistory_PriceListItem
- 18.07.13         * add Object_Asset               
+ 18.07.13         * add Object_Asset
  13.07.13         *
-
+ 21.01.14 + PriceList. Dima
 */
 
 -- тест
 -- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inShowAll:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inShowAll:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inPriceListId:=0, inShowAll:= FALSE, inisErased:= FALSE, inSession:= '2')
+

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_LossDebt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
 
 
 

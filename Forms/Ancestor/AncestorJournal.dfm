@@ -3,26 +3,26 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 356
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 59
     Width = 717
-    Height = 272
-    ExplicitTop = 57
+    Height = 270
+    ExplicitTop = 59
     ExplicitWidth = 717
-    ExplicitHeight = 272
-    ClientRectBottom = 272
-    ClientRectRight = 717
+    ExplicitHeight = 270
+    ClientRectBottom = 266
+    ClientRectRight = 713
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 717
-      ExplicitHeight = 272
+      ExplicitWidth = 711
+      ExplicitHeight = 264
       inherited cxGrid: TcxGrid
-        Width = 717
-        Height = 272
-        ExplicitWidth = 717
-        ExplicitHeight = 272
+        Width = 711
+        Height = 264
+        ExplicitWidth = 711
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -101,6 +101,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 67
     Top = 227
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -118,7 +119,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited ActionList: TActionList
-    Top = 226
+    Left = 191
+    Top = 210
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
@@ -133,6 +135,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
           Name = 'ShowAll'
           Value = True
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = MasterDS
@@ -154,6 +162,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
           Name = 'ShowAll'
           Value = False
           DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       ActionType = acUpdate
@@ -283,7 +297,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -369,6 +383,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 200
   end
   inherited PopupMenu: TPopupMenu
+    Left = 152
+    Top = 256
     object N3: TMenuItem [0]
       Action = actInsert
     end

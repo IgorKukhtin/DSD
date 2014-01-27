@@ -445,7 +445,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 20
+    TabOrder = 18
     Width = 204
   end
   object cxLabel15: TcxLabel [18]
@@ -482,7 +482,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 25
+    TabOrder = 23
     Width = 100
   end
   object edStartPromo: TcxDateEdit [23]
@@ -516,6 +516,9 @@
           StoredProc = spJuridicalDetails
         end
         item
+          StoredProc = spClearDefaluts
+        end
+        item
           StoredProc = spContract
         end
         item
@@ -528,6 +531,9 @@
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spJuridicalDetailsIU
         end>
       Caption = 'Ok'
     end
@@ -1476,5 +1482,27 @@
       end>
     Left = 40
     Top = 318
+  end
+  object spClearDefaluts: TdsdStoredProc
+    StoredProcName = 'gpGet_JuridicalDetails_ClearDefault'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'FullName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Name'
+        DataType = ftString
+      end
+      item
+        Name = 'OKPO'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OKPO'
+        DataType = ftString
+      end>
+    Left = 272
+    Top = 384
   end
 end

@@ -35,6 +35,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadCityFormTest;
+    procedure ContractChoiceSaleFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
@@ -75,6 +76,7 @@ type
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
     procedure LoadSendFormTest;
+    procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSheetWorkTimeFormTest;
@@ -309,6 +311,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
 end;
+procedure TLoadFormTest.LoadSendDebtFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSendDebtJournalForm');
+end;
 procedure TLoadFormTest.LoadSendOnPriceFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendOnPriceForm'));
@@ -521,6 +530,9 @@ procedure TLoadFormTest.LoadPartnerFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner_ObjectForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerEditForm');
 
@@ -871,6 +883,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
 end;
+
+procedure TLoadFormTest.ContractChoiceSaleFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceSaleForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoiceSaleForm');
+end;
+
 
 
 procedure TLoadFormTest.SetUp;

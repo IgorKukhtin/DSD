@@ -19,8 +19,8 @@ uses StrUtils, Classes, SysUtils, UtilConst;
 
 procedure ExecFile(FileName: string; Query: TZQuery);
 begin
-  Query.SQL.LoadFromFile(FileName);
   try
+    Query.SQL.LoadFromFile(FileName);
     Query.ExecSQL;
   except
     on E: Exception do

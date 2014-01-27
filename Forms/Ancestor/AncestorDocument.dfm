@@ -3,32 +3,32 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 782
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 798
-  ExplicitHeight = 356
+  ExplicitWidth = 790
+  ExplicitHeight = 355
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 86
+    Top = 88
     Width = 782
-    Height = 235
+    Height = 233
     TabOrder = 5
-    ExplicitTop = 86
+    ExplicitTop = 88
     ExplicitWidth = 782
-    ExplicitHeight = 235
-    ClientRectBottom = 235
-    ClientRectRight = 782
-    ClientRectTop = 24
+    ExplicitHeight = 233
+    ClientRectBottom = 229
+    ClientRectRight = 778
+    ClientRectTop = 22
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitTop = 24
-      ExplicitWidth = 782
-      ExplicitHeight = 211
+      ExplicitTop = 22
+      ExplicitWidth = 776
+      ExplicitHeight = 207
       inherited cxGrid: TcxGrid
-        Width = 782
-        Height = 211
-        ExplicitWidth = 782
-        ExplicitHeight = 211
+        Width = 776
+        Height = 207
+        ExplicitWidth = 776
+        ExplicitHeight = 207
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -50,8 +50,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 782
-        Height = 211
+        Width = 776
+        Height = 207
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -284,6 +284,9 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end
         item
           StoredProc = spSelect
+        end
+        item
+          StoredProc = spSelectMIContainer
         end>
     end
     inherited actGridToExcel: TdsdGridToExcel
@@ -502,7 +505,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -675,10 +678,17 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Component = FormParams
+        ComponentItem = 'inOperDate'
+        DataType = ftDateTime
         ParamType = ptInput
       end
       item
@@ -704,8 +714,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 168
-    Top = 240
+    Left = 152
+    Top = 232
   end
   object spInsertUpdateMovement: TdsdStoredProc
     DataSets = <>
