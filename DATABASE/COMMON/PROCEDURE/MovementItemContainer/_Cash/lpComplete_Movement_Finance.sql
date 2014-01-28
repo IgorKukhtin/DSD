@@ -308,10 +308,14 @@ BEGIN
                                                )
      FROM (SELECT _tmpItem_Active.MovementItemId
                 , _tmpItem_Active.OperSumm, _tmpItem_Active.OperDate
-                , _tmpItem_Active.ContainerId AS ActiveContainerId, _tmpItem_Active.AccountId AS ActiveAccountId
-                , _tmpItem_Passive.ContainerId AS PassiveContainerId, _tmpItem_Passive.AccountId AS PassiveAccountId
+                , _tmpItem_Active.ContainerId AS ActiveContainerId
+                , _tmpItem_Active.AccountId AS ActiveAccountId
+                , COALESCE (_tmpItem_Passive_SendDebt.ContainerId, _tmpItem_Passive.ContainerId) AS PassiveContainerId
+                , COALESCE (_tmpItem_Passive_SendDebt.AccountId, _tmpItem_Passive.AccountId) AS PassiveAccountId
            FROM _tmpItem AS _tmpItem_Active
                 LEFT JOIN _tmpItem AS _tmpItem_Passive ON _tmpItem_Passive.OperSumm < 0 AND _tmpItem_Passive.MovementItemId = _tmpItem_Active.MovementItemId
+                LEFT JOIN Movement ON Movement.Id = inMovementId
+                LEFT JOIN _tmpItem AS _tmpItem_Passive_SendDebt ON _tmpItem_Passive_SendDebt.OperSumm < 0 AND Movement.DescId = zc_Movement_SendDebt()
            WHERE _tmpItem_Active.OperSumm > 0
           ) AS _tmpItem
     ;
@@ -336,6 +340,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.01.14                                        * add zc_Movement_SendDebt
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
  22.01.14                                        * add IsMaster
  29.12.13                                        *

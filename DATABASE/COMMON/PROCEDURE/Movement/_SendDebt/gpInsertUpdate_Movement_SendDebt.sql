@@ -34,28 +34,53 @@ $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SendDebt());
-     vbUserId:= inSession;
-
-     -- определяем ключ доступа
-     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_SendDebt());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SendDebt());
 
      -- проверка
-     IF (COALESCE (inJuridicalFromId, 0) = 0) OR (COALESCE (inJuridicalToId, 0) = 0)
+     IF (COALESCE (inJuridicalFromId, 0) = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
+         RAISE EXCEPTION 'Ошибка. Не установлено <Юридическое лицо (Дебет)>.';
      END IF;
+     IF (COALESCE (inInfoMoneyFromId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Дебет)>.';
+     END IF;
+     IF (COALESCE (inContractFromId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Дебет)>.';
+     END IF;
+
+     -- проверка
+     IF (COALESCE (inJuridicalToId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <Юридическое лицо (Кредит)>.';
+     END IF;
+     IF (COALESCE (inInfoMoneyToId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <УП статья назначения (Кредит)>.';
+     END IF;
+     IF (COALESCE (inContractToId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка. Не установлено <Договор (Кредит)>.';
+     END IF;
+
+
+     -- 1. Распроводим Документ
+     IF ioId > 0 AND vbUserId = lpCheckRight (inSession, zc_Enum_Process_UnComplete_SendDebt())
+     THEN
+         PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                      , inUserId     := vbUserId);
+     END IF;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили свойство <Примечание>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-     
+   
      -- сохранили <Главный Элемент документа>
      ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
 
-    -- сохранили связь с <Договор ОТ >
+     -- сохранили связь с <Договор ОТ >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), ioMasterId, inContractFromId);
 
      -- сохранили связь с <Вид форм оплаты ОТ>
@@ -64,7 +89,8 @@ BEGIN
      -- сохранили связь с <Статьи назначения ОТ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioMasterId, inInfoMoneyFromId);
 
-
+     -- сохранили свойство <Комментарий>
+     PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMasterId, inComment);
 
 
      -- сохранили <Второй Элемент документа>
@@ -79,21 +105,36 @@ BEGIN
      -- сохранили связь с <Статьи назначения КОМУ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioChildId, inInfoMoneyToId);
 
-
-
-     -- пересчитали Итоговые суммы по накладной
-     -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
+     -- 5.1. таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean, IsMaster Boolean
+                                ) ON COMMIT DROP;
+     -- 5.3. проводим Документ
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_SendDebt())
+     THEN
+          PERFORM lpComplete_Movement_SendDebt (inMovementId := ioId
+                                              , inUserId     := vbUserId);
+     END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.01.14                                        * add lpComplete_Movement_SendDebt
  24.01.14         *
 */
 
