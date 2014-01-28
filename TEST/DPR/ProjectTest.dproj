@@ -519,7 +519,7 @@
 			<DCCReference Include="..\..\Forms\Document\PersonalSendCashJournal.pas">
 				<Form>PersonalSendCashJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\LossDebtTest.pas">
+			<DCCReference Include="..\SOURCE\Movement\All\SendDebtTest.pas">
 				<Form>$R *.RES</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\SheetWorkTimeTest.pas"/>
@@ -952,6 +952,7 @@
 				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\LossDebtTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

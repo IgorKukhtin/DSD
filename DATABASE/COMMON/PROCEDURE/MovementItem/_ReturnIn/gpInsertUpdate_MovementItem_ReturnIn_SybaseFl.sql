@@ -38,6 +38,9 @@ BEGIN
          inAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0);
      END IF;
 
+     -- !!!!!!!!!!!!!!!
+     inAmount:= inAmountPartner;
+
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    

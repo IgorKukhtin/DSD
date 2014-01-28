@@ -203,7 +203,7 @@ uses
   PersonalGroupEdit in '..\..\Forms\Guides\PersonalGroupEdit.pas' {PersonalGroupEditForm},
   PersonalSendCash in '..\..\Forms\Document\PersonalSendCash.pas' {PersonalSendCashForm},
   PersonalSendCashJournal in '..\..\Forms\Document\PersonalSendCashJournal.pas' {PersonalSendCashJournalForm},
-  LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas' {$R *.RES},
+  SendDebtTest in '..\SOURCE\Movement\All\SendDebtTest.pas' {$R *.RES},
   SheetWorkTimeTest in '..\SOURCE\Movement\All\SheetWorkTimeTest.pas',
   Report_Fuel in '..\..\Forms\Report\Report_Fuel.pas' {Report_FuelForm},
   Report_Transport in '..\..\Forms\Report\Report_Transport.pas' {Report_TransportForm},
@@ -325,7 +325,8 @@ uses
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas';
 
 {$R *.RES}
 

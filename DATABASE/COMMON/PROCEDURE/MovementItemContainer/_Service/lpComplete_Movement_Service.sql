@@ -46,13 +46,13 @@ BEGIN
              , COALESCE (View_InfoMoney.InfoMoneyId, 0) AS InfoMoneyId
                -- Бизнес: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Business.ChildObjectId, 0) AS BusinessId
-               -- Главное Юр.лицо всегда из договора
+               -- Главное Юр.лицо: всегда из договора
              , COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, 0) AS JuridicalId_Basis
              , COALESCE (MILinkObject_Unit.ObjectId, 0) AS UnitId
                -- Филиал: всегда по подразделению
              , COALESCE (ObjectLink_Unit_Branch.ChildObjectId, 0) AS BranchId
              , COALESCE (MILinkObject_Contract.ObjectId, 0) AS ContractId
-             , MILinkObject_PaidKind.ObjectId AS PaidKindId
+             , COALESCE (MILinkObject_PaidKind.ObjectId, 0) AS PaidKindId
              , CASE WHEN MovementItem.Amount >= 0 THEN TRUE ELSE FALSE END AS IsActive
              , TRUE AS IsMaster
         FROM Movement
@@ -89,13 +89,13 @@ BEGIN
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
      END IF;
    
      -- проверка
-     IF 1=0 and EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
+     IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо.Проведение невозможно.';
      END IF;
 
 
@@ -131,7 +131,6 @@ BEGIN
         FROM _tmpItem
        ;
 
-
      -- проводим Документ
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
@@ -143,10 +142,8 @@ BEGIN
      -- 5. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Service() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
-
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
