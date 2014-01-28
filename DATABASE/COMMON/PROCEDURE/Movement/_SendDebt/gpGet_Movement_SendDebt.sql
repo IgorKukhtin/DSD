@@ -129,8 +129,8 @@ BEGIN
             , Object_PaidKind_To.Id                  AS PaidKindToId
             , Object_PaidKind_To.ValueData           AS PaidKindToName
 
-            , MI_Master.Amount         AS Amount
-            , MovementString_Comment.ValueData      AS Comment
+            , MI_Master.Amount            AS Amount
+            , MIString_Comment.ValueData  AS Comment
            
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -156,6 +156,10 @@ BEGIN
                                             AND MILinkObject_PaidKind_From.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_From ON Object_PaidKind_From.Id = MILinkObject_PaidKind_From.ObjectId
 
+            LEFT JOIN MovementItemString AS MIString_Comment
+                                         ON MIString_Comment.MovementItemId = MI_Master.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
             
             LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id
                                          AND MI_Child.DescId     = zc_MI_Child()
@@ -178,9 +182,7 @@ BEGIN
                                             AND MILinkObject_PaidKind_To.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind_To ON Object_PaidKind_To.Id = MILinkObject_PaidKind_To.ObjectId
 
-            LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
+ 
                                     
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendDebt();
