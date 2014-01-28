@@ -3,22 +3,24 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
-    IN inInvNumber           TVarChar  , -- Номер документа
-    IN inOperDate            TDateTime , -- Дата документа
-    IN inAmountIn            TFloat    , -- Сумма операции 
-    IN inAmountOut           TFloat    , -- Сумма операции 
-    IN inComment             TVarChar  , -- Комментарий
-    IN inBusinessId          Integer   , -- Бизнес    
-    IN inContractId          Integer   , -- Договор
-    IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inJuridicalId         Integer   , -- Юр. лицо	
-    IN inJuridicalBasisId    Integer   , -- Главное юр. лицо	
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
-    IN inUnitId              Integer   , -- Подразделение
-    IN inSession             TVarChar    -- сессия пользователя
+ INOUT ioId                       Integer   , -- Ключ объекта <Документ>
+    IN inInvNumber                TVarChar  , -- Номер документа
+    IN inOperDate                 TDateTime , -- Дата документа
+    IN inAmountIn                 TFloat    , -- Сумма операции 
+    IN inAmountOut                TFloat    , -- Сумма операции 
+    IN inComment                  TVarChar  , -- Комментарий
+    IN inBusinessId               Integer   , -- Бизнес    
+    IN inContractId               Integer   , -- Договор
+    IN inInfoMoneyId              Integer   , -- Статьи назначения 
+    IN inJuridicalId              Integer   , -- Юр. лицо	
+    IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
+    IN inPaidKindId               Integer   , -- Виды форм оплаты
+    IN inUnitId                   Integer   , -- Подразделение
+    IN inContractConditionKindId  Integer   , -- Типы условий договоров
+    IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
 $BODY$
@@ -76,6 +78,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
+     -- сохранили связь с <Типы условий договоров>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), ioMIId, inContractConditionKindId);
+
 
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -106,6 +111,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.01.14         * add ContractConditionKind
  22.01.14                                        * add IsMaster
  26.12.13                                        * add lpComplete_Movement_Service
  24.12.13                        *

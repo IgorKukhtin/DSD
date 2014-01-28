@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
+             , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              )
 AS
 $BODY$
@@ -52,6 +53,9 @@ BEGIN
            , CAST ('' as TVarChar)            AS UnitName
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
+
+           , 0                                AS ContractConditionKindId
+           , CAST ('' as TVarChar)            AS ContractConditionKindName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
 
@@ -90,6 +94,9 @@ BEGIN
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
 
+           , Object_ContractConditionKind.Id        AS ContractConditionKindId
+           , Object_ContractConditionKind.ValueData AS ContractConditionKindName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -120,6 +127,12 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                             ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
+
        WHERE Movement.Id =  inMovementId;
 
    END IF;  
@@ -132,6 +145,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, TDateTime, TVarChar) OWNER TO po
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 28.01.14         * add ContractConditionKind
  22.01.14                                        * add inOperDate
  28.12.13                                        * add View_InfoMoney
  24.12.13                         * -- MovItem
