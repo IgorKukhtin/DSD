@@ -325,7 +325,9 @@ uses
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  Partner1CLink in '..\..\Forms\Guides\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
+  GoodsByGoodsKind1CLink in '..\..\Forms\Guides\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm};
 
 {$R *.RES}
 
