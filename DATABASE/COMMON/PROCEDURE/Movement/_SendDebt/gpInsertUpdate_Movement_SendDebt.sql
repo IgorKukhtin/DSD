@@ -49,9 +49,7 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_SendDebt(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили свойство <Примечание>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
-     
+   
      -- сохранили <Главный Элемент документа>
      ioMasterId := lpInsertUpdate_MovementItem (ioMasterId, zc_MI_Master(), inJuridicalFromId, ioId, inAmount, NULL);
 
@@ -64,7 +62,8 @@ BEGIN
      -- сохранили связь с <Статьи назначения ОТ>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioMasterId, inInfoMoneyFromId);
 
-
+     -- сохранили свойство <Комментарий>
+     PERFORM lpInsertUpdate_MovementItemString(zc_MIString_Comment(), ioMasterId, inComment);
 
 
      -- сохранили <Второй Элемент документа>
