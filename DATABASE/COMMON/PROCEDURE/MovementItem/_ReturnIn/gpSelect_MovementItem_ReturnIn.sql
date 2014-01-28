@@ -31,26 +31,20 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             MovementItem.Id
+             MovementItem.Id			AS Id
            , Object_Goods.Id            AS GoodsId
            , Object_Goods.ObjectCode    AS GoodsCode
            , Object_Goods.ValueData     AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-
            , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
-
            , CAST (NULL AS TFloat)      AS HeadCount
-
            , CAST (NULL AS TVarChar)    AS PartionGoods
-
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-
            , Object_Asset.Id            AS AssetId
            , Object_Asset.ValueData     AS AssetName
-
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE AS isErased
 
@@ -76,30 +70,28 @@ BEGIN
          AND (MILinkObject_GoodsKind.ObjectId IS NULL OR (MovementItem.MovementId IS NULL AND lfObject_GoodsByGoodsKind.GoodsId IS NULL))
       UNION ALL
        SELECT
-             MovementItem.Id
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
-           , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
+             MovementItem.Id					AS Id
+           , Object_Goods.Id          			AS GoodsId
+           , Object_Goods.ObjectCode  			AS GoodsCode
+           , Object_Goods.ValueData   			AS GoodsName
+           , MovementItem.Amount				AS Amount
+           , MIFloat_AmountPartner.ValueData    AS AmountPartner
+           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_CountForPrice.ValueData 	AS CountForPrice
+           , MIFloat_HeadCount.ValueData 		AS HeadCount
 
-           , MIFloat_Price.ValueData AS Price
-           , MIFloat_CountForPrice.ValueData AS CountForPrice
+           , MIString_PartionGoods.ValueData 	AS PartionGoods
+           , Object_GoodsKind.Id        		AS GoodsKindId
+           , Object_GoodsKind.ValueData 		AS GoodsKindName
 
-           , MIFloat_HeadCount.ValueData AS HeadCount
-
-           , MIString_PartionGoods.ValueData AS PartionGoods
-           , Object_GoodsKind.Id        AS GoodsKindId
-           , Object_GoodsKind.ValueData AS GoodsKindName
-
-           , Object_Asset.Id         AS AssetId
-           , Object_Asset.ValueData  AS AssetName
+           , Object_Asset.Id         			AS AssetId
+           , Object_Asset.ValueData  			AS AssetName
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0) ) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-           , MovementItem.isErased
+                   END AS TFloat) 				AS AmountSumm
+           , MovementItem.isErased				AS isErased
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
@@ -140,30 +132,25 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             MovementItem.Id
-           , Object_Goods.Id          AS GoodsId
-           , Object_Goods.ObjectCode  AS GoodsCode
-           , Object_Goods.ValueData   AS GoodsName
-           , MovementItem.Amount
-           , MIFloat_AmountPartner.ValueData   AS AmountPartner
-
-           , MIFloat_Price.ValueData AS Price
-           , MIFloat_CountForPrice.ValueData AS CountForPrice
-
-           , MIFloat_HeadCount.ValueData AS HeadCount
-
-           , MIString_PartionGoods.ValueData AS PartionGoods
-
-           , Object_GoodsKind.ValueData AS GoodsKindName
-
-           , Object_Asset.Id         AS AssetId
-           , Object_Asset.ValueData  AS AssetName
-
+             MovementItem.Id					AS Id
+           , Object_Goods.Id          			AS GoodsId
+           , Object_Goods.ObjectCode  			AS GoodsCode
+           , Object_Goods.ValueData   			AS GoodsName
+           , MovementItem.Amount				AS Amount
+           , MIFloat_AmountPartner.ValueData   	AS AmountPartner
+           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_CountForPrice.ValueData 	AS CountForPrice
+           , MIFloat_HeadCount.ValueData 		AS HeadCount
+           , MIString_PartionGoods.ValueData 	AS PartionGoods
+           , Object_GoodsKind.Id        		AS GoodsKindId
+           , Object_GoodsKind.ValueData 		AS GoodsKindName
+           , Object_Asset.Id         			AS AssetId
+           , Object_Asset.ValueData  			AS AssetName
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                   END AS TFloat) AS AmountSumm
-           , MovementItem.isErased
+                   END AS TFloat)			    AS AmountSumm
+           , MovementItem.isErased              AS isErased
 
        FROM MovementItem
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
