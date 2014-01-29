@@ -1,20 +1,24 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientWidth = 982
-  ExplicitWidth = 998
-  ExplicitHeight = 364
+  ExplicitWidth = 990
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 982
+    ExplicitHeight = 272
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 982
+        Height = 272
         ExplicitWidth = 982
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -142,6 +146,11 @@ inherited ServiceJournalForm: TServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
+          object clContractConditionKindName: TcxGridDBColumn
+            Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractConditionKindName'
+            Width = 60
+          end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
@@ -158,10 +167,15 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       FormName = 'TServiceForm'
       GuiParams = <
         item
           Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
           Value = Null
         end
         item
@@ -176,8 +190,66 @@ inherited ServiceJournalForm: TServiceJournalForm
           DataType = ftDateTime
         end>
     end
-    inherited actUpdate: TdsdInsertUpdateAction
+    object actInsertMask: TdsdInsertUpdateAction [3]
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
       FormName = 'TServiceForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100
+      FormName = 'TServiceForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41608d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -201,10 +273,72 @@ inherited ServiceJournalForm: TServiceJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end>
+    end
+    object bbInsertMask: TdxBarButton [5]
+      Action = actInsertMask
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 472
     Top = 248
+  end
+  inherited PopupMenu: TPopupMenu
+    object N13: TMenuItem [1]
+      Action = actInsertMask
+    end
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 200
+    Top = 120
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_Service'

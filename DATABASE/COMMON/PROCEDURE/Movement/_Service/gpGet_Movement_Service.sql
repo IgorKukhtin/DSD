@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
     IN inMovementId        Integer   , -- êëþ÷ Äîêóìåíòà
+    IN inMovementId_Value  Integer   ,
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- ñåññèÿ ïîëüçîâàòåëÿ
 )
@@ -27,7 +29,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Service());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE (inMovementId, 0) = 0
+     IF COALESCE (inMovementId_Value, 0) = 0
      THEN
 
      RETURN QUERY 
@@ -58,27 +60,29 @@ BEGIN
            , CAST ('' as TVarChar)            AS ContractConditionKindName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
-
+  
      ELSE
 
      RETURN QUERY 
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
+             inMovementId as Id
+           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , CASE WHEN MovementItem.Amount > 0 THEN
-                       MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
-                       - MovementItem.Amount
-                  ELSE
-                      0
-                  END::TFloat AS AmountOut
+           , CASE WHEN inMovementId = 0 
+                       THEN 0
+                  WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END :: TFloat AS AmountIn
+           , CASE WHEN inMovementId = 0
+                       THEN 0
+                  WHEN MovementItem.Amount < 0 
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END :: TFloat AS AmountOut
 
            , MIString_Comment.ValueData   AS Comment
 
@@ -98,9 +102,9 @@ BEGIN
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
        FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
-            LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
  
@@ -133,14 +137,14 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
-       WHERE Movement.Id =  inMovementId;
+       WHERE Movement.Id =  inMovementId_Value;
 
    END IF;  
 
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_Service (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
