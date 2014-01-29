@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_ReturnIn();
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -9,14 +10,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn(
     IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
     IN inPrice               TFloat    , -- Цена
-    IN inCountForPrice       TFloat    , -- Цена за количество
+ INOUT ioCountForPrice       TFloat    , -- Цена за количество
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inSession             TVarChar    -- сессия пользователя
-)                              
-RETURNS Integer AS
+)
+RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -38,14 +40,14 @@ BEGIN
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-   
+
      -- сохранили свойство <Количество у контрагента>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
 
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Цена за количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
@@ -58,12 +60,18 @@ BEGIN
 
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-     
+
      -- создали объект <Связи Товары и Виды товаров>
      PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN ioCountForPrice > 0
+                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
+                      END;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
@@ -74,11 +82,12 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 28.01.14                                                          * add outAmountSumm
  13.01.14                                        * add RAISE EXCEPTION
- 18.07.13         * add inAssetId                 
- 17.07.13         * 
+ 18.07.13         * add inAssetId
+ 17.07.13         *
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')

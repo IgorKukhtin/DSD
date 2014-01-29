@@ -923,6 +923,7 @@ inherited SaleForm: TSaleForm
         Name = 'outAmountSumm'
         Component = MasterCDS
         ComponentItem = 'AmountSumm'
+        DataType = ftFloat
       end
       item
         Name = 'inHeadCount'

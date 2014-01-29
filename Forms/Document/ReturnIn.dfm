@@ -511,7 +511,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Sale'
+    StoredProcName = 'gpUpdate_Status_ReturnIn'
     Left = 104
     Top = 88
   end
@@ -625,7 +625,7 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'Key'
       end
       item
-        Name = 'ContarctName'
+        Name = 'ContractName'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
@@ -831,6 +831,12 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
         Name = 'inHeadCount'
         Component = MasterCDS
         ComponentItem = 'HeadCount'
@@ -855,11 +861,6 @@ inherited ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
       end
       item
         Value = Null
