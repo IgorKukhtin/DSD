@@ -42,6 +42,23 @@ BEGIN
      inObjectId_9       := COALESCE (inObjectId_9, 0);
      inObjectId_10      := COALESCE (inObjectId_10, 0);
 
+
+     -- !!!
+     -- !!!пока не пон€тно с проводками по Ѕизнесу, кроме счета ѕрибыль, поэтому учитывать по этой аналитике не будем, т.е. обнул€ем значение!!!
+     IF inDescId_1 = zc_ObjectCostLink_Business() THEN inObjectId_1:= 0; END IF;
+     IF inDescId_2 = zc_ObjectCostLink_Business() THEN inObjectId_2:= 0; END IF;
+     IF inDescId_3 = zc_ObjectCostLink_Business() THEN inObjectId_3:= 0; END IF;
+     IF inDescId_4 = zc_ObjectCostLink_Business() THEN inObjectId_4:= 0; END IF;
+     IF inDescId_5 = zc_ObjectCostLink_Business() THEN inObjectId_5:= 0; END IF;
+     IF inDescId_6 = zc_ObjectCostLink_Business() THEN inObjectId_6:= 0; END IF;
+     IF inDescId_7 = zc_ObjectCostLink_Business() THEN inObjectId_7:= 0; END IF;
+     IF inDescId_8 = zc_ObjectCostLink_Business() THEN inObjectId_8:= 0; END IF;
+     IF inDescId_9 = zc_ObjectCostLink_Business() THEN inObjectId_9:= 0; END IF;
+     IF inDescId_10 = zc_ObjectCostLink_Business() THEN inObjectId_10:= 0; END IF;
+     -- !!!
+     -- !!!
+
+
      BEGIN
 
      -- находим
