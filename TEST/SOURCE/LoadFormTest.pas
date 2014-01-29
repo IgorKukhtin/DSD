@@ -18,6 +18,7 @@ type
   published
     procedure MainFormTest;
     procedure UserFormSettingsTest;
+    procedure Load1CLinkFormTest;
     procedure LoadAccountFormTest;
     procedure LoadAccountGroupFormTest;
     procedure LoadAccountDirectionFormTest;
@@ -657,6 +658,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
 end;
 
+
+procedure TLoadFormTest.Load1CLinkFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartner1CLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
+end;
 
 procedure TLoadFormTest.LoadAccountDirectionFormTest;
 begin

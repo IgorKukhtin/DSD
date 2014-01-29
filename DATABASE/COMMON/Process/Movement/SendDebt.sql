@@ -1,13 +1,13 @@
 -- Документ <Взаимозачет (Юридические лица)>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Status
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_SendDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_SendDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -18,7 +18,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement
                                   , inCode:= 1
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SendDebt())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_SendDebt');
-
+/*   
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_SendDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
@@ -31,7 +31,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_SendD
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SendDebt())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_SendDebt');
 
-                                  
+*/                                  
 -- Status_
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_SendDebt()
                                   , inDescId:= zc_Object_Process()
@@ -50,14 +50,15 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_SendDebt()
                                   , inCode:= 3
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SendDebt())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_SendDebt');
-
+/*  
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_SendDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_SendDebt())||'>. - Проведение за период'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_SendDebt');
+*/  
 
-
+/*
  -- Документ <Взаимозачет (Юридические лица)>
  -- заливка прав - InsertUpdate_Movement_SendDebt + Get_Movement_SendDebt
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
@@ -136,7 +137,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_SendDe
                             AND tmpData.ProcessId = tmpProcess.ProcessId
  WHERE tmpData.RoleId IS NULL
 ;
- 
+*/ 
  
 END $$;
 
@@ -144,6 +145,6 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.01.14                                        * Оставляем только InsertUpdate... and Complete...
  27.01.14         *              
-
 */

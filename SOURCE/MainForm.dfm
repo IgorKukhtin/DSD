@@ -700,6 +700,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPartner1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods1CLink'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1056,6 +1064,14 @@ object MainForm: TMainForm
     object bbSendDebt: TdxBarButton
       Action = actSendDebt
       Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1102#1088'. '#1083#1080#1094#1072')'
+      Category = 0
+    end
+    object bbPartner1CLink: TdxBarButton
+      Action = actPartner1CLink
+      Category = 0
+    end
+    object bbGoods1CLink: TdxBarButton
+      Action = actGoodsByGoodsKind1CLink
       Category = 0
     end
   end
@@ -2050,6 +2066,24 @@ object MainForm: TMainForm
       Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1070#1088'. '#1083#1080#1094#1072')'
       FormName = 'TSendDebtJournalForm'
       FormNameParam.Value = 'TSendDebtJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPartner1CLink: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1057#1074#1103#1079#1100' '#1090#1086#1095#1077#1082' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
+      FormName = 'TPartner1CLinkForm'
+      FormNameParam.Value = 'TPartner1CLinkForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsByGoodsKind1CLink: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1057#1074#1103#1079#1100' '#1090#1086#1074#1072#1088#1086#1074' '#1089' 1'#1057
+      FormName = 'TGoodsByGoodsKind1CLinkForm'
+      FormNameParam.Value = 'TGoodsByGoodsKind1CLinkForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

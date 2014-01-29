@@ -38,6 +38,9 @@ type
     ContractGuides: TdsdGuides;
     ceAmountKredit: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceContractConditionKind: TcxButtonEdit;
+    ContractConditionKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

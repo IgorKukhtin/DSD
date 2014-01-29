@@ -14,6 +14,19 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_SendDebt());
 
+     -- таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean, IsMaster Boolean
+                                ) ON COMMIT DROP;
+
      -- проводим Документ
      PERFORM lpComplete_Movement_SendDebt (inMovementId := inMovementId
                                          , inUserId     := vbUserId);
@@ -25,6 +38,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.01.14                                        * add _tmp...
  27.01.14          * 
 */
 

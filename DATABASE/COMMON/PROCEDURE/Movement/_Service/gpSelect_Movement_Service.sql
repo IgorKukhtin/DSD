@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractInvNumber TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
+             , ContractConditionKindId Integer, ContractConditionKindName TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,10 @@ BEGIN
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.ValueData        AS PaidKindName
 
+           , Object_ContractConditionKind.Id        AS ContractConditionKindId
+           , Object_ContractConditionKind.ValueData AS ContractConditionKindName
+
+
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -88,6 +93,11 @@ BEGIN
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
+                                             ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
+                                            AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
+            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
+
        WHERE Movement.DescId = zc_Movement_Service()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -99,6 +109,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar) OWNER 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 28.01.14         * add ContractConditionKind
  14.01.14                                        * add Object_Contract_InvNumber_View
  28.12.13                                        * add Object_InfoMoney_View
  28.12.13                                        * add Object_RoleAccessKey_View
