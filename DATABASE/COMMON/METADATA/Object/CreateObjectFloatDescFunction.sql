@@ -131,17 +131,6 @@ CREATE OR REPLACE FUNCTION zc_ObjectFloat_StaffListSumm_Value() RETURNS Integer 
 INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
   SELECT 'zc_ObjectFloat_StaffListSumm_Value', zc_Object_StaffListSumm(), '—ÛÏÏ‡, „Ì' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_StaffListSumm_Value');
 
---------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
---------------------------- !!! ¬–≈Ã≈ÕÕ€≈ Œ¡⁄≈ “€ !!!
---------------------------- !!!!!!!!!!!!!!!!!!!!!!!!!
-
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_Partner1CLink_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner1CLink_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectFloat_Partner1CLink_Code', zc_Object_Partner1CLink(), ' Ó‰' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_Partner1CLink_Code');
-
-CREATE OR REPLACE FUNCTION zc_ObjectFloat_GoodsByGoodsKind1CLink_Code() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind1CLink_Code'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO ObjectFloatDesc (Code, DescId, ItemName)
-  SELECT 'zc_ObjectFloat_GoodsByGoodsKind1CLink_Code', zc_Object_GoodsByGoodsKind1CLink(), ' Ó‰' WHERE NOT EXISTS (SELECT * FROM ObjectFloatDesc WHERE Code = 'zc_ObjectFloat_GoodsByGoodsKind1CLink_Code');
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–

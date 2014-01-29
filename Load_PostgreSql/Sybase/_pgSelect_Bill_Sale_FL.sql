@@ -3,6 +3,10 @@ result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberC
      , PaidKindId_Postgres Integer, ContractId Integer, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, StatusId smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
+  declare local temporary table _tmpBill_NotNalog(
+       BillId Integer null
+  ) on commit preserve rows;
+  //
   declare local temporary table _tmpList(
        ObjectId Integer
      , BillId_calc Integer null
@@ -30,6 +34,36 @@ begin
      , StatusId smallint
      , Id_Postgres integer
   ) on commit preserve rows;
+
+  insert into _tmpBill_NotNalog (BillId)
+           select Bill.Id as BillId
+           from dba.Bill
+                join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+           where Bill.BillDate between @inStartDate and @inEndDate
+             and Bill.BillKind in (zc_bkSaleToClient())
+         -- and Bill.BillNumber = 121710
+            and Bill.FromId<>1022 -- ÂÈÇÀÐÄ 1
+            and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
+            and Bill.ToId<>1022 -- ÂÈÇÀÐÄ 1
+            and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
+            and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
+            and Bill.MoneyKindId = zc_mkBN()
+            and Bill.Id <> 1634846
+         -- and 1=0
+           group by BillId;
+ update dba.Bill left outer join _tmpBill_NotNalog on _tmpBill_NotNalog.BillId = Bill.Id
+        set Bill.Id_Postgres = null
+ where Bill.BillDate between @inStartDate and @inEndDate
+   and Bill.BillKind in (zc_bkSaleToClient())
+   and Bill.FromId<>1022 -- ÂÈÇÀÐÄ 1
+   and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
+   and Bill.ToId<>1022 -- ÂÈÇÀÐÄ 1
+   and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
+   and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
+   and Bill.MoneyKindId = zc_mkBN()
+   and _tmpBill_NotNalog.BillId is null
+   and Bill.Id_Postgres is not null
+   and Bill.Id <> 1634846;
 
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
                     , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
@@ -66,7 +100,8 @@ select Bill.Id as ObjectId
 
      , Bill.Id_Postgres as Id_Postgres
 
-from dba.Bill
+from _tmpBill_NotNalog
+     left outer join dba.Bill on Bill.Id = _tmpBill_NotNalog.BillId
      left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad
      left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId
                      ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId
@@ -102,17 +137,6 @@ from dba.Bill
                                                                      then 5 else Bill.FromId end 
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
      left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
-where Bill.BillDate between @inStartDate and @inEndDate
--- and Bill.BillNumber = 121710
-  and Bill.BillKind in (zc_bkSaleToClient())
-  and Bill.FromId<>1022 -- ÂÈÇÀÐÄ 1
-  and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
-  and Bill.ToId<>1022 -- ÂÈÇÀÐÄ 1
-  and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
-  and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
-  and Bill.MoneyKindId = zc_mkBN()
-  and Bill.Id <> 1634846
--- and 1=0
 ;
 
    //

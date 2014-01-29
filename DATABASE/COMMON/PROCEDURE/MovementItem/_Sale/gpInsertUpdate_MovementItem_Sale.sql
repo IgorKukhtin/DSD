@@ -70,8 +70,11 @@ BEGIN
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
+     IF inGoodsId <> 0
+     THEN
+         -- создали объект <Связи Товары и Виды товаров>
+         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
+     END IF;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

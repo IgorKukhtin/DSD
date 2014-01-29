@@ -86,13 +86,13 @@ BEGIN
      -- проверка
      IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
      THEN
-         RAISE EXCEPTION 'В документе не определен расчетный счет. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.В документе не определен расчетный счет.Проведение невозможно.';
      END IF;
    
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
-         RAISE EXCEPTION 'У расчетного счета не установлено главное юр лицо. Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У расчетного счета не установлено главное юр лицо.Проведение невозможно.';
      END IF;
 
 
