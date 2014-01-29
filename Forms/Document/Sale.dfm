@@ -409,7 +409,7 @@ inherited SaleForm: TSaleForm
     object cxLabel10: TcxLabel
       Left = 779
       Top = 45
-      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     end
     object edIsChecked: TcxCheckBox
       Left = 893
@@ -696,7 +696,7 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Key'
       end
       item
-        Name = 'ContarctName'
+        Name = 'ContractName'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'TextValue'
