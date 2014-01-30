@@ -2070,6 +2070,11 @@ object MainForm: TMainForm
         item
           Name = 'inDescId'
           Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072
+          DataType = ftString
         end>
       isShowModal = False
     end
