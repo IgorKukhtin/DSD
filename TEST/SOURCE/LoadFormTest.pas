@@ -665,6 +665,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
 end;
 
 procedure TLoadFormTest.LoadAccountDirectionFormTest;

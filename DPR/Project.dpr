@@ -30,7 +30,9 @@ uses
   SimpleGauge in '..\SOURCE\SimpleGauge.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   Document in '..\SOURCE\COMPONENT\Document.pas',
-  dialogs;
+  dialogs,
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
 
 {$R *.res}
 
@@ -43,7 +45,7 @@ begin
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
        Application.CreateForm(TMainForm, MainFormInstance);
-       Application.CreateForm(TdmMain, dmMain);
-    end;
+  Application.CreateForm(TdmMain, dmMain);
+  end;
   Application.Run;
 end.

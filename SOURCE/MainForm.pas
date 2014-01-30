@@ -258,6 +258,8 @@ type
     actGoodsByGoodsKind1CLink: TdsdOpenForm;
     bbPartner1CLink: TdxBarButton;
     bbGoods1CLink: TdxBarButton;
+    actLoad1CSale: TdsdOpenForm;
+    bbLoad1CSale: TdxBarButton;
     actReport_GoodsMIReturn: TdsdOpenForm;
     bbReport_GoodsMIReturn: TdxBarButton;
     procedure FormCreate(Sender: TObject);

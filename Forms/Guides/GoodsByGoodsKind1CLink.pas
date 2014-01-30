@@ -10,10 +10,30 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, cxSplitter, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  dsdGuides;
 
 type
   TGoodsByGoodsKind1CLinkForm = class(TAncestorDBGridForm)
+    cxDetailGrid: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter: TcxSplitter;
+    colCode: TcxGridDBColumn;
+    colName: TcxGridDBColumn;
+    colDetailCode: TcxGridDBColumn;
+    colDetailName: TcxGridDBColumn;
+    colDetailBranch: TcxGridDBColumn;
+    DetailCDS: TClientDataSet;
+    DetailDS: TDataSource;
+    spDetailSelect: TdsdStoredProc;
+    dxBarControlContainerItem: TdxBarControlContainerItem;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    actChoiceBranchForm: TOpenChoiceForm;
+    colGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
