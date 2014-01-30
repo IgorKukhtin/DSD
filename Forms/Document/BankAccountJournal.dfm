@@ -63,6 +63,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 87
           end
+          object colInvNumber_Parent: TcxGridDBColumn [2]
+            Caption = #8470' '#1087#1083#1072#1090'. '#1074' '#1073'/'#1074
+            DataBinding.FieldName = 'InvNumber_Parent'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
             Width = 66

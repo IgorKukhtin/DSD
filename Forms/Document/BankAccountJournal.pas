@@ -28,6 +28,7 @@ type
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
+    colInvNumber_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inEndDate     TDateTime , --
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , AmountIn TFloat 
              , AmountOut TFloat 
@@ -34,6 +34,8 @@ BEGIN
        SELECT
              Movement.Id
            , Movement.InvNumber
+           , (Movement_BankStatementItem.InvNumber || ' от ' || Movement_BankStatement.OperDate :: Date :: TVarChar || ' (' ||  Movement_BankStatementItem.ParentId :: TVarChar || ')' ) :: TVarChar AS InvNumber_Parent
+           , Movement.ParentId
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
@@ -60,7 +62,8 @@ BEGIN
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
        FROM Movement
---            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
+            LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
@@ -105,6 +108,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, TVarChar) OW
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.01.14                                        * add InvNumber_Parent
  15.01.14                         * 
  */
 
