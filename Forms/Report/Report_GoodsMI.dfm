@@ -1,7 +1,8 @@
-inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
+inherited Report_GoodsMIForm: TReport_GoodsMIForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1086#1074#1072#1088#1072'>'
   ClientHeight = 344
   ClientWidth = 973
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 981
   ExplicitHeight = 378
   PixelsPerInch = 96
@@ -32,11 +33,16 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Count
+              Column = clAmount_CountWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_CountSh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -47,11 +53,16 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Count
+              Column = clAmount_CountWeight
             end
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_CountSh
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -87,9 +98,16 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object clAmount_Count: TcxGridDBColumn
+          object clAmount_CountSh: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'Amount_Count'
+            DataBinding.FieldName = 'Amount_CountSh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmount_CountWeight: TcxGridDBColumn
+            Caption = #1042#1077#1089
+            DataBinding.FieldName = 'Amount_CountWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -140,7 +158,7 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_SaleGoods'
+    StoredProcName = 'gpReport_GoodsMI'
     Params = <
       item
         Name = 'inStartDate'
