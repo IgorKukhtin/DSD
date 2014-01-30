@@ -26,6 +26,7 @@ type
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

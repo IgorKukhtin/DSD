@@ -157,6 +157,12 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
         ParamType = ptInput
       end
       item
+        Name = 'inDescId'
+        Component = FormParams
+        ComponentItem = 'inDescId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -167,7 +173,7 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
     Top = 208
   end
   inherited BarManager: TdxBarManager
-    Left = 144
+    Left = 160
     Top = 208
     DockControlHeights = (
       0
@@ -203,6 +209,8 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -223,5 +231,14 @@ inherited Report_SaleGoodsForm: TReport_SaleGoodsForm
         ParamType = ptInput
       end>
     Left = 600
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inDescId'
+        ParamType = ptInput
+      end>
+    Left = 328
+    Top = 170
   end
 end

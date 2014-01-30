@@ -2,8 +2,8 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1085#1072#1077#1084#1085#1099#1081' '#1090#1088#1072#1085#1089#1087#1086#1088#1090'>'
   ClientHeight = 336
   ClientWidth = 1212
-  ExplicitWidth = 1228
-  ExplicitHeight = 371
+  ExplicitWidth = 1220
+  ExplicitHeight = 370
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

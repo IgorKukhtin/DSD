@@ -2058,7 +2058,11 @@ object MainForm: TMainForm
       FormName = 'TReport_SaleGoodsForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end>
       isShowModal = False
     end
     object actSendDebt: TdsdOpenForm
@@ -2114,7 +2118,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
