@@ -55,6 +55,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 6
     Width = 162
   end
@@ -66,6 +67,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 7
     Width = 215
   end
@@ -124,6 +126,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 15
     Width = 161
   end
@@ -135,6 +138,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 16
     Width = 103
   end
@@ -151,6 +155,7 @@ inherited ContractEditForm: TContractEditForm
   object edCode: TcxCurrencyEdit [21]
     Left = 16
     Top = 23
+    Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 19
@@ -158,7 +163,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel12: TcxLabel [22]
     Left = 183
-    Top = 170
+    Top = 165
     Caption = #1053#1086#1084#1077#1088' '#1072#1088#1093#1080#1074#1080#1088#1086#1074#1072#1085#1080#1103
   end
   object edInvNumberArchive: TcxTextEdit [23]
@@ -180,6 +185,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 23
     Width = 162
   end
@@ -196,6 +202,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 162
   end
@@ -212,6 +219,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 27
     Width = 162
   end
@@ -228,6 +236,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 29
     Width = 162
   end
@@ -369,6 +378,7 @@ inherited ContractEditForm: TContractEditForm
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 38
     Width = 162
   end
