@@ -9,22 +9,19 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
---    IN inCarId               Integer   , -- Автомобили
---    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
---    IN inRouteId             Integer   , -- Маршрут
---    IN inPersonalId          Integer   , -- Сотрудник (экспедитор)
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -51,6 +48,9 @@ BEGIN
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+     -- сохранили свойство <Номер накладной у контрагента>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
@@ -74,22 +74,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-/*
-     -- сохранили связь с <Автомобили>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-     -- сохранили связь с <Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-     -- сохранили связь с <Маршруты>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Route(), ioId, inRouteId);
-     -- сохранили связь с <Сотрудник (экспедитор)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
-*/
      -- сохранили связь с <Сортировки маршрутов>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-   
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
@@ -100,15 +90,16 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.14                                                       * add inInvNumberPartner
  13.01.14                                        * del property from redmain
  11.01.14                                        * add inChecked, inInvNumberOrder
  13.08.13                                        * add RAISE EXCEPTION
  13.07.13         *
 */
 /*
--- 1. 
+-- 1.
 update Movement set StatusId = zc_Enum_Status_Erased() where DescId = zc_Movement_Sale() and StatusId <> zc_Enum_Status_Erased();
--- 2. 
+-- 2.
 update dba.Bill set Id_Postgres = null where BillKind = zc_bkSaleToClient() and Id_Postgres is not null;
 update dba.fBill set Id_Postgres = null where BillKind = zc_bkSaleToClient() and Id_Postgres is not null;
 update dba.fBillItems set Id_Postgres = null where BillKind = zc_bkSaleToClient() and Id_Postgres is not null;
