@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION lpInsertFind_Object_ProfitLoss(
     IN inProfitLossDirectionId  Integer  , -- Аналитика ОПиУ - направление
     IN inInfoMoneyDestinationId Integer  , -- Управленческие назначения
     IN inInfoMoneyId            Integer  , -- Статьи назначения
-    IN inInsert                 Boolean  DEFAULT TRUE , -- 
+    IN inInsert                 Boolean  DEFAULT FALSE , -- 
     IN inUserId                 Integer  DEFAULT NULL   -- Пользователь
 )
   RETURNS Integer AS
@@ -135,6 +135,7 @@ ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Intege
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.14                                        * add !!!запрет вставки статьи!!!, т.е. inInsert = FALSE
  23.12.13                                        * add inInsert
  26.08.13                                        *
 */

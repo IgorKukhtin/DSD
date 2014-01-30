@@ -477,7 +477,11 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_SaleGoods'
+          ItemName = 'bbReport_GoodsMISale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMIReturn'
         end>
     end
     object bbBank: TdxBarButton
@@ -1061,8 +1065,12 @@ object MainForm: TMainForm
       Action = actMovementDesc
       Category = 0
     end
-    object bbReport_SaleGoods: TdxBarButton
-      Action = actReport_SaleGoods
+    object bbReport_GoodsMISale: TdxBarButton
+      Action = actReport_GoodsMISale
+      Category = 0
+    end
+    object bbReport_GoodsMIReturn: TdxBarButton
+      Action = actReport_GoodsMIReturn
       Category = 0
     end
     object bbSendDebt: TdxBarButton
@@ -2060,17 +2068,22 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_SaleGoods: TdsdOpenForm
+    object actReport_GoodsMISale: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TReport_SaleGoodsForm'
-      FormNameParam.Value = 'TReport_SaleGoodsForm'
+      FormName = 'TReport_GoodsMIForm'
+      FormNameParam.Value = 'TReport_GoodsMIForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <
         item
           Name = 'inDescId'
           Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2101,6 +2114,7 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+<<<<<<< HEAD
     object actLoad1CSale: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1072#1089#1093#1086#1076#1085#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
@@ -2108,6 +2122,19 @@ object MainForm: TMainForm
       FormNameParam.Value = 'TLoadSaleFrom1CForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+=======
+    object actReport_GoodsMIReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
+      FormName = 'TReport_GoodsMIForm'
+      FormNameParam.Value = 'TReport_GoodsMIForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end>
+>>>>>>> refs/remotes/origin/master
       isShowModal = False
     end
   end

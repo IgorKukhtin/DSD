@@ -98,6 +98,13 @@ object ProfitLossForm: TProfitLossForm
         HeaderAlignmentVert = vaCenter
         Width = 80
       end
+      object clOnComplete: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'onComplete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
+      end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -275,6 +282,8 @@ object ProfitLossForm: TProfitLossForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TProfitLossEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -290,6 +299,8 @@ object ProfitLossForm: TProfitLossForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TProfitLossEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

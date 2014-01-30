@@ -672,8 +672,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_SaleGoods.pas">
-				<Form>Report_SaleGoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
+				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">

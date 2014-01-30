@@ -250,8 +250,8 @@ type
     bbReport_JuridicalCollation: TdxBarButton;
     actMovementDesc: TdsdOpenForm;
     bbMovementDesc: TdxBarButton;
-    actReport_SaleGoods: TdsdOpenForm;
-    bbReport_SaleGoods: TdxBarButton;
+    actReport_GoodsMISale: TdsdOpenForm;
+    bbReport_GoodsMISale: TdxBarButton;
     actSendDebt: TdsdOpenForm;
     bbSendDebt: TdxBarButton;
     actPartner1CLink: TdsdOpenForm;
@@ -260,6 +260,8 @@ type
     bbGoods1CLink: TdxBarButton;
     actLoad1CSale: TdsdOpenForm;
     bbLoad1CSale: TdxBarButton;
+    actReport_GoodsMIReturn: TdsdOpenForm;
+    bbReport_GoodsMIReturn: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
