@@ -103,7 +103,7 @@ function TDocument.GetName: string;
 begin
   if (csWriting in Owner.ComponentState) or (csDesigning in Owner.ComponentState) then
      exit;
-  with TFileOpenDialog.Create(nil) do
+  with {File}TOpenDialog.Create(nil) do
   try
     if Execute then begin
        result := ExtractFileName(FileName);

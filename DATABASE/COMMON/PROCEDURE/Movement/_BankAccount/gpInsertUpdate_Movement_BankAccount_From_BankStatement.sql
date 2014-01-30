@@ -46,14 +46,15 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Movement AS Movement_BankAccount 
-                   ON Movement_BankAccount.ParentId = Movement.Id
-                  AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                              ON Movement_BankAccount.ParentId = Movement.Id
+                             AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                             AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
-
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id
@@ -110,6 +111,7 @@ BEGIN
              JOIN Movement AS Movement_BankAccount
                            ON Movement_BankAccount.ParentId = Movement.Id
                           AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
+                          AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
              JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
              JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id

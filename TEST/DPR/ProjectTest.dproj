@@ -672,8 +672,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_SaleGoods.pas">
-				<Form>Report_SaleGoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
+				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -962,6 +962,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\LossDebtTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbMeatTest.pas"/>
+			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
+				<Form>LoadSaleFrom1CForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
+			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

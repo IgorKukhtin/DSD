@@ -1,10 +1,12 @@
 -- Function: gpReport_SaleGoods ()
 
 DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_SaleGoods (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
+    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
@@ -68,7 +70,7 @@ BEGIN
                                     AND MovementItem.descid =  zc_MI_MASter()
                                     AND MovementItem.objectId in (SELECT _tmpGoods.GoodsId FROM _tmpGoods)
            
-                 WHERE Movement.DescId = zc_Movement_Sale() 
+                 WHERE Movement.DescId = inDescId 
                    AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
            
                  GROUP BY  Movement.invnumber, MIReport.OperDate, MovementItem.objectId
@@ -88,7 +90,7 @@ BEGIN
                    JOIN Container ON Container.Id = MIContainer.ContainerId
                                  AND Container.DescId = zc_Container_Count()
                                  AND Container.ObjectId in (SELECT _tmpGoods.GoodsId FROM _tmpGoods)
-                 WHERE Movement.DescId = zc_Movement_Sale() 
+                 WHERE Movement.DescId = inDescId 
     
                  GROUP BY Movement.invnumber
                         , MIContainer.OperDate
@@ -127,7 +129,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_SaleGoods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

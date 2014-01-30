@@ -33,6 +33,15 @@ type
     actGetForm: TdsdExecStoredProc;
     actOpenDocument: TMultiAction;
     bbOpenDocument: TdxBarButton;
+    colAccountCode: TcxGridDBColumn;
+    colAccountName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colInfoMoneyGroupCode: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationCode: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
   private
     { Private declarations }
   public

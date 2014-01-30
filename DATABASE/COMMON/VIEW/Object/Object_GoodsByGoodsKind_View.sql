@@ -1,10 +1,11 @@
 -- Object_GoodsByGoodsKind_View
 
--- DROP VIEW IF EXISTS Object_GoodsByGoodsKind_View;
+DROP VIEW IF EXISTS Object_GoodsByGoodsKind_View;
 
 CREATE OR REPLACE VIEW Object_GoodsByGoodsKind_View AS
-       SELECT 
-             ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId   AS GoodsId
+       SELECT
+             ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId    AS Id 
+           , ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId   AS GoodsId
            , Object_Goods.ObjectCode                           AS GoodsCode
            , Object_Goods.ValueData                            AS GoodsName
            , ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId AS GoodsKindId

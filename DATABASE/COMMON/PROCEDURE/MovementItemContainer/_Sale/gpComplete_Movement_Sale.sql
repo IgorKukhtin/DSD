@@ -212,7 +212,7 @@ BEGIN
                                , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId_ProfitLoss_10500 Integer
                                , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_From Integer
-                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
                                , PartionGoodsId Integer) ON COMMIT DROP;
      -- заполняем таблицу - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (MovementItemId
@@ -221,7 +221,7 @@ BEGIN
                          , ContainerId_ProfitLoss_10100, ContainerId_ProfitLoss_10400, ContainerId_ProfitLoss_10500
                          , ContainerId_Partner, AccountId_Partner, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_From
-                         , isPartionCount, isPartionSumm, isTareReturning
+                         , isPartionCount, isPartionSumm, isTareReturning, isLossMaterials
                          , PartionGoodsId)
         SELECT
               _tmp.MovementItemId
@@ -309,7 +309,14 @@ BEGIN
                     AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                         THEN TRUE
                    ELSE FALSE
-               END AS isTareReturning
+              END AS isTareReturning
+
+              -- Списание Прочее сырье ли это (если да, ничего не делаем для проводок по суммам, потом это будет документ Списание)
+            , CASE WHEN _tmp.Price = 0
+                    AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20600() -- 10200; "Прочее сырье"
+                        THEN TRUE
+                   ELSE FALSE
+              END AS isLossMaterials
 
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
@@ -544,6 +551,13 @@ BEGIN
        WHERE OperCount <> 0;
 
 
+     -- 1.2.3. дальше !!!Возвратная тара не учавствует!!!, поэтому удаляем
+     DELETE FROM _tmpItem WHERE _tmpItem.isTareReturning = TRUE;
+
+     -- 1.2.4. дальше !!!Прочее сырье с ценой=0 не учавствует!!!, поэтому удаляем (потом это будет документ Списание))
+     DELETE FROM _tmpItem WHERE _tmpItem.isLossMaterials = TRUE;
+
+
      -- 1.3.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItemSumm (MovementItemId, ContainerId_ProfitLoss_40208, ContainerId_ProfitLoss_10500, ContainerId_ProfitLoss_10400, ContainerId, AccountId, OperSumm, OperSumm_ChangePercent, OperSumm_Partner)
         SELECT
@@ -564,7 +578,7 @@ BEGIN
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
                                                                                   ON lfContainerSumm_20901.GoodsId           = _tmpItem.GoodsId
                                                                                  AND lfContainerSumm_20901.JuridicalId_basis = vbJuridicalId_Basis_From
-                                                                                 AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_From
+                                                                                 -- AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_From -- !!!пока не понятно с проводками по Бизнесу!!!
                                                                                  AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                  AND _tmpItem.isTareReturning                = FALSE
              -- так находим для остальных
@@ -1395,6 +1409,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.14                                        * add !!!Возвратная тара не учавствует!!!, поэтому удаляем
  12.01.14                                        * lpInsertUpdate_MovementItemLinkObject
  21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208

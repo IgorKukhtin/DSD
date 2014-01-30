@@ -110,6 +110,7 @@
 			<DCCReference Include="cxPivotGridRS16.dcp"/>
 			<DCCReference Include="VclSmp.dcp"/>
 			<DCCReference Include="cxVerticalGridRS16.dcp"/>
+			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -137,6 +138,7 @@
 				<Form>SimpleGaugeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

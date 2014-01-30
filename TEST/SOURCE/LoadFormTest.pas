@@ -581,8 +581,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_SaleGoodsForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TReport_SaleGoodsForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
@@ -665,6 +665,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPartner1CLinkForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsByGoodsKind1CLinkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsByGoodsKind1CLinkForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TLoadSaleFrom1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
 end;
 
 procedure TLoadFormTest.LoadAccountDirectionFormTest;

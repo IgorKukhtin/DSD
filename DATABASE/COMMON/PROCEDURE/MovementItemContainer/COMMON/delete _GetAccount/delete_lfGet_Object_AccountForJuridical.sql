@@ -1,7 +1,7 @@
 -- Function: lfGet_Object_AccountForJuridical (Integer, boolean, Integer, Integer)
 
--- DROP FUNCTION lfGet_Object_AccountForJuridical (Integer, boolean, Integer, Integer);
-
+DROP FUNCTION IF EXISTS lfGet_Object_AccountForJuridical (Integer, boolean, Integer, Integer);
+/*
 CREATE OR REPLACE FUNCTION lfGet_Object_AccountForJuridical(IN inInfoMoneyDestinationId Integer, IN isDebet Boolean, OUT outAccountGroupId Integer, OUT outAccountDirectionId Integer)
 AS
 $BODY$
@@ -74,11 +74,12 @@ $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
 ALTER FUNCTION lfGet_Object_AccountForJuridical (Integer, boolean) OWNER TO postgres;
-
+*/
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.14                                        * delete
  13.08.13                        *
 */
 

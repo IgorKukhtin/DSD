@@ -2,20 +2,14 @@ unit ClientBankLoad;
 
 interface
 
-uses dsdAction, DB, dsdDb, Classes;
+uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
 
 type
 
   TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank);
 
-  TClientBankLoad = class
+  TClientBankLoad = class(TFileExternalLoad)
   private
-    FDataSet: TDataSet;
-    FInitializeDirectory: string;
-    FActive: boolean;
-    FOEM: boolean;
-    FStartDate: TDateTime;
-    FEndDate: TDateTime;
     function GetOperSumm: real; virtual; abstract;
     function GetDocNumber: string; virtual; abstract;
     function GetOperDate: TDateTime; virtual; abstract;
@@ -29,15 +23,10 @@ type
     function GetComment: string; virtual; abstract;
     function GetCurrencyCode: string; virtual; abstract;
     function GetCurrencyName: string; virtual; abstract;
+    procedure First; override;
   public
-    constructor Create(StartDate, EndDate: TDateTime); virtual;
-    destructor Destroy;
-    function EOF: boolean;
-    function RecordCount: integer;
-    procedure Next;
-    procedure Activate;
-    property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
-    property Active: boolean read FActive;
+    constructor Create(StartDate, EndDate: TDateTime); overload; virtual;
+    procedure Next;     override;
     property DocNumber: string read GetDocNumber;
     property OperDate: TDateTime read GetOperDate;
     property OperSumm: real read GetOperSumm;
@@ -53,28 +42,17 @@ type
     property Comment: string read GetComment;
   end;
 
-  TClientBankLoadAction = class(TdsdCustomAction)
+  TClientBankLoadAction = class(TExternalLoadAction)
   private
     FClientBankType: TClientBankType;
-    FInitializeDirectory: string;
-    FEndDate: TdsdParam;
-    FStartDate: TdsdParam;
-    function StartDate: TDateTime;
-    function EndDate: TDateTime;
     function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
-    function GetStoredProc: TdsdStoredProc;
-    procedure ProcessingOneRow(AClientBankLoad: TClientBankLoad; AStoredProc: TdsdStoredProc);
-  public
-    function Execute: boolean; override;
-    constructor Create(Owner: TComponent); override;
-    destructor Destroy; override;
+  protected
+    function GetStoredProc: TdsdStoredProc; override;
+    function GetExternalLoad: TExternalLoad; override;
+    procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); override;
   published
     // Для какого банка осуществляется загрузка
     property ClientBankType: TClientBankType read FClientBankType write FClientBankType;
-    // Директория загрузки. Сделана published что бы сохранять данные по стандартной схеме
-    property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
-    property StartDateParam: TdsdParam read FStartDate write FStartDate;
-    property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
 
   procedure Register;
@@ -83,7 +61,7 @@ implementation
 
 { TClientBankLoadAction }
 
-uses VCL.ActnList, Dialogs, SysUtils, MemDBFTable, Variants, SimpleGauge;
+uses VCL.ActnList, Dialogs, SysUtils, Variants;
 
 procedure Register;
 begin
@@ -178,61 +156,6 @@ type
     function GetCurrencyName: string; override;
   end;
 
-constructor TClientBankLoadAction.Create(Owner: TComponent);
-begin
-  inherited;
-  FStartDate := TdsdParam.Create(nil);
-  FEndDate := TdsdParam.Create(nil);
-end;
-
-destructor TClientBankLoadAction.Destroy;
-begin
-  FStartDate.Free;
-  FEndDate.Free;
-  inherited;
-end;
-
-function TClientBankLoadAction.EndDate: TDateTime;
-begin
-  result := EndDateParam.Value;
-end;
-
-function TClientBankLoadAction.Execute: boolean;
-var
-   FClientBankLoad: TClientBankLoad;
-   FStoredProc: TdsdStoredProc;
-begin
-  FClientBankLoad := GetClientBankLoad(ClientBankType, StartDate, EndDate);
-  try
-    FClientBankLoad.InitializeDirectory := InitializeDirectory;
-    FClientBankLoad.Activate;
-    if FClientBankLoad.Active then begin
-       InitializeDirectory := FClientBankLoad.InitializeDirectory;
-       FStoredProc := GetStoredProc;
-       FStoredProc.OutputType := otResult;
-       FStoredProc.StoredProcName := 'gpInsertUpdate_Movement_BankStatementItemLoad';
-       try
-         with TGaugeFactory.GetGauge('Загрузка данных', 1, FClientBankLoad.RecordCount) do begin
-           Start;
-           try
-             while not FClientBankLoad.EOF do begin
-               ProcessingOneRow(FClientBankLoad, FStoredProc);
-               IncProgress;
-               FClientBankLoad.Next;
-             end;
-           finally
-             Finish
-           end;
-         end;
-       finally
-         FStoredProc.Free
-       end;
-    end;
-  finally
-    FClientBankLoad.Free;
-  end;
-end;
-
 function TClientBankLoadAction.GetClientBankLoad(
   AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
 begin
@@ -245,9 +168,16 @@ begin
   end;
 end;
 
+function TClientBankLoadAction.GetExternalLoad: TExternalLoad;
+begin
+  result := GetClientBankLoad(ClientBankType, StartDate, EndDate);
+end;
+
 function TClientBankLoadAction.GetStoredProc: TdsdStoredProc;
 begin
   result := TdsdStoredProc.Create(nil);
+  result.OutputType := otResult;
+  result.StoredProcName := 'gpInsertUpdate_Movement_BankStatementItemLoad';
   with result do begin
     Params.AddParam('inDocNumber', ftString, ptInput, null);
     Params.AddParam('inOperDate', ftDateTime, ptInput, null);
@@ -266,9 +196,9 @@ begin
 end;
 
 procedure TClientBankLoadAction.ProcessingOneRow(
-  AClientBankLoad: TClientBankLoad; AStoredProc: TdsdStoredProc);
+  AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc);
 begin
-  with AStoredProc, AClientBankLoad do begin
+  with AStoredProc, TClientBankLoad(AExternalLoad) do begin
     ParamByName('inDocNumber').Value := DocNumber;
     ParamByName('inOperDate').Value := OperDate;
     ParamByName('inBankAccountMain').Value := BankAccountMain;
@@ -286,62 +216,24 @@ begin
   end;
 end;
 
-function TClientBankLoadAction.StartDate: TDateTime;
-begin
-  result := StartDateParam.Value;
-end;
-
 { TClientBankLoad }
 
-procedure TClientBankLoad.Activate;
+constructor TClientBankLoad.Create(StartDate, EndDate: TDateTime);
 begin
-  with {File}TOpenDialog.Create(nil) do
-  try
-    InitialDir := InitializeDirectory;
-//    DefaultFolder := InitializeDirectory;
-    DefaultExt := '*.dbf';
-    Filter := '*.dbf';
-    {with FileTypes.Add do
-    begin
-      DisplayName := 'Файлы загрузки';
-      FileMask := '*.dbf';
-    end;}
-    if Execute then begin
-       InitializeDirectory := ExtractFilePath(FileName);
-       FDataSet := TMemDBFTable.Create(nil);
-       TMemDBFTable(FDataSet).FileName := FileName;
-       TMemDBFTable(FDataSet).OEM := FOEM;
-       TMemDBFTable(FDataSet).Open;
-       FActive := TMemDBFTable(FDataSet).Active;
-       // Установить на первую запись подходящей даты
-       while not TMemDBFTable(FDataSet).EOF do begin
-         if (FStartDate <= OperDate) and (OperDate <= FEndDate) then
-             break;
-         TMemDBFTable(FDataSet).Next;
-       end;
-    end;
-  finally
-    Free;
-  end;
-end;
-
-constructor TClientBankLoad.Create;
-begin
-  FActive := false;
-  FOEM := false;
+  inherited Create;
   FStartDate := StartDate;
   FEndDate := EndDate;
 end;
 
-destructor TClientBankLoad.Destroy;
+procedure TClientBankLoad.First;
 begin
-  if Assigned(FDataSet) then
-     FreeAndNil(FDataSet);
-end;
-
-function TClientBankLoad.EOF: boolean;
-begin
-  result := (not Assigned(FDataSet)) or (not FDataSet.Active) or FDataSet.Eof;
+  inherited;
+  // Установить на первую запись подходящей даты
+  while not FDataSet.EOF do begin
+    if (FStartDate <= OperDate) and (OperDate <= FEndDate) then
+             break;
+    FDataSet.Next;
+  end;
 end;
 
 procedure TClientBankLoad.Next;
@@ -351,14 +243,9 @@ begin
   until ((FStartDate <= OperDate) and (OperDate <= FEndDate)) or FDataSet.EOF;
 end;
 
-function TClientBankLoad.RecordCount: integer;
-begin
-  result  := FDataSet.RecordCount
-end;
-
 { TPrivatBankLoad }
 
-constructor TPrivatBankLoad.Create;
+constructor TPrivatBankLoad.Create(StartDate, EndDate: TDateTime);
 begin
   inherited;
   FOEM := true;
