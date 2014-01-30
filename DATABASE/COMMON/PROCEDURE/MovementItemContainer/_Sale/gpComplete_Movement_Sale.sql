@@ -525,6 +525,10 @@ BEGIN
        WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 
 
+     -- 1.1.3. дальше !!!Возвратная тара не учавствует!!!, поэтому удаляем
+     DELETE FROM _tmpItem WHERE _tmpItem.isTareReturning = TRUE;
+
+
      -- 1.2.1. определяется ContainerId_Goods для количественного учета
      UPDATE _tmpItem SET ContainerId_Goods = lpInsertUpdate_ContainerCount_Goods (inOperDate               := vbOperDate
                                                                                 , inUnitId                 := vbUnitId_From
@@ -564,7 +568,7 @@ BEGIN
              LEFT JOIN lfSelect_ContainerSumm_byAccount (zc_Enum_Account_20901()) AS lfContainerSumm_20901
                                                                                   ON lfContainerSumm_20901.GoodsId           = _tmpItem.GoodsId
                                                                                  AND lfContainerSumm_20901.JuridicalId_basis = vbJuridicalId_Basis_From
-                                                                                 AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_From
+                                                                                 -- AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_From -- !!!пока не понятно с проводками по Бизнесу!!!
                                                                                  AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                                                                                  AND _tmpItem.isTareReturning                = FALSE
              -- так находим для остальных
@@ -1395,6 +1399,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.01.14                                        * add !!!Возвратная тара не учавствует!!!, поэтому удаляем
  12.01.14                                        * lpInsertUpdate_MovementItemLinkObject
  21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208

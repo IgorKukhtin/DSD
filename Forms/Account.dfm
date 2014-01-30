@@ -130,6 +130,7 @@ object AccountForm: TAccountForm
       object onComplete: TcxGridDBColumn
         Caption = '***'
         DataBinding.FieldName = 'onComplete'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 25
       end
