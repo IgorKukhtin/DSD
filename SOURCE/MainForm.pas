@@ -258,6 +258,8 @@ type
     actGoodsByGoodsKind1CLink: TdsdOpenForm;
     bbPartner1CLink: TdxBarButton;
     bbGoods1CLink: TdxBarButton;
+    actLoad1CSale: TdsdOpenForm;
+    bbLoad1CSale: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

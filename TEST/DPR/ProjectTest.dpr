@@ -328,7 +328,11 @@ uses
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   Partner1CLink in '..\..\Forms\Guides\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   GoodsByGoodsKind1CLink in '..\..\Forms\Guides\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm},
-  LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas';
+  LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas',
+  dbMeatTest in '..\SOURCE\dbMeatTest.pas',
+  LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
+  ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas';
 
 {$R *.RES}
 

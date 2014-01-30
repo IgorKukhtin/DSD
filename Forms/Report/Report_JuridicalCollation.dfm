@@ -1,26 +1,26 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
   ClientHeight = 389
-  ClientWidth = 674
-  ExplicitWidth = 682
+  ClientWidth = 893
+  ExplicitWidth = 901
   ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 674
+    Width = 893
     Height = 306
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 674
     ExplicitHeight = 306
     ClientRectBottom = 306
-    ClientRectRight = 674
+    ClientRectRight = 893
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 674
       ExplicitHeight = 306
       inherited cxGrid: TcxGrid
-        Width = 674
+        Width = 893
         Height = 306
         ExplicitWidth = 674
         ExplicitHeight = 306
@@ -80,25 +80,30 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
               Kind = skSum
             end>
           OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colItemName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 95
           end
           object coInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 56
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 93
           end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
@@ -107,7 +112,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 75
+            Width = 107
           end
           object colKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
@@ -116,14 +121,68 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 99
+          end
+          object colAccountCode: TcxGridDBColumn
+            DataBinding.FieldName = 'AccountCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colAccountName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090
+            DataBinding.FieldName = 'AccountName'
+            HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentVert = vaCenter
+            Width = 85
+          end
+          object colInfoMoneyCode: TcxGridDBColumn
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1087#1088'. '#1089#1090#1072#1090#1100#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentVert = vaCenter
+            Width = 86
+          end
+          object colInfoMoneyDestinationCode: TcxGridDBColumn
+            DataBinding.FieldName = 'InfoMoneyDestinationCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1053#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            HeaderAlignmentVert = vaCenter
+            Width = 101
+          end
+          object colInfoMoneyGroupCode: TcxGridDBColumn
+            DataBinding.FieldName = 'InfoMoneyGroupCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1089#1090#1072#1090#1077#1081
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            HeaderAlignmentVert = vaCenter
+            Width = 71
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 674
+    Width = 893
     Height = 57
     ExplicitWidth = 674
     ExplicitHeight = 57
@@ -303,6 +362,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Category = 0
     end
   end
+  inherited PeriodChoice: TPeriodChoice
+    Top = 72
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -311,6 +373,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       item
         Component = JuridicalGuides
       end>
+    Top = 80
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
