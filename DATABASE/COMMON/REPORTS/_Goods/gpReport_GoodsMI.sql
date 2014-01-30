@@ -1,9 +1,11 @@
--- Function: gpReport_SaleGoods ()
+-- Function: gpReport_GoodsMI ()
 
 DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_SaleGoods (
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
@@ -13,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpReport_SaleGoods (
 RETURNS TABLE  (TradeMarkName TVarChar
               , GoodsGroupName TVarChar
               , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar
-              , Amount_Summ TFloat, Amount_Count TFloat
+              , Amount_Summ TFloat, Amount_CountWeight TFloat, Amount_CountSh TFloat
               )   
 AS
 $BODY$
@@ -38,7 +40,8 @@ BEGIN
          , Object_Goods.ObjectCode AS GoodsCode
          , Object_Goods.ValueData AS GoodsName
          , CAST (SUM(AllSale.Amount_Summ) AS TFloat) AS Amount_Summ
-         , CAST (SUM(AllSale.Amount_Count) AS TFloat) AS Amount_Count
+         , CAST (SUM(AllSale.Amount_Count * (case when Object_Measure.Id = zc_Measure_Sh() then ObjectFloat_Weight.ValueData else 1 end )) AS TFloat) AS Amount_CountWeight 
+         , CAST (SUM(case when Object_Measure.Id = zc_Measure_Sh() then AllSale.Amount_Count else 0 end) AS TFloat) AS Amount_CountSh 
     FROM (
            SELECT AllContainer.invnumber, AllContainer.OperDate, AllContainer.GoodsId
             , sum(AllContainer.Amount_Summ)  AS Amount_Summ
@@ -117,6 +120,13 @@ BEGIN
          LEFT JOIN Object AS Object_GoodsGroup 
                           ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                          AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                                         AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+         LEFT JOIN ObjectFloat AS ObjectFloat_Weight ON ObjectFloat_Weight.ObjectId = Object_Goods.Id 
+                              AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
                          
         GROUP BY
            Object_TradeMark.ValueData 
@@ -129,15 +139,16 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+
  22.01.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpReport_SaleGoods (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',  inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',  inDescId:= 5 ,inSession:= zfCalc_UserAdmin());
