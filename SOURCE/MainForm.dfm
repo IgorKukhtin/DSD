@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -2043,7 +2043,7 @@ object MainForm: TMainForm
     end
     object actReport_JuridicalSold: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
-      Caption = #1054#1073#1086#1088#1086#1090#1082#1072' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -2068,7 +2068,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-
     object actReport_GoodsMIReturn: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
@@ -2163,7 +2162,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

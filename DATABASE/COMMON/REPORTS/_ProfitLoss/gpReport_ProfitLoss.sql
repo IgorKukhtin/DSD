@@ -24,9 +24,9 @@ $BODY$BEGIN
 
      RETURN QUERY 
       SELECT
-             (View_ProfitLoss.ProfitLossGroupCode || ' ' || View_ProfitLoss.ProfitLossGroupName):: TVarChar         AS ProfitLossGroupName
-           , (View_ProfitLoss.ProfitLossDirectionCode || ' ' || View_ProfitLoss.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
-           , (View_ProfitLoss.ProfitLossCode || ' ' || View_ProfitLoss.ProfitLossName):: TVarChar                   AS ProfitLossName
+             (CASE WHEN View_ProfitLoss.ProfitLossGroupCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossGroupCode || ' ' || View_ProfitLoss.ProfitLossGroupName):: TVarChar         AS ProfitLossGroupName
+           , (CASE WHEN View_ProfitLoss.ProfitLossDirectionCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossDirectionCode || ' ' || View_ProfitLoss.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
+           , (CASE WHEN View_ProfitLoss.ProfitLossCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossCode || ' ' || View_ProfitLoss.ProfitLossName):: TVarChar                   AS ProfitLossName
            , View_ProfitLoss.onComplete                                                                             AS OnComplete
 
            , Object_Business.ValueData          AS BusinessName

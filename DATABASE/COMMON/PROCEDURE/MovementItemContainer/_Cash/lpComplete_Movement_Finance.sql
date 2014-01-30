@@ -125,7 +125,10 @@ BEGIN
                                      END;
 
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
-     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+     UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.ProfitLossDirectionId <> 0
+                                                           THEN _tmpItem.ProfitLossDirectionId -- если уже был определен
+
+                                                      WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                                        AND _tmpItem.UnitId = 0
                                                            THEN zc_Enum_ProfitLossDirection_11100() -- Результат основной деятельности + Маркетинг
 
@@ -151,7 +154,9 @@ BEGIN
 
                                                       ELSE _tmpItem.ProfitLossDirectionId
                                                  END
-                       , ObjectId = CASE WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                       , ObjectId = CASE WHEN _tmpItem.ObjectId <> 0 
+                                              THEN _tmpItem.ObjectId -- если уже был определен
+                                         WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
                                           AND _tmpItem.UnitId = 0
                                               THEN zc_Enum_ProfitLoss_11101() -- Результат основной деятельности + Маркетинг + Продукция
                                          WHEN _tmpItem.InfoMoneyId = zc_Enum_InfoMoney_50201() -- Налог на прибыль

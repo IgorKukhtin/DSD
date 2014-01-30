@@ -32,17 +32,50 @@ BEGIN
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
+         RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
+     END IF;
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен <№ дог.>.';
+     END IF;
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена <Форма оплаты>.';
+     END IF;
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена <УП статья назначения>.';
      END IF;
 
      -- проверка
      IF (COALESCE (ioAmountDebet, 0) <> 0) AND (COALESCE (ioAmountKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
      -- проверка
      IF (COALESCE (ioSummDebet, 0) <> 0) AND (COALESCE (ioSummKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
+     END IF;
+
+     -- проверка
+     IF EXISTS (SELECT MovementItem.Id
+                FROM MovementItem
+                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                     JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                      ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.ObjectId = inJuridicalId
+                  AND MovementItem.DescId = zc_MI_Master()
+                  AND MovementItem.Id <> COALESCE (ioId, 0))
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
      END IF;
 
      -- расчет
@@ -83,7 +116,6 @@ BEGIN
 
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-
      -- пересчитали Итоговые суммы по документу
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
