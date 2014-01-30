@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Sale(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
-             , OperDatePartner TDateTime
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -38,6 +38,7 @@ BEGIN
              , Object_Status.Name              		AS StatusName
              , CAST (False as Boolean)         		AS Checked
              , inOperDate				      		AS OperDatePartner
+             , CAST ('' as TVarChar)                AS InvNumberPartner
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (20 as TFloat)                  AS VATPercent
              , CAST (0 as TFloat)                   AS ChangePercent
@@ -53,8 +54,8 @@ BEGIN
              , CAST ('' as TVarChar) 				AS PaidKindName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
-             , 0                     				AS PersonalPackerId
-             , CAST ('' as TVarChar) 				AS PersonalPackerName
+             , 0                     				AS RouteSortingId
+             , CAST ('' as TVarChar) 				AS RouteSortingName
              , CAST ('' as TVarChar) 				AS InvNumberOrder
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -68,6 +69,7 @@ BEGIN
            , Object_Status.ValueData     				AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -101,6 +103,10 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -173,6 +179,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 30.01.14                                                        * add inInvNumberPartner
  29.01.14                                                        * fix ContractName if empty
  16.01.14                                                        * MovementBoolean_Checked
  29.07.13         * add zc_MovementLinkObject_Personal

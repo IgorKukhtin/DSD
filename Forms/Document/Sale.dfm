@@ -245,6 +245,7 @@ inherited SaleForm: TSaleForm
     Width = 1049
     Height = 129
     TabOrder = 3
+    ExplicitLeft = 8
     ExplicitWidth = 1049
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -339,25 +340,25 @@ inherited SaleForm: TSaleForm
       Width = 77
     end
     object cxLabel5: TcxLabel
-      Left = 166
+      Left = 379
       Top = 45
       Caption = #8470' '#1079#1072#1103#1074#1082#1080' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
     object edInvNumberOrder: TcxTextEdit
-      Left = 166
+      Left = 395
       Top = 63
       TabOrder = 15
-      Width = 121
+      Width = 115
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 288
+      Left = 512
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 16
       Width = 137
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 423
+      Left = 651
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -365,12 +366,12 @@ inherited SaleForm: TSaleForm
       Width = 65
     end
     object cxLabel7: TcxLabel
-      Left = 423
+      Left = 651
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 502
+      Left = 726
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
@@ -378,17 +379,17 @@ inherited SaleForm: TSaleForm
       Width = 129
     end
     object cxLabel8: TcxLabel
-      Left = 494
+      Left = 718
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel13: TcxLabel
-      Left = 652
+      Left = 865
       Top = 46
       Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
     end
     object edRouteSorting: TcxButtonEdit
-      Left = 652
+      Left = 865
       Top = 63
       Properties.Buttons = <
         item
@@ -399,7 +400,7 @@ inherited SaleForm: TSaleForm
       Width = 121
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 779
+      Left = 163
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -407,13 +408,13 @@ inherited SaleForm: TSaleForm
       Width = 108
     end
     object cxLabel10: TcxLabel
-      Left = 779
+      Left = 163
       Top = 45
       Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     end
     object edIsChecked: TcxCheckBox
-      Left = 893
-      Top = 63
+      Left = 891
+      Top = 95
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 25
       Width = 137
@@ -432,7 +433,18 @@ inherited SaleForm: TSaleForm
           Kind = bkEllipsis
         end>
       TabOrder = 27
-      Width = 77
+      Width = 94
+    end
+    object cxLabel12: TcxLabel
+      Left = 271
+      Top = 45
+      Caption = #8470' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 275
+      Top = 63
+      TabOrder = 29
+      Width = 115
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -635,6 +647,12 @@ inherited SaleForm: TSaleForm
         DataType = ftDateTime
       end
       item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
         Name = 'PriceWithVAT'
         Value = 'False'
         Component = edPriceWithVAT
@@ -752,6 +770,13 @@ inherited SaleForm: TSaleForm
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -982,7 +1007,7 @@ inherited SaleForm: TSaleForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
+    Left = 904
     Top = 48
   end
   object GuidesFrom: TdsdGuides

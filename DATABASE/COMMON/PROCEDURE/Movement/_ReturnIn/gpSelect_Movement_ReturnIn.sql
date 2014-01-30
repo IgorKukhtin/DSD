@@ -1,10 +1,13 @@
 -- Function: gpSelect_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsPartnerDate Boolean ,
+    IN inIsErased      Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -26,40 +29,55 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= inSession;
 
-     RETURN QUERY 
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                                UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                                      )
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+             Movement.Id                                AS Id
+           , Movement.InvNumber                         AS InvNumber
+           , Movement.OperDate                          AS OperDate
+           , Object_Status.ObjectCode                   AS StatusCode
+           , Object_Status.ValueData                    AS StatusName
 
-           , MovementBoolean_Checked.ValueData           AS Checked
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+           , MovementBoolean_Checked.ValueData          AS Checked
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
 
-           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
 
-           , MovementFloat_VATPercent.ValueData     AS VATPercent
-           , MovementFloat_ChangePercent.ValueData  AS ChangePercent           
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
 
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
 
-           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
+           , Object_From.Id                             AS FromId
+           , Object_From.ValueData                      AS FromName
+           , Object_To.Id                               AS ToId
+           , Object_To.ValueData                        AS ToName
 
-           , Object_PaidKind.Id                AS PaidKindId
-           , Object_PaidKind.ValueData         AS PaidKindName
-           , View_Contract_InvNumber.ContractId
-           , View_Contract_InvNumber.InvNumber AS ContractName
+           , Object_PaidKind.Id                         AS PaidKindId
+           , Object_PaidKind.ValueData                  AS PaidKindName
+           , View_Contract_InvNumber.ContractId         AS ContractId
+           , View_Contract_InvNumber.InvNumber          AS ContractName
 
-       FROM Movement
+       FROM (SELECT Movement.id FROM  tmpStatus
+               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.statusid = tmpStatus.StatusId
+               WHERE inIsPartnerDate = FALSE
+
+             UNION ALL SELECT MovementDate_OperDatePartner.movementid  AS Id FROM MovementDate AS MovementDate_OperDatePartner
+                        JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.movementid AND Movement.DescId = zc_Movement_ReturnIn()
+                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.statusid
+                       WHERE inIsPartnerDate = TRUE AND MovementDate_OperDatePartner.valuedata BETWEEN inStartDate AND inEndDate
+                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            ) AS tmpMovement
+
+            JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -115,22 +133,21 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            ;
 
-       WHERE Movement.DescId = zc_Movement_ReturnIn()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
-  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.14                                                       * add inIsPartnerDate, inIsErased
  14.01.14                                        * add Object_Contract_InvNumber_View
  11.01.14                                        * add Checked, TotalCountPartner
  17.07.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+--  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

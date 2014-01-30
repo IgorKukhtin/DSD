@@ -245,6 +245,14 @@ inherited SaleJournalForm: TSaleJournalForm
   inherited Panel: TPanel
     Width = 924
     ExplicitWidth = 924
+    object edIsPartnerDate: TcxCheckBox
+      Left = 427
+      Top = 5
+      Action = actRefresh
+      Caption = #1044#1072#1090#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      TabOrder = 4
+      Width = 190
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -254,9 +262,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 243
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 471
-    Top = 210
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
     end
@@ -283,6 +289,20 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inIsPartnerDate'
+        Value = 'False'
+        Component = edIsPartnerDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Top = 155
   end
@@ -308,6 +328,13 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 96
   end
   inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = edIsPartnerDate
+      end>
     Left = 408
     Top = 344
   end

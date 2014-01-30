@@ -1,5 +1,5 @@
 inherited ReturnInForm: TReturnInForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'> ('#1085#1086#1074')'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 759
   ClientWidth = 1049
   ExplicitWidth = 1057
@@ -16,7 +16,6 @@ inherited ReturnInForm: TReturnInForm
     ClientRectBottom = 598
     ClientRectRight = 1045
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
       ExplicitWidth = 1043
       ExplicitHeight = 576
       inherited cxGrid: TcxGrid
@@ -193,8 +192,6 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
       ExplicitWidth = 1043
       ExplicitHeight = 576
       inherited cxGridEntry: TcxGrid
@@ -251,7 +248,6 @@ inherited ReturnInForm: TReturnInForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitHeight = 24
     end
     object cxLabel3: TcxLabel
       Left = 743

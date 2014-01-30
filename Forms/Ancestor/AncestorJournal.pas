@@ -63,6 +63,8 @@ type
     actSetErasedList: TMultiAction;
     actMovementItemContainer: TdsdOpenForm;
     bbMovementItemContainer: TdxBarButton;
+    actShowErased: TBooleanStoredProcAction;
+    bbShowErased: TdxBarButton;
   private
     { Private declarations }
   public

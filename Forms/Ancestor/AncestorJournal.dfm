@@ -119,13 +119,15 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited ActionList: TActionList
-    Left = 191
+    Left = 183
     Top = 210
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -151,6 +153,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -258,6 +262,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
       ImageIndex = 57
       FormName = 'TMovementItemContainerForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -266,6 +272,24 @@ inherited AncestorJournalForm: TAncestorJournalForm
           ParamType = ptInput
         end>
       isShowModal = False
+    end
+    object actShowErased: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndex = 64
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1085#1077' '#1091#1076#1072#1083#1077#1085#1085#1099#1077
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
+      ImageIndexTrue = 65
+      ImageIndexFalse = 64
     end
   end
   inherited MasterDS: TDataSource
@@ -288,6 +312,13 @@ inherited AncestorJournalForm: TAncestorJournalForm
         Value = 41608d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsErased'
+        Value = False
+        Component = actShowErased
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Top = 99
@@ -333,6 +364,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -366,6 +401,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object bbMovementItemContainer: TdxBarButton
       Action = actMovementItemContainer
+      Category = 0
+    end
+    object bbShowErased: TdxBarButton
+      Action = actShowErased
       Category = 0
     end
   end
@@ -459,7 +498,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         ParamType = ptInput
       end>
     Left = 48
-    Top = 152
+    Top = 176
   end
   object spMovementSetErased: TdsdStoredProc
     DataSets = <>
@@ -471,7 +510,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 56
-    Top = 160
+    Left = 136
+    Top = 168
   end
 end

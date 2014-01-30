@@ -23,7 +23,7 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox;
 
 type
   TReturnInJournalForm = class(TAncestorJournalForm)
@@ -43,6 +43,7 @@ type
     colContractName: TcxGridDBColumn;
     colInvNumberOrder: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
+    edIsPartnerDate: TcxCheckBox;
   private
     { Private declarations }
   public
