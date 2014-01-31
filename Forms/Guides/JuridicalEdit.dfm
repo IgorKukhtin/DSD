@@ -178,6 +178,9 @@
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
             OptionsData.Appending = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
             object colJDData: TcxGridDBColumn
@@ -307,6 +310,10 @@
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -357,6 +364,10 @@
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
@@ -374,6 +385,7 @@
               DataBinding.FieldName = 'PaidKindName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 40
             end
             object clStartDate: TcxGridDBColumn
@@ -389,6 +401,7 @@
               DataBinding.FieldName = 'EndDate'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 60
             end
             object clInfoMoneyCode: TcxGridDBColumn
@@ -396,6 +409,7 @@
               DataBinding.FieldName = 'InfoMoneyCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 50
             end
             object clInfoMoneyName: TcxGridDBColumn
@@ -403,6 +417,7 @@
               DataBinding.FieldName = 'InfoMoneyName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 100
             end
             object clContractKindName: TcxGridDBColumn

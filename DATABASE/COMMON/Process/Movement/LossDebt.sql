@@ -1,17 +1,19 @@
 -- Документ <Расчеты подотчета с юр.лицом>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Строки Документа <Расчеты подотчета с юр.лицом>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_MI_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_MI_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_MI_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_MI_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetUnErased_MI_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetUnErased_MI_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Status
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_CompletePeriod_LossDebt() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_CompletePeriod_LossDebt' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -22,7 +24,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement
                                   , inCode:= 1
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_LossDebt');
-
+/*   
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_LossDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
@@ -34,20 +36,30 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_LossD
                                   , inCode:= 3
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_LossDebt');
-                                  
+*/                                  
 -- Строки Документа <Расчеты подотчета с юр.лицом>
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_LossDebt()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_LossDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_LossDebt');
-
+/*  
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_LossDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_MI_LossDebt');                                 
- 
+*/ 
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_LossDebt()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 1
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - удаление.'
+                                  , inEnumName:= 'zc_Enum_Process_SetErased_MI_LossDebt');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetUnErased_MI_LossDebt()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 1
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - восстановление.'
+                                  , inEnumName:= 'zc_Enum_Process_SetUnErased_MI_LossDebt');
                                                                   
 -- Status_LossDebt
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_LossDebt()
@@ -67,14 +79,14 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_LossDebt()
                                   , inCode:= 3
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - Удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_LossDebt');
-
+/*  
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_LossDebt()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 4
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_LossDebt())||'> - Проведение за период.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_LossDebt');
-
-
+*/  
+/*
  -- Документ <Расчеты подотчета с юр.лицом>
  -- заливка прав - InsertUpdate_Movement_LossDebt + Get_Movement_LossDebt
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
@@ -157,7 +169,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_LossDe
                             AND tmpData.ProcessId = tmpProcess.ProcessId
  WHERE tmpData.RoleId IS NULL
 ;
- 
+*/ 
  
 END $$;
 

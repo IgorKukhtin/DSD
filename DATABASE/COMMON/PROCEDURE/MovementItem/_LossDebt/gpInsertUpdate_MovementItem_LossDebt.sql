@@ -26,8 +26,7 @@ $BODY$
    DECLARE vbSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
-     vbUserId:= inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
 
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
@@ -63,13 +62,15 @@ BEGIN
                      JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                  ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                                 AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
                      JOIN MovementItemLinkObject AS MILinkObject_Contract
                                                       ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-                     LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
-                                                      ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
-                                                     AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                                                     AND MILinkObject_Contract.ObjectId = inContractId
+                     JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                 ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                                                AND MILinkObject_PaidKind.ObjectId = inPaidKindId
                 WHERE MovementItem.MovementId = inMovementId
                   AND MovementItem.ObjectId = inJuridicalId
                   AND MovementItem.DescId = zc_MI_Master()
@@ -134,3 +135,22 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_LossDebt (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+
+/*
+SELECT MovementItem.ObjectId, MILinkObject_PaidKind.ObjectId, MILinkObject_InfoMoney.ObjectId, MILinkObject_Contract.ObjectId
+                FROM MovementItem
+                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                     JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                 ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                WHERE MovementItem.MovementId = 12055 
+                  AND MovementItem.DescId = zc_MI_Master()
+
+group by MovementItem.ObjectId, MILinkObject_PaidKind.ObjectId, MILinkObject_InfoMoney.ObjectId, MILinkObject_Contract.ObjectId
+having count (*) >1
+*/

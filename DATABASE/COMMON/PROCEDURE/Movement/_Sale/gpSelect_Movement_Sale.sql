@@ -35,9 +35,11 @@ BEGIN
      --
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
-                                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                                UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                                      )
+                       UNION
+                        SELECT zc_Enum_Status_UnComplete() AS StatusId
+                       UNION
+                        SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                       )
      SELECT
              Movement.Id
            , Movement.InvNumber
@@ -77,12 +79,12 @@ BEGIN
            , Object_RouteSorting.ValueData AS RouteSortingName
 
        FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.statusid = tmpStatus.StatusId
+               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
                WHERE inIsPartnerDate = FALSE
 
              UNION ALL SELECT MovementDate_OperDatePartner.movementid  AS Id FROM MovementDate AS MovementDate_OperDatePartner
                         JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.movementid AND Movement.DescId = zc_Movement_Sale()
-                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.statusid
+                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
                        WHERE inIsPartnerDate = TRUE AND MovementDate_OperDatePartner.valuedata BETWEEN inStartDate AND inEndDate
                          AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             ) AS tmpMovement
