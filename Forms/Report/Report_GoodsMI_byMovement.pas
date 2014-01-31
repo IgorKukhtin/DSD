@@ -1,4 +1,4 @@
-unit Report_GoodsMI;
+unit Report_GoodsMI_byMovement;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_GoodsMIForm = class(TAncestorReportForm)
+  TReport_GoodsMI_byMovementForm = class(TAncestorReportForm)
     clTradeMarkName: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
@@ -28,6 +28,11 @@ type
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
     clAmount_CountSh: TcxGridDBColumn;
+    clInvNumber: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clPartnerName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
   private
     { Private declarations }
@@ -39,6 +44,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_GoodsMIForm);
+  RegisterClass(TReport_GoodsMI_byMovementForm);
 
 end.

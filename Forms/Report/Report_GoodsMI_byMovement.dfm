@@ -1,26 +1,26 @@
-inherited Report_GoodsMIForm: TReport_GoodsMIForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1086#1074#1072#1088#1072'>'
-  ClientHeight = 344
-  ClientWidth = 973
+inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')> '
+  ClientHeight = 345
+  ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 981
-  ExplicitHeight = 378
+  ExplicitWidth = 986
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 973
-    Height = 287
+    Width = 978
+    Height = 288
     TabOrder = 3
     ExplicitWidth = 973
     ExplicitHeight = 287
-    ClientRectBottom = 287
-    ClientRectRight = 973
+    ClientRectBottom = 288
+    ClientRectRight = 978
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 973
       ExplicitHeight = 287
       inherited cxGrid: TcxGrid
-        Width = 973
-        Height = 287
+        Width = 978
+        Height = 288
         ExplicitWidth = 973
         ExplicitHeight = 287
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -70,75 +70,121 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 73
+          end
+          object clJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 103
+          end
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 151
+          end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1054
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 26
+          end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 76
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 77
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 51
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 120
           end
           object clAmount_CountSh: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
             DataBinding.FieldName = 'Amount_CountSh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 88
           end
           object clAmount_CountWeight: TcxGridDBColumn
             Caption = #1042#1077#1089
             DataBinding.FieldName = 'Amount_CountWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 83
           end
           object clAmount_Summ: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Amount_Summ'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 71
+          end
+          object clPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 973
+    Width = 978
     ExplicitWidth = 973
     inherited deStart: TcxDateEdit
+      Left = 95
       EditValue = 41579d
+      ExplicitLeft = 95
     end
     inherited deEnd: TcxDateEdit
+      Left = 304
       EditValue = 41608d
+      ExplicitLeft = 304
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 4
+      ExplicitLeft = 4
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 194
+      ExplicitLeft = 194
     end
     object cxLabel4: TcxLabel
-      Left = 413
+      Left = 402
       Top = 6
       Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 474
+      Left = 462
       Top = 5
       Properties.Buttons = <
         item
@@ -149,14 +195,13 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Width = 240
     end
     object edInDescName: TcxTextEdit
-      AlignWithMargins = True
-      Left = 730
+      Left = 714
       Top = 5
-      ParentCustomHint = False
-      BeepOnEnter = False
       Enabled = False
       ParentFont = False
-      Properties.HideSelection = False
+      Style.BorderColor = clWindowFrame
+      Style.BorderStyle = ebsUltraFlat
+      Style.Color = clWindow
       Style.Font.Charset = DEFAULT_CHARSET
       Style.Font.Color = clWindowText
       Style.Font.Height = -11
@@ -164,7 +209,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 231
+      Width = 259
     end
   end
   inherited MasterDS: TDataSource
@@ -176,7 +221,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI'
+    StoredProcName = 'gpReport_GoodsMI_byMovement'
     Params = <
       item
         Name = 'inStartDate'

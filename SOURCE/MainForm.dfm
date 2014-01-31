@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -481,7 +481,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementSale'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMIReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementReturn'
         end>
     end
     object bbBank: TdxBarButton
@@ -1069,8 +1077,16 @@ object MainForm: TMainForm
       Action = actReport_GoodsMISale
       Category = 0
     end
+    object bbReport_GoodsMI_byMovementSale: TdxBarButton
+      Action = actReport_GoodsMI_byMovementSale
+      Category = 0
+    end
     object bbReport_GoodsMIReturn: TdxBarButton
       Action = actReport_GoodsMIReturn
+      Category = 0
+    end
+    object bbReport_GoodsMI_byMovementReturn: TdxBarButton
+      Action = actReport_GoodsMI_byMovementReturn
       Category = 0
     end
     object bbSendDebt: TdxBarButton
@@ -2078,6 +2094,11 @@ object MainForm: TMainForm
         item
           Name = 'inDescId'
           Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1080#1090#1086#1075')'
+          DataType = ftString
         end>
       isShowModal = False
     end
@@ -2095,7 +2116,7 @@ object MainForm: TMainForm
         end
         item
           Name = 'InDescName'
-          Value = #1055#1088#1086#1076#1072#1078#1072
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1080#1090#1086#1075')'
           DataType = ftString
         end>
       isShowModal = False
@@ -2134,6 +2155,43 @@ object MainForm: TMainForm
       FormNameParam.Value = 'TLoadSaleFrom1CForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_byMovementSale: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+      FormName = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_byMovementReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+      FormName = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+          DataType = ftString
+        end>
       isShowModal = False
     end
   end

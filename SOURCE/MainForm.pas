@@ -262,6 +262,10 @@ type
     bbLoad1CSale: TdxBarButton;
     actReport_GoodsMIReturn: TdsdOpenForm;
     bbReport_GoodsMIReturn: TdxBarButton;
+    actReport_GoodsMI_byMovementSale: TdsdOpenForm;
+    actReport_GoodsMI_byMovementReturn: TdsdOpenForm;
+    bbReport_GoodsMI_byMovementSale: TdxBarButton;
+    bbReport_GoodsMI_byMovementReturn: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
