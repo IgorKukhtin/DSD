@@ -1,19 +1,19 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
-  ClientHeight = 759
+  ClientHeight = 715
   ClientWidth = 1049
   ExplicitWidth = 1057
-  ExplicitHeight = 793
+  ExplicitHeight = 749
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 157
     Width = 1049
-    Height = 602
+    Height = 558
     ExplicitTop = 157
     ExplicitWidth = 1049
     ExplicitHeight = 602
-    ClientRectBottom = 598
+    ClientRectBottom = 554
     ClientRectRight = 1045
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
@@ -21,7 +21,7 @@ inherited SaleForm: TSaleForm
       ExplicitHeight = 576
       inherited cxGrid: TcxGrid
         Width = 1043
-        Height = 576
+        Height = 532
         ExplicitWidth = 1043
         ExplicitHeight = 576
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -218,7 +218,7 @@ inherited SaleForm: TSaleForm
       ExplicitHeight = 576
       inherited cxGridEntry: TcxGrid
         Width = 1043
-        Height = 576
+        Height = 532
         ExplicitWidth = 1043
         ExplicitHeight = 576
         inherited cxGridEntryDBTableView: TcxGridDBTableView
@@ -245,7 +245,6 @@ inherited SaleForm: TSaleForm
     Width = 1049
     Height = 129
     TabOrder = 3
-    ExplicitLeft = 8
     ExplicitWidth = 1049
     ExplicitHeight = 129
     inherited edInvNumber: TcxTextEdit
@@ -340,7 +339,7 @@ inherited SaleForm: TSaleForm
       Width = 77
     end
     object cxLabel5: TcxLabel
-      Left = 379
+      Left = 393
       Top = 45
       Caption = #8470' '#1079#1072#1103#1074#1082#1080' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
     end
@@ -413,8 +412,8 @@ inherited SaleForm: TSaleForm
       Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     end
     object edIsChecked: TcxCheckBox
-      Left = 891
-      Top = 95
+      Left = 865
+      Top = 90
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 25
       Width = 137
@@ -436,7 +435,7 @@ inherited SaleForm: TSaleForm
       Width = 94
     end
     object cxLabel12: TcxLabel
-      Left = 271
+      Left = 275
       Top = 45
       Caption = #8470' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
@@ -681,6 +680,7 @@ inherited SaleForm: TSaleForm
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'ToId'
@@ -706,6 +706,7 @@ inherited SaleForm: TSaleForm
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'ContractId'
@@ -731,11 +732,25 @@ inherited SaleForm: TSaleForm
         Value = ''
         Component = GuidesRouteSorting
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'InvNumberOrder'
         Value = ''
         Component = edInvNumberOrder
+        DataType = ftString
+      end
+      item
+        Name = 'PriceListId'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 224
@@ -848,6 +863,20 @@ inherited SaleForm: TSaleForm
         Component = GuidesRouteSorting
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'ioPriceListId'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'Key'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outPriceListName'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 162
     Top = 312
@@ -1083,19 +1112,6 @@ inherited SaleForm: TSaleForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'PriceListId'
-        Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PriceListName'
-        Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
     Left = 416
     Top = 8
@@ -1177,5 +1193,13 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end>
     Left = 916
+  end
+  object frxDBDMaster: TfrxDBDataset
+    UserName = 'frxDBDMaster'
+    CloseDataSource = False
+    DataSet = MasterCDS
+    BCDToCurrency = False
+    Left = 358
+    Top = 221
   end
 end
