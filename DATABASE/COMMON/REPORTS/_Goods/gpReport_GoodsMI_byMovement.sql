@@ -1,7 +1,6 @@
--- Function: gpReport_SaleGoods ()
+-- Function: gpReport_GoodsMI_byMovement ()
 
-DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, TVarChar)
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inStartDate    TDateTime ,  
@@ -192,6 +191,12 @@ BEGIN
          , Object_Juridical.Id
          , Object_Juridical.ValueData  
          , Object_PaidKind.ValueData  
+
+       ORDER BY AllSale.OperDate
+              , AllSale.invnumber
+              , Object_GoodsGroup.ValueData
+              , Object_Goods.ValueData
+
                                        
     ;
          
@@ -209,13 +214,4 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 */
 
 
---select * from gpReport_GoodsMI_byMovement(inStartDate := ('15.12.2013')::TDateTime , inEndDate := ('17.12.2013')::TDateTime , inDescId := 5 , inGoodsGroupId := 0 ,  inSession := '5') order by 1;
-
-/*
-select * from Object
-join ObjectDesc on  ObjectDesc.id =  Object.Descid
-where Object.id in (39604)
-
-
- select * from zc_ContainerLinkObject_Juridical()*/
-
+--select * from gpReport_GoodsMI_byMovement(inStartDate := ('15.12.2013')::TDateTime , inEndDate := ('17.12.2013')::TDateTime , inDescId := 5 , inGoodsGroupId := 0 ,  inSession := '5');
