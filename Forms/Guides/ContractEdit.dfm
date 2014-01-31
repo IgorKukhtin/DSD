@@ -288,6 +288,7 @@ inherited ContractEditForm: TContractEditForm
               Default = True
               Kind = bkEllipsis
             end>
+          Properties.ReadOnly = True
           HeaderAlignmentVert = vaCenter
           Width = 601
         end

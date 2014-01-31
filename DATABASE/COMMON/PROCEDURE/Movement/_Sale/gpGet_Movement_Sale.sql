@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar, InvNumberOrder TVarChar
+             , PriceListId Integer, PriceListName TVarChar
               )
 AS
 $BODY$
@@ -57,6 +58,8 @@ BEGIN
              , 0                     				AS RouteSortingId
              , CAST ('' as TVarChar) 				AS RouteSortingName
              , CAST ('' as TVarChar) 				AS InvNumberOrder
+             , CAST (0 as INTEGER)                   AS PriceListId
+             , CAST ('' as TVarChar) 				AS PriceListName
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
 
@@ -88,6 +91,8 @@ BEGIN
            , Object_RouteSorting.Id        				AS RouteSortingId
            , Object_RouteSorting.ValueData 				AS RouteSortingName
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
+           , Object_PriceList.id                        AS PriceListId
+           , Object_PriceList.valuedata                 AS PriceListName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -166,6 +171,58 @@ BEGIN
 
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+
+
+
+-- PriceList Partner
+         LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
+                              ON ObjectDate_PartnerStartPromo.ObjectId = Object_To.Id
+                             AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
+
+         LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
+                              ON ObjectDate_PartnerEndPromo.ObjectId = Object_To.Id
+                             AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
+                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_To.Id
+                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
+                             AND Movement.operdate BETWEEN ObjectDate_PartnerStartPromo.valuedata AND ObjectDate_PartnerEndPromo.valuedata
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                              ON ObjectLink_Partner_PriceList.ObjectId = Object_To.Id
+                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                             AND ObjectLink_Partner_PriceListPromo.objectid IS NULL
+-- PriceList Juridical
+         LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
+                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                             AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
+
+         LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
+                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                             AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
+
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
+                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
+                             AND (ObjectLink_Partner_PriceListPromo.childobjectid IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
+                             AND Movement.operdate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                             AND ObjectLink_Juridical_PriceListPromo.objectid IS NULL
+
+         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = coalesce(MovementLinkObject_PriceList.objectid,coalesce(coalesce(coalesce(coalesce(ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis()))
+
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
      END IF;
@@ -179,6 +236,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.01.14                                                        * add PriceList
  30.01.14                                                        * add inInvNumberPartner
  29.01.14                                                        * fix ContractName if empty
  16.01.14                                                        * MovementBoolean_Checked
@@ -188,3 +246,5 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 1, inOperDate:=CURRENT_DATE,inSession:= '2')
+ SELECT * FROM gpGet_Movement_Sale(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+ --SELECT * FROM gpGet_Movement_Sale(inMovementId := 40874 , inOperDate := '25.01.2014',  inSession := '5');

@@ -28,6 +28,9 @@ type
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
     N13: TMenuItem;
+    actReCompleteAll: TdsdExecStoredProc;
+    spMovementReCompleteAll: TdsdStoredProc;
+    bbReCompleteAll: TdxBarButton;
   private
     { Private declarations }
   public

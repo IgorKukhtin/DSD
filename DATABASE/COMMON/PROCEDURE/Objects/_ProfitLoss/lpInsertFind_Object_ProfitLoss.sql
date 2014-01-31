@@ -24,22 +24,22 @@ BEGIN
    -- Проверки
    IF COALESCE (inUserId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Пользователя : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inProfitLossGroupId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Группа ОПиУ> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Статью ОПиУ т.к. не установлено <Группа ОПиУ> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inProfitLossDirectionId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Статью ОПиУ т.к. не установлено <Аналитика ОПиУ - направление> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
    IF COALESCE (inInfoMoneyDestinationId, 0) = 0 AND COALESCE (inInfoMoneyId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Невозможно определить Статью ОПиУ т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
+       RAISE EXCEPTION 'Ошибка.Невозможно определить Статью ОПиУ т.к. не установлено <Управленческое назначение> : <%>, <%>, <%>, <%>', inProfitLossGroupId, inProfitLossDirectionId, inInfoMoneyDestinationId, inInfoMoneyId;
    END IF;
 
 
@@ -49,13 +49,20 @@ BEGIN
    END IF;
 
 
+   -- проверка - статья не должна быть удалена
+   IF EXISTS (SELECT Id FROM Object WHERE Id = vbProfitLossId AND isErased = TRUE)
+   THEN
+       RAISE EXCEPTION 'Ошибка.Невозможно использовать удаленную статью ОПиУ: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inProfitLossGroupId), lfGet_Object_ValueData (inProfitLossDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+   END IF;
+
+
    -- Создаем новую статью ОПиУ
    IF COALESCE (vbProfitLossId, 0) = 0 
    THEN
        -- для некоторых случаев блокируем создание новой статьи ОПиУ
        IF inInsert = FALSE
        THEN
-           RAISE EXCEPTION 'В данном документе невозможно создать новую статью ОПиУ с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inProfitLossGroupId), lfGet_Object_ValueData (inProfitLossDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
+           RAISE EXCEPTION 'Ошибка.В данном документе невозможно создать новую статью ОПиУ с параметрами: <%>, <%>, <%>, <%>', lfGet_Object_ValueData (inProfitLossGroupId), lfGet_Object_ValueData (inProfitLossDirectionId), lfGet_Object_ValueData (inInfoMoneyDestinationId), lfGet_Object_ValueData (inInfoMoneyId);
        END IF;
 
        -- Определяем Id 2-ий уровень по <Группа ОПиУ> и <Аналитика ОПиУ - направление>
@@ -134,7 +141,8 @@ ALTER FUNCTION lpInsertFind_Object_ProfitLoss (Integer, Integer, Integer, Intege
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.01.14                                        * add проверка - статья не должна быть удалена
  30.01.14                                        * add !!!запрет вставки статьи!!!, т.е. inInsert = FALSE
  23.12.13                                        * add inInsert
  26.08.13                                        *

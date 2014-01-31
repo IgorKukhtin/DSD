@@ -201,6 +201,7 @@
         Name = 'inInfoMoneyId '
         Value = ''
         Component = InfoMoneyGuides
+        ParamType = ptInput
       end>
     Left = 264
     Top = 64
@@ -292,6 +293,8 @@
   object ProfitLossGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossGroup
+    FormNameParam.Value = 'TProfitLossGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TProfitLossGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -301,6 +304,8 @@
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossDirection
+    FormNameParam.Value = 'TProfitLossDirectionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -329,6 +334,8 @@
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
+    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -338,6 +345,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
