@@ -198,30 +198,29 @@ BEGIN
          LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
                               ON ObjectLink_Partner_PriceList.ObjectId = Object_To.Id
                              AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                             AND ObjectLink_Partner_PriceListPromo.objectid IS NULL
+                             AND ObjectLink_Partner_PriceListPromo.ObjectId IS NULL
 -- PriceList Juridical
          LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
-                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
 
          LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
-                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
 
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
-                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
-                             AND (ObjectLink_Partner_PriceListPromo.childobjectid IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
+                             AND (ObjectLink_Partner_PriceListPromo.ChildObjectId IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
                              AND Movement.operdate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
 
          LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.childobjectid
+                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                              AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                             AND ObjectLink_Juridical_PriceListPromo.objectid IS NULL
+                             AND ObjectLink_Juridical_PriceListPromo.ObjectId IS NULL
 
-         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = coalesce(MovementLinkObject_PriceList.objectid,coalesce(coalesce(coalesce(coalesce(ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis()))
-
+         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis()))
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
@@ -246,5 +245,5 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 
 -- тест
 -- SELECT * FROM gpGet_Movement_Sale (inMovementId:= 1, inOperDate:=CURRENT_DATE,inSession:= '2')
- SELECT * FROM gpGet_Movement_Sale(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_Sale(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
  --SELECT * FROM gpGet_Movement_Sale(inMovementId := 40874 , inOperDate := '25.01.2014',  inSession := '5');

@@ -7544,6 +7544,7 @@ begin
         //toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
         //toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioPriceListId',ftInteger,ptInputOutput, 0);
         //
         toStoredProc_two.StoredProcName:='gpSetErased_Movement';
         toStoredProc_two.OutputType := otResult;
@@ -7556,7 +7557,6 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             {}
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
@@ -7837,6 +7837,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
 function TMainForm.pLoadDocument_Sale_Fl:Integer;
+var PriceListId:Integer;
 begin
      Result:=0;
      if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
@@ -7882,14 +7883,20 @@ begin
         toStoredProc.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPersonalId',ftInteger,ptInput, 0);}
         toStoredProc.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('ioPriceListId',ftInteger,ptInputOutput, 0);
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
              //
-             {}
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                  fOpenSqToQuery ('select ObjectId AS PriceListId from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_PriceList()');
+                  PriceListId:=toSqlQuery.FieldByName('PriceListId').AsInteger;
+             end
+             else PriceListId:=0;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
@@ -7913,6 +7920,7 @@ begin
              toStoredProc.Params.ParamByName('inPersonalId').Value:=FieldByName('PersonalId_Postgres').AsInteger;
              }
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('RouteSortingId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('ioPriceListId').Value:=PriceListId;
 
              if not myExecToStoredProc then ;//exit;
              //
