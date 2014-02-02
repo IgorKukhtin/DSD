@@ -40,8 +40,8 @@ BEGIN
           (CASE WHEN Operation.MovementSumm > 0 THEN 0 ELSE - Operation.MovementSumm END)::TFloat AS Kredit,
           Movement.OperDate,
           Movement.InvNumber, 
-          Account.ObjectCode        AS AccountCode,
-          Account.ValueData         AS AccountName,
+          Object_Account_View.AccountCode,
+          Object_Account_View.AccountName_all AS AccountName,
           Contract.ValueData        AS ContractName,
           Object_InfoMoney_View.InfoMoneyGroupCode,
           Object_InfoMoney_View.InfoMoneyGroupName,
@@ -72,7 +72,7 @@ BEGIN
   -- WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
   GROUP BY ContractId, AccountId, MIContainer.MovementId, InfoMoneyId
     HAVING SUM(MIContainer.Amount) <> 0) AS Operation
-      JOIN Object AS Account ON Account.Id = Operation.AccountId
+      LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
       JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       JOIN Object AS Contract ON Contract.Id = Operation.ContractId
       JOIN Movement ON Movement.Id = Operation.MovementId

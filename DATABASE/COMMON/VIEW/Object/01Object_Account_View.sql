@@ -1,6 +1,6 @@
 -- View: Object_Account_View
 
--- DROP VIEW IF EXISTS Object_Account_View;
+DROP VIEW IF EXISTS Object_Account_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Account_View AS
          SELECT 
@@ -32,6 +32,22 @@ CREATE OR REPLACE VIEW Object_Account_View AS
            , Object_AccountKind.ObjectCode  AS AccountKindCode
            , Object_AccountKind.ValueData   AS AccountKindName
            
+           , CAST (CASE WHEN Object_Account.ObjectCode < 100000
+                          THEN '0'
+                     ELSE ''
+                   END
+                || Object_Account.ObjectCode || ' '
+                || Object_AccountGroup.ValueData
+                || CASE WHEN Object_AccountDirection.ValueData <> Object_AccountGroup.ValueData
+                             THEN ' ' || Object_AccountDirection.ValueData
+                        ELSE ''
+                   END
+                || CASE WHEN Object_Account.ValueData <> Object_AccountDirection.ValueData
+                             THEN ' ' || Object_Account.ValueData
+                        ELSE ''
+                   END
+                   AS TVarChar) AS AccountName_all 
+
            , COALESCE (ObjectBoolean_onComplete.ValueData, FALSE)  AS onComplete
            
        FROM Object AS Object_Account
