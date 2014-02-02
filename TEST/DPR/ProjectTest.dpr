@@ -335,7 +335,7 @@ uses
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm};
 
