@@ -490,6 +490,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_GoodsMI_byMovementReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods_Movement'
         end>
     end
     object bbBank: TdxBarButton
@@ -1087,6 +1091,10 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMI_byMovementReturn: TdxBarButton
       Action = actReport_GoodsMI_byMovementReturn
+      Category = 0
+    end
+    object bbReport_Goods_Movement: TdxBarButton
+      Action = actReport_Goods_Movement
       Category = 0
     end
     object bbSendDebt: TdxBarButton
@@ -2192,6 +2200,16 @@ object MainForm: TMainForm
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
           DataType = ftString
         end>
+      isShowModal = False
+    end
+    object actReport_Goods_Movement: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099
+      Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081
+      FormName = 'TReport_Goods_MovementForm'
+      FormNameParam.Value = 'TReport_Goods_MovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
       isShowModal = False
     end
   end
