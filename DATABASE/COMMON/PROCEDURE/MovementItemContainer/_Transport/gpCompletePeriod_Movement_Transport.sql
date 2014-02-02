@@ -12,11 +12,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_Transport());
-     vbUserId:=2; -- CAST (inSession AS Integer);
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_Transport());
 
 
      -- таблица - Документы которые надо сначала Распровести, потом Провести

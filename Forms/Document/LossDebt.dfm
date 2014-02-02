@@ -1480,7 +1480,7 @@ object LossDebtForm: TLossDebtForm
     Top = 48
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'PersonalAccountJournalForm'
+    FormName = 'LossDebtJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'

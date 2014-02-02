@@ -572,7 +572,7 @@
 				<Form>StaffListEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\PersonalTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\ModelService.pas">
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
@@ -864,7 +864,7 @@
 				<Form>JuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
@@ -974,6 +974,9 @@
 				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

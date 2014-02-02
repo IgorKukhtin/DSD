@@ -122,6 +122,7 @@ type
     fromFlADOConnection: TADOConnection;
     fromFlQuery: TADOQuery;
     fromFlSqlQuery: TADOQuery;
+    cbCompleteReturnIn: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -134,6 +135,7 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
+    procedure cbReturnInClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -163,6 +165,7 @@ type
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
     procedure pCompleteDocument_Sale(isLastComplete:Boolean);
     procedure pCompleteDocument_Sale_Fl(isLastComplete:Boolean);
+    procedure pCompleteDocument_ReturnIn_Fl(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
     procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
@@ -461,6 +464,11 @@ procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
+procedure TMainForm.cbReturnInClick(Sender: TObject);
+begin
+
+end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
@@ -747,6 +755,7 @@ begin
      DataSource.DataSet:=fromFlQuery;
 
      if not fStop then pCompleteDocument_Sale_Fl(True);
+     if not fStop then pCompleteDocument_ReturnIn_Fl(True);
 
      if not fStop then DataSource.DataSet:=fromQuery;
      //!!!end FLOAT!!!
@@ -7500,6 +7509,76 @@ begin
      myDisabledCB(cbCompleteSale);
 end;
 //--------------------------------------------------------------------------*--------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_ReturnIn_Fl(isLastComplete:Boolean);
+begin
+     if (not cbCompleteReturnIn.Checked)or(not cbCompleteReturnIn.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteReturnIn);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Id_Postgres is not null'
+           +'  and Bill.BillKind=zc_bkReturnToUnit()'
+           );
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+        cbCompleteReturnIn.Caption:='3.2. ('+IntToStr(RecordCount)+') Возврат от покупателя';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_ReturnIn';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteReturnIn);
+end;
+//--------------------------------------------------------------------------*--------------------------------------------------------------------------
 //!!!!INTEGER
 function TMainForm.pLoadDocument_Sale:Integer;
 begin
@@ -7863,16 +7942,17 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberOrder',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
         toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
+
         toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
         toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
-        toStoredProc.Params.AddParam ('inInvNumberOrder',ftString,ptInput, '');
 
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
@@ -7899,16 +7979,17 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:='';
+             toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('BillNumberClient1').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
+
              if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
 
-             toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('BillNumberClient1').AsString;
 
              toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;

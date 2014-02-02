@@ -21,14 +21,17 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clAmount_Summ: TcxGridDBColumn;
-    clAmount_CountWeight: TcxGridDBColumn;
+    clSumm: TcxGridDBColumn;
+    clAmount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_CountSh: TcxGridDBColumn;
+    clAmount_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
+    clAmountPartner_Weight: TcxGridDBColumn;
+    clAmountPartner_Sh: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -23,10 +23,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Income());
 
      -- проверка - связанные документы Изменять нельзя
      -- PERFORM lfCheck_Movement_Parent (inMovementId:= inMovementId, inComment:= 'изменение');

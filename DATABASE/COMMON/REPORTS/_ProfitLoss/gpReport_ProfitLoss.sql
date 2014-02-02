@@ -187,6 +187,7 @@ $BODY$BEGIN
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = COALESCE (tmpReport.RouteId_inf, COALESCE (tmpReport.JuridicalId_inf, COALESCE (tmpReport.PersonalId_inf, COALESCE (tmpReport.UnitId_inf, tmpReport.CarId_inf))))
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.GoodsId_inf
 
+      WHERE View_ProfitLoss.ProfitLossCode <> 90101
       ;
   
 END;

@@ -5,25 +5,26 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTi
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (Integer, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (integer, TVarChar, TDateTime, TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (integer, TVarChar, TDateTime, TDateTime, TVarChar, Boolean, Boolean, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
     IN inOperDate            TDateTime , -- Дата документа
     IN inOperDatePartner     TDateTime , -- Дата накладной у контрагента
-    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
     IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
-    IN inInvNumberOrder      TVarChar  , -- Номер заявки контрагента
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
  INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar   , -- Прайс лист
+   OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS RECORD AS

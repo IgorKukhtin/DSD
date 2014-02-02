@@ -35,9 +35,7 @@ type
     procedure MovementProductionUnionTest;
     procedure MovementProductionSeparateTest;
     procedure MovementSendOnPriceTest;
-    procedure MovementSaleTest;
     procedure MovementReturnOutTest;
-    procedure MovementReturnInTest;
     procedure MovementSendTest;
 
     procedure MovementLossTest;
@@ -88,37 +86,12 @@ type
     constructor Create; override;
   end;
 
-  TMovementSaleTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             InvNumberOrder:String;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId,} RouteSortingId,PriceListId: Integer
-             ): integer;
-    constructor Create; override;
-  end;
-
   TMovementReturnOutTest = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   public
     function InsertUpdateMovementReturnOut(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer
-             ): integer;
-    constructor Create; override;
-  end;
-
-  TMovementReturnInTest = class(TMovementTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId: Integer
              ): integer;
@@ -263,21 +236,6 @@ begin
   end;
 end;
 
-procedure TdbMovementTest.MovementSaleTest;
-var
-  MovementSale: TMovementSaleTest;
-  Id: Integer;
-begin
-  MovementSale := TMovementSaleTest.Create;
-  Id := MovementSale.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
 
 procedure TdbMovementTest.MovementReturnOutTest;
 var
@@ -286,22 +244,6 @@ var
 begin
   MovementReturnOut := TMovementReturnOutTest.Create;
   Id := MovementReturnOut.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    DeleteMovement(Id);
-  end;
-end;
-
-procedure TdbMovementTest.MovementReturnInTest;
-var
-  MovementReturnIn: TMovementReturnInTest;
-  Id: Integer;
-begin
-  MovementReturnIn := TMovementReturnInTest.Create;
-  Id := MovementReturnIn.InsertDefault;
   // создание документа
   try
   // редактирование
@@ -586,96 +528,6 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-{ TMovementSale }
-constructor TMovementSaleTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_Sale';
-  spSelect := 'gpSelect_Movement_Sale';
-  spGet := 'gpGet_Movement_Sale';
-end;
-
-function TMovementSaleTest.InsertDefault: integer;
-var Id: Integer;
-    InvNumber: String;
-    OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    Checked,PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    InvNumberOrder:String;
-    FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId,} RouteSortingId, PriceListId: Integer;
-begin
-  Id:=0;
-  InvNumber:='1';
-  OperDate:= Date;
-  OperDatePartner:= Date;
-
-  Checked:=true;
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
-
-  InvNumberOrder:='';
-
-  FromId := TPartnerTest.Create.GetDefault;
-  ToId := TUnit.Create.GetDefault;
-  PaidKindId:=1;
-  ContractId:=TContractTest.Create.GetDefault;
-  //CarId:=0;
-  //PersonalDriverId:=0;
-  //RouteId:=0;
-  //PersonalId:=0;
-  RouteSortingId:=0;
-  PriceListId:=0;
-  //
-  result := InsertUpdateMovementSale(Id, InvNumber, OperDate,
-             OperDatePartner, Checked, PriceWithVAT,
-             VATPercent, ChangePercent,
-             InvNumberOrder,
-             FromId, ToId, PaidKindId, ContractId,
-             {CarId,PersonalDriverId, RouteId, PersonalId,}
-             RouteSortingId,PriceListId);
-
-end;
-
-function TMovementSaleTest.InsertUpdateMovementSale(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             InvNumberOrder:String;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId, }RouteSortingId,PriceListId: Integer):Integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-
-  FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
-
-  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
-  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
-  FParams.AddParam('inInvNumberOrder', ftString, ptInput, InvNumberOrder);
-
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-
-//  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-//  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
-//  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
-//  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
-
-  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
-  FParams.AddParam('ioPriceListId', ftInteger, ptInput, PriceListId);
-
-
-  result := InsertUpdate(FParams);
-end;
 
 { TMovementReturnOut }
 constructor TMovementReturnOutTest.Create;
@@ -728,70 +580,6 @@ begin
 
   FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
 
-  FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
-  FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
-  FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
-  FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-
-  result := InsertUpdate(FParams);
-end;
-
-{ TMovementReturnIn }
-constructor TMovementReturnInTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_ReturnIn';
-  spSelect := 'gpSelect_Movement_ReturnIn';
-  spGet := 'gpGet_Movement_ReturnIn';
-end;
-
-function TMovementReturnInTest.InsertDefault: integer;
-var Id: Integer;
-    InvNumber: String;
-    OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    Checked, PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId: Integer;
-begin
-  Id:=0;
-  InvNumber:='1';
-  OperDate:= Date;
-
-  OperDatePartner:= Date;
-  Checked:=true;
-  PriceWithVAT:=true;
-  VATPercent:=20;
-  ChangePercent:=-10;
-
-  FromId := TPartnerTest.Create.GetDefault;
-  ToId := TUnit.Create.GetDefault;
-  PaidKindId:=TPaidKindTest.Create.GetDefault;
-  ContractId:=TContractTest.Create.GetDefault;
-  //
-  result := InsertUpdateMovementReturnIn(Id, InvNumber, OperDate,
-             OperDatePartner, Checked, PriceWithVAT,
-             VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId);
-end;
-
-function TMovementReturnInTest.InsertUpdateMovementReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
-  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-
-  FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
