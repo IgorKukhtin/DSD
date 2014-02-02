@@ -11,29 +11,29 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     Width = 978
     Height = 288
     TabOrder = 3
-    ExplicitWidth = 973
-    ExplicitHeight = 287
+    ExplicitWidth = 978
+    ExplicitHeight = 288
     ClientRectBottom = 288
     ClientRectRight = 978
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
-      ExplicitHeight = 287
+      ExplicitWidth = 978
+      ExplicitHeight = 288
       inherited cxGrid: TcxGrid
         Width = 978
         Height = 288
-        ExplicitWidth = 973
-        ExplicitHeight = 287
+        ExplicitWidth = 978
+        ExplicitHeight = 288
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Summ
+              Column = clSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_CountWeight
+              Column = clAmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -42,18 +42,28 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_CountSh
+              Column = clAmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Summ
+              Column = clSumm
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_CountWeight
+              Column = clAmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -62,7 +72,17 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_CountSh
+              Column = clAmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Sh
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -125,26 +145,15 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object clAmount_CountSh: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086
-            DataBinding.FieldName = 'Amount_CountSh'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 88
+          object clAmount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_Weight'
+            Visible = False
           end
-          object clAmount_CountWeight: TcxGridDBColumn
-            Caption = #1042#1077#1089
-            DataBinding.FieldName = 'Amount_CountWeight'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 83
-          end
-          object clAmount_Summ: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'Amount_Summ'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 71
+          object clAmount_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_Sh'
+            Visible = False
           end
           object clPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
@@ -153,13 +162,34 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 40
           end
+          object clAmountPartner_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountPartner_Weight'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 88
+          end
+          object clAmountPartner_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'AmountPartner_Sh'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 83
+          end
+          object clSumm: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
+            DataBinding.FieldName = 'Summ'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
     Width = 978
-    ExplicitWidth = 973
+    ExplicitWidth = 978
     inherited deStart: TcxDateEdit
       Left = 95
       EditValue = 41579d
