@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-     cxGrid, dsdGuides, ImgList, cxPC, cxGridDBTableView;
+     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridDBTableView;
 
 type
   TDataSetAcionType = (acInsert, acUpdate);
@@ -398,14 +398,15 @@ type
 
   TdsdGridToExcel = class (TdsdCustomAction)
   private
-    FGrid: TcxGrid;
+    FGrid: TcxControl;
+    procedure SetGrid(const Value: TcxControl);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
   published
-    property Grid: TcxGrid read FGrid write FGrid;
+    property Grid: TcxControl read FGrid write SetGrid;
     property Caption;
     property Hint;
     property ImageIndex;
@@ -472,7 +473,8 @@ implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
-     frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo;
+     frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
+     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid;
 
 procedure Register;
 begin
@@ -1073,7 +1075,14 @@ end;
 function TdsdGridToExcel.LocalExecute: boolean;
 begin
   result := true;
-  ExportGridToExcel('#$#$#$.xls', FGrid);
+  if not Assigned(FGrid) then begin
+     ShowMessage('Не установлено свойство Grid');
+     exit;
+  end;
+  if FGrid is TcxGrid then
+     ExportGridToExcel('#$#$#$.xls', TcxGrid(FGrid));
+  if FGrid is TcxCustomPivotGrid then
+     cxExportPivotGridToExcel('#$#$#$.xls', TcxCustomPivotGrid(FGrid));
   ShellExecute(Application.Handle, 'open', PWideChar('#$#$#$.xls'), nil, nil, SW_SHOWNORMAL);
 end;
 
@@ -1084,6 +1093,15 @@ begin
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (AComponent = FGrid) then
        FGrid := nil;
+end;
+
+procedure TdsdGridToExcel.SetGrid(const Value: TcxControl);
+begin
+  if not ((Value is TcxGrid) or (Value is TcxCustomPivotGrid)) then begin
+     ShowMessage('Компонент может быть только типа TcxGrid или TcxPivotGrid');
+     exit;
+  end;
+  FGrid := Value;
 end;
 
 { TdsdPrintAction }

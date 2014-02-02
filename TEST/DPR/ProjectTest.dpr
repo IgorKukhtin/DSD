@@ -332,7 +332,8 @@ uses
   dbMeatTest in '..\SOURCE\dbMeatTest.pas',
   LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
   ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas';
 
 {$R *.RES}
 

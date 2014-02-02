@@ -7,13 +7,16 @@ CREATE OR REPLACE FUNCTION gpSelect_1CSaleLoad(
     IN inEndDate          TDateTime , --
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UnitId TVarChar, VidDoc TVarChar, InvNumber TVarChar,
-               OperDate TVarChar, ClientCode TVarChar, ClientName TVarChar, 
-               GoodsCode TVarChar, GoodsName TVarChar, OperCount TVarChar, OperPrice TVarChar,
-               Tax TVarChar, Doc1Date TVarChar, Doc1Number TVarChar, Doc2Date TVarChar, Doc2Number TVarChar,
-               Suma TVarChar, PDV TVarChar, SumaPDV TVarChar, ClientINN TVarChar, ClientOKPO TVarChar,
-               InvNalog TVarChar, BillId TVarChar, EkspCode TVarChar, ExpName TVarChar
+RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
+               OperDate TDateTime, ClientCode Integer, ClientName TVarChar, 
+               GoodsCode Integer, GoodsName TVarChar, OperCount TFloat, OperPrice TFloat,
+               Tax TFloat, Doc1Date TDateTime, Doc1Number TVarChar, Doc2Date TDateTime, Doc2Number TVarChar,
+               Suma TFloat, PDV TFloat, SumaPDV TFloat, ClientINN TVarChar, ClientOKPO TVarChar,
+               InvNalog TVarChar, BillId Integer, EkspCode Integer, ExpName TVarChar,
+               DeliveryPointId Integer, DeliveryPointName TVarChar,
+               GoodsGoodsKindId Integer, GoodsGoodsKindName TVarChar
 )
+
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -49,9 +52,26 @@ BEGIN
       Sale1C.InvNalog    ,
       Sale1C.BillId      ,
       Sale1C.EkspCode    ,
-      Sale1C.ExpName     
+      Sale1C.ExpName     ,
+      0::Integer,
+      ''::TVarChar,
+      0::Integer,
+      ''::TVarChar
 
    FROM Sale1C;
+
+select Object_Partner.*, Object_DeliveryPoint.*, Sale1C.* 
+
+   FROM Sale1C
+
+ LEFT JOIN Object AS Object_DeliveryPoint ON Sale1C.ClientCode = Object_DeliveryPoint.ObjectCode
+ AND Object_DeliveryPoint.DescId =  zc_Object_Partner1CLink()
+     LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+         ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_DeliveryPoint.Id
+        AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+  LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId   
+
+ order by 2
   
 END;
 $BODY$
@@ -62,7 +82,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad(TDateTime, TDateTime, TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.12.13                                        * add vbAccessKeyAll
+ 14.12.13                         * 
 */
 
 -- тест

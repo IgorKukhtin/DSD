@@ -24,6 +24,10 @@ type
     colClientINN: TcxGridDBColumn;
     colClientOKPO: TcxGridDBColumn;
     colSuma: TcxGridDBColumn;
+    colDeliveryPoint: TcxGridDBColumn;
+    colGoodsGoodsKind: TcxGridDBColumn;
+    colClientCode: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
