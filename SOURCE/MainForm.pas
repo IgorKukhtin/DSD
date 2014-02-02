@@ -266,6 +266,8 @@ type
     actReport_GoodsMI_byMovementReturn: TdsdOpenForm;
     bbReport_GoodsMI_byMovementSale: TdxBarButton;
     bbReport_GoodsMI_byMovementReturn: TdxBarButton;
+    actReport_Goods_Movement: TdsdOpenForm;
+    bbReport_Goods_Movement: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
