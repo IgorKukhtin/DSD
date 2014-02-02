@@ -56,7 +56,6 @@ type
     actGoodsKind: TdsdOpenForm;
     bbPaidKind: TdxBarButton;
     bbContractKind: TdxBarButton;
-    bbUnitGroup: TdxBarButton;
     bbUnit: TdxBarButton;
     bbGoodsGroup: TdxBarButton;
     bbGoods: TdxBarButton;
@@ -67,7 +66,7 @@ type
     bbGoodsKind: TdxBarButton;
     actReport_Balance: TdsdOpenForm;
     bbReportBalance: TdxBarButton;
-    bbReports: TdxBarSubItem;
+    bbReportsGoods: TdxBarSubItem;
     bbBank: TdxBarButton;
     actPriceList: TdsdOpenForm;
     bbPriceList: TdxBarButton;
@@ -268,6 +267,18 @@ type
     bbReport_GoodsMI_byMovementReturn: TdxBarButton;
     actReport_Goods_Movement: TdsdOpenForm;
     bbReport_Goods_Movement: TdxBarButton;
+    bbReportsFinance: TdxBarSubItem;
+    bbReportMain: TdxBarSubItem;
+    bbReportsProduction: TdxBarSubItem;
+    actReport_Production_Union: TdsdOpenForm;
+    bbGoodsDocuments_Separator: TdxBarSeparator;
+    bbReportsProduction_Separator: TdxBarSeparator;
+    bbHistory_Separator: TdxBarSeparator;
+    bbReportsGoods_Separator: TdxBarSeparator;
+    bbReportsFinance_Separator: TdxBarSeparator;
+    bbReportMain_Separator: TdxBarSeparator;
+    bbService_Separator: TdxBarSeparator;
+    dxBarButton1: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
