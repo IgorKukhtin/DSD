@@ -1265,7 +1265,7 @@ BEGIN
                     ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
 
-     -- 5.2.2. формируются Проводки для отчета (Счета: Юр.лицо(Сумма по прайсу "минус" Сумма контрагентау) <-> ОПиУ(Скидка по акциям)) Аналитики: !!!Товар здесь ЛЮБОЙ из с/с, а если его нет тогда количественный и еще inAccountId_1 НЕ ПРАВИЛЬНЫЙ!!! 
+     -- 5.2.2. формируются Проводки для отчета (Счета: Юр.лицо(Сумма по прайсу "минус" Сумма контрагенту) <-> ОПиУ(Скидка по акциям)) Аналитики: !!!Товар здесь ЛЮБОЙ из с/с, а если его нет тогда количественный и еще inAccountId_1 НЕ ПРАВИЛЬНЫЙ!!! 
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem_byProfitLoss.MovementItemId
                                               , inActiveContainerId  := _tmpItem_byProfitLoss.ActiveContainerId
