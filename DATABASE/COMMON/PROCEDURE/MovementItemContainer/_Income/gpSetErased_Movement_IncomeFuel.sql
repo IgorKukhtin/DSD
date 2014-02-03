@@ -1,8 +1,8 @@
--- Function: gpSetErased_Movement_Income (Integer, TVarChar)
+-- Function: gpSetErased_Movement_IncomeFuel (Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpSetErased_Movement_Income (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSetErased_Movement_IncomeFuel (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSetErased_Movement_Income(
+CREATE OR REPLACE FUNCTION gpSetErased_Movement_IncomeFuel(
     IN inMovementId        Integer               , -- ключ Документа
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )                              
@@ -11,11 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Income());
-     vbUserId:=2;
-
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_IncomeFuel());
 
      -- проверка - если <Master> Проведен, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
@@ -30,13 +27,13 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  30.10.13         *
 */
 
 -- тест
--- SELECT * FROM gpSetErased_Movement_Income (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSetErased_Movement_IncomeFuel (inMovementId:= 149639, inSession:= zfCalc_UserAdmin())

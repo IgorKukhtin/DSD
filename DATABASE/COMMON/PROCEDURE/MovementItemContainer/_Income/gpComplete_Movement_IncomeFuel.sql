@@ -12,19 +12,16 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:=PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_IncomeFueld());
-     vbUserId:=2; -- CAST (inSession AS Integer);
-
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_IncomeFuel());
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  30.10.13                                        *
 */
 

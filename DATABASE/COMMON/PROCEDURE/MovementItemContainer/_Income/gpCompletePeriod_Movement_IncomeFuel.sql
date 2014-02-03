@@ -12,10 +12,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_IncomeFuel());
-     vbUserId:=2; -- CAST (inSession AS Integer);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_CompletePeriod_IncomeFuel());
 
      -- таблица - Документы которые надо сначала Распровести, потом Провести
      CREATE TEMP TABLE _tmpMovement (MovementId Integer, OperDate TDateTime) ON COMMIT DROP;
@@ -66,11 +64,11 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  01.11.13                                        * add ...Id_Transit
  31.10.13                                        * all
  30.10.13         *
