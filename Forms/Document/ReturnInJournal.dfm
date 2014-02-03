@@ -2,26 +2,27 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 924
-  ExplicitWidth = 932
-  ExplicitHeight = 569
+  ExplicitWidth = 940
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 924
-    Height = 476
+    Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 924
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 920
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 924
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 918
-      ExplicitHeight = 470
+      ExplicitWidth = 924
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 918
-        Height = 470
-        ExplicitWidth = 918
-        ExplicitHeight = 470
+        Width = 924
+        Height = 478
+        ExplicitWidth = 924
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -237,13 +238,19 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   inherited Panel: TPanel
     Width = 924
     ExplicitWidth = 924
+    inherited deStart: TcxDateEdit
+      EditValue = 41609d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 41639d
+    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
       Action = actRefresh
-      Caption = #1044#1072#1090#1072' '#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
-      Width = 190
+      Width = 198
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -258,10 +265,44 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TReturnInForm'
       FormNameParam.Value = 'TReturnInForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -272,14 +313,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41579d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41608d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -306,7 +347,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
