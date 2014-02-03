@@ -21,19 +21,24 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clAmountSale_Summ: TcxGridDBColumn;
-    clAmountSale_CountWeight: TcxGridDBColumn;
+    clSale_Summ: TcxGridDBColumn;
+    clSale_Amount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmountSale_CountSh: TcxGridDBColumn;
+    clSale_Amount_Sh: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     clAmountReturn_CountSh: TcxGridDBColumn;
     clAmountReturn_CountWeight: TcxGridDBColumn;
     clAmountReturn_Summ: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
+    clSale_AmountPartner_Weight: TcxGridDBColumn;
+    clSale_AmountPartner_Sh: TcxGridDBColumn;
+    clReturn_AmountPartner_Weight: TcxGridDBColumn;
+    clReturn_AmountPartner_Sh: TcxGridDBColumn;
   private
     { Private declarations }
   public
