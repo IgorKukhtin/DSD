@@ -96,9 +96,9 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateContract(const Id: integer; InvNumber, Comment: string;
-                                        SigningDate, StartDate, EndDate: TDateTime;
-                                        ChangePercent,ChangePrice :Double; JuridicalId,InfoMoneyId,ContractKindId,PaidKindId :Integer
+    function InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
+  Comment: string; SigningDate, StartDate, EndDate: TDateTime;
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId :Integer
                                  ): integer;
     constructor Create; override;
   end;
@@ -920,7 +920,7 @@ begin
   try
     // Получение данных о юр лице
     with ObjectTest.GetRecord(Id) do
-      Check((FieldByName('InvNumber').AsString = '123456'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+      Check((FieldByName('InvNumber').AsString = '123456-test'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
 
   finally
     ObjectTest.Delete(Id);
@@ -997,30 +997,58 @@ begin
 end;
 
 function TContractTest.InsertDefault: integer;
+var Id,Code: integer;
+    InvNumber,InvNumberArchive,Comment: string;
+    SigningDate, StartDate, EndDate: TDateTime;
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId :Integer;
 begin
-  result := InsertUpdateContract(0, '123456', 'comment', date,date,date, 1,2,0,0,0,0);
+    Id:=0;
+    Code:=0;
+    InvNumber:='123456-test';
+    InvNumberArchive:='';
+    Comment:='comment';
+    SigningDate:=date; StartDate:=date; EndDate:=date;
+    JuridicalId:=TJuridical.Create.GetDefault;
+    JuridicalBasisId:=9399;//ООО АЛАН
+    InfoMoneyId:=8962;//(30101) Доходы Продукция Готовая продукция
+    ContractKindId:=0;
+    PaidKindId:=3;//БН
+    PersonalId:=0;
+    AreaId:=0;
+    ContractArticleId:=0;
+    ContractStateKindId:=0;
+
+  result := InsertUpdateContract(Id,Code,
+    InvNumber,InvNumberArchive,Comment,
+    SigningDate, StartDate, EndDate,
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId);
   inherited;
 end;
 
-function TContractTest.InsertUpdateContract(const Id: integer; InvNumber,
+function TContractTest.InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment: string; SigningDate, StartDate, EndDate: TDateTime;
-  ChangePercent,ChangePrice :Double; JuridicalId,InfoMoneyId,ContractKindId,PaidKindId :Integer
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId :Integer
  ): integer;
 
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inInvNumberArchive', ftString, ptInput, InvNumberArchive);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
   FParams.AddParam('inSigningDate', ftDateTime, ptInput, SigningDate);
   FParams.AddParam('inStartDate', ftDateTime, ptInput, StartDate);
   FParams.AddParam('inEndDate', ftDateTime, ptInput, EndDate);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-  FParams.AddParam('inChangePrice', ftFloat, ptInput, ChangePrice);
-  FParams.AddParam('inComment', ftString, ptInput, Comment);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inJuridicalBasisId', ftInteger, ptInput, JuridicalBasisId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inContractKindId', ftInteger, ptInput, ContractKindId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
+  FParams.AddParam('inAreaId', ftInteger, ptInput, AreaId);
+  FParams.AddParam('inContractArticleId', ftInteger, ptInput, ContractArticleId);
+  FParams.AddParam('inContractStateKindId', ftInteger, ptInput, ContractStateKindId);
 
   result := InsertUpdate(FParams);
 end;

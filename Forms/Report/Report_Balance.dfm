@@ -249,8 +249,8 @@ object Report_BalanceForm: TReport_BalanceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -325,6 +325,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      Grid = cxDBPivotGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6

@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PersonalSendCash());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_PersonalSendCash());
 
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = inMovementId);

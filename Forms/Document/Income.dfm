@@ -977,6 +977,8 @@ object IncomeForm: TIncomeForm
           ParamType = ptInput
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1593,8 +1595,6 @@ object IncomeForm: TIncomeForm
     Top = 224
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'IncomeJournalForm'
-    DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'

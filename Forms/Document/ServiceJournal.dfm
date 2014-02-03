@@ -1,24 +1,19 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
   ClientWidth = 982
-  ExplicitWidth = 990
+  ExplicitWidth = 998
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 982
-    ExplicitHeight = 272
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
-      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 982
-        Height = 272
         ExplicitWidth = 982
-        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -251,6 +246,19 @@ inherited ServiceJournalForm: TServiceJournalForm
           DataType = ftDateTime
         end>
     end
+    object actReCompleteAll: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spMovementReCompleteAll
+      StoredProcList = <
+        item
+          StoredProc = spMovementReCompleteAll
+        end>
+      Caption = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      Hint = #1055#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076
+      ImageIndex = 10
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
+      InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 56
@@ -305,9 +313,17 @@ inherited ServiceJournalForm: TServiceJournalForm
           ItemName = 'bbDelete'
         end
         item
+          Visible = True
+          ItemName = 'bbReCompleteAll'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
@@ -324,6 +340,10 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
     object bbInsertMask: TdxBarButton [5]
       Action = actInsertMask
+      Category = 0
+    end
+    object bbReCompleteAll: TdxBarButton
+      Action = actReCompleteAll
       Category = 0
     end
   end
@@ -358,5 +378,27 @@ inherited ServiceJournalForm: TServiceJournalForm
       end>
     Left = 80
     Top = 176
+  end
+  object spMovementReCompleteAll: TdsdStoredProc
+    StoredProcName = 'gpCompletePeriod_Movement_Service'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41579d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndtDate'
+        Value = 41608d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 272
+    Top = 224
   end
 end

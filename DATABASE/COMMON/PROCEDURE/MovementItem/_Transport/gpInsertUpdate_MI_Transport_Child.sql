@@ -28,10 +28,8 @@ RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportChild());
 
      -- сохранили <Элемент документа> и вернули параметры
      SELECT tmp.ioId, tmp.ioAmount, tmp.outAmount_calc, tmp.outAmount_Distance_calc, tmp.outAmount_ColdHour_calc, tmp.outAmount_ColdDistance_calc

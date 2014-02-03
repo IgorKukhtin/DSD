@@ -29,6 +29,8 @@ type
   private
     FInitializeDirectory: string;
   public
+    constructor Create; override;
+    procedure Open(FileName: string);
     procedure Activate; override;
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
   end;
@@ -38,6 +40,7 @@ type
     FInitializeDirectory: string;
     FEndDate: TdsdParam;
     FStartDate: TdsdParam;
+    FFileName: string;
   protected
     function StartDate: TDateTime;
     function EndDate: TDateTime;
@@ -45,6 +48,7 @@ type
     function GetExternalLoad: TExternalLoad; virtual; abstract;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); virtual; abstract;
   public
+    property FileName: string read FFileName write FFileName;
     constructor Create(Owner: TComponent); override;
     destructor Destroy; override;
     function Execute: boolean; override;
@@ -116,12 +120,7 @@ begin
     end;}
     if Execute then begin
        InitializeDirectory := ExtractFilePath(FileName);
-       FDataSet := TMemDBFTable.Create(nil);
-       TMemDBFTable(FDataSet).FileName := FileName;
-       TMemDBFTable(FDataSet).OEM := FOEM;
-       TMemDBFTable(FDataSet).Open;
-       FActive := TMemDBFTable(FDataSet).Active;
-       First;
+       Self.Open(FileName);
     end;
   finally
     Free;
@@ -130,6 +129,7 @@ end;
 
 constructor TExternalLoadAction.Create(Owner: TComponent);
 begin
+  FileName := '';
   inherited;
   FStartDate := TdsdParam.Create(nil);
   FEndDate := TdsdParam.Create(nil);
@@ -155,7 +155,10 @@ begin
   FExternalLoad := TFileExternalLoad(GetExternalLoad);
   try
     FExternalLoad.InitializeDirectory := InitializeDirectory;
-    FExternalLoad.Activate;
+    if FileName <> '' then
+       FExternalLoad.Open(FileName)
+    else
+       FExternalLoad.Activate;
     if FExternalLoad.Active then begin
        InitializeDirectory := FExternalLoad.InitializeDirectory;
        FStoredProc := GetStoredProc;
@@ -184,6 +187,22 @@ end;
 function TExternalLoadAction.StartDate: TDateTime;
 begin
   result := StartDateParam.Value;
+end;
+
+constructor TFileExternalLoad.Create;
+begin
+  inherited;
+  FOEM := true;
+end;
+
+procedure TFileExternalLoad.Open(FileName: string);
+begin
+  FDataSet := TMemDBFTable.Create(nil);
+  TMemDBFTable(FDataSet).FileName := FileName;
+  TMemDBFTable(FDataSet).OEM := FOEM;
+  FDataSet.Open;
+  First;
+  FActive := FDataSet.Active;
 end;
 
 end.

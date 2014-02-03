@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  -- vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_LossDebt());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_LossDebt());
 
   -- устанавливаем новое значение
   outIsErased := FALSE;

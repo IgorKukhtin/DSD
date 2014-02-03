@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_Service()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -30,6 +32,12 @@ BEGIN
 
      -- Результат
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                         )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -62,8 +70,12 @@ BEGIN
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
 
-       FROM Movement
+       FROM tmpStatus
+            JOIN Movement ON Movement.DescId = zc_Movement_Service()
+                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.StatusId = tmpStatus.StatusId
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
@@ -97,18 +109,17 @@ BEGIN
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
-       WHERE Movement.DescId = zc_Movement_Service()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+      ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.01.14                                        * add inIsErased
  28.01.14         * add ContractConditionKind
  14.01.14                                        * add Object_Contract_InvNumber_View
  28.12.13                                        * add Object_InfoMoney_View

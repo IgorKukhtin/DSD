@@ -24,10 +24,10 @@ $BODY$BEGIN
 
      RETURN QUERY 
       SELECT
-             (CASE WHEN View_ProfitLoss.ProfitLossGroupCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossGroupCode || ' ' || View_ProfitLoss.ProfitLossGroupName):: TVarChar         AS ProfitLossGroupName
-           , (CASE WHEN View_ProfitLoss.ProfitLossDirectionCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossDirectionCode || ' ' || View_ProfitLoss.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
-           , (CASE WHEN View_ProfitLoss.ProfitLossCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossCode || ' ' || View_ProfitLoss.ProfitLossName):: TVarChar                   AS ProfitLossName
-           , View_ProfitLoss.onComplete                                                                             AS OnComplete
+             View_ProfitLoss.ProfitLossGroupName
+           , View_ProfitLoss.ProfitLossDirectionName
+           , View_ProfitLoss.ProfitLossName
+           , View_ProfitLoss.onComplete
 
            , Object_Business.ValueData          AS BusinessName
            , Object_JuridicalBasis.ValueData    AS JuridicalName_Basis
@@ -187,17 +187,17 @@ $BODY$BEGIN
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = COALESCE (tmpReport.RouteId_inf, COALESCE (tmpReport.JuridicalId_inf, COALESCE (tmpReport.PersonalId_inf, COALESCE (tmpReport.UnitId_inf, tmpReport.CarId_inf))))
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.GoodsId_inf
 
+      WHERE View_ProfitLoss.ProfitLossCode <> 90101
       ;
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_ProfitLoss (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  03.11.13                                        * all
  21.10.13                         *
  01.09.13                                        *

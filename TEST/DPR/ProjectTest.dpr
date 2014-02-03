@@ -222,7 +222,7 @@ uses
   StaffListData in '..\..\Forms\StaffListData.pas' {StaffListDataForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
-  SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
+  SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
   ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm},
@@ -251,7 +251,7 @@ uses
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  Report_Goods_Movement in '..\..\Forms\Report\Report_Goods_Movement.pas' {Report_Goods_MovementForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
   SendTicketFuel in '..\..\Forms\Document\SendTicketFuel.pas' {SendTicketFuelForm: TParentForm},
   SendTicketFuelJournal in '..\..\Forms\Document\SendTicketFuelJournal.pas' {SendTicketFuelJournalForm: TParentForm},
@@ -302,7 +302,7 @@ uses
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
+  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
@@ -332,7 +332,13 @@ uses
   dbMeatTest in '..\SOURCE\dbMeatTest.pas',
   LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
   ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
+  PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
+  SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
+  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm};
 
 {$R *.RES}
 

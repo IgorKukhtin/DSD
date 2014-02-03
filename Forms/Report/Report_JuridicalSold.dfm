@@ -1,29 +1,29 @@
 inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
-  ClientWidth = 1075
-  ExplicitWidth = 1091
+  ClientWidth = 1127
+  ExplicitWidth = 1143
   ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1075
+    Width = 1127
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 863
-    ExplicitHeight = 306
+    ExplicitWidth = 1127
+    ExplicitHeight = 472
     ClientRectBottom = 472
-    ClientRectRight = 1075
+    ClientRectRight = 1127
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 863
-      ExplicitHeight = 306
+      ExplicitWidth = 1127
+      ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1075
+        Width = 1127
         Height = 472
-        ExplicitWidth = 863
-        ExplicitHeight = 306
+        ExplicitWidth = 1127
+        ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -207,6 +207,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
               Kind = skSum
               Column = colKreditSumm
             end>
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -224,21 +228,21 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 40
           end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 45
           end
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 62
+            Width = 60
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -379,14 +383,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Width = 60
           end
           object colSendDebtSumm: TcxGridDBColumn
-            Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090
+            Caption = #1042#1079'-'#1079#1072#1095#1077#1090' (+)'#1086#1087#1083'.'#1087#1088#1080#1093'. (-)'#1086#1087#1083'.'#1088#1072#1089#1093'.'
             DataBinding.FieldName = 'SendDebtSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 70
           end
           object colOtherSumm: TcxGridDBColumn
             Caption = '***'
@@ -470,17 +474,19 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
   end
   inherited Panel: TPanel
-    Width = 1075
+    Width = 1127
     Height = 57
-    ExplicitWidth = 863
+    ExplicitWidth = 1127
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
+      EditValue = 41609d
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
+      EditValue = 41639d
       ExplicitLeft = 118
       ExplicitTop = 30
     end
@@ -495,12 +501,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ExplicitTop = 31
     end
     object cxLabel3: TcxLabel
-      Left = 697
+      Left = 365
       Top = 7
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object ceInfoMoneyGroup: TcxButtonEdit
-      Left = 697
+      Left = 365
       Top = 30
       Properties.Buttons = <
         item
@@ -527,7 +533,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 365
+      Left = 697
       Top = 30
       Properties.Buttons = <
         item
@@ -538,7 +544,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Width = 160
     end
     object cxLabel5: TcxLabel
-      Left = 365
+      Left = 697
       Top = 7
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
@@ -570,13 +576,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 41395d
+          Value = 41609d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41395d
+          Value = 41639d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -597,14 +603,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -674,6 +680,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Action = dsdPrintAction
       Category = 0
     end
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = AccountGuides
+      end
+      item
+        Component = dsdInfoMoneyGroupGuides
+      end
+      item
+        Component = dsdInfoMoneyDestinationGuides
+      end
+      item
+        Component = InfoMoneyGuides
+      end>
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'

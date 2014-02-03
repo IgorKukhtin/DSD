@@ -43,7 +43,7 @@ BEGIN
                                , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId Integer, JuridicalId_Basis Integer
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean
+                               , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
 
      -- !!!Проводим Документы!!!

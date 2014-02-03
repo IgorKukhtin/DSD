@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inAccountId        Integer,    -- Счет  
     IN inInfoMoneyId      Integer,    -- Управленческая статья  
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
-    IN inInfoMoneyDestinationId   Integer,    -- филиал
+    IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalName TVarChar, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
@@ -32,21 +32,7 @@ BEGIN
         Object_Juridical.ValueData AS JuridicalName,   
         View_Contract_InvNumber.InvNumber AS ContractNumber,
         Object_PaidKind.ValueData AS PaidKindName,
-        CAST (CASE WHEN Object_Account_View.AccountCode < 100000
-                        THEN '0'
-                   ELSE ''
-              END
-           || Object_Account_View.AccountCode || ' '
-           || Object_Account_View.AccountGroupName
-           || CASE WHEN Object_Account_View.AccountDirectionName <> Object_Account_View.AccountGroupName
-                        THEN ' ' || Object_Account_View.AccountDirectionName
-                   ELSE ''
-              END
-           || CASE WHEN Object_Account_View.AccountName <> Object_Account_View.AccountDirectionName
-                        THEN ' ' || Object_Account_View.AccountName
-                   ELSE ''
-              END
-              AS TVarChar) AS AccountName,
+        Object_Account_View.AccountName_all AS AccountName,
         Object_InfoMoney_View.InfoMoneyGroupName,
         Object_InfoMoney_View.InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode,
@@ -86,7 +72,7 @@ BEGIN
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ReturnInSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS MoneySumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_Service(), zc_Movement_TransportService()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS ServiceSumm,
-                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_SendDebt()) THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm,
+                     SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId in (zc_Movement_SendDebt()) THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS SendDebtSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN Movement.DescId not in (zc_Movement_Income(), zc_Movement_ReturnOut()
                                                                                                            , zc_Movement_Sale(), zc_Movement_ReturnIn()
                                                                                                            , zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_PersonalAccount()

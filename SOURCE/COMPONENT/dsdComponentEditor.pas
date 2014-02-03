@@ -5,6 +5,11 @@ interface
 uses Classes, DesignEditors, DesignIntf, dsdAddOn;
 
 type
+  // Выбираем только гриды
+  TExcelGridProperty = class(TComponentProperty)
+  public
+    procedure GetValues(Proc: TGetStrProc); override;
+  end;
 
   // Редактор компонент позволяет отображать только используемые
   TdsdParamComponentProperty = class(TComponentProperty)
@@ -37,7 +42,8 @@ type
 implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
-     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults;
+     cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
+     cxGrid, cxCustomPivotGrid, cxControls;
 
 procedure Register;
 begin
@@ -45,6 +51,7 @@ begin
    RegisterPropertyEditor(TypeInfo(String), TdsdParam, 'ComponentItem', TComponentItemTextProperty);
    RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam, 'DataType', TDataTypeProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam, 'Component', TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel , 'Grid', TExcelGridProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component', TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
 end;
@@ -137,6 +144,15 @@ begin
   Proc('ftFloat');
   Proc('ftInteger');
   Proc('ftString');
+end;
+
+{ TExcelGridProperty }
+
+procedure TExcelGridProperty.GetValues(Proc: TGetStrProc);
+begin
+  // Отображаем только те компоненты, с которыми умеет работать TdsdGuides
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxGrid)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCustomPivotGrid)), Proc);
 end;
 
 end.
