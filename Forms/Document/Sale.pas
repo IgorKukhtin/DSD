@@ -72,6 +72,9 @@ type
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;
+    dsdPrintTax: TdsdPrintAction;
+    spSelectPrintHeader: TdsdStoredProc;
+    bbPrintTax: TdxBarButton;
   private
     { Private declarations }
   public
