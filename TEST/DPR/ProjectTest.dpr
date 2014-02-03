@@ -333,10 +333,10 @@ uses
   LoadSaleFrom1C in '..\..\Forms\LOAD1C\LoadSaleFrom1C.pas' {LoadSaleFrom1CForm: TParentForm},
   ExternalDocumentLoad in '..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm};
 
 {$R *.RES}

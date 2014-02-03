@@ -32,21 +32,7 @@ BEGIN
         Object_Juridical.ValueData AS JuridicalName,   
         View_Contract_InvNumber.InvNumber AS ContractNumber,
         Object_PaidKind.ValueData AS PaidKindName,
-        CAST (CASE WHEN Object_Account_View.AccountCode < 100000
-                        THEN '0'
-                   ELSE ''
-              END
-           || Object_Account_View.AccountCode || ' '
-           || Object_Account_View.AccountGroupName
-           || CASE WHEN Object_Account_View.AccountDirectionName <> Object_Account_View.AccountGroupName
-                        THEN ' ' || Object_Account_View.AccountDirectionName
-                   ELSE ''
-              END
-           || CASE WHEN Object_Account_View.AccountName <> Object_Account_View.AccountDirectionName
-                        THEN ' ' || Object_Account_View.AccountName
-                   ELSE ''
-              END
-              AS TVarChar) AS AccountName,
+        Object_Account_View.AccountName_all AS AccountName,
         Object_InfoMoney_View.InfoMoneyGroupName,
         Object_InfoMoney_View.InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode,

@@ -39,7 +39,7 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                           FROM (SELECT AccountId FROM Object_Account_View /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
+                           FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountId = inAccountId) AS tmpAccount -- счет
                           -- FROM (SELECT Id AS AccountId FROM Object WHERE DescId = zc_Object_Account() AND ObjectCode IN (20503 /*30505, 30508, 70105, 100301, 110101*/)  /*WHERE Object_Account_View.AccountDirectionCode IN (20500, 30500, 70100, 100300, 110000)*/) AS tmpAccount -- счет 
                                JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                              AND Container.DescId = zc_Container_Summ()

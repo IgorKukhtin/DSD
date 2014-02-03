@@ -22,7 +22,8 @@ uses
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
   MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
-  Document in '..\SOURCE\COMPONENT\Document.pas';
+  Document in '..\SOURCE\COMPONENT\Document.pas',
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
 
 {$R *.res}
 

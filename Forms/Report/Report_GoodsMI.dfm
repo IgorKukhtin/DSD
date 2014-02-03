@@ -295,12 +295,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       end
       item
         Component = GoodsGroupGuides
-      end
-      item
-        Component = deEnd
-      end
-      item
-        Component = deStart
       end>
     Left = 184
     Top = 136
