@@ -690,14 +690,13 @@ object Report_AccountForm: TReport_AccountForm
     object edAccount: TcxButtonEdit
       Left = 442
       Top = 5
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 300
+      Width = 400
     end
     object cxLabel1: TcxLabel
       Left = 10
@@ -819,6 +818,54 @@ object Report_AccountForm: TReport_AccountForm
           'TabOrder'
           'TabStop'
           'Tag'
+          'TextHint'
+          'Top'
+          'Touch'
+          'Visible'
+          'Width')
+      end
+      item
+        Component = edAccount
+        Properties.Strings = (
+          'Align'
+          'AlignWithMargins'
+          'Anchors'
+          'AutoSize'
+          'BeepOnEnter'
+          'Constraints'
+          'Cursor'
+          'CustomHint'
+          'DragCursor'
+          'DragKind'
+          'DragMode'
+          'Enabled'
+          'FakeStyleController'
+          'Height'
+          'HelpContext'
+          'HelpKeyword'
+          'HelpType'
+          'Hint'
+          'ImeMode'
+          'ImeName'
+          'Left'
+          'Margins'
+          'Name'
+          'ParentColor'
+          'ParentCustomHint'
+          'ParentFont'
+          'ParentShowHint'
+          'PopupMenu'
+          'Properties'
+          'RepositoryItem'
+          'ShowHint'
+          'Style'
+          'StyleDisabled'
+          'StyleFocused'
+          'StyleHot'
+          'TabOrder'
+          'TabStop'
+          'Tag'
+          'Text'
           'TextHint'
           'Top'
           'Touch'
@@ -989,12 +1036,7 @@ object Report_AccountForm: TReport_AccountForm
         Component = PeriodChoice
       end
       item
-      end
-      item
-      end
-      item
-      end
-      item
+        Component = AccountGuides
       end>
     Left = 328
     Top = 64

@@ -12,17 +12,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1075
+    ExplicitWidth = 1127
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1127
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1075
+      ExplicitWidth = 1127
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1127
         Height = 472
-        ExplicitWidth = 1075
+        ExplicitWidth = 1127
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -476,7 +476,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   inherited Panel: TPanel
     Width = 1127
     Height = 57
-    ExplicitWidth = 1075
+    ExplicitWidth = 1127
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -680,6 +680,24 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Action = dsdPrintAction
       Category = 0
     end
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = AccountGuides
+      end
+      item
+        Component = dsdInfoMoneyGroupGuides
+      end
+      item
+        Component = dsdInfoMoneyDestinationGuides
+      end
+      item
+        Component = InfoMoneyGuides
+      end>
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'

@@ -974,10 +974,6 @@
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
-				<Form>Report_GoodsMIForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovement.pas">
 				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
