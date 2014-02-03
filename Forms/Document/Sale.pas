@@ -75,6 +75,8 @@ type
     dsdPrintTax: TdsdPrintAction;
     spSelectPrintHeader: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
+    N2: TMenuItem;
+    N3: TMenuItem;
   private
     { Private declarations }
   public

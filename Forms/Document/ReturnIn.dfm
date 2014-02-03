@@ -481,6 +481,12 @@ inherited ReturnInForm: TReturnInForm
   inherited PopupMenu: TPopupMenu
     Left = 800
     Top = 464
+    object N2: TMenuItem
+      Action = actMISetErased
+    end
+    object N3: TMenuItem
+      Action = actMISetUnErased
+    end
   end
   inherited EntryCDS: TClientDataSet
     Left = 629
