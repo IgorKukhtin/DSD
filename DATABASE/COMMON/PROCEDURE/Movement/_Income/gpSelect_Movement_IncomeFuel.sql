@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , PaidKindName TVarChar, ContractName TVarChar
              , RouteName TVarChar
              , PersonalDriverName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar
               )
 AS
 $BODY$
@@ -56,11 +57,18 @@ BEGIN
            , Object_Contract.ValueData         AS ContractName
            , Object_Route.ValueData            AS RouteName
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
+
+           , Object_Goods.ObjectCode AS GoodsCode
+           , Object_Goods.ValueData  AS GoodsName
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                                  AND MovementItem.DescId = zc_MI_Mastre()
+                                  AND MovementItem.isErased = FALSE
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -127,13 +135,12 @@ BEGIN
   
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  14.12.13                                        * add Object_RoleAccessKey_View
  31.10.13                                        * add OperDatePartner
  23.10.13                                        * add zfConvert_StringToNumber

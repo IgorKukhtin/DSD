@@ -123,6 +123,7 @@ type
     fromFlQuery: TADOQuery;
     fromFlSqlQuery: TADOQuery;
     cbCompleteReturnIn: TCheckBox;
+    cbOnlyInsertDocument: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -7926,7 +7927,10 @@ begin
      with fromFlQuery,Sql do begin
         Close;
         Clear;
-        Add('call dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+        Add('select * from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+        if cbOnlyInsertDocument.Checked
+        then Add('where isnull(Id_Postgres,0)=0');
+
         Open;
         Result:=RecordCount;
         cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
@@ -8210,8 +8214,11 @@ begin
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
            );
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
         Open;
+
         cbSale.Caption:='3.1. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Продажа покупателю';
         //
         fStop:=cbOnlyOpen.Checked;
@@ -9021,23 +9028,26 @@ begin
            +'                           group by _pgPartner.PartnerId_pg'
            +'                          ) as _pgContract on _pgContract.PartnerId_pg = _pgPartner.PartnerId_pg');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
-        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = case when Bill.ToId in (1022,1037) then 5 else Bill.ToId end');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
-           +'  and Bill.FromId<>1022' // ВИЗАРД 1
-           +'  and Bill.FromId<>1037' // ВИЗАРД 1037
-           +'  and Bill.ToId<>1022' // ВИЗАРД 1
-           +'  and Bill.ToId<>1037' // ВИЗАРД 1037
+//!!!           +'  and Bill.FromId<>1022' // ВИЗАРД 1
+//!!!           +'  and Bill.FromId<>1037' // ВИЗАРД 1037
+//!!!           +'  and Bill.ToId<>1022' // ВИЗАРД 1
+//!!!           +'  and Bill.ToId<>1037' // ВИЗАРД 1037
            +'  and Bill.MoneyKindId = zc_mkBN()'
 // +' and Bill.Id = 1260716'
 // +' and Bill.BillNumber = 121710'
 // +' and 1=0'
            );
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(Bill.Id_Postgres,0)=0');
         Add('order by OperDate, ObjectId');
         Open;
+
         Result:=RecordCount;
         cbReturnIn.Caption:='3.2. ('+IntToStr(RecordCount)+') Возврат от покупателя';
         //
@@ -9150,8 +9160,11 @@ begin
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
            );
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
         Open;
+
         cbReturnIn.Caption:='3.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
         //
         fStop:=cbOnlyOpen.Checked;

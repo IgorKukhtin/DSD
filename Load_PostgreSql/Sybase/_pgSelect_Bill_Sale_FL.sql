@@ -42,15 +42,15 @@ begin
            where Bill.BillDate between @inStartDate and @inEndDate
              and Bill.BillKind in (zc_bkSaleToClient())
          -- and Bill.BillNumber = 121710
-            and Bill.FromId<>1022 -- ÂÈÇÀÐÄ 1
+/*            and Bill.FromId<>1022 -- ÂÈÇÀÐÄ 1
             and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
-            and Bill.ToId<>1022 -- ÂÈÇÀÐÄ 1
             and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
-            and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
+            and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037*/
             and Bill.MoneyKindId = zc_mkBN()
             and Bill.Id <> 1634846
          -- and 1=0
            group by BillId;
+/*
  update dba.Bill left outer join _tmpBill_NotNalog on _tmpBill_NotNalog.BillId = Bill.Id
         set Bill.Id_Postgres = null
  where Bill.BillDate between @inStartDate and @inEndDate
@@ -59,12 +59,11 @@ begin
    and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
    and Bill.ToId<>1022 -- ÂÈÇÀÐÄ 1
    and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
-   and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
    and Bill.MoneyKindId = zc_mkBN()
    and _tmpBill_NotNalog.BillId is null
    and Bill.Id_Postgres is not null
    and Bill.Id <> 1634846;
-
+*/
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
                     , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
 select Bill.Id as ObjectId
@@ -133,6 +132,9 @@ from _tmpBill_NotNalog
                                                                                      4792, -- 'ÒÐÅÒÜßÊÎÂ Î.Í.'
                                                                                      980, -- 'ÒÓËÅÍÊÎ Ñ.'
                                                                                      2436  -- 'ØÅÂÖÎÂ È.'
+
+                                                                                    ,1022 -- ÂÈÇÀÐÄ 1
+                                                                                    ,1037 -- ÂÈÇÀÐÄ 1037
                                                                                      )
                                                                      then 5 else Bill.FromId end 
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId

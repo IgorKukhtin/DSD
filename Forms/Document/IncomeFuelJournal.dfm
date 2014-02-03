@@ -293,6 +293,33 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
+      object colGoodsCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1090#1086#1074'.'
+        DataBinding.FieldName = 'GoodsCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object colGoodsName: TcxGridDBColumn
+        Caption = #1058#1086#1074#1072#1088
+        DataBinding.FieldName = 'GoodsName'
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object colFuelCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1074#1080#1076#1072' '#1090#1086#1087#1083'.'
+        DataBinding.FieldName = 'FuelCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object colFuelName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
+        DataBinding.FieldName = 'FuelName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
     end
     object cxGridLevel: TcxGridLevel
       GridView = cxGridDBTableView
