@@ -2,28 +2,28 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 759
   ClientWidth = 1049
-  ExplicitWidth = 1065
-  ExplicitHeight = 794
+  ExplicitWidth = 1057
+  ExplicitHeight = 793
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 155
+    Top = 157
     Width = 1049
-    Height = 604
-    ExplicitTop = 155
+    Height = 602
+    ExplicitTop = 157
     ExplicitWidth = 1049
-    ExplicitHeight = 604
-    ClientRectBottom = 604
-    ClientRectRight = 1049
+    ExplicitHeight = 602
+    ClientRectBottom = 598
+    ClientRectRight = 1045
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 580
+      ExplicitLeft = 2
+      ExplicitWidth = 1043
+      ExplicitHeight = 576
       inherited cxGrid: TcxGrid
-        Width = 1049
-        Height = 580
-        ExplicitWidth = 1049
-        ExplicitHeight = 580
+        Width = 1043
+        Height = 576
+        ExplicitWidth = 1043
+        ExplicitHeight = 576
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -193,14 +193,15 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 580
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1043
+      ExplicitHeight = 576
       inherited cxGridEntry: TcxGrid
-        Width = 1049
-        Height = 580
-        ExplicitWidth = 1049
-        ExplicitHeight = 580
+        Width = 1043
+        Height = 576
+        ExplicitWidth = 1043
+        ExplicitHeight = 576
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -250,7 +251,7 @@ inherited ReturnInForm: TReturnInForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitHeight = 22
+      ExplicitHeight = 24
     end
     object cxLabel3: TcxLabel
       Left = 743
@@ -470,7 +471,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -772,10 +773,12 @@ inherited ReturnInForm: TReturnInForm
     Top = 272
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ReturnIn_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ReturnIn_SetUnErased'
     Left = 718
     Top = 464
   end

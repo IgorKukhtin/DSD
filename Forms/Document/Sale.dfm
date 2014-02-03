@@ -2,29 +2,28 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitTop = -4
-  ExplicitWidth = 1031
-  ExplicitHeight = 703
+  ExplicitWidth = 1023
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1015
-    Height = 542
-    ExplicitTop = 155
-    ExplicitWidth = 1049
-    ExplicitHeight = 558
-    ClientRectBottom = 554
-    ClientRectRight = 1045
+    Height = 540
+    ExplicitTop = 128
+    ExplicitWidth = 1015
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
-      ExplicitWidth = 1043
-      ExplicitHeight = 532
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1043
-        Height = 532
-        ExplicitWidth = 1043
-        ExplicitHeight = 532
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -213,14 +212,15 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 536
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1049
-        ExplicitHeight = 536
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -271,7 +271,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -582,7 +582,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -993,6 +993,7 @@ inherited SaleForm: TSaleForm
     Top = 272
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
     Left = 718
     Top = 512
   end
