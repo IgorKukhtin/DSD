@@ -1,26 +1,26 @@
 inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
-  ClientHeight = 345
-  ClientWidth = 978
+  ClientHeight = 339
+  ClientWidth = 1137
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 986
-  ExplicitHeight = 379
+  ExplicitWidth = 1145
+  ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 978
-    Height = 288
+    Width = 1137
+    Height = 282
     TabOrder = 3
     ExplicitWidth = 978
     ExplicitHeight = 288
-    ClientRectBottom = 288
-    ClientRectRight = 978
+    ClientRectBottom = 282
+    ClientRectRight = 1137
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 978
       ExplicitHeight = 288
       inherited cxGrid: TcxGrid
-        Width = 978
-        Height = 288
+        Width = 1137
+        Height = 282
         ExplicitWidth = 978
         ExplicitHeight = 288
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -28,12 +28,12 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_Summ
+              Column = clSale_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_CountWeight
+              Column = clSale_Amount_Weight
             end
             item
               Format = ',0.####'
@@ -42,7 +42,7 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_CountSh
+              Column = clSale_Amount_Sh
             end
             item
               Format = ',0.####'
@@ -63,12 +63,12 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_Summ
+              Column = clSale_Summ
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_CountWeight
+              Column = clSale_Amount_Weight
             end
             item
               Format = ',0.####'
@@ -77,7 +77,7 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountSale_CountSh
+              Column = clSale_Amount_Sh
             end
             item
               Format = ',0.####'
@@ -105,89 +105,115 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 93
           end
           object clPartnerName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 151
+            Width = 136
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1054
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 26
+            Width = 24
           end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 76
+            Width = 68
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            Width = 70
+          end
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 56
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 51
+            Width = 44
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 102
           end
-          object clAmountSale_CountSh: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090
-            DataBinding.FieldName = 'AmountSale_CountSh'
+          object clSale_Amount_Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Sale_Amount_Sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 76
           end
-          object clAmountSale_CountWeight: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1082#1075
-            DataBinding.FieldName = 'AmountSale_CountWeight'
+          object clSale_Amount_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1082#1075' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Sale_Amount_Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            Width = 70
           end
-          object clAmountSale_Summ: TcxGridDBColumn
+          object clSale_AmountPartner_Sh: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_AmountPartner_Sh'
+          end
+          object clSale_AmountPartner_Weight: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1085#1086', '#1082#1075' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Sale_AmountPartner_Weight'
+          end
+          object clSale_Summ: TcxGridDBColumn
             Caption = #1055#1088#1086#1076#1072#1085#1086', '#1075#1088#1085
-            DataBinding.FieldName = 'AmountSale_Summ'
+            DataBinding.FieldName = 'Sale_Summ'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 71
-          end
-          object clAmountReturn_CountSh: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090
-            DataBinding.FieldName = 'AmountReturn_CountSh'
+            Width = 62
           end
           object clAmountReturn_CountWeight: TcxGridDBColumn
-            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'AmountReturn_CountWeight'
+            Width = 54
+          end
+          object clAmountReturn_CountSh: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'AmountReturn_CountSh'
+            Width = 54
+          end
+          object clReturn_AmountPartner_Weight: TcxGridDBColumn
+            Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Return_AmountPartner_Weight'
+          end
+          object clReturn_AmountPartner_Sh: TcxGridDBColumn
+            Caption = #1074#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1087#1086#1082#1091#1087')'
+            DataBinding.FieldName = 'Return_AmountPartner_Sh'
           end
           object clAmountReturn_Summ: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085
             DataBinding.FieldName = 'AmountReturn_Summ'
+            Width = 55
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 978
+    Width = 1137
     ExplicitWidth = 978
     inherited deStart: TcxDateEdit
       Left = 95

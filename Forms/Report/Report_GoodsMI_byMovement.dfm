@@ -101,14 +101,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 104
           end
           object clPartnerName: TcxGridDBColumn
             Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 151
+            Width = 152
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1054
@@ -129,7 +129,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             DataBinding.FieldName = 'GoodsGroupName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 77
+            Width = 78
           end
           object clGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -143,7 +143,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 108
           end
           object clAmount_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
@@ -156,32 +156,32 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Visible = False
           end
           object clPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
+            Caption = #1062#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
             DataBinding.FieldName = 'Price'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 40
+            Width = 45
           end
           object clAmountPartner_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Weight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 88
+            Width = 91
           end
           object clAmountPartner_Sh: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'AmountPartner_Sh'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            Width = 87
           end
           object clSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'Summ'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 73
           end
         end
       end
