@@ -59,6 +59,8 @@ type
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
+    N2: TMenuItem;
+    N3: TMenuItem;
   private
     { Private declarations }
   public
