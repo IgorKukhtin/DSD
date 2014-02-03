@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inAccountId        Integer,    -- Счет  
     IN inInfoMoneyId      Integer,    -- Управленческая статья  
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
-    IN inInfoMoneyDestinationId   Integer,    -- филиал
+    IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalName TVarChar, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,

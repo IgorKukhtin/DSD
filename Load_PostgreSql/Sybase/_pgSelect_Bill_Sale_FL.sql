@@ -63,6 +63,27 @@ begin
    and _tmpBill_NotNalog.BillId is null
    and Bill.Id_Postgres is not null
    and Bill.Id <> 1634846;
+
+
+ SELECT * FROM Movement where Descid = zc_Movement_ReturnIn() and OperDate between '01.12.2013' and '31.12.2013'
+and StatusId = zc_Enum_Status_UnComplete()
+ 
+
+ update Movement set StatusId = zc_Enum_Status_Erased() where Descid = zc_Movement_ReturnIn() and OperDate between '01.12.2013' and '31.12.2013'
+and StatusId = zc_Enum_Status_UnComplete()
+
+ update dba.Bill
+        left outer join (select Bill.Id as BillId
+                         from dba.Bill'
+                              join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+                         where Bill.BillDate '2013-12-01' and '2013-12-31'
+                           and Bill.BillKind in (zc_bkReturnToUnit())
+                        ) as Bill_find on Bill_find.BillId = Bill.Id
+        set Bill.Id_Postgres = null
+ where Bill.BillDate between '2013-12-01' and '2013-12-31'
+   and Bill.BillKind in (zc_bkReturnToUnit())
+   and Bill_find.BillId is null
+   and Bill.Id_Postgres is not null;
 */
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
                     , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)

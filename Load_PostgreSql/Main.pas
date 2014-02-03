@@ -5918,7 +5918,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
-           +'  and Id_Postgres is not null'
+           +'  and Id_Postgres >0'
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            );
         Add('order by OperDate,ObjectId');
@@ -6438,6 +6438,7 @@ begin
            +'  and (UnitTo.pgUnitId is not null or UnitTo.ParentId=4137)' // ÌÎ ËÈÖÀ-ÂÑÅ
            +'  and (pgUnitFrom.Id_Postgres_Branch is null or UnitFrom.ParentId=4137)' // ÌÎ ËÈÖÀ-ÂÑÅ
            +'  and (pgUnitTo.Id_Postgres_Branch is null or UnitTo.ParentId=4137)' // ÌÎ ËÈÖÀ-ÂÑÅ
+           +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
@@ -6695,6 +6696,7 @@ begin
            +'                                                      and UnitTo.ParentId=4137'); // ÌÎ ËÈÖÀ-ÂÑÅ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit())'
+           +'  and Id_Postgres >0'
 
            +' AND (('
            +'      isnull(UnitFrom.ParentId,0)<>4137' // ÌÎ ËÈÖÀ-ÂÑÅ
@@ -7458,6 +7460,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
         Add('     as Bill');
+        Add('where Bill.Id_Postgres>0');
         Add('order by OperDate,InvNumber,ObjectId');
         Open;
         cbCompleteSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Ïðîäàæà ïîêóïàòåëþ';
@@ -7525,7 +7528,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
-           +'  and Id_Postgres is not null'
+           +'  and Id_Postgres > 0'
            +'  and Bill.BillKind=zc_bkReturnToUnit()'
            );
         Add('order by OperDate,InvNumber,ObjectId');
@@ -8319,6 +8322,7 @@ begin
            +'                                                      and UnitTo.ParentId=4137'); // ÌÎ ËÈÖÀ-ÂÑÅ
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProductionInFromReceipt())'
+           +'  and Id_Postgres >0'
            +'  and isnull(Bill.isRemains,zc_rvNo())=zc_rvNo()'
            );
         Add('  and FromId_Postgres <> 0');
@@ -8668,6 +8672,7 @@ begin
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkProduction())'
+           +'  and Id_Postgres >0'
            );
         Add('  and FromId_Postgres <> 0');
         Add('  and ToId_Postgres <> 0');
@@ -9012,7 +9017,20 @@ begin
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
-        Add('from dba.Bill');
+        Add('from (select Bill.Id as BillId'
+           +'      from dba.Bill'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind in (zc_bkReturnToUnit())'
+//!!!           +'       and Bill.FromId<>1022' // ÂÈÇÀÐÄ 1
+//!!!           +'       and Bill.FromId<>1037' // ÂÈÇÀÐÄ 1037
+//!!!           +'       and Bill.ToId<>1022' // ÂÈÇÀÐÄ 1
+//!!!           +'       and Bill.ToId<>1037' // ÂÈÇÀÐÄ 1037
+           +'        and Bill.MoneyKindId = zc_mkBN()'
+           +'      group by Bill.Id'
+           +'      ) as Bill_find');
+
+        Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
         Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('          left outer join (select PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by PartnerId_pg, UnitId'
@@ -9032,17 +9050,6 @@ begin
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind in (zc_bkReturnToUnit())'
-//!!!           +'  and Bill.FromId<>1022' // ÂÈÇÀÐÄ 1
-//!!!           +'  and Bill.FromId<>1037' // ÂÈÇÀÐÄ 1037
-//!!!           +'  and Bill.ToId<>1022' // ÂÈÇÀÐÄ 1
-//!!!           +'  and Bill.ToId<>1037' // ÂÈÇÀÐÄ 1037
-           +'  and Bill.MoneyKindId = zc_mkBN()'
-// +' and Bill.Id = 1260716'
-// +' and Bill.BillNumber = 121710'
-// +' and 1=0'
-           );
         if cbOnlyInsertDocument.Checked
         then Add('and isnull(Bill.Id_Postgres,0)=0');
         Add('order by OperDate, ObjectId');
@@ -9139,7 +9146,7 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , zc_rvYes() as isFl');
         Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-îøèáêà òîâàð')
-           +'            when KindPackage.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-îøèáêà âèä')
+           +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-îøèáêà âèä')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
         Add('     , zc_rvYes() as zc_rvYes');

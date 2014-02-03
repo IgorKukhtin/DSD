@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , RouteName TVarChar
              , PersonalDriverName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
+             , FuelCode Integer, FuelName TVarChar
               )
 AS
 $BODY$
@@ -60,15 +61,22 @@ BEGIN
 
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
+           , Object_Fuel.ObjectCode  AS FuelCode
+           , Object_Fuel.ValueData   AS FuelName
+
        FROM Movement
             JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = Movement.ParentId
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                  AND MovementItem.DescId = zc_MI_Mastre()
+                                  AND MovementItem.DescId = zc_MI_Master()
                                   AND MovementItem.isErased = FALSE
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN MovementItemContainer AS MIContainer_Count ON MIContainer_Count.MovementItemId = MovementItem.Id
+                                                                AND MIContainer_Count.DescId = zc_MIContainer_Count()
+            LEFT JOIN Container AS Container_Count ON Container_Count.Id = MIContainer_Count.ContainerId
+            LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = Container_Count.ObjectId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
@@ -141,6 +149,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 03.02.14                                        * add Goods... and Fuel...
  14.12.13                                        * add Object_RoleAccessKey_View
  31.10.13                                        * add OperDatePartner
  23.10.13                                        * add zfConvert_StringToNumber
@@ -153,4 +162,4 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_IncomeFuel (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inSession:= zfCalc_UserAdmin())
