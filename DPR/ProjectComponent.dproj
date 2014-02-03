@@ -186,9 +186,15 @@
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
 					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
+						<Excluded_Packages Name="C:\WINDOWS\system32\frxTee16.bpl">(untitled)</Excluded_Packages>
+						<Excluded_Packages Name="F:\Project-DSD\BIN\ProjectDesignComponent.bpl">(untitled)</Excluded_Packages>
+						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxADO16.bpl">FastReport 4.0 ADO Components</Excluded_Packages>
+						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxBDE16.bpl">FastReport 4.0 BDE Components</Excluded_Packages>
+						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxDBX16.bpl">FastReport 4.0 DBX Components</Excluded_Packages>
+						<Excluded_Packages Name="F:\Install\FastReport 4.12\LibD16\dclfrxIBX16.bpl">FastReport 4.0 IBX Components</Excluded_Packages>
 						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dcloffice2k160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
+						<Excluded_Packages Name="$(BDSBIN)\dclofficexp160.bpl">Microsoft Office XP Sample Automation Server Wrapper Components</Excluded_Packages>
 					</Excluded_Packages>
 				</Delphi.Personality>
 				<Deployment/>

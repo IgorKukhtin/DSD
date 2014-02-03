@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 446
   ClientWidth = 863
-  ExplicitTop = -52
   ExplicitWidth = 869
   ExplicitHeight = 471
   PixelsPerInch = 96
@@ -179,6 +178,9 @@
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
             OptionsData.Appending = True
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Inserting = False
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
             object colJDData: TcxGridDBColumn
@@ -269,6 +271,7 @@
               Default = True
               Kind = bkEllipsis
             end>
+          Properties.ReadOnly = True
           TabOrder = 6
           Width = 193
         end
@@ -307,6 +310,10 @@
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -357,6 +364,10 @@
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
             OptionsView.ColumnAutoWidth = True
             OptionsView.GroupByBox = False
             OptionsView.HeaderAutoHeight = True
@@ -374,6 +385,7 @@
               DataBinding.FieldName = 'PaidKindName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 40
             end
             object clStartDate: TcxGridDBColumn
@@ -389,6 +401,7 @@
               DataBinding.FieldName = 'EndDate'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 60
             end
             object clInfoMoneyCode: TcxGridDBColumn
@@ -396,6 +409,7 @@
               DataBinding.FieldName = 'InfoMoneyCode'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 50
             end
             object clInfoMoneyName: TcxGridDBColumn
@@ -403,6 +417,7 @@
               DataBinding.FieldName = 'InfoMoneyName'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
+              Options.Editing = False
               Width = 100
             end
             object clContractKindName: TcxGridDBColumn
@@ -482,7 +497,7 @@
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 23
+    TabOrder = 22
     Width = 100
   end
   object edStartPromo: TcxDateEdit [23]
@@ -1088,8 +1103,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

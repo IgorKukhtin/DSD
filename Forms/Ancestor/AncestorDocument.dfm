@@ -397,6 +397,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       ShortCut = 16464
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object actUnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
@@ -452,6 +454,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Category = 'DSDLib'
       Caption = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1053#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -647,6 +651,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatus
+    FormNameParam.Value = ''
+    FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 136

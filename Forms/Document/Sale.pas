@@ -23,7 +23,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
 
 type
   TSaleForm = class(TAncestorDocumentForm)
@@ -69,6 +69,9 @@ type
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPricelist: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    frxDBDMaster: TfrxDBDataset;
   private
     { Private declarations }
   public

@@ -1,5 +1,6 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (integer, tvarchar, tdatetime, tdatetime, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 

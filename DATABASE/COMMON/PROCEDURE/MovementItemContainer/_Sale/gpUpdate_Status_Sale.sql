@@ -10,7 +10,6 @@ CREATE OR REPLACE FUNCTION gpUpdate_Status_Sale(
 RETURNS VOID AS
 $BODY$
 BEGIN
-
      CASE inStatusCode
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_Sale (inMovementId, inSession);
@@ -24,12 +23,11 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  29.10.13                                        *
  06.10.13                                        *
 */

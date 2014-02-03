@@ -40,7 +40,7 @@ BEGIN
        --
        IF vbJuridicalId_find > 0
        THEN
-           RAISE EXCEPTION 'Ошибка. Значение ОКПО <%> уже установлено у <%>.', inOKPO, lfGet_Object_ValueData (vbJuridicalId_find);
+           RAISE EXCEPTION 'Ошибка.Значение ОКПО <%> уже установлено у <%>.', inOKPO, lfGet_Object_ValueData (vbJuridicalId_find);
        END IF;
    END IF;
 
@@ -58,9 +58,16 @@ BEGIN
        --
        IF vbJuridicalId_find > 0
        THEN
-           RAISE EXCEPTION 'Ошибка. Значение полное наименование <%> уже установлено у <%>.', inFullName, lfGet_Object_ValueData (vbJuridicalId_find);
+           RAISE EXCEPTION 'Ошибка.Значение полное наименование <%> уже установлено у <%>.', inFullName, lfGet_Object_ValueData (vbJuridicalId_find);
        END IF;
    END IF;
+
+   -- проверка
+   IF COALESCE (inJuridicalId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
+   END IF;
+
 
    -- Вставляем или меняем объект историю
    ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_JuridicalDetails(), inJuridicalId, inOperDate);

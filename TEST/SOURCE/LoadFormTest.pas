@@ -584,6 +584,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMIForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMIForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_Goods_MovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_Goods_MovementForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalSoldForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalSoldForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalCollationForm'));

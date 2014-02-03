@@ -649,8 +649,8 @@ BEGIN
      -- 1.2.2. формируются Проводки для количественного учета
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Count() AS DescId, inMovementId, MovementItemId, ContainerId_Goods, 0 AS ParentId, OperCount, vbOperDate, TRUE
-       FROM _tmpItem
-       WHERE OperCount <> 0;
+       FROM _tmpItem;
+       -- WHERE OperCount <> 0;
 
 
      -- 1.2.3. определяется ContainerId_GoodsTicketFuel для проводок по количественному учету - Расход талонов
@@ -1106,7 +1106,7 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  21.12.13                                        * Personal -> Member
  01.11.13                                        * add vbOperDatePartner
  30.10.13                                        * add 

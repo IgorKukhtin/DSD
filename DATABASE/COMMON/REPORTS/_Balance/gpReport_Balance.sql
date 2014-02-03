@@ -26,9 +26,9 @@ $BODY$BEGIN
              CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 THEN 'œ¿——»¬€' ELSE '¿ “»¬€' END AS TVarChar) AS RootName
 
            , Object_Account_View.AccountCode
-           , (Object_Account_View.AccountGroupCode||' '||Object_Account_View.AccountGroupName)::TVarChar  AS AccountGroupName
-           , (Object_Account_View.AccountDirectionCode||'  '||Object_Account_View.AccountDirectionName)::TVarChar      AS AccountDirectionName
-           , (Object_Account_View.AccountCode||'  '||Object_Account_View.AccountName)::TVarChar                     AS AccountName
+           , (CASE WHEN Object_Account_View.AccountGroupCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountGroupCode||' '||Object_Account_View.AccountGroupName)::TVarChar  AS AccountGroupName
+           , (CASE WHEN Object_Account_View.AccountDirectionCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountDirectionCode||'  '||Object_Account_View.AccountDirectionName)::TVarChar      AS AccountDirectionName
+           , (CASE WHEN Object_Account_View.AccountCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountCode||'  '||Object_Account_View.AccountName)::TVarChar                     AS AccountName
            , Object_Account_View.onComplete                      AS AccountOnComplete
 
            --, lfObject_InfoMoney.InfoMoneyCode

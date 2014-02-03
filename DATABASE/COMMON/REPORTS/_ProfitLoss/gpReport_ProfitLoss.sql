@@ -24,9 +24,9 @@ $BODY$BEGIN
 
      RETURN QUERY 
       SELECT
-             (View_ProfitLoss.ProfitLossGroupCode || ' ' || View_ProfitLoss.ProfitLossGroupName):: TVarChar         AS ProfitLossGroupName
-           , (View_ProfitLoss.ProfitLossDirectionCode || ' ' || View_ProfitLoss.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
-           , (View_ProfitLoss.ProfitLossCode || ' ' || View_ProfitLoss.ProfitLossName):: TVarChar                   AS ProfitLossName
+             (CASE WHEN View_ProfitLoss.ProfitLossGroupCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossGroupCode || ' ' || View_ProfitLoss.ProfitLossGroupName):: TVarChar         AS ProfitLossGroupName
+           , (CASE WHEN View_ProfitLoss.ProfitLossDirectionCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossDirectionCode || ' ' || View_ProfitLoss.ProfitLossDirectionName):: TVarChar AS ProfitLossDirectionName
+           , (CASE WHEN View_ProfitLoss.ProfitLossCode < 100000 THEN '' ELSE '' END || View_ProfitLoss.ProfitLossCode || ' ' || View_ProfitLoss.ProfitLossName):: TVarChar                   AS ProfitLossName
            , View_ProfitLoss.onComplete                                                                             AS OnComplete
 
            , Object_Business.ValueData          AS BusinessName
@@ -187,6 +187,7 @@ $BODY$BEGIN
            LEFT JOIN Object AS Object_Direction   ON Object_Direction.Id = COALESCE (tmpReport.RouteId_inf, COALESCE (tmpReport.JuridicalId_inf, COALESCE (tmpReport.PersonalId_inf, COALESCE (tmpReport.UnitId_inf, tmpReport.CarId_inf))))
            LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.GoodsId_inf
 
+      WHERE View_ProfitLoss.ProfitLossCode <> 90101
       ;
   
 END;

@@ -705,6 +705,7 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 10
+      OnClick = cbReturnInClick
     end
     object cbProductionUnion: TCheckBox
       Tag = 20
@@ -1004,6 +1005,22 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 13
+      OnClick = cbCompleteIncomeClick
+    end
+    object cbCompleteReturnIn: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 221
+      Width = 194
+      Height = 17
+      Caption = '3.2. '#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 14
       OnClick = cbCompleteIncomeClick
     end
   end

@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      47
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -65,6 +65,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbHistory'
+        end
+        item
+          Visible = True
           ItemName = 'bbTransportDocuments'
         end
         item
@@ -73,15 +77,23 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbHistory'
+          ItemName = 'bbReportsProduction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsFinance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportMain'
         end
         item
           Visible = True
           ItemName = 'bbGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReports'
         end
         item
           Visible = True
@@ -98,10 +110,6 @@ object MainForm: TMainForm
       Visible = True
       WholeRow = True
     end
-    object bbExit: TdxBarButton
-      Action = actExit
-      Category = 0
-    end
     object bbGoodsDocuments: TdxBarSubItem
       Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       Category = 0
@@ -117,6 +125,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsDocuments_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbSale'
         end
         item
@@ -129,7 +141,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbSend'
+          ItemName = 'bbGoodsDocuments_Separator'
         end
         item
           Visible = True
@@ -141,11 +153,23 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSend'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoss'
         end
         item
           Visible = True
           ItemName = 'bbInventory'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsDocuments_Separator'
         end
         item
           Visible = True
@@ -155,6 +179,595 @@ object MainForm: TMainForm
           Visible = True
           ItemName = 'bbZakazInternal'
         end>
+    end
+    object bbGoodsDocuments_Separator: TdxBarSeparator
+      Caption = 'bbGoodsDocuments_Separator'
+      Category = 0
+      Hint = 'bbGoodsDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbIncome: TdxBarButton
+      Action = actIncome
+      Category = 0
+    end
+    object bbReturnOut: TdxBarButton
+      Action = actReturnOut
+      Category = 0
+    end
+    object bbSale: TdxBarButton
+      Action = actSale
+      Category = 0
+    end
+    object bbReturnIn: TdxBarButton
+      Action = actReturnIn
+      Category = 0
+    end
+    object bbSendOnPrice: TdxBarButton
+      Action = actSendOnPrice
+      Category = 0
+    end
+    object bbProductionSeparate: TdxBarButton
+      Action = actProductionSeparate
+      Category = 0
+    end
+    object bbProductionUnion: TdxBarButton
+      Action = actProductionUnion
+      Category = 0
+    end
+    object bbSend: TdxBarButton
+      Action = actSend
+      Category = 0
+    end
+    object bbLoss: TdxBarButton
+      Action = actLoss
+      Category = 0
+    end
+    object bbInventory: TdxBarButton
+      Action = actInventory
+      Category = 0
+    end
+    object bbZakazExternal: TdxBarButton
+      Action = actZakazExternal
+      Category = 0
+    end
+    object bbZakazInternal: TdxBarButton
+      Action = actZakazInternal
+      Category = 0
+    end
+    object bbFinanceDocuments: TdxBarSubItem
+      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Category = 0
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbIncomeCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankAccountDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFinanceDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLossDebt'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendDebt'
+        end>
+    end
+    object bbFinanceDocuments_Separator: TdxBarSeparator
+      Caption = 'bbFinanceDocuments_Separator'
+      Category = 0
+      Hint = 'bbFinanceDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbIncomeCash: TdxBarButton
+      Action = actCashOperation
+      Category = 0
+    end
+    object bbJuridicalService: TdxBarButton
+      Action = actService
+      Category = 0
+    end
+    object bbBankLoad: TdxBarButton
+      Action = actBankLoad
+      Category = 0
+    end
+    object bbBankAccountDocument: TdxBarButton
+      Action = actBankAccountDocument
+      Category = 0
+    end
+    object bbLossDebt: TdxBarButton
+      Action = actLossDebt
+      Category = 0
+    end
+    object bbSendDebt: TdxBarButton
+      Action = actSendDebt
+      Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1102#1088'. '#1083#1080#1094#1072')'
+      Category = 0
+    end
+    object bbHistory: TdxBarSubItem
+      Caption = #1048#1089#1090#1086#1088#1080#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPriceListItem'
+        end>
+    end
+    object bbHistory_Separator: TdxBarSeparator
+      Caption = 'bbHistory_Separator'
+      Category = 0
+      Hint = 'bbHistory_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPriceListItem: TdxBarButton
+      Action = actPriceListItem
+      Category = 0
+    end
+    object bbTransportDocuments: TdxBarSubItem
+      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbIncomeFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalSendCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSendTicketFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCar'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRoute'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCarModel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFreight'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRateFuelKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRateFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCardFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTicketFuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransportDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbtReport_Transport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Fuel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_TransportHoursWork'
+        end>
+    end
+    object bbTransportDocuments_Separator: TdxBarSeparator
+      Caption = 'bbTransportDocuments_Separator'
+      Category = 0
+      Hint = 'bbTransportDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbTransport: TdxBarButton
+      Action = actTransport
+      Category = 0
+    end
+    object bbIncomeFuel: TdxBarButton
+      Action = actIncomeFuel
+      Category = 0
+    end
+    object bbPersonalSendCash: TdxBarButton
+      Action = actPersonalSendCash
+      Category = 0
+    end
+    object bbPersonalAccount: TdxBarButton
+      Action = actPersonalAccount
+      Category = 0
+    end
+    object bbTransportService: TdxBarButton
+      Action = actTransportService
+      Category = 0
+    end
+    object bbSendTicketFuel: TdxBarButton
+      Action = actSendTicketFuel
+      Category = 0
+    end
+    object bbCar: TdxBarButton
+      Action = actCar
+      Category = 0
+    end
+    object bbRoute: TdxBarButton
+      Action = actRoute
+      Category = 0
+    end
+    object bbCarModel: TdxBarButton
+      Action = actCarModel
+      Category = 0
+    end
+    object bbFreight: TdxBarButton
+      Action = actFreight
+      Category = 0
+    end
+    object bbFuel: TdxBarButton
+      Action = actFuel
+      Category = 0
+    end
+    object bbRateFuelKind: TdxBarButton
+      Action = actRateFuelKind
+      Category = 0
+    end
+    object bbRateFuel: TdxBarButton
+      Action = actRateFuel
+      Category = 0
+    end
+    object bbCardFuel: TdxBarButton
+      Action = actCardFuel
+      Category = 0
+    end
+    object bbTicketFuel: TdxBarButton
+      Action = actTicketFuel
+      Category = 0
+    end
+    object bbtReport_Transport: TdxBarButton
+      Action = actReport_Transport
+      Category = 0
+    end
+    object bbReport_Fuel: TdxBarButton
+      Action = actReport_Fuel
+      Category = 0
+    end
+    object bbReport_TransportHoursWork: TdxBarButton
+      Action = actReport_TransportHoursWork
+      Category = 0
+    end
+    object bbPersonalDocuments: TdxBarSubItem
+      Caption = #1055#1077#1088#1089#1086#1085#1072#1083
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPersonalGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPosition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPositionLevel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMember'
+        end
+        item
+          Visible = True
+          ItemName = 'bbWorkTimeKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStaffListData'
+        end
+        item
+          Visible = True
+          ItemName = 'bbModelService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCalendar'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSheetWorkTime'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPersonalService'
+        end>
+    end
+    object bbPersonalDocuments_Separator: TdxBarSeparator
+      Caption = 'bbPersonalDocuments_Separator'
+      Category = 0
+      Hint = 'bbPersonalDocuments_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbPersonalGroup: TdxBarButton
+      Action = actPersonalGroup
+      Category = 0
+    end
+    object bbPersonal: TdxBarButton
+      Action = actPersonal
+      Category = 0
+    end
+    object bbPosition: TdxBarButton
+      Action = actPosition
+      Category = 0
+    end
+    object bbPositionLevel: TdxBarButton
+      Action = actPositionLevel
+      Category = 0
+    end
+    object bbMember: TdxBarButton
+      Action = actMember
+      Category = 0
+    end
+    object bbWorkTimeKind: TdxBarButton
+      Action = actWorkTimeKind
+      Category = 0
+    end
+    object bbStaffListData: TdxBarButton
+      Action = actStaffListData
+      Category = 0
+    end
+    object bbModelService: TdxBarButton
+      Action = actModelService
+      Category = 0
+    end
+    object bbCalendar: TdxBarButton
+      Action = actCalendar
+      Category = 0
+    end
+    object bbSheetWorkTime: TdxBarButton
+      Action = actSheetWorkTime
+      Category = 0
+    end
+    object bbPersonalService: TdxBarButton
+      Action = actPersonalService
+      Category = 0
+    end
+    object bbReportsProduction: TdxBarSubItem
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object bbReportsProduction_Separator: TdxBarSeparator
+      Caption = 'bbReportsProduction_Separator'
+      Category = 0
+      Hint = 'bbReportsProduction_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actReport_Production_Union
+      Category = 0
+    end
+    object bbReportsGoods: TdxBarSubItem
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1099')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbReport_MotionGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_Goods_Movement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMISale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMIReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportHistoryCost'
+        end>
+    end
+    object bbReportsGoods_Separator: TdxBarSeparator
+      Caption = 'bbReportsGoods_Separator'
+      Category = 0
+      Hint = 'bbReportsGoods_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbReport_MotionGoods: TdxBarButton
+      Action = actReport_MotionGoods
+      Category = 0
+    end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
+    object bbReport_Goods_Movement: TdxBarButton
+      Action = actReport_Goods_Movement
+      Category = 0
+    end
+    object bbReport_GoodsMISale: TdxBarButton
+      Action = actReport_GoodsMISale
+      Category = 0
+    end
+    object bbReport_GoodsMI_byMovementSale: TdxBarButton
+      Action = actReport_GoodsMI_byMovementSale
+      Category = 0
+    end
+    object bbReport_GoodsMIReturn: TdxBarButton
+      Action = actReport_GoodsMIReturn
+      Category = 0
+    end
+    object bbReport_GoodsMI_byMovementReturn: TdxBarButton
+      Action = actReport_GoodsMI_byMovementReturn
+      Category = 0
+    end
+    object bbReportHistoryCost: TdxBarButton
+      Action = actReport_HistoryCost
+      Category = 0
+    end
+    object bbReportsFinance: TdxBarSubItem
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1099')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalSold'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_JuridicalCollation'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsFinance_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAccountReport'
+        end>
+    end
+    object bbReportsFinance_Separator: TdxBarSeparator
+      Caption = 'bbReportsFinance_Separator'
+      Category = 0
+      Hint = 'bbReportsFinance_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbReport_JuridicalSold: TdxBarButton
+      Action = actReport_JuridicalSold
+      Category = 0
+    end
+    object bbReport_JuridicalCollation: TdxBarButton
+      Action = actReport_JuridicalCollation
+      Category = 0
+    end
+    object bbAccountReport: TdxBarButton
+      Action = actReport_Account
+      Category = 0
+    end
+    object bbReportMain: TdxBarSubItem
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbReportBalance'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportProfitLoss'
+        end>
+    end
+    object bbReportMain_Separator: TdxBarSeparator
+      Caption = 'bbReportMain_Separator'
+      Category = 0
+      Hint = 'bbReportMain_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbReportBalance: TdxBarButton
+      Action = actReport_Balance
+      Category = 0
     end
     object bbGuides: TdxBarSubItem
       Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
@@ -294,6 +907,10 @@ object MainForm: TMainForm
           ItemName = 'dxBarSubItem'
         end>
     end
+    object bbReportProfitLoss: TdxBarButton
+      Action = actReport_ProfitLoss
+      Category = 0
+    end
     object bbGuides_Separator: TdxBarSeparator
       Caption = 'bbGuides_Separator'
       Category = 0
@@ -301,23 +918,8 @@ object MainForm: TMainForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbFinanceDocuments_Separator: TdxBarSeparator
-      Caption = 'bbFinanceDocuments_Separator'
-      Category = 0
-      Hint = 'bbFinanceDocuments_Separator'
-      Visible = ivAlways
-      ShowCaption = False
-    end
-    object bbMeasure: TdxBarButton
-      Action = actMeasure
-      Category = 0
-    end
     object bbJuridicalGroup: TdxBarButton
       Action = actJuridicalGroup
-      Category = 0
-    end
-    object bbGoodsProperty: TdxBarButton
-      Action = actGoodsProperty
       Category = 0
     end
     object bbJuridical_List: TdxBarButton
@@ -328,64 +930,16 @@ object MainForm: TMainForm
       Action = actJuridical
       Category = 0
     end
-    object bbBusiness: TdxBarButton
-      Action = actBusiness
-      Category = 0
-    end
-    object bbBranch: TdxBarButton
-      Action = actBranch
-      Category = 0
-    end
-    object bbIncome: TdxBarButton
-      Action = actIncome
-      Category = 0
-    end
-    object bbSendOnPrice: TdxBarButton
-      Action = actSendOnPrice
-      Category = 0
-    end
-    object bbSend: TdxBarButton
-      Action = actSend
-      Category = 0
-    end
-    object bbSale: TdxBarButton
-      Action = actSale
-      Category = 0
-    end
-    object bbReturnOut: TdxBarButton
-      Action = actReturnOut
-      Category = 0
-    end
-    object bbReturnIn: TdxBarButton
-      Action = actReturnIn
-      Category = 0
-    end
-    object bbLoss: TdxBarButton
-      Action = actLoss
-      Category = 0
-    end
-    object bbInventory: TdxBarButton
-      Action = actInventory
-      Category = 0
-    end
-    object bbProductionSeparate: TdxBarButton
-      Action = actProductionSeparate
-      Category = 0
-    end
-    object bbProductionUnion: TdxBarButton
-      Action = actProductionUnion
-      Category = 0
-    end
-    object bbZakazExternal: TdxBarButton
-      Action = actZakazExternal
-      Category = 0
-    end
-    object bbZakazInternal: TdxBarButton
-      Action = actZakazInternal
-      Category = 0
-    end
     object bbPartner: TdxBarButton
       Action = actPartner
+      Category = 0
+    end
+    object bbRouteSorting: TdxBarButton
+      Action = actRouteSorting
+      Category = 0
+    end
+    object bbArea: TdxBarButton
+      Action = actArea
       Category = 0
     end
     object bbPaidKind: TdxBarButton
@@ -400,11 +954,21 @@ object MainForm: TMainForm
       Action = actContract
       Category = 0
     end
-    object bbUnitGroup: TdxBarButton
-      Caption = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
+    object bbContractArticle: TdxBarButton
+      Action = actContractArticle
       Category = 0
-      Hint = #1043#1088#1091#1087#1087#1099' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081
-      Visible = ivAlways
+    end
+    object bbAsset: TdxBarButton
+      Action = actAsset
+      Category = 0
+    end
+    object bbBusiness: TdxBarButton
+      Action = actBusiness
+      Category = 0
+    end
+    object bbBranch: TdxBarButton
+      Action = actBranch
+      Category = 0
     end
     object bbUnit_List: TdxBarButton
       Action = actUnit_List
@@ -412,6 +976,26 @@ object MainForm: TMainForm
     end
     object bbUnit: TdxBarButton
       Action = actUnit
+      Category = 0
+    end
+    object bbCash: TdxBarButton
+      Action = actCash
+      Category = 0
+    end
+    object bbBank: TdxBarButton
+      Action = actBank
+      Category = 0
+    end
+    object bbBankAccount: TdxBarButton
+      Action = actBankAccount
+      Category = 0
+    end
+    object bbCurrency: TdxBarButton
+      Action = actCurrency
+      Category = 0
+    end
+    object bbCity: TdxBarButton
+      Action = actCity
       Category = 0
     end
     object bbGoodsGroup: TdxBarButton
@@ -426,106 +1010,20 @@ object MainForm: TMainForm
       Action = actGoodsKind
       Category = 0
     end
-    object bbReportBalance: TdxBarButton
-      Action = actReport_Balance
+    object bbMeasure: TdxBarButton
+      Action = actMeasure
       Category = 0
     end
-    object bbReportProfitLoss: TdxBarButton
-      Action = actReport_ProfitLoss
+    object bbGoodsProperty: TdxBarButton
+      Action = actGoodsProperty
       Category = 0
     end
-    object bbReportHistoryCost: TdxBarButton
-      Action = actReport_HistoryCost
-      Category = 0
-    end
-    object bbReport_MotionGoods: TdxBarButton
-      Action = actReport_MotionGoods
-      Category = 0
-    end
-    object bbReports: TdxBarSubItem
-      Caption = #1054#1090#1095#1077#1090#1099
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbReportBalance'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReportProfitLoss'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAccountReport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReportHistoryCost'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_MotionGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_JuridicalSold'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_JuridicalCollation'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_GoodsMISale'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_GoodsMIReturn'
-        end>
-    end
-    object bbBank: TdxBarButton
-      Action = actBank
+    object bbTradeMark: TdxBarButton
+      Action = actTradeMark
       Category = 0
     end
     object bbPriceList: TdxBarButton
       Action = actPriceList
-      Category = 0
-    end
-    object bbCash: TdxBarButton
-      Action = actCash
-      Category = 0
-    end
-    object bbCurrency: TdxBarButton
-      Action = actCurrency
-      Category = 0
-    end
-    object bbInfoMoneyGroup: TdxBarButton
-      Action = actInfoMoneyGroup
-      Category = 0
-    end
-    object bbInfoMoneyDestination: TdxBarButton
-      Action = actInfoMoneyDestination
-      Category = 0
-    end
-    object bbInfoMoney: TdxBarButton
-      Action = actInfoMoney
-      Category = 0
-    end
-    object bbAccountGroup: TdxBarButton
-      Action = actAccountGroup
-      Category = 0
-    end
-    object bbAccountDirection: TdxBarButton
-      Action = actAccountDirection
-      Category = 0
-    end
-    object bbProfitLossGroup: TdxBarButton
-      Action = actProfitLossGroup
-      Category = 0
-    end
-    object bbProfitLossDirection: TdxBarButton
-      Action = actProfitLossDirection
       Category = 0
     end
     object dxBarSubItem: TdxBarSubItem
@@ -572,101 +1070,40 @@ object MainForm: TMainForm
           ItemName = 'bbProfitLoss'
         end>
     end
+    object bbInfoMoneyGroup: TdxBarButton
+      Action = actInfoMoneyGroup
+      Category = 0
+    end
+    object bbInfoMoneyDestination: TdxBarButton
+      Action = actInfoMoneyDestination
+      Category = 0
+    end
+    object bbInfoMoney: TdxBarButton
+      Action = actInfoMoney
+      Category = 0
+    end
+    object bbAccountGroup: TdxBarButton
+      Action = actAccountGroup
+      Category = 0
+    end
+    object bbAccountDirection: TdxBarButton
+      Action = actAccountDirection
+      Category = 0
+    end
     object bbAccount: TdxBarButton
       Action = actAccount
       Category = 0
     end
+    object bbProfitLossGroup: TdxBarButton
+      Action = actProfitLossGroup
+      Category = 0
+    end
+    object bbProfitLossDirection: TdxBarButton
+      Action = actProfitLossDirection
+      Category = 0
+    end
     object bbProfitLoss: TdxBarButton
       Action = actProfitLoss
-      Category = 0
-    end
-    object bbRouteSorting: TdxBarButton
-      Action = actRouteSorting
-      Category = 0
-    end
-    object bbTradeMark: TdxBarButton
-      Action = actTradeMark
-      Category = 0
-    end
-    object bbAsset: TdxBarButton
-      Action = actAsset
-      Category = 0
-    end
-    object bbHistory: TdxBarSubItem
-      Caption = #1048#1089#1090#1086#1088#1080#1080
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPriceListItem'
-        end>
-    end
-    object bbPriceListItem: TdxBarButton
-      Action = actPriceListItem
-      Category = 0
-    end
-    object bbFinanceDocuments: TdxBarSubItem
-      Caption = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
-      Category = 0
-      Hint = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1092#1080#1085#1072#1085#1089#1086#1074#1099#1077
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbIncomeCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbFinanceDocuments_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridicalService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankLoad'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankAccountDocument'
-        end
-        item
-          Visible = True
-          ItemName = 'bbFinanceDocuments_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLossDebt'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSendDebt'
-        end>
-    end
-    object bbIncomeCash: TdxBarButton
-      Action = actCashOperation
-      Category = 0
-    end
-    object bbBankAccount: TdxBarButton
-      Action = actBankAccount
-      Category = 0
-    end
-    object bbJuridicalService: TdxBarButton
-      Action = actService
-      Category = 0
-    end
-    object bbBankLoad: TdxBarButton
-      Action = actBankLoad
-      Category = 0
-    end
-    object bbLossDebt: TdxBarButton
-      Action = actLossDebt
-      Category = 0
-    end
-    object bbRole: TdxBarButton
-      Action = actRole
       Category = 0
     end
     object bbService: TdxBarSubItem
@@ -716,7 +1153,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbGuides_Separator'
+          ItemName = 'bbService_Separator'
         end
         item
           Visible = True
@@ -726,6 +1163,17 @@ object MainForm: TMainForm
           Visible = True
           ItemName = 'bbUpdateProgramm'
         end>
+    end
+    object bbService_Separator: TdxBarSeparator
+      Caption = 'bbService_Separator'
+      Category = 0
+      Hint = 'bbService_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbRole: TdxBarButton
+      Action = actRole
+      Category = 0
     end
     object bbAction: TdxBarButton
       Action = actAction
@@ -739,343 +1187,16 @@ object MainForm: TMainForm
       Action = actProcess
       Category = 0
     end
-    object bbTransportDocuments: TdxBarSubItem
-      Caption = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbTransport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbIncomeFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalSendCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalAccount'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSendTicketFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTransportService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTransportDocuments_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCar'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRoute'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCarModel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbFreight'
-        end
-        item
-          Visible = True
-          ItemName = 'bbFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRateFuelKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRateFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCardFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTicketFuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTransportDocuments_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbtReport_Transport'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Fuel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_Goods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_TransportHoursWork'
-        end>
-    end
-    object bbTransport: TdxBarButton
-      Action = actTransport
-      Category = 0
-    end
-    object bbIncomeFuel: TdxBarButton
-      Action = actIncomeFuel
-      Category = 0
-    end
-    object bbPersonalSendCash: TdxBarButton
-      Action = actPersonalSendCash
-      Category = 0
-    end
-    object bbSendTicketFuel: TdxBarButton
-      Action = actSendTicketFuel
-      Category = 0
-    end
-    object bbTransportDocuments_Separator: TdxBarSeparator
-      Caption = 'bbTransportDocuments_Separator'
-      Category = 0
-      Hint = 'bbTransportDocuments_Separator'
-      Visible = ivAlways
-      ShowCaption = False
-    end
-    object bbCar: TdxBarButton
-      Action = actCar
-      Category = 0
-    end
-    object bbRoute: TdxBarButton
-      Action = actRoute
-      Category = 0
-    end
-    object bbCarModel: TdxBarButton
-      Action = actCarModel
-      Category = 0
-    end
-    object bbFreight: TdxBarButton
-      Action = actFreight
-      Category = 0
-    end
-    object bbFuel: TdxBarButton
-      Action = actFuel
-      Category = 0
-    end
-    object bbRateFuelKind: TdxBarButton
-      Action = actRateFuelKind
-      Category = 0
-    end
-    object bbRateFuel: TdxBarButton
-      Action = actRateFuel
-      Category = 0
-    end
-    object bbCardFuel: TdxBarButton
-      Action = actCardFuel
-      Category = 0
-    end
-    object bbTicketFuel: TdxBarButton
-      Action = actTicketFuel
-      Category = 0
-    end
-    object bbtReport_Transport: TdxBarButton
-      Action = actReport_Transport
-      Category = 0
-    end
-    object bbReport_Fuel: TdxBarButton
-      Action = actReport_Fuel
-      Category = 0
-    end
-    object bbReport_TransportHoursWork: TdxBarButton
-      Action = actReport_TransportHoursWork
-      Category = 0
-    end
-    object bbAccountReport: TdxBarButton
-      Action = actReport_Account
-      Category = 0
-    end
-    object bbReport_Goods: TdxBarButton
-      Action = actReport_Goods
-      Category = 0
-    end
-    object bbPersonalDocuments: TdxBarSubItem
-      Caption = #1055#1077#1088#1089#1086#1085#1072#1083
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPersonalGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonal'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPosition'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPositionLevel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMember'
-        end
-        item
-          Visible = True
-          ItemName = 'bbWorkTimeKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStaffListData'
-        end
-        item
-          Visible = True
-          ItemName = 'bbModelService'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalDocuments_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCalendar'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSheetWorkTime'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPersonalService'
-        end>
-    end
-    object bbPersonalGroup: TdxBarButton
-      Action = actPersonalGroup
-      Category = 0
-    end
-    object bbPersonal: TdxBarButton
-      Action = actPersonal
-      Category = 0
-    end
-    object bbPosition: TdxBarButton
-      Action = actPosition
-      Category = 0
-    end
-    object bbMember: TdxBarButton
-      Action = actMember
-      Category = 0
-    end
-    object bbWorkTimeKind: TdxBarButton
-      Action = actWorkTimeKind
-      Category = 0
-    end
-    object bbPersonalDocuments_Separator: TdxBarSeparator
-      Caption = 'bbPersonalDocuments_Separator'
-      Category = 0
-      Hint = 'bbPersonalDocuments_Separator'
-      Visible = ivAlways
-      ShowCaption = False
-    end
-    object bbSheetWorkTime: TdxBarButton
-      Action = actSheetWorkTime
-      Category = 0
-    end
-    object bbPersonalService: TdxBarButton
-      Action = actPersonalService
-      Category = 0
-    end
-    object bbPositionLevel: TdxBarButton
-      Action = actPositionLevel
-      Category = 0
-    end
-    object bbStaffListData: TdxBarButton
-      Action = actStaffListData
-      Category = 0
-    end
-    object bbUpdateProgramm: TdxBarButton
-      Action = actUpdateProgram
-      Category = 0
-    end
-    object bbModelService: TdxBarButton
-      Action = actModelService
-      Category = 0
-    end
-    object bbAbout: TdxBarButton
-      Action = actAbout
-      Category = 0
-    end
     object bbProtocol: TdxBarButton
       Action = actProtocol
-      Category = 0
-    end
-    object bbArea: TdxBarButton
-      Action = actArea
-      Category = 0
-    end
-    object bbContractArticle: TdxBarButton
-      Action = actContractArticle
-      Category = 0
-    end
-    object bbCalendar: TdxBarButton
-      Action = actCalendar
       Category = 0
     end
     object bbSetUserDefaults: TdxBarButton
       Action = actSetUserDefaults
       Category = 0
     end
-    object bbPersonalAccount: TdxBarButton
-      Action = actPersonalAccount
-      Category = 0
-    end
-    object bbTransportService: TdxBarButton
-      Action = actTransportService
-      Category = 0
-    end
-    object bbBankAccountDocument: TdxBarButton
-      Action = actBankAccountDocument
-      Category = 0
-    end
-    object bbCity: TdxBarButton
-      Action = actCity
-      Category = 0
-    end
-    object bbReport_JuridicalSold: TdxBarButton
-      Action = actReport_JuridicalSold
-      Category = 0
-    end
-    object bbReport_JuridicalCollation: TdxBarButton
-      Action = actReport_JuridicalCollation
-      Category = 0
-    end
     object bbMovementDesc: TdxBarButton
       Action = actMovementDesc
-      Category = 0
-    end
-    object bbReport_GoodsMISale: TdxBarButton
-      Action = actReport_GoodsMISale
-      Category = 0
-    end
-    object bbReport_GoodsMIReturn: TdxBarButton
-      Action = actReport_GoodsMIReturn
-      Category = 0
-    end
-    object bbSendDebt: TdxBarButton
-      Action = actSendDebt
-      Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1102#1088'. '#1083#1080#1094#1072')'
       Category = 0
     end
     object bbPartner1CLink: TdxBarButton
@@ -1088,6 +1209,18 @@ object MainForm: TMainForm
     end
     object bbLoad1CSale: TdxBarButton
       Action = actLoad1CSale
+      Category = 0
+    end
+    object bbAbout: TdxBarButton
+      Action = actAbout
+      Category = 0
+    end
+    object bbUpdateProgramm: TdxBarButton
+      Action = actUpdateProgram
+      Category = 0
+    end
+    object bbExit: TdxBarButton
+      Action = actExit
       Category = 0
     end
   end
@@ -1265,7 +1398,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_Balance: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TReport_BalanceForm'
       FormNameParam.Value = ''
@@ -1274,7 +1407,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_ProfitLoss: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
       Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
       FormName = 'TReport_ProfitLossForm'
       FormNameParam.Value = ''
@@ -1302,7 +1435,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_HistoryCost: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
       FormName = 'TReport_HistoryCostForm'
       FormNameParam.Value = ''
@@ -1787,7 +1920,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_MotionGoods: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_MotionGoodsForm'
       FormNameParam.Value = ''
@@ -1926,7 +2059,7 @@ object MainForm: TMainForm
     end
     object actReport_Account: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
-      Caption = #1054#1090#1095#1077#1090' '#1086#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = ''
@@ -2042,8 +2175,8 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_JuridicalSold: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
-      Caption = #1054#1073#1086#1088#1086#1090#1082#1072' '#1087#1086' '#1102#1088' '#1083#1080#1094#1072#1084
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -2051,7 +2184,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_JuridicalCollation: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
       FormName = 'TReport_JuridicalCollationForm'
       FormNameParam.Value = ''
@@ -2069,7 +2202,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMIReturn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
@@ -2078,11 +2211,16 @@ object MainForm: TMainForm
         item
           Name = 'inDescId'
           Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1080#1090#1086#1075')'
+          DataType = ftString
         end>
       isShowModal = False
     end
     object actReport_GoodsMISale: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
@@ -2095,7 +2233,7 @@ object MainForm: TMainForm
         end
         item
           Name = 'InDescName'
-          Value = #1055#1088#1086#1076#1072#1078#1072
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1080#1090#1086#1075')'
           DataType = ftString
         end>
       isShowModal = False
@@ -2136,6 +2274,63 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsMI_byMovementSale: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+      FormName = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_byMovementReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+      FormName = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_Goods_Movement: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
+      FormName = 'TReport_Goods_MovementForm'
+      FormNameParam.Value = 'TReport_Goods_MovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Production_Union: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
+      FormName = 'TReport_Production_Union'
+      FormNameParam.Value = 'TReport_Production_Union'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2162,7 +2357,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

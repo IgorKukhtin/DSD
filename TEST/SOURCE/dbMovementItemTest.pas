@@ -22,7 +22,6 @@ type
   published
     procedure MovementItemIncomeTest;
     procedure MovementItemSendOnPriceTest;
-    procedure MovementItemSaleTest;
     procedure MovementItemReturnOutTest;
     procedure MovementItemProductionUnionTest;
     procedure MovementItemZakazExternalTest;
@@ -82,20 +81,6 @@ type
        Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
        CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId: Integer): integer;
-    constructor Create; override;
-  end;
-
-  TMovementItemSaleTest = class(TMovementItemTest)
-  private
-    function InsertDefault: integer; override;
-  protected
-    procedure SetDataSetParam; override;
-  public
-    function InsertUpdateMovementItemSale
-      (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
-       Price, CountForPrice, HeadCount: double;
-       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -196,22 +181,6 @@ begin
   finally
     // удаление
     MovementItemSendOnPrice.Delete(Id);
-  end;
-end;
-
-procedure TdbMovementItemTest.MovementItemSaleTest;
-var
-  MovementItemSale: TMovementItemSaleTest;
-  Id: Integer;
-begin
-  MovementItemSale := TMovementItemSaleTest.Create;
-  Id := MovementItemSale.InsertDefault;
-  // создание документа
-  try
-  // редактирование
-  finally
-    // удаление
-    MovementItemSale.Delete(Id);
   end;
 end;
 
@@ -416,71 +385,6 @@ begin
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
 end;
 
-{ TMovementSale }
-constructor TMovementItemSaleTest.Create;
-begin
-  inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Sale';
-  spSelect := 'gpSelect_MovementItem_Sale';
-  spGet := 'gpGet_MovementItem_Sale';
-end;
-
-function TMovementItemSaleTest.InsertDefault: integer;
-var Id, MovementId, GoodsId: Integer;
-    Amount, AmountPartner, Price, CountForPrice,
-    HeadCount, AmountChangePercent, ChangePercentAmount: double;
-    PartionGoods:String;
-    GoodsKindId, AssetId: Integer;
-begin
-  Id:=0;
-  MovementId:= TMovementSaleTest.Create.GetDefault;
-  GoodsId:=TGoodsTest.Create.GetDefault;
-  Amount:=10;
-  AmountPartner:=11;
-  ChangePercentAmount := 10;
-  Price:=2.34;
-  CountForPrice:=1;
-  HeadCount:=5;
-  PartionGoods:='';
-  GoodsKindId:=0;
-  AssetId:=0;
-  AmountChangePercent := 0;
-  //
-  result := InsertUpdateMovementItemSale(Id, MovementId, GoodsId,
-                              Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
-                              Price, CountForPrice, HeadCount,
-                              PartionGoods, GoodsKindId, AssetId);
-end;
-
-function TMovementItemSaleTest.InsertUpdateMovementItemSale
-  (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
-       CountForPrice, HeadCount: double;
-       PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
-begin
-  FParams.Clear;
-  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
-  FParams.AddParam('inMovementId', ftInteger, ptInput, MovementId);
-  FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
-  FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
-  FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
-  FParams.AddParam('inAmountChangePercent', ftFloat, ptInput, AmountChangePercent);
-  FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
-  FParams.AddParam('inPrice', ftFloat, ptInput, Price);
-  FParams.AddParam('inCountForPrice', ftFloat, ptInput, CountForPrice);
-  FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
-  FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
-  FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
-  FParams.AddParam('inAssetId', ftInteger, ptInput, AssetId);
-  result := InsertUpdate(FParams);
-end;
-
-procedure TMovementItemSaleTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementSaleTest.Create.GetDefault);
-  FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
-end;
 
 { TMovementReturnOut }
 constructor TMovementItemReturnOutTest.Create;

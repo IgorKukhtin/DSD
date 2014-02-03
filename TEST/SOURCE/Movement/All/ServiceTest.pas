@@ -17,7 +17,7 @@ type
   public
     function InsertUpdateService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
+        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
     constructor Create; override;
   end;
 
@@ -41,7 +41,7 @@ var Id: Integer;
     OperDate: TDateTime;
     AmountIn, AmountOut: Double;
     Comment:String;
-    BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: Integer;
+    BusinessId, ContractId, ContractConditionKindId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -50,7 +50,8 @@ begin
   AmountOut := 0;
   Comment:='';
   BusinessId := 0;
-  ContractId:=0;
+  ContractId:=TContractTest.Create.GetDefault;
+  ContractConditionKindId:=0;
   InfoMoneyId := 0;
   with TInfoMoneyTest.Create.GetDataSet do begin
      if Locate('Code', '21501', []) then
@@ -62,12 +63,12 @@ begin
   PaidKindId:=0;
 
   result := InsertUpdateService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
-              BusinessId, ContractId,InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId);
+              BusinessId, ContractId,InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId,ContractConditionKindId);
 end;
 
 function TService.InsertUpdateService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
+        BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -83,6 +84,7 @@ begin
   FParams.AddParam('inJuridicalBasisId', ftInteger, ptInput, JuridicalBasisId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inContractConditionKindId', ftInteger, ptInput, ContractConditionKindId);
 
   result := InsertUpdate(FParams);
 

@@ -1,10 +1,12 @@
 -- Документ <Расход денег с подотчета на подотчет>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Get_Movement_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Get_Movement_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_Movement_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_Movement_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- Строки Документа <Расход денег с подотчета на подотчет>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_MI_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_MI_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+-- CREATE OR REPLACE FUNCTION zc_Enum_Process_Select_MI_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Select_MI_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_SetUnErased_MI_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetUnErased_MI_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 -- Status
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_PersonalSendCash() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_PersonalSendCash' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -21,7 +23,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement
                                   , inCode:= 1
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash');
-
+/*
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Get_Movement_PersonalSendCash()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
@@ -33,20 +35,30 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_Movement_Perso
                                   , inCode:= 3
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_Movement_PersonalSendCash');
-                                  
+*/                                  
 -- Строки Документа <Транспорт>
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_PersonalSendCash()
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_PersonalSendCash()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_PersonalSendCash');
-
+/*
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Select_MI_PersonalSendCash()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 2
                                   , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - получение данных.'
                                   , inEnumName:= 'zc_Enum_Process_Select_MI_PersonalSendCash');                                 
-                                                                   
+*/                                                                   
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_LossDebt()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 1
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - удаление.'
+                                  , inEnumName:= 'zc_Enum_Process_SetErased_MI_PersonalSendCash');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetUnErased_MI_LossDebt()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 1
+                                  , inName:= 'Элемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - восстановление.'
+                                  , inEnumName:= 'zc_Enum_Process_SetUnErased_MI_PersonalSendCash');
 -- Status_PersonalSendCash
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_PersonalSendCash()
                                   , inDescId:= zc_Object_Process()
@@ -72,7 +84,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Person
                                   , inName:= 'Документ <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_PersonalSendCash())||'> - Проведение за период.'
                                   , inEnumName:= 'zc_Enum_Process_CompletePeriod_PersonalSendCash');
 
-
+/*
  -- Документ <Транспорт>
  -- заливка прав - InsertUpdate_Movement_PersonalSendCash + Get_Movement_PersonalSendCash
  PERFORM gpInsertUpdate_Object_RoleProcess (ioId        := tmpData.RoleRightId
@@ -155,6 +167,7 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_CompletePeriod_Person
                             AND tmpData.ProcessId = tmpProcess.ProcessId
  WHERE tmpData.RoleId IS NULL
 ;
+*/
   
 END $$;
 

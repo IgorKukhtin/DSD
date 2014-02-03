@@ -28,10 +28,8 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Transport());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransportMaster());
 
    IF COALESCE (inStartOdometre, 0) <> 0 OR COALESCE (inEndOdometre, 0) <> 0
    THEN

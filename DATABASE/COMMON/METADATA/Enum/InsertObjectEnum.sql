@@ -378,6 +378,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50101, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_50101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_50201');
 
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80301, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_80301');
 
 END $$;
 
@@ -406,6 +407,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.14                                        * add zc_Enum_ProfitLoss_80301
  25.01.14                                        * add zc_Enum_ContractConditionKind_...
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
  22.12.13                                        * add zc_Enum_InfoMoneyGroup_...

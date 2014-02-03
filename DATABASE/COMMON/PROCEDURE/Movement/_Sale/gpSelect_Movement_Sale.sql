@@ -1,11 +1,15 @@
 -- Function: gpSelect_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsPartnerDate Boolean ,
+    IN inIsErased      Boolean ,
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
@@ -29,7 +33,13 @@ BEGIN
      vbUserId:= inSession;
 
      --
-     RETURN QUERY 
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                       UNION
+                        SELECT zc_Enum_Status_UnComplete() AS StatusId
+                       UNION
+                        SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                       )
      SELECT
              Movement.Id
            , Movement.InvNumber
@@ -66,11 +76,22 @@ BEGIN
            , View_Contract_InvNumber.InvNumber AS ContractName
 
            , Object_RouteSorting.Id        AS RouteSortingId
-           , Object_RouteSorting.ValueData AS RouteSortingName       
+           , Object_RouteSorting.ValueData AS RouteSortingName
 
-       FROM Movement
+       FROM (SELECT Movement.id FROM  tmpStatus
+               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Sale() AND Movement.StatusId = tmpStatus.StatusId
+               WHERE inIsPartnerDate = FALSE
+
+             UNION ALL SELECT MovementDate_OperDatePartner.movementid  AS Id FROM MovementDate AS MovementDate_OperDatePartner
+                        JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.movementid AND Movement.DescId = zc_Movement_Sale()
+                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                       WHERE inIsPartnerDate = TRUE AND MovementDate_OperDatePartner.valuedata BETWEEN inStartDate AND inEndDate
+                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            ) AS tmpMovement
+
+            JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-                                          
+
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
@@ -123,7 +144,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId 
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -134,23 +155,24 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+            ;
 
-       WHERE Movement.DescId = zc_Movement_Sale()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
-  
+
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.14                                                       * add inIsPartnerDate, inIsErased
  14.01.14                                        * add Object_Contract_InvNumber_View
  11.01.14                                        * add Checked, InvNumberOrder
- 13.08.13                                        * add TotalCountPartner               
+ 13.08.13                                        * add TotalCountPartner
  13.07.13          *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

@@ -26,23 +26,57 @@ $BODY$
    DECLARE vbSumm TFloat;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
-     vbUserId:= inSession;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_LossDebt());
 
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка. Не установлено <Юр.лицо>.';
+         RAISE EXCEPTION 'Ошибка.Не установлено <Юридическое лицо>.';
+     END IF;
+     IF COALESCE (inContractId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен <№ дог.>.';
+     END IF;
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена <Форма оплаты>.';
+     END IF;
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлена <УП статья назначения>.';
      END IF;
 
      -- проверка
      IF (COALESCE (ioAmountDebet, 0) <> 0) AND (COALESCE (ioAmountKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
      -- проверка
      IF (COALESCE (ioSummDebet, 0) <> 0) AND (COALESCE (ioSummKredit, 0) <> 0) THEN
-        RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
+        RAISE EXCEPTION 'Ошибка.Должна быть введена только одна сумма: <Дебет долг на дату> или <Кредит долг на дату>.';
+     END IF;
+
+     -- проверка
+     IF EXISTS (SELECT MovementItem.Id
+                FROM MovementItem
+                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                                                AND MILinkObject_InfoMoney.ObjectId = inInfoMoneyId
+                     JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                                                     AND MILinkObject_Contract.ObjectId = inContractId
+                     JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                 ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                                                AND MILinkObject_PaidKind.ObjectId = inPaidKindId
+                WHERE MovementItem.MovementId = inMovementId
+                  AND MovementItem.ObjectId = inJuridicalId
+                  AND MovementItem.DescId = zc_MI_Master()
+                  AND MovementItem.Id <> COALESCE (ioId, 0))
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
      END IF;
 
      -- расчет
@@ -83,7 +117,6 @@ BEGIN
 
      -- сохранили связь с <Подразделение>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
-
      -- пересчитали Итоговые суммы по документу
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
@@ -102,3 +135,22 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_MovementItem_LossDebt (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, inCountForPrice:= 1, inLiveWeight:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+
+/*
+SELECT MovementItem.ObjectId, MILinkObject_PaidKind.ObjectId, MILinkObject_InfoMoney.ObjectId, MILinkObject_Contract.ObjectId
+                FROM MovementItem
+                     JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                                 ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+                     JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                                      ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                                     AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+                     JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                                 ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+                WHERE MovementItem.MovementId = 12055 
+                  AND MovementItem.DescId = zc_MI_Master()
+
+group by MovementItem.ObjectId, MILinkObject_PaidKind.ObjectId, MILinkObject_InfoMoney.ObjectId, MILinkObject_Contract.ObjectId
+having count (*) >1
+*/

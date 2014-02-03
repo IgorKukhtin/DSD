@@ -952,6 +952,8 @@ object LossDebtForm: TLossDebtForm
           ParamType = ptInput
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -1478,7 +1480,7 @@ object LossDebtForm: TLossDebtForm
     Top = 48
   end
   object RefreshAddOn: TRefreshAddOn
-    FormName = 'PersonalAccountJournalForm'
+    FormName = 'LossDebtJournalForm'
     DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'

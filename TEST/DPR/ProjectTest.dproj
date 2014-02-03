@@ -572,7 +572,7 @@
 				<Form>StaffListEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\PersonalTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\ModelService.pas">
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
@@ -672,8 +672,8 @@
 				<Form>CashJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
-				<Form>Report_GoodsMIForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods_Movement.pas">
+				<Form>Report_Goods_MovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashOperation.pas">
@@ -864,7 +864,7 @@
 				<Form>JuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
@@ -971,6 +971,17 @@
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
+				<Form>Report_GoodsMIForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovement.pas">
+				<Form>Report_GoodsMI_byMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
