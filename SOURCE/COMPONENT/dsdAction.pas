@@ -1190,9 +1190,9 @@ end;
 
 function TdsdInsertUpdateGuides.LocalExecute: boolean;
 begin
-  inherited;
   // Делаем post всем
   try
+    inherited;
     PostDataSet;
   except
     TParentForm(Owner).ModalResult := mrNone;

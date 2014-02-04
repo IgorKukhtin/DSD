@@ -723,6 +723,12 @@ object Report_AccountForm: TReport_AccountForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Align'
