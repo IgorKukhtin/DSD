@@ -61,6 +61,7 @@ object ContractKindForm: TContractKindForm
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
@@ -104,8 +105,8 @@ object ContractKindForm: TContractKindForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -238,6 +239,8 @@ object ContractKindForm: TContractKindForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TContractKindEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -253,6 +256,8 @@ object ContractKindForm: TContractKindForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TContractKindEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -309,7 +314,6 @@ object ContractKindForm: TContractKindForm
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
     end
     object dsdGridToExcel: TdsdGridToExcel
@@ -338,7 +342,13 @@ object ContractKindForm: TContractKindForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
     Left = 224
