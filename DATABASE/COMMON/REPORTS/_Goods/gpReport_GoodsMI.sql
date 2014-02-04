@@ -1,7 +1,5 @@
 -- Function: gpReport_GoodsMI ()
 
-DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_SaleGoods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
@@ -56,24 +54,24 @@ BEGIN
                       , 0 AS  Amount
                       , 0 AS  AmountPartner
                       , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN MIReport.Amount ELSE -1 * MIReport.Amount END) AS Summ
-                 FROM (SELECT Container.Id AS ContainerId
-                       FROM ContainerLinkObject AS ContainerLO_ProfitLoss
-                            JOIN Container ON Container.Id = ContainerLO_ProfitLoss.ContainerId
-                                          AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
-                       WHERE ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
-                         AND ContainerLO_ProfitLoss.ObjectId in ( zc_Enum_ProfitLoss_10101(), zc_Enum_ProfitLoss_10102() -- Сумма реализации: Продукция + Ирна
-                                                                , zc_Enum_ProfitLoss_10201(), zc_Enum_ProfitLoss_10202() -- Скидка по акциям: Продукция + Ирна
-                                                                , zc_Enum_ProfitLoss_10301(), zc_Enum_ProfitLoss_10302() -- Скидка дополнительная: Продукция + Ирна
-                                                                , zc_Enum_ProfitLoss_10701(), zc_Enum_ProfitLoss_10702() -- Сумма возвратов: Продукция + Ирна
-                                                                 )
-                     ) AS tmpListContainer
-                      JOIN ReportContainerLink ON ReportContainerLink.ContainerId = tmpListContainer.ContainerId
-
-                      JOIN MovementItemReport AS MIReport
-                                              ON MIReport.ReportContainerId = ReportContainerLink.ReportContainerId
-                                             AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                 FROM MovementItemReport AS MIReport
                       JOIN Movement ON Movement.Id = MIReport.MovementId
                                    AND Movement.DescId = inDescId
+
+                      JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MIReport.ReportContainerId--ReportContainerLink.ContainerId = tmpListContainer.ContainerId
+                      
+                      JOIN (SELECT Container.Id AS ContainerId
+                            FROM ContainerLinkObject AS ContainerLO_ProfitLoss
+                                 JOIN Container ON Container.Id = ContainerLO_ProfitLoss.ContainerId
+                                                AND Container.ObjectId = zc_Enum_Account_100301() -- прибыль текущего периода
+                            WHERE ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
+                              AND ContainerLO_ProfitLoss.ObjectId in ( zc_Enum_ProfitLoss_10101(), zc_Enum_ProfitLoss_10102() -- Сумма реализации: Продукция + Ирна
+                                                                     , zc_Enum_ProfitLoss_10201(), zc_Enum_ProfitLoss_10202() -- Скидка по акциям: Продукция + Ирна
+                                                                     , zc_Enum_ProfitLoss_10301(), zc_Enum_ProfitLoss_10302() -- Скидка дополнительная: Продукция + Ирна
+                                                                     , zc_Enum_ProfitLoss_10701(), zc_Enum_ProfitLoss_10702() -- Сумма возвратов: Продукция + Ирна
+                                                                      )
+                           ) AS tmpListContainer ON  tmpListContainer.ContainerId = ReportContainerLink.ContainerId 
+                      
 
                       JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                                        AND MovementItem.DescId =  zc_MI_Master()
@@ -82,6 +80,8 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                 WHERE  MIReport.OperDate BETWEEN inStartDate AND inEndDate
                  GROUP BY MovementItem.ObjectId
                         , MILinkObject_GoodsKind.ObjectId
                 UNION ALL    
@@ -140,9 +140,10 @@ ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarCha
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.02.14         * 
  01.02.14                                        * All
  22.01.14         *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',  inDescId:= 5, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.12.2013', inEndDate:= '01.12.2013',  inDescId:= 5, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
