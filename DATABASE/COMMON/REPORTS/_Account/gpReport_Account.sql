@@ -89,17 +89,17 @@ BEGIN
          , tmpReport.SummEnd   :: TFloat AS SummEnd
          , tmpReport.OperPrice :: TFloat AS OperPrice
 
-         , Object_AccountGroup.ObjectCode AS AccountGroupCode, Object_AccountGroup.ValueData AS AccountGroupName
-         , Object_AccountDirection.ObjectCode AS AccountDirectionCode, Object_AccountDirection.ValueData AS AccountDirectionName
-         , View_Account.ObjectCode AS AccountCode, View_Account.ValueData AS AccountName
+         , View_Account.AccountGroupCode, View_Account.AccountGroupName
+         , View_Account.AccountDirectionCode, View_Account.AccountDirectionName
+         , View_Account.AccountCode, View_Account.AccountName
          , View_Account.AccountName_all AS AccountName_All
 
-         , Object_AccountGroup_inf.ObjectCode AS AccountGroupCode_inf, Object_AccountGroup_inf.ValueData AS AccountGroupName_inf
-         , Object_AccountDirection_inf.ObjectCode AS AccountDirectionCode_inf, Object_AccountDirection_inf.ValueData AS AccountDirectionName_inf
-         , View_Account_inf.ObjectCode AS AccountCode_inf, View_Account_inf.ValueData AS AccountName_inf
+         , View_Account_inf.AccountGroupCode AS AccountGroupCode_inf, View_Account_inf.AccountGroupName AS AccountGroupName_inf
+         , View_Account_inf.AccountDirectionCode AS AccountDirectionCode_inf, View_Account_inf.AccountDirectionName AS AccountDirectionName_inf
+         , View_Account_inf.AccountCode AS AccountCode_inf, View_Account_inf.AccountName AS AccountName_inf
          , View_Account_inf.AccountName_all AS AccountName_All_inf
 
-         , View_ProfitLoss.ProfitLossName_all AS ProfitLossName_All_inf
+         , View_ProfitLoss_inf.ProfitLossName_all AS ProfitLossName_All_inf
 
    FROM      
        (SELECT COALESCE (ContainerLO_InfoMoney.ObjectId, tmpReport_All.InfoMoneyId_inf) AS InfoMoneyId
@@ -417,8 +417,8 @@ BEGIN
 
        LEFT JOIN MovementDesc ON MovementDesc.Id = tmpReport.MovementDescId
 
-       -- LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
-       LEFT JOIN Object AS View_Account ON View_Account.Id = tmpReport.AccountId
+       LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpReport.AccountId
+       /*LEFT JOIN Object AS View_Account ON View_Account.Id = tmpReport.AccountId
        LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
                             ON ObjectLink_Account_AccountGroup.ObjectId = tmpReport.AccountId
                            AND ObjectLink_Account_AccountGroup.DescId = zc_ObjectLink_Account_AccountGroup()
@@ -426,10 +426,10 @@ BEGIN
        LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection
                             ON ObjectLink_Account_AccountDirection.ObjectId = tmpReport.AccountId
                            AND ObjectLink_Account_AccountDirection.DescId = zc_ObjectLink_Account_AccountDirection()
-       LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Account_AccountDirection.ChildObjectId
+       LEFT JOIN Object AS Object_AccountDirection ON Object_AccountDirection.Id = ObjectLink_Account_AccountDirection.ChildObjectId*/
 
-       -- LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
-       LEFT JOIN Object AS View_Account_inf ON View_Account_inf.Id = tmpReport.AccountId_inf
+       LEFT JOIN Object_Account_View AS View_Account_inf ON View_Account_inf.AccountId = tmpReport.AccountId_inf
+       /*LEFT JOIN Object AS View_Account_inf ON View_Account_inf.Id = tmpReport.AccountId_inf
        LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup_inf
                             ON ObjectLink_Account_AccountGroup_inf.ObjectId = tmpReport.AccountId_inf
                            AND ObjectLink_Account_AccountGroup_inf.DescId = zc_ObjectLink_Account_AccountGroup()
@@ -437,10 +437,10 @@ BEGIN
        LEFT JOIN ObjectLink AS ObjectLink_Account_AccountDirection_inf
                             ON ObjectLink_Account_AccountDirection_inf.ObjectId = tmpReport.AccountId_inf
                            AND ObjectLink_Account_AccountDirection_inf.DescId = zc_ObjectLink_Account_AccountDirection()
-       LEFT JOIN Object AS Object_AccountDirection_inf ON Object_AccountDirection_inf.Id = ObjectLink_Account_AccountDirection_inf.ChildObjectId
+       LEFT JOIN Object AS Object_AccountDirection_inf ON Object_AccountDirection_inf.Id = ObjectLink_Account_AccountDirection_inf.ChildObjectId*/
 
-       -- LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
-       LEFT JOIN Object AS View_ProfitLoss_inf ON View_ProfitLoss_inf.Id = tmpReport.ProfitLossId_inf
+       LEFT JOIN Object_ProfitLoss_View AS View_ProfitLoss_inf ON View_ProfitLoss_inf.ProfitLossId = tmpReport.ProfitLossId_inf
+       /*LEFT JOIN Object AS View_ProfitLoss_inf ON View_ProfitLoss_inf.Id = tmpReport.ProfitLossId_inf
        LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup_inf
                             ON ObjectLink_ProfitLoss_ProfitLossGroup_inf.ObjectId = tmpReport.ProfitLossId_inf
                            AND ObjectLink_ProfitLoss_ProfitLossGroup_inf.DescId = zc_ObjectLink_ProfitLoss_ProfitLossGroup()
@@ -448,7 +448,7 @@ BEGIN
        LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossDirection_inf
                             ON ObjectLink_ProfitLoss_ProfitLossDirection_inf.ObjectId = tmpReport.ProfitLossId_inf
                            AND ObjectLink_ProfitLoss_ProfitLossDirection_inf.DescId = zc_ObjectLink_ProfitLoss_ProfitLossDirection()
-       LEFT JOIN Object AS Object_ProfitLossDirection_inf ON Object_ProfitLossDirection_inf.Id = ObjectLink_ProfitLoss_ProfitLossDirection_inf.ChildObjectId
+       LEFT JOIN Object AS Object_ProfitLossDirection_inf ON Object_ProfitLossDirection_inf.Id = ObjectLink_ProfitLoss_ProfitLossDirection_inf.ChildObjectId*/
 
        LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = tmpReport.ObjectId_Direction
        LEFT JOIN Object AS Object_Destination ON Object_Destination.Id = tmpReport.ObjectId_Destination

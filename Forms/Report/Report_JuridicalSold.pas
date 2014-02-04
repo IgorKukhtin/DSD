@@ -35,8 +35,8 @@ type
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
     ceInfoMoneyGroup: TcxButtonEdit;
-    dsdInfoMoneyGroupGuides: TdsdGuides;
-    dsdInfoMoneyDestinationGuides: TdsdGuides;
+    InfoMoneyGroupGuides: TdsdGuides;
+    InfoMoneyDestinationGuides: TdsdGuides;
     ceInfoMoneyDestination: TcxButtonEdit;
     cxLabel4: TcxLabel;
     InfoMoneyGuides: TdsdGuides;

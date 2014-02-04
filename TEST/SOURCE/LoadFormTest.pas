@@ -20,8 +20,6 @@ type
     procedure UserFormSettingsTest;
     procedure Load1CLinkFormTest;
     procedure LoadAccountFormTest;
-    procedure LoadAccountGroupFormTest;
-    procedure LoadAccountDirectionFormTest;
     procedure LoadAssetFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -656,13 +654,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyEditForm');
 end;
 
-procedure TLoadFormTest.LoadAccountGroupFormTest;
-begin
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
-end;
 
 
 procedure TLoadFormTest.Load1CLinkFormTest;
@@ -675,18 +666,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TLoadSaleFrom1CForm');
 end;
 
-procedure TLoadFormTest.LoadAccountDirectionFormTest;
+procedure TLoadFormTest.LoadAccountFormTest;
 begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionEditForm');
-end;
 
-procedure TLoadFormTest.LoadAccountFormTest;
-begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccount_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccount_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountEditForm');
 end;

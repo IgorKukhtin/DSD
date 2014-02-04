@@ -13,8 +13,8 @@ RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                Tax TFloat, Doc1Date TDateTime, Doc1Number TVarChar, Doc2Date TDateTime, Doc2Number TVarChar,
                Suma TFloat, PDV TFloat, SumaPDV TFloat, ClientINN TVarChar, ClientOKPO TVarChar,
                InvNalog TVarChar, BillId Integer, EkspCode Integer, ExpName TVarChar,
-               DeliveryPointId Integer, DeliveryPointName TVarChar,
-               GoodsGoodsKindId Integer, GoodsGoodsKindName TVarChar
+               DeliveryPointCode Integer, DeliveryPointName TVarChar,
+               GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar
 )
 
 AS
@@ -53,26 +53,37 @@ BEGIN
       Sale1C.BillId      ,
       Sale1C.EkspCode    ,
       Sale1C.ExpName     ,
-      0::Integer,
-      ''::TVarChar,
-      0::Integer,
-      ''::TVarChar
+      Object_Partner.ObjectCode,
+      Object_Partner.ValueData,
+      Object_GoodsByGoodsKind_View.goodsCode,
+      (Object_GoodsByGoodsKind_View.goodsname||' '||Object_GoodsByGoodsKind_View.goodsKindname)::TVarChar
+      
 
-   FROM Sale1C;
-
-select Object_Partner.*, Object_DeliveryPoint.*, Sale1C.* 
-
-   FROM Sale1C
-
+      FROM Sale1C
  LEFT JOIN Object AS Object_DeliveryPoint ON Sale1C.ClientCode = Object_DeliveryPoint.ObjectCode
- AND Object_DeliveryPoint.DescId =  zc_Object_Partner1CLink()
-     LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-         ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_DeliveryPoint.Id
-        AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-  LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId   
+       AND Object_DeliveryPoint.DescId =  zc_Object_Partner1CLink()
+ LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+        ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_DeliveryPoint.Id
+       AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+       AND ObjectLink_Partner1CLink_Branch.ChildObjectId = zfGetBranchFromUnitId(Sale1C.UnitId)
+ LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+        ON ObjectLink_Partner1CLink_Partner.ObjectId = ObjectLink_Partner1CLink_Branch.ObjectId
+       AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+ LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
 
- order by 2
-  
+
+ LEFT JOIN Object AS Object_GoodsByGoodsKind1CLink ON Sale1C.GoodsCode = Object_GoodsByGoodsKind1CLink.ObjectCode
+       AND Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
+       
+ LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
+        ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+       AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+       AND ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId = zfGetBranchFromUnitId(Sale1C.UnitId)
+ LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind
+        ON ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId
+       AND ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind()
+ LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ChildObjectId;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -82,7 +93,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad(TDateTime, TDateTime, TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 14.12.13                         * 
+ 03.02.14                         * 
 */
 
 -- ÚÂÒÚ

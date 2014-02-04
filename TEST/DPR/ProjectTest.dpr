@@ -92,14 +92,14 @@ uses
   InfoMoneyDestinationEdit in '..\..\Forms\Guides\InfoMoneyDestinationEdit.pas' {InfoMoneyDestinationEditForm},
   InfoMoney_Object in '..\..\Forms\Guides\InfoMoney_Object.pas' {InfoMoney_ObjectForm},
   InfoMoneyEdit in '..\..\Forms\Guides\InfoMoneyEdit.pas' {InfoMoneyEditForm},
-  AccountGroup in '..\..\Forms\AccountGroup.pas' {AccountGroupForm},
-  AccountGroupEdit in '..\..\Forms\AccountGroupEdit.pas' {AccountGroupEditForm},
-  AccountDirection in '..\..\Forms\AccountDirection.pas' {AccountDirectionForm},
-  AccountDirectionEdit in '..\..\Forms\AccountDirectionEdit.pas' {AccountDirectionEditForm},
+  AccountGroup in '..\..\Forms\Guides\AccountGroup.pas' {AccountGroupForm},
+  AccountGroupEdit in '..\..\Forms\Guides\AccountGroupEdit.pas' {AccountGroupEditForm},
+  AccountDirection in '..\..\Forms\Guides\AccountDirection.pas' {AccountDirectionForm},
+  AccountDirectionEdit in '..\..\Forms\Guides\AccountDirectionEdit.pas' {AccountDirectionEditForm},
   ProfitLossGroup in '..\..\Forms\ProfitLossGroup.pas' {ProfitLossGroupForm},
   ProfitLossGroupEdit in '..\..\Forms\ProfitLossGroupEdit.pas' {ProfitLossGroupEditForm},
-  Account in '..\..\Forms\Account.pas' {AccountForm},
-  AccountEdit in '..\..\Forms\AccountEdit.pas' {AccountEditForm},
+  Account_Object in '..\..\Forms\Guides\Account_Object.pas' {Account_ObjectForm},
+  AccountEdit in '..\..\Forms\Guides\AccountEdit.pas' {AccountEditForm},
   ProfitLoss in '..\..\Forms\ProfitLoss.pas' {ProfitLossForm},
   ProfitLossDirection in '..\..\Forms\ProfitLossDirection.pas' {ProfitLossDirectionForm},
   ProfitLossDirectionEdit in '..\..\Forms\ProfitLossDirectionEdit.pas' {ProfitLossDirectionEditForm},
@@ -338,7 +338,8 @@ uses
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm};
+  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm};
 
 {$R *.RES}
 

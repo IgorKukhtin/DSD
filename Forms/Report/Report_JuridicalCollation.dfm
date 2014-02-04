@@ -2,8 +2,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
   ClientHeight = 389
   ClientWidth = 893
-  ExplicitWidth = 909
-  ExplicitHeight = 424
+  ExplicitWidth = 901
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

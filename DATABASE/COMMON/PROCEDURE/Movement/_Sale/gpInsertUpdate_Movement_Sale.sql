@@ -46,40 +46,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
-
-     -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL);
-
-     -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
-     -- сохранили свойство <Номер накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
-
-
-     -- сохранили свойство <Проверен>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
-
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-     -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-
-     -- сохранили свойство <Номер заявки контрагента>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-     -- сохранили связь с <Сортировки маршрутов>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
+     ioId := lpInsertUpdate_Movement_Sale(ioId, inInvNumber, inInvNumberPartner, inInvNumberOrder,
+                     inOperDate, inOperDatePartner, inChecked, inPriceWithVAT, inVATPercent, inChangePercent, 
+                     inFromId, inToId, inPaidKindId, inContractId, inRouteSortingId, vbUserId);
 
      IF COALESCE (ioPriceListId, 0) = 0
      THEN
@@ -139,18 +108,11 @@ BEGIN
        FROM Object WHERE Object.Id = ioPriceListId;
      END IF;
 
-
      -- сохранили связь с <Прайс лист>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, ioPriceListId);
 
-
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-
-
-
-
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -162,6 +124,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.02.14                         * add lpInsertUpdate_Movement_Sale
  31.01.14                                                       * add inPriceListId
  30.01.14                                                       * add inInvNumberPartner
  13.01.14                                        * del property from redmain

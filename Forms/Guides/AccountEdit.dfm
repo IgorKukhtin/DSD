@@ -294,6 +294,8 @@
   object AccountGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -303,6 +305,8 @@
   object AccountDirectionnGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountDirection
+    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -331,6 +335,8 @@
   object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
+    FormNameParam.Value = 'TInfoMoneyDestinationForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -340,6 +346,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
