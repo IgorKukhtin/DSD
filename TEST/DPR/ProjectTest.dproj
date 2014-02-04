@@ -236,16 +236,16 @@
 			<DCCReference Include="..\..\Forms\Guides\InfoMoneyEdit.pas">
 				<Form>InfoMoneyEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AccountGroup.pas">
+			<DCCReference Include="..\..\Forms\Guides\AccountGroup.pas">
 				<Form>AccountGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AccountGroupEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\AccountGroupEdit.pas">
 				<Form>AccountGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AccountDirection.pas">
+			<DCCReference Include="..\..\Forms\Guides\AccountDirection.pas">
 				<Form>AccountDirectionForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AccountDirectionEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\AccountDirectionEdit.pas">
 				<Form>AccountDirectionEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLossGroup.pas">
@@ -254,10 +254,10 @@
 			<DCCReference Include="..\..\Forms\ProfitLossGroupEdit.pas">
 				<Form>ProfitLossGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Account.pas">
-				<Form>AccountForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Account_Object.pas">
+				<Form>Account_ObjectForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AccountEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\AccountEdit.pas">
 				<Form>AccountEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\ProfitLoss.pas">
@@ -980,6 +980,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
 				<Form>Report_GoodsMIForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Account.pas">
+				<Form>AccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

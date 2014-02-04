@@ -667,7 +667,7 @@ object Report_AccountForm: TReport_AccountForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41548d
+      EditValue = 41609d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -676,7 +676,7 @@ object Report_AccountForm: TReport_AccountForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41578d
+      EditValue = 41639d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -722,6 +722,22 @@ object Report_AccountForm: TReport_AccountForm
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = AccountGuides
+        Properties.Strings = (
+          'FormName'
+          'FormNameParam'
+          'Key'
+          'KeyField'
+          'LookupControl'
+          'Name'
+          'Params'
+          'ParentDataSet'
+          'ParentId'
+          'PositionDataSet'
+          'Tag'
+          'TextValue')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -818,54 +834,6 @@ object Report_AccountForm: TReport_AccountForm
           'TabOrder'
           'TabStop'
           'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
-      end
-      item
-        Component = edAccount
-        Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'Text'
           'TextHint'
           'Top'
           'Touch'
@@ -988,14 +956,14 @@ object Report_AccountForm: TReport_AccountForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41548d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41578d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1044,9 +1012,9 @@ object Report_AccountForm: TReport_AccountForm
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccountForm'
+    FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountForm'
+    FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

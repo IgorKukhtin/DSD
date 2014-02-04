@@ -565,6 +565,83 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Width = 150
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AccountGuides
+        Properties.Strings = (
+          'FormName'
+          'FormNameParam'
+          'Key'
+          'KeyField'
+          'LookupControl'
+          'Name'
+          'Params'
+          'ParentDataSet'
+          'ParentId'
+          'PositionDataSet'
+          'Tag'
+          'TextValue')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = InfoMoneyDestinationGuides
+        Properties.Strings = (
+          'FormName'
+          'FormNameParam'
+          'Key'
+          'KeyField'
+          'LookupControl'
+          'Name'
+          'Params'
+          'ParentDataSet'
+          'ParentId'
+          'PositionDataSet'
+          'Tag'
+          'TextValue')
+      end
+      item
+        Component = InfoMoneyGroupGuides
+        Properties.Strings = (
+          'FormName'
+          'FormNameParam'
+          'Key'
+          'KeyField'
+          'LookupControl'
+          'Name'
+          'Params'
+          'ParentDataSet'
+          'ParentId'
+          'PositionDataSet'
+          'Tag'
+          'TextValue')
+      end
+      item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'FormName'
+          'FormNameParam'
+          'Key'
+          'KeyField'
+          'LookupControl'
+          'Name'
+          'Params'
+          'ParentDataSet'
+          'ParentId'
+          'PositionDataSet'
+          'Tag'
+          'TextValue')
+      end>
+  end
   inherited ActionList: TActionList
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
@@ -632,14 +709,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'inInfoMoneyGroupId'
         Value = ''
-        Component = dsdInfoMoneyGroupGuides
+        Component = InfoMoneyGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inInfoMoneyDestinationId'
         Value = ''
-        Component = dsdInfoMoneyDestinationGuides
+        Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -690,10 +767,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = AccountGuides
       end
       item
-        Component = dsdInfoMoneyGroupGuides
+        Component = InfoMoneyGroupGuides
       end
       item
-        Component = dsdInfoMoneyDestinationGuides
+        Component = InfoMoneyDestinationGuides
       end
       item
         Component = InfoMoneyGuides
@@ -707,7 +784,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Left = 184
     Top = 264
   end
-  object dsdInfoMoneyGroupGuides: TdsdGuides
+  object InfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyGroup
     FormNameParam.Value = 'TInfoMoneyGroupForm'
@@ -718,7 +795,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdInfoMoneyGroupGuides
+        Component = InfoMoneyGroupGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -726,7 +803,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdInfoMoneyGroupGuides
+        Component = InfoMoneyGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -734,7 +811,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Left = 776
     Top = 53
   end
-  object dsdInfoMoneyDestinationGuides: TdsdGuides
+  object InfoMoneyDestinationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoneyDestination
     FormNameParam.Value = 'TInfoMoneyDestinationForm'
@@ -745,7 +822,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdInfoMoneyDestinationGuides
+        Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -753,7 +830,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdInfoMoneyDestinationGuides
+        Component = InfoMoneyDestinationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -788,9 +865,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edAccount
-    FormNameParam.Value = 'TAccountForm'
+    FormNameParam.Value = 'TAccount_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountForm'
+    FormName = 'TAccount_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
