@@ -28,6 +28,9 @@ type
     colGoodsGoodsKind: TcxGridDBColumn;
     colClientCode: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
+    actMoveToDoc: TdsdExecStoredProc;
+    spMoveSale: TdsdStoredProc;
+    bbMoveSale: TdxBarButton;
   private
     { Private declarations }
   public

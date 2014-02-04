@@ -7,7 +7,7 @@
 			<Base>True</Base>
 			<Config Condition="'$(Config)'==''">Debug</Config>
 			<Platform Condition="'$(Platform)'==''">Win32</Platform>
-			<TargetedPlatforms>1</TargetedPlatforms>
+			<TargetedPlatforms>3</TargetedPlatforms>
 			<AppType>Application</AppType>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Config)'=='Base' or '$(Base)'!=''">
@@ -60,6 +60,10 @@
 			<DCC_ExeOutput>.\$(Platform)\$(Config)</DCC_ExeOutput>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win64)'!=''">
+			<VerInfo_Keys>CompanyName=;FileDescription=;FileVersion=1.0.0.0;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.0.0;Comments=</VerInfo_Keys>
+			<DCC_Namespace>Winapi;System.Win;Data.Win;Datasnap.Win;Web.Win;Soap.Win;Xml.Win;$(DCC_Namespace)</DCC_Namespace>
+			<VerInfo_Locale>1033</VerInfo_Locale>
+			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<DCC_UsePackage>dxBarDBNavRS16;dxdborRS16;dxTileControlRS16;cxLibraryRS16;dxCoreRS16;dxPScxPivotGridLnkRS16;cxExportRS16;ZComponent;dxBarRS16;TeeDB;dxDBXServerModeRS16;cxSpreadSheetRS16;cxTreeListdxBarPopupMenuRS16;vclib;cxPivotGridOLAPRS16;officeXPrt;DBXSybaseASEDriver;cxPageControlRS16;dxRibbonRS16;vclimg;dxPSCoreRS16;dxComnRS16;cxTreeListRS16;dxPScxGridLnkRS16;dxPScxTLLnkRS16;vcldb;dxADOServerModeRS16;vcldsnap;DBXDb2Driver;vcl;DBXMSSQLDriver;dxDockingRS16;cxPageControldxBarPopupMenuRS16;webdsnap;dxBarExtItemsRS16;EhLibDataDrivers160;EhLib160;JclDeveloperTools;dxPSLnksRS16;cxSchedulerGridRS16;adortl;dxPSdxLCLnkRS16;cxVerticalGridRS16;dxorgcRS16;dxPScxExtCommonRS16;dxNavBarRS16;ZDbc;ZPlain;Tee;JclContainers;DBXOdbcDriver;dxSkinsCoreRS16;dxmdsRS16;dxSpellCheckerRS16;cxGridRS16;dxPScxCommonRS16;vclactnband;TeeUI;ipstudiowin;bindcompvcl;Jcl;vclie;dxServerModeRS16;ZCore;vcltouch;cxEditorsRS16;cxPivotGridRS16;websnap;cxSchedulerRS16;dxPScxSSLnkRS16;VclSmp;dxTabbedMDIRS16;DataSnapConnectors;ipstudiowinclient;dsnapcon;dxPSdxFCLnkRS16;dxThemeRS16;JclVcl;ZParseSql;vclx;dxFlowChartRS16;dxGDIPlusRS16;$(DCC_UsePackage)</DCC_UsePackage>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Base_Win32)'!=''">
@@ -199,7 +203,7 @@
 				</Delphi.Personality>
 				<Deployment/>
 				<Platforms>
-					<Platform value="Win64">False</Platform>
+					<Platform value="Win64">True</Platform>
 					<Platform value="Win32">True</Platform>
 				</Platforms>
 			</BorlandProject>

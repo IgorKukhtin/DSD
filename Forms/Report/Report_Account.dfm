@@ -723,22 +723,6 @@ object Report_AccountForm: TReport_AccountForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AccountGuides
-        Properties.Strings = (
-          'FormName'
-          'FormNameParam'
-          'Key'
-          'KeyField'
-          'LookupControl'
-          'Name'
-          'Params'
-          'ParentDataSet'
-          'ParentId'
-          'PositionDataSet'
-          'Tag'
-          'TextValue')
-      end
-      item
         Component = deEnd
         Properties.Strings = (
           'Align'
@@ -856,8 +840,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -870,8 +854,8 @@ object Report_AccountForm: TReport_AccountForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 144
-    Top = 24
+    Left = 160
+    Top = 8
     DockControlHeights = (
       0
       0
