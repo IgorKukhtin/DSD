@@ -1,13 +1,13 @@
--- Function: gpMovementItem_PersonalAccount_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_ReturnIn_SetErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_PersonalAccount_SetErased (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpMovementItem_PersonalAccount_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_ReturnIn_SetErased (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_ReturnIn_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_PersonalAccount_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_ReturnIn_SetErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
-)                              
+)
   RETURNS Boolean
 AS
 $BODY$
@@ -15,12 +15,12 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_MI_PersonalAccount());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_ReturnIn());
 
   -- устанавливаем новое значение
   outIsErased := TRUE;
 
-  -- Обязательно меняем 
+  -- Обязательно меняем
   UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
 
@@ -44,14 +44,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_PersonalAccount_SetErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovementItem_ReturnIn_SetErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 16.01.14                                        *
- 19.12.13         *
+03.02.14                                                          *
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_PersonalAccount_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_ReturnIn_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

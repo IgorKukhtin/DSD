@@ -1,4 +1,4 @@
-﻿CREATE OR REPLACE FUNCTION lpGetUserBySession(
+CREATE OR REPLACE FUNCTION lpGetUserBySession(
 IN inSession TVarChar)
 RETURNS integer AS
 $BODY$  

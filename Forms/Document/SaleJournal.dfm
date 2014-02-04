@@ -246,6 +246,12 @@ inherited SaleJournalForm: TSaleJournalForm
   inherited Panel: TPanel
     Width = 924
     ExplicitWidth = 924
+    inherited deStart: TcxDateEdit
+      EditValue = 41609d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 41639d
+    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -266,9 +272,43 @@ inherited SaleJournalForm: TSaleJournalForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'ShowAll'
+          Value = False
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -279,14 +319,14 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41579d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41608d
+        Value = 41639d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

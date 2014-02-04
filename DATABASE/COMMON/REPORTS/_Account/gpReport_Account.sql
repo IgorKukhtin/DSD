@@ -92,26 +92,14 @@ BEGIN
          , Object_AccountGroup.ObjectCode AS AccountGroupCode, Object_AccountGroup.ValueData AS AccountGroupName
          , Object_AccountDirection.ObjectCode AS AccountDirectionCode, Object_AccountDirection.ValueData AS AccountDirectionName
          , View_Account.ObjectCode AS AccountCode, View_Account.ValueData AS AccountName
-         , ('(' || CASE WHEN Object_AccountGroup.ObjectCode < 100000 THEN '0' ELSE '' END || View_Account.ObjectCode :: TVarChar || ') '
-                || Object_AccountGroup.ValueData
-                || CASE WHEN Object_AccountDirection.ValueData <> Object_AccountGroup.ValueData THEN ' ' || Object_AccountDirection.ValueData ELSE '' END
-                || CASE WHEN View_Account.ValueData <> Object_AccountDirection.ValueData THEN ' ' || View_Account.ValueData ELSE '' END
-           ) :: TVarChar AS AccountName_All
+         , View_Account.AccountName_all AS AccountName_All
 
          , Object_AccountGroup_inf.ObjectCode AS AccountGroupCode_inf, Object_AccountGroup_inf.ValueData AS AccountGroupName_inf
          , Object_AccountDirection_inf.ObjectCode AS AccountDirectionCode_inf, Object_AccountDirection_inf.ValueData AS AccountDirectionName_inf
          , View_Account_inf.ObjectCode AS AccountCode_inf, View_Account_inf.ValueData AS AccountName_inf
-         , ('(' || CASE WHEN Object_AccountGroup_inf.ObjectCode < 100000 THEN '0' ELSE '' END || View_Account_inf.ObjectCode :: TVarChar || ') '
-                || Object_AccountGroup_inf.ValueData
-                || CASE WHEN Object_AccountDirection_inf.ValueData <> Object_AccountGroup_inf.ValueData THEN ' ' || Object_AccountDirection_inf.ValueData ELSE '' END
-                || CASE WHEN View_Account_inf.ValueData <> Object_AccountDirection_inf.ValueData THEN ' ' || View_Account_inf.ValueData ELSE '' END
-           ) :: TVarChar AS AccountName_All_inf
+         , View_Account_inf.AccountName_all AS AccountName_All_inf
 
-         , ('(' || View_ProfitLoss_inf.ObjectCode :: TVarChar || ') '
-                || Object_ProfitLossGroup_inf.ValueData
-                || CASE WHEN Object_ProfitLossDirection_inf.ValueData <> Object_ProfitLossGroup_inf.ValueData THEN ' ' || Object_ProfitLossDirection_inf.ValueData ELSE '' END
-                || CASE WHEN View_ProfitLoss_inf.ValueData <> Object_ProfitLossDirection_inf.ValueData THEN ' ' || View_ProfitLoss_inf.ValueData ELSE '' END
-           ) :: TVarChar AS ProfitLossName_All_inf
+         , View_ProfitLoss.ProfitLossName_all AS ProfitLossName_All_inf
 
    FROM      
        (SELECT COALESCE (ContainerLO_InfoMoney.ObjectId, tmpReport_All.InfoMoneyId_inf) AS InfoMoneyId

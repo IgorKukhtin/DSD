@@ -1,10 +1,12 @@
 -- Function: gpSelect_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_BankAccount(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, ParentId Integer, OperDate TDateTime
@@ -26,11 +28,17 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Cash());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_BankAccount());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                         )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -61,7 +69,10 @@ BEGIN
            , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
-       FROM Movement
+       FROM tmpStatus
+            JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
+                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.StatusId = tmpStatus.StatusId
             LEFT JOIN Movement AS Movement_BankStatementItem ON Movement_BankStatementItem.Id = Movement.ParentId
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -96,18 +107,17 @@ BEGIN
                                          ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
-
-       WHERE Movement.DescId = zc_Movement_BankAccount()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
+      ;
   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.02.14                                        * add inIsErased
  29.01.14                                        * add InvNumber_Parent
  15.01.14                         * 
  */

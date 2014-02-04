@@ -2,19 +2,20 @@
 
 DROP VIEW IF EXISTS Object_Account_View CASCADE;
 
-CREATE OR REPLACE VIEW Object_Account_View AS
-         SELECT 
+CREATE OR REPLACE VIEW Object_Account_View
+AS
+      SELECT 
              Object_AccountGroup.Id            AS AccountGroupId
            , Object_AccountGroup.ObjectCode    AS AccountGroupCode
-           , Object_AccountGroup.ValueData     AS AccountGroupName
+           , CAST ((CASE WHEN Object_AccountGroup.ObjectCode < 100000 THEN '0' ELSE '' END || Object_AccountGroup.ObjectCode || ' ' || Object_AccountGroup.ValueData) AS TVarChar) AS AccountGroupName
           
            , Object_AccountDirection.Id           AS AccountDirectionId
            , Object_AccountDirection.ObjectCode   AS AccountDirectionCode
-           , Object_AccountDirection.ValueData    AS AccountDirectionName
+           , CAST ((CASE WHEN Object_AccountDirection.ObjectCode < 100000 THEN '' ELSE '' END || Object_AccountDirection.ObjectCode || ' ' || Object_AccountDirection.ValueData) AS TVarChar) AS AccountDirectionName
           
            , Object_Account.Id           AS AccountId
            , Object_Account.ObjectCode   AS AccountCode
-           , Object_Account.ValueData    AS AccountName
+           , CAST ((CASE WHEN Object_Account.ObjectCode < 100000 THEN '' ELSE '' END || Object_Account.ObjectCode || ' ' || Object_Account.ValueData) AS TVarChar) AS AccountName
           
            , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupId, Object_InfoMoney_View.InfoMoneyGroupId)     AS InfoMoneyGroupId
            , COALESCE (View_InfoMoneyDestination.InfoMoneyGroupCode, Object_InfoMoney_View.InfoMoneyGroupCode) AS InfoMoneyGroupCode
@@ -33,8 +34,8 @@ CREATE OR REPLACE VIEW Object_Account_View AS
            , Object_AccountKind.ValueData   AS AccountKindName
            
            , CAST (CASE WHEN Object_Account.ObjectCode < 100000
-                          THEN '0'
-                     ELSE ''
+                             THEN '0'
+                        ELSE ''
                    END
                 || Object_Account.ObjectCode || ' '
                 || Object_AccountGroup.ValueData
@@ -48,7 +49,8 @@ CREATE OR REPLACE VIEW Object_Account_View AS
                    END
                    AS TVarChar) AS AccountName_all 
 
-           , COALESCE (ObjectBoolean_onComplete.ValueData, FALSE)  AS onComplete
+           , ObjectBoolean_onComplete.ValueData AS onComplete
+           , Object_Account.isErased            AS isErased
            
        FROM Object AS Object_Account
             LEFT JOIN ObjectLink AS ObjectLink_Account_AccountGroup
@@ -81,19 +83,16 @@ CREATE OR REPLACE VIEW Object_Account_View AS
             LEFT JOIN Object AS Object_AccountKind ON Object_AccountKind.Id = ObjectLink_Account_AccountKind.ChildObjectId
                                    
        WHERE Object_Account.DescId = zc_Object_Account();
-;
 
-
-ALTER TABLE Object_Account_View  OWNER TO postgres;
-
+ALTER TABLE Object_Account_View OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  07.11.13                        * add Object_InfoMoneyDestination_View
  08.10.13                        *
 */
 
 -- òåñò
--- SELECT * FROM Object_Account_View
+-- SELECT * FROM Object_Account_View ORDER BY AccountCode

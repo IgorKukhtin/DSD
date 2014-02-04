@@ -1,22 +1,38 @@
 -- View: Object_ProfitLoss_View
 
--- DROP VIEW IF EXISTS Object_ProfitLoss_View;
+DROP VIEW IF EXISTS Object_ProfitLoss_View CASCADE;
 
-CREATE OR REPLACE VIEW Object_ProfitLoss_View AS
-     SELECT 
-           Object_ProfitLossGroup.Id            AS ProfitLossGroupId
-          ,Object_ProfitLossGroup.ObjectCode    AS ProfitLossGroupCode
-          ,Object_ProfitLossGroup.ValueData     AS ProfitLossGroupName
+CREATE OR REPLACE VIEW Object_ProfitLoss_View
+AS
+      SELECT Object_ProfitLossGroup.Id            AS ProfitLossGroupId
+           , Object_ProfitLossGroup.ObjectCode    AS ProfitLossGroupCode
+           , CAST ((CASE WHEN Object_ProfitLossGroup.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLossGroup.ObjectCode || ' ' || Object_ProfitLossGroup.ValueData) AS TVarChar) AS ProfitLossGroupName
           
-          ,Object_ProfitLossDirection.Id           AS ProfitLossDirectionId
-          ,Object_ProfitLossDirection.ObjectCode   AS ProfitLossDirectionCode
-          ,Object_ProfitLossDirection.ValueData    AS ProfitLossDirectionName
+           , Object_ProfitLossDirection.Id           AS ProfitLossDirectionId
+           , Object_ProfitLossDirection.ObjectCode   AS ProfitLossDirectionCode
+           , CAST ((CASE WHEN Object_ProfitLossDirection.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLossDirection.ObjectCode || ' ' || Object_ProfitLossDirection.ValueData) AS TVarChar) AS ProfitLossDirectionName
+
+           , Object_ProfitLoss.Id           AS ProfitLossId
+           , Object_ProfitLoss.ObjectCode   AS ProfitLossCode
+           , CAST ((CASE WHEN Object_ProfitLoss.ObjectCode < 100000 THEN '' ELSE '' END || Object_ProfitLoss.ObjectCode || ' ' || Object_ProfitLoss.ValueData) AS TVarChar) AS ProfitLossName
           
-          ,Object_ProfitLoss.Id           AS ProfitLossId
-          ,Object_ProfitLoss.ObjectCode   AS ProfitLossCode
-          ,Object_ProfitLoss.ValueData    AS ProfitLossName
-          
-          ,ObjectBoolean_onComplete.ValueData AS onComplete
+           , ObjectBoolean_onComplete.ValueData AS onComplete
+
+           , CAST (CASE WHEN Object_ProfitLoss.ObjectCode < 100000
+                          THEN ''
+                     ELSE ''
+                   END
+                || Object_ProfitLoss.ObjectCode || ' '
+                || Object_ProfitLossGroup.ValueData
+                || CASE WHEN Object_ProfitLossDirection.ValueData <> Object_ProfitLossGroup.ValueData
+                             THEN ' ' || Object_ProfitLossDirection.ValueData
+                        ELSE ''
+                   END
+                || CASE WHEN Object_ProfitLoss.ValueData <> Object_ProfitLossDirection.ValueData
+                             THEN ' ' || Object_ProfitLoss.ValueData
+                        ELSE ''
+                   END
+                   AS TVarChar) AS ProfitLossName_all
 
      FROM Object AS Object_ProfitLoss
           LEFT JOIN ObjectLink AS ObjectLink_ProfitLoss_ProfitLossGroup
@@ -34,15 +50,15 @@ CREATE OR REPLACE VIEW Object_ProfitLoss_View AS
                                  AND ObjectBoolean_onComplete.DescId = zc_ObjectBoolean_ProfitLoss_onComplete()
      WHERE Object_ProfitLoss.DescId = zc_Object_ProfitLoss();
 
-ALTER TABLE Object_ProfitLoss_View  OWNER TO postgres;
+ALTER TABLE Object_ProfitLoss_View OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  21.10.13                        *
 */
 
 -- тест
--- SELECT * FROM Object_ProfitLoss_View
+-- SELECT * FROM Object_ProfitLoss_View ORDER BY ProfitLossCode

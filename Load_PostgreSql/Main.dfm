@@ -784,6 +784,21 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 15
     end
+    object cbOnlyInsertDocument: TCheckBox
+      Left = 15
+      Top = 41
+      Width = 178
+      Height = 17
+      Caption = #1058#1086#1083#1100#1082#1086' '#1085#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 16
+      OnClick = cbCompleteClick
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1015

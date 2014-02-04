@@ -26,10 +26,10 @@ $BODY$BEGIN
              CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName
 
            , Object_Account_View.AccountCode
-           , (CASE WHEN Object_Account_View.AccountGroupCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountGroupCode||' '||Object_Account_View.AccountGroupName)::TVarChar  AS AccountGroupName
-           , (CASE WHEN Object_Account_View.AccountDirectionCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountDirectionCode||'  '||Object_Account_View.AccountDirectionName)::TVarChar      AS AccountDirectionName
-           , (CASE WHEN Object_Account_View.AccountCode < 100000 THEN '0' ELSE '' END || Object_Account_View.AccountCode||'  '||Object_Account_View.AccountName)::TVarChar                     AS AccountName
-           , Object_Account_View.onComplete                      AS AccountOnComplete
+           , Object_Account_View.AccountGroupName
+           , Object_Account_View.AccountDirectionName
+           , Object_Account_View.AccountName
+           , Object_Account_View.onComplete AS AccountOnComplete
 
            --, lfObject_InfoMoney.InfoMoneyCode
            , Object_InfoMoney_View.InfoMoneyName
@@ -58,7 +58,7 @@ $BODY$BEGIN
            , CAST (tmpReportOperation.CountKredit AS TFloat) AS CountKredit
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
        FROM 
-           Object_Account_View 
+           Object_Account_View
            LEFT JOIN
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
@@ -170,10 +170,9 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis and zc_ContainerLinkObject_Business
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member

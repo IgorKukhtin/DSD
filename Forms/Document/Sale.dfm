@@ -2,29 +2,28 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitTop = -4
-  ExplicitWidth = 1031
-  ExplicitHeight = 703
+  ExplicitWidth = 1023
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1015
-    Height = 542
-    ExplicitTop = 155
-    ExplicitWidth = 1049
-    ExplicitHeight = 560
-    ClientRectBottom = 542
-    ClientRectRight = 1015
+    Height = 540
+    ExplicitTop = 128
+    ExplicitWidth = 1015
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 536
+      ExplicitLeft = 2
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1049
-        ExplicitHeight = 536
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -213,14 +212,15 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 536
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1049
-        ExplicitHeight = 536
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -271,7 +271,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -463,6 +463,38 @@ inherited SaleForm: TSaleForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TransferByPartner'
+      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_TransferByPartner'
+    end
+    object dsdPrintTax: TdsdPrintAction [10]
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TransferByPartner_Tax'
+      ReportNameParam.Name = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = 'PrintMovement_TransferByPartner_Tax'
+      ReportNameParam.DataType = ftString
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -481,7 +513,7 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
@@ -550,8 +582,64 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end>
+    end
+    object bbPrintTax: TdxBarButton [5]
+      Action = dsdPrintTax
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 782
@@ -560,6 +648,12 @@ inherited SaleForm: TSaleForm
   inherited PopupMenu: TPopupMenu
     Left = 800
     Top = 464
+    object N2: TMenuItem
+      Action = actMISetErased
+    end
+    object N3: TMenuItem
+      Action = actMISetUnErased
+    end
   end
   inherited EntryCDS: TClientDataSet
     Left = 629
@@ -905,6 +999,7 @@ inherited SaleForm: TSaleForm
     Top = 272
   end
   inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
     Left = 718
     Top = 512
   end
@@ -1204,5 +1299,19 @@ inherited SaleForm: TSaleForm
     BCDToCurrency = False
     Left = 358
     Top = 221
+  end
+  object spSelectPrintHeader: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Transport'
+    DataSets = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 466
+    Top = 106
   end
 end

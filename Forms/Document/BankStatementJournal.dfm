@@ -120,33 +120,33 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'DSDLib'
-      ClientBankType = cbPrivatBank
       StartDateParam.Value = 41579d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41608d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      ClientBankType = cbPrivatBank
     end
     object BankForumLoad: TClientBankLoadAction
       Category = 'DSDLib'
-      ClientBankType = cbForum
       StartDateParam.Value = 41579d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41608d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      ClientBankType = cbForum
     end
     object BankOTPLoad: TClientBankLoadAction
       Category = 'DSDLib'
-      ClientBankType = cbOTPBank
       StartDateParam.Value = 41579d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41608d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      ClientBankType = cbOTPBank
     end
     object BankOTP: TMultiAction
       Category = 'DSDLib'
@@ -163,23 +163,23 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object BankVostokLoad: TClientBankLoadAction
       Category = 'DSDLib'
-      ClientBankType = cbVostok
       StartDateParam.Value = 41579d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41608d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      ClientBankType = cbVostok
     end
     object BankFidoLoad: TClientBankLoadAction
       Category = 'DSDLib'
-      ClientBankType = cbFidoBank
       StartDateParam.Value = 41579d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41608d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      ClientBankType = cbFidoBank
     end
     object BankPrivat: TMultiAction
       Category = 'DSDLib'
