@@ -11,18 +11,18 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
     Width = 1137
     Height = 282
     TabOrder = 3
-    ExplicitWidth = 978
-    ExplicitHeight = 288
+    ExplicitWidth = 1137
+    ExplicitHeight = 282
     ClientRectBottom = 282
     ClientRectRight = 1137
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 978
-      ExplicitHeight = 288
+      ExplicitWidth = 1137
+      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 1137
         Height = 282
-        ExplicitWidth = 978
-        ExplicitHeight = 288
+        ExplicitWidth = 1137
+        ExplicitHeight = 282
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -58,6 +58,26 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSale_AmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSale_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clReturn_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clReturn_AmountPartner_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -93,6 +113,26 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountReturn_Summ
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSale_AmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSale_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clReturn_AmountPartner_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clReturn_AmountPartner_Sh
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -214,15 +254,15 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
   end
   inherited Panel: TPanel
     Width = 1137
-    ExplicitWidth = 978
+    ExplicitWidth = 1137
     inherited deStart: TcxDateEdit
       Left = 95
-      EditValue = 41579d
+      EditValue = 41609d
       ExplicitLeft = 95
     end
     inherited deEnd: TcxDateEdit
       Left = 304
-      EditValue = 41608d
+      EditValue = 41609d
       ExplicitLeft = 304
     end
     inherited cxLabel1: TcxLabel
@@ -263,14 +303,14 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41609d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

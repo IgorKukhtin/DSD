@@ -70,7 +70,7 @@ BEGIN
 
 
     FROM ( SELECT MAX(AllContainer.ContainerId_Juridical) AS ContainerId_Juridical
-                , MAX(AllContainer.PartnerId) AS PartnerId
+                , (AllContainer.PartnerId) AS PartnerId
              
                 , AllContainer.GoodsId
                 , AllContainer.GoodsKindId
@@ -89,19 +89,33 @@ BEGIN
                       , MovementItem.objectId AS GoodsId
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                       
-                      , sum (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN 1 ELSE -1 END ELSE 0 END) AS Sale_Summ
-                      , sum (CASE WHEN Movement.DescId = zc_Movement_ReturnIn() THEN MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN 1 ELSE -1 END ELSE 0 END) AS Return_Summ
+                      , sum (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN 1 ELSE -1 END ELSE 0 END) AS Sale_Summ
+                      , sum (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN MIReport.Amount * CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN 1 ELSE -1 END ELSE 0 END) AS Return_Summ
                       
                       , 0 AS  Sale_Amount
                       , 0 AS  Return_Amount
                       , 0 AS  Sale_AmountPartner
                       , 0 AS  Return_AmountPartner
 
-                 FROM (SELECT zc_Movement_Sale() AS DescId UNION SELECT zc_Movement_ReturnIn() AS DescId) AS tmpDesc
-                      JOIN Movement ON Movement.DescId = tmpDesc.DescId
-                                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                      JOIN MovementItemReport AS MIReport ON MIReport.MovementId = Movement.Id
+                 FROM MovementItemReport AS MIReport 
+                      JOIN (SELECT Movement.Id AS MovementId
+                                 , Movement.DescId AS MovementDescId
+                                 , MovementLinkObject_Partner.ObjectId AS PartnerId 
 
+                            FROM (SELECT zc_Movement_Sale() AS DescId UNION SELECT zc_Movement_ReturnIn() AS DescId) AS tmpDesc
+                                 JOIN Movement ON Movement.DescId = tmpDesc.DescId
+                                 
+                            LEFT JOIN (SELECT zc_MovementLinkObject_To() AS DescId, zc_Movement_Sale() AS MovementDescId
+                                      UNION
+                                       SELECT zc_MovementLinkObject_From() AS DescId, zc_Movement_ReturnIn() AS MovementDescId
+                                      ) AS tmpDesc_Partner ON tmpDesc_Partner.MovementDescId = Movement.DescId
+
+                            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                                        AND MovementLinkObject_Partner.DescId = tmpDesc_Partner.DescId
+                  
+                            ) as tmpMovement ON tmpMovement.MovementId = MIReport.MovementId               
+                                     
                       JOIN ReportContainerLink ON  ReportContainerLink.ReportContainerId = MIReport.ReportContainerId 
 
                       JOIN (SELECT Container.Id AS ContainerId
@@ -124,7 +138,9 @@ BEGIN
                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-           
+                                                      
+                 WHERE  MIReport.OperDate BETWEEN inStartDate AND inEndDate 
+                        
                  GROUP BY CASE WHEN MIReport.ActiveContainerId = ReportContainerLink.ContainerId THEN MIReport.PassiveContainerId ELSE MIReport.ActiveContainerId END
                         , MovementItem.objectId
                         , MILinkObject_GoodsKind.ObjectId
@@ -145,13 +161,14 @@ BEGIN
                       , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Sale_AmountPartner
                       , SUM (CASE WHEN tmpMovement.MovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Return_AmountPartner
 
-                 FROM (SELECT Movement.Id AS MovementId
-                            , Movement.DescId AS MovementDescId
-                            , MovementLinkObject_Partner.ObjectId AS PartnerId 
+                 FROM MovementItemContainer AS MIContainer 
+                                                
+                      JOIN (SELECT Movement.Id AS MovementId
+                                 , Movement.DescId AS MovementDescId
+                                 , MovementLinkObject_Partner.ObjectId AS PartnerId 
 
-                       FROM (SELECT zc_Movement_Sale() AS DescId UNION SELECT zc_Movement_ReturnIn() AS DescId) AS tmpDesc
-                            JOIN Movement ON Movement.DescId = tmpDesc.DescId
-                                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                            FROM (SELECT zc_Movement_Sale() AS DescId UNION SELECT zc_Movement_ReturnIn() AS DescId) AS tmpDesc
+                                 JOIN Movement ON Movement.DescId = tmpDesc.DescId
                                  
                             LEFT JOIN (SELECT zc_MovementLinkObject_To() AS DescId, zc_Movement_Sale() AS MovementDescId
                                       UNION
@@ -161,10 +178,9 @@ BEGIN
                             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                                         AND MovementLinkObject_Partner.DescId = tmpDesc_Partner.DescId
-                      ) as tmpMovement
-                      JOIN MovementItemContainer AS MIContainer 
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-                                                
+                  
+                            ) as tmpMovement ON tmpMovement.MovementId = MIContainer.MovementId
+                 
                       JOIN Container ON Container.Id = MIContainer.ContainerId
                                     AND Container.DescId = zc_Container_Count()
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
@@ -177,14 +193,16 @@ BEGIN
                                                   ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
 
-
+                  where MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                    AND MIContainer.DescId = zc_MIContainer_Count()
+                  
                   GROUP BY tmpMovement.PartnerId
                         , Container.ObjectId 
                         , ContainerLO_GoodsKind.ObjectId
 
                ) AS AllContainer
 
-          GROUP BY AllContainer.GoodsId, AllContainer.GoodsKindId
+          GROUP BY AllContainer.GoodsId, AllContainer.GoodsKindId, AllContainer.PartnerId
 
          ) AS AllSale
    
