@@ -192,12 +192,12 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     ExplicitWidth = 978
     inherited deStart: TcxDateEdit
       Left = 95
-      EditValue = 41579d
+      EditValue = 41609d
       ExplicitLeft = 95
     end
     inherited deEnd: TcxDateEdit
       Left = 304
-      EditValue = 41608d
+      EditValue = 41609d
       ExplicitLeft = 304
     end
     inherited cxLabel1: TcxLabel
@@ -255,14 +255,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41609d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41609d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
