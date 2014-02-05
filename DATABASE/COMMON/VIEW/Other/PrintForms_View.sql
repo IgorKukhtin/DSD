@@ -29,7 +29,7 @@ AS
            , CAST (17661 AS INTEGER)                         -- ћетро C&C
            , CAST ('PrintMovement_SaleMetro' AS TVarChar)
       UNION
---налогова€ пока одинакова€ дл€ всех
+--налогова€
       SELECT
              CAST ('SaleTax' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
