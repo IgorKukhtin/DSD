@@ -25,8 +25,6 @@ object ContractConditionValueForm: TContractConditionValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1170
-    ExplicitHeight = 303
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,20 +46,20 @@ object ContractConditionValueForm: TContractConditionValueForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clInvNumberArchive: TcxGridDBColumn
-        Caption = #8470' '#1072#1088#1093#1080#1074'.'
+        Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
         DataBinding.FieldName = 'InvNumberArchive'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 55
       end
       object clInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 55
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'

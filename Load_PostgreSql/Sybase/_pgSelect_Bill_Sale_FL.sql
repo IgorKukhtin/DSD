@@ -4,7 +4,8 @@ result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberC
      , isFl smallint, StatusId smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_NotNalog(
-       BillId Integer null
+       BillId Integer not null
+     , CodeIM Integer not null
   ) on commit preserve rows;
   //
   declare local temporary table _tmpList(
@@ -35,10 +36,12 @@ begin
      , Id_Postgres integer
   ) on commit preserve rows;
 
-  insert into _tmpBill_NotNalog (BillId)
-           select Bill.Id as BillId
+  insert into _tmpBill_NotNalog (BillId, CodeIM)
+           select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM
            from dba.Bill
                 join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+                left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
+                left join dba.Goods on Goods.Id = GoodsProperty.GoodsId
            where Bill.BillDate between @inStartDate and @inEndDate
              and Bill.BillKind in (zc_bkSaleToClient())
          -- and Bill.BillNumber = 121710
@@ -107,7 +110,7 @@ select Bill.Id as ObjectId
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
-     , _pgContract.ContractId_pg as ContractId
+     , isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
      , null as CarId
      , null as PersonalDriverId
 
@@ -126,11 +129,23 @@ from _tmpBill_NotNalog
      left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId
                      ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId
                                         and Bill_find.Id is null
-     left outer join (select PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by PartnerId_pg, UnitId
+     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId
                      ) as _pgPartner on _pgPartner.UnitId = isnull (Bill_find.ToId, Unit_byLoad_To.Id_byLoad)
      left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
 
-     left outer join (select _pgPartner.PartnerId_pg, max (isnull(_pgContract_find.ContractId_pg, _pgPartner.ContractId_pg)) as ContractId_pg
+     left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
+                      from dba._pgPartner
+                      where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '30101'
+                      group by _pgPartner.JuridicalId_pg
+                     ) as _pgContract_30101 on _pgContract_30101.JuridicalId_pg = _pgPartner.JuridicalId_pg
+                                           and _tmpBill_NotNalog.CodeIM = 30101
+     left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
+                      from dba._pgPartner
+                      where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '30103'
+                      group by _pgPartner.JuridicalId_pg
+                     ) as _pgContract_30103 on _pgContract_30103.JuridicalId_pg = _pgPartner.JuridicalId_pg
+                                           and _tmpBill_NotNalog.CodeIM = 30103
+     /*left outer join (select _pgPartner.PartnerId_pg, max (isnull(_pgContract_find.ContractId_pg, _pgPartner.ContractId_pg)) as ContractId_pg
                       from dba._pgPartner
                            left outer join (select _pgPartner.PartnerId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
                                             from dba._pgPartner
@@ -139,7 +154,7 @@ from _tmpBill_NotNalog
                                            ) as _pgContract_find on _pgContract_find.PartnerId_pg = _pgPartner.PartnerId_pg
                       where _pgPartner.PartnerId_pg <> 0 and _pgPartner.ContractId_pg <> 0
                       group by _pgPartner.PartnerId_pg
-                     ) as _pgContract on _pgContract.PartnerId_pg = _pgPartner.PartnerId_pg
+                     ) as _pgContract on _pgContract.PartnerId_pg = _pgPartner.PartnerId_pg*/
 
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = case when Bill.FromId in (1388, -- 'ÃÐÈÂÀ Ð.'
                                                                                      1799, -- 'ÄÐÎÂÎÐÓÁ'

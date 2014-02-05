@@ -2,54 +2,33 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1042#1099#1073#1086#1088' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 853
-    Height = 468
+    Height = 470
     ExplicitWidth = 853
-    ExplicitHeight = 468
-    ClientRectBottom = 464
-    ClientRectRight = 849
+    ExplicitHeight = 470
+    ClientRectBottom = 470
+    ClientRectRight = 853
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 847
-      ExplicitHeight = 462
+      ExplicitWidth = 853
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 847
-        Height = 462
-        ExplicitWidth = 847
-        ExplicitHeight = 462
+        Width = 853
+        Height = 470
+        ExplicitWidth = 853
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           object colInvNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088
+            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'InvNumber'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 100
-          end
-          object colStartDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
-            DataBinding.FieldName = 'StartDate'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object clEndDate: TcxGridDBColumn
-            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
-            DataBinding.FieldName = 'EndDate'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 70
-          end
-          object colContractKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
-            DataBinding.FieldName = 'ContractKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -73,6 +52,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           object colPartnerCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
             DataBinding.FieldName = 'PartnerCode'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -108,6 +88,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90
@@ -115,6 +96,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           object clInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -126,6 +108,42 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             Options.Editing = False
             Width = 90
           end
+          object colContractKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'ContractKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colStartDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1089
+            DataBinding.FieldName = 'StartDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clEndDate: TcxGridDBColumn
+            Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colChangePercent: TcxGridDBColumn
+            Caption = '(-/+)% '#1057#1082#1080#1076#1082#1080'/'#1053#1072#1094#1077#1085#1082#1080
+            DataBinding.FieldName = 'ChangePercent'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object colPriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
+            DataBinding.FieldName = 'PriceListName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -133,18 +151,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 30
-          end
-          object colChangePercent: TcxGridDBColumn
-            Caption = '(-/+)% '#1057#1082#1080#1076#1082#1080'/'#1053#1072#1094#1077#1085#1082#1080
-            DataBinding.FieldName = 'ChangePercent'
-            Options.Editing = False
-            Width = 55
-          end
-          object colPriceListName: TcxGridDBColumn
-            Caption = #1055#1088#1072#1081#1089' '#1083#1080#1089#1090
-            DataBinding.FieldName = 'PriceListName'
-            Options.Editing = False
-            Width = 70
           end
         end
       end
@@ -247,7 +253,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   inherited PopupMenu: TPopupMenu
