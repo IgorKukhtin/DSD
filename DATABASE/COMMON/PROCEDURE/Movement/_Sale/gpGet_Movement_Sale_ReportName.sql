@@ -29,10 +29,13 @@ BEGIN
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
              AND PrintForms_View.PartnerId = MovementLinkObject_To.ObjectId
+             AND PrintForms_View.ReportType = 'Sale'
+
 
        LEFT JOIN PrintForms_View AS PrintForms_View_Default
               ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
              AND PrintForms_View_Default.PartnerId = 0
+             AND PrintForms_View_Default.ReportType = 'Sale'
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();

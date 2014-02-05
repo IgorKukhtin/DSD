@@ -8,21 +8,23 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 83
     Width = 978
-    Height = 288
+    Height = 262
     TabOrder = 3
+    ExplicitTop = 83
     ExplicitWidth = 978
-    ExplicitHeight = 288
-    ClientRectBottom = 288
+    ExplicitHeight = 262
+    ClientRectBottom = 262
     ClientRectRight = 978
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 978
-      ExplicitHeight = 288
+      ExplicitHeight = 262
       inherited cxGrid: TcxGrid
         Width = 978
-        Height = 288
+        Height = 262
         ExplicitWidth = 978
-        ExplicitHeight = 288
+        ExplicitHeight = 262
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -189,32 +191,38 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   end
   inherited Panel: TPanel
     Width = 978
+    Height = 57
     ExplicitWidth = 978
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
-      Left = 95
+      Left = 114
       EditValue = 41609d
-      ExplicitLeft = 95
+      ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
-      Left = 304
+      Left = 114
+      Top = 32
       EditValue = 41609d
-      ExplicitLeft = 304
+      ExplicitLeft = 114
+      ExplicitTop = 32
     end
     inherited cxLabel1: TcxLabel
       Left = 4
       ExplicitLeft = 4
     end
     inherited cxLabel2: TcxLabel
-      Left = 194
-      ExplicitLeft = 194
+      Left = 4
+      Top = 33
+      ExplicitLeft = 4
+      ExplicitTop = 33
     end
     object cxLabel4: TcxLabel
-      Left = 402
+      Left = 226
       Top = 6
       Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 462
+      Left = 286
       Top = 5
       Properties.Buttons = <
         item
@@ -222,10 +230,10 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 240
+      Width = 259
     end
     object edInDescName: TcxTextEdit
-      Left = 714
+      Left = 624
       Top = 5
       Enabled = False
       ParentFont = False
@@ -239,6 +247,22 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
+      Width = 317
+    end
+    object cxLabel3: TcxLabel
+      Left = 227
+      Top = 36
+      Caption = #1070#1088'.'#1051#1080#1094#1086
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 286
+      Top = 32
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
       Width = 259
     end
   end
@@ -275,6 +299,13 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         ParamType = ptInput
       end
       item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -305,6 +336,9 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     ComponentList = <
       item
         Component = PeriodChoice
+      end
+      item
+        Component = JuridicalGuides
       end
       item
         Component = GoodsGroupGuides
@@ -342,7 +376,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 600
+    Left = 456
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -360,5 +394,32 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
       end>
     Left = 328
     Top = 170
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 320
+    Top = 32
   end
 end

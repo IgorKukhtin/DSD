@@ -115,6 +115,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
+			<DCCReference Include="..\SOURCE\Log.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

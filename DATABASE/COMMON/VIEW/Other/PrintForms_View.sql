@@ -29,23 +29,24 @@ AS
            , CAST (17661 AS INTEGER)                         -- Метро C&C
            , CAST ('PrintMovement_SaleMetro' AS TVarChar)
       UNION
---налоговая пока одинаковая для всех
+--налоговая
       SELECT
              CAST ('SaleTax' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
-           , CAST ('01.01.2200' AS TDateTime)
+           , CAST ('09.02.2014' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_SaleTax' AS TVarChar)
-/*
--- Если поменяется форма налоговой или % НДС
+
+-- Новая форма налоговой
+      UNION
       SELECT
              CAST ('SaleTax' AS TVarChar)
-           , CAST ('01.01.2016' AS TDateTime)
+           , CAST ('10.02.2014' AS TDateTime)
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_SaleTax_2016' AS TVarChar)
+           , CAST ('PrintMovement_SaleTax_2014' AS TVarChar)
 
-*/
+
        ;
 
 
@@ -61,4 +62,4 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM PrintForms_View 
+-- SELECT * FROM PrintForms_View

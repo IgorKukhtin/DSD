@@ -80,6 +80,9 @@ type
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
+    PrintHeaderCDS: TClientDataSet;
+    frxDBDHeader: TfrxDBDataset;
+    PrintHeaderDS: TDataSource;
   private
     { Private declarations }
   public

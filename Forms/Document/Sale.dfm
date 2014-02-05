@@ -477,6 +477,11 @@ inherited SaleForm: TSaleForm
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Params = <
@@ -571,7 +576,7 @@ inherited SaleForm: TSaleForm
   end
   inherited MasterCDS: TClientDataSet
     Left = 88
-    Top = 520
+    Top = 512
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_Sale'
@@ -620,8 +625,8 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 782
-    Top = 273
+    Left = 830
+    Top = 265
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -853,7 +858,7 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 224
+    Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
@@ -989,7 +994,7 @@ inherited SaleForm: TSaleForm
       item
         Guides = GuidesTo
       end>
-    Left = 168
+    Left = 160
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver
@@ -1027,13 +1032,13 @@ inherited SaleForm: TSaleForm
       item
         Control = edIsChecked
       end>
-    Left = 232
+    Left = 216
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 696
-    Top = 272
+    Left = 912
+    Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_Sale_SetUnErased'
@@ -1144,8 +1149,8 @@ inherited SaleForm: TSaleForm
     Top = 368
   end
   inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 864
-    Top = 270
+    Left = 912
+    Top = 262
   end
   object GuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
@@ -1334,12 +1339,16 @@ inherited SaleForm: TSaleForm
     CloseDataSource = False
     DataSet = MasterCDS
     BCDToCurrency = False
-    Left = 358
-    Top = 221
+    Left = 310
+    Top = 205
   end
   object spSelectPrintHeader: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Transport'
-    DataSets = <>
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
     Params = <
       item
         Name = 'inMovementId'
@@ -1348,8 +1357,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 466
-    Top = 106
+    Left = 362
+    Top = 322
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportName'
@@ -1369,10 +1378,9 @@ inherited SaleForm: TSaleForm
         Component = FormParams
         ComponentItem = 'ReportNameSale'
         DataType = ftString
-        ParamType = ptResult
       end>
-    Left = 360
-    Top = 280
+    Left = 312
+    Top = 392
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -1380,7 +1388,26 @@ inherited SaleForm: TSaleForm
       item
         Component = GuidesPricelist
       end>
+    Left = 496
+    Top = 96
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 388
+    Top = 258
+  end
+  object frxDBDHeader: TfrxDBDataset
+    UserName = 'frxDBDHeader'
+    CloseDataSource = False
+    DataSet = PrintHeaderCDS
+    BCDToCurrency = False
+    Left = 382
+    Top = 210
+  end
+  object PrintHeaderDS: TDataSource
+    DataSet = PrintHeaderCDS
     Left = 456
-    Top = 232
+    Top = 272
   end
 end
