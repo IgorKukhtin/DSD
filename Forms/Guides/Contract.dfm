@@ -45,6 +45,13 @@ object ContractForm: TContractForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object clInvNumberArchive: TcxGridDBColumn
         Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
         DataBinding.FieldName = 'InvNumberArchive'
@@ -267,6 +274,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object clIsErased: TcxGridDBColumn
