@@ -72,11 +72,14 @@ type
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;
-    dsdPrintTax: TdsdPrintAction;
     spSelectPrintHeader: TdsdStoredProc;
-    bbPrintTax: TdxBarButton;
     N2: TMenuItem;
     N3: TMenuItem;
+    mactPrint_Sale: TMultiAction;
+    actSPPrintSaleProcName: TdsdExecStoredProc;
+    spGetReportName: TdsdStoredProc;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshPrice: TdsdDataSetRefresh;
   private
     { Private declarations }
   public
