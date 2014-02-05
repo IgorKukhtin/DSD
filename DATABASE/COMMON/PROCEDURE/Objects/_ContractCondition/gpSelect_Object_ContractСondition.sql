@@ -31,7 +31,7 @@ BEGIN
 
          , Object_ContractCondition.isErased AS isErased
          
-     FROM OBJECT AS Object_ContractCondition
+     FROM Object AS Object_ContractCondition
      
           LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
@@ -51,14 +51,13 @@ BEGIN
   
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
  16.11.13         *
 */
 

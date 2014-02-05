@@ -140,7 +140,7 @@ uses
   Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm},
-  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm},
+  ContractConditionValue in '..\..\Forms\Guides\ContractConditionValue.pas' {ContractConditionValueForm},
   ContractEdit in '..\..\Forms\Guides\ContractEdit.pas' {ContractEditForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm},
   PriceListItem in '..\..\Forms\PriceListItem.pas' {PriceListItemForm},
@@ -339,7 +339,8 @@ uses
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
-  Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm};
+  Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
+  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm};
 
 {$R *.RES}
 

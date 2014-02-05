@@ -36,6 +36,9 @@ type
     edInDescName: TcxTextEdit;
     clAmount_Weight: TcxGridDBColumn;
     clAmount_Sh: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public
