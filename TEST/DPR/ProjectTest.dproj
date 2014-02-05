@@ -376,8 +376,8 @@
 			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
 				<Form>ProductionSeparateForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
-				<Form>ContractForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractConditionValue.pas">
+				<Form>ContractConditionValueForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractEdit.pas">
 				<Form>ContractEditForm</Form>
@@ -984,6 +984,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Account.pas">
 				<Form>AccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
+				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

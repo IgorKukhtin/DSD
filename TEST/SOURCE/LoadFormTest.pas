@@ -177,6 +177,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
