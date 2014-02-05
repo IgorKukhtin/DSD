@@ -4,6 +4,7 @@ uses
   Vcl.Forms,
   Controls,
   Classes,
+  SysUtils,
   LoginForm in '..\SOURCE\LoginForm.pas' {LoginForm},
   Storage in '..\SOURCE\Storage.pas',
   Authentication in '..\SOURCE\Authentication.pas',
@@ -32,20 +33,22 @@ uses
   Document in '..\SOURCE\COMPONENT\Document.pas',
   dialogs,
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  Log in '..\SOURCE\Log.pas';
 
 {$R *.res}
 
 begin
   Application.Initialize;
-//    TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+  Logger := TLog.Create(FindCmdLineSwitch('log'));
+
   // Процесс аутентификации
   with TLoginForm.Create(Application) do
     //Если все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
        Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
-  end;
+       Application.CreateForm(TdmMain, dmMain);
+    end;
   Application.Run;
 end.

@@ -1,8 +1,8 @@
--- Function: gpSelect_Object_Contract()
+-- Function: gpSelect_Object_ContractConditionValue()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractConditionValue (TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
+CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionValue(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -23,6 +23,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , OKPO TVarChar
+             , ContractConditionKindId Integer, ContractConditionKindName TVarChar                
+             , Value TFloat
              , isErased Boolean 
               )
 AS
@@ -30,7 +32,7 @@ $BODY$
 BEGIN
 
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
+   -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_ContractConditionValue());
 
    RETURN QUERY 
    SELECT
@@ -80,6 +82,10 @@ BEGIN
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
+       , Object_ContractConditionKind.Id        AS ContractConditionKindId
+       , Object_ContractConditionKind.ValueData AS ContractConditionKindName
+       , ObjectFloat_Value.ValueData            AS Value  
+
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
@@ -110,7 +116,7 @@ BEGIN
         LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
-                             ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId 
+                             ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
         LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId                     
             
@@ -126,26 +132,30 @@ BEGIN
         
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                             ON ObjectLink_ContractCondition_Contract.ChildObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                             ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                            AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+        LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+           
+        LEFT JOIN ObjectFloat AS ObjectFloat_Value 
+                              ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                             AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
    ;
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
- 09.01.14         * add PaidKindId
- 06.01.14                                         * add OKPO
- 14.11.13         * add from redmaine               
- 20.10.13                                        * add Object_Contract_View
- 20.10.13                                        * add from redmine
- 22.07.13         * add  SigningDate, StartDate, EndDate               
- 11.06.13         *
- 12.04.13                                        *
+ 05.02.14                                        *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractConditionValue (inSession := zfCalc_UserAdmin())

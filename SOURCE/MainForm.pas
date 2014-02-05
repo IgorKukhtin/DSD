@@ -279,6 +279,8 @@ type
     bbReportMain_Separator: TdxBarSeparator;
     bbService_Separator: TdxBarSeparator;
     dxBarButton1: TdxBarButton;
+    actContractConditionValue: TdsdOpenForm;
+    bbContractConditionValue: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

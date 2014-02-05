@@ -41,7 +41,7 @@ type
 implementation
 
 uses IdHTTP, Xml.XMLDoc, XMLIntf, Classes, ZLibEx, idGlobal, UtilConst, Variants, UtilConvert,
-     MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge, Forms;
+     MessagesUnit, Dialogs, StrUtils, IDComponent, SimpleGauge, Forms, Log;
 
 const
 
@@ -217,6 +217,7 @@ begin
      TMessagesForm.Create(nil).Execute(ConvertXMLParamToStrings(pData), ConvertXMLParamToStrings(pData), true);
   FSendList.Clear;
   FSendList.Add('XML=' + '<?xml version="1.1" encoding="windows-1251"?>' + pData);
+  Logger.AddToLog(pData);
   FReceiveStream.Clear;
   IdHTTPWork.FExecOnServer := pExecOnServer;
   try
@@ -243,6 +244,8 @@ begin
      Result := PrepareStr;
   if ResultType = gcDataSet then
      Result := PrepareStr;
+
+  Logger.AddToLog(Result);
 end;
 
 class function TStorageFactory.GetStorage: IStorage;
