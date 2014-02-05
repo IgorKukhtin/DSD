@@ -161,6 +161,7 @@ type
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
   public
+    constructor Create(AOwner: TComponent); override;
     property InsertUpdateAction: TCustomAction read FInsertUpdateAction write FInsertUpdateAction;
   end;
 
@@ -1187,6 +1188,13 @@ begin
 end;
 
 { TdsdInsertUpdateGuides }
+
+constructor TdsdInsertUpdateGuides.Create(AOwner: TComponent);
+begin
+  inherited;
+  // Обязательно так, потому как это делается в LocalExecute
+  PostDataSetBeforeExecute := false
+end;
 
 function TdsdInsertUpdateGuides.LocalExecute: boolean;
 begin
