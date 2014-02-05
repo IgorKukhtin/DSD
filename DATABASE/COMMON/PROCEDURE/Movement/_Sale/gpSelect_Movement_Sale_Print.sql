@@ -211,4 +211,4 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 */
 
 -- тест
- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 40874, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Sale_Print (inMovementId := 40874, inSession:= '2')
