@@ -55,8 +55,7 @@ requires
   dxBarExtItemsRS16,
   cxPivotGridRS16,
   VclSmp,
-  cxVerticalGridRS16,
-  ZLibEx;
+  cxVerticalGridRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -79,6 +78,7 @@ contains
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas';
+  ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
+  Log in '..\SOURCE\Log.pas';
 
 end.

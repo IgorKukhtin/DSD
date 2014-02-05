@@ -22,7 +22,8 @@ uses
   MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
-  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas';
+  ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
+  Log in '..\SOURCE\Log.pas';
 
 {$R *.res}
 
