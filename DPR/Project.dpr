@@ -40,7 +40,7 @@ uses
 
 begin
   Application.Initialize;
-  Logger := TLog.Create(FindCmdLineSwitch('log'));
+  Logger.Enabled := FindCmdLineSwitch('log');
 
   // Процесс аутентификации
   with TLoginForm.Create(Application) do

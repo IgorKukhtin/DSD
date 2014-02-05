@@ -101,5 +101,9 @@ begin
   FTraceLevel:= Value;
 end;
 
+initialization
+
+  Logger := TLog.Create(false);
+
 end.
 
