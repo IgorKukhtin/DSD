@@ -9013,13 +9013,16 @@ begin
         Add('     , _pgPartner.PartnerId_pg as FromId_Postgres');
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres');
-        Add('     , _pgContract.ContractId_pg as ContractId');
+        Add('     , isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
 //!!!           +'       and Bill.FromId<>1022' // ÂÈÇÀÐÄ 1
@@ -9033,18 +9036,20 @@ begin
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
         Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
-        Add('          left outer join (select PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by PartnerId_pg, UnitId'
+        Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                          ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_From.Id_byLoad');
-        Add('          left outer join (select _pgPartner.PartnerId_pg, max (isnull(_pgContract_find.ContractId_pg, _pgPartner.ContractId_pg)) as ContractId_pg'
+        Add('          left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg'
            +'                           from dba._pgPartner'
-           +'                                left outer join (select _pgPartner.PartnerId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg'
-           +'                                                 from dba._pgPartner'
-           +'                                                 where _pgPartner.PartnerId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '+FormatToVarCharServer_notNULL('30101')
-           +'                                                 group by _pgPartner.PartnerId_pg'
-           +'                                                ) as _pgContract_find on _pgContract_find.PartnerId_pg = _pgPartner.PartnerId_pg'
-           +'                           where _pgPartner.PartnerId_pg <> 0 and _pgPartner.ContractId_pg <> 0'
-           +'                           group by _pgPartner.PartnerId_pg'
-           +'                          ) as _pgContract on _pgContract.PartnerId_pg = _pgPartner.PartnerId_pg');
+           +'                           where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '+FormatToVarCharServer_notNULL('30101')
+           +'                           group by _pgPartner.JuridicalId_pg'
+           +'                          ) as _pgContract_30101 on _pgContract_30101.JuridicalId_pg = _pgPartner.JuridicalId_pg'
+           +'                                                and Bill_find.CodeIM = 30101');
+        Add('          left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg'
+           +'                           from dba._pgPartner'
+           +'                           where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '+FormatToVarCharServer_notNULL('30103')
+           +'                           group by _pgPartner.JuridicalId_pg'
+           +'                          ) as _pgContract_30103 on _pgContract_30103.JuridicalId_pg = _pgPartner.JuridicalId_pg'
+           +'                                                and Bill_find.CodeIM = 30103');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = case when Bill.ToId in (1022,1037) then 5 else Bill.ToId end');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');

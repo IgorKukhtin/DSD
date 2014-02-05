@@ -45,6 +45,10 @@ type
     colChecked: TcxGridDBColumn;
     colRouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public
