@@ -2357,14 +2357,14 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
     PreviewOptions.Zoom = 1.000000000000000000
     PrintOptions.Printer = 'Default'
     PrintOptions.PrintOnSheet = 0
-    ReportOptions.CreateDate = 37867.733215115700000000
+    ReportOptions.CreateDate = 37867.733215115710000000
     ReportOptions.Name = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' - '#1059#1082#1088#1057#1082#1083#1072#1076
     ReportOptions.LastChange = 41452.570119166700000000
     ScriptLanguage = 'C++Script'
@@ -3191,6 +3191,7 @@ object MainForm: TMainForm
       TopMargin = 6.000000000000000000
       BottomMargin = 6.000000000000000000
       Columns = 1
+      ColumnWidth = 189.000000000000000000
       ColumnPositions.Strings = (
         '0')
       object Band2: TfrxFooter
