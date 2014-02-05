@@ -23,8 +23,8 @@ inherited ContractEditForm: TContractEditForm
   end
   object LbInvNumber: TcxLabel [3]
     Left = 116
-    Top = 0
-    Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+    Top = 5
+    Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel3: TcxLabel [4]
     Left = 16
@@ -149,7 +149,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel11: TcxLabel [20]
     Left = 16
-    Top = 0
+    Top = 5
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit [21]
@@ -164,7 +164,7 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel12: TcxLabel [22]
     Left = 183
     Top = 165
-    Caption = #1053#1086#1084#1077#1088' '#1072#1088#1093#1080#1074#1080#1088#1086#1074#1072#1085#1080#1103
+    Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
   end
   object edInvNumberArchive: TcxTextEdit [23]
     Left = 183
