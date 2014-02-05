@@ -217,6 +217,7 @@ object Report_AccountForm: TReport_AccountForm
       object AccountCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1089#1095'.'
         DataBinding.FieldName = 'AccountCode'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -228,14 +229,6 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
-      object AccountName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'AccountName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
       object ObjectCode_Direction: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1086#1073'.'#1085#1072#1087#1088'.'
         DataBinding.FieldName = 'ObjectCode_Direction'
@@ -246,6 +239,12 @@ object Report_AccountForm: TReport_AccountForm
       object ObjectName_Direction: TcxGridDBColumn
         Caption = #1054#1073#1098#1077#1082#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
         DataBinding.FieldName = 'ObjectName_Direction'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object DescName_Direction: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+        DataBinding.FieldName = 'DescName_Direction'
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -264,12 +263,11 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object JuridicalBasisCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1102#1088'.'#1083'.('#1075#1083'.)'
-        DataBinding.FieldName = 'JuridicalBasisCode'
-        Visible = False
+      object DescName_Destination: TcxGridDBColumn
+        Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'DescName_Destination'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 70
       end
       object JuridicalBasisName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
@@ -278,35 +276,12 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object BusinessCode_inf: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1073#1080#1079#1085'.'
-        DataBinding.FieldName = 'BusinessCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-      end
-      object BusinessName_inf: TcxGridDBColumn
+      object BusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
-        DataBinding.FieldName = 'BusinessName_inf'
+        DataBinding.FieldName = 'BusinessName'
         Visible = False
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object BranchCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072'  ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'BranchCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-      end
-      object BranchName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'.  '#1060#1080#1083#1080#1072#1083'  ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'BranchName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 70
       end
       object InfoMoneyCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055
@@ -358,20 +333,6 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 50
       end
-      object InvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'.'
-        DataBinding.FieldName = 'InvNumber'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 40
-      end
-      object OperDate: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072
-        DataBinding.FieldName = 'OperDate'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
       object MovementDescName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082'.'
         DataBinding.FieldName = 'MovementDescName'
@@ -379,139 +340,21 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
-      object PersonalCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1089#1086#1090#1088#1091#1076#1085#1080#1082#1072' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalCode_inf'
+      object InvNumber: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1082'.'
+        DataBinding.FieldName = 'InvNumber'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
       end
-      object PersonalName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1057#1086#1090#1088#1091#1076#1085#1080#1082'  ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object CarModelName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarModelName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object CarCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object CarName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object RouteCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1084#1072#1088#1096#1088#1091#1090#1072
-        DataBinding.FieldName = 'RouteCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object RouteName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1052#1072#1088#1096#1088#1091#1090
-        DataBinding.FieldName = 'RouteName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object UnitCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1087#1086#1076#1088#1072#1079#1076'. ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'UnitCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-      end
-      object UnitName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1055#1080#1059')'
-        DataBinding.FieldName = 'UnitName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 75
-      end
-      object AccountGroupCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' c'#1095'. '#1075#1088'.'
-        DataBinding.FieldName = 'AccountGroupCode'
+      object OperDate: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072
+        DataBinding.FieldName = 'OperDate'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
-      end
-      object AccountGroupName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'AccountGroupName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object AccountDirectionCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object AccountDirectionName: TcxGridDBColumn
-        Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'AccountDirectionName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object AccountGroupCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' c'#1095'. '#1075#1088'.'
-        DataBinding.FieldName = 'AccountGroupCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object AccountGroupName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'AccountGroupName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object AccountDirectionCode_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1050#1086#1076' c'#1095'. '#1085#1072#1087#1088'.'
-        DataBinding.FieldName = 'AccountDirectionCode_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object AccountDirectionName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
-        DataBinding.FieldName = 'AccountDirectionName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
       object AccountCode_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'. '#1050#1086#1076' '#1089#1095'.'
@@ -520,14 +363,6 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
-      end
-      object AccountName_inf: TcxGridDBColumn
-        Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'AccountName_inf'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
       end
       object AccountName_All_inf: TcxGridDBColumn
         Caption = #1087#1088#1080#1084'. '#1057#1095#1077#1090
@@ -544,6 +379,45 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 90
+      end
+      object BusinessName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object BranchName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'.  '#1060#1080#1083#1080#1072#1083'  ('#1054#1055#1080#1059')'
+        DataBinding.FieldName = 'BranchName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object UnitName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077' ('#1054#1055#1080#1059')'
+        DataBinding.FieldName = 'UnitName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 75
+      end
+      object RouteName_inf: TcxGridDBColumn
+        Caption = #1087#1088#1080#1084'. '#1052#1072#1088#1096#1088#1091#1090
+        DataBinding.FieldName = 'RouteName_inf'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object OperPrice: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072
+        DataBinding.FieldName = 'OperPrice'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
       end
       object SummStart: TcxGridDBColumn
         Caption = #1054#1089#1090#1072#1090#1086#1082' '#1085#1072' '#1085#1072#1095#1072#1083#1086
@@ -584,73 +458,6 @@ object Report_AccountForm: TReport_AccountForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
-      end
-      object JuridicalCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
-        DataBinding.FieldName = 'JuridicalCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object JuridicalName: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object PersonalCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'PersonalCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 32
-      end
-      object PersonalName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1042#1086#1076#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 108
-      end
-      object CarModelName: TcxGridDBColumn
-        Caption = #1052#1072#1088#1082'a '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarModelName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object CarCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084#1086#1073#1080#1083#1103
-        DataBinding.FieldName = 'CarCode'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object CarName: TcxGridDBColumn
-        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
-        DataBinding.FieldName = 'CarName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 80
-      end
-      object OperPrice: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072
-        DataBinding.FieldName = 'OperPrice'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -723,106 +530,20 @@ object Report_AccountForm: TReport_AccountForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = deStart
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = Owner

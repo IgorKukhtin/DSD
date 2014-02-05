@@ -18,6 +18,11 @@ $BODY$
    DECLARE vbOperDate TDateTime;  
    DECLARE vbMovementId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbPartnerId Integer;
+   DECLARE vbOperCount TFloat;
+   DECLARE vbOperPrice TFloat;
+   DECLARE vbGoodsId Integer; 
+   DECLARE vbGoodsKindId Integer;
 BEGIN
 	
      -- проверка прав пользователя на вызов процедуры
@@ -75,119 +80,64 @@ BEGIN
 
 
      OPEN cursMovement FOR 
-        SELECT InvNumber, OperDate, zfGetUnitFromUnitId(UnitId) 
+        SELECT DISTINCT InvNumber, OperDate, zfGetUnitFromUnitId(UnitId), ObjectLink_Partner1CLink_Partner.ChildObjectId 
           FROM Sale1C 
+          JOIN Object AS Object_DeliveryPoint ON Sale1C.ClientCode = Object_DeliveryPoint.ObjectCode
+           AND Object_DeliveryPoint.DescId =  zc_Object_Partner1CLink()
+          JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+            ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_DeliveryPoint.Id
+           AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+           AND ObjectLink_Partner1CLink_Branch.ChildObjectId = zfGetBranchFromUnitId(Sale1C.UnitId)
+          JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+            ON ObjectLink_Partner1CLink_Partner.ObjectId = ObjectLink_Partner1CLink_Branch.ObjectId
+           AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
          WHERE OperDate BETWEEN inStartDate AND inEndDate; --открываем курсор
      LOOP --начинаем цикл по курсору
           --извлекаем данные из строки и записываем их в переменные
-        FETCH cursMovement INTO vbInvNumber, vbOperDate, vbUnitId;
+        FETCH cursMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbPartnerId;
         --если такого периода и не возникнет, то мы выходим
         IF NOT FOUND THEN 
            EXIT;
         END IF;
         vbMovementId := lpInsertUpdate_Movement_Sale(ioId := 0, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := '', 
                           inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := false, inPriceWithVAT := true, inVATPercent := 20, 
-                          inChangePercent := 0, inFromId := vbUnitId, inToId := 0, inPaidKindId := 0, inContractId := 0, inRouteSortingId := 0, inUserId := vbUserId);
+                          inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId := zc_Enum_PaidKind_FirstForm(), inContractId := 0, inRouteSortingId := 0, inUserId := vbUserId);
+        -- сохранили свойство <Проверен>
+        PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, true);
+
+        OPEN cursMovementItem FOR 
+        SELECT OperCount, OperPrice, Object_GoodsByGoodsKind_View.GoodsId, Object_GoodsByGoodsKind_View.GoodsKindId
+
+          FROM Sale1C 
+          JOIN Object AS Object_GoodsByGoodsKind1CLink ON Sale1C.GoodsCode = Object_GoodsByGoodsKind1CLink.ObjectCode
+           AND Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
+          JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
+            ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+           AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+           AND ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId = zfGetBranchFromUnitId(Sale1C.UnitId)
+          JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind
+            ON ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId
+           AND ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind()
+          JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ChildObjectId
+
+         WHERE InvNumber = vbInvNumber AND OperDate = vbOperDate; --открываем курсор;
+        LOOP
+          FETCH cursMovementItem INTO vbOperCount, vbOperPrice, vbGoodsId, vbGoodsKindId;
+          --если такого периода и не возникнет, то мы выходим
+          IF NOT FOUND THEN 
+             EXIT;
+          END IF;
+
+          PERFORM lpInsertUpdate_MovementItem_Sale(ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId, 
+              inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount, 
+              inChangePercentAmount := 0, inPrice := vbOperPrice, inCountForPrice := 1 , inHeadCount := 0, 
+              inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
+
+        END LOOP;--заканчиваем цикл по курсору
+        CLOSE cursMovementItem; --закрываем курсор
      END LOOP;--заканчиваем цикл по курсору
      CLOSE cursMovement; --закрываем курсор
     
-     -- Выбираем все данные и сразу вызываем процедуры
-/*     PERFORM             
-       lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
-               inInvNumber := Movement.InvNumber, 
-               inOperDate := Movement.OperDate, 
-               inAmount := MovementFloat_Amount.ValueData, 
-               inBankAccountId := MovementLinkObject_BankAccount.ObjectId,  
-               inComment := MovementString_Comment.ValueData, 
-               inMoneyPlaceId := MovementLinkObject_Juridical.ObjectId, 
-               inContractId := MovementLinkObject_Contract.ObjectId, 
-               inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
-               inUnitId := MovementLinkObject_Unit.ObjectId, 
-               inCurrencyId := MovementLinkObject_Currency.ObjectId, 
-               inParentId := Movement.Id)
-
-       FROM Movement
-            LEFT JOIN Movement AS Movement_BankAccount 
-                              ON Movement_BankAccount.ParentId = Movement.Id
-                             AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-                             AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
-
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
-                                         ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
-                                        AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
-
-            LEFT JOIN MovementString AS MovementString_Comment
-                                     ON MovementString_Comment.MovementId =  Movement.Id
-                                    AND MovementString_Comment.DescId = zc_MovementString_Comment()
-
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
-           
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Currency
-                                         ON MovementLinkObject_Currency.MovementId = Movement.Id
-                                        AND MovementLinkObject_Currency.DescId = zc_MovementLinkObject_Currency()
-          
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Juridical
-                                         ON MovementLinkObject_Juridical.MovementId = Movement.Id
-                                        AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
- 
-       WHERE Movement.DescId = zc_Movement_BankStatementItem()
-         AND Movement.ParentId = inMovementId;
-
-
-     -- 5.1. таблица - Проводки
-     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
-     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
-                               , MovementItemId Integer, ContainerId Integer
-                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
-                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
-                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId Integer, JuridicalId_Basis Integer
-                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
-                               , IsActive Boolean, IsMaster Boolean
-                                ) ON COMMIT DROP;
-
-
-     -- 5.3. проводим Документы
-     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_BankAccount())
-     THEN
-         PERFORM lpComplete_Movement_BankAccount (inMovementId := Movement_BankAccount.Id
-                                                , inUserId     := vbUserId)
-         FROM Movement
-             JOIN Movement AS Movement_BankAccount
-                           ON Movement_BankAccount.ParentId = Movement.Id
-                          AND Movement_BankAccount.DescId = zc_Movement_BankAccount()
-                          AND Movement_BankAccount.StatusId = zc_Enum_Status_UnComplete()
-             JOIN MovementItem ON MovementItem.MovementId = Movement_BankAccount.Id AND MovementItem.DescId = zc_MI_Master()
-             JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
-                                         AND MILinkObject_MoneyPlace.ObjectId > 0
-         WHERE Movement.DescId = zc_Movement_BankStatementItem()
-           AND Movement.ParentId = inMovementId;
-     END IF;
-
-     -- Ставим статус у документа выписки
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-         WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-*/
-
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

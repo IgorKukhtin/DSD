@@ -21,9 +21,16 @@ type
     function GetData(FieldName: String): Variant;
   end;
 
+  procedure Register;
+
 implementation
 
-uses DB, Variants, SysUtils;
+uses VCL.ActnList, DB, Variants, SysUtils;
+
+procedure Register;
+begin
+  RegisterActions('DSDLib', [TSale1CLoadAction], TSale1CLoadAction);
+end;
 
 { TSale1CLoadAction }
 

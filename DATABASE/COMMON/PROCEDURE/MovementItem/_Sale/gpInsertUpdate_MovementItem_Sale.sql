@@ -39,41 +39,12 @@ BEGIN
          RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
      END IF;
 
-
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-     -- сохранили свойство <Количество c учетом % скидки>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountChangePercent(), ioId, inAmountChangePercent);
-     -- сохранили свойство <% скидки для кол-ва>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_ChangePercentAmount(), ioId, inChangePercentAmount);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+
+     ioId := lpInsertUpdate_MovementItem_Sale(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner, inAmountChangePercent, 
+                   inChangePercentAmount, inPrice, inCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, vbUserId);              
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
-
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
-     END IF;
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -94,6 +65,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.02.14                        * add lpInsertUpdate_MovementItem_Sale
  08.09.13                                        * add zc_MIFloat_AmountChangePercent
  02.09.13                                        * add zc_MIFloat_ChangePercentAmount
  13.08.13                                        * add RAISE EXCEPTION

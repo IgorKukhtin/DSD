@@ -11,7 +11,8 @@ uses
   Vcl.Menus, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, DataModul,
+  ExternalLoad, ExternalDocumentLoad;
 
 type
   TLoadSaleFrom1CForm = class(TAncestorReportForm)
@@ -31,6 +32,11 @@ type
     actMoveToDoc: TdsdExecStoredProc;
     spMoveSale: TdsdStoredProc;
     bbMoveSale: TdxBarButton;
+    actTrancateTable: TdsdExecStoredProc;
+    actSale1CLoadAction: TSale1CLoadAction;
+    spDelete1CLoad: TdsdStoredProc;
+    actLoad1C: TMultiAction;
+    bbLoad1c: TdxBarButton;
   private
     { Private declarations }
   public

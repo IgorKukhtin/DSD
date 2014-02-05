@@ -71,7 +71,6 @@ BEGIN
        AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
  LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
 
-
  LEFT JOIN Object AS Object_GoodsByGoodsKind1CLink ON Sale1C.GoodsCode = Object_GoodsByGoodsKind1CLink.ObjectCode
        AND Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
        

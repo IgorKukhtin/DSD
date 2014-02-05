@@ -186,7 +186,7 @@ BEGIN
         FROM 
              (SELECT MovementItem.Id AS MovementItemId
 
-                   , MovementItem.ObjectId AS GoodsId
+                   , COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId, 0) AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                    , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
@@ -215,7 +215,11 @@ BEGIN
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
-                   LEFT JOIN Object ON Object.Id = MovementItem.ObjectId
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
+                                        ON ObjectLink_Goods_Fuel.ObjectId = MovementItem.ObjectId
+                                       AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
+                                       AND vbCarId <> 0
+                   LEFT JOIN Object ON Object.Id = COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, MovementItem.ObjectId)
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id

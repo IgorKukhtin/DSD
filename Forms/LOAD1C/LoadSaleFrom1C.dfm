@@ -125,6 +125,12 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   inherited Panel: TPanel
     Width = 853
     ExplicitWidth = 853
+    inherited deStart: TcxDateEdit
+      EditValue = 41640d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 41640d
+    end
   end
   inherited ActionList: TActionList
     object actMoveToDoc: TdsdExecStoredProc
@@ -140,6 +146,32 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       QuestionBeforeExecute = #1055#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1077#1088#1077#1085#1077#1089#1077#1085#1099
     end
+    object actTrancateTable: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'actTrancateTable'
+    end
+    object actSale1CLoadAction: TSale1CLoadAction
+      Category = 'DSDLib'
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+    end
+    object actLoad1C: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actTrancateTable
+        end
+        item
+          Action = actSale1CLoadAction
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1080#1079' 1'#1057
+      ImageIndex = 50
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -151,6 +183,21 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_1CSaleLoad'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
     Left = 104
     Top = 64
   end
@@ -178,11 +225,19 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         end
         item
           Visible = True
+          ItemName = 'bbLoad1c'
+        end
+        item
+          Visible = True
           ItemName = 'bbMoveSale'
         end>
     end
     object bbMoveSale: TdxBarButton
       Action = actMoveToDoc
+      Category = 0
+    end
+    object bbLoad1c: TdxBarButton
+      Action = actLoad1C
       Category = 0
     end
   end
@@ -193,19 +248,27 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
     Left = 176
     Top = 136
+  end
+  object spDelete1CLoad: TdsdStoredProc
+    StoredProcName = 'gpDelete_1CSale'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    Left = 176
+    Top = 192
   end
 end
