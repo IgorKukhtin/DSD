@@ -340,7 +340,8 @@ uses
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
-  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm};
+  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
+  Log in '..\..\SOURCE\Log.pas';
 
 {$R *.RES}
 
