@@ -84,8 +84,10 @@ type
     ContractKindChoiceForm: TOpenChoiceForm;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     clJuridicalBasisName: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
+    clContractConditionKindName: TcxGridDBColumn;
+    clValue: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clJuridicalName_find: TcxGridDBColumn;
   private
     { Private declarations }
   public

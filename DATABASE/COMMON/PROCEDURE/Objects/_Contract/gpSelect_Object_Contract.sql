@@ -90,10 +90,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_InvNumberArchive.DescId = zc_objectString_Contract_InvNumberArchive()
-                            
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()

@@ -113,6 +113,13 @@ type
     edEndPromo: TcxDateEdit;
     edStartPromo: TcxDateEdit;
     spClearDefaluts: TdsdStoredProc;
+    clCode: TcxGridDBColumn;
+    clInvNumberArchive: TcxGridDBColumn;
+    clPersonalName: TcxGridDBColumn;
+    clAreaName: TcxGridDBColumn;
+    clContractArticleName: TcxGridDBColumn;
+    clContractStateKindName: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -25,8 +25,6 @@ object ContractConditionValueForm: TContractConditionValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 1170
-    ExplicitHeight = 303
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,21 +45,28 @@ object ContractConditionValueForm: TContractConditionValueForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'Code'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 45
+      end
       object clInvNumberArchive: TcxGridDBColumn
-        Caption = #8470' '#1072#1088#1093#1080#1074'.'
+        Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
         DataBinding.FieldName = 'InvNumberArchive'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 55
       end
       object clInvNumber: TcxGridDBColumn
-        Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 55
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -88,6 +93,13 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 130
       end
+      object clJuridicalName_find: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1086#1080#1089#1082')'
+        DataBinding.FieldName = 'JuridicalName'
+        Visible = False
+        Options.Editing = False
+        Width = 100
+      end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
@@ -95,14 +107,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object clContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 75
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
@@ -283,6 +295,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 120
       end
       object clIsErased: TcxGridDBColumn

@@ -28,7 +28,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_Juridical()) AS Code
+           , 0 ::Integer  AS Code -- lfGet_ObjectCode(0, zc_Object_Juridical())
            , inName                 AS NAME
            
            , CAST ('' as TVarChar)    AS GLNCode

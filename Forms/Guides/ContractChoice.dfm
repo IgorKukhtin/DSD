@@ -2,8 +2,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   Caption = #1042#1099#1073#1086#1088' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,7 +27,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           Styles.Footer = nil
           Styles.Header = nil
           object colInvNumber: TcxGridDBColumn
-            Caption = #1053#1086#1084#1077#1088
+            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -93,6 +93,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 90

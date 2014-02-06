@@ -37,19 +37,31 @@ BEGIN
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
    vbUserId := inSession;
 
+   /*
    IF ioId <> 0 
         -- пытаемся найти код
    THEN vbCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); 
         -- Иначе, определяем его как последний+1
    ELSE vbCode:= inCode; -- lfGet_ObjectCode (inCode, zc_Object_Contract()); 
+   END IF;*/
+
+   IF COALESCE (ioId, 0) = 0 AND EXISTS (SELECT ObjectCode FROM Object WHERE ObjectCode = inCode AND DescId = zc_Object_Contract())
+   THEN 
+       -- Если код не установлен, определяем его как последний + 1
+       vbCode:= lfGet_ObjectCode (0, zc_Object_Contract());
+   ELSE
+       -- Если код не установлен, определяем его как последний + 1
+       vbCode:= lfGet_ObjectCode (inCode, zc_Object_Contract());
    END IF;
 
+   -- проверка уникальности <Код>
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Contract(), vbCode);
 
    -- проверка уникальности для свойства <Номер договора>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
    -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица
-   IF inInvNumber <> '' and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
+   IF inInvNumber <> '' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
    THEN
        IF EXISTS (SELECT ObjectLink.ChildObjectId
                   FROM ObjectLink

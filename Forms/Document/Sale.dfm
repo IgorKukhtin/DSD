@@ -476,6 +476,55 @@ inherited SaleForm: TSaleForm
         end>
       RefreshOnTabSetChanges = True
     end
+    object mactPrint_Sale: TMultiAction [9]
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actSPPrintSaleProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
+    object mactPrint_SaleTax: TMultiAction [10]
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actSPPrintSaleTaxProcName
+        end
+        item
+          Action = actPrintSaleTax
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
+    object actPrintSaleTax: TdsdPrintAction [11]
+      Category = 'DSDLib'
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrintHeader
       StoredProcList = <
@@ -516,7 +565,7 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
@@ -536,17 +585,14 @@ inherited SaleForm: TSaleForm
         end>
       isShowModal = True
     end
-    object mactPrint_Sale: TMultiAction
+    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
-      ActionList = <
+      StoredProc = spGetReporNameTax
+      StoredProcList = <
         item
-          Action = actSPPrintSaleProcName
-        end
-        item
-          Action = actPrint
+          StoredProc = spGetReporNameTax
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
+      Caption = 'actSPPrintSaleTaxProcName'
     end
     object actSPPrintSaleProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -620,8 +666,64 @@ inherited SaleForm: TSaleForm
       0
       28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end>
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
+    end
+    object bbPrintTax: TdxBarButton [5]
+      Action = mactPrint_SaleTax
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -680,6 +782,12 @@ inherited SaleForm: TSaleForm
       end
       item
         Name = 'ReportNameSale'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportNameSaleTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1409,5 +1517,27 @@ inherited SaleForm: TSaleForm
     DataSet = PrintHeaderCDS
     Left = 456
     Top = 272
+  end
+  object spGetReporNameTax: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportNameTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSaleTax'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 384
   end
 end

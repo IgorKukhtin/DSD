@@ -41,9 +41,12 @@ type
     colTotalSummPVAT: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
-    colInvNumberOrder: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
   private
     { Private declarations }
   public

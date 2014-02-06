@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
 $BODY$
@@ -65,6 +66,10 @@ BEGIN
            , Object_PaidKind.ValueData                  AS PaidKindName
            , View_Contract_InvNumber.ContractId         AS ContractId
            , View_Contract_InvNumber.InvNumber          AS ContractName
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.statusid = tmpStatus.StatusId
@@ -133,6 +138,7 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
             ;
 
 END;
@@ -143,6 +149,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 05.02.14                                        * add Object_InfoMoney_View
  30.01.14                                                       * add inIsPartnerDate, inIsErased
  14.01.14                                        * add Object_Contract_InvNumber_View
  11.01.14                                        * add Checked, TotalCountPartner

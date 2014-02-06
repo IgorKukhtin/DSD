@@ -50,6 +50,11 @@ BEGIN
    THEN
       RAISE EXCEPTION 'Ошибка.<Группа юридических лиц> не выбрана.';
    END IF;
+   -- проверка
+   IF COALESCE (inName, '') = ''
+   THEN
+      RAISE EXCEPTION 'Ошибка.Необходимо определить <Название юридического лица>.';
+   END IF;
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Juridical(), vbCode, inName);
