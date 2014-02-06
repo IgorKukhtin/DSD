@@ -23,7 +23,7 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
 
 type
   TReturnInForm = class(TAncestorDocumentForm)
@@ -61,6 +61,14 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
+    frxDBDMaster: TfrxDBDataset;
+    frxDBDHeader: TfrxDBDataset;
+    PrintHeaderCDS: TClientDataSet;
+    PrintHeaderDS: TDataSource;
+    spSelectPrintHeader: TdsdStoredProc;
+    spGetReportName: TdsdStoredProc;
+    actSPPrintProcName: TdsdExecStoredProc;
+    mactPrint: TMultiAction;
   private
     { Private declarations }
   public

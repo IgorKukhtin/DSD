@@ -16,7 +16,6 @@ inherited ReturnInForm: TReturnInForm
     ClientRectBottom = 598
     ClientRectRight = 1045
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
       ExplicitWidth = 1043
       ExplicitHeight = 576
       inherited cxGrid: TcxGrid
@@ -83,10 +82,6 @@ inherited ReturnInForm: TReturnInForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -387,6 +382,40 @@ inherited ReturnInForm: TReturnInForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrintHeader
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintHeader
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'NULL'
+      ReportNameParam.Name = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = Null
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint: TMultiAction [10]
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -405,7 +434,7 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [13]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
@@ -424,6 +453,15 @@ inherited ReturnInForm: TReturnInForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object actSPPrintProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -473,6 +511,9 @@ inherited ReturnInForm: TReturnInForm
       0
       28
       0)
+    inherited bbPrint: TdxBarButton
+      Action = mactPrint
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 782
@@ -509,6 +550,31 @@ inherited ReturnInForm: TReturnInForm
     Top = 468
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ReportName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 280
     Top = 552
   end
@@ -590,25 +656,25 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'FromId'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
       end
       item
         Name = 'ToId'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -721,14 +787,14 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inFromId'
         Value = ''
-        Component = GuidesTo
+        Component = GuidesFrom
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Value = ''
-        Component = GuidesFrom
+        Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -960,8 +1026,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 264
-    Top = 1
+    Left = 240
+    Top = 17
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1016,5 +1082,72 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 536
     Top = 3
+  end
+  object frxDBDMaster: TfrxDBDataset
+    UserName = 'frxDBDMaster'
+    CloseDataSource = False
+    DataSet = MasterCDS
+    BCDToCurrency = False
+    Left = 318
+    Top = 205
+  end
+  object frxDBDHeader: TfrxDBDataset
+    UserName = 'frxDBDHeader'
+    CloseDataSource = False
+    DataSet = PrintHeaderCDS
+    BCDToCurrency = False
+    Left = 390
+    Top = 210
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 396
+    Top = 258
+  end
+  object PrintHeaderDS: TDataSource
+    DataSet = PrintHeaderCDS
+    Left = 464
+    Top = 272
+  end
+  object spSelectPrintHeader: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 370
+    Top = 322
+  end
+  object spGetReportName: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnIn_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportName'
+        DataType = ftString
+      end>
+    Left = 320
+    Top = 392
   end
 end
