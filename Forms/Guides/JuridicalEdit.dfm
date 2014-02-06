@@ -1,8 +1,9 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 446
-  ClientWidth = 960
-  ExplicitWidth = 966
+  ClientWidth = 1127
+  ExplicitLeft = -135
+  ExplicitWidth = 1133
   ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
@@ -118,7 +119,7 @@
   object Panel: TPanel [15]
     Left = 284
     Top = 0
-    Width = 676
+    Width = 843
     Height = 446
     Align = alRight
     BevelEdges = [beLeft]
@@ -128,18 +129,20 @@
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
-      Width = 674
+      Width = 841
       Height = 446
       Align = alClient
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
+      ExplicitWidth = 674
       ClientRectBottom = 446
-      ClientRectRight = 674
+      ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitWidth = 674
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -165,9 +168,9 @@
           Width = 193
         end
         object JuridicalDetailsGrid: TcxGrid
-          Left = 472
+          Left = 456
           Top = 0
-          Width = 202
+          Width = 385
           Height = 422
           Align = alRight
           TabOrder = 8
@@ -289,21 +292,24 @@
       object PartnerTS: TcxTabSheet
         Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         ImageIndex = 1
+        ExplicitWidth = 674
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 674
+          Width = 841
           Height = 26
           Align = dalTop
           BarManager = dxBarManager
+          ExplicitWidth = 674
         end
         object PartnerGrid: TcxGrid
           Left = 0
           Top = 26
-          Width = 674
+          Width = 841
           Height = 396
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 674
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -343,21 +349,24 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
+        ExplicitWidth = 674
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 674
+          Width = 841
           Height = 26
           Align = dalTop
           BarManager = dxBarManager
+          ExplicitWidth = 674
         end
         object ContractGrid: TcxGrid
           Left = 0
           Top = 26
-          Width = 674
+          Width = 841
           Height = 396
           Align = alClient
           TabOrder = 0
+          ExplicitWidth = 674
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
