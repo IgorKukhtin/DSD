@@ -265,8 +265,8 @@ type
     actReport_GoodsMI_byMovementReturn: TdsdOpenForm;
     bbReport_GoodsMI_byMovementSale: TdxBarButton;
     bbReport_GoodsMI_byMovementReturn: TdxBarButton;
-    actReport_Goods_Movement: TdsdOpenForm;
-    bbReport_Goods_Movement: TdxBarButton;
+    actReport_GoodsMI_SaleReturnIn: TdsdOpenForm;
+    bbReport_GoodsMI_SaleReturnIn: TdxBarButton;
     bbReportsFinance: TdxBarSubItem;
     bbReportMain: TdxBarSubItem;
     bbReportsProduction: TdxBarSubItem;
