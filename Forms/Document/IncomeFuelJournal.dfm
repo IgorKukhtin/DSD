@@ -216,6 +216,19 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object colBranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object colBranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object colPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
         DataBinding.FieldName = 'PaidKindName'

@@ -88,6 +88,8 @@ type
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
     clPersonalName: TcxGridDBColumn;
+    BranchCode: TcxGridDBColumn;
+    BranchName: TcxGridDBColumn;
   private
   public
   end;
