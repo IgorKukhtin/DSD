@@ -74,7 +74,7 @@ BEGIN
      FROM Movement
      JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.ObjectId = vbMainBankAccountId
       AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
-    WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement();
+    WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement() AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
     IF COALESCE(vbMovementId, 0) = 0 THEN
        -- 5. ≈сли такого документа нет - создать его

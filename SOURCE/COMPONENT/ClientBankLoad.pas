@@ -223,6 +223,7 @@ begin
   inherited Create;
   FStartDate := StartDate;
   FEndDate := EndDate;
+  FOEM := false;
 end;
 
 procedure TClientBankLoad.First;

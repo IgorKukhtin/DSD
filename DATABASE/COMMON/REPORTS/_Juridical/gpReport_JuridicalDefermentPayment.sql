@@ -1,14 +1,10 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , --
-    IN inAccountId        Integer,    -- Счет  
-    IN inInfoMoneyId      Integer,    -- Управленческая статья  
-    IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
-    IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalName TVarChar, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
@@ -24,6 +20,9 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
+
+     -- Выбираем остаток на дату по юр. лицам в разрезе договоров. 
+     -- Так же выбираем продажи и возвраты за период 
 
      -- Один запрос, который считает остаток и движение. 
   RETURN QUERY  
@@ -116,7 +115,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
