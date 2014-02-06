@@ -43,7 +43,6 @@ inherited AncestorDataForm: TAncestorDataForm
       2)
     Categories.Visibles = (
       True)
-    ImageOptions.Images = dmMain.ImageList
     NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
     PopupMenuLinks = <>
     ShowShortCutInHint = True

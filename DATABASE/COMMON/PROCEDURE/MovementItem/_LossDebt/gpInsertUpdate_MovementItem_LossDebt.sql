@@ -76,7 +76,8 @@ BEGIN
                   AND MovementItem.DescId = zc_MI_Master()
                   AND MovementItem.Id <> COALESCE (ioId, 0))
      THEN
-         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
+         RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено. <%>', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
+         -- RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено. <%>', inJuridicalId, inPaidKindId, inInfoMoneyId, inContractId, (SELECT MovementItem.Id
      END IF;
 
      -- расчет

@@ -47,7 +47,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -96,13 +95,11 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 520
     Top = 264
   end
   object PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 112
     Top = 264
     object N1: TMenuItem

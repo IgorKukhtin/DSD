@@ -3,31 +3,28 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 57
     Width = 717
-    Height = 270
-    ExplicitTop = 59
+    Height = 272
+    ExplicitTop = 57
     ExplicitWidth = 717
-    ExplicitHeight = 270
-    ClientRectBottom = 266
-    ClientRectRight = 713
+    ExplicitHeight = 272
+    ClientRectBottom = 272
+    ClientRectRight = 717
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 711
-      ExplicitHeight = 264
+      ExplicitWidth = 717
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
-        Width = 711
-        Height = 264
-        ExplicitWidth = 711
-        ExplicitHeight = 264
+        Width = 717
+        Height = 272
+        ExplicitWidth = 717
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colStatus: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -119,6 +116,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 183
     Top = 210
     object actInsert: TdsdInsertUpdateAction
@@ -324,11 +322,12 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 99
   end
   inherited BarManager: TdxBarManager
+    ImageOptions.Images = dmMain.ImageList
     Top = 99
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -418,6 +417,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 224
     Top = 200
   end
