@@ -31,10 +31,10 @@ AS
 $BODY$
 BEGIN
 
-  IF COALESCE (inJuridicalId, 0) = 0
+  /*IF COALESCE (inJuridicalId, 0) = 0
    THEN
        RAISE EXCEPTION 'Ошибка. Не выбрано юр.лицов!!!';
-   END IF;
+   END IF;*/
    
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;

@@ -1,4 +1,4 @@
-unit Report_Goods_Movement;
+unit Report_GoodsMI_SaleReturnIn;
 
 interface
 
@@ -16,7 +16,7 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_Goods_MovementForm = class(TAncestorReportForm)
+  TReport_GoodsMI_SaleReturnInForm = class(TAncestorReportForm)
     clTradeMarkName: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
@@ -31,14 +31,17 @@ type
     clJuridicalName: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
-    clAmountReturn_CountSh: TcxGridDBColumn;
-    clAmountReturn_CountWeight: TcxGridDBColumn;
-    clAmountReturn_Summ: TcxGridDBColumn;
+    clReturn_Amount_Sh: TcxGridDBColumn;
+    clReturn_Amount_Weight: TcxGridDBColumn;
+    clReturn_Summ: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clSale_AmountPartner_Weight: TcxGridDBColumn;
     clSale_AmountPartner_Sh: TcxGridDBColumn;
     clReturn_AmountPartner_Weight: TcxGridDBColumn;
     clReturn_AmountPartner_Sh: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public
@@ -49,6 +52,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_Goods_MovementForm);
+  RegisterClass(TReport_GoodsMI_SaleReturnInForm);
 
 end.

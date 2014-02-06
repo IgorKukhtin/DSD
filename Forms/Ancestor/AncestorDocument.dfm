@@ -21,6 +21,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
+      ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 776
       ExplicitHeight = 207
@@ -30,10 +31,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ExplicitWidth = 776
         ExplicitHeight = 207
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -276,6 +273,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -504,6 +502,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Top = 176
   end
   inherited BarManager: TdxBarManager
+    ImageOptions.Images = dmMain.ImageList
     Left = 104
     Top = 175
     DockControlHeights = (

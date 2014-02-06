@@ -637,7 +637,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_Goods_Movement'
+          ItemName = 'bbReport_GoodsMI_SaleReturnIn'
         end
         item
           Visible = True
@@ -679,8 +679,8 @@ object MainForm: TMainForm
       Action = actReport_Goods
       Category = 0
     end
-    object bbReport_Goods_Movement: TdxBarButton
-      Action = actReport_Goods_Movement
+    object bbReport_GoodsMI_SaleReturnIn: TdxBarButton
+      Action = actReport_GoodsMI_SaleReturnIn
       Category = 0
     end
     object bbReport_GoodsMISale: TdxBarButton
@@ -2329,11 +2329,11 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
-    object actReport_Goods_Movement: TdsdOpenForm
+    object actReport_GoodsMI_SaleReturnIn: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
       Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
-      FormName = 'TReport_Goods_MovementForm'
-      FormNameParam.Value = 'TReport_Goods_MovementForm'
+      FormName = 'TReport_GoodsMI_SaleReturnInForm'
+      FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInForm'
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <>

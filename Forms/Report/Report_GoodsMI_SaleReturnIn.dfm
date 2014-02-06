@@ -1,8 +1,9 @@
-inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
+inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
   ClientHeight = 339
   ClientWidth = 1137
   AddOnFormData.Params = FormParams
+  ExplicitLeft = -289
   ExplicitWidth = 1145
   ExplicitHeight = 373
   PixelsPerInch = 96
@@ -47,17 +48,17 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_CountSh
+              Column = clReturn_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_CountWeight
+              Column = clReturn_Amount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_Summ
+              Column = clReturn_Summ
             end
             item
               Format = ',0.####'
@@ -102,17 +103,17 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_CountSh
+              Column = clReturn_Amount_Sh
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_CountWeight
+              Column = clReturn_Amount_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountReturn_Summ
+              Column = clReturn_Summ
             end
             item
               Format = ',0.####'
@@ -225,14 +226,14 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             HeaderAlignmentVert = vaCenter
             Width = 62
           end
-          object clAmountReturn_CountWeight: TcxGridDBColumn
+          object clReturn_Amount_Weight: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1082#1075' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'AmountReturn_CountWeight'
+            DataBinding.FieldName = 'Return_Amount_Weight'
             Width = 54
           end
-          object clAmountReturn_CountSh: TcxGridDBColumn
+          object clReturn_Amount_Sh: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'AmountReturn_CountSh'
+            DataBinding.FieldName = 'Return_Amount_Sh'
             Width = 54
           end
           object clReturn_AmountPartner_Weight: TcxGridDBColumn
@@ -243,9 +244,9 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
             Caption = #1074#1086#1079#1074#1088#1072#1090', '#1096#1090' ('#1087#1086#1082#1091#1087')'
             DataBinding.FieldName = 'Return_AmountPartner_Sh'
           end
-          object clAmountReturn_Summ: TcxGridDBColumn
+          object clReturn_Summ: TcxGridDBColumn
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085
-            DataBinding.FieldName = 'AmountReturn_Summ'
+            DataBinding.FieldName = 'Return_Summ'
             Width = 55
           end
         end
@@ -289,6 +290,22 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
       TabOrder = 5
       Width = 240
     end
+    object cxLabel3: TcxLabel
+      Left = 717
+      Top = 6
+      Caption = #1070#1088'.'#1051#1080#1094#1086
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 773
+      Top = 6
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 259
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -299,7 +316,7 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Goods_Movement'
+    StoredProcName = 'gpReport_GoodsMI_SaleReturnIn'
     Params = <
       item
         Name = 'inStartDate'
@@ -313,6 +330,13 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
         Value = 41609d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = '0'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -389,5 +413,32 @@ inherited Report_Goods_MovementForm: TReport_Goods_MovementForm
     Params = <>
     Left = 328
     Top = 170
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    Key = '0'
+    FormNameParam.Name = 'TJuridical_ObjectForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 840
   end
 end
