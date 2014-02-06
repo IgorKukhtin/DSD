@@ -96,6 +96,8 @@ type
     colFuelName: TcxGridDBColumn;
     colGoodsCode: TcxGridDBColumn;
     colFuelCode: TcxGridDBColumn;
+    colBranchCode: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
   private
   public
   end;

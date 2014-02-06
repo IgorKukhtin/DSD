@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StartRunPlan TDateTime, EndRunPlan TDateTime, StartRun TDateTime, EndRun TDateTime
              , HoursWork TFloat, HoursAdd TFloat
              , Comment TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , CarName TVarChar, CarModelName TVarChar, CarTrailerName TVarChar
              , PersonalDriverName TVarChar
              , PersonalDriverMoreName TVarChar
@@ -45,6 +46,8 @@ BEGIN
                       
            , MovementString_Comment.ValueData      AS Comment
 
+           , View_Unit.BranchCode
+           , View_Unit.BranchName
            , Object_Car.ValueData        AS CarName
            , Object_CarModel.ValueData   AS CarModelName
            , Object_CarTrailer.ValueData AS CarTrailerName
@@ -92,6 +95,9 @@ BEGIN
                                          ON MovementLinkObject_Car.MovementId = Movement.Id
                                         AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
             LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Car_CarModel ON ObjectLink_Car_CarModel.ObjectId = Object_Car.Id
                                                            AND ObjectLink_Car_CarModel.DescId = zc_ObjectLink_Car_CarModel()
@@ -136,6 +142,7 @@ ALTER FUNCTION gpSelect_Movement_Transport (TDateTime, TDateTime, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.02.14                                        * add Branch...
  14.12.13                                        * add lpGetUserBySession
  02.12.13         * add Personal (changes in wiki)
  23.10.13                                        * add zfConvert_StringToNumber

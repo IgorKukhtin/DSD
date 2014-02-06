@@ -173,6 +173,20 @@ object TransportJournalForm: TTransportJournalForm
       object clPersonalName: TcxGridDBColumn
         Caption = #1069#1082#1089#1087#1077#1076#1080#1090#1086#1088
         DataBinding.FieldName = 'PersonalName'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object BranchCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1092#1080#1083#1080#1072#1083#1072
+        DataBinding.FieldName = 'BranchCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object BranchName: TcxGridDBColumn
+        Caption = #1060#1080#1083#1080#1072#1083
+        DataBinding.FieldName = 'BranchName'
         HeaderAlignmentVert = vaCenter
         Width = 60
       end

@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , PaidKindName TVarChar, ContractName TVarChar
              , RouteName TVarChar
              , PersonalDriverName TVarChar
+             , BranchCode Integer, BranchName TVarChar
              , GoodsCode Integer, GoodsName TVarChar
              , FuelCode Integer, FuelName TVarChar
               )
@@ -58,6 +59,8 @@ BEGIN
            , Object_Contract.ValueData         AS ContractName
            , Object_Route.ValueData            AS RouteName
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
+           , View_Unit.BranchCode
+           , View_Unit.BranchName
 
            , Object_Goods.ObjectCode AS GoodsCode
            , Object_Goods.ValueData  AS GoodsName
@@ -112,10 +115,14 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_To.Id
+                                                       AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
+            LEFT JOIN Object_Unit_View AS View_Unit ON View_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -149,6 +156,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.02.14                                        * add Branch...
  03.02.14                                        * add Goods... and Fuel...
  14.12.13                                        * add Object_RoleAccessKey_View
  31.10.13                                        * add OperDatePartner

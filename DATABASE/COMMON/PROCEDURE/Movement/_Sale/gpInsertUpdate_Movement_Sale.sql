@@ -41,7 +41,7 @@ BEGIN
      END IF;
 
      -- проверка
-     IF COALESCE (inContractId, 0) = 0
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
@@ -52,8 +52,8 @@ BEGIN
 
      IF COALESCE (ioPriceListId, 0) = 0
      THEN
-     --Выбираем прайс
-         SELECT Object_PriceList.valuedata,  coalesce(coalesce(coalesce(coalesce(ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
+         --Выбираем прайс
+         SELECT Object_PriceList.valuedata,  COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
          INTO outPriceListName, ioPriceListId
          FROM (SELECT inToId AS Id) AS Object_To
 
@@ -98,7 +98,7 @@ BEGIN
                               ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.childobjectid
                              AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
                              AND ObjectLink_Juridical_PriceListPromo.objectid IS NULL
-        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = coalesce(coalesce(coalesce(coalesce(ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
+        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
 
      ;
 
