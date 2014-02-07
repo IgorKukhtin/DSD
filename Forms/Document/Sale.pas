@@ -72,7 +72,7 @@ type
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;
-    spSelectPrintHeader: TdsdStoredProc;
+    spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     mactPrint_Sale: TMultiAction;
@@ -88,6 +88,8 @@ type
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
+    PrintItemsCDS: TClientDataSet;
+    PrintItemsDS: TDataSource;
   private
     { Private declarations }
   public

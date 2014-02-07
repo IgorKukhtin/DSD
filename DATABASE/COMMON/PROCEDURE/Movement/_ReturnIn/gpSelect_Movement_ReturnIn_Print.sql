@@ -6,65 +6,42 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Checked Boolean
-             , OperDatePartner TDateTime
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
-
-             , JuridicalId_From Integer, JuridicalName_From TVarChar
-             , JuridicalAddress_From TVarChar
-             , OKPO_From TVarChar
-             , INN_From TVarChar
-             , NumberVAT_From TVarChar
-             , AccounterName_From TVarChar
-             , BankAccount_From TVarChar
-
-             , JuridicalId_To Integer, JuridicalName_To TVarChar
-             , JuridicalAddress_To TVarChar
-             , OKPO_To TVarChar
-             , INN_To TVarChar
-             , NumberVAT_To TVarChar
-             , AccounterName_To TVarChar
-             , BankAccount_To TVarChar
-              )
+RETURNS SETOF refcursor
 AS
 $BODY$
-   DECLARE vbUserId Integer;
+    DECLARE Cursor1 refcursor;
+    DECLARE Cursor2 refcursor;
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
 
      --
-     RETURN QUERY
+    OPEN Cursor1 FOR
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode          		AS StatusCode
-           , Object_Status.ValueData         	    AS StatusName
-           , MovementBoolean_Checked.ValueData      AS Checked
-           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData     AS VATPercent
-           , MovementFloat_ChangePercent.ValueData  AS ChangePercent
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
-           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-           , Object_From.Id                    		AS FromId
-           , Object_From.ValueData             		AS FromName
-           , Object_To.Id                      		AS ToId
-           , Object_To.ValueData               		AS ToName
-           , Object_PaidKind.Id                		AS PaidKindId
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , Object_Contract.Id                		AS ContractId
-           , Object_Contract.ValueData         		AS ContractName
+             Movement.Id                                AS Id
+           , Movement.InvNumber                         AS InvNumber
+           , Movement.OperDate                          AS OperDate
+           , Object_Status.ObjectCode          		    AS StatusCode
+           , Object_Status.ValueData         	        AS StatusName
+           , MovementBoolean_Checked.ValueData          AS Checked
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , Object_From.Id                    		    AS FromId
+           , Object_From.ValueData             		    AS FromName
+           , Object_To.Id                      		    AS ToId
+           , Object_To.ValueData               		    AS ToName
+           , Object_PaidKind.Id                		    AS PaidKindId
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , Object_Contract.Id                		    AS ContractId
+           , Object_Contract.ValueData         		    AS ContractName
 
            , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
            , COALESCE (OH_JuridicalDetails_From.FullName
@@ -167,6 +144,75 @@ BEGIN
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();
+    RETURN NEXT Cursor1;
+    OPEN Cursor2 FOR
+       SELECT
+             MovementItem.Id					AS Id
+           , Object_Goods.Id          			AS GoodsId
+           , Object_Goods.ObjectCode  			AS GoodsCode
+           , Object_Goods.ValueData   			AS GoodsName
+           , MovementItem.Amount				AS Amount
+           , MIFloat_AmountPartner.ValueData   	AS AmountPartner
+           , MIFloat_Price.ValueData 			AS Price
+           , MIFloat_CountForPrice.ValueData 	AS CountForPrice
+           , MIFloat_HeadCount.ValueData 		AS HeadCount
+           , MIString_PartionGoods.ValueData 	AS PartionGoods
+           , Object_GoodsKind.Id        		AS GoodsKindId
+           , Object_GoodsKind.ValueData 		AS GoodsKindName
+           , Object_Measure.Id                  AS MeasureId
+           , Object_Measure.ValueData           AS MeasureName
+           , Object_Asset.Id         			AS AssetId
+           , Object_Asset.ValueData  			AS AssetName
+           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                           THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                   END AS TFloat)			    AS AmountSumm
+
+       FROM  MovementItem
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+
+            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                        ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+
+            LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                         ON MIString_PartionGoods.MovementItemId =  MovementItem.Id
+                                        AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+            LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE--tmpIsErased.isErased
+
+            ;
+
+    RETURN NEXT Cursor2;
 
 
 
@@ -179,6 +225,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.02.14                                                       *  change to Cursor
  06.02.14                                                       *
 */
 

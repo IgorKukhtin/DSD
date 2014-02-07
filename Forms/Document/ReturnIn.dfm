@@ -383,10 +383,10 @@ inherited ReturnInForm: TReturnInForm
       RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrintHeader
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintHeader
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -1086,10 +1086,10 @@ inherited ReturnInForm: TReturnInForm
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'
     CloseDataSource = False
-    DataSet = MasterCDS
+    DataSet = PrintItemsCDS
     BCDToCurrency = False
-    Left = 318
-    Top = 205
+    Left = 390
+    Top = 293
   end
   object frxDBDHeader: TfrxDBDataset
     UserName = 'frxDBDHeader'
@@ -1097,26 +1097,30 @@ inherited ReturnInForm: TReturnInForm
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
     Left = 390
-    Top = 210
+    Top = 242
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 396
-    Top = 258
+    Left = 468
+    Top = 242
   end
   object PrintHeaderDS: TDataSource
     DataSet = PrintHeaderCDS
-    Left = 464
-    Top = 272
+    Left = 504
+    Top = 242
   end
-  object spSelectPrintHeader: TdsdStoredProc
+  object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
         DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1125,8 +1129,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 370
-    Top = 322
+    Left = 306
+    Top = 266
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
@@ -1149,5 +1153,16 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 320
     Top = 392
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 469
+    Top = 294
+  end
+  object PrintItemsDS: TDataSource
+    DataSet = PrintItemsCDS
+    Left = 506
+    Top = 294
   end
 end
