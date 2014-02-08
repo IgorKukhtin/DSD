@@ -73,7 +73,7 @@ INSERT INTO MovementDesc (Code, ItemName)
 CREATE OR REPLACE FUNCTION zc_Movement_PersonalService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PersonalService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalService', 'Начисление зарплаты' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalService');
-  
+
 CREATE OR REPLACE FUNCTION zc_Movement_PersonalReport() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PersonalReport'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PersonalReport', 'Авансовый отчет' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PersonalReport');
@@ -110,19 +110,30 @@ CREATE OR REPLACE FUNCTION zc_Movement_SendDebt() RETURNS Integer AS $BODY$BEGIN
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_SendDebt', 'Взаимозачет (Юридические лица)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_SendDebt');
 
+
+CREATE OR REPLACE FUNCTION zc_Movement_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_Tax'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_Tax', 'Налоговая накладная' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_Tax');
+
+CREATE OR REPLACE FUNCTION zc_Movement_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TaxCorrective'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_TaxCorrective', 'Корректировка к налоговой накладной' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TaxCorrective');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.14         												*    add zc_Movement_Tax, zc_Movement_TaxCorrective
  24.01.14         *
  14.01.14                                        * add zc_Movement_LossDebt
- 22.12.13         * add  zc_Movement_PersonalAccount, zc_Movement_TrasportService               
- 01.10.13         * add  zc_Movement_SheetWorkTime            
+ 22.12.13         * add  zc_Movement_PersonalAccount, zc_Movement_TrasportService
+ 01.10.13         * add  zc_Movement_SheetWorkTime
  30.09.13                                        * add zc_Movement_PersonalSendCash
  20.08.13         * add  zc_Movement_Transport
- 13.08.13         * add  zc_Movement_BankStatementItem            
- 12.08.13         * add  zc_Movement_BankAccount, zc_Movement_BankStatement, zc_Movement_Service, zc_Movement_PersonalService, zc_Movement_PersonalReport, zc_Movement_ExchangeCurrency            
- 19.07.13         * add  zc_Movement_ZakazInternal, zc_Movement_ZakazExternal              
- 19.07.13         * add  zc_Movement_Inventory    
+ 13.08.13         * add  zc_Movement_BankStatementItem
+ 12.08.13         * add  zc_Movement_BankAccount, zc_Movement_BankStatement, zc_Movement_Service, zc_Movement_PersonalService, zc_Movement_PersonalReport, zc_Movement_ExchangeCurrency
+ 19.07.13         * add  zc_Movement_ZakazInternal, zc_Movement_ZakazExternal
+ 19.07.13         * add  zc_Movement_Inventory
  16.07.13                                        * add zc_Movement_SendOnPrice, zc_Movement_ProductionSeparate, zc_Movement_Loss
  16.07.13                                        * НОВАЯ СХЕМА2 - Create and Insert
  30.06.13                                        * НОВАЯ СХЕМА
