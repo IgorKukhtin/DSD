@@ -65,10 +65,12 @@ type
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderCDS: TClientDataSet;
     PrintHeaderDS: TDataSource;
-    spSelectPrintHeader: TdsdStoredProc;
+    spSelectPrint: TdsdStoredProc;
     spGetReportName: TdsdStoredProc;
     actSPPrintProcName: TdsdExecStoredProc;
     mactPrint: TMultiAction;
+    PrintItemsCDS: TClientDataSet;
+    PrintItemsDS: TDataSource;
   private
     { Private declarations }
   public

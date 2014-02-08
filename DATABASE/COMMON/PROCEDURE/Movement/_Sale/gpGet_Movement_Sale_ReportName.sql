@@ -28,6 +28,10 @@ BEGIN
               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
+       LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+              ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
              AND PrintForms_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
@@ -38,7 +42,9 @@ BEGIN
               ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
              AND PrintForms_View_Default.JuridicalId = 0
              AND PrintForms_View_Default.ReportType = 'Sale'
+             AND PrintForms_View_Default.PaidKindId = MovementLinkObject_PaidKind.ObjectId
              AND PrintForms_View_Default.DescId = zc_Movement_Sale()
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
@@ -54,6 +60,7 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.02.14                                                        * + PaidKindId
  06.02.14                                                        *
  05.02.14                                                        *
 */

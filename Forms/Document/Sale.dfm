@@ -16,12 +16,13 @@ inherited SaleForm: TSaleForm
     ClientRectBottom = 536
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
       ExplicitWidth = 1009
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1009
         Height = 514
+        ExplicitLeft = 40
+        ExplicitTop = 64
         ExplicitWidth = 1009
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -85,10 +86,6 @@ inherited SaleForm: TSaleForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -502,10 +499,10 @@ inherited SaleForm: TSaleForm
     end
     object actPrintSaleTax: TdsdPrintAction [11]
       Category = 'DSDLib'
-      StoredProc = spSelectPrintHeader
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintHeader
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -526,10 +523,10 @@ inherited SaleForm: TSaleForm
       ReportNameParam.ParamType = ptInput
     end
     inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrintHeader
+      StoredProc = spSelectPrint
       StoredProcList = <
         item
-          StoredProc = spSelectPrintHeader
+          StoredProc = spSelectPrint
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
@@ -741,11 +738,11 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited EntryCDS: TClientDataSet
-    Left = 629
+    Left = 693
     Top = 236
   end
   inherited EntryDS: TDataSource
-    Left = 581
+    Left = 653
     Top = 236
   end
   inherited spSelectMIContainer: TdsdStoredProc
@@ -1140,7 +1137,7 @@ inherited SaleForm: TSaleForm
       item
         Control = edIsChecked
       end>
-    Left = 216
+    Left = 232
     Top = 193
   end
   inherited RefreshAddOn: TRefreshAddOn
@@ -1445,18 +1442,22 @@ inherited SaleForm: TSaleForm
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'
     CloseDataSource = False
-    DataSet = MasterCDS
+    DataSet = PrintItemsCDS
     BCDToCurrency = False
-    Left = 310
-    Top = 205
+    Left = 398
+    Top = 245
   end
-  object spSelectPrintHeader: TdsdStoredProc
+  object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
         DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1465,8 +1466,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 362
-    Top = 322
+    Left = 319
+    Top = 208
   end
   object spGetReportName: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportName'
@@ -1502,21 +1503,21 @@ inherited SaleForm: TSaleForm
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 388
-    Top = 258
+    Left = 476
+    Top = 193
   end
   object frxDBDHeader: TfrxDBDataset
     UserName = 'frxDBDHeader'
     CloseDataSource = False
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
-    Left = 382
-    Top = 210
+    Left = 398
+    Top = 194
   end
   object PrintHeaderDS: TDataSource
     DataSet = PrintHeaderCDS
-    Left = 456
-    Top = 272
+    Left = 552
+    Top = 192
   end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
@@ -1539,5 +1540,16 @@ inherited SaleForm: TSaleForm
       end>
     Left = 416
     Top = 384
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 246
+  end
+  object PrintItemsDS: TDataSource
+    DataSet = PrintItemsCDS
+    Left = 552
+    Top = 245
   end
 end

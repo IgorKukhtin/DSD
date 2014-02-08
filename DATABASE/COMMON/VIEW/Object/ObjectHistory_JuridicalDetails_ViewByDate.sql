@@ -14,7 +14,11 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , ObjectHistoryString_NumberVAT.ValueData        AS NumberVAT
        , ObjectHistoryString_AccounterName.ValueData    AS AccounterName
        , ObjectHistoryString_BankAccount.ValueData      AS BankAccount
---       , ObjectHistoryString_Phone.ValueData            AS Phone
+       , Object_Bank.Id                                 AS BankId
+       , Object_Bank.valuedata                          AS BankName
+       , ObjectString_MFO.ValueData                     AS MFO
+       , CAST ('не указан' AS TVarChar)                 AS Phone
+--       , COALESCE (ObjectHistoryString_Phone.ValueData, CAST ('не указан' AS TVarChar)) AS Phone
 
   FROM ObjectHistory AS ObjectHistory_JuridicalDetails
 
@@ -39,6 +43,15 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_BankAccount
                                 ON ObjectHistoryString_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
                                AND ObjectHistoryString_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
+
+  LEFT JOIN ObjectHistoryLink AS ObjectHistoryLink_Bank
+                                ON ObjectHistoryLink_Bank.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+                               AND ObjectHistoryLink_Bank.DescId = zc_ObjectHistoryLink_JuridicalDetails_Bank()
+  LEFT JOIN Object AS Object_Bank ON Object_Bank.id = ObjectHistoryLink_Bank.ObjectId
+  LEFT JOIN ObjectString AS ObjectString_MFO ON ObjectString_MFO.ObjectId = Object_Bank.Id
+                                            AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
+
+
 /*
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_Phone
                                 ON ObjectHistoryString_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
@@ -55,6 +68,7 @@ ALTER TABLE ObjectHistory_JuridicalDetails_ViewByDate  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 07.02.14                                                       *  + bank
  05.02.14                                                       *
 */
 
