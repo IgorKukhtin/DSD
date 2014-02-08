@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale_SybaseFl()
 
--- DROP FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseFl();
-
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_SybaseFl();
+/*
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseFl(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
@@ -75,7 +75,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-
+*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.

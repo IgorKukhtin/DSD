@@ -11,14 +11,15 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
     IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
     IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
-    IN inCountForPrice       TFloat    , -- Цена за количество
+ INOUT ioCountForPrice       TFloat    , -- Цена за количество
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
     IN inAssetId             Integer   , -- Основные средства (для которых закупается ТМЦ)
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer
+RETURNS RECORD
 AS
 $BODY$
 BEGIN
@@ -37,7 +38,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
      -- сохранили свойство <Цена за количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
+     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
      -- сохранили свойство <Количество голов>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
@@ -57,6 +59,19 @@ BEGIN
          PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
      END IF;
 
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN ioCountForPrice > 0
+                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
+                      END;
+
+     -- сохранили протокол
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -64,7 +79,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 04.02.14                         * 
+ 08.02.14                                        *
+ 04.02.14                         *
 */
 
 -- тест

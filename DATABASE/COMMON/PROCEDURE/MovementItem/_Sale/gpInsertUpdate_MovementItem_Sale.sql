@@ -28,35 +28,29 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
-     -- проверка - проведенный/удаленный документ не может корректироваться
-     IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
-     THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = inMovementId));
-     END IF;
      -- проверка - удаленный элемент документа не может корректироваться
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
      THEN
-         RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
+         RAISE EXCEPTION 'Ошибка.Элемент не может корректироваться т.к. он <Удален>.';
      END IF;
 
-     -- сохранили свойство <Цена за количество>
-     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-
-     ioId := lpInsertUpdate_MovementItem_Sale(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner, inAmountChangePercent, 
-                   inChangePercentAmount, inPrice, inCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, vbUserId);              
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
-
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
-                      END;
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+            INTO ioId, ioCountForPrice, outAmountSumm
+     FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+                                          , inMovementId         := inMovementId
+                                          , inGoodsId            := inGoodsId
+                                          , inAmount             := inAmount
+                                          , inAmountPartner      := inAmountPartner
+                                          , inAmountChangePercent:= inAmountChangePercent
+                                          , inChangePercentAmount:= inChangePercentAmount
+                                          , inPrice              := inPrice
+                                          , ioCountForPrice      := ioCountForPrice
+                                          , inHeadCount          := inHeadCount
+                                          , inPartionGoods       := inPartionGoods
+                                          , inGoodsKindId        := inGoodsKindId
+                                          , inAssetId            := inAssetId
+                                          , inUserId             := vbUserId
+                                           ) AS tmp;
 
 END;
 $BODY$
@@ -65,6 +59,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.02.14                                        * была ошибка с lpInsertUpdate_MovementItem_Sale
  04.02.14                        * add lpInsertUpdate_MovementItem_Sale
  08.09.13                                        * add zc_MIFloat_AmountChangePercent
  02.09.13                                        * add zc_MIFloat_ChangePercentAmount
