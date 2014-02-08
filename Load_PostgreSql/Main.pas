@@ -8185,7 +8185,7 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡(+BillItems.GoodsPropertyName+')+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ‚Ë‰')
            +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -8194,6 +8194,7 @@ begin
         Add('     left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad');
 
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty as GoodsProperty_f on GoodsProperty_f.Id = BillItems.GoodsPropertyId');
         Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
         Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
@@ -9051,7 +9052,22 @@ begin
            +'                          ) as _pgContract_30103 on _pgContract_30103.JuridicalId_pg = _pgPartner.JuridicalId_pg'
            +'                                                and Bill_find.CodeIM = 30103');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
-        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = case when Bill.ToId in (1022,1037) then 5 else Bill.ToId end');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = case when Bill.ToId in (1388' //√–»¬¿ –.
+           +'                                                                             , 1799' //ƒ–Œ¬Œ–”¡
+           +'                                                                             , 1288' //»Ÿ»   .
+           +'                                                                             , 956' // Œ∆”ÿ Œ —.
+           +'                                                                             , 1390' //Õﬂ… Œ ¬.
+           +'                                                                             , 5460' //ŒÀ≈…Õ»  Ã.¬.
+           +'                                                                             , 324' //—≈Ã≈Õ≈¬ —.
+           +'                                                                             , 3010' //“¿“¿–◊≈Õ Œ ≈.
+           +'                                                                             , 5446' //“ ¿◊≈Õ Œ Àﬁ¡Œ¬‹
+           +'                                                                             , 4792' //“–≈“‹ﬂ Œ¬ Œ.Õ.
+           +'                                                                             , 980' //“”À≈Õ Œ —.
+           +'                                                                             , 2436' //ÿ≈¬÷Œ¬ ».
+
+           +'                                                                             , 1022' //¬»«¿–ƒ 1
+           +'                                                                             , 1037' //¬»«¿–ƒ 1037
+           +'                                                                              ) then 5 else Bill.ToId end');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
@@ -9150,7 +9166,7 @@ begin
         Add('     , 1 as CountForPrice');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ÚÓ‚‡(+BillItems.GoodsPropertyName+')+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡ ‚Ë‰')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
@@ -9158,6 +9174,7 @@ begin
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
+        Add('     left outer join dba.GoodsProperty as GoodsProperty_f on GoodsProperty_f.Id = BillItems.GoodsPropertyId');
         Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
         Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
