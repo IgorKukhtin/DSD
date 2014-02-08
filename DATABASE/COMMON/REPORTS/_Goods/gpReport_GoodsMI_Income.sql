@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsGroupName TVarChar
              , GoodsKindName TVarChar
              , TradeMarkName TVarChar
              , PaidKindName TVarChar
+             , FuelKindName TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat
              , AmountPartner_Weight TFloat , AmountPartner_Sh TFloat
              , Summ TFloat
@@ -62,7 +63,7 @@ BEGIN
          , Object_GoodsKind.ValueData  AS GoodsKindName
          , Object_TradeMark.ValueData  AS TradeMarkName
          , Object_PaidKind.ValueData   AS PaidKindName
-         
+         , Object_FuelKind.ValueData   AS FuelKindName
          , (tmpOperationGroup.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
          , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END) :: TFloat AS Amount_Sh
 
@@ -74,6 +75,7 @@ BEGIN
      FROM (SELECT tmpOperation.PaidKindId
                 , tmpOperation.GoodsId
                 , tmpOperation.GoodsKindId
+                , tmpOperation.FuelKindId
                 , ABS (SUM (tmpOperation.Amount)):: TFloat          AS Amount
                 , ABS (SUM (tmpOperation.AmountPartner)):: TFloat   AS AmountPartner
                 , ABS (SUM (tmpOperation.Summ)) :: TFloat           AS Summ
@@ -81,6 +83,7 @@ BEGIN
            FROM (SELECT tmpMovement.PaidKindId
                       , MovementItem.ObjectId AS GoodsId       
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      , COALESCE (ContainerLO_FuelKind.ObjectId, 0)  AS FuelKindId
                       , SUM (COALESCE (MIContainer.Amount,0)) AS Summ
                       , 0 AS Amount
                       , 0 AS AmountPartner
@@ -101,14 +104,21 @@ BEGIN
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+
+                      LEFT JOIN ContainerLinkObject AS ContainerLO_FuelKind
+                                                    ON ContainerLO_FuelKind.ContainerId = Container.Id
+                                                   AND ContainerLO_FuelKind.DescId = zc_ContainerLinkObject_Goods()
+
                       GROUP BY tmpMovement.PaidKindId
                              , MovementItem.ObjectId
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
+                             , COALESCE (ContainerLO_FuelKind.ObjectId, 0) 
               UNION
                 
                  SELECT tmpMovement.PaidKindId
                       , MovementItem.ObjectId AS GoodsId       
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                      , COALESCE (Container.ObjectId, 0)              AS FuelKindId
                       , 0 AS Summ
                       , SUM (MIContainer.Amount) AS Amount
                       , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner                 
@@ -117,12 +127,12 @@ BEGIN
                       JOIN MovementItemContainer AS MIContainer 
                                                  ON MIContainer.MovementId = tmpMovement.MovementId
                                                 AND MIContainer.DescId = zc_MIContainer_Count()
-                      /*JOIN Container ON Container.Id = MIContainer.ContainerId
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
-
-                      LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
+                      LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
+                                         
+                     /* LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId = Container.Id
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
+
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                        AND MovementItem.DescId =  zc_MI_Master()
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
@@ -136,7 +146,7 @@ BEGIN
                                                  
                       LEFT JOIN MovementLinkObject AS MovementLO_From
                                                    ON MovementLO_From.MovementId = tmpMovement.MovementId
-                                                      AND MovementLO_From.DescId = zc_MovementLinkObject_From()   
+                                                  AND MovementLO_From.DescId = zc_MovementLinkObject_From()   
                       LEFT JOIN Object ON Object.Id = MovementLO_From.ObjectId 
                                       AND Object.DescId = zc_Object_TicketFuel() 
                         
@@ -145,12 +155,14 @@ BEGIN
                       GROUP BY tmpMovement.PaidKindId
                              , MovementItem.ObjectId    
                              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) 
+                             , COALESCE (Container.ObjectId, 0) 
 
                ) AS tmpOperation
 
            GROUP BY tmpOperation.PaidKindId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
+                  , tmpOperation.FuelKindId
 
           ) AS tmpOperationGroup
 
@@ -160,6 +172,8 @@ BEGIN
 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId
 
+          LEFT JOIN Object AS Object_FuelKind ON Object_FuelKind.Id = tmpOperationGroup.FuelKindId        
+                  
           LEFT JOIN ObjectLink AS ObjectLink_Goods_TradeMark
                                ON ObjectLink_Goods_TradeMark.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_TradeMark.DescId = zc_ObjectLink_Goods_TradeMark()
@@ -194,5 +208,4 @@ ALTER FUNCTION gpReport_GoodsMI_Income (TDateTime, TDateTime, Integer, Integer, 
 */
 
 -- тест
-SELECT * FROM gpReport_GoodsMI_Income (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
-
+--SELECT * FROM gpReport_GoodsMI_Income (inStartDate:= '01.01.2013', inEndDate:= '31.12.2013',  inDescId:= 1, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());

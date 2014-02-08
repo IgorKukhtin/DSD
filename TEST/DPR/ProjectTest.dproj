@@ -978,8 +978,8 @@
 				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
-				<Form>Report_GoodsMIForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_Income.pas">
+				<Form>Report_GoodsMI_IncomeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Account.pas">
@@ -991,6 +991,10 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\Log.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
+				<Form>Report_GoodsMIForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

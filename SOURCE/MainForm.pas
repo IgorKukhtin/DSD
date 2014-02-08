@@ -281,6 +281,8 @@ type
     dxBarButton1: TdxBarButton;
     actContractConditionValue: TdsdOpenForm;
     bbContractConditionValue: TdxBarButton;
+    actReport_GoodsMI_Income: TdsdOpenForm;
+    bbReport_GoodsMI_Income: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

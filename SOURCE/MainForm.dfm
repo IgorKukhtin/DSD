@@ -637,6 +637,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_Income'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMI_SaleReturnIn'
         end
         item
@@ -689,6 +693,10 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMI_byMovementSale: TdxBarButton
       Action = actReport_GoodsMI_byMovementSale
+      Category = 0
+    end
+    object bbReport_GoodsMI_Income: TdxBarButton
+      Action = actReport_GoodsMI_Income
       Category = 0
     end
     object bbReport_GoodsMIReturn: TdxBarButton
@@ -2347,6 +2355,25 @@ object MainForm: TMainForm
       FormNameParam.DataType = ftString
       FormNameParam.ParamType = ptResult
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_Income: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1055#1088#1080#1093#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      FormName = 'TReport_GoodsMI_IncomeForm'
+      FormNameParam.Value = 'TReport_GoodsMI_IncomeForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 1
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1080#1093#1086#1076' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1086#1074' ('#1080#1090#1086#1075')'
+          DataType = ftString
+        end>
       isShowModal = False
     end
   end
