@@ -5985,8 +5985,18 @@ begin
         Clear;
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillNumber as InvNumber');
-        Add('     , Bill.BillDate as OperDate');
 
+        Add('     , cast (Bill.BillNumber as TVarCharMedium)'
+           +'    || case when OKPO='+FormatToVarCharServer_notNULL('')+' or ToId_Postgres is null or ContractId is null'
+           +'                 then '+FormatToVarCharServer_notNULL('-ошибка')
+           +'                   || case when OKPO='+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL('-от кого:')+' || UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
+           +'                   || case when ToId_Postgres is null then '+FormatToVarCharServer_notNULL('-кому:')+' || UnitTo.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
+           +'                   || case when ContractId is null then '+FormatToVarCharServer_notNULL('-договор:???')+' else '+FormatToVarCharServer_notNULL('')+' end'
+           +'            else '+FormatToVarCharServer_notNULL('')
+           +'       end as InvNumber_all');
+
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , UnitFrom.UnitName as UnitNameFrom');
         Add('     , OperDate as OperDatePartner');
         Add('     , null as InvNumberPartner');
 
@@ -5994,25 +6004,29 @@ begin
         Add('     , Bill.Nds as VATPercent');
         Add('     , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent');
 
-        Add('     , UnitFrom.Id3_Postgres as FromId_Postgres');
+//        Add('     , UnitFrom.Id3_Postgres as FromId_Postgres');
         Add('     , _pgUnit.Id_Postgres as ToId_Postgres');
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
         Add('     , null as ContractId');
         Add('     , null as CarId');
         Add('     , null as PersonalDriverId');
         Add('     , null as PersonalPackerId');
+        Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
-        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId'
-           +'                                         and UnitFrom.pgUnitId is null');
+        Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id=Bill.ToId');
         Add('     left outer join dba._pgUnit on _pgUnit.Id=UnitTo.pgUnitId');
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
-           +'  and UnitFrom.PersonalId_Postgres is null'
+//           +'  and UnitFrom.PersonalId_Postgres is null'
+           +'  and Bill.MoneyKindId = zc_mkBN()'
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -6124,6 +6138,7 @@ begin
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and BillItems.Id is not null'
+           +'  and Bill.Id_Postgres>0'
            );
         Add('order by Bill.BillDate, ObjectId');
         Open;
@@ -8185,7 +8200,7 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(+BillItems.GoodsPropertyName+')+FormatToVarCharServer_notNULL(')')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
            +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -8215,6 +8230,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.Id_Postgres>0'
+           +'  and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
            );
@@ -9022,6 +9038,7 @@ begin
            +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
@@ -9166,7 +9183,7 @@ begin
         Add('     , 1 as CountForPrice');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(+BillItems.GoodsPropertyName+')+FormatToVarCharServer_notNULL(')')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
@@ -9186,6 +9203,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and Bill.Id_Postgres>0'
+           +'  and BillItems.GoodsPropertyId<>1041' //КОВБАСНI ВИРОБИ
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
            );

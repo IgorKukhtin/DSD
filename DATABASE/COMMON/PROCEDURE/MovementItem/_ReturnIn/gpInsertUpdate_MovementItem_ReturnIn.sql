@@ -25,11 +25,6 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
 
-     -- проверка - проведенный/удаленный документ не может корректироваться
-     IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
-     THEN
-         RAISE EXCEPTION 'Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = inMovementId));
-     END IF;
      -- проверка - удаленный элемент документа не может корректироваться
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
      THEN
