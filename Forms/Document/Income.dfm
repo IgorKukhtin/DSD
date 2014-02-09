@@ -1462,7 +1462,7 @@ object IncomeForm: TIncomeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'inId'
+        Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
