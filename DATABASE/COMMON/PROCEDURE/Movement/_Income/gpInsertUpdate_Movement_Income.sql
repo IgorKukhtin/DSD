@@ -29,7 +29,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      -- определяем ключ доступа
-     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
+     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
 
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');

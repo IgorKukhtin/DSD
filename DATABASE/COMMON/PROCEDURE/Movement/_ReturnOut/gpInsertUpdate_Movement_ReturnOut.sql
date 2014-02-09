@@ -22,14 +22,15 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
-     vbUserId := inSession;
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
+     -- определяем ключ доступа
+     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnOut(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnOut(), inInvNumber, inOperDate, vbAccessKeyId);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);

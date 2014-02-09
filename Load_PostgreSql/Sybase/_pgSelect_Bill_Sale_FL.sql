@@ -93,10 +93,10 @@ insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, Ope
                     , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
 select Bill.Id as ObjectId
      , cast (Bill.BillNumber as TVarCharMedium) ||
-       case when FromId_Postgres is null or ToId_Postgres is null or ContractId is null
+       case when FromId_Postgres is null or ToId_Postgres is null or ContractId = 0
                  then '-ошибка' || case when FromId_Postgres is null then '-от кого:' || UnitFrom.UnitName else '' end
                                 || case when ToId_Postgres is null then '-кому:' || UnitTo.UnitName else '' end
-                                || case when ContractId is null then '-договор:???' else '' end
+                                || case when ContractId = 0 then '-договор:???' else '' end
             else ''
        end as InvNumber_all
      , Bill.BillNumber as InvNumber
@@ -223,7 +223,7 @@ from _tmpBill_NotNalog
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0 -- _tmpList2.ObjectId = _tmpList.BillId_calc
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres
           , ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres
-   order by 4, 3, 1
+   order by 5, 3, 1
    ;
 
 end
