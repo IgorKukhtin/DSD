@@ -40,7 +40,7 @@ BEGIN
              , CAST (False as Boolean)        		AS Registered
              , inOperDate         	            	AS DateRegistered
              , CAST (False as Boolean)              AS PriceWithVAT
-             , CAST (20 as TFloat)                  AS VATPercent
+             , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
@@ -55,7 +55,9 @@ BEGIN
              , CAST ('' as TVarChar) 				AS TaxKindName
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
-          LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1;
+          LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
+          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate;
+
      ELSE
 
      RETURN QUERY
@@ -170,5 +172,5 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
+ SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
 -- SELECT * FROM gpGet_Movement_Tax(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
