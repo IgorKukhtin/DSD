@@ -7,7 +7,7 @@ BEGIN
    THEN
        PERFORM lpInsertUpdate_Object (0, zc_Object_RateFuelKind(), 1, 'Лето');
    END IF;
-   
+
    -- Добавляем роли:
    -- zc_Enum_Role_Admin
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
@@ -29,17 +29,17 @@ END $$;
 DO $$
 DECLARE ioId integer;
 BEGIN
-   
-   IF NOT EXISTS(SELECT * FROM OBJECT 
-   JOIN ObjectLink AS RoleRight_Role 
-     ON RoleRight_Role.descid = zc_ObjectLink_RoleRight_Role() 
+
+   IF NOT EXISTS(SELECT * FROM OBJECT
+   JOIN ObjectLink AS RoleRight_Role
+     ON RoleRight_Role.descid = zc_ObjectLink_RoleRight_Role()
     AND RoleRight_Role.childobjectid = zc_Enum_Role_Admin()
-    AND RoleRight_Role.objectid = OBJECT.id 
- 
-   JOIN ObjectLink AS RoleRight_Process 
-     ON RoleRight_Process.descid = zc_ObjectLink_RoleRight_Process() 
+    AND RoleRight_Role.objectid = OBJECT.id
+
+   JOIN ObjectLink AS RoleRight_Process
+     ON RoleRight_Process.descid = zc_ObjectLink_RoleRight_Process()
     AND RoleRight_Process.childobjectid = zc_Enum_Process_InsertUpdate_Object_User()
-    AND RoleRight_Process.objectid = OBJECT.id 
+    AND RoleRight_Process.objectid = OBJECT.id
   WHERE OBJECT.descid = zc_Object_RoleRight()) THEN
      -- Создаем права роли администратора
      ioId := lpInsertUpdate_Object(ioId, zc_Object_RoleRight(), 0, '');
@@ -63,22 +63,22 @@ BEGIN
      PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_User_Password(), UserId, 'Админ');
    END IF;
 
-   IF NOT EXISTS(SELECT * FROM OBJECT 
+   IF NOT EXISTS(SELECT * FROM OBJECT
 
-     JOIN ObjectLink AS UserRole_Role 
-       ON UserRole_Role.descid = zc_ObjectLink_UserRole_Role() 
+     JOIN ObjectLink AS UserRole_Role
+       ON UserRole_Role.descid = zc_ObjectLink_UserRole_Role()
       AND UserRole_Role.childobjectid = zc_Enum_Role_Admin()
-      AND UserRole_Role.objectid = OBJECT.id 
- 
-     JOIN ObjectLink AS UserRole_User 
-       ON UserRole_User.descid = zc_ObjectLink_UserRole_User() 
+      AND UserRole_Role.objectid = OBJECT.id
+
+     JOIN ObjectLink AS UserRole_User
+       ON UserRole_User.descid = zc_ObjectLink_UserRole_User()
       AND UserRole_User.childobjectid = UserId
-      AND UserRole_User.objectid = OBJECT.id 
+      AND UserRole_User.objectid = OBJECT.id
   WHERE OBJECT.descid = zc_Object_UserRole()) THEN
 
      -- Соединяем пользователя с ролью
      ioId := lpInsertUpdate_Object(ioId, zc_Object_UserRole(), 0, '');
-     
+
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_Role(), ioId, zc_Enum_Role_Admin());
 
      PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_UserRole_User(), ioId, UserId);
@@ -111,13 +111,26 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_Trial(),     inDescId:= zc_Object_WorkTimeKind(), inCode:= 8, inName:= 'пробная смена' , inEnumName:= 'zc_Enum_WorkTimeKind_Trial');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_WorkTimeKind_DayOff(),    inDescId:= zc_Object_WorkTimeKind(), inCode:= 9, inName:= 'Выходной'      , inEnumName:= 'zc_Enum_WorkTimeKind_DayOff');
 
+
+     -- !!! Типы формирования налогового документа
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Tax(),      			 		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 1, inName:= 'Налоговая'  , inEnumName:= 'zc_Enum_DocumentTaxKind_Tax');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(),  		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 2, inName:= 'Сводная налоговая по юр.л.(реализация)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), 		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 3, inName:= 'Сводная налоговая по юр.л.(реализация-возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), 	 		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 4, inName:= 'Сводная налоговая по т.т.(реализация)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryPartnerS');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR(), 	 		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 5, inName:= 'Сводная налоговая по т.т.(реализация-возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_Corrective(), 	 		 		inDescId:= zc_Object_DocumentTaxKind(), inCode:= 6, inName:= 'Корректировка'  , inEnumName:= 'zc_Enum_DocumentTaxKind_Corrective');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR(),  inDescId:= zc_Object_DocumentTaxKind(), inCode:= 7, inName:= 'Сводная корректировка по юр.л.(возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR(), inDescId:= zc_Object_DocumentTaxKind(), inCode:= 8, inName:= 'Сводная корректировка по юр.л.(реализация-возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR(),    inDescId:= zc_Object_DocumentTaxKind(), inCode:= 9, inName:= 'Сводная корректировка по т.т.(возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR(),   inDescId:= zc_Object_DocumentTaxKind(), inCode:= 10, inName:= 'Сводная корректировка по т.т.(реализация-возвраты)'  , inEnumName:= 'zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR');
+
      -- !!! Типы моделей начисления
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_DaySheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 1, inName:= 'По дням табель'         , inEnumName:= 'zc_Enum_ModelServiceKind_DaySheetWorkTime');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthSheetWorkTime(), inDescId:= zc_Object_ModelServiceKind(), inCode:= 2, inName:= 'За месяц табель'        , inEnumName:= 'zc_Enum_ModelServiceKind_MonthSheetWorkTime');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_SatSheetWorkTime(),   inDescId:= zc_Object_ModelServiceKind(), inCode:= 3, inName:= 'По субботам табель'     , inEnumName:= 'zc_Enum_ModelServiceKind_SatSheetWorkTime');
    --  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_MonthFundPay(),       inDescId:= zc_Object_ModelServiceKind(), inCode:= 4, inName:= 'За месяц Фонд/Доплата'  , inEnumName:= 'zc_Enum_ModelServiceKind_MonthFundPay');
    --  PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ModelServiceKind_TurnFundPay(),        inDescId:= zc_Object_ModelServiceKind(), inCode:= 5, inName:= 'За 1 смену Фонд/Доплата', inEnumName:= 'zc_Enum_ModelServiceKind_TurnFundPay');
-  
+
      -- !!! Типы выбора данных
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_InWeight(),  inDescId:= zc_Object_SelectKind(), inCode:= 1, inName:= 'Кол-во приход с пересчетом в вес', inEnumName:= 'zc_Enum_SelectKind_InWeight');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_SelectKind_OutWeight(), inDescId:= zc_Object_SelectKind(), inCode:= 2, inName:= 'Кол-во расход с пересчетом в вес', inEnumName:= 'zc_Enum_SelectKind_OutWeight');
@@ -161,9 +174,9 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportRoundTrip(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 107, inName:= 'Ставка за маршрут в обе стороны, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportRoundTrip');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportPoint()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 108, inName:= 'Ставка за точку, грн'   , inEnumName:= 'zc_Enum_ContractConditionKind_TransportPoint');
 
-     -- !!! 
+     -- !!!
      -- !!! Баланс: 1-уровень Управленческих Счетов
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_10000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_20000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_30000');
@@ -175,9 +188,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_90000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100000, inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_100000');
 
-     -- !!! 
+     -- !!!
      -- !!! Баланс: 2-уровень Управленческих Счетов
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20400');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20500,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20500');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20600,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_20600');
@@ -221,9 +234,9 @@ BEGIN
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100400,  inDescId:= zc_Object_AccountDirection(), inEnumName:= 'zc_Enum_AccountDirection_100400');
 
-     -- !!! 
+     -- !!!
      -- !!! Баланс: Управленческие Счета (1+2+3 уровень)
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20901, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_20901');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 40201, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_40201');
@@ -231,9 +244,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100301, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_100301');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110101, inDescId:= zc_Object_Account(), inEnumName:= 'zc_Enum_Account_110101');
 
-     -- !!! 
+     -- !!!
      -- !!! УП: 1-уровень Управленческие группы назначения
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10000, inDescId:= zc_Object_InfoMoneyGroup(), inEnumName:= 'zc_Enum_InfoMoneyGroup_10000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20000, inDescId:= zc_Object_InfoMoneyGroup(), inEnumName:= 'zc_Enum_InfoMoneyGroup_20000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30000, inDescId:= zc_Object_InfoMoneyGroup(), inEnumName:= 'zc_Enum_InfoMoneyGroup_30000');
@@ -243,9 +256,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70000, inDescId:= zc_Object_InfoMoneyGroup(), inEnumName:= 'zc_Enum_InfoMoneyGroup_70000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80000, inDescId:= zc_Object_InfoMoneyGroup(), inEnumName:= 'zc_Enum_InfoMoneyGroup_80000');
 
-     -- !!! 
+     -- !!!
      -- !!! УП: 2-уровень Управленческие назначения
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10100, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_10100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10200, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_10200');
 
@@ -290,9 +303,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70500, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_70500');
 
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80300, inDescId:= zc_Object_InfoMoneyDestination(), inEnumName:= 'zc_Enum_InfoMoneyDestination_80300');
-     -- !!! 
+     -- !!!
      -- !!! УП: Управленческие статьи назначения (1+2+3 уровень)
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20401');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20901, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_20901');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 21201, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_21201');
@@ -301,9 +314,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 50202, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_50202');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80401, inDescId:= zc_Object_InfoMoney(), inEnumName:= 'zc_Enum_InfoMoney_80401');
 
-     -- !!! 
+     -- !!!
      -- !!! ОПиУ: 1-уровень (Группа ОПиУ)
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_10000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 20000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_20000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 30000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_30000');
@@ -313,9 +326,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 70000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_70000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80000, inDescId:= zc_Object_ProfitLossGroup(), inEnumName:= 'zc_Enum_ProfitLossGroup_80000');
 
-     -- !!! 
+     -- !!!
      -- !!! ОПиУ: 2-уровень (Аналитика ОПиУ - направление)
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10100, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_10100');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_10200');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_10300');
@@ -353,9 +366,9 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80200, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_80200');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80300, inDescId:= zc_Object_ProfitLossDirection(), inEnumName:= 'zc_Enum_ProfitLossDirection_80300');
 
-     -- !!! 
+     -- !!!
      -- !!! ОПиУ: Статья (1+2+3 уровень)
-     -- !!! 
+     -- !!!
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10101, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10101');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10102, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10102');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 10201, inDescId:= zc_Object_ProfitLoss(), inEnumName:= 'zc_Enum_ProfitLoss_10201');
@@ -407,6 +420,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.02.14														 * add	Типы формирования налогового документа
  30.01.14                                        * add zc_Enum_ProfitLoss_80301
  25.01.14                                        * add zc_Enum_ContractConditionKind_...
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
@@ -424,14 +438,14 @@ END $$;
  09.11.13                                        * add zc_Enum_Role_Transport
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  01.11.13                                        * add zc_Enum_Account_110101
- 30.10.13         * add Типы сумм для штатного расписания              
+ 30.10.13         * add Типы сумм для штатного расписания
  07.10.13                                        * role...
  03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101
  01.10.13         * add Типы рабочего времени (6 шт)
  30.09.13                                        * add zc_Enum_InfoMoney_21201
  29.09.13                                        * add zc_Object_RateFuelKind
  27.09.13                                        * add zc_Enum_InfoMoney_20401
- 26.09.13         * del zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter               
+ 26.09.13         * del zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter
  24.09.13         * add zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter, zc_Enum_RouteKind_Internal, zc_Enum_RouteKind_External
  21.09.13                                        * add zc_Enum_InfoMoney_80401
  15.09.13                                        * add zc_Enum_AccountDirection_20900 and zc_Enum_Account_20901

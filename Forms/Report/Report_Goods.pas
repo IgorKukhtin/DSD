@@ -13,7 +13,7 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
-  dsdGuides, cxButtonEdit, cxCurrencyEdit;
+  dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
   TReport_GoodsForm = class(TAncestorReportForm)
@@ -30,6 +30,7 @@ type
     clSummOut: TcxGridDBColumn;
     clSummEnd: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
