@@ -26,24 +26,22 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
-
-     -- проверка - проведенный/удаленный документ не может корректироваться
-     IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
-     END IF;
+     -- определяем ключ доступа
+     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
      -- проверка
-     IF COALESCE (inContractId, 0) = 0 -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
+
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, vbAccessKeyId);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);

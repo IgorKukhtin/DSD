@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
-DROP FUNCTION IF EXISTS gpinsertupdate_movementitem_sale(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpinsertupdate_movementitem_sale(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

@@ -70,19 +70,19 @@ BEGIN
              , MovementFloat_VATPercent.ValueData          AS VATPercent
              , MovementFloat_ChangePrice.ValueData         AS ChangePrice
 
-             , Object_From.Id                    AS FromId
-             , Object_From.ValueData             AS FromName
-             , Object_To.Id                      AS ToId
-             , Object_To.ValueData               AS ToName
-             , 0                                 AS ToParentId
-             , Object_PaidKind.Id                AS PaidKindId
-             , Object_PaidKind.ValueData         AS PaidKindName
-             , Object_Contract.Id                AS ContractId
-             , Object_Contract.ValueData         AS ContractName
-             , Object_Route.Id                   AS RouteId
-             , Object_Route.ValueData            AS RouteName
-             , View_PersonalDriver.PersonalId    AS PersonalDriverId
-             , View_PersonalDriver.PersonalName  AS PersonalDriverName
+             , Object_From.Id                     AS FromId
+             , Object_From.ValueData              AS FromName
+             , Object_To.Id                       AS ToId
+             , Object_To.ValueData                AS ToName
+             , 0                                  AS ToParentId
+             , Object_PaidKind.Id                 AS PaidKindId
+             , Object_PaidKind.ValueData          AS PaidKindName
+             , View_Contract_InvNumber.ContractId AS ContractId
+             , View_Contract_InvNumber.InvNumber  AS ContractName
+             , Object_Route.Id                    AS RouteId
+             , Object_Route.ValueData             AS RouteName
+             , View_PersonalDriver.PersonalId     AS PersonalDriverId
+             , View_PersonalDriver.PersonalName   AS PersonalDriverName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -120,7 +120,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = Movement.Id
@@ -138,13 +138,13 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_IncomeFuel (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 09.02.14                                        * add Object_Contract_InvNumber_View
  31.10.13                                        * add OperDatePartner
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE

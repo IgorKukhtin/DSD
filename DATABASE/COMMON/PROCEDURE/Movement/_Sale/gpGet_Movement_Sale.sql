@@ -86,8 +86,8 @@ BEGIN
            , Object_To.ValueData               			AS ToName
            , Object_PaidKind.Id                			AS PaidKindId
            , Object_PaidKind.ValueData         			AS PaidKindName
-           , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
+           , View_Contract_InvNumber.ContractId        		AS ContractId
+           , View_Contract_InvNumber.InvNumber         		AS ContractName
            , Object_RouteSorting.Id        				AS RouteSortingId
            , Object_RouteSorting.ValueData 				AS RouteSortingName
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -144,31 +144,26 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
-
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
@@ -178,8 +173,6 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
-
-
 
 -- PriceList Partner
          LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo

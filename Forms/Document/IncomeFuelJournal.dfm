@@ -158,7 +158,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 60
       end
       object colInvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -176,18 +176,18 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         Width = 45
       end
       object colOperDatePartner: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074#1082#1080
+        Caption = #1044#1072#1090#1072' '#1079#1072#1087#1088#1072#1074'.'
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentVert = vaCenter
       end
       object colInvNumberMaster: TcxGridDBColumn
-        Caption = #8470' '#1055#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
+        Caption = #8470' '#1055#1091#1090'. '#1083#1080#1089#1090
         DataBinding.FieldName = 'InvNumberMaster'
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
       object colOperDateMaster: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1055#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
+        Caption = #1044#1072#1090#1072' '#1055#1091#1090'. '#1083#1080#1089#1090
         DataBinding.FieldName = 'OperDateMaster'
         HeaderAlignmentVert = vaCenter
         Width = 50
@@ -305,6 +305,30 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
         DataBinding.FieldName = 'VATPercent'
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object colInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        Width = 50
+      end
+      object colInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
+        Width = 70
+      end
+      object colInfoMoneyDestinationName: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
+        Width = 70
+      end
+      object colInfoMoneyName: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        Visible = False
+        Width = 70
       end
       object colGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1090#1086#1074'.'

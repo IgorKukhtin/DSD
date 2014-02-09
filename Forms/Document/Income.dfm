@@ -50,7 +50,7 @@ object IncomeForm: TIncomeForm
     object cxLabel2: TcxLabel
       Left = 112
       Top = 5
-      Caption = #1044#1072#1090#1072
+      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
     end
     object edFrom: TcxButtonEdit
       Left = 227
@@ -104,12 +104,12 @@ object IncomeForm: TIncomeForm
     object cxLabel5: TcxLabel
       Left = 225
       Top = 45
-      Caption = #8470' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
     end
     object cxLabel6: TcxLabel
       Left = 112
       Top = 45
-      Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
     end
     object edOperDatePartner: TcxDateEdit
       Left = 112
@@ -1595,6 +1595,7 @@ object IncomeForm: TIncomeForm
     Top = 224
   end
   object RefreshAddOn: TRefreshAddOn
+    DataSet = 'ClientDataSet'
     KeyField = 'Id'
     RefreshAction = 'actRefresh'
     FormParams = 'FormParams'

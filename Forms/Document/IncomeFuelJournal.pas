@@ -98,6 +98,10 @@ type
     colFuelCode: TcxGridDBColumn;
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
   private
   public
   end;

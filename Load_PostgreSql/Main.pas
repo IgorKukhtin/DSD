@@ -145,6 +145,7 @@ type
     function myExecToStoredProc_ZConnection:Boolean;
     function myExecToStoredProc:Boolean;
     function myExecToStoredProc_two:Boolean;
+    function myExecSqlUpdateErased(ObjectId:Integer;Erased,Erased_del:byte):Boolean;
 
     function FormatToVarCharServer_notNULL(_Value:string):string;
     function FormatToDateServer_notNULL(_Date:TDateTime):string;
@@ -397,6 +398,13 @@ begin
            exit;
      //end;
      result:=true;
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.myExecSqlUpdateErased(ObjectId:Integer;Erased,Erased_del:byte):Boolean;
+begin
+     if Erased=Erased_del
+     then fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set isErased = true where Id = '+IntToStr(ObjectId))+')')
+     else fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set isErased = false where Id = '+IntToStr(ObjectId))+')');
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.EADO_EngineErrorMsg(E:EADOError);
@@ -864,6 +872,8 @@ begin
         Add('     , Measure.MeasureName as ObjectName');
         Add('     , case when Measure.Id = zc_measure_Sht() then zc_rvYes() else zc_rvNo() end as zc_Measure_Sh');
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Measure.Erased as Erased');
         Add('     , Measure.Id_Postgres');
         Add('from dba.Measure');
         Add('order by ObjectId');
@@ -892,6 +902,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              // toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Measure set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -921,6 +932,8 @@ begin
         Add('select Goods.Id as ObjectId');
         Add('     , 0 as ObjectCode');
         Add('     , Goods.GoodsName as ObjectName');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , Goods.Erased as Erased');
         Add('     , Goods.Id_Postgres');
         Add('     , Goods_parent.Id_Postgres as ParentId_Postgres');
         Add('from dba.Goods');
@@ -954,6 +967,7 @@ begin
              toStoredProc.Params.ParamByName('inParentId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.Goods set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -973,6 +987,98 @@ begin
 //update Object set ObjectCode = null where DescId = zc_Object_Goods()
 //select * from Object where DescId = zc_Object_Goods()
      if (not cbGoods.Checked)or(not cbGoods.Enabled) then exit;
+     //
+     fExecSqFromQuery(' update dba.GoodsProperty'
+                     +'        left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+                     +'        left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode'
+                     +' = case when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
+                     +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
+                     +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
+                     +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
+
+                     +'        when fCheckGoodsParentID(8414,Goods.ParentId) =zc_rvYes() then 20205' // ДРОВА, ГАЗ  - Общефирменные Прочие ТМЦ Прочие ТМЦ
+                     +'        when fCheckGoodsParentID(7429,Goods.ParentId) =zc_rvYes() then 20301' // МЕБЕЛЬ  - Общефирменные Прочие основные ср-ва Мебель
+
+                     +'        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701' // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
+                     +'        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901' // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
+                     +'        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101' // ГП            - 30101	Доходы	Продукция	Готовая продукция
+                     +'        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101' // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
+                     +'        when fCheckGoodsParentID(3482,Goods.ParentId) =zc_rvYes() then 30101' // эксперименты       - 30101	Доходы	Продукция	Готовая продукция
+                     +'        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102' // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
+                     +'        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103' // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
+                     +'        when fCheckGoodsParentID(2849,Goods.ParentId) =zc_rvYes() then 30301' // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
+                     +'        when fCheckGoodsParentID(1855,Goods.ParentId) =zc_rvYes() then 30101' // ПРОИЗВОДСТВО + УДАЛЕННЫЕ - 30101	Доходы	Продукция	Готовая продукция
+
+                     +'        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204' // КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
+                     +'        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601' // КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203' // МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
+                     +'        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601' // ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205' // РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+                     +'        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202' // СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
+                     +'        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601' // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601' // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(7238,Goods.ParentId) =zc_rvYes() then 20601' // С-ПРОЧЕЕ - 20601	Общефирменные  Прочие материалы	Прочие материалы
+                     +'        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205' // СД-КУХНЯ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
+
+                     +'        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101' // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
+
+                     +'        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201' // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when Goods.Id in (6041, 7013) then 10201' // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when Goods.ParentId in (5857) then 10203' // СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
+
+                     +'        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601' // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
+
+                     +'        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201' // для проработок-новые специи - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201' // ДОБАВКИ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201' // СПЕЦИИ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201' // СПЕЦИИ ДЕЛИКАТ. - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(7,Goods.ParentId) =zc_rvYes() then 10201' // СЫРЬЕ СПЕЦИИ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when fCheckGoodsParentID(90,Goods.ParentId) =zc_rvYes() then 10201' // СЫРЬЕ СОЯ - 10201		Основное сырье Прочее сырье	Специи
+                     +'        when Goods.Id = 26 then 10201' // ФИБРОУЗ-80 - 10201		Основное сырье Прочее сырье	Специи
+
+                     +'        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202' // ОБОЛОЧКА - 10202		Основное сырье Прочее сырье	Оболочка
+                     +'        when fCheckGoodsParentID(11,Goods.ParentId) =zc_rvYes() then 10202' // СЫРЬЕ ОБОЛОЧКА - 10202		Основное сырье Прочее сырье	Оболочка
+                     +'        when Goods.Id = 164 then 10202' // НИТКИ - 10202		Основное сырье Прочее сырье	Оболочка
+
+                     +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // !!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
+                     +'        when fCheckGoodsParentID(176,Goods.ParentId) =zc_rvYes() then 10203' // СЫРЬЕ ЭТИКЕТКИ И ТЕРМОЧЕКИ - 10203		Основное сырье Прочее сырье	Упаковка
+
+                     +'        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204' // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
+                     +'        when Goods.Id in (2792, 7001, 6710) then 10103' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
+                     +'        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105' // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+                     +'        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105' // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+                     +'        when fCheckGoodsParentID(5503,Goods.ParentId) =zc_rvYes() then 10105' // СО-ПТИЦА РАЗНАЯ - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+
+                     +'        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when fCheckGoodsParentID(2633,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВЯДИНА ПФ* - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when fCheckGoodsParentID(2662,Goods.ParentId) =zc_rvYes() then 10103' // СО-СЫРЬЕ УБОЙ ГОВ.* - 10103		Основное сырье Мясное сырье Говядина
+
+                     +'        when fCheckGoodsParentID(2635,Goods.ParentId) =zc_rvYes() then 10104' // СО-КУРИЦА* - 10104		Основное сырье Мясное сырье Курица
+                     +'        when fCheckGoodsParentID(905,Goods.ParentId) =zc_rvYes() then 10104' // КУРИН. - 10104		Основное сырье Мясное сырье Курица
+
+                     +'        when fCheckGoodsParentID(2632,Goods.ParentId) =zc_rvYes() then 10102' // !!!СО!!! - 10102		Основное сырье Мясное сырье Свинина
+                     +'        when fCheckGoodsParentID(2691,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВЯДИНА ПРОДАЖА маг - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when Goods.Id in (2800) then 10104' // КУРЫ-ГРИЛЬ* - 10104		Основное сырье Мясное сырье Курица
+                     +'        when Goods.Id in (3039) then 10103' // ДОНЕР - КЕБАБ - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when Goods.Id in (17) then 10103' // Гост СЫРЬЕ - К-3 - 10103		Основное сырье Мясное сырье Говядина
+                     +'        when Goods.Id in (538) then 10102' // УДАЛЕННЫЕ П/К - 10102		Основное сырье Мясное сырье Свинина
+                     +'        when fCheckGoodsParentID(3447,Goods.ParentId) =zc_rvYes() then 10102' // !!!СО-НА ПРОДАЖУ!!! - 10102		Основное сырье Мясное сырье Свинина
+
+                     +'        when fCheckGoodsParentID(3217,Goods.ParentId) =zc_rvYes() then 21301' // СО-ЭМУЛЬСИИ - 10102		Общефирменные Незавершенное производство Незавершенное производство
+
+                     +'        when Goods.Id in (257,802,1275,2373) then 21301' // ЭМУЛЬСИЯ СЕРДЦА - 10102		Общефирменные Незавершенное производство Незавершенное производство
+                                                                      // ЭМУЛЬСИЯ МАСЛА
+                                                                      // ЭМУЛЬСИЯ ЖИРОВАЯ
+                                                                      // ЛЕД
+
+                     +'        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10201' // СЫР - 10201		Основное сырье Прочее сырье	Прочее сырье
+                     +'        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501' // Тара - 20501		Общефирменные Оборотная тара	Оборотная тара
+
+                     +'                                                                      end'
+                     +' set InfoMoneyCode = _pgInfoMoney.ObjectCode'
+                      );
      //
      myEnabledCB(cbGoods);
 
@@ -1010,6 +1116,8 @@ begin
         Add('     , case when isPartionCount.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionCount');
         Add('     , case when isPartionSumm.GoodsPropertyId is not null then zc_rvYes() else zc_rvNo() end as isPartionSumm');
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , GoodsProperty.Erased as Erased');
         Add('     , 0 AS TradeMarkId_PG');
         Add('     , case when Goods.ParentId in (5874)'
            +'                 then Unit_Alan.Id_Postgres_Business_Chapli'
@@ -1027,74 +1135,13 @@ begin
         Add('     left outer join dba.Goods as Goods_parent on Goods_parent.Id = Goods.ParentId');
         Add('     left outer join dba.Measure on Measure.Id = GoodsProperty.MeasureId');
         Add('     left outer join dba.GoodsProperty_Detail on GoodsProperty_Detail.GoodsPropertyId = GoodsProperty.Id');
-        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = case when Goods.Id in (1063) then 30101'); // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
-        Add('                                                                        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401'); // ГСМ  - 20401	Общефирменные ГСМ ГСМ
-        Add('                                                                        when fCheckGoodsParentID(1491,Goods.ParentId) =zc_rvYes() then 20701'); // АГРОСЕЛЬПРОМ  - 20701	Общефирменные Товары	Прочие товары
-        Add('                                                                        when fCheckGoodsParentID(338, Goods.ParentId) =zc_rvYes() then 20901'); // ц.ИРНА      - 20901	Общефирменные	Ирна Ирна
-        Add('                                                                        when fCheckGoodsParentID(5,   Goods.ParentId) =zc_rvYes() then 30101'); // ГП            - 30101	Доходы	Продукция	Готовая продукция
-        Add('                                                                        when fCheckGoodsParentID(5306,Goods.ParentId) =zc_rvYes() then 30101'); // ПЕРЕПАК       - 30101	Доходы	Продукция	Готовая продукция
-        Add('                                                                        when fCheckGoodsParentID(3482,Goods.ParentId) =zc_rvYes() then 30101'); // эксперименты       - 30101	Доходы	Продукция	Готовая продукция
-        Add('                                                                        when fCheckGoodsParentID(5874,Goods.ParentId) =zc_rvYes() then 30102'); // ТУШЕНКА       - 30102	Доходы	Продукция	Тушенка
-        Add('                                                                        when fCheckGoodsParentID(2387,Goods.ParentId) =zc_rvYes() then 30103'); // ХЛЕБ          - 30103	Доходы  Продукция	Хлеб
-        Add('                                                                        when fCheckGoodsParentID(2849,Goods.ParentId) =zc_rvYes() then 30301'); // С-ПЕРЕРАБОТКА - 30301	Доходы  Переработка	Переработка
-        Add('                                                                        when fCheckGoodsParentID(1855,Goods.ParentId) =zc_rvYes() then 30101'); // ПРОИЗВОДСТВО + УДАЛЕННЫЕ - 30101	Доходы	Продукция	Готовая продукция
-
-        Add('                                                                        when fCheckGoodsParentID(6682,Goods.ParentId) =zc_rvYes() then 20204'); // КАНЦТОВАРЫ - 20204	Общефирменные  Прочие ТМЦ Канц товары
-        Add('                                                                        when fCheckGoodsParentID(6677,Goods.ParentId) =zc_rvYes() then 20601'); // КУЛЬКИ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(2954,Goods.ParentId) =zc_rvYes() then 20203'); // МОЮЩЕЕ - 20203	Общефирменные  Прочие ТМЦ Моющие средства, кислоты
-        Add('                                                                        when fCheckGoodsParentID(6678,Goods.ParentId) =zc_rvYes() then 20601'); // ПЛЕНКА И СКОТЧ - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(2949,Goods.ParentId) =zc_rvYes() then 20205'); // РАЗНОЕ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
-        Add('                                                                        when fCheckGoodsParentID(2641,Goods.ParentId) =zc_rvYes() then 20202'); // СПЕЦОДЕЖДА - 20202	Общефирменные  Прочие ТМЦ Спецодежда
-        Add('                                                                        when fCheckGoodsParentID(6681,Goods.ParentId) =zc_rvYes() then 20601'); // ЦЕННИКИ, ЯРЛЫКИ, ЭТ. ДАТА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(6676,Goods.ParentId) =zc_rvYes() then 20601'); // ЩЕПА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(2787,Goods.ParentId) =zc_rvYes() then 20205'); // СД-КУХНЯ - 20205	Общефирменные  Прочие ТМЦ Прочие ТМЦ
-
-        Add('                                                                        when fCheckGoodsParentID(2642,Goods.ParentId) =zc_rvYes() then 20101'); // СД-ЗАПЧАСТИ оборуд-е - 20101	Общефирменные  Запчасти и Ремонты	Запчасти и Ремонты
-
-        Add('                                                                        when fCheckGoodsParentID(2647,Goods.ParentId) =zc_rvYes() then 10201'); // СД-ПЕКАРНЯ - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when Goods.Id in (6041, 7013) then 10201'); // СД-ТУШЕНКА - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when Goods.ParentId in (5857) then 10203'); // СД-ТУШЕНКА - 10203		Основное сырье Прочее сырье	Упаковка
-
-        Add('                                                                        when fCheckGoodsParentID(4213,Goods.ParentId) =zc_rvYes() then 20601'); // ГОФРОТАРА - 20601	Общефирменные  Прочие материалы	Прочие материалы
-        Add('                                                                        when fCheckGoodsParentID(3521,Goods.ParentId) =zc_rvYes() then 10201'); // для проработок-новые специи - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(3221,Goods.ParentId) =zc_rvYes() then 10201'); // ДОБАВКИ - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2643,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2644,Goods.ParentId) =zc_rvYes() then 10201'); // СПЕЦИИ ДЕЛИКАТ. - 10201		Основное сырье Прочее сырье	Специи
-        Add('                                                                        when fCheckGoodsParentID(2645,Goods.ParentId) =zc_rvYes() then 10202'); // ОБОЛОЧКА - 10202		Основное сырье Прочее сырье	Оболочка
-        Add('                                                                        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203'); // !!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
-
-        Add('                                                                        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204'); // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
-        Add('                                                                        when Goods.Id in (2792, 7001, 6710) then 10103'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
-        Add('                                                                        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105'); // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
-        Add('                                                                        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105'); // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
-        Add('                                                                        when fCheckGoodsParentID(5503,Goods.ParentId) =zc_rvYes() then 10105'); // СО-ПТИЦА РАЗНАЯ - 10105		Основное сырье Мясное сырье Прочее мясное сырье
-
-        Add('                                                                        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when fCheckGoodsParentID(2633,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПФ* - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when fCheckGoodsParentID(2662,Goods.ParentId) =zc_rvYes() then 10103'); // СО-СЫРЬЕ УБОЙ ГОВ.* - 10103		Основное сырье Мясное сырье Говядина
-
-        Add('                                                                        when fCheckGoodsParentID(2635,Goods.ParentId) =zc_rvYes() then 10104'); // СО-КУРИЦА* - 10104		Основное сырье Мясное сырье Курица
-
-        Add('                                                                        when fCheckGoodsParentID(2632,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО!!! - 10102		Основное сырье Мясное сырье Свинина
-        Add('                                                                        when fCheckGoodsParentID(2691,Goods.ParentId) =zc_rvYes() then 10103'); // СО-ГОВЯДИНА ПРОДАЖА маг - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when Goods.Id in (2800) then 10104'); // КУРЫ-ГРИЛЬ* - 10104		Основное сырье Мясное сырье Курица
-        Add('                                                                        when Goods.Id in (3039) then 10103'); // ДОНЕР - КЕБАБ - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when Goods.Id in (17) then 10103'); // Гост СЫРЬЕ - К-3 - 10103		Основное сырье Мясное сырье Говядина
-        Add('                                                                        when Goods.Id in (538) then 10102'); // УДАЛЕННЫЕ П/К - 10102		Основное сырье Мясное сырье Свинина
-        Add('                                                                        when fCheckGoodsParentID(3447,Goods.ParentId) =zc_rvYes() then 10102'); // !!!СО-НА ПРОДАЖУ!!! - 10102		Основное сырье Мясное сырье Свинина
-
-        Add('                                                                        when fCheckGoodsParentID(3217,Goods.ParentId) =zc_rvYes() then 21301'); // СО-ЭМУЛЬСИИ - 10102		Общефирменные Незавершенное производство Незавершенное производство
-        Add('                                                                        when fCheckGoodsParentID(1670,Goods.ParentId) =zc_rvYes() then 10201'); // СЫР - 10201		Основное сырье Прочее сырье	Прочее сырье
-        Add('                                                                        when fCheckGoodsParentID(686,Goods.ParentId) =zc_rvYes() then 20501'); // Тара - 20501		Общефирменные Оборотная тара	Оборотная тара
-
-        Add('                                                                   end');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = GoodsProperty.InfoMoneyCode');
         Add('where Goods.HasChildren = zc_hsLeaf()');
 //  Add(' and GoodsProperty.GoodsCode in (7001)');
         Add('group by ObjectId');
         Add('       , ObjectName');
         Add('       , ObjectCode');
+        Add('       , Erased');
         Add('       , Id_Postgres');
         Add('       , MeasureId_Postgres');
         Add('       , ParentId_Postgres');
@@ -1151,6 +1198,7 @@ begin
              toStoredProc.Params.ParamByName('inFuelId').Value:=FieldByName('FuelId_PG').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
 
              if (FieldByName('isPartionCount').AsInteger=FieldByName('zc_rvYes').AsInteger)
               or(FieldByName('isPartionSumm').AsInteger=FieldByName('zc_rvYes').AsInteger)
@@ -1272,6 +1320,8 @@ begin
         Add('     , KindPackage.KindPackageCode as ObjectCode');
         Add('     , KindPackage.KindPackageName as ObjectName');
         Add('     , KindPackage.Id_Postgres as Id_Postgres');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , KindPackage.Erased as Erased');
         Add('     , zc_KindPackage_PF() as zc_KindPackage_PF');
         Add('from dba.KindPackage');
         Add('where KindPackage.HasChildren = zc_hsLeaf()');
@@ -1304,6 +1354,7 @@ begin
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.KindPackage set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -4810,6 +4861,8 @@ begin
         Add('     , case when PriceList_byHistory.Id = zc_def_PriceList_onRecalcProduction() then zc_rvYes() else zc_rvNo() end as zc_PriceList_ProductionSeparate');
         Add('     , 20 as VATPercent');
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , zc_erasedDel() as zc_erasedDel');
+        Add('     , PriceList_byHistory.Erased as Erased');
         Add('     , PriceList_byHistory.Id_Postgres as Id_Postgres');
         Add('from dba.PriceList_byHistory');
         Add('order by ObjectId');
@@ -4842,6 +4895,7 @@ begin
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              //toStoredProc.Params.ParamByName('inSession').Value:=fGetSession;
              if not myExecToStoredProc then ;//exit;
+             if not myExecSqlUpdateErased(toStoredProc.Params.ParamByName('ioId').Value,FieldByName('Erased').AsInteger,FieldByName('zc_erasedDel').AsInteger) then ;//exit;
              //
              if (1=0)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres='+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+' where Id = '+FieldByName('ObjectId').AsString);
@@ -5974,6 +6028,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Income:Integer;
+var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
 begin
      Result:=0;
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
@@ -5987,11 +6042,10 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
 
         Add('     , cast (Bill.BillNumber as TVarCharMedium)'
-           +'    || case when OKPO='+FormatToVarCharServer_notNULL('')+' or ToId_Postgres is null or ContractId is null'
+           +'    || case when OKPO='+FormatToVarCharServer_notNULL('')+' or ToId_Postgres is null'
            +'                 then '+FormatToVarCharServer_notNULL('-ошибка')
-           +'                   || case when OKPO='+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL('-от кого:')+' || UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
+           +'                   || case when OKPO='+FormatToVarCharServer_notNULL('')+' then '+FormatToVarCharServer_notNULL('-от кого:')+' || UnitFrom.UnitName||'+FormatToVarCharServer_notNULL('(')+'||OKPO||'+FormatToVarCharServer_notNULL(')')+' else '+FormatToVarCharServer_notNULL('')+' end'
            +'                   || case when ToId_Postgres is null then '+FormatToVarCharServer_notNULL('-кому:')+' || UnitTo.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
-           +'                   || case when ContractId is null then '+FormatToVarCharServer_notNULL('-договор:???')+' else '+FormatToVarCharServer_notNULL('')+' end'
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as InvNumber_all');
 
@@ -6007,15 +6061,24 @@ begin
 //        Add('     , UnitFrom.Id3_Postgres as FromId_Postgres');
         Add('     , _pgUnit.Id_Postgres as ToId_Postgres');
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
-        Add('     , null as ContractId');
-        Add('     , null as CarId');
-        Add('     , null as PersonalDriverId');
+        Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_pg');
         Add('     , null as PersonalPackerId');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
+        Add('     left outer join (select Bill.Id as BillId'
+           +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id'
+           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'                         and Bill.MoneyKindId = zc_mkBN()'
+           +'                      group by Bill.Id'
+           +'                     ) as Bill_findInfoMoney on Bill_findInfoMoney.BillId=Bill.Id');
+        Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = Bill_findInfoMoney.InfoMoneyCode');
         Add('     left outer join dba.Unit as UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
@@ -6057,18 +6120,68 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc_two.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inAddress',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inGLNCode',ftString,ptInput, '');
+        toStoredProc_two.Params.AddParam ('inPrepareDayCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inDocumentDayCount',ftFloat,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inJuridicalId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inRouteId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inRouteSortingId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inPersonalTakeId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
-             // gc_isDebugMode:=true;
+             //
+             //Сначала находим контрагента  и юр.лицо
+             fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+                           +' from ObjectHistory_JuridicalDetails_View'
+                           +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                           +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                           +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                           );
+             PartnerId_pg:=toSqlQuery.FieldByName('PartnerId').AsInteger;
+             JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             //
+             //создаем контрагента !!!если надо!!!
+             if (PartnerId_pg=0)and(JuridicalId_pg<>0) then
+             begin
+                  toStoredProc_two.Params.ParamByName('ioId').Value:=0;
+                  toStoredProc_two.Params.ParamByName('inCode').Value:=0;
+                  toStoredProc_two.Params.ParamByName('inName').Value:=FieldByName('UnitNameFrom').AsString;
+                  toStoredProc_two.Params.ParamByName('inJuridicalId').Value:=JuridicalId_pg;
+                  //
+                  if not myExecToStoredProc_two then ;//exit;
+                  //
+                  PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
+             end;
+             //находим договор
+             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
+                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
+                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
+             if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-от кого:'+FieldByName('UnitNameFrom').AsString
+                                 else if ContractId_pg=0
+                                      then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка--договор:???'
+                                      else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
+
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
 
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
@@ -6078,12 +6191,10 @@ begin
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
              toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
 
-             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
+             toStoredProc.Params.ParamByName('inFromId').Value:=PartnerId_pg;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
-             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
              toStoredProc.Params.ParamByName('inPersonalPackerId').Value:=FieldByName('PersonalPackerId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
@@ -8200,7 +8311,7 @@ begin
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , 0 as AssetId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL(')')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+KindPackage_f.KindPackageName+'+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
            +'            else '+FormatToVarCharServer_notNULL('')+' end as errInvNumber');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -8210,6 +8321,8 @@ begin
 
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty as GoodsProperty_f on GoodsProperty_f.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.KindPackage as KindPackage_f on KindPackage_f.Id = BillItems.KindPackageId');
+
         Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
         Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
@@ -9010,11 +9123,11 @@ begin
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , cast (Bill.BillNumber as TVarCharMedium)'
-           +'    || case when FromId_Postgres is null or ToId_Postgres is null or ContractId is null'
+           +'    || case when FromId_Postgres is null or ToId_Postgres is null or ContractId = 0'
            +'                 then '+FormatToVarCharServer_notNULL('-ошибка')
            +'                   || case when FromId_Postgres is null then '+FormatToVarCharServer_notNULL('-от кого:')+' || UnitFrom.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
            +'                   || case when ToId_Postgres is null then '+FormatToVarCharServer_notNULL('-кому:')+' || UnitTo.UnitName else '+FormatToVarCharServer_notNULL('')+' end'
-           +'                   || case when ContractId is null then '+FormatToVarCharServer_notNULL('-договор:???')+' else '+FormatToVarCharServer_notNULL('')+' end'
+           +'                   || case when ContractId = 0 then '+FormatToVarCharServer_notNULL('-договор:???')+' else '+FormatToVarCharServer_notNULL('')+' end'
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as InvNumber_all');
 
@@ -9183,7 +9296,7 @@ begin
         Add('     , 1 as CountForPrice');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL(')')
+        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар(')+'+GoodsProperty_f.GoodsName+'+FormatToVarCharServer_notNULL('*')+'+KindPackage_f.KindPackageName+'+FormatToVarCharServer_notNULL(')')
            +'            when GoodsProperty_Detail_byServer.KindPackageId is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as errInvNumber');
@@ -9192,6 +9305,8 @@ begin
         Add('from dba.Bill');
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty as GoodsProperty_f on GoodsProperty_f.Id = BillItems.GoodsPropertyId');
+        Add('     left outer join dba.KindPackage as KindPackage_f on KindPackage_f.Id = BillItems.KindPackageId');
+
         Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
         Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
         Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
