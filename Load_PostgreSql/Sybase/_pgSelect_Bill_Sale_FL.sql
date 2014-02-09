@@ -40,6 +40,7 @@ begin
            select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM
            from dba.Bill
                 join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+                                  and BillItems.GoodsPropertyId<>1041 -- йнбаюямI бхпнах
                 left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
                 left join dba.Goods on Goods.Id = GoodsProperty.GoodsId
            where Bill.BillDate between @inStartDate and @inEndDate
