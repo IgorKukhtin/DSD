@@ -31,7 +31,6 @@ BEGIN
       -- проверка прав пользователя на вызов процедуры
       -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Transport());
 
-
       RETURN QUERY 
            -- Получили все Путевые листы по маршрутам
       WITH tmpTransport AS (SELECT Movement.Id AS MovementId
@@ -343,12 +342,14 @@ BEGIN
              LEFT JOIN Object AS Object_Fuel ON Object_Fuel.Id = tmpFuel.FuelId
 
              -- ограничиваем по филиалу, если нужно
-             JOIN ObjectLink AS ObjectLink_Car_Unit 
+             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit 
                              ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                             AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-             JOIN Object_Unit_View AS ViewObject_Unit
+             LEFT JOIN Object_Unit_View AS ViewObject_Unit
                                    ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
-                                  AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+        WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
+           OR inBranchId = 0 
+           OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)   
 
         GROUP BY tmpFuel.MovementId
                , tmpFuel.InvNumber
@@ -373,10 +374,11 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.02.14         * ограничения для zc_Branch_Basis()
  12.12.13         * add inBranchId     
  28.10.13                                        *
  05.10.13         *
 */
 
 -- тест
--- SELECT * FROM gpReport_Transport (inStartDate:= '01.10.2013', inEndDate:= '31.10.2013', inCarId:= null, inSession:= zfCalc_UserAdmin());
+ --SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
