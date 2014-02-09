@@ -6088,6 +6088,7 @@ begin
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'  and Bill.FromId<>4928'//‘Œ««»-œ≈–≈œ¿  œ–Œƒ” ÷»»
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );
