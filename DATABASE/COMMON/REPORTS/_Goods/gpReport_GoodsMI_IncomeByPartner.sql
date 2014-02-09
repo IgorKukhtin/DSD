@@ -54,7 +54,8 @@ BEGIN
                              Movement.Id AS MovementId
                               , Movement.DescId AS MovementDescId
                               , ContainerLO_Juridical.ObjectId  AS JuridicalId 
-                              , case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end  AS PartnerId 
+                              , MovementLinkObject_Partner.ObjectId AS PartnerId
+                              --, case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end  AS PartnerId 
                               , ContainerLinkObject_PaidKind.ObjectId AS PaidKindId 
                      
                          FROM Movement 
@@ -74,20 +75,21 @@ BEGIN
                                                            ON MovementLinkObject_Partner.MovementId = Movement.Id
                                                           AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_From()
 
-                              LEFT JOIN Object AS Object_CardFuel ON Object_CardFuel.Id = MovementLinkObject_Partner.ObjectId
+                              /*LEFT JOIN Object AS Object_CardFuel ON Object_CardFuel.Id = MovementLinkObject_Partner.ObjectId
                                                                 AND Object_CardFuel.DescId = zc_Object_CardFuel() 
                           
                               LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical 
                                                    ON ObjectLink_CardFuel_Juridical.ObjectId = Object_CardFuel.Id
                                                   AND ObjectLink_CardFuel_Juridical.DescId = zc_ObjectLink_CardFuel_Juridical()
-                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CardFuel_Juridical.ChildObjectId
+                              LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_CardFuel_Juridical.ChildObjectId*/
                                                            
                          WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate   
                            AND Movement.DescId = inDescId
                                           
                        GROUP BY Movement.Id 
                               , ContainerLO_Juridical.ObjectId
-                              , case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end
+                              , MovementLinkObject_Partner.ObjectId
+                              --, case when coalesce (ObjectLink_CardFuel_Juridical.ChildObjectId,0) = 0 then MovementLinkObject_Partner.ObjectId else ObjectLink_CardFuel_Juridical.ChildObjectId end
                               , ContainerLinkObject_PaidKind.ObjectId
                          )
 
@@ -180,10 +182,6 @@ BEGIN
                                                 AND MIContainer.DescId = zc_MIContainer_Count()
                       LEFT JOIN Container ON Container.Id = MIContainer.ContainerId
                                          
-                     /* LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
-                                                    ON ContainerLO_GoodsKind.ContainerId = Container.Id
-                                                   AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()*/
-
                       JOIN MovementItem ON MovementItem.Id = MIContainer.MovementItemId
                                        AND MovementItem.DescId =  zc_MI_Master()
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
@@ -262,9 +260,9 @@ ALTER FUNCTION gpReport_GoodsMI_IncomeByPartner (TDateTime, TDateTime, Integer, 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 08.02.14         * 
+ 09.02.14         * 
     
 */
 
 -- ÚÂÒÚ
---SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inEndDate:= '31.12.2014',  inDescId:= 1, inJuridicalId:= 15039, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_IncomeByPartner (inStartDate:= '01.01.2013', inEndDate:= '31.12.2014',  inDescId:= 1, inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());  --inJuridicalId:= 15039

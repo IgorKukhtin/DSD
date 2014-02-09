@@ -283,6 +283,8 @@ type
     bbContractConditionValue: TdxBarButton;
     actReport_GoodsMI_Income: TdsdOpenForm;
     bbReport_GoodsMI_Income: TdxBarButton;
+    actReport_GoodsMI_IncomeByPartner: TdsdOpenForm;
+    bbReport_GoodsMI_IncomeByPartner: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

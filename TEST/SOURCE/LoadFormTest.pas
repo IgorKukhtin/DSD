@@ -597,6 +597,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

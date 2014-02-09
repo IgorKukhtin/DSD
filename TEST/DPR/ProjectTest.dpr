@@ -337,12 +337,13 @@ uses
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
-  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
+  Report_GoodsMI_IncomeByPartner in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas' {Report_GoodsMI_IncomeByPartnerForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm};
+  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm};
 
 {$R *.RES}
 
