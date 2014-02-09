@@ -6062,8 +6062,6 @@ begin
         Add('     , _pgUnit.Id_Postgres as ToId_Postgres');
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_pg');
-        Add('     , null as CarId');
-        Add('     , null as PersonalDriverId');
         Add('     , null as PersonalPackerId');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
 
@@ -6122,8 +6120,6 @@ begin
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCarId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPersonalDriverId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPersonalPackerId',ftInteger,ptInput, 0);
         //
         toStoredProc_two.StoredProcName:='gpInsertUpdate_Object_Partner_Sybase';
@@ -6147,10 +6143,11 @@ begin
              if fStop then begin exit;end;
              //
              //Сначала находим контрагента  и юр.лицо
-             fOpenSqToQuery(' select isnull(ObjectLink.ObjectId,0) as PartnerId, isnull(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
+             fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
                            +' from ObjectHistory_JuridicalDetails_View'
-                           +'      join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
-                           +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString)
+                           +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
+                           +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
+                           +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
                            );
              PartnerId_pg:=toSqlQuery.FieldByName('PartnerId').AsInteger;
              JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
@@ -6197,9 +6194,7 @@ begin
              toStoredProc.Params.ParamByName('inFromId').Value:=PartnerId_pg;
              toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
-             toStoredProc.Params.ParamByName('inCarId').Value:=FieldByName('CarId').AsInteger;
-             toStoredProc.Params.ParamByName('inPersonalDriverId').Value:=FieldByName('PersonalDriverId').AsInteger;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
              toStoredProc.Params.ParamByName('inPersonalPackerId').Value:=FieldByName('PersonalPackerId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;

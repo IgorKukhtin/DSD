@@ -12,7 +12,9 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, InvNumberMaste
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePrice TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummVAT TFloat
              , FromName TVarChar, ToName TVarChar
-             , PaidKindName TVarChar, ContractName TVarChar
+             , PaidKindName TVarChar
+             , ContractName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteName TVarChar
              , PersonalDriverName TVarChar
              , BranchCode Integer, BranchName TVarChar
@@ -56,7 +58,11 @@ BEGIN
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
-           , Object_Contract.ValueData         AS ContractName
+           , View_Contract_InvNumber.InvNumber AS ContractName
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
            , Object_Route.ValueData            AS RouteName
            , View_PersonalDriver.PersonalName  AS PersonalDriverName
            , View_Unit.BranchCode
@@ -132,7 +138,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
                                          ON MovementLinkObject_Route.MovementId = Movement.Id
@@ -156,6 +163,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View
  06.02.14                                        * add Branch...
  03.02.14                                        * add Goods... and Fuel...
  14.12.13                                        * add Object_RoleAccessKey_View

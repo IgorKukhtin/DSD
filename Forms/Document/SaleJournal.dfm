@@ -10,18 +10,17 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1110
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
-    ExplicitWidth = 924
+    ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 924
+      ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 478
-        ExplicitWidth = 924
+        ExplicitWidth = 1110
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -109,8 +108,9 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 55
           end
           inherited colInvNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
-            Width = 70
+            Width = 55
           end
           object colInvNumberOrder: TcxGridDBColumn [2]
             Caption = #8470' '#1079#1072#1103#1074#1082#1080
@@ -120,29 +120,30 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 50
           end
           object colOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 65
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 90
           end
           object colToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 120
+            Width = 90
           end
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -166,14 +167,14 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 70
           end
           object colChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1057#1082', (+)% '#1053#1072#1094
+            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
             DataBinding.FieldName = 'ChangePercent'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
           object colPriceWithVAT: TcxGridDBColumn
-            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' '
+            Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -268,7 +269,7 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 1110
-    ExplicitWidth = 924
+    ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
       EditValue = 41609d
     end
@@ -279,9 +280,9 @@ inherited SaleJournalForm: TSaleJournalForm
       Left = 427
       Top = 5
       Action = actRefresh
-      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
-      Width = 206
+      Width = 262
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -336,6 +337,10 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited MasterDS: TDataSource
     Left = 64
+    Top = 139
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 139
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale'
@@ -371,8 +376,8 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 155
   end
   inherited BarManager: TdxBarManager
-    Left = 184
-    Top = 83
+    Left = 168
+    Top = 155
     DockControlHeights = (
       0
       0
@@ -388,8 +393,8 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 248
-    Top = 96
+    Left = 240
+    Top = 144
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

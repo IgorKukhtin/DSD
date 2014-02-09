@@ -55,7 +55,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode          		AS StatusCode
+           , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
            , MovementBoolean_Checked.ValueData      AS Checked
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
@@ -66,14 +66,14 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-           , Object_From.Id                    		AS FromId
-           , Object_From.ValueData             		AS FromName
-           , Object_To.Id                      		AS ToId
-           , Object_To.ValueData               		AS ToName
-           , Object_PaidKind.Id                		AS PaidKindId
-           , Object_PaidKind.ValueData         		AS PaidKindName
-           , Object_Contract.Id                		AS ContractId
-           , Object_Contract.ValueData         		AS ContractName
+           , Object_From.Id                    	    AS FromId
+           , Object_From.ValueData             	    AS FromName
+           , Object_To.Id                      	    AS ToId
+           , Object_To.ValueData               	    AS ToName
+           , Object_PaidKind.Id                	    AS PaidKindId
+           , Object_PaidKind.ValueData         	    AS PaidKindName
+           , View_Contract_InvNumber.ContractId     AS ContractId
+           , View_Contract_InvNumber.InvNumber      AS ContractName
 
 
        FROM Movement
@@ -132,7 +132,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnIn();
@@ -140,17 +140,15 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
-
- 17.07.13         *
+ 09.02.14                                        * add Object_Contract_InvNumber_View
  27.01.14                                                          * -Car -Driver +Checked +id=0
-
+ 17.07.13         *
 */
 
 -- ÚÂÒÚ

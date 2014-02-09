@@ -91,6 +91,10 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
   private
   public
   end;

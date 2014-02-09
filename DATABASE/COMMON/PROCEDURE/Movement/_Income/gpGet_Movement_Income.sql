@@ -66,17 +66,17 @@ BEGIN
              , MovementFloat_VATPercent.ValueData          AS VATPercent
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
-             , Object_From.Id                    AS FromId
-             , Object_From.ValueData             AS FromName
-             , Object_To.Id                      AS ToId
-             , Object_To.ValueData               AS ToName
-             , ObjectLink_Unit_Parent.ChildObjectId AS ToParentId
-             , Object_PaidKind.Id                AS PaidKindId
-             , Object_PaidKind.ValueData         AS PaidKindName
-             , Object_Contract.Id                AS ContractId
-             , Object_Contract.ValueData         AS ContractName
-             , View_PersonalPacker.PersonalId    AS PersonalPackerId
-             , View_PersonalPacker.PersonalName  AS PersonalPackerName
+             , Object_From.Id                        AS FromId
+             , Object_From.ValueData                 AS FromName
+             , Object_To.Id                          AS ToId
+             , Object_To.ValueData                   AS ToName
+             , ObjectLink_Unit_Parent.ChildObjectId  AS ToParentId
+             , Object_PaidKind.Id                    AS PaidKindId
+             , Object_PaidKind.ValueData             AS PaidKindName
+             , View_Contract_InvNumber.ContractId    AS ContractId
+             , View_Contract_InvNumber.InvNumber     AS ContractName
+             , View_PersonalPacker.PersonalId        AS PersonalPackerId
+             , View_PersonalPacker.PersonalName      AS PersonalPackerName
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -115,7 +115,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalPacker
                                          ON MovementLinkObject_PersonalPacker.MovementId = Movement.Id
@@ -127,13 +127,13 @@ BEGIN
      END IF;
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 09.02.14                                        * add Object_Contract_InvNumber_View
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE
  07.10.13                                        * add lpCheckRight
@@ -146,7 +146,6 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
  09.07.13                                        * Красота
  08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *
-
 */
 
 -- тест
