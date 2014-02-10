@@ -172,5 +172,5 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 */
 
 -- тест
- SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
+-- SELECT * FROM gpGet_Movement_Tax (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
 -- SELECT * FROM gpGet_Movement_Tax(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');

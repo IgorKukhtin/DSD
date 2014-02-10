@@ -154,4 +154,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 */
 
 -- тест
- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
