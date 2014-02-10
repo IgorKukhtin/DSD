@@ -43,8 +43,8 @@ BEGIN
 
                 
         , CAST (SUM (tmp_All.SummStart) AS TFloat) AS SummStart
-        , CAST (ABS (SUM (tmp_All.SummIn)) AS TFloat)    AS SummIn
-        , CAST (ABS (SUM (tmp_All.SummOut)) AS TFloat)   AS SummOut
+        , CAST (SUM (tmp_All.SummIn) AS TFloat)    AS SummIn
+        , CAST (SUM (tmp_All.SummOut) AS TFloat)   AS SummOut
         , CAST (SUM (tmp_All.SummEnd) AS TFloat)   AS SummEnd 
   from (
        select  COALESCE(ContainerLO_Car.ObjectId, COALESCE(ContainerLO_Unit.ObjectId, ContainerLO_Member.ObjectId)) AS DirectionId
@@ -97,8 +97,11 @@ BEGIN
                          , tmpContainer.GoodsId
                          , 0 AS SummStart
                          , 0 AS SummEnd
-                         , case when MIContainer.isactive = true then COALESCE(MIContainer.Amount,0) else 0 end AS SummIn
-                         , case when MIContainer.isactive = false then COALESCE(MIContainer.Amount,0) else 0 end AS SummOut
+                         --, case when MIContainer.isactive = true then COALESCE(MIContainer.Amount,0) else 0 end AS SummIn
+                         --, case when MIContainer.isactive = false then COALESCE(MIContainer.Amount,0) else 0 end AS SummOut
+                         , case when COALESCE(MIContainer.Amount,0) >= 0 then COALESCE(MIContainer.Amount,0) else 0 end AS SummIn
+                         , case when COALESCE(MIContainer.Amount,0) < 0  then COALESCE(MIContainer.Amount,0)*(-1) else 0 end AS SummOut
+                         
                          , MIContainer.MovementId            
                     FROM tmpContainer
                      
@@ -186,4 +189,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO
 */
 
 -- тест
---SELECT * FROM gpReport_Goods (inStartDate:= '01.12.2013', inEndDate:= '01.12.2013', inGoodsId:= 2062, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_Goods (inStartDate:= '01.12.2013', inEndDate:= '01.12.2013', inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());

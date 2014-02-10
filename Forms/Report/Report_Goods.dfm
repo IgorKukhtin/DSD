@@ -260,9 +260,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoods_ObjectForm'
+    FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

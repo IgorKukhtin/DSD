@@ -210,7 +210,7 @@ uses
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
   Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm},
+  GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm},
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
@@ -343,7 +343,8 @@ uses
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
-  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm};
+  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
+  SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm: TParentForm};
 
 {$R *.RES}
 
