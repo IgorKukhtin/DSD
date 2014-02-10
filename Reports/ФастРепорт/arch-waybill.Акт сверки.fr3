@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<TfrxReport Version="4.14" DotMatrixReport="False" EngineOptions.DoublePass="True" IniFile="\Software\Fast Reports" PreviewOptions.Buttons="4095" PreviewOptions.Zoom="1" PrintOptions.Printer="Default" PrintOptions.PrintOnSheet="0" ReportOptions.CreateDate="39787,6353689236" ReportOptions.Description.Text="" ReportOptions.LastChange="41680,1282020833" ScriptLanguage="PascalScript" ScriptText.Text="var&#13;&#10;  total: real;                                  &#13;&#10;&#13;&#10;procedure Child1OnBeforePrint(Sender: TfrxComponent);&#13;&#10;begin&#13;&#10;  total := &#60;StartBalance&#62; + [SUM(&#60;frxDBDataset.&#34;OperSumm&#34;&#62;, MasterData1, 1)];                                                         &#13;&#10;end;&#13;&#10;&#13;&#10;BEGIN&#13;&#10;END.          " PropData="044C65667403F80003546F7003B8000844617461736574730101063220446174615365743D226672784442446174617365742220446174615365744E616D653D22667278444244617461736574220000095661726961626C657301010611204E616D653D222043617465676F7279220001061C204E616D653D22537461727444617465222056616C75653D222727220001061A204E616D653D22456E6444617465222056616C75653D222727220001061E204E616D653D22537461727442616C616E6365222056616C75653D2230220001061E204E616D653D22506172746E65724E616D65222056616C75653D222727220000055374796C650100">
+  <TfrxDataPage Name="Data" Height="1000" Left="0" Top="0" Width="1000"/>
+  <TfrxReportPage Name="Page2" PaperWidth="210" PaperHeight="297" PaperSize="9" LeftMargin="10" RightMargin="10" TopMargin="10" BottomMargin="15" Columns="1" ColumnWidth="0" ColumnPositions.Text="0" HGuides.Text="" VGuides.Text="" OnBeforePrint="Page2OnBeforePrint">
+    <TfrxMasterData Name="MasterData1" Height="18" Left="0" Top="325" Width="718,1107" Columns="1" ColumnWidth="200" ColumnGap="20" DataSet="frxDBDataset" DataSetName="frxDBDataset" RowCount="0" Stretched="True">
+      <TfrxMemoView Name="Memo1" Left="20" Top="0" Width="168" Height="18" OnBeforePrint="Memo1OnBeforePrint" ShowHint="False" StretchMode="smMaxHeight" DataSetName="qryArch" Frame.Typ="15" Text="[frxDBDataset.&#34;OperationName&#34;] № [frxDBDataset.&#34;OperNumber&#34;] от [frxDBDataset.&#34;OperDate&#34;]"/>
+      <TfrxMemoView Name="Memo3" Left="188" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DataSetName="qryArch" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[IIF(&#60;frxDBDataset.&#34;OperSumm&#34;&#62; &#62; 0 , &#60;frxDBDataset.&#34;OperSumm&#34;&#62;, 0)]"/>
+      <TfrxMemoView Name="Memo4" Left="265" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DataSetName="qryArch" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[IIF(&#60;frxDBDataset.&#34;OperSumm&#34;&#62; &#60; 0 , - &#60;frxDBDataset.&#34;OperSumm&#34;&#62;, 0)]"/>
+      <TfrxMemoView Name="Memo13" Left="362" Top="0" Width="168" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+      <TfrxMemoView Name="Memo14" Left="530" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo15" Left="607" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo46" Left="0" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" HAlign="haRight" Text="[&#60;Line#&#62; +1]"/>
+      <TfrxMemoView Name="Memo51" Left="342" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+    </TfrxMasterData>
+    <TfrxReportTitle Name="ReportTitle1" Height="18,8976378" Left="0" Top="16" Width="718,1107" Child="Child4" Stretched="True">
+      <TfrxMemoView Name="Memo40" Left="0" Top="0" Width="684" Height="18,8976378" ShowHint="False" StretchMode="smMaxHeight" Font.Charset="1" Font.Color="0" Font.Height="-13" Font.Name="Arial" Font.Style="1" HAlign="haCenter" ParentFont="False" VAlign="vaCenter" Text="АКТ СВЕРКИ"/>
+    </TfrxReportTitle>
+    <TfrxReportSummary Name="ReportSummary1" Height="146" Left="0" Top="479" Width="718,1107">
+      <TfrxMemoView Name="Memo34" Left="0" Top="64" Width="342" Height="34" ShowHint="False" Text="От НАС"/>
+      <TfrxMemoView Name="Memo35" Left="342" Top="64" Width="342" Height="34" ShowHint="False" Text="От [PartnerName]"/>
+      <TfrxMemoView Name="Memo36" Left="0" Top="3,76345" Width="342" Height="34" ShowHint="False" Text="По данным НАС"/>
+      <TfrxMemoView Name="Memo37" Left="342" Top="3,76345" Width="342" Height="34" ShowHint="False" Text=""/>
+      <TfrxMemoView Name="Memo38" Left="0" Top="37,76345" Width="342" Height="18" ShowHint="False" Text="на [EndDate] задолженность в пользу [PartnerName]"/>
+      <TfrxMemoView Name="Memo39" Left="342" Top="37,76345" Width="342" Height="18" ShowHint="False" Text=""/>
+      <TfrxMemoView Name="Memo42" Left="0" Top="127,55875" Width="334" Height="18" ShowHint="False" Frame.Typ="4" Text="М. П."/>
+      <TfrxMemoView Name="Memo43" Left="342" Top="127,55875" Width="334" Height="18" ShowHint="False" Frame.Typ="4" Text="М. П."/>
+    </TfrxReportSummary>
+    <TfrxFooter Name="Footer1" Height="18" Left="0" Top="363" Width="718,1107" OnBeforePrint="Footer1OnBeforePrint" Child="Child1" Stretched="True">
+      <TfrxMemoView Name="Memo22" Left="20" Top="0" Width="168" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text="Обороты за период"/>
+      <TfrxMemoView Name="Memo23" Left="188" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[Sum(IIF(&#60;frxDBDataset.&#34;OperSumm&#34;&#62; &#62; 0 , &#60;frxDBDataset.&#34;OperSumm&#34;&#62;, 0))]"/>
+      <TfrxMemoView Name="Memo24" Left="265" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[Sum(IIF(&#60;frxDBDataset.&#34;OperSumm&#34;&#62; &#60; 0 , - &#60;frxDBDataset.&#34;OperSumm&#34;&#62;, 0))]"/>
+      <TfrxMemoView Name="Memo25" Left="362" Top="0" Width="168" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+      <TfrxMemoView Name="Memo26" Left="530" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo27" Left="607" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo47" Left="0" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" HAlign="haRight" Text="[Sum(1, MasterData1) + 2]"/>
+      <TfrxMemoView Name="Memo52" Left="342" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+    </TfrxFooter>
+    <TfrxChild Name="Child1" Height="18" Left="0" Top="401" Width="718,1107" OnBeforePrint="Child1OnBeforePrint" Stretched="True">
+      <TfrxMemoView Name="Memo28" Left="20" Top="0" Width="168" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text="Сальдо на [EndDate]"/>
+      <TfrxMemoView Name="Memo29" Left="188" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[IIF(total &#62; 0, total, 0)]"/>
+      <TfrxMemoView Name="Memo30" Left="265" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" Text="[IIF(total &#60;= 0, -total, 0)]"/>
+      <TfrxMemoView Name="Memo31" Left="362" Top="0" Width="168" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+      <TfrxMemoView Name="Memo32" Left="530" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo33" Left="607" Top="0" Width="77" Height="18" ShowHint="False" StretchMode="smMaxHeight" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo48" Left="0" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" HAlign="haRight" Text="[Sum(1, MasterData1) + 3]"/>
+      <TfrxMemoView Name="Memo53" Left="342" Top="0" Width="20" Height="18" ShowHint="False" StretchMode="smMaxHeight" Frame.Typ="15" Text=""/>
+    </TfrxChild>
+    <TfrxChild Name="Child2" Height="50" Left="0" Top="109" Width="718,1107" Child="Child3" Stretched="True">
+      <TfrxMemoView Name="Memo21" Left="0" Top="0" Width="684" Height="50" ShowHint="False" StretchMode="smMaxHeight" VAlign="vaCenter" Text="        Мы, нижеподписавшиеся, _________________ МЫ _________________, с одной стороны, и [PartnerName], с другой стороны, составили настоящий акт сверки в том, что состояние взаимных расчетов по данным учета следующее:"/>
+    </TfrxChild>
+    <TfrxChild Name="Child3" Height="86,03154" Left="0" Top="179" Width="718,1107">
+      <TfrxMemoView Name="Memo5" Left="20" Top="34,01574803" Width="168" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Наименование операции, документы"/>
+      <TfrxMemoView Name="Memo7" Left="188" Top="34,01574803" Width="77" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Дебет"/>
+      <TfrxMemoView Name="Memo8" Left="265" Top="34,01574803" Width="77" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Кредит"/>
+      <TfrxMemoView Name="Memo11" Left="0" Top="0" Width="342" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="По данным НАС"/>
+      <TfrxMemoView Name="Memo12" Left="342" Top="0" Width="342" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="По данным [PartnerName]"/>
+      <TfrxMemoView Name="Memo16" Left="362" Top="34,01574803" Width="168" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Наименование операции, документы"/>
+      <TfrxMemoView Name="Memo17" Left="530" Top="34,01574803" Width="77" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Дебет"/>
+      <TfrxMemoView Name="Memo18" Left="607" Top="34,01574803" Width="77" Height="34" ShowHint="False" Frame.Typ="15" HAlign="haCenter" VAlign="vaCenter" Text="Кредит"/>
+      <TfrxMemoView Name="Memo44" Left="0" Top="34,01574803" Width="20" Height="34" ShowHint="False" Frame.Typ="15" GapX="0" HAlign="haCenter" Text="№&#13;&#10;п/п"/>
+      <TfrxMemoView Name="Memo49" Left="342" Top="34,01574803" Width="20" Height="34" ShowHint="False" Frame.Typ="15" GapX="0" HAlign="haCenter" Text="№&#13;&#10;п/п"/>
+      <TfrxMemoView Name="Memo54" Left="20" Top="68,03154" Width="168" Height="18" ShowHint="False" Frame.Typ="15" Text="Сальдо на [StartDate]"/>
+      <TfrxMemoView Name="Memo55" Left="188" Top="68,03154" Width="77" Height="18" ShowHint="False" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" HideZeros="True" Text="[IIF(&#60;StartBalance&#62; &#62; 0, &#60;StartBalance&#62;, 0)]"/>
+      <TfrxMemoView Name="Memo56" Left="265" Top="68,03154" Width="77" Height="18" ShowHint="False" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2n" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" GapX="0" HAlign="haRight" HideZeros="True" Text="[IIF(&#60;StartBalance&#62; &#60; 0,  - &#60;StartBalance&#62;, 0)]"/>
+      <TfrxMemoView Name="Memo57" Left="362" Top="68,03154" Width="168" Height="18" ShowHint="False" Frame.Typ="15" Text=""/>
+      <TfrxMemoView Name="Memo58" Left="530" Top="68,03154" Width="77" Height="18" ShowHint="False" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo59" Left="607" Top="68,03154" Width="77" Height="18" ShowHint="False" DisplayFormat.DecimalSeparator="," DisplayFormat.FormatStr="%2.2m" DisplayFormat.Kind="fkNumeric" Frame.Typ="15" HAlign="haRight" Text=""/>
+      <TfrxMemoView Name="Memo60" Left="0" Top="68,03154" Width="20" Height="18" ShowHint="False" Frame.Typ="15" HAlign="haRight" Text="1"/>
+      <TfrxMemoView Name="Memo61" Left="342" Top="68,03154" Width="20" Height="18" ShowHint="False" Frame.Typ="15" Text=""/>
+    </TfrxChild>
+    <TfrxChild Name="Child4" Height="34" Left="0" Top="55" Width="718,1107" Child="Child2" Stretched="True">
+      <TfrxMemoView Name="Memo41" Left="0" Top="0" Width="684" Height="34" ShowHint="False" StretchMode="smMaxHeight" HAlign="haCenter" VAlign="vaCenter" Text="взаимных расчетов по состоянию на [EndDate]&#13;&#10;между Нами и [PartnerName]"/>
+    </TfrxChild>
+  </TfrxReportPage>
+</TfrxReport>

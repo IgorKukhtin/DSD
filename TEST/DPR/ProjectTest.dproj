@@ -540,6 +540,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\SourceFuel_Object.pas">
 				<Form>SourceFuel_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\CardFuel.pas">
 				<Form>CardFuelForm</Form>
@@ -997,6 +998,11 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovement.pas">
 				<Form>Report_GoodsMI_byMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment.pas">
+				<Form>TReport_JuridicalDefermentPayment</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
