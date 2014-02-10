@@ -78,6 +78,8 @@ type
     procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadSaleFormTest;
+    procedure LoadTaxFormTest;
+    procedure LoadTaxCorrectiveTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
@@ -387,6 +389,24 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
 end;
 
+procedure TLoadFormTest.LoadTaxFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
+end;
+
+procedure TLoadFormTest.LoadTaxCorrectiveTest;
+begin
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxCorrectiveJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxCorrectiveJournalForm');
+}
+end;
+
 procedure TLoadFormTest.LoadReturnOutFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReturnOutForm'));
@@ -604,6 +624,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment');
+
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

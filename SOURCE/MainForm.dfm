@@ -734,6 +734,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_JuridicalDefermentPayment'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsFinance_Separator'
         end
         item
@@ -1245,6 +1249,10 @@ object MainForm: TMainForm
     end
     object bbExit: TdxBarButton
       Action = actExit
+      Category = 0
+    end
+    object bbReport_JuridicalDefermentPayment: TdxBarButton
+      Action = actReport_JuridicalDefermentPayment
       Category = 0
     end
   end
@@ -2403,6 +2411,15 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_JuridicalDefermentPayment: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1089#1088#1086#1095#1082#1077
+      FormName = 'TReport_JuridicalDefermentPayment'
+      FormNameParam.Value = 'TReport_JuridicalDefermentPayment'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2429,7 +2446,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
