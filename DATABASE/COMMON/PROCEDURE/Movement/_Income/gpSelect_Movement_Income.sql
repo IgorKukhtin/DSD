@@ -21,13 +21,16 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
      vbUserId:= lpGetUserBySession (inSession);
 
-
+     -- Результат
      RETURN QUERY 
+     WITH tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                              )
        SELECT
              Movement.Id
            , Movement.InvNumber
@@ -61,7 +64,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyName
            , View_PersonalPacker.PersonalName  AS PersonalPackerName
        FROM Movement
-            -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -136,6 +140,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add Object_RoleAccessKey_View
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View
  14.12.13                                        * del Object_RoleAccessKey_View
  14.12.13                                        * add Object_RoleAccessKey_View

@@ -210,7 +210,7 @@ uses
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
   Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm},
+  SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm},
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
@@ -324,8 +324,8 @@ uses
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
-  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
+  Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
   Partner1CLink in '..\..\Forms\Guides\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   GoodsByGoodsKind1CLink in '..\..\Forms\Guides\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm},
   LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas',
@@ -345,7 +345,9 @@ uses
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm: TParentForm},
-  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm};
+  Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
+  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
 
 {$R *.RES}
 

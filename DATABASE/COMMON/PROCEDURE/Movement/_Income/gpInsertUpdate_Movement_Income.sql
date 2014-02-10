@@ -29,7 +29,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Income());
      -- определяем ключ доступа
-     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Income());
 
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
@@ -72,13 +72,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 07.12.13                                        * add lpGetAccessKey
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add lpGetAccessKey
  07.10.13                                        * add lpCheckRight
  06.10.13                                        * add lfCheck_Movement_Parent
  30.09.13                                        * del zc_MovementLinkObject_PersonalDriver

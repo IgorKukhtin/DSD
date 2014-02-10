@@ -29,13 +29,18 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
+     -- Результат
      RETURN QUERY
-     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
-                                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                                UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                                      )
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                              )
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -68,18 +73,23 @@ BEGIN
            , Object_TaxKind.ValueData         		    AS TaxKindName
 
 
-       FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.statusid = tmpStatus.StatusId
-               WHERE inIsPartnerDate = FALSE
-
-             UNION ALL SELECT MovementDate_OperDatePartner.movementid  AS Id FROM MovementDate AS MovementDate_OperDatePartner
-                        JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.movementid AND Movement.DescId = zc_Movement_ReturnIn()
-                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.statusid
-                       WHERE inIsPartnerDate = TRUE AND MovementDate_OperDatePartner.valuedata BETWEEN inStartDate AND inEndDate
-                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+       FROM (SELECT Movement.id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT MovementDate_OperDatePartner.MovementId  AS Id
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnIn()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = TRUE
+               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             ) AS tmpMovement
 
-            JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
@@ -152,8 +162,9 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
- 10.02.14                                                            * add TaxKind
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add Object_RoleAccessKey_View
+ 10.02.14                                                       * add TaxKind
  05.02.14                                        * add Object_InfoMoney_View
  30.01.14                                                       * add inIsPartnerDate, inIsErased
  14.01.14                                        * add Object_Contract_InvNumber_View
@@ -162,4 +173,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+--  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

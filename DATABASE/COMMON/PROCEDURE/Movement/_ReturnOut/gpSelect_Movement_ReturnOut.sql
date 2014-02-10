@@ -25,54 +25,65 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
-     vbUserId:= inSession;
+     -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnOut());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     RETURN QUERY
+     -- Результат
+     RETURN QUERY 
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
-                                UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
-                                UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
-                                      )
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                       )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                              )
        SELECT
-             Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
-           , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode                   AS StatusCode
-           , Object_Status.ValueData                    AS StatusName
-           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
-           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , MovementFloat_VATPercent.ValueData         AS VATPercent
-           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
-           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , Object_From.Id                             AS FromId
-           , Object_From.ValueData                      AS FromName
-           , Object_To.Id                               AS ToId
-           , Object_To.ValueData                        AS ToName
-           , Object_PaidKind.Id                         AS PaidKindId
-           , Object_PaidKind.ValueData                  AS PaidKindName
-           , View_Contract_InvNumber.ContractId         AS ContractId
-           , View_Contract_InvNumber.InvNumber          AS ContractName
-           , View_InfoMoney.InfoMoneyGroupName          AS InfoMoneyGroupName
-           , View_InfoMoney.InfoMoneyDestinationName    AS InfoMoneyDestinationName
-           , View_InfoMoney.InfoMoneyCode               AS InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName               AS InfoMoneyName
+             Movement.Id
+           , Movement.InvNumber
+           , Movement.OperDate
+           , Object_Status.ObjectCode          AS StatusCode
+           , Object_Status.ValueData           AS StatusName
 
-       FROM (SELECT Movement.id FROM  tmpStatus
-               JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnOut() AND Movement.statusid = tmpStatus.StatusId
-               WHERE inIsPartnerDate = FALSE
+           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
+           
+           , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData     AS VATPercent
+           , MovementFloat_ChangePercent.ValueData  AS ChangePercent           
+           
+           , MovementFloat_TotalCount.ValueData     AS TotalCount
+                                                                   
+           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
 
-             UNION ALL SELECT MovementDate_OperDatePartner.movementid  AS Id FROM MovementDate AS MovementDate_OperDatePartner
-                        JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.movementid AND Movement.DescId = zc_Movement_ReturnOut()
-                        JOIN tmpStatus ON tmpStatus.StatusId = Movement.statusid
-                       WHERE inIsPartnerDate = TRUE AND MovementDate_OperDatePartner.valuedata BETWEEN inStartDate AND inEndDate
-                         AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+           , Object_From.Id                    AS FromId
+           , Object_From.ValueData             AS FromName
+           , Object_To.Id                      AS ToId
+           , Object_To.ValueData               AS ToName
+        
+           , Object_PaidKind.Id                AS PaidKindId
+           , Object_PaidKind.ValueData         AS PaidKindName
+           , Object_Contract.Id                AS ContractId
+           , Object_Contract.ValueData         AS ContractName
+
+       FROM (SELECT Movement.id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnOut() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT MovementDate_OperDatePartner.MovementId  AS Id
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnOut()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = TRUE
+               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
             ) AS tmpMovement
 
-            JOIN Movement ON Movement.id = tmpMovement.id
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -131,13 +142,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.02.14                                                         *
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add Object_RoleAccessKey_View
+ 10.02.14                                                       *
+ 14.07.13         *
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())

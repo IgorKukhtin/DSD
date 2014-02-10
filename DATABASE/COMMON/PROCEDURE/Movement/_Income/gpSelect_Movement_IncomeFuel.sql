@@ -25,12 +25,11 @@ AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_Select_Movement_IncomeFuel());
      vbUserId:= lpGetUserBySession (inSession);
 
-
+     -- Результат
      RETURN QUERY 
        SELECT
              Movement.Id

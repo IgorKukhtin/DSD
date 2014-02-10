@@ -30,12 +30,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
-   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
-     -- определяем ключ доступа
-     -- vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
@@ -43,77 +40,25 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
-     -- сохранили ???частично??? <Документ>
-     ioId := lpInsertUpdate_Movement_Sale(ioId, inInvNumber, inInvNumberPartner, inInvNumberOrder,
-                     inOperDate, inOperDatePartner, inChecked, inPriceWithVAT, inVATPercent, inChangePercent, 
-                     inFromId, inToId, inPaidKindId, inContractId, inRouteSortingId, vbUserId);
-
-     IF COALESCE (ioPriceListId, 0) = 0
-     THEN
-         --Выбираем прайс
-         SELECT Object_PriceList.valuedata,  COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
-         INTO outPriceListName, ioPriceListId
-         FROM (SELECT inToId AS Id) AS Object_To
-
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
-                              ON ObjectDate_PartnerStartPromo.ObjectId = Object_To.Id
-                             AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
-                              ON ObjectDate_PartnerEndPromo.ObjectId = Object_To.Id
-                             AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
-                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_To.Id
-                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
-                             AND inOperDate BETWEEN ObjectDate_PartnerStartPromo.valuedata AND ObjectDate_PartnerEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
-                              ON ObjectLink_Partner_PriceList.ObjectId = Object_To.Id
-                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
-                             AND ObjectLink_Partner_PriceListPromo.objectid IS NULL
--- PriceList Juridical
-         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                              ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
-                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
-                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
-                             AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
-
-         LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
-                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
-                             AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
-
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
-                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.childobjectid
-                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
-                             AND (ObjectLink_Partner_PriceListPromo.childobjectid IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)-- можно и не проверять
-                             AND inOperDate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
-
-         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
-                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.childobjectid
-                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
-                             AND ObjectLink_Juridical_PriceListPromo.objectid IS NULL
-        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.childobjectid, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.childobjectid),ObjectLink_Juridical_PriceList.childobjectid),zc_PriceList_Basis())
-
-     ;
-
-     ELSE
-       SELECT Object.valuedata
-       INTO outPriceListName
-       FROM Object WHERE Object.Id = ioPriceListId;
-     END IF;
-
-     -- сохранили связь с <Прайс лист>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, ioPriceListId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     -- сохранили <Документ>
+     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
+            INTO ioId, ioPriceListId, outPriceListName
+     FROM lpInsertUpdate_Movement_Sale (ioId               := ioId
+                                      , inInvNumber        := inInvNumber
+                                      , inInvNumberPartner := inInvNumberPartner
+                                      , inInvNumberOrder   := inInvNumberOrder
+                                      , inOperDate         := inOperDate
+                                      , inOperDatePartner  := inOperDatePartner
+                                      , inChecked          := inChecked
+                                      , inPriceWithVAT     := inPriceWithVAT
+                                      , inVATPercent       := inVATPercent
+                                      , inFromId           := inFromId
+                                      , inToId             := inToId
+                                      , inPaidKindId       := inPaidKindId
+                                      , inContractId       := inContractId
+                                      , inContractId       := inRouteSortingId
+                                      , inUserId           := vbUserId
+                                       ) AS tmp;
 
 END;
 $BODY$
@@ -122,6 +67,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * в lp-должно быть все
  04.02.14                         * add lpInsertUpdate_Movement_Sale
  31.01.14                                                       * add inPriceListId
  30.01.14                                                       * add inInvNumberPartner
