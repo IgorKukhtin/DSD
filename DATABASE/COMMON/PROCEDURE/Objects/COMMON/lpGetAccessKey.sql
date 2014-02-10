@@ -16,6 +16,7 @@ BEGIN
   -- для Админа  - Все Права
   IF EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = inUserId)
   THEN
+      -- Transport
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Transport()
                        , zc_Enum_Process_Get_Movement_Transport()
                        , zc_Enum_Process_InsertUpdate_Movement_Income()
@@ -29,10 +30,21 @@ BEGIN
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 24)); -- Транспорт Днепр
       ELSE
+      -- Document
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
+                       , zc_Enum_Process_InsertUpdate_Movement_ReturnOut()
+                       , zc_Enum_Process_InsertUpdate_Movement_Sale()
+                       , zc_Enum_Process_InsertUpdate_Movement_ReturnInt()
+                        )
+      THEN
+           inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)
+      ELSE
+      -- Service
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service())
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 44)); -- Начисления Днепр
       ELSE
+      -- Cash
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
                        , zc_Enum_Process_Get_Movement_Cash()
                         )
@@ -40,6 +52,8 @@ BEGIN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54)); -- Касса Днепр
       ELSE
           RAISE EXCEPTION 'У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+
+      END IF;
       END IF;
       END IF;
       END IF;
@@ -70,6 +84,7 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add Document...
  13.01.14                                        * возвращаем права админу :-)
  15.12.13                                        * add zc_Enum_Process_AccessKey_TrasportAll
  07.12.13                                        *
