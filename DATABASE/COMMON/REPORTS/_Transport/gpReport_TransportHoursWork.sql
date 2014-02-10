@@ -96,8 +96,12 @@ $BODY$BEGIN
               LEFT JOIN MovementFloat AS MovementFloat_HoursAdd ON MovementFloat_HoursAdd.MovementId =  tmpMovementAll.Id
                                                                AND MovementFloat_HoursAdd.DescId = zc_MovementFloat_HoursAdd()
               -- ограничиваем по Филиалу
-              join Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = View_PersonalDriver.UnitId
-                                   AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+              LEFT JOIN Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = View_PersonalDriver.UnitId
+                                  -- AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+           WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
+              OR inBranchId = 0 
+              OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)
+
 ;
 
 END;
@@ -110,6 +114,7 @@ ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.02.14         * изменение условий ограничения филиала inBranchId 
  16.12.13         * add inBranchId             
  12.11.13                                        * add zc_MovementLinkObject_PersonalDriverMore
  27.10.13         *

@@ -167,11 +167,13 @@ BEGIN
              LEFT JOIN Object AS Object_CarModel ON Object_CarModel.Id = ObjectLink_Car_CarModel.ChildObjectId
              
              -- Ограничили по Филиалу, если надо
-             JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
+             LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = Object_Car.Id
                                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-             JOIN Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
-                                                     AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
-             
+             LEFT JOIN Object_Unit_View AS ViewObject_Unit ON ViewObject_Unit.Id = ObjectLink_Car_Unit.ChildObjectId
+                                                    -- AND (ViewObject_Unit.BranchId = inBranchId OR inBranchId = 0)
+          WHERE COALESCE (ViewObject_Unit.BranchId, 0) = inBranchId 
+             OR inBranchId = 0 
+             OR (inBranchId = zc_Branch_Basis() AND COALESCE (ViewObject_Unit.BranchId, 0) = 0)    
     ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -184,6 +186,7 @@ ALTER FUNCTION gpReport_Fuel (TDateTime, TDateTime, Integer, Integer, Integer, T
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.02.14         * изменение условий ограничения филиала inBranchId 
  15.01.14                        * 
  21.12.13                                        * Personal -> Member
  11.12.13         * add inBranchId              

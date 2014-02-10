@@ -1,19 +1,24 @@
 -- Function: gpSelect_Movement_ReturnOut()
 
--- DROP FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnOut(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
+    IN inIsPartnerDate Boolean ,
+    IN inIsErased      Boolean ,
     IN inSession     TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , PriceWithVAT Boolean
              , OperDatePartner TDateTime
-             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
-             , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , VATPercent TFloat, ChangePercent TFloat
+             , TotalCount TFloat, TotalCountPartner TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
 $BODY$
@@ -25,7 +30,11 @@ BEGIN
 
      -- Ðåçóëüòàò
      RETURN QUERY 
-     WITH tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                       )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
         , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
@@ -58,23 +67,36 @@ BEGIN
            , Object_Contract.Id                AS ContractId
            , Object_Contract.ValueData         AS ContractName
 
-       FROM Movement
-            JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+       FROM (SELECT Movement.id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnOut() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT MovementDate_OperDatePartner.MovementId  AS Id
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_ReturnOut()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = TRUE
+               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            ) AS tmpMovement
 
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
-                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
-                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-        
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-        
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -82,15 +104,16 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
+                                    ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
-
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -112,14 +135,14 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+            ;
 
-       WHERE Movement.DescId = zc_Movement_ReturnOut()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
-  
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
+<<<<<<< HEAD
 ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
@@ -131,3 +154,15 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar) OWNE
 
 -- òåñò
 -- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+=======
+ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+
+/*
+ ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
+               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 10.02.14                                                         *
+*/
+
+-- òåñò
+--  SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+>>>>>>> refs/remotes/origin/master

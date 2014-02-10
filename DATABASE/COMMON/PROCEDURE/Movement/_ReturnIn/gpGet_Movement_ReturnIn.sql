@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
              )
 AS
 $BODY$
@@ -33,7 +34,7 @@ BEGIN
              , CAST (False as Boolean)              AS Checked
              , inOperDate				      		AS OperDatePartner
              , CAST (False as Boolean)              AS PriceWithVAT
-             , CAST (20 as TFloat)                  AS VATPercent
+             , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS ChangePercent
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
@@ -47,7 +48,11 @@ BEGIN
              , CAST ('' as TVarChar) 				AS PaidKindName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+             , 0                     				AS TaxKindId
+             , CAST ('' as TVarChar) 				AS TaxKindName
+
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate;
      ELSE
 
      RETURN QUERY
@@ -74,6 +79,8 @@ BEGIN
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
            , View_Contract_InvNumber.InvNumber      AS ContractName
+           , Object_TaxKind.Id                		AS TaxKindId
+           , Object_TaxKind.ValueData         		AS TaxKindName
 
 
        FROM Movement
@@ -129,6 +136,12 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -146,6 +159,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 10.02.14                                                            * add TaxKind
  09.02.14                                        * add Object_Contract_InvNumber_View
  27.01.14                                                          * -Car -Driver +Checked +id=0
  17.07.13         *

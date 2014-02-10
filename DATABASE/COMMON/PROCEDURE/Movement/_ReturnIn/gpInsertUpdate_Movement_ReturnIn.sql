@@ -11,18 +11,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inChecked             Boolean   , -- Проверен
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
-    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки 
-
+    IN inChangePercent       TFloat    , -- (-)% Скидки (+)% Наценки
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
-    IN inPaidKindId          Integer   , -- Виды форм оплаты 
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
-    
---    IN inCarId               Integer   , -- Автомобили
---    IN inPersonalDriverId    Integer   , -- Сотрудник (водитель)
-    
+    IN inDocumentTaxKind     Integer   , -- Тип формирования налогового документа
     IN inSession             TVarChar    -- сессия пользователя
-)                               
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -65,12 +61,10 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-/*
-     -- сохранили связь с <Автомобили>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Car(), ioId, inCarId);
-     -- сохранили связь с <Сотрудник (водитель)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
-*/
+
+     -- сохранили связь с <Тип формирования налогового документа>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKind);
+
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -86,7 +80,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  13.01.14                                        * add/del property from redmain
- 17.07.13         * 
+ 17.07.13         *
 */
 
 -- тест
