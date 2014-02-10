@@ -26,9 +26,13 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbAccessKeyId Integer;
 BEGIN
+     -- определяем ключ доступа
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale());
+
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL);
+     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили свойство <Дата накладной у контрагента>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
