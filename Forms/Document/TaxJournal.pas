@@ -27,28 +27,25 @@ uses
 
 type
   TTaxJournalForm = class(TAncestorJournalForm)
-    colOperDatePartner: TcxGridDBColumn;
+    colDateRegistered: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
     colPriceWithVAT: TcxGridDBColumn;
     colVATPercent: TcxGridDBColumn;
     colTotalSummVAT: TcxGridDBColumn;
     colTotalSummMVAT: TcxGridDBColumn;
     colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
+    colTaxKindName: TcxGridDBColumn;
     colContractName: TcxGridDBColumn;
-    colInvNumberOrder: TcxGridDBColumn;
     colChecked: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
     edIsPartnerDate: TcxCheckBox;
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public
