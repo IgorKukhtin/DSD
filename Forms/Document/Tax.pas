@@ -34,32 +34,24 @@ type
     edContract: TcxButtonEdit;
     cxLabel9: TcxLabel;
     cxLabel6: TcxLabel;
-    edPaidKind: TcxButtonEdit;
+    edDocumentTaxKind: TcxButtonEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    DocumentTaxKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
-    edOperDatePartner: TcxDateEdit;
+    edDateRegistered: TcxDateEdit;
     cxLabel10: TcxLabel;
     edIsChecked: TcxCheckBox;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colAmountChangePercent: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colChangePercentAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
@@ -71,7 +63,6 @@ type
     actSPPrintSaleProcName: TdsdExecStoredProc;
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
@@ -82,6 +73,8 @@ type
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    edIsDocument: TcxCheckBox;
+    edIsRegistered: TcxCheckBox;
   private
     { Private declarations }
   public

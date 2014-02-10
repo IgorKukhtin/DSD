@@ -273,8 +273,9 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSaleForm'
+      FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -293,8 +294,9 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSaleForm'
+      FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
       GuiParams = <
         item
           Name = 'Id'

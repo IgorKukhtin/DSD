@@ -24,7 +24,7 @@ $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Tax());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -167,7 +167,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  09.02.14                                                        *
 */
 

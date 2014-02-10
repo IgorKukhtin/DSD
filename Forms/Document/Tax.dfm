@@ -1,27 +1,29 @@
 inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
-  ClientWidth = 1015
-  ExplicitWidth = 1023
+  ClientWidth = 1054
+  ExplicitWidth = 1062
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 128
-    Width = 1015
+    Width = 1054
     Height = 540
     ExplicitTop = 128
     ExplicitWidth = 1015
     ExplicitHeight = 540
     ClientRectBottom = 536
-    ClientRectRight = 1011
+    ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1009
+        Width = 1048
         Height = 514
-        ExplicitWidth = 1009
+        ExplicitLeft = 48
+        ExplicitTop = 64
+        ExplicitWidth = 1048
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -33,12 +35,10 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChangePercent
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
             end
             item
               Format = ',0.####'
@@ -48,7 +48,6 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -59,12 +58,10 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountChangePercent
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
             end
             item
               Format = ',0.####'
@@ -74,7 +71,6 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
@@ -119,44 +115,9 @@ inherited TaxForm: TTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 100
           end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colChangePercentAmount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
-            DataBinding.FieldName = 'ChangePercentAmount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colAmountChangePercent: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
-            DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -191,22 +152,6 @@ inherited TaxForm: TTaxForm
             Options.Editing = False
             Width = 91
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
         end
       end
     end
@@ -216,7 +161,7 @@ inherited TaxForm: TTaxForm
       ExplicitWidth = 1009
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1009
+        Width = 1048
         Height = 514
         ExplicitWidth = 1009
         ExplicitHeight = 514
@@ -241,7 +186,7 @@ inherited TaxForm: TTaxForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1015
+    Width = 1054
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1015
@@ -308,7 +253,7 @@ inherited TaxForm: TTaxForm
       Caption = #1050#1086#1084#1091
     end
     object edContract: TcxButtonEdit
-      Left = 598
+      Left = 512
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -320,26 +265,25 @@ inherited TaxForm: TTaxForm
       Width = 272
     end
     object cxLabel9: TcxLabel
-      Left = 598
+      Left = 512
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 512
+      Left = 793
       Top = 5
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+      Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
-    object edPaidKind: TcxButtonEdit
-      Left = 512
+    object edDocumentTaxKind: TcxButtonEdit
+      Left = 793
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 77
+      Width = 91
     end
     object edPriceWithVAT: TcxCheckBox
       Left = 374
@@ -361,26 +305,12 @@ inherited TaxForm: TTaxForm
       Top = 45
       Caption = '% '#1053#1044#1057
     end
-    object edChangePercent: TcxCurrencyEdit
-      Left = 598
-      Top = 63
-      Enabled = False
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      TabOrder = 17
-      Width = 144
-    end
-    object cxLabel8: TcxLabel
-      Left = 598
-      Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
-    end
-    object edOperDatePartner: TcxDateEdit
+    object edDateRegistered: TcxDateEdit
       Left = 104
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 19
+      TabOrder = 17
       Width = 100
     end
     object cxLabel10: TcxLabel
@@ -389,10 +319,10 @@ inherited TaxForm: TTaxForm
       Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
     end
     object edIsChecked: TcxCheckBox
-      Left = 760
+      Left = 595
       Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 21
+      TabOrder = 19
       Width = 124
     end
     object cxLabel12: TcxLabel
@@ -403,8 +333,22 @@ inherited TaxForm: TTaxForm
     object edInvNumberPartner: TcxTextEdit
       Left = 210
       Top = 63
-      TabOrder = 23
+      TabOrder = 21
       Width = 127
+    end
+    object edIsDocument: TcxCheckBox
+      Left = 717
+      Top = 63
+      Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 22
+      Width = 124
+    end
+    object edIsRegistered: TcxCheckBox
+      Left = 837
+      Top = 63
+      Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
+      TabOrder = 23
+      Width = 165
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -455,7 +399,7 @@ inherited TaxForm: TTaxForm
           Action = actPrintSaleTax
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
+      ImageIndex = 16
     end
     object actPrintSaleTax: TdsdPrintAction [11]
       Category = 'DSDLib'
@@ -560,18 +504,6 @@ inherited TaxForm: TTaxForm
         end>
       Caption = 'actSPPrintSaleProcName'
     end
-    object actRefreshPrice: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProc = spSelect
-      StoredProcList = <
-        item
-          StoredProc = spSelect
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -582,18 +514,13 @@ inherited TaxForm: TTaxForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Sale'
+    StoredProcName = 'gpSelect_MovementItem_Tax'
     Params = <
       item
         Name = 'inMovementId'
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListId'
-        Value = ''
         ParamType = ptInput
       end
       item
@@ -609,6 +536,10 @@ inherited TaxForm: TTaxForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'delme'
+        Value = ''
       end>
     Left = 160
     Top = 248
@@ -755,12 +686,12 @@ inherited TaxForm: TTaxForm
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Sale'
+    StoredProcName = 'gpUpdate_Status_Tax'
     Left = 104
     Top = 88
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale'
+    StoredProcName = 'gpGet_Movement_Tax'
     Params = <
       item
         Name = 'inMovementId'
@@ -808,16 +739,22 @@ inherited TaxForm: TTaxForm
         DataType = ftBoolean
       end
       item
-        Name = 'OperDatePartner'
-        Value = 0d
-        Component = edOperDatePartner
-        DataType = ftDateTime
+        Name = 'Document'
+        Value = 'False'
+        Component = edIsDocument
+        DataType = ftBoolean
       end
       item
-        Name = 'InvNumberPartner'
-        Value = ''
-        Component = edInvNumberPartner
-        DataType = ftString
+        Name = 'Registered'
+        Value = 'False'
+        Component = edIsRegistered
+        DataType = ftBoolean
+      end
+      item
+        Name = 'DateRegistered'
+        Value = 0d
+        Component = edDateRegistered
+        DataType = ftDateTime
       end
       item
         Name = 'PriceWithVAT'
@@ -832,10 +769,10 @@ inherited TaxForm: TTaxForm
         DataType = ftFloat
       end
       item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
       end
       item
         Name = 'FromId'
@@ -864,19 +801,6 @@ inherited TaxForm: TTaxForm
         DataType = ftString
       end
       item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
@@ -890,33 +814,38 @@ inherited TaxForm: TTaxForm
         DataType = ftString
       end
       item
-        Name = 'RouteSortingId'
+        Name = 'TaxKindId'
         Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
       end
       item
-        Name = 'RouteSortingName'
+        Name = 'TaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Value = ''
         DataType = ftString
       end
       item
-        Name = 'InvNumberOrder'
+        Value = ''
+      end
+      item
         Value = ''
         DataType = ftString
       end
       item
-        Name = 'PriceListId'
-        Value = ''
-      end
-      item
-        Name = 'PriceListName'
-        Value = ''
-        DataType = ftString
+        Value = 0.000000000000000000
+        DataType = ftFloat
       end>
     Left = 216
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale'
+    StoredProcName = 'gpInsertUpdate_Movement_Tax'
     Params = <
       item
         Name = 'ioId'
@@ -940,12 +869,6 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inInvNumberOrder'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -955,7 +878,7 @@ inherited TaxForm: TTaxForm
       item
         Name = 'inOperDatePartner'
         Value = 0d
-        Component = edOperDatePartner
+        Component = edDateRegistered
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -963,6 +886,20 @@ inherited TaxForm: TTaxForm
         Name = 'inChecked'
         Value = 'False'
         Component = edIsChecked
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRegistered'
+        Value = 'False'
+        Component = edIsRegistered
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocument'
+        Value = 'False'
+        Component = edIsDocument
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -981,13 +918,6 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -1002,13 +932,6 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inContractId'
         Value = ''
         Component = ContractGuides
@@ -1016,17 +939,23 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inRouteSortingId'
+        Name = 'inDocumentTaxKind'
         Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'ioPriceListId'
+        Name = '11'
         Value = ''
-        ParamType = ptInputOutput
+        DataType = ftString
       end
       item
-        Name = 'outPriceListName'
+        Name = '22'
+        Value = ''
+      end
+      item
+        Name = '33'
         Value = ''
         DataType = ftString
       end>
@@ -1050,7 +979,7 @@ inherited TaxForm: TTaxForm
         Control = edOperDate
       end
       item
-        Control = edOperDatePartner
+        Control = edDateRegistered
       end
       item
         Control = edFrom
@@ -1070,11 +999,12 @@ inherited TaxForm: TTaxForm
         Control = edVATPercent
       end
       item
-      end
-      item
+        Control = edDocumentTaxKind
       end
       item
         Control = edIsChecked
+      end
+      item
       end>
     Left = 232
     Top = 193
@@ -1085,16 +1015,17 @@ inherited TaxForm: TTaxForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
+    StoredProcName = 'gpMovementItem_Tax_SetUnErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Tax_SetErased'
     Left = 718
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Tax'
     Params = <
       item
         Name = 'ioId'
@@ -1123,27 +1054,6 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
-        Component = MasterCDS
-        ComponentItem = 'AmountPartner'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmountChangePercent'
-        Component = MasterCDS
-        ComponentItem = 'AmountChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inChangePercentAmount'
-        Component = MasterCDS
-        ComponentItem = 'ChangePercentAmount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
         Name = 'inPrice'
         Component = MasterCDS
         ComponentItem = 'Price'
@@ -1164,30 +1074,39 @@ inherited TaxForm: TTaxForm
         DataType = ftFloat
       end
       item
-        Name = 'inHeadCount'
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPartionGoods'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inGoodsKindId'
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item
-        Name = 'inAssetId'
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
+        Name = 'del8'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'del9'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'del10'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'del11'
+        Value = Null
+        DataType = ftFloat
+      end
+      item
+        Name = 'del12'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'del13'
+        Value = Null
       end>
     Left = 160
     Top = 368
@@ -1199,9 +1118,9 @@ inherited TaxForm: TTaxForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1226,34 +1145,21 @@ inherited TaxForm: TTaxForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
+        Name = 'JuridicalId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
-        Name = 'PartnerName'
+        Name = 'JuridicalName'
         Value = ''
         Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1273,18 +1179,18 @@ inherited TaxForm: TTaxForm
     Left = 408
     Top = 8
   end
-  object PaidKindGuides: TdsdGuides
+  object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
+    FormName = 'TDocumentTaxKindForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = PaidKindGuides
+        Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1292,12 +1198,13 @@ inherited TaxForm: TTaxForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PaidKindGuides
+        Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 528
+    Left = 816
+    Top = 8
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1323,7 +1230,7 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 728
+    Left = 616
   end
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'
@@ -1378,10 +1285,7 @@ inherited TaxForm: TTaxForm
     Top = 392
   end
   object RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = actRefreshPrice
-    ComponentList = <
-      item
-      end>
+    ComponentList = <>
     Left = 496
     Top = 96
   end
