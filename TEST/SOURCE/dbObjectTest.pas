@@ -62,6 +62,7 @@ type
     procedure JuridicalGroup_Test;
     procedure Measure_Test;
     procedure PaidKind_Test;
+    procedure DocumentTaxKind_Test;
     procedure Partner_Test;
     procedure PriceList_Test;
     procedure Route_Test;
@@ -185,6 +186,15 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePaidKind(const Id: integer; Code: Integer;
+        Name: string): integer;
+    constructor Create; override;
+  end;
+
+  TDocumentTaxKindTest = class(TObjectTest)
+  private
+    function InsertDefault: integer; override;
+  public
+    function InsertUpdateDocumentTaxKind(const Id: integer; Code: Integer;
         Name: string): integer;
     constructor Create; override;
   end;
@@ -1200,6 +1210,51 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
+{=================}
+{TPaidKindTest}
+constructor TDocumentTaxKindTest.Create;
+begin
+  inherited;
+  spInsertUpdate := 'gpInsertUpdate_Object_DocumentTaxKind';
+  spSelect := 'gpSelect_Object_DocumentTaxKind';
+  spGet := 'gpGet_Object_DocumentTaxKind';
+end;
+
+function TDocumentTaxKindTest.InsertDefault: integer;
+begin
+  result := InsertUpdateDocumentTaxKind(0, -3, 'Тип формирования налогового документа');
+  inherited;
+end;
+
+function TDocumentTaxKindTest.InsertUpdateDocumentTaxKind;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
+  FParams.AddParam('inCode', ftInteger, ptInput, Code);
+  FParams.AddParam('inName', ftString, ptInput, Name);
+  result := InsertUpdate(FParams);
+end;
+
+procedure TdbObjectTest.DocumentTaxKind_Test;
+var Id: integer;
+    RecordCount: Integer;
+    ObjectTest: TDocumentTaxKindTest;
+begin
+  ObjectTest := TDocumentTaxKindTest.Create;
+  // Получим список
+  RecordCount := GetRecordCount(ObjectTest);
+  // Вставка
+  Id := ObjectTest.InsertDefault;
+  try
+    // Получение данных
+    with ObjectTest.GetRecord(Id) do
+      Check((FieldByName('Name').AsString = 'Тип формирования налогового документа'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
+  finally
+    ObjectTest.Delete(Id);
+  end;
+end;
+{==================================}
+
 
 {TContractKindTest}
 constructor TContractKindTest.Create;

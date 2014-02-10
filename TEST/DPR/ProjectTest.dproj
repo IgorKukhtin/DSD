@@ -612,8 +612,8 @@
 				<Form>StaffListSummKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
-				<Form>PaidKindForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\DocumentTaxKind.pas">
+				<Form>DocumentTaxKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
@@ -1011,6 +1011,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale.pas">
 				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
+				<Form>PaidKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

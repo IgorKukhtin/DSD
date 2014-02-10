@@ -35,16 +35,11 @@ type
     cxLabel9: TcxLabel;
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
     edChangePercent: TcxCurrencyEdit;
     cxLabel8: TcxLabel;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
     PaidKindGuides: TdsdGuides;
@@ -66,9 +61,6 @@ type
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    cxLabel11: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;

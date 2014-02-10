@@ -2,8 +2,8 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitWidth = 1031
-  ExplicitHeight = 707
+  ExplicitWidth = 1023
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -16,15 +16,13 @@ inherited TaxForm: TTaxForm
     ClientRectBottom = 536
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 24
-      ExplicitWidth = 1007
-      ExplicitHeight = 512
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1007
-        Height = 512
-        ExplicitWidth = 1007
-        ExplicitHeight = 512
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -86,6 +84,10 @@ inherited TaxForm: TTaxForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -209,14 +211,15 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1015
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1015
-        ExplicitHeight = 518
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -338,22 +341,11 @@ inherited TaxForm: TTaxForm
       TabOrder = 13
       Width = 77
     end
-    object cxLabel5: TcxLabel
-      Left = 300
-      Top = 45
-      Caption = #8470' '#1079#1072#1103#1074#1082#1080
-    end
-    object edInvNumberOrder: TcxTextEdit
-      Left = 300
-      Top = 63
-      TabOrder = 15
-      Width = 68
-    end
     object edPriceWithVAT: TcxCheckBox
       Left = 374
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 16
+      TabOrder = 14
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
@@ -361,7 +353,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 17
+      TabOrder = 15
       Width = 77
     end
     object cxLabel7: TcxLabel
@@ -375,7 +367,7 @@ inherited TaxForm: TTaxForm
       Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
-      TabOrder = 19
+      TabOrder = 17
       Width = 144
     end
     object cxLabel8: TcxLabel
@@ -383,68 +375,36 @@ inherited TaxForm: TTaxForm
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
-    object cxLabel13: TcxLabel
-      Left = 749
-      Top = 46
-      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1072
-    end
-    object edRouteSorting: TcxButtonEdit
-      Left = 749
-      Top = 63
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 22
-      Width = 121
-    end
     object edOperDatePartner: TcxDateEdit
       Left = 104
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 23
+      TabOrder = 19
       Width = 100
     end
     object cxLabel10: TcxLabel
       Left = 104
       Top = 45
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+      Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
     end
     object edIsChecked: TcxCheckBox
-      Left = 880
+      Left = 760
       Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 25
-      Width = 124
-    end
-    object cxLabel11: TcxLabel
-      Left = 880
-      Top = 5
-      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
-    end
-    object edPriceList: TcxButtonEdit
-      Left = 876
-      Top = 23
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 27
+      TabOrder = 21
       Width = 124
     end
     object cxLabel12: TcxLabel
       Left = 210
       Top = 45
-      Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+      Caption = #8470' '#1053#1086#1084#1077#1088' '#1085#1072#1083#1086#1075'. '#1076#1086#1082
     end
     object edInvNumberPartner: TcxTextEdit
       Left = 210
       Top = 63
-      TabOrder = 29
-      Width = 84
+      TabOrder = 23
+      Width = 127
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -470,7 +430,6 @@ inherited TaxForm: TTaxForm
           StoredProc = spSelectMIContainer
         end
         item
-          StoredProc = spInsertUpdateMovement
         end>
       RefreshOnTabSetChanges = True
     end
@@ -635,8 +594,6 @@ inherited TaxForm: TTaxForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -935,33 +892,24 @@ inherited TaxForm: TTaxForm
       item
         Name = 'RouteSortingId'
         Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
       end
       item
         Name = 'RouteSortingName'
         Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'InvNumberOrder'
         Value = ''
-        Component = edInvNumberOrder
         DataType = ftString
       end
       item
         Name = 'PriceListId'
         Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 216
@@ -994,7 +942,6 @@ inherited TaxForm: TTaxForm
       item
         Name = 'inInvNumberOrder'
         Value = ''
-        Component = edInvNumberOrder
         DataType = ftString
         ParamType = ptInput
       end
@@ -1071,22 +1018,16 @@ inherited TaxForm: TTaxForm
       item
         Name = 'inRouteSortingId'
         Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'ioPriceListId'
         Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'outPriceListName'
         Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 162
@@ -1121,7 +1062,6 @@ inherited TaxForm: TTaxForm
         Control = edInvNumberPartner
       end
       item
-        Control = edInvNumberOrder
       end
       item
         Control = edPriceWithVAT
@@ -1130,10 +1070,8 @@ inherited TaxForm: TTaxForm
         Control = edVATPercent
       end
       item
-        Control = edRouteSorting
       end
       item
-        Control = edPriceList
       end
       item
         Control = edIsChecked
@@ -1258,33 +1196,6 @@ inherited TaxForm: TTaxForm
     Left = 912
     Top = 262
   end
-  object GuidesRouteSorting: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 792
-    Top = 64
-  end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
@@ -1309,7 +1220,7 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
+    Left = 272
     Top = 8
   end
   object GuidesTo: TdsdGuides
@@ -1359,7 +1270,7 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 416
+    Left = 408
     Top = 8
   end
   object PaidKindGuides: TdsdGuides
@@ -1413,32 +1324,6 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end>
     Left = 728
-  end
-  object GuidesPricelist: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesPricelist
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 916
   end
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'
@@ -1496,7 +1381,6 @@ inherited TaxForm: TTaxForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
       end>
     Left = 496
     Top = 96
