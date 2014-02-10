@@ -347,8 +347,8 @@ object ContractConditionValueForm: TContractConditionValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -395,6 +395,15 @@ object ContractConditionValueForm: TContractConditionValueForm
         item
           Visible = True
           ItemName = 'bbSetUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbInsertJuridical'
         end
         item
           Visible = True
@@ -455,6 +464,10 @@ object ContractConditionValueForm: TContractConditionValueForm
     end
     object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
+      Category = 0
+    end
+    object bbInsertJuridical: TdxBarButton
+      Action = actMultiInsertJuridical
       Category = 0
     end
   end
@@ -747,6 +760,31 @@ object ContractConditionValueForm: TContractConditionValueForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object actInsertJuridical: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      ImageIndex = 0
+      FormName = 'TJuridicalEditForm'
+      FormNameParam.Value = 'TJuridicalEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '0'
+        end>
+      isShowModal = True
+    end
+    object actMultiInsertJuridical: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actInsertJuridical
+        end
+        item
+          Action = actInsert
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
+      ImageIndex = 0
     end
   end
   object dsdStoredProc: TdsdStoredProc

@@ -88,6 +88,9 @@ type
     clValue: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
     clJuridicalName_find: TcxGridDBColumn;
+    actInsertJuridical: TdsdInsertUpdateAction;
+    bbInsertJuridical: TdxBarButton;
+    actMultiInsertJuridical: TMultiAction;
   private
     { Private declarations }
   public
