@@ -1,28 +1,31 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 759
-  ClientWidth = 1049
-  ExplicitWidth = 1057
-  ExplicitHeight = 793
+  ClientHeight = 676
+  ClientWidth = 858
+  ExplicitTop = 5
+  ExplicitWidth = 874
+  ExplicitHeight = 711
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 157
-    Width = 1049
-    Height = 602
-    ExplicitTop = 157
+    Top = 126
+    Width = 858
+    Height = 550
+    ExplicitTop = 155
     ExplicitWidth = 1049
-    ExplicitHeight = 602
-    ClientRectBottom = 598
-    ClientRectRight = 1045
+    ExplicitHeight = 604
+    ClientRectBottom = 550
+    ClientRectRight = 858
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1043
-      ExplicitHeight = 576
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1049
+      ExplicitHeight = 580
       inherited cxGrid: TcxGrid
-        Width = 1043
-        Height = 576
-        ExplicitWidth = 1043
-        ExplicitHeight = 576
+        Width = 858
+        Height = 526
+        ExplicitWidth = 1049
+        ExplicitHeight = 580
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -82,6 +85,10 @@ inherited ReturnInForm: TReturnInForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -122,7 +129,7 @@ inherited ReturnInForm: TReturnInForm
             Width = 120
           end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -132,7 +139,7 @@ inherited ReturnInForm: TReturnInForm
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088'.'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -188,15 +195,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1043
-      ExplicitHeight = 576
+      ExplicitTop = 24
+      ExplicitWidth = 1049
+      ExplicitHeight = 580
       inherited cxGridEntry: TcxGrid
-        Width = 1043
-        Height = 576
-        ExplicitWidth = 1043
-        ExplicitHeight = 576
+        Width = 858
+        Height = 526
+        ExplicitWidth = 1049
+        ExplicitHeight = 580
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -218,26 +224,30 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1049
-    Height = 129
+    Width = 858
+    Height = 100
     TabOrder = 3
-    ExplicitWidth = 1049
-    ExplicitHeight = 129
+    ExplicitWidth = 890
+    ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
+      ExplicitWidth = 120
+      Width = 120
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 112
-      ExplicitLeft = 112
+      Left = 136
+      ExplicitLeft = 136
     end
     inherited cxLabel2: TcxLabel
-      Left = 112
-      ExplicitLeft = 112
+      Left = 136
+      Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+      ExplicitLeft = 136
+      ExplicitWidth = 71
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -246,15 +256,17 @@ inherited ReturnInForm: TReturnInForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitHeight = 24
+      ExplicitWidth = 120
+      ExplicitHeight = 22
+      Width = 120
     end
     object cxLabel3: TcxLabel
-      Left = 743
+      Left = 385
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
-      Left = 743
+      Left = 385
       Top = 23
       Properties.Buttons = <
         item
@@ -265,7 +277,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 140
     end
     object edFrom: TcxButtonEdit
-      Left = 221
+      Left = 245
       Top = 23
       Properties.Buttons = <
         item
@@ -276,12 +288,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 130
     end
     object cxLabel4: TcxLabel
-      Left = 221
+      Left = 245
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edContract: TcxButtonEdit
-      Left = 445
+      Left = 625
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -290,20 +302,20 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 10
-      Width = 286
+      Width = 150
     end
     object cxLabel9: TcxLabel
-      Left = 445
+      Left = 625
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 359
+      Left = 539
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 359
+      Left = 539
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -315,53 +327,53 @@ inherited ReturnInForm: TReturnInForm
       Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 175
+      Left = 245
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
-      Width = 137
+      Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 307
+      Left = 385
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 15
-      Width = 65
+      Width = 80
     end
     object cxLabel7: TcxLabel
-      Left = 307
+      Left = 385
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 386
+      Left = 472
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 17
-      Width = 129
+      Width = 144
     end
     object cxLabel8: TcxLabel
-      Left = 378
+      Left = 472
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 527
+      Left = 136
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 19
-      Width = 108
+      Width = 100
     end
     object cxLabel10: TcxLabel
-      Left = 527
+      Left = 136
       Top = 45
-      Caption = #1044#1072#1090#1072' '#1085#1072#1082#1083'. '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 641
+      Left = 625
       Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 21
@@ -509,15 +521,15 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Action = mactPrint
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 782
-    Top = 273
+    Left = 654
+    Top = 337
   end
   inherited PopupMenu: TPopupMenu
     Left = 800
@@ -579,13 +591,13 @@ inherited ReturnInForm: TReturnInForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 48
+    Left = 24
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
-    Left = 104
-    Top = 88
+    Left = 56
+    Top = 8
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -841,8 +853,8 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited RefreshAddOn: TRefreshAddOn
     DataSet = ''
-    Left = 696
-    Top = 272
+    Left = 616
+    Top = 296
   end
   inherited spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpMovementItem_ReturnIn_SetErased'
@@ -949,8 +961,8 @@ inherited ReturnInForm: TReturnInForm
     Top = 368
   end
   inherited EntryViewAddOn: TdsdDBViewAddOn
-    Left = 864
-    Top = 270
+    Left = 640
+    Top = 382
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -976,8 +988,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 803
-    Top = 4
+    Left = 459
+    Top = 65532
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1026,8 +1038,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 240
-    Top = 17
+    Left = 296
+    Top = 1
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1053,8 +1065,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 376
-    Top = 4
+    Left = 568
+    Top = 65532
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1080,7 +1092,7 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
+    Left = 704
     Top = 3
   end
   object frxDBDMaster: TfrxDBDataset
