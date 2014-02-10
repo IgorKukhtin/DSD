@@ -50,7 +50,9 @@ $BODY$BEGIN
               SELECT inGoodsId;
          ELSE 
              INSERT INTO _tmpGoods (GoodsId)
-              SELECT Id FROM Object WHERE DescId = zc_Object_Goods();
+              SELECT Id FROM Object WHERE DescId = zc_Object_Goods()
+             UNION
+              SELECT Id FROM Object WHERE DescId = zc_Object_Fuel();
          END IF;
     END IF;
 
@@ -67,8 +69,10 @@ $BODY$BEGIN
        ELSE 
           INSERT INTO _tmpLocation (LocationId)
              SELECT Id FROM Object WHERE DescId = zc_Object_Unit()
-             UNION all
-             SELECT Id FROM Object WHERE DescId = zc_Object_Personal();
+            UNION all
+             SELECT Id FROM Object WHERE DescId = zc_Object_Member()
+            UNION all
+             SELECT Id FROM Object WHERE DescId = zc_Object_Car();
        END IF;      
    END IF;
 
