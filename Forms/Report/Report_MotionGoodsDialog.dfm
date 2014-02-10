@@ -225,7 +225,9 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormName = 'TGoods_ObjectForm'
+    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsFuel_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -250,6 +252,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -275,6 +279,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -300,6 +306,8 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object UnitGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnitGroup
+    FormNameParam.Value = 'TUnitTreeForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnitTreeForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
