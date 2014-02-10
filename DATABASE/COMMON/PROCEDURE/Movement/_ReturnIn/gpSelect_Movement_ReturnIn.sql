@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , TaxKindId Integer, TaxKindName TVarChar
               )
 AS
 $BODY$
@@ -41,35 +42,31 @@ BEGIN
            , Movement.OperDate                          AS OperDate
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
-
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
-
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
-
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
-
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                               AS ToId
            , Object_To.ValueData                        AS ToName
-
            , Object_PaidKind.Id                         AS PaidKindId
            , Object_PaidKind.ValueData                  AS PaidKindName
            , View_Contract_InvNumber.ContractId         AS ContractId
            , View_Contract_InvNumber.InvNumber          AS ContractName
-           , View_InfoMoney.InfoMoneyGroupName
-           , View_InfoMoney.InfoMoneyDestinationName
-           , View_InfoMoney.InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName
+           , View_InfoMoney.InfoMoneyGroupName          AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName    AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode               AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName               AS InfoMoneyName
+           , Object_TaxKind.Id                	       	AS TaxKindId
+           , Object_TaxKind.ValueData         		    AS TaxKindName
+
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_ReturnIn() AND Movement.statusid = tmpStatus.StatusId
@@ -134,6 +131,13 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -148,7 +152,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 10.02.14                                                            * add TaxKind
  05.02.14                                        * add Object_InfoMoney_View
  30.01.14                                                       * add inIsPartnerDate, inIsErased
  14.01.14                                        * add Object_Contract_InvNumber_View

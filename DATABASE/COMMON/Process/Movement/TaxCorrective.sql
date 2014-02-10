@@ -1,4 +1,4 @@
--- Документ <Налоговая накладная>
+-- Документ <Корректировка>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- строки
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_TaxCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_TaxCorrective' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -15,7 +15,7 @@ DO $$
 
 BEGIN
 
--- Документ <Налоговая накладная>
+-- Документ <Корректировка>
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_TaxCorrective()
                                   , inDescId:= zc_Object_Process()
                                   , inCode:= 1

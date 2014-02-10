@@ -44,11 +44,22 @@ AS
              zc_movement_sale()
            , CAST ('SaleTax' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
-           , CAST ('09.02.2014' AS TDateTime)
+           , CAST ('01.02.2214' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_SaleTax' AS TVarChar)
+      UNION
+--коррект
+      SELECT
+             zc_movement_TaxCorrective()
+           , CAST ('TaxCorrective' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.02.2214' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_TaxCorrective' AS TVarChar)
 
+/*
 -- Новая форма налоговой
       UNION
       SELECT
@@ -59,7 +70,8 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_SaleTax_2014' AS TVarChar)
--- возвраты стандарт
+*/
+-- возвраты от пок стандарт
       UNION
       SELECT
              zc_movement_returnin()
@@ -69,7 +81,18 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnIn' AS TVarChar)
-       ORDER BY 1,2,4
+-- возвраты поставщ стандарт
+      UNION
+      SELECT
+             zc_movement_returnout()
+           , CAST ('ReturnOut' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_ReturnOut' AS TVarChar)
+
+--       ORDER BY 1,2,4
 
        ;
 
@@ -81,6 +104,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                                        * + TaxCorrective, ReturnOut
  06.02.14                                                        * + ReturnIn
  05.02.14                                                        *
 */
