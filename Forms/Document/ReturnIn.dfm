@@ -1,31 +1,28 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 676
-  ClientWidth = 858
-  ExplicitTop = 5
-  ExplicitWidth = 874
-  ExplicitHeight = 711
+  ClientWidth = 925
+  ExplicitWidth = 933
+  ExplicitHeight = 710
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
-    Width = 858
-    Height = 550
-    ExplicitTop = 155
-    ExplicitWidth = 1049
-    ExplicitHeight = 604
-    ClientRectBottom = 550
-    ClientRectRight = 858
+    Top = 128
+    Width = 925
+    Height = 548
+    ExplicitTop = 128
+    ExplicitWidth = 858
+    ExplicitHeight = 548
+    ClientRectBottom = 544
+    ClientRectRight = 921
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 580
+      ExplicitWidth = 852
+      ExplicitHeight = 522
       inherited cxGrid: TcxGrid
-        Width = 858
-        Height = 526
-        ExplicitWidth = 1049
-        ExplicitHeight = 580
+        Width = 919
+        Height = 522
+        ExplicitWidth = 852
+        ExplicitHeight = 522
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -195,14 +192,15 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1049
-      ExplicitHeight = 580
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 919
+      ExplicitHeight = 522
       inherited cxGridEntry: TcxGrid
-        Width = 858
-        Height = 526
-        ExplicitWidth = 1049
-        ExplicitHeight = 580
+        Width = 919
+        Height = 522
+        ExplicitWidth = 919
+        ExplicitHeight = 522
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -224,10 +222,10 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 858
+    Width = 925
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 890
+    ExplicitWidth = 858
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -257,7 +255,7 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 120
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 120
     end
     object cxLabel3: TcxLabel
@@ -379,6 +377,22 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 21
       Width = 137
     end
+  end
+  object edDocumentTaxKind: TcxButtonEdit [2]
+    Left = 781
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 91
+  end
+  object cxLabel5: TcxLabel [3]
+    Left = 781
+    Top = 5
+    Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -521,7 +535,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbPrint: TdxBarButton
       Action = mactPrint
@@ -722,12 +736,17 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftBoolean
       end
       item
+        Name = 'TaxKindId'
         Value = ''
-        ParamType = ptUnknown
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
       end
       item
+        Name = 'TaxKindName'
         Value = ''
-        ParamType = ptUnknown
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Value = ''
@@ -825,9 +844,11 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'inDocumentTaxKindId'
         Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Value = ''
@@ -1176,5 +1197,32 @@ inherited ReturnInForm: TReturnInForm
     DataSet = PrintItemsCDS
     Left = 506
     Top = 294
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 816
+    Top = 8
   end
 end

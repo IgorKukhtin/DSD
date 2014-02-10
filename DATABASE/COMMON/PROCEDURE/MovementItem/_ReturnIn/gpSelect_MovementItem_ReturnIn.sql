@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              )
 AS
 $BODY$
+  DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -29,12 +30,14 @@ BEGIN
 
      IF inShowAll THEN
 
+     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+
      RETURN QUERY
        SELECT
              0                          AS Id
-           , Object_Goods.Id            AS GoodsId
-           , Object_Goods.ObjectCode    AS GoodsCode
-           , Object_Goods.ValueData     AS GoodsName
+           , tmpGoods.GoodsId           AS GoodsId
+           , tmpGoods.GoodsCode         AS GoodsCode
+           , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS Price
@@ -80,7 +83,7 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis()/*inPriceListId*/, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
        WHERE tmpMI.GoodsId IS NULL
@@ -224,5 +227,5 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inSession:= '2')
+ SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
