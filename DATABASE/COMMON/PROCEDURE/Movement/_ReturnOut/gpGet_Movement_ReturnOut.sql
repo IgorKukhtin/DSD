@@ -1,9 +1,10 @@
 -- Function: gpGet_Movement_ReturnOut()
 
--- DROP FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_ReturnOut (Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnOut(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
@@ -20,36 +21,58 @@ BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_ReturnOut());
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RETURN QUERY
+         SELECT
+               0                                    AS Id
+             , CAST (NEXTVAL ('movement_returnout_seq') AS TVarChar) AS InvNumber
+             , inOperDate						    AS OperDate
+             , Object_Status.Code                   AS StatusCode
+             , Object_Status.Name                   AS StatusName
+             , inOperDate				      		AS OperDatePartner
+             , CAST (False as Boolean)              AS PriceWithVAT
+             , CAST (20 as TFloat)                  AS VATPercent
+             , CAST (0 as TFloat)                   AS ChangePercent
+             , CAST (0 as TFloat)                   AS TotalCount
+             , CAST (0 as TFloat)                   AS TotalSummMVAT
+             , CAST (0 as TFloat)                   AS TotalSummPVAT
+             , CAST (0 as TFloat)                   AS TotalSumm
+             , 0                     				AS FromId
+             , CAST ('' as TVarChar) 			    AS FromName
+             , 0                     				AS ToId
+             , CAST ('' as TVarChar) 				AS ToName
+             , 0                     				AS PaidKindId
+             , CAST ('' as TVarChar) 				AS PaidKindName
+             , 0                     				AS ContractId
+             , CAST ('' as TVarChar) 				AS ContractName
+          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
+     ELSE
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
-
+             Movement.Id                            AS Id
+           , Movement.InvNumber                     AS InvNumber
+           , Movement.OperDate                      AS OperDate
+           , Object_Status.ObjectCode          	    AS StatusCode
+           , Object_Status.ValueData         	    AS StatusName
            , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           
            , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData     AS VATPercent
-           , MovementFloat_ChangePercent.ValueData  AS ChangePercent           
-           
+           , MovementFloat_ChangePercent.ValueData  AS ChangePercent
            , MovementFloat_TotalCount.ValueData     AS TotalCount
-                                                                   
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , Object_From.Id                    	    AS FromId
+           , Object_From.ValueData             	    AS FromName
+           , Object_To.Id                      	    AS ToId
+           , Object_To.ValueData               	    AS ToName
+           , Object_PaidKind.Id                	    AS PaidKindId
+           , Object_PaidKind.ValueData         	    AS PaidKindName
+           , View_Contract_InvNumber.ContractId     AS ContractId
+           , View_Contract_InvNumber.InvNumber      AS ContractName
 
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
-        
-           , Object_PaidKind.Id                AS PaidKindId
-           , Object_PaidKind.ValueData         AS PaidKindName
-           , Object_Contract.Id                AS ContractId
-           , Object_Contract.ValueData         AS ContractName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -61,11 +84,11 @@ BEGIN
            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-        
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-        
+
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
@@ -103,24 +126,22 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnOut();
-  
+     END IF;
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
- 14.07.13         *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 10.02.14                                                            *
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnOut (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_ReturnOut (inMovementId:= 1, inOperDate:='01.01.2014', inSession:= '2')
