@@ -142,27 +142,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-<<<<<<< HEAD
 ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
  10.02.14                                        * add Object_RoleAccessKey_View
+ 10.02.14                                                       *
  14.07.13         *
 */
 
 -- òåñò
 -- SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
-=======
-ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
-/*
- ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
-               Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
- 10.02.14                                                         *
-*/
-
--- òåñò
---  SELECT * FROM gpSelect_Movement_ReturnOut (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
->>>>>>> refs/remotes/origin/master

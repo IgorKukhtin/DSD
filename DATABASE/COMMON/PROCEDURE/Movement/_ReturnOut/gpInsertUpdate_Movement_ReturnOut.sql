@@ -19,6 +19,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnOut(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbAccessKeyId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnOut());
