@@ -287,6 +287,8 @@ type
     bbReport_GoodsMI_IncomeByPartner: TdxBarButton;
     actReport_JuridicalDefermentPayment: TdsdOpenForm;
     bbReport_JuridicalDefermentPayment: TdxBarButton;
+    actTax: TdsdOpenForm;
+    bbTax: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

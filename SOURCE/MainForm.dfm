@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      45
+      47
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -138,6 +138,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbSendOnPrice'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTax'
         end
         item
           Visible = True
@@ -1253,6 +1257,10 @@ object MainForm: TMainForm
     end
     object bbReport_JuridicalDefermentPayment: TdxBarButton
       Action = actReport_JuridicalDefermentPayment
+      Category = 0
+    end
+    object bbTax: TdxBarButton
+      Action = actTax
       Category = 0
     end
   end
@@ -2420,6 +2428,16 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actTax: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      FormName = 'TTaxJournalForm'
+      FormNameParam.Name = 'TTaxJournalForm'
+      FormNameParam.Value = 'TTaxJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2446,7 +2464,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

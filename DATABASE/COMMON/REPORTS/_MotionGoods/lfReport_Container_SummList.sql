@@ -21,8 +21,10 @@ BEGIN
           FROM _tmpLocation 
               JOIN ContainerLinkObject AS ContainerLinkObject_Location ON ContainerLinkObject_Location.ObjectId = _tmpLocation.LocationId
               JOIN (SELECT zc_ContainerLinkObject_Unit() AS DescId 
-                    UNION ALL
+                   UNION ALL
                     SELECT zc_ContainerLinkObject_Member() AS DescId
+                   UNION ALL
+                    SELECT zc_ContainerLinkObject_Car() AS DescId
                     ) AS tmpDesc ON tmpDesc.DescId = ContainerLinkObject_Location.DescId
          ) AS tmpContainerLocation
                                 -- список количественных контейнеров (начали с ограниечения ТОВАРЫ)
