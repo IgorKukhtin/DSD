@@ -52,11 +52,13 @@ BEGIN
                                       , inChecked          := inChecked
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent
+                                      , inChangePercent    := inChangePercent
                                       , inFromId           := inFromId
                                       , inToId             := inToId
                                       , inPaidKindId       := inPaidKindId
                                       , inContractId       := inContractId
-                                      , inContractId       := inRouteSortingId
+                                      , inRouteSortingId   := inRouteSortingId
+                                      , ioPriceListId      := ioPriceListId
                                       , inUserId           := vbUserId
                                        ) AS tmp;
 
