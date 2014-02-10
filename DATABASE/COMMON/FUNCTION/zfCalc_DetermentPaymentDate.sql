@@ -5,15 +5,32 @@ DROP FUNCTION IF EXISTS zfCalc_DetermentPaymentDate (Integer, Integer, TDateTime
 CREATE OR REPLACE FUNCTION zfCalc_DetermentPaymentDate(
     IN inContractConditionId Integer   , -- “ип отсрочки
     IN inDayCount            Integer   , -- ƒней отсрочки
-    IN inDate                TDateTime , -- ƒата от которой надо посчитать начало действи€ отсрочки
+    IN inDate                TDateTime   -- ƒата от которой надо посчитать начало действи€ отсрочки
 )
 RETURNS TDateTime AS
 $BODY$
-  DECLARE vbValue TFloat;
 BEGIN
 
-     -- возвращаем результат, уже округленный до 2-х знаков
-     RETURN (vbValue);
+     CASE inContractConditionId
+         WHEN 0 THEN Return(inDate);
+         WHEN zc_Enum_ContractConditionKind_DelayDayCalendar() THEN RETURN(inDate::Date - inDayCount);
+         WHEN zc_Enum_ContractConditionKind_DelayDayBank() THEN 
+              BEGIN
+                RETURN(SELECT 
+                   MIN(CalendarDate)
+                FROM
+                  (SELECT ObjectDate_Value.valuedata AS CalendarDate
+                     FROM ObjectDate AS ObjectDate_Value
+                LEFT JOIN ObjectBoolean AS ObjectBoolean_Working 
+                       ON ObjectBoolean_Working.ObjectId = ObjectDate_Value.ObjectId 
+                      AND ObjectBoolean_Working.DescId = zc_ObjectBoolean_Calendar_Working()
+                    WHERE ObjectDate_Value.DescId = zc_ObjectDate_Calendar_Value()
+                      AND ObjectDate_Value.valuedata < inDate 
+                      AND ObjectBoolean_Working.ValueData = true
+                 ORDER BY CalendarDate DESC
+                 LIMIT inDayCount) AS Result);                                       	
+              END;
+     END CASE;
 
 END;
 $BODY$
@@ -29,12 +46,6 @@ ALTER FUNCTION zfCalc_DetermentPaymentDate (Integer, Integer, TDateTime) OWNER T
 */
 /*
 -- тест
-SELECT * FROM zfCalc_DetermentPaymentDate (inDistance           := 100
-                                  , inAmountFuel         := 17
-                                  , inColdHour           := 1
-                                  , inAmountColdHour     := 17
-                                  , inColdDistance       := 100
-                                  , inAmountColdDistance := 17
-                                  , inFuel_Ratio         := 1.3059
-                                  , inRateFuelKindTax    := 0)
+SELECT * FROM zfCalc_DetermentPaymentDate (zc_Enum_ContractConditionKind_DelayDayCalendar(), 7, current_date);
+SELECT * FROM zfCalc_DetermentPaymentDate (zc_Enum_ContractConditionKind_DelayDayBank(), 7, current_date);
 */

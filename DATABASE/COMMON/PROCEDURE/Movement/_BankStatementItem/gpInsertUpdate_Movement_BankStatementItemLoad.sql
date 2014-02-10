@@ -76,6 +76,9 @@ BEGIN
       AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
     WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement() AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
+      RAISE EXCEPTION 'Валюта "%" ', vbMovementId;
+
+
     IF COALESCE(vbMovementId, 0) = 0 THEN
        -- 5. Если такого документа нет - создать его
        -- сохранили <Документ>

@@ -17,8 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -47,6 +45,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -95,6 +94,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     Left = 520
     Top = 264

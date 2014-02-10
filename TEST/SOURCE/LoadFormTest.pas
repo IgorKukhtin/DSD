@@ -604,6 +604,10 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_IncomeByPartnerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_IncomeByPartnerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment');
+
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;
