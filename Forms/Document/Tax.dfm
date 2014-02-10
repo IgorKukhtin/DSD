@@ -1015,12 +1015,12 @@ inherited TaxForm: TTaxForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Tax_SetUnErased'
+    StoredProcName = 'gpMovementItem_Tax_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Tax_SetErased'
+    StoredProcName = 'gpMovementItem_Tax_SetUnErased'
     Left = 718
     Top = 464
   end
