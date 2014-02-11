@@ -2715,7 +2715,7 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
-        function InsertData_pg(UnitId,GoodsId,GoodsKindId:Integer;inCode:Integer;inName:String);
+        function InsertData_pg(UnitId,GoodsId,GoodsKindId:Integer;inCode:Integer;inName:String):Boolean;
         var findId:Integer;
         begin
              //—Ì‡˜‡Î‡ Ì‡ıÓ‰ËÏ ËÌÙÛ ‚ PG
@@ -2729,10 +2729,10 @@ procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
                            );
              findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
 
-             if (inCode<>0)or(findId<>0) then findId:=
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
+             if (inCode<>0)or(findId<>0) then findId:=1;
+             toStoredProc.Params.ParamByName('ioId').Value:=findId;
+             toStoredProc.Params.ParamByName('inCode').Value:=inCode;
+             toStoredProc.Params.ParamByName('inName').Value:=inName;
              if not myExecToStoredProc then ;//exit;
              Result:=myExecToStoredProc;
          end;
@@ -6179,6 +6179,7 @@ begin
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_pg');
         Add('     , null as PersonalPackerId');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
+        Add('     , Bill.FromId, Bill.ToId');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -6186,7 +6187,7 @@ begin
         Add('     left outer join (select Bill.Id as BillId'
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperPrice<>0 and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
@@ -6203,9 +6204,11 @@ begin
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
-           +'  and Bill.FromId<>4928'//‘Œ««»-œ≈–≈œ¿  œ–Œƒ” ÷»»
+//           +'  and Bill.FromId<>4928'//‘Œ««»-œ≈–≈œ¿  œ–Œƒ” ÷»»
+           +'  and Bill.ToId<>4927'//— À¿ƒ œ≈–≈œ¿ 
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
+//+'  and Bill.Id=1383229'
            );
         Add('order by OperDate, ObjectId');
         Open;
@@ -9241,6 +9244,7 @@ begin
         Add('     , MoneyKind.Id_Postgres as PaidKindId_Postgres');
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_pg');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
+        Add('     , Bill.FromId, Bill.ToId');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -9248,7 +9252,7 @@ begin
         Add('     left outer join (select Bill.Id as BillId'
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id'
+           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperPrice<>0 and BillItems.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
@@ -9265,7 +9269,8 @@ begin
         Add('     left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkReturnToClient()'
-           +'  and Bill.ToId<>4928'//‘Œ««»-œ≈–≈œ¿  œ–Œƒ” ÷»»
+//           +'  and Bill.ToId<>4928'//‘Œ««»-œ≈–≈œ¿  œ–Œƒ” ÷»»
+           +'  and Bill.FromId<>4927'//— À¿ƒ œ≈–≈œ¿ 
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );

@@ -81,10 +81,11 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
+			<VerInfo_Build>2</VerInfo_Build>
 			<Debugger_DebugSourcePath>D:\WORK\ExtLib\Components\FastReport 4.12\Source\ExportPack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Release>24</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.24.1;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.24.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -193,11 +194,7 @@
 						<VersionInfoKeys Name="ProductVersion">1.0.0.0</VersionInfoKeys>
 						<VersionInfoKeys Name="Comments"/>
 					</VersionInfoKeys>
-					<Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dcloffice2K160.bpl">Microsoft Office 2000 Sample Automation Server Wrapper Components</Excluded_Packages>
-						<Excluded_Packages Name="C:\Users\Public\Documents\RAD Studio\9.0\Bpl\dacvcl160.bpl">Devart Data Access GUI related Components</Excluded_Packages>
-						<Excluded_Packages Name="$(BDSBIN)\dclIPIndyImpl160.bpl">IP Abstraction Indy Implementation Design Time</Excluded_Packages>
-					</Excluded_Packages>
+					<Excluded_Packages/>
 					<Source>
 						<Source Name="MainSource">Project.dpr</Source>
 					</Source>

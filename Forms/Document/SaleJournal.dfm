@@ -2,27 +2,29 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -128
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitWidth = 1118
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1110
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1110
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1104
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1110
-        Height = 478
-        ExplicitWidth = 1110
-        ExplicitHeight = 478
+        Width = 1104
+        Height = 470
+        ExplicitWidth = 1104
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -400,7 +402,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -408,6 +410,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 640
     Top = 152
   end

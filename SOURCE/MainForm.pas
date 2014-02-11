@@ -106,7 +106,7 @@ type
     bbRoute: TdxBarButton;
     bbRouteSorting: TdxBarButton;
     bbTradeMark: TdxBarButton;
-    bbAsset: TdxBarButton;
+    bbGuideAsset: TdxBarButton;
     bbPosition: TdxBarButton;
     bbMember: TdxBarButton;
     actSend: TdsdOpenForm;
@@ -278,7 +278,7 @@ type
     bbReportsFinance_Separator: TdxBarSeparator;
     bbReportMain_Separator: TdxBarSeparator;
     bbService_Separator: TdxBarSeparator;
-    dxBarButton1: TdxBarButton;
+    bbReportProductionUnion: TdxBarButton;
     actContractConditionValue: TdsdOpenForm;
     bbContractConditionValue: TdxBarButton;
     actReport_GoodsMI_Income: TdsdOpenForm;
@@ -289,6 +289,12 @@ type
     bbReport_JuridicalDefermentPayment: TdxBarButton;
     actTax: TdsdOpenForm;
     bbTax: TdxBarButton;
+    actTaxCorrection: TdsdOpenForm;
+    bbTaxCorrective: TdxBarButton;
+    bbAsset: TdxBarSubItem;
+    bbAsset_Separator: TdxBarSeparator;
+    actGoods_List: TdsdOpenForm;
+    bbGoods_List: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

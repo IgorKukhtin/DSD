@@ -61,10 +61,10 @@ BEGIN
            , Object_Contract.invnumber         			AS ContractName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
-           , Movement_DocumentMaster.Id                 AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar) AS DocumentMasterName
-           , Movement_DocumentChild.Id                  AS DocumentChildId
-           , CAST(Movement_DocumentChild.InvNumber as TVarChar) AS DocumentChildName
+           , Movement_DocumentMaster.Id                            AS DocumentMasterId
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)   AS DocumentMasterName
+           , CAST(ObjectFloat_DocumentChild.ValueData as INTEGER)  AS DocumentChildId
+           , CAST(MS_Child_InvNumberPartner.ValueData as TVarChar) AS DocumentChildName
 
 
 
@@ -150,13 +150,22 @@ BEGIN
                                          ON MovementLinkObject_DocumentMaster.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentMaster.DescId = zc_MovementLinkObject_DocumentMaster()
 
-            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkObject_DocumentMaster.ObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentMaster ON ObjectFloat_DocumentMaster.ObjectId = MovementLinkObject_DocumentMaster.ObjectId
+                                                               AND ObjectFloat_DocumentMaster.DescId = zc_ObjectFloat_Document_MovementId()
+
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = ObjectFloat_DocumentMaster.ValueData
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentChild
                                          ON MovementLinkObject_DocumentChild.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentChild.DescId = zc_MovementLinkObject_DocumentChild()
 
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkObject_DocumentChild.ObjectId
+            LEFT JOIN ObjectFloat AS ObjectFloat_DocumentChild ON ObjectFloat_DocumentChild.ObjectId = MovementLinkObject_DocumentChild.ObjectId
+                                                               AND ObjectFloat_DocumentChild.DescId = zc_ObjectFloat_Document_MovementId()
+
+            LEFT JOIN MovementString AS MS_Child_InvNumberPartner
+                                     ON MS_Child_InvNumberPartner.MovementId =  ObjectFloat_DocumentChild.ValueData
+                                    AND MS_Child_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
 
             ;
 
@@ -174,4 +183,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2013', inEndDate:= '12.12.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_Tax()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Tax (integer, integer, integer, tfloat, tfloat, integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Tax(
