@@ -289,6 +289,8 @@ type
     bbReport_JuridicalDefermentPayment: TdxBarButton;
     actTax: TdsdOpenForm;
     bbTax: TdxBarButton;
+    actTaxCorrection: TdsdOpenForm;
+    bbTaxCorrective: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

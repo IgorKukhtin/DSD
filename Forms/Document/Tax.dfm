@@ -11,18 +11,16 @@ inherited TaxForm: TTaxForm
     Width = 1054
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 1015
+    ExplicitWidth = 1054
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 1050
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1009
+      ExplicitWidth = 1048
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1048
         Height = 514
-        ExplicitLeft = 48
-        ExplicitTop = 64
         ExplicitWidth = 1048
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -158,12 +156,12 @@ inherited TaxForm: TTaxForm
     inherited tsEntry: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 1009
+      ExplicitWidth = 1048
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
         Width = 1048
         Height = 514
-        ExplicitWidth = 1009
+        ExplicitWidth = 1048
         ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -189,7 +187,7 @@ inherited TaxForm: TTaxForm
     Width = 1054
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1015
+    ExplicitWidth = 1054
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -617,6 +615,7 @@ inherited TaxForm: TTaxForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem
@@ -876,23 +875,9 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inOperDatePartner'
-        Value = 0d
-        Component = edDateRegistered
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
         Name = 'inChecked'
         Value = 'False'
         Component = edIsChecked
-        DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRegistered'
-        Value = 'False'
-        Component = edIsRegistered
         DataType = ftBoolean
         ParamType = ptInput
       end
@@ -946,6 +931,16 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
+        Name = '55'
+        Value = 'False'
+        DataType = ftBoolean
+      end
+      item
+        Name = '44'
+        Value = 0d
+        DataType = ftDateTime
+      end
+      item
         Name = '11'
         Value = ''
         DataType = ftString
@@ -979,7 +974,7 @@ inherited TaxForm: TTaxForm
         Control = edOperDate
       end
       item
-        Control = edDateRegistered
+        Control = edDocumentTaxKind
       end
       item
         Control = edFrom
@@ -1005,6 +1000,7 @@ inherited TaxForm: TTaxForm
         Control = edIsChecked
       end
       item
+        Control = edIsDocument
       end>
     Left = 232
     Top = 193
@@ -1340,5 +1336,71 @@ inherited TaxForm: TTaxForm
     DataSet = PrintItemsCDS
     Left = 552
     Top = 245
+  end
+  object HeaderSaver2: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_Params
+    ControlList = <
+      item
+        Control = edDateRegistered
+      end
+      item
+        Control = edIsRegistered
+      end>
+    GetStoredProc = spGet
+    Left = 552
+    Top = 553
+  end
+  object spInsertUpdateMovement_Params: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_Params'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDateRegistered'
+        Value = 0d
+        Component = edDateRegistered
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inRegistered'
+        Value = 'False'
+        Component = edIsRegistered
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 417
+    Top = 552
   end
 end

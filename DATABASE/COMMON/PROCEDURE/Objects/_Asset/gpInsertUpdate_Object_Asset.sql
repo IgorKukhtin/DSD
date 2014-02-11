@@ -1,13 +1,25 @@
 -- Function: gpInsertUpdate_Object_Asset()
 
--- DROP FUNCTION gpInsertUpdate_Object_Asset();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Asset(
  INOUT ioId                  Integer   ,    -- ключ объекта < Основные средства>
     IN inCode                Integer   ,    -- Код объекта 
     IN inName                TVarChar  ,    -- Название объекта 
+    
+    IN inRelease             TDateTime ,    -- Дата выпуска
+    
     IN inInvNumber           TVarChar  ,    -- Инвентарный номер
+    IN inFullName            TVarChar  ,    -- Полное название ОС
+    IN inSerialNumber        TVarChar  ,    -- Заводской номер
+    IN inPassportNumber      TVarChar  ,    -- Номер паспорта
+    IN inComment             TVarChar  ,    -- Примечание
+    
     IN inAssetGroupId        Integer   ,    -- ссылка на группу основных средств
+    IN inJuridicalId         Integer   ,    -- ссылка на Юридические лица
+    IN inMakerId             Integer   ,    -- ссылка на Производитель (ОС)
+    
     IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
@@ -35,7 +47,18 @@ BEGIN
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Asset(), vbCode_calc, inName);
 
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_InvNumber(), ioId, inInvNumber);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_FullName(), ioId, inFullName);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_SerialNumber(), ioId, inSerialNumber);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_PassportNumber(), ioId, inPassportNumber);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Asset_Comment(), ioId, inComment);
+
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_AssetGroup(), ioId, inAssetGroupId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Juridical(), ioId, inJuridicalId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Asset_Maker(), ioId, inMakerId);
+
+
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Asset_Release(), ioId, inRelease);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -44,12 +67,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TVarChar, Integer, tvarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Asset(Integer, Integer, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.02.14         * add wiki  
  02.07.13          *
 */
 

@@ -945,12 +945,12 @@
 				<Form>TransportServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TaxJournal.pas">
-				<Form>TaxJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TaxCorrectiveJournal.pas">
+				<Form>TaxCorrectiveJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Tax.pas">
-				<Form>TaxForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TaxCorrective.pas">
+				<Form>TaxCorrectiveForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Partner1CLink.pas">
@@ -1019,6 +1019,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsFuel_Object.pas">
 				<Form>GoodsFuel_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Tax.pas">
+				<Form>TaxForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TaxJournal.pas">
+				<Form>TaxJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

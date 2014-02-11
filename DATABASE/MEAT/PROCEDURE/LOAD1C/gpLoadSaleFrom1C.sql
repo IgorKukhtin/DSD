@@ -40,7 +40,7 @@ BEGIN
       JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
         ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_DeliveryPoint.Id
        AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-       AND ObjectLink_Partner1CLink_Branch.ChildObjectId = zfGetUnitId(Sale1C.UnitId)
+       AND ObjectLink_Partner1CLink_Branch.ChildObjectId = zfGetBranchFromUnitId(Sale1C.UnitId)
       JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
         ON ObjectLink_Partner1CLink_Partner.ObjectId = ObjectLink_Partner1CLink_Branch.ObjectId
        AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
@@ -60,9 +60,9 @@ BEGIN
       JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ChildObjectId
      WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
 
---     IF vbSaleCount > vbCount THEN 
-  --      RAISE EXCEPTION 'Не все записи засинхронизированы. Перенос не возможен'; 
-  --   END IF;
+     IF vbSaleCount > vbCount THEN 
+        RAISE EXCEPTION 'Не все записи засинхронизированы. Перенос не возможен'; 
+     END IF;
 
      -- Помечаем на удаление загруженных Sale
 

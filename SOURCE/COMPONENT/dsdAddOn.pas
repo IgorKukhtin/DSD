@@ -63,6 +63,40 @@ type
 
   end;
 
+  // Управление цветами
+
+  // Значение цвета
+  TColorValue = class(TCollectionItem)
+  private
+    FColor: TColor;
+    FValue: Variant;
+  published
+    property Color: TColor read FColor write FColor;
+    property Value: Variant read FValue write FValue;
+  end;
+
+  // Правило управления цветом
+  TColorRule = class(TCollectionItem)
+  private
+    FColorColumn: TcxGridColumn;
+    FValueColumn: TcxGridColumn;
+    FColorInValueColumn: boolean;
+    FColorValueList: TCollection;
+    FStyle: TcxStyle;
+  public
+    constructor Create(Collection: TCollection); override;
+    destructor Destroy; override;
+  published
+    // Какую ячейку раскрашивать. Если ColorColumn не указан, то будет меняться цвет у всей строки
+    property ColorColumn: TcxGridColumn read FColorColumn write FColorColumn;
+    // Откуда брать значение для определения цвета
+    property ValueColumn: TcxGridColumn read FValueColumn write FValueColumn;
+    // Указан ли цвет непосредственно в ValueColumn;
+    property ColorInValueColumn: boolean read FColorInValueColumn write FColorInValueColumn default true;
+    // Значения для цветов
+    property ColorValueList: TCollection read FColorValueList write FColorValueList;
+  end;
+
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
@@ -81,6 +115,7 @@ type
     FErasedStyle: TcxStyle;
     FBeforeOpen: TDataSetNotifyEvent;
     FAfterOpen: TDataSetNotifyEvent;
+    FColorRuleList: TCollection;
     procedure OnBeforeOpen(ADataSet: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
     procedure ActionOnlyEditingCellOnEnter;
@@ -112,6 +147,7 @@ type
     // если при выходе из грида ДатаСет в Edit mode, то делаем Post
     procedure OnExit(Sender: TObject);
     procedure SetOnlyEditingCellOnEnter(const Value: boolean);
+    function GetErasedColumn(Sender: TObject): TcxGridColumn;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -129,6 +165,8 @@ type
     // Перемещаться только по редактируемым ячейкам по Enter
     // В случае достижения конца колонок и наличия следующей записи перейти на нее и cпозиционироваться на редактируемой ячейке
     property OnlyEditingCellOnEnter: boolean read FOnlyEditingCellOnEnter write SetOnlyEditingCellOnEnter;
+    // Правила разукрашивания грида
+    property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -481,6 +519,8 @@ begin
   FBackGroundStyle.Color := $00E4E4E4;
   FErasedStyle := TcxStyle.Create(nil);
   FErasedStyle.TextColor := clRed;
+
+  FColorRuleList := TCollection.Create(TColorRule);
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -509,6 +549,15 @@ begin
      Abort;
 end;
 
+function TdsdDBViewAddOn.GetErasedColumn(Sender: TObject): TcxGridColumn;
+begin
+  result := nil;
+  if (Sender is TcxGridDBTableView) then
+      result := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+  if (Sender is TcxGridDBBandedTableView) then
+      result := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+end;
+
 procedure TdsdDBViewAddOn.OnCustomDrawCell(Sender: TcxCustomGridTableView;
   ACanvas: TcxCanvas; AViewInfo: TcxGridTableDataCellViewInfo;
   var ADone: Boolean);
@@ -518,16 +567,52 @@ begin
      ACanvas.Brush.Color := clHighlight;
      ACanvas.Font.Color := clHighlightText;
   end;
+
   // работаем со свойством Удален
-  if (Sender is TcxGridDBTableView) then
-      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(FErasedFieldName);
-  if (Sender is TcxGridDBBandedTableView) then
-      Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
+  Column := GetErasedColumn(Sender);
   if Assigned(Column) then
      if not VarIsNull(AViewInfo.GridRecord.Values[Column.Index])
         and AViewInfo.GridRecord.Values[Column.Index] then
             ACanvas.Font.Color := FErasedStyle.TextColor;
 end;
+
+procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
+  ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
+  out AStyle: TcxStyle);
+var Column: TcxGridColumn;
+    i: integer;
+begin
+  if Assigned(FOnGetContentStyleEvent) then
+     FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
+
+  if ARecord = nil then exit;
+  // Если это сгруппированная строка, то выходим
+  if not ARecord.IsData then exit;
+
+  // работаем со свойством Удален
+  Column := GetErasedColumn(Sender);
+  if Assigned(Column) then
+     if not VarIsNull(ARecord.Values[Column.Index])
+        and ARecord.Values[Column.Index] then
+            AStyle := FErasedStyle;
+
+  // Работаем с условиями
+  for i := 0 to ColorRuleList.Count - 1 do
+      with TColorRule(ColorRuleList.Items[i]) do begin
+        if Assigned(ColorColumn) then
+        begin
+          if AItem = ColorColumn then
+             if not VarIsNull(ARecord.Values[ValueColumn.Index]) then begin
+                FStyle.TextColor := ARecord.Values[ValueColumn.Index];
+                AStyle := FStyle
+             end;
+        end
+        else begin
+          FStyle.Color := ARecord.Values[ValueColumn.Index];
+        end;
+      end;
+end;
+
 
 procedure TdsdDBViewAddOn.OnCustomDrawColumnHeader(
   Sender: TcxGridTableView; ACanvas: TcxCanvas;
@@ -708,29 +793,6 @@ begin
   if (Operation = opRemove) and (AComponent = FView) then begin
      FView := nil;
   end;
-end;
-
-procedure TdsdDBViewAddOn.OnGetContentStyle(Sender: TcxCustomGridTableView;
-  ARecord: TcxCustomGridRecord; AItem: TcxCustomGridTableItem;
-  out AStyle: TcxStyle);
-var Column: TcxGridColumn;
-begin
-  if Assigned(FOnGetContentStyleEvent) then
-     FOnGetContentStyleEvent(Sender, ARecord, AItem, AStyle);
-
-  if ARecord = nil then exit;
-  // Если это сгруппированная строка, то выходим
-  if not ARecord.IsData then exit;
-  // работаем со свойством Удален
-
-  if (Sender is TcxGridDBTableView) then
-      Column := TcxGridDBTableView(Sender).GetColumnByFieldName(AnsiUpperCase(FErasedFieldName));
-  if (Sender is TcxGridDBBandedTableView) then
-      Column := TcxGridDBBandedTableView(Sender).GetColumnByFieldName(FErasedFieldName);
-  if Assigned(Column) then
-     if not VarIsNull(ARecord.Values[Column.Index])
-        and ARecord.Values[Column.Index] then
-            AStyle := FErasedStyle;
 end;
 
 procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
@@ -1466,6 +1528,23 @@ constructor TAddOnFormData.Create;
 begin
   FisAlwaysRefresh := true;
   FisSingle := true;
+end;
+
+{ TColorRule }
+
+constructor TColorRule.Create(Collection: TCollection);
+begin
+  inherited Create(Collection);
+  FColorValueList := TCollection.Create(TColorValue);
+  FColorInValueColumn := true;
+  FStyle := TcxStyle.Create(nil);
+end;
+
+destructor TColorRule.Destroy;
+begin
+  FreeAndNil(FColorValueList);
+  FreeAndNil(FStyle);
+  inherited;
 end;
 
 end.

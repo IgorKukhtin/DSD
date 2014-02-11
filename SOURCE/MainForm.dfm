@@ -145,6 +145,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoodsDocuments_Separator'
         end
         item
@@ -1261,6 +1265,10 @@ object MainForm: TMainForm
     end
     object bbTax: TdxBarButton
       Action = actTax
+      Category = 0
+    end
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrection
       Category = 0
     end
   end
@@ -2434,6 +2442,16 @@ object MainForm: TMainForm
       FormName = 'TTaxJournalForm'
       FormNameParam.Name = 'TTaxJournalForm'
       FormNameParam.Value = 'TTaxJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTaxCorrection: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
+      FormName = 'TTaxCorrectiveJournalForm'
+      FormNameParam.Name = 'TTaxCorrectiveJournalForm'
+      FormNameParam.Value = 'TTaxCorrectiveJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

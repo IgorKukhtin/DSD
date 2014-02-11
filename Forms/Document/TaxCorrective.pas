@@ -1,4 +1,4 @@
-unit Tax;
+unit TaxCorrective;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
 
 type
-  TTaxForm = class(TAncestorDocumentForm)
+  TTaxCorrectiveForm = class(TAncestorDocumentForm)
     cxLabel3: TcxLabel;
     edFrom: TcxButtonEdit;
     edTo: TcxButtonEdit;
@@ -84,13 +84,13 @@ type
   end;
 
 var
-  TaxForm: TTaxForm;
+  TaxCorrectiveForm: TTaxCorrectiveForm;
 
 implementation
 
 {$R *.dfm}
 
 initialization
-  RegisterClass(TTaxForm);
+  RegisterClass(TTaxCorrectiveForm);
 
 end.
