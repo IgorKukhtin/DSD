@@ -3,7 +3,7 @@ object GoodsForm: TGoodsForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
   ClientHeight = 404
-  ClientWidth = 523
+  ClientWidth = 722
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,12 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 523
+    Width = 722
     Height = 378
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitWidth = 523
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -51,13 +52,20 @@ object GoodsForm: TGoodsForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 35
       end
       object clGoodsGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'GoodsGroupName'
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object clGoodsGroupNameFull: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
+        DataBinding.FieldName = 'GoodsGroupNameFull'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 150
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -69,7 +77,7 @@ object GoodsForm: TGoodsForm
         Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 35
       end
       object clWeight: TcxGridDBColumn
         Caption = #1042#1077#1089
@@ -77,14 +85,6 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 45
-      end
-      object clBusinessName: TcxGridDBColumn
-        Caption = #1041#1080#1079#1085#1077#1089
-        DataBinding.FieldName = 'BusinessName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
       object clFuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
@@ -100,16 +100,17 @@ object GoodsForm: TGoodsForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object clBusinessName: TcxGridDBColumn
+        Caption = #1041#1080#1079#1085#1077#1089
+        DataBinding.FieldName = 'BusinessName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object clInfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
         DataBinding.FieldName = 'InfoMoneyGroupCode'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clInfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -134,6 +135,13 @@ object GoodsForm: TGoodsForm
         Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -272,10 +280,12 @@ object GoodsForm: TGoodsForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
+      Enabled = False
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
+      Enabled = False
     end
     object bbSetErased: TdxBarButton
       Action = dsdSetErased
@@ -323,6 +333,8 @@ object GoodsForm: TGoodsForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TGoodsEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -338,6 +350,8 @@ object GoodsForm: TGoodsForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TGoodsEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'

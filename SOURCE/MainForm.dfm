@@ -3,7 +3,7 @@ object MainForm: TMainForm
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
   ClientHeight = 407
-  ClientWidth = 838
+  ClientWidth = 1118
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      47
+      26
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -62,6 +62,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbFinanceDocuments'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAsset'
         end
         item
           Visible = True
@@ -141,14 +145,6 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbTax'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
           ItemName = 'bbGoodsDocuments_Separator'
         end
         item
@@ -186,6 +182,18 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbZakazInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
         end>
     end
     object bbGoodsDocuments_Separator: TdxBarSeparator
@@ -241,6 +249,14 @@ object MainForm: TMainForm
     end
     object bbZakazInternal: TdxBarButton
       Action = actZakazInternal
+      Category = 0
+    end
+    object bbTax: TdxBarButton
+      Action = actTax
+      Category = 0
+    end
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrection
       Category = 0
     end
     object bbFinanceDocuments: TdxBarSubItem
@@ -312,6 +328,32 @@ object MainForm: TMainForm
     object bbSendDebt: TdxBarButton
       Action = actSendDebt
       Caption = #1042#1079#1072#1080#1084#1086#1079#1072#1095#1077#1090' ('#1102#1088'. '#1083#1080#1094#1072')'
+      Category = 0
+    end
+    object bbAsset: TdxBarSubItem
+      Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAsset_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuideAsset'
+        end>
+    end
+    object bbAsset_Separator: TdxBarSeparator
+      Caption = 'bbAsset_Separator'
+      Category = 0
+      Hint = 'bbAsset_Separator'
+      Visible = ivAlways
+      ShowCaption = False
+    end
+    object bbGuideAsset: TdxBarButton
+      Action = actAsset
+      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082
       Category = 0
     end
     object bbHistory: TdxBarSubItem
@@ -606,13 +648,13 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbReportsProduction: TdxBarSubItem
-      Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'dxBarButton1'
+          ItemName = 'bbReportProductionUnion'
         end>
     end
     object bbReportsProduction_Separator: TdxBarSeparator
@@ -622,12 +664,12 @@ object MainForm: TMainForm
       Visible = ivAlways
       ShowCaption = False
     end
-    object dxBarButton1: TdxBarButton
+    object bbReportProductionUnion: TdxBarButton
       Action = actReport_Production_Union
       Category = 0
     end
     object bbReportsGoods: TdxBarSubItem
-      Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1099')'
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -728,7 +770,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbReportsFinance: TdxBarSubItem
-      Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1099')'
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -738,11 +780,11 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbReport_JuridicalCollation'
+          ItemName = 'bbReport_JuridicalDefermentPayment'
         end
         item
           Visible = True
-          ItemName = 'bbReport_JuridicalDefermentPayment'
+          ItemName = 'bbReport_JuridicalCollation'
         end
         item
           Visible = True
@@ -764,6 +806,10 @@ object MainForm: TMainForm
       Action = actReport_JuridicalSold
       Category = 0
     end
+    object bbReport_JuridicalDefermentPayment: TdxBarButton
+      Action = actReport_JuridicalDefermentPayment
+      Category = 0
+    end
     object bbReport_JuridicalCollation: TdxBarButton
       Action = actReport_JuridicalCollation
       Category = 0
@@ -773,7 +819,7 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbReportMain: TdxBarSubItem
-      Caption = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
+      Caption = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       Category = 0
       Visible = ivAlways
       ItemLinks = <
@@ -795,6 +841,10 @@ object MainForm: TMainForm
     end
     object bbReportBalance: TdxBarButton
       Action = actReport_Balance
+      Category = 0
+    end
+    object bbReportProfitLoss: TdxBarButton
+      Action = actReport_ProfitLoss
       Category = 0
     end
     object bbGuides: TdxBarSubItem
@@ -860,10 +910,6 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbAsset'
-        end
-        item
-          Visible = True
           ItemName = 'bbBusiness'
         end
         item
@@ -908,6 +954,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoods_List'
+        end
+        item
+          Visible = True
           ItemName = 'bbGoods'
         end
         item
@@ -938,10 +988,6 @@ object MainForm: TMainForm
           Visible = True
           ItemName = 'dxBarSubItem'
         end>
-    end
-    object bbReportProfitLoss: TdxBarButton
-      Action = actReport_ProfitLoss
-      Category = 0
     end
     object bbGuides_Separator: TdxBarSeparator
       Caption = 'bbGuides_Separator'
@@ -994,10 +1040,6 @@ object MainForm: TMainForm
       Action = actContractArticle
       Category = 0
     end
-    object bbAsset: TdxBarButton
-      Action = actAsset
-      Category = 0
-    end
     object bbBusiness: TdxBarButton
       Action = actBusiness
       Category = 0
@@ -1036,6 +1078,10 @@ object MainForm: TMainForm
     end
     object bbGoodsGroup: TdxBarButton
       Action = actGoodsGroup
+      Category = 0
+    end
+    object bbGoods_List: TdxBarButton
+      Action = actGoods_List
       Category = 0
     end
     object bbGoods: TdxBarButton
@@ -1259,18 +1305,6 @@ object MainForm: TMainForm
       Action = actExit
       Category = 0
     end
-    object bbReport_JuridicalDefermentPayment: TdxBarButton
-      Action = actReport_JuridicalDefermentPayment
-      Category = 0
-    end
-    object bbTax: TdxBarButton
-      Action = actTax
-      Category = 0
-    end
-    object bbTaxCorrective: TdxBarButton
-      Action = actTaxCorrection
-      Category = 0
-    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1446,7 +1480,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_Balance: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TReport_BalanceForm'
       FormNameParam.Value = ''
@@ -1455,7 +1489,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_ProfitLoss: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
       Caption = #1054#1090#1095#1077#1090' '#1086' '#1055#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1059#1073#1099#1090#1082#1072#1093
       FormName = 'TReport_ProfitLossForm'
       FormNameParam.Value = ''
@@ -1483,7 +1517,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_HistoryCost: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1057#1077#1073#1077#1089#1090#1086#1080#1084#1086#1089#1090#1100
       FormName = 'TReport_HistoryCostForm'
       FormNameParam.Value = ''
@@ -1685,6 +1719,16 @@ object MainForm: TMainForm
       Hint = #1042#1072#1083#1102#1090#1099
       FormName = 'TCurrencyForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoods_List: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1058#1086#1074#1072#1088#1099' ('#1089#1087#1080#1089#1086#1082')'
+      Hint = #1058#1086#1074#1072#1088#1099
+      FormName = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -1920,7 +1964,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actAsset: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Category = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       Hint = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       FormName = 'TAssetForm'
@@ -1978,7 +2022,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_MotionGoods: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_MotionGoodsForm'
       FormNameParam.Value = ''
@@ -2233,7 +2277,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_JuridicalSold: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
@@ -2242,7 +2286,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_JuridicalCollation: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
       FormName = 'TReport_JuridicalCollationForm'
       FormNameParam.Value = ''
@@ -2260,7 +2304,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMIReturn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
@@ -2278,7 +2322,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMISale: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
@@ -2333,7 +2377,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMI_byMovementSale: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
       FormName = 'TReport_GoodsMI_byMovementForm'
       FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
@@ -2352,7 +2396,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMI_byMovementReturn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
       FormName = 'TReport_GoodsMI_byMovementForm'
       FormNameParam.Value = 'TReport_GoodsMI_byMovementForm'
@@ -2370,7 +2414,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMI_SaleReturnIn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
       FormName = 'TReport_GoodsMI_SaleReturnInForm'
       FormNameParam.Value = 'TReport_GoodsMI_SaleReturnInForm'
@@ -2380,7 +2424,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_Production_Union: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1087#1088'-'#1074#1086')'
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
       FormName = 'TReport_Production_Union'
       FormNameParam.Value = 'TReport_Production_Union'
@@ -2390,7 +2434,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMI_Income: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1055#1088#1080#1093#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072' ('#1080#1090#1086#1075#1080')'
       FormName = 'TReport_GoodsMI_IncomeForm'
       FormNameParam.Value = 'TReport_GoodsMI_IncomeForm'
@@ -2409,7 +2453,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_GoodsMI_IncomeByPartner: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1055#1088#1080#1093#1086#1076' '#1090#1086#1074#1072#1088#1072' '#1086#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
       FormName = 'TReport_GoodsMI_IncomeByPartnerForm'
       FormNameParam.Value = 'TReport_GoodsMI_IncomeByPartnerForm'
@@ -2428,7 +2472,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_JuridicalDefermentPayment: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1092#1080#1085'.)'
       Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1089#1088#1086#1095#1082#1077
       FormName = 'TReport_JuridicalDefermentPayment'
       FormNameParam.Value = 'TReport_JuridicalDefermentPayment'
