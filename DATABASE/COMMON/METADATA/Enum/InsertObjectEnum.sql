@@ -151,7 +151,7 @@ BEGIN
      -- !!! Состояние договора
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_Signed(), inDescId:= zc_Object_ContractStateKind(), inCode:= 1, inName:= 'Подписан' , inEnumName:= 'zc_Enum_ContractStateKind_Signed');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_UnSigned(), inDescId:= zc_Object_ContractStateKind(), inCode:= 2, inName:= 'Не подписан' , inEnumName:= 'zc_Enum_ContractStateKind_UnSigned');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_Close(), inDescId:= zc_Object_ContractStateKind(), inCode:= 3, inName:= 'Расторгнут' , inEnumName:= 'zc_Enum_ContractStateKind_Close');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractStateKind_Close(), inDescId:= zc_Object_ContractStateKind(), inCode:= 3, inName:= 'Завершен' , inEnumName:= 'zc_Enum_ContractStateKind_Close');
 
      -- !!! Типы условий договоров
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_ChangePercent()         , inDescId:= zc_Object_ContractConditionKind(), inCode:= 1,  inName:= '(-)% Скидки (+)% Наценки'     , inEnumName:= 'zc_Enum_ContractConditionKind_ChangePercent');

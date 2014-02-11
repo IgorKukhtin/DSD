@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 446
   ClientWidth = 1127
-  ExplicitLeft = -135
   ExplicitWidth = 1133
   ExplicitHeight = 471
   PixelsPerInch = 96
@@ -135,14 +134,12 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitWidth = 674
       ClientRectBottom = 446
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitWidth = 674
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -292,7 +289,6 @@
       object PartnerTS: TcxTabSheet
         Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
         ImageIndex = 1
-        ExplicitWidth = 674
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -300,7 +296,6 @@
           Height = 26
           Align = dalTop
           BarManager = dxBarManager
-          ExplicitWidth = 674
         end
         object PartnerGrid: TcxGrid
           Left = 0
@@ -309,7 +304,6 @@
           Height = 396
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 674
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -349,7 +343,6 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitWidth = 674
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -357,7 +350,6 @@
           Height = 26
           Align = dalTop
           BarManager = dxBarManager
-          ExplicitWidth = 674
         end
         object ContractGrid: TcxGrid
           Left = 0
@@ -366,7 +358,6 @@
           Height = 396
           Align = alClient
           TabOrder = 0
-          ExplicitWidth = 674
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -384,6 +375,34 @@
             OptionsView.HeaderAutoHeight = True
             OptionsView.Indicator = True
             Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object clContractStateKindCode: TcxGridDBColumn
+              Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
+              DataBinding.FieldName = 'ContractStateKindCode'
+              PropertiesClassName = 'TcxImageComboBoxProperties'
+              Properties.Alignment.Horz = taLeftJustify
+              Properties.Alignment.Vert = taVCenter
+              Properties.Images = dmMain.ImageList
+              Properties.Items = <
+                item
+                  Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                  ImageIndex = 12
+                  Value = 1
+                end
+                item
+                  Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                  ImageIndex = 11
+                  Value = 2
+                end
+                item
+                  Description = #1047#1072#1082#1088#1099#1090
+                  ImageIndex = 13
+                  Value = 3
+                end>
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 60
+            end
             object clCode: TcxGridDBColumn
               Caption = #1050#1086#1076
               DataBinding.FieldName = 'Code'
@@ -480,14 +499,6 @@
               HeaderAlignmentVert = vaCenter
               Width = 60
             end
-            object clContractStateKindName: TcxGridDBColumn
-              Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077
-              DataBinding.FieldName = 'ContractStateKindName'
-              Visible = False
-              HeaderAlignmentHorz = taCenter
-              HeaderAlignmentVert = vaCenter
-              Width = 60
-            end
             object clComment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
@@ -503,6 +514,10 @@
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 30
+            end
+            object clContractStateKindColor: TcxGridDBColumn
+              DataBinding.FieldName = 'ContractStateKindColor'
+              Visible = False
             end
           end
           object ContractGridLevel: TcxGridLevel
@@ -1169,8 +1184,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1397,6 +1412,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 256
     Top = 288
   end
@@ -1414,6 +1430,7 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 392
     Top = 248
   end
@@ -1424,6 +1441,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 480
     Top = 296
   end

@@ -45,6 +45,34 @@ object ContractConditionValueForm: TContractConditionValueForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clContractStateKindName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractStateKindCode'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1055#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 12
+            Value = 1
+          end
+          item
+            Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 11
+            Value = 2
+          end
+          item
+            Description = #1047#1072#1082#1088#1099#1090
+            ImageIndex = 13
+            Value = 3
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -103,14 +131,6 @@ object ContractConditionValueForm: TContractConditionValueForm
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 76
-      end
-      object clContractStateKindName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractStateKindName'
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 76
