@@ -1,13 +1,14 @@
---Function: gpSelect_Object_DocumentTaxKind(TVarChar)
+-- Function: gpSelect_Object_DocumentTaxKind(TVarChar)
 
---DROP FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar);
+-- DROP FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_DocumentTaxKind(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
-
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
+AS
+$BODY$
+BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DocumentTaxKind());
 
@@ -21,18 +22,14 @@ $BODY$BEGIN
    WHERE Object.DescId = zc_Object_DocumentTaxKind();
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
- 11.02.14                                                        *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.02.14                                                       *
 */
 
 -- тест

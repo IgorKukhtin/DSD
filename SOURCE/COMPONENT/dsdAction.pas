@@ -1158,7 +1158,19 @@ begin
          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
          for i := 0 to Params.Count - 1 do
              Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
-         PrepareReport;
+
+         if Assigned(Self.Owner) then
+            for I := 0 to Self.Owner.ComponentCount - 1 do
+                if Self.Owner.Components[i] is TDataSet then
+                   TDataSet(Self.Owner.Components[i]).DisableControls;
+         try
+           PrepareReport;
+         finally
+           if Assigned(Self.Owner) then
+              for I := 0 to Self.Owner.ComponentCount - 1 do
+                  if Self.Owner.Components[i] is TDataSet then
+                     TDataSet(Self.Owner.Components[i]).EnableControls;
+         end;
          ShowReport;
       end;
     end;
