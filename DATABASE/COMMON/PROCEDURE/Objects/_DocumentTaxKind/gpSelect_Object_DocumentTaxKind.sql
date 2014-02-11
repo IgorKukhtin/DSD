@@ -1,39 +1,36 @@
-п»ї--Function: gpSelect_Object_PaidKind(TVarChar)
+-- Function: gpSelect_Object_DocumentTaxKind(TVarChar)
 
---DROP FUNCTION gpSelect_Object_PaidKind(TVarChar);
+-- DROP FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Object_PaidKind(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+CREATE OR REPLACE FUNCTION gpSelect_Object_DocumentTaxKind(
+    IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
-$BODY$BEGIN
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased Boolean)
+AS
+$BODY$
+BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_DocumentTaxKind());
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_PaidKind());
-
-   RETURN QUERY 
-   SELECT 
-         Object.Id         AS Id 
+   RETURN QUERY
+   SELECT
+         Object.Id         AS Id
        , Object.ObjectCode AS Code
        , Object.ValueData  AS Name
        , Object.isErased   AS isErased
    FROM Object
-   WHERE Object.DescId = zc_Object_PaidKind();
-  
+   WHERE Object.DescId = zc_Object_DocumentTaxKind();
+
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_PaidKind(TVarChar)
-  OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Object_DocumentTaxKind(TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
- 08.06.13          *
-
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.02.14                                                       *
 */
 
--- С‚РµСЃС‚
--- SELECT * FROM gpSelect_Object_PaidKind('2')
+-- тест
+-- SELECT * FROM gpSelect_Object_DocumentTaxKind('2')

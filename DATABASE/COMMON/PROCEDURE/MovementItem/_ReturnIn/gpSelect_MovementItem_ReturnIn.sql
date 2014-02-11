@@ -213,19 +213,17 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
- 30.01.14														*  inisErased
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.01.14							* add inisErased
  18.07.13         * add Object_Asset
  17.07.13         *
-
 */
 
 -- тест
- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
 -- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')

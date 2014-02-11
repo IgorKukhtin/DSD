@@ -534,6 +534,15 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 38
     end
+    object cbData1CLink: TCheckBox
+      Tag = 10
+      Left = 151
+      Top = 201
+      Width = 172
+      Height = 17
+      Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
+      TabOrder = 39
+    end
   end
   object DocumentPanel: TPanel
     Left = 783
@@ -682,7 +691,6 @@ object MainForm: TMainForm
       Width = 194
       Height = 17
       Caption = '1.3. '#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091
-      Enabled = False
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11

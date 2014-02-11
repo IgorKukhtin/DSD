@@ -1,11 +1,28 @@
-CREATE OR REPLACE FUNCTION lpGetUserBySession(
-IN inSession TVarChar)
-RETURNS integer AS
+-- Function: lpGetUserBySession (TVarChar)
+
+DROP FUNCTION IF EXISTS lpGetUserBySession (TVarChar);
+
+CREATE OR REPLACE FUNCTION lpGetUserBySession (
+    IN inSession TVarChar
+)
+RETURNS Integer
+AS
 $BODY$  
 BEGIN
-  RETURN to_number(inSession, '00000000000');   
+     IF inSession <> ''
+     THEN RETURN to_number (inSession, '00000000000');   
+     ELSE RETURN 0;
+     END IF;
+
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpGetUserBySession(TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpGetUserBySession (TVarChar) OWNER TO postgres;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.02.14                                        * check inSession <> ''
+*/
+
+-- тест
+-- SELECT * FROM lpGetUserBySession (inSession:= zfCalc_UserAdmin())
