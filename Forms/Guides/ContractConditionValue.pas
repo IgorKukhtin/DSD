@@ -91,6 +91,8 @@ type
     actInsertJuridical: TdsdInsertUpdateAction;
     bbInsertJuridical: TdxBarButton;
     actMultiInsertJuridical: TMultiAction;
+    actUpdateJuridical: TdsdInsertUpdateAction;
+    bbUpdateJuridical: TdxBarButton;
   private
     { Private declarations }
   public

@@ -57,6 +57,7 @@ type
     procedure LoadModelServiceFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
+    procedure LoadDocumentTaxKindFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
@@ -549,6 +550,12 @@ procedure TLoadFormTest.LoadPaidKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPaidKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPaidKindForm');
+end;
+
+procedure TLoadFormTest.LoadDocumentTaxKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentTaxKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TDocumentTaxKindForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;

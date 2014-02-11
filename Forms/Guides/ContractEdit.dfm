@@ -298,7 +298,7 @@ inherited ContractEditForm: TContractEditForm
           HeaderAlignmentVert = vaCenter
           Width = 553
         end
-        object clsfcisErased: TcxGridDBColumn
+        object colisErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
           DataBinding.FieldName = 'isErased'
           Visible = False
@@ -519,6 +519,33 @@ inherited ContractEditForm: TContractEditForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'spInserUpdateContract'
+    end
+    object actSetErasedContractCondition: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedCondition
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCondition
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ErasedFieldName = 'isErased'
+      DataSource = ContractConditionDS
+    end
+    object actSetUnErasedContractCondition: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErasedCondition
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErasedCondition
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ContractConditionDS
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1104,8 +1131,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1138,6 +1165,14 @@ inherited ContractEditForm: TContractEditForm
         item
           Visible = True
           ItemName = 'bbInsertCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetErasedContractCondition'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUnerasedCondition'
         end
         item
           Visible = True
@@ -1212,6 +1247,14 @@ inherited ContractEditForm: TContractEditForm
     end
     object bbConditionRefresh: TdxBarButton
       Action = actConditionRefresh
+      Category = 0
+    end
+    object bbSetErasedContractCondition: TdxBarButton
+      Action = actSetErasedContractCondition
+      Category = 0
+    end
+    object bbSetUnerasedCondition: TdxBarButton
+      Action = actSetUnErasedContractCondition
       Category = 0
     end
   end
@@ -1325,5 +1368,29 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 128
     Top = 136
+  end
+  object spErasedUnErasedCondition: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ContractConditionCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 496
+    Top = 72
+  end
+  object DBViewAddOnCondition: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewContractCondition
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    Left = 616
+    Top = 72
   end
 end

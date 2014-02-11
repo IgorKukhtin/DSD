@@ -71,6 +71,9 @@ type
     mactPrint: TMultiAction;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    edDocumentTaxKind: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    DocumentTaxKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

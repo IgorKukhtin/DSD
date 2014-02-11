@@ -1567,9 +1567,10 @@ end;
 procedure TMultiAction.ListExecute;
 var i: integer;
 begin
+  // Выполняем события друг за другом. Если какое-то не выполнено, то отменяются и остальные
   for i := 0 to ActionList.Count - 1 do
       if Assigned(TActionItem(ActionList.Items[i]).Action) then
-         TActionItem(ActionList.Items[i]).Action.Execute;
+         if not TActionItem(ActionList.Items[i]).Action.Execute then exit;
 end;
 
 function TMultiAction.LocalExecute: boolean;

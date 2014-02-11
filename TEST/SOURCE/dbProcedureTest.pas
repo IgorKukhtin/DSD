@@ -209,6 +209,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\_PaidKind\gpSelect_Object_PaidKind.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_PaidKind\gpGet_Object_PaidKind.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\_DocumentTaxKind\gpInsertUpdate_Object_DocumentTaxKind.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_DocumentTaxKind\gpSelect_Object_DocumentTaxKind.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\_DocumentTaxKind\gpGet_Object_DocumentTaxKind.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\lfSelect_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpInsertUpdate_Object_ProfitLoss.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\_ProfitLoss\gpSelect_Object_ProfitLoss.sql', ZQuery);

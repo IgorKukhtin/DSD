@@ -64,7 +64,7 @@ type
     cxGridDBTableViewContractCondition: TcxGridDBTableView;
     cContractConditionKindName: TcxGridDBColumn;
     clValue: TcxGridDBColumn;
-    clsfcisErased: TcxGridDBColumn;
+    colisErased: TcxGridDBColumn;
     cxGridContractConditionLevel: TcxGridLevel;
     dxBarDockControl1: TdxBarDockControl;
     BarManager: TdxBarManager;
@@ -94,6 +94,12 @@ type
     cxLabel15: TcxLabel;
     edMainJuridical: TcxButtonEdit;
     MainJuridicalGuides: TdsdGuides;
+    actSetErasedContractCondition: TdsdUpdateErased;
+    bbSetErasedContractCondition: TdxBarButton;
+    spErasedUnErasedCondition: TdsdStoredProc;
+    actSetUnErasedContractCondition: TdsdUpdateErased;
+    bbSetUnerasedCondition: TdxBarButton;
+    DBViewAddOnCondition: TdsdDBViewAddOn;
   private
     { Private declarations }
   public
