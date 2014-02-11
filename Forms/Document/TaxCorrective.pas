@@ -77,6 +77,10 @@ type
     edIsRegistered: TcxCheckBox;
     HeaderSaver2: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    edReturnIn: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    edTax: TcxTextEdit;
   private
     { Private declarations }
   public

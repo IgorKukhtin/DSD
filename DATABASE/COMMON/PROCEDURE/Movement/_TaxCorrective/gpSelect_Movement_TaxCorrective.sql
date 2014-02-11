@@ -61,9 +61,9 @@ BEGIN
            , Object_Contract.invnumber         			AS ContractName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
-           , Movement_DocumentMaster.Id                 AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar) AS DocumentMasterName
-           , Movement_DocumentChild.Id                  AS DocumentChildId
+           , Movement_DocumentMaster.Id                            AS DocumentMasterId
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)   AS DocumentMasterName
+           , CAST(ObjectFloat_DocumentChild.ValueData as INTEGER)  AS DocumentChildId
            , CAST(MS_Child_InvNumberPartner.ValueData as TVarChar) AS DocumentChildName
 
 
@@ -162,8 +162,6 @@ BEGIN
             LEFT JOIN ObjectFloat AS ObjectFloat_DocumentChild ON ObjectFloat_DocumentChild.ObjectId = MovementLinkObject_DocumentChild.ObjectId
                                                                AND ObjectFloat_DocumentChild.DescId = zc_ObjectFloat_Document_MovementId()
 
---            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = ObjectFloat_DocumentChild.ValueData
-
             LEFT JOIN MovementString AS MS_Child_InvNumberPartner
                                      ON MS_Child_InvNumberPartner.MovementId =  ObjectFloat_DocumentChild.ValueData
                                     AND MS_Child_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -185,4 +183,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2013', inEndDate:= '12.12.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

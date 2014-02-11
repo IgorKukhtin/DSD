@@ -1,25 +1,25 @@
 inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
-  ClientWidth = 1054
-  ExplicitWidth = 1062
+  ClientWidth = 1092
+  ExplicitWidth = 1100
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 128
-    Width = 1054
+    Width = 1092
     Height = 540
     ExplicitTop = 128
     ExplicitWidth = 1054
     ExplicitHeight = 540
     ClientRectBottom = 536
-    ClientRectRight = 1050
+    ClientRectRight = 1088
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1048
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1048
+        Width = 1086
         Height = 514
         ExplicitWidth = 1048
         ExplicitHeight = 514
@@ -159,7 +159,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       ExplicitWidth = 1048
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1048
+        Width = 1086
         Height = 514
         ExplicitWidth = 1048
         ExplicitHeight = 514
@@ -184,7 +184,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1054
+    Width = 1092
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1054
@@ -347,6 +347,30 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 23
       Width = 165
+    end
+    object cxLabel5: TcxLabel
+      Left = 890
+      Top = 5
+      Caption = #8470' '#1074#1086#1079'. '#1086#1090' '#1087#1086#1082'.'
+    end
+    object edReturnIn: TcxTextEdit
+      Left = 890
+      Top = 23
+      Enabled = False
+      TabOrder = 25
+      Width = 83
+    end
+    object cxLabel8: TcxLabel
+      Left = 979
+      Top = 5
+      Caption = #8470' '#1085#1072#1083#1086#1075'.'
+    end
+    object edTax: TcxTextEdit
+      Left = 979
+      Top = 23
+      Enabled = False
+      TabOrder = 27
+      Width = 83
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -826,11 +850,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
       end
       item
+        Name = 'DocumentMasterName'
         Value = ''
+        Component = edReturnIn
         DataType = ftString
       end
       item
+        Name = 'DocumentChildName'
         Value = ''
+        Component = edTax
+        DataType = ftString
       end
       item
         Value = ''
