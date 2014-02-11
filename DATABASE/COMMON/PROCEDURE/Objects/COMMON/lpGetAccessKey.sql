@@ -19,7 +19,6 @@ BEGIN
       -- Transport
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Transport()
                        , zc_Enum_Process_Get_Movement_Transport()
-                       , zc_Enum_Process_InsertUpdate_Movement_Income()
                        , zc_Enum_Process_InsertUpdate_Movement_IncomeFuel()
                        , zc_Enum_Process_InsertUpdate_Movement_TransportIncome()
                        , zc_Enum_Process_InsertUpdate_Movement_PersonalSendCash()

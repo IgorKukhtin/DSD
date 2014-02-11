@@ -71,16 +71,6 @@ object IncomeJournalForm: TIncomeJournalForm
       DataController.Filter.TranslateLike = True
       DataController.Summary.DefaultGroupSummaryItems = <
         item
-          Kind = skSum
-          Position = spFooter
-          Column = colTotalSummPacker
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-          Column = colTotalSummSpending
-        end
-        item
           Format = ',0.####'
           Kind = skSum
           Column = colTotalSumm
@@ -114,6 +104,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalCount
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -150,6 +145,11 @@ object IncomeJournalForm: TIncomeJournalForm
           Format = ',0.####'
           Kind = skSum
           Column = colTotalSummPVAT
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = colTotalCountPartner
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -245,11 +245,21 @@ object IncomeJournalForm: TIncomeJournalForm
         Width = 58
       end
       object colTotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'TotalCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object colTotalCountPartner: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
+        DataBinding.FieldName = 'TotalCountPartner'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
       end

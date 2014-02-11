@@ -152,7 +152,8 @@ BEGIN
 
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-         AND Object_To.DescId = zc_Object_Car(); -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
+         -- AND Object_To.DescId = zc_Object_Car() -- !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!
+      ;
   
 END;
 $BODY$
@@ -162,6 +163,7 @@ ALTER FUNCTION gpSelect_Movement_IncomeFuel (TDateTime, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.02.14                                        * add убрал !!!САМОЕ НЕКРАСИВОЕ РЕШЕНИЕ!!!, т.к. AccessKeyId будет достаточно
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View
  06.02.14                                        * add Branch...
  03.02.14                                        * add Goods... and Fuel...

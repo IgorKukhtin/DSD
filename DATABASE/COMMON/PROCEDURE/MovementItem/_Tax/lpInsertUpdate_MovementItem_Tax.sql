@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Tax()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Tax(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_Tax(integer, integer, integer, tfloat, tfloat, tfloat, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>

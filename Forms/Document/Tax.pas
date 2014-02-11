@@ -34,41 +34,25 @@ type
     edContract: TcxButtonEdit;
     cxLabel9: TcxLabel;
     cxLabel6: TcxLabel;
-    edPaidKind: TcxButtonEdit;
-    cxLabel5: TcxLabel;
-    edInvNumberOrder: TcxTextEdit;
+    edDocumentTaxKind: TcxButtonEdit;
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    edChangePercent: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
-    cxLabel13: TcxLabel;
-    edRouteSorting: TcxButtonEdit;
-    GuidesRouteSorting: TdsdGuides;
     GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
-    PaidKindGuides: TdsdGuides;
+    DocumentTaxKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
-    edOperDatePartner: TcxDateEdit;
+    edDateRegistered: TcxDateEdit;
     cxLabel10: TcxLabel;
     edIsChecked: TcxCheckBox;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colAmountChangePercent: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colChangePercentAmount: TcxGridDBColumn;
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    cxLabel11: TcxLabel;
-    edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;
@@ -79,7 +63,6 @@ type
     actSPPrintSaleProcName: TdsdExecStoredProc;
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
-    actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
@@ -90,6 +73,8 @@ type
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    edIsDocument: TcxCheckBox;
+    edIsRegistered: TcxCheckBox;
   private
     { Private declarations }
   public

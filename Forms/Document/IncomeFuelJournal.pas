@@ -102,6 +102,7 @@ type
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
+    colTotalCountPartner: TcxGridDBColumn;
   private
   public
   end;

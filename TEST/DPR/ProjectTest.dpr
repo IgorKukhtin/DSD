@@ -210,7 +210,7 @@ uses
   CrossAddOnViewTestForm in '..\SOURCE\Component\CrossAddOnViewTestForm.pas' {CrossAddOnViewTest},
   Report_Account in '..\..\Forms\Report\Report_Account.pas' {Report_AccountForm},
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm},
+  SourceFuel_Object in '..\..\Forms\Guides\SourceFuel_Object.pas' {SourceFuel_ObjectForm: TParentForm},
   CardFuel in '..\..\Forms\CardFuel.pas' {CardFuelForm},
   TicketFuel in '..\..\Forms\TicketFuel.pas' {TicketFuelForm},
   TicketFuelEdit in '..\..\Forms\TicketFuelEdit.pas' {TicketFuelEditForm},
@@ -235,7 +235,7 @@ uses
   StaffListChoice in '..\..\Forms\StaffListChoice.pas' {StaffListChoiceForm: TParentForm},
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
   StaffListSummKind in '..\..\Forms\Enum\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm},
-  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  DocumentTaxKind in '..\..\Forms\Kind\DocumentTaxKind.pas' {DocumentTaxKindForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
@@ -346,7 +346,8 @@ uses
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
 
 {$R *.RES}
 

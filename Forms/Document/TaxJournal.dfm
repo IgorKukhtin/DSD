@@ -2,26 +2,29 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 574
+  ExplicitWidth = 1118
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
     Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1110
     ExplicitHeight = 476
     ClientRectBottom = 472
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1102
-      ExplicitHeight = 468
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1104
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1102
-        Height = 468
-        ExplicitWidth = 1102
-        ExplicitHeight = 468
+        Width = 1104
+        Height = 470
+        ExplicitWidth = 1104
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -36,7 +39,6 @@ inherited TaxJournalForm: TTaxJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
             end
             item
               Format = ',0.####'
@@ -67,7 +69,6 @@ inherited TaxJournalForm: TTaxJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCountPartner
             end
             item
               Format = ',0.####'
@@ -112,21 +113,20 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberOrder: TcxGridDBColumn [2]
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080
-            DataBinding.FieldName = 'InvNumberOrder'
+          object colInvNumberPartner: TcxGridDBColumn [2]
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
           inherited colOperDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             HeaderAlignmentHorz = taCenter
             Width = 50
           end
-          object colOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'OperDatePartner'
+          object colDateRegistered: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
+            DataBinding.FieldName = 'DateRegistered'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
@@ -148,13 +148,9 @@ inherited TaxJournalForm: TTaxJournalForm
           object colTotalCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'TotalCount'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colTotalCountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'TotalCountPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -162,16 +158,12 @@ inherited TaxJournalForm: TTaxJournalForm
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'TotalSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
-          end
-          object colChangePercent: TcxGridDBColumn
-            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-            DataBinding.FieldName = 'ChangePercent'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 65
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -190,6 +182,9 @@ inherited TaxJournalForm: TTaxJournalForm
           object colTotalSummVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -198,6 +193,9 @@ inherited TaxJournalForm: TTaxJournalForm
           object colTotalSummMVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummMVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -206,14 +204,17 @@ inherited TaxJournalForm: TTaxJournalForm
           object colTotalSummPVAT: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
             DataBinding.FieldName = 'TotalSummPVAT'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
+          object colTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -248,14 +249,6 @@ inherited TaxJournalForm: TTaxJournalForm
             DataBinding.FieldName = 'InfoMoneyName'
             Width = 70
           end
-          object colRouteSortingName: TcxGridDBColumn
-            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
-            DataBinding.FieldName = 'RouteSortingName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
@@ -280,7 +273,7 @@ inherited TaxJournalForm: TTaxJournalForm
       Left = 427
       Top = 5
       Action = actRefresh
-      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
+      Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080'>'
       TabOrder = 4
       Width = 262
     end
@@ -295,7 +288,9 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSaleForm'
+      FormName = 'TTaxForm'
+      FormNameParam.Name = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -314,7 +309,9 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSaleForm'
+      FormName = 'TTaxForm'
+      FormNameParam.Name = 'TTaxForm'
+      FormNameParam.Value = 'TTaxForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -343,7 +340,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale'
+    StoredProcName = 'gpSelect_Movement_Tax'
     Params = <
       item
         Name = 'instartdate'
@@ -373,7 +370,8 @@ inherited TaxJournalForm: TTaxJournalForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Top = 155
+    Left = 104
+    Top = 171
   end
   inherited BarManager: TdxBarManager
     Left = 168
@@ -408,7 +406,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Sale'
+    StoredProcName = 'gpComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -426,7 +424,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
@@ -438,7 +436,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Tax'
     Params = <
       item
         Name = 'inmovementid'
