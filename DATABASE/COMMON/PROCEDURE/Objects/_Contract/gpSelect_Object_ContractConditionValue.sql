@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
-             , ContractStateKindId Integer, ContractStateKindName TVarChar
+             , ContractStateKindId Integer, ContractStateKindColor Integer, ContractStateKindName TVarChar
              , OKPO TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar                
              , Value TFloat
@@ -78,6 +78,11 @@ BEGIN
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
        , Object_ContractStateKind.Id        AS ContractStateKindId
+       , CASE Object_ContractStateKind.ObjectCode 
+              WHEN 2 THEN 32768 -- Зеленый
+              WHEN 3 THEN   255 -- Красный        
+              ELSE  0 -- Не меняем цвет
+          END AS  ContractStateKindColor
        , Object_ContractStateKind.ValueData AS ContractStateKindName
 
        , ObjectHistory_JuridicalDetails_View.OKPO
@@ -154,6 +159,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 11.02.14                         * add ContractStateKindColor
  05.02.14                                        *
 */
 

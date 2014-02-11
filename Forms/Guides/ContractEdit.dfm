@@ -530,6 +530,7 @@ inherited ContractEditForm: TContractEditForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractConditionDS
     end
@@ -543,9 +544,24 @@ inherited ContractEditForm: TContractEditForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
+      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ContractConditionDS
+    end
+    object actDeleteDocument: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spDeleteDocument
+      StoredProcList = <
+        item
+          StoredProc = spDeleteDocument
+        end
+        item
+          StoredProc = spDocumentSelect
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 2
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1206,6 +1222,10 @@ inherited ContractEditForm: TContractEditForm
         end
         item
           Visible = True
+          ItemName = 'bbDeleteDocument'
+        end
+        item
+          Visible = True
           ItemName = 'bbStatic'
         end
         item
@@ -1255,6 +1275,10 @@ inherited ContractEditForm: TContractEditForm
     end
     object bbSetUnerasedCondition: TdxBarButton
       Action = actSetUnErasedContractCondition
+      Category = 0
+    end
+    object bbDeleteDocument: TdxBarButton
+      Action = actDeleteDocument
       Category = 0
     end
   end
@@ -1392,5 +1416,19 @@ inherited ContractEditForm: TContractEditForm
     OnlyEditingCellOnEnter = False
     Left = 616
     Top = 72
+  end
+  object spDeleteDocument: TdsdStoredProc
+    StoredProcName = 'gpDelete_Object_ContractDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inId'
+        Component = DocumentCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 648
+    Top = 272
   end
 end
