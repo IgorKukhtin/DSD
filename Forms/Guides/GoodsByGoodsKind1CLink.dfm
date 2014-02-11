@@ -284,9 +284,15 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsByGoodsKindId'
+        Name = 'inGoodsId'
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item

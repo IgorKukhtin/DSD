@@ -407,6 +407,10 @@ object ContractConditionValueForm: TContractConditionValueForm
         end
         item
           Visible = True
+          ItemName = 'bbUpdateJuridical'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -467,7 +471,11 @@ object ContractConditionValueForm: TContractConditionValueForm
       Category = 0
     end
     object bbInsertJuridical: TdxBarButton
-      Action = actMultiInsertJuridical
+      Action = actInsertJuridical
+      Category = 0
+    end
+    object bbUpdateJuridical: TdxBarButton
+      Action = actUpdateJuridical
       Category = 0
     end
   end
@@ -763,6 +771,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     end
     object actInsertJuridical: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
       ImageIndex = 0
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
@@ -772,7 +781,7 @@ object ContractConditionValueForm: TContractConditionValueForm
           Name = 'Id'
           Value = '0'
         end>
-      isShowModal = True
+      isShowModal = False
     end
     object actMultiInsertJuridical: TMultiAction
       Category = 'DSDLib'
@@ -785,6 +794,21 @@ object ContractConditionValueForm: TContractConditionValueForm
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
       ImageIndex = 0
+    end
+    object actUpdateJuridical: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1077#1085#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
+      ImageIndex = 1
+      FormName = 'TJuridicalEditForm'
+      FormNameParam.Value = 'TJuridicalEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'JuridicalId'
+        end>
+      isShowModal = False
     end
   end
   object dsdStoredProc: TdsdStoredProc

@@ -25,7 +25,7 @@ type
 
 implementation
 
-uses VCL.ActnList, DB, Variants, SysUtils;
+uses VCL.ActnList, DB, Variants, SysUtils, Classes;
 
 procedure Register;
 begin
@@ -120,5 +120,9 @@ function TSale1CLoad.GetData(FieldName: String): Variant;
 begin
   result := FDataSet.FieldByName(FieldName).AsString;
 end;
+
+initialization
+
+  RegisterClass(TSale1CLoadAction);
 
 end.
