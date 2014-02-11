@@ -347,7 +347,8 @@ uses
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
-  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm};
+  PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
+  GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm};
 
 {$R *.RES}
 
