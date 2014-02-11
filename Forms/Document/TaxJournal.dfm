@@ -387,6 +387,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 640
     Top = 152
   end

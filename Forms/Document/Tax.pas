@@ -75,6 +75,8 @@ type
     PrintItemsDS: TDataSource;
     edIsDocument: TcxCheckBox;
     edIsRegistered: TcxCheckBox;
+    HeaderSaver2: THeaderSaver;
+    spInsertUpdateMovement_Params: TdsdStoredProc;
   private
     { Private declarations }
   public

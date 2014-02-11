@@ -2,29 +2,27 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitWidth = 1031
-  ExplicitHeight = 703
+  ExplicitWidth = 1023
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1015
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1015
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1015
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1015
-      ExplicitHeight = 518
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1015
-        ExplicitHeight = 518
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -213,14 +211,15 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1015
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1009
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1015
-        Height = 518
-        ExplicitWidth = 1015
-        ExplicitHeight = 518
+        Width = 1009
+        Height = 514
+        ExplicitWidth = 1009
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -273,7 +272,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -665,7 +664,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -732,6 +731,7 @@ inherited SaleForm: TSaleForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem
