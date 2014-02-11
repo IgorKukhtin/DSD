@@ -93,6 +93,7 @@ type
     actMultiInsertJuridical: TMultiAction;
     actUpdateJuridical: TdsdInsertUpdateAction;
     bbUpdateJuridical: TdxBarButton;
+    clContractStateKindColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

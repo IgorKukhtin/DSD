@@ -100,6 +100,9 @@ type
     actSetUnErasedContractCondition: TdsdUpdateErased;
     bbSetUnerasedCondition: TdxBarButton;
     DBViewAddOnCondition: TdsdDBViewAddOn;
+    actDeleteDocument: TdsdExecStoredProc;
+    spDeleteDocument: TdsdStoredProc;
+    bbDeleteDocument: TdxBarButton;
   private
     { Private declarations }
   public
