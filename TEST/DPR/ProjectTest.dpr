@@ -324,8 +324,8 @@ uses
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
-  TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
-  Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
+  TaxCorrectiveJournal in '..\..\Forms\Document\TaxCorrectiveJournal.pas' {TaxCorrectiveJournalForm: TParentForm},
+  TaxCorrective in '..\..\Forms\Document\TaxCorrective.pas' {TaxCorrectiveForm: TParentForm},
   Partner1CLink in '..\..\Forms\Guides\Partner1CLink.pas' {Partner1CLinkForm: TParentForm},
   GoodsByGoodsKind1CLink in '..\..\Forms\Guides\GoodsByGoodsKind1CLink.pas' {GoodsByGoodsKind1CLinkForm: TParentForm},
   LossDebtTest in '..\SOURCE\Movement\All\LossDebtTest.pas',
@@ -348,7 +348,9 @@ uses
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
-  GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm};
+  GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
+  Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
+  TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm};
 
 {$R *.RES}
 

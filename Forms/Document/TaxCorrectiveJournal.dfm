@@ -1,5 +1,5 @@
-inherited TaxJournalForm: TTaxJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1118
@@ -288,9 +288,9 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTaxForm'
-      FormNameParam.Name = 'TTaxForm'
-      FormNameParam.Value = 'TTaxForm'
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Name = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -309,9 +309,9 @@ inherited TaxJournalForm: TTaxJournalForm
         end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTaxForm'
-      FormNameParam.Name = 'TTaxForm'
-      FormNameParam.Value = 'TTaxForm'
+      FormName = 'TTaxCorrectiveForm'
+      FormNameParam.Name = 'TTaxCorrectiveForm'
+      FormNameParam.Value = 'TTaxCorrectiveForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -340,7 +340,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax'
+    StoredProcName = 'gpSelect_Movement_TaxCorrective'
     Params = <
       item
         Name = 'instartdate'
@@ -407,7 +407,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Tax'
+    StoredProcName = 'gpComplete_Movement_TaxCorrective'
     Params = <
       item
         Name = 'inmovementid'
@@ -425,7 +425,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Tax'
+    StoredProcName = 'gpUnComplete_Movement_TaxCorrective'
     Params = <
       item
         Name = 'inmovementid'
@@ -437,7 +437,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Tax'
+    StoredProcName = 'gpSetErased_Movement_TaxCorrective'
     Params = <
       item
         Name = 'inmovementid'

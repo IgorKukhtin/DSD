@@ -1,4 +1,4 @@
-unit TaxJournal;
+unit TaxCorrectiveJournal;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit;
 
 type
-  TTaxJournalForm = class(TAncestorJournalForm)
+  TTaxCorrectiveJournalForm = class(TAncestorJournalForm)
     colDateRegistered: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
@@ -53,11 +53,11 @@ type
   end;
 
 var
-  TaxJournalForm: TTaxJournalForm;
+  TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm;
 
 implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TTaxJournalForm);
+  RegisterClass(TTaxCorrectiveJournalForm);
 end.
