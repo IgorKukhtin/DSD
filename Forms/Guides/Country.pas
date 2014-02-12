@@ -1,5 +1,4 @@
-
-unit AssetGroup;
+unit Country;
 
 interface
 
@@ -9,12 +8,11 @@ uses
   cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
-  Vcl.ActnList, dsdAction, ParentForm, DataModul, Vcl.ComCtrls,
-  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit,
-  dsdAddOn, dxBarExtItems,
-  dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
-  dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
+  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
+  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  cxGridBandedTableView, cxGridDBBandedTableView, cxCheckBox, dxSkinsCore,
+  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
+  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
   dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
   dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
@@ -23,10 +21,12 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
-  TAssetGroupForm = class(TParentForm)
+  TCountryForm = class(TParentForm)
+    cxGridLevel: TcxGridLevel;
+    cxGrid: TcxGrid;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -35,25 +35,29 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
     bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
-    actUpdate: TdsdInsertUpdateAction;
     bbEdit: TdxBarButton;
-    cxDBTreeList: TcxDBTreeList;
-    colCode: TcxDBTreeListColumn;
-    colName: TcxDBTreeListColumn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    spErasedUnErased: TdsdStoredProc;
-    actSetErased: TdsdUpdateErased;
-    actSetUnErased: TdsdUpdateErased;
-    actGridToExcel: TdsdGridToExcel;
-    actChoiceGuides: TdsdChoiceGuides;
     bbSetErased: TdxBarButton;
-    bbSetEnerased: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
-    bbChoiceGuide: TdxBarButton;
+    bbSetUnErased: TdxBarButton;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbToExcel: TdxBarButton;
+    dxBarStatic: TdxBarStatic;
+    spErasedUnErased: TdsdStoredProc;
+    bbChoice: TdxBarButton;
+    cxGridDBTableView: TcxGridDBTableView;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clErased: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    dsdDBViewAddOn: TdsdDBViewAddOn;
+    spInsertUpdateObject: TdsdStoredProc;
+    InsertRecord: TInsertRecord;
+    CountryChoiceForm: TOpenChoiceForm;
+    dsdSetErased: TdsdUpdateErased;
+    dsdUpdateErased1: TdsdUpdateErased;
+    spGet: TdsdStoredProc;
   private
     { Private declarations }
   public
@@ -65,6 +69,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TAssetGroupForm);
+  RegisterClass(TCountryForm);
 
 end.

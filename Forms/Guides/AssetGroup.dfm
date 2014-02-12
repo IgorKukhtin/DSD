@@ -1,9 +1,9 @@
 object AssetGroupForm: TAssetGroupForm
   Left = 0
   Top = 0
-  Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
-  ClientHeight = 383
-  ClientWidth = 492
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1075#1088#1091#1087#1087' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
+  ClientHeight = 335
+  ClientWidth = 397
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -14,86 +14,69 @@ object AssetGroupForm: TAssetGroupForm
   OldCreateOrder = False
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
-  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.ChoiceAction = actChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
+  object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
-    Width = 492
-    Height = 357
+    Width = 397
+    Height = 309
     Align = alClient
-    TabOrder = 0
-    LookAndFeel.Kind = lfStandard
-    LookAndFeel.NativeStyle = False
-    LookAndFeel.SkinName = ''
-    ExplicitWidth = 895
-    ExplicitHeight = 365
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsSelection.InvertSelect = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentVert = vaCenter
-        Width = 63
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 119
-      end
-      object clParentName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'AssetGroupName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
+    Bands = <
+      item
+      end>
+    DataController.DataSource = DataSource
+    DataController.ParentField = 'ParentId'
+    DataController.KeyField = 'Id'
+    Images = dmMain.TreeImageList
+    Navigator.Buttons.CustomButtons = <>
+    OptionsBehavior.IncSearch = True
+    OptionsCustomizing.ColumnHiding = True
+    OptionsCustomizing.ColumnsQuickCustomization = True
+    OptionsData.Editing = False
+    OptionsData.Deleting = False
+    OptionsView.ColumnAutoWidth = True
+    OptionsView.HeaderAutoHeight = True
+    OptionsView.Indicator = True
+    RootValue = -1
+    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
+    TabOrder = 4
+    object colName: TcxDBTreeListColumn
+      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
+      DataBinding.FieldName = 'Name'
+      Options.Hidden = True
+      Options.Editing = False
+      Width = 300
+      Position.ColIndex = 0
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
     end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
+    object colCode: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Options.Hidden = True
+      Options.Editing = False
+      Width = 88
+      Position.ColIndex = 1
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
+    Left = 96
     Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 40
-    Top = 152
+    Left = 96
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -107,7 +90,7 @@ object AssetGroupForm: TAssetGroupForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 280
+    Left = 232
     Top = 96
   end
   object dxBarManager: TdxBarManager
@@ -127,8 +110,8 @@ object AssetGroupForm: TAssetGroupForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
-    Top = 96
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -156,15 +139,15 @@ object AssetGroupForm: TAssetGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
+          ItemName = 'bbSetEnerased'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'dxBarStatic1'
         end
         item
           BeginGroup = True
@@ -173,15 +156,12 @@ object AssetGroupForm: TAssetGroupForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic1'
         end
         item
+          BeginGroup = True
           Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbChoiceGuide'
         end>
       OneOnRow = True
       Row = 0
@@ -201,33 +181,29 @@ object AssetGroupForm: TAssetGroupForm
       Action = actUpdate
       Category = 0
     end
-    object bbErased: TdxBarButton
-      Action = dsdSetErased
+    object bbSetErased: TdxBarButton
+      Action = actSetErased
       Category = 0
     end
-    object bbUnErased: TdxBarButton
-      Action = dsdSetUnErased
+    object bbSetEnerased: TdxBarButton
+      Action = actSetUnErased
       Category = 0
     end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
+    object dxBarStatic1: TdxBarStatic
       Caption = '     '
       Category = 0
       Hint = '     '
       Visible = ivAlways
     end
-    object bbChoiceGuides: TdxBarButton
-      Action = dsdChoiceGuides
+    object bbChoiceGuide: TdxBarButton
+      Action = actChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 280
-    Top = 152
+    Left = 232
+    Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -254,7 +230,7 @@ object AssetGroupForm: TAssetGroupForm
           Name = 'Id'
           Value = Null
         end>
-      isShowModal = True
+      isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -273,12 +249,12 @@ object AssetGroupForm: TAssetGroupForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = True
+      isShowModal = False
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
-    object dsdSetErased: TdsdUpdateErased
+    object actSetErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProc = spErasedUnErased
       StoredProcList = <
@@ -292,7 +268,7 @@ object AssetGroupForm: TAssetGroupForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
+    object actSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       StoredProc = spErasedUnErased
       StoredProcList = <
@@ -307,32 +283,31 @@ object AssetGroupForm: TAssetGroupForm
       isSetErased = False
       DataSource = DataSource
     end
-    object dsdChoiceGuides: TdsdChoiceGuides
+    object actGridToExcel: TdsdGridToExcel
+      Category = 'DSDLib'
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
+      ImageIndex = 6
+      ShortCut = 16472
+    end
+    object actChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       Params = <
         item
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftString
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ShortCut = 13
       ImageIndex = 7
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -343,12 +318,35 @@ object AssetGroupForm: TAssetGroupForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 40
+    Left = 240
     Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 160
-    Top = 152
+    Left = 104
+    Top = 248
+  end
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    ErasedFieldName = 'isErased'
+    OnDblClickActionList = <
+      item
+        Action = actChoiceGuides
+      end
+      item
+        Action = actUpdate
+      end>
+    ActionItemList = <
+      item
+        Action = actChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    DBTreeList = cxDBTreeList
+    Left = 48
+    Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -361,32 +359,7 @@ object AssetGroupForm: TAssetGroupForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 288
-    Top = 208
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end
-      item
-        Action = actUpdate
-      end>
-    ActionItemList = <
-      item
-        Action = dsdChoiceGuides
-        ShortCut = 13
-      end
-      item
-        Action = actUpdate
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    Left = 144
-    Top = 240
+    Left = 160
+    Top = 168
   end
 end

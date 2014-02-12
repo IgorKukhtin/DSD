@@ -295,6 +295,12 @@ type
     bbAsset_Separator: TdxBarSeparator;
     actGoods_List: TdsdOpenForm;
     bbGoods_List: TdxBarButton;
+    actAssetGroup: TdsdOpenForm;
+    bbAssetGroup: TdxBarButton;
+    actMaker: TdsdOpenForm;
+    actCountry: TdsdOpenForm;
+    bbCountry: TdxBarButton;
+    bbMaker: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

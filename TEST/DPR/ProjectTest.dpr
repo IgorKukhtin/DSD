@@ -106,7 +106,6 @@ uses
   dbTest in '..\SOURCE\dbTest.pas',
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
   TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
-  AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm},
   Route in '..\..\Forms\Guides\Route.pas' {RouteForm},
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
   RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm},
@@ -349,11 +348,14 @@ uses
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
-  SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
+  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
-  JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
+  AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm: TParentForm},
   Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
-  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm};
+  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
+  JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
+  SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm};
 
 {$R *.RES}
 
