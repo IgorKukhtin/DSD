@@ -6,20 +6,20 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
  INOUT ioId                     Integer,    -- ключ объекта <Элемент истории реквизитов юр. лиц>
     IN inJuridicalId            Integer,    -- Юр. лицо
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
-
     IN inBankId                 Integer,    -- Банк
     IN inFullName               TVarChar,   -- Юр. лицо полное наименование
-    IN inJuridicalAddress	TVarChar,   -- Юридический адрес
+    IN inJuridicalAddress	    TVarChar,   -- Юридический адрес
     IN inOKPO                   TVarChar,   -- ОКПО
     IN inINN	                TVarChar,   -- ИНН
-    IN inNumberVAT	        TVarChar,   -- Номер свидетельства плательщика НДС
+    IN inNumberVAT	            TVarChar,   -- Номер свидетельства плательщика НДС
     IN inAccounterName	        TVarChar,   -- ФИО бухг.
     IN inBankAccount	        TVarChar,   -- р.счет
+    IN inPhone      	        TVarChar,   -- телефон
     IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
-DECLARE 
+DECLARE
   vbJuridicalId_find Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
@@ -89,14 +89,17 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_AccounterName(), ioId, inAccounterName);
    -- р.счет
    PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_BankAccount(), ioId, inBankAccount);
+   -- телефон
+   PERFORM lpInsertUpdate_ObjectHistoryString(zc_ObjectHistoryString_JuridicalDetails_Phone(), ioId, inPhone);
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-  
+
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 12.02.14                                                       * add phone
  06.01.14                                        * add проверка уникальность  <Юр. лицо полное наименование>
  05.01.14                                        * add проверка уникальность <ОКПО>
  03.01.14                                        *Cyr1251
