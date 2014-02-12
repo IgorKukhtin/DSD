@@ -8,16 +8,16 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 88
+    Top = 86
     Width = 782
-    Height = 233
+    Height = 235
     TabOrder = 5
     ExplicitTop = 88
     ExplicitWidth = 782
     ExplicitHeight = 233
-    ClientRectBottom = 229
-    ClientRectRight = 778
-    ClientRectTop = 22
+    ClientRectBottom = 235
+    ClientRectRight = 782
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
@@ -31,6 +31,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ExplicitWidth = 776
         ExplicitHeight = 207
         inherited cxGridDBTableView: TcxGridDBTableView
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'
@@ -44,6 +48,9 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -273,7 +280,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -502,13 +508,12 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Top = 176
   end
   inherited BarManager: TdxBarManager
-    ImageOptions.Images = dmMain.ImageList
     Left = 104
     Top = 175
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -863,6 +868,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 632
     Top = 206
   end

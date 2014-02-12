@@ -64,9 +64,14 @@ object ContractConditionValueForm: TContractConditionValueForm
             Value = 2
           end
           item
-            Description = #1047#1072#1082#1088#1099#1090
+            Description = #1047#1072#1074#1077#1088#1096#1077#1085
             ImageIndex = 13
             Value = 3
+          end
+          item
+            Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            ImageIndex = 66
+            Value = 4
           end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -325,10 +330,6 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
-      end
-      object clContractStateKindColor: TcxGridDBColumn
-        DataBinding.FieldName = 'ContractStateKindColor'
-        Visible = False
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -884,12 +885,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    ColorRuleList = <
-      item
-        ColorColumn = clContractStateKindName
-        ValueColumn = clContractStateKindColor
-        ColorValueList = <>
-      end>
+    ColorRuleList = <>
     Left = 272
     Top = 184
   end

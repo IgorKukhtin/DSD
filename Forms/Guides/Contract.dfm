@@ -45,6 +45,39 @@ object ContractForm: TContractForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object clContractStateKindName: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractStateKindCode'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1055#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 12
+            Value = 1
+          end
+          item
+            Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 11
+            Value = 2
+          end
+          item
+            Description = #1047#1072#1074#1077#1088#1096#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end
+          item
+            Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            ImageIndex = 66
+            Value = 4
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 76
+      end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
@@ -246,15 +279,6 @@ object ContractForm: TContractForm
       object clContractArticleName: TcxGridDBColumn
         Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractArticleName'
-        Visible = False
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 55
-      end
-      object clContractStateKindName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractStateKindName'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter

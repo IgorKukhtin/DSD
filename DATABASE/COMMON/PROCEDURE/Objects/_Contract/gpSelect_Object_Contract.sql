@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
-             , ContractStateKindId Integer, ContractStateKindName TVarChar
+             , ContractStateKindCode Integer
              , OKPO TVarChar
              , isErased Boolean 
               )
@@ -75,8 +75,7 @@ BEGIN
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_ContractStateKind.Id        AS ContractStateKindId
-       , Object_ContractStateKind.ValueData AS ContractStateKindName
+       , Object_ContractStateKind.ObjectCode      AS ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 

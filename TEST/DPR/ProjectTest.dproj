@@ -1047,9 +1047,9 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\Country.pas">
 				<Form>CountryForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

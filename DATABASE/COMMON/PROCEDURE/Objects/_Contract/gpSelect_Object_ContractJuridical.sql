@@ -17,8 +17,6 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaName TVarChar
              , ContractArticleName TVarChar
              , ContractStateKindCode Integer 
-             , ContractStateKindColor Integer 
-             , ContractStateKindName TVarChar
              , isErased Boolean 
               )
 AS
@@ -51,12 +49,6 @@ BEGIN
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
        , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
-       , CASE Object_ContractStateKind.ObjectCode 
-              WHEN 2 THEN 32768 -- Зеленый
-              WHEN 3 THEN   255 -- Красный        
-              ELSE  0 -- Не меняем цвет
-          END AS  ContractStateKindColor
-       , Object_ContractStateKind.ValueData AS ContractStateKindName
 
        , Object_Contract_View.isErased
        
