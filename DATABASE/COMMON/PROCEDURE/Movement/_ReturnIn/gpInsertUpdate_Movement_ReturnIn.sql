@@ -37,36 +37,23 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
-
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
-
-     -- сохранили свойство <Дата накладной у контрагента>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
-
-     -- сохранили свойство <Проверен>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
-
-     -- сохранили свойство <Цена с НДС (да/нет)>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
-     -- сохранили свойство <% НДС>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-     -- сохранили свойство <(-)% Скидки (+)% Наценки >
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
-
-     -- сохранили связь с <От кого (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Кому (в документе)>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-     -- сохранили связь с <Договора>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
-
-     -- сохранили связь с <Тип формирования налогового документа>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
-
+     ioId := lpInsertUpdate_Movement_ReturnIn
+                                       (ioId               := ioId
+                                      , inInvNumber        := inInvNumber
+                                      , inOperDate         := inOperDate
+                                      , inOperDatePartner  := inOperDatePartner
+                                      , inChecked          := inChecked
+                                      , inPriceWithVAT     := inPriceWithVAT
+                                      , inVATPercent       := inVATPercent
+                                      , inChangePercent    := inChangePercent
+                                      , inFromId           := inFromId
+                                      , inToId             := inToId
+                                      , inPaidKindId       := inPaidKindId
+                                      , inContractId       := inContractId
+                                      , inDocumentTaxKindId:= inDocumentTaxKindId
+                                      , inUserId           := vbUserId
+                                       );
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -81,6 +68,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.02.14                        * move to lp
  13.01.14                                        * add/del property from redmain
  17.07.13         *
 */

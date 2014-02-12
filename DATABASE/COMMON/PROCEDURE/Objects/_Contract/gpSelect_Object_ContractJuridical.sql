@@ -16,6 +16,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalName TVarChar
              , AreaName TVarChar
              , ContractArticleName TVarChar
+             , ContractStateKindCode Integer 
+             , ContractStateKindColor Integer 
              , ContractStateKindName TVarChar
              , isErased Boolean 
               )
@@ -47,6 +49,13 @@ BEGIN
        , Object_Personal_View.PersonalName  AS PersonalName
        , Object_Area.ValueData              AS AreaName
        , Object_ContractArticle.ValueData   AS ContractArticleName
+
+       , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
+       , CASE Object_ContractStateKind.ObjectCode 
+              WHEN 2 THEN 32768 -- Зеленый
+              WHEN 3 THEN   255 -- Красный        
+              ELSE  0 -- Не меняем цвет
+          END AS  ContractStateKindColor
        , Object_ContractStateKind.ValueData AS ContractStateKindName
 
        , Object_Contract_View.isErased
@@ -99,6 +108,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 12.02.14                         * add KindColor
  05.02.14                                         * add all
  06.01.14                                         * add Object_InfoMoney_View
  26.11.13                         *
