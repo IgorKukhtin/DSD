@@ -15,17 +15,17 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateTax(Id: Integer; InvNumber,InvNumberPartner,InvNumberOrder: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
+    function InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+             Checked, Document, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId, }RouteSortingId,PriceListId: Integer
+             FromId, ToId, ContractId, DocumentTaxKindId: Integer
              ): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, JuridicalTest, UnitsTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TTax }
 
@@ -41,78 +41,50 @@ function TTax.InsertDefault: integer;
 var Id: Integer;
     InvNumber,InvNumberPartner: String;
     OperDate: TDateTime;
-    OperDatePartner: TDateTime;
-    Checked,PriceWithVAT: Boolean;
-    VATPercent, ChangePercent: double;
+    Checked, Document, PriceWithVAT: Boolean;
+    VATPercent: double;
     InvNumberOrder:String;
-    FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId,} RouteSortingId, PriceListId: Integer;
+    FromId, ToId, ContractId, DocumentTaxKindId : Integer;
 begin
   Id:=0;
   InvNumber:='1';
   InvNumberPartner:='123';
   OperDate:= Date;
-  OperDatePartner:= Date;
-
   Checked:=true;
+  Document:=true;
   PriceWithVAT:=true;
   VATPercent:=20;
-  ChangePercent:=-10;
-
-  InvNumberOrder:='';
 
   FromId := TPartnerTest.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  PaidKindId:=1;
+  DocumentTaxKindId:=TDocumentTaxKindTest.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
-  //CarId:=0;
-  //PersonalDriverId:=0;
-  //RouteId:=0;
-  //PersonalId:=0;
-  RouteSortingId:=0;
-  PriceListId:=0;
-  //
+
   result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, InvNumberOrder, OperDate,
-             OperDatePartner, Checked, PriceWithVAT,
+             OperDatePartner, Checked, Document, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId,
-             {CarId,PersonalDriverId, RouteId, PersonalId,}
-             RouteSortingId,PriceListId);
+             FromId, ToId,  ContractId, DocumentTaxKindId);
 end;
 
-function TTax.InsertUpdateTax(Id: Integer; InvNumber,InvNumberPartner,InvNumberOrder: String; OperDate: TDateTime;
-             OperDatePartner: TDateTime; Checked, PriceWithVAT: Boolean;
+function TTax.InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+             Checked, Document, PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, {CarId, PersonalDriverId, RouteId, PersonalId, }RouteSortingId,PriceListId: Integer
+             FromId, ToId, ContractId, DocumentTaxKindId: Integer
              ): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumber);
-  FParams.AddParam('inInvNumberOrder', ftString, ptInput, InvNumberOrder);
-
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
-  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
-
   FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
-
+  FParams.AddParam('inDocument', ftBoolean, ptInput, Document);
   FParams.AddParam('inPriceWithVAT', ftBoolean, ptInput, PriceWithVAT);
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
-  FParams.AddParam('inChangePercent', ftFloat, ptInput, ChangePercent);
-
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
-
-  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-
-//  FParams.AddParam('inCarId', ftInteger, ptInput, CarId);
-//  FParams.AddParam('inPersonalDriverId', ftInteger, ptInput, PersonalDriverId);
-//  FParams.AddParam('inRouteId', ftInteger, ptInput, RouteId);
-//  FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
-
-  FParams.AddParam('inRouteSortingId', ftInteger, ptInput, RouteSortingId);
-  FParams.AddParam('ioPriceListId', ftInteger, ptInput, PriceListId);
+  FParams.AddParam('inDocumentTaxKindId', ftInteger, ptInput, DocumentTaxKindId);
 
   result := InsertUpdate(FParams);
 end;
@@ -150,3 +122,4 @@ initialization
   TestFramework.RegisterTest('Документы', TTaxTest.Suite);
 
 end.
+

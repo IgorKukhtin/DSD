@@ -127,7 +127,7 @@ uses
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm},
   AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm},
-  JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
+  DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
   LossJournal in '..\..\Forms\Document\LossJournal.pas' {LossJournalForm},
@@ -354,7 +354,8 @@ uses
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas';
 
 {$R *.RES}
 
