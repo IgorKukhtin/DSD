@@ -11,17 +11,17 @@ inherited ReturnInForm: TReturnInForm
     Width = 925
     Height = 548
     ExplicitTop = 128
-    ExplicitWidth = 858
+    ExplicitWidth = 925
     ExplicitHeight = 548
     ClientRectBottom = 544
     ClientRectRight = 921
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 852
+      ExplicitWidth = 919
       ExplicitHeight = 522
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 522
-        ExplicitWidth = 852
+        ExplicitWidth = 919
         ExplicitHeight = 522
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -225,7 +225,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 925
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 858
+    ExplicitWidth = 925
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -869,6 +869,34 @@ inherited ReturnInForm: TReturnInForm
     Top = 192
   end
   inherited HeaderSaver: THeaderSaver
+    ControlList = <
+      item
+        Control = edOperDate
+      end
+      item
+        Control = edChangePercent
+      end
+      item
+        Control = edDocumentTaxKind
+      end
+      item
+        Control = edOperDatePartner
+      end
+      item
+        Control = edPriceWithVAT
+      end
+      item
+        Control = edTo
+      end
+      item
+        Control = edFrom
+      end
+      item
+        Control = edPriceWithVAT
+      end
+      item
+        Control = edIsChecked
+      end>
     Left = 232
     Top = 193
   end

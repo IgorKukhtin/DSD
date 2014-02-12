@@ -67,11 +67,11 @@ BEGIN
            , Movement.OperDate							AS OperDate
            , Object_Status.ObjectCode    				AS StatusCode
            , Object_Status.ValueData     				AS StatusName
-           , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementBoolean_Document.ValueData         AS Document
-           , MovementBoolean_Registered.ValueData       AS Registered
-           , MovementDate_DateRegistered.ValueData      AS DateRegistered
-           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
+           , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
+           , COALESCE (MovementBoolean_Registered.ValueData, FALSE)     AS Registered
+           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
