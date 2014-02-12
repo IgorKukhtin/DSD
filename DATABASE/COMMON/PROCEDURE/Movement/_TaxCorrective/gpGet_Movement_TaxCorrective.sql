@@ -89,10 +89,10 @@ BEGIN
            , Object_Contract.invnumber         			AS ContractName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
-           , Movement_DocumentMaster.Id                 AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar) AS DocumentMasterName
-           , Movement_DocumentChild.Id                  AS DocumentChildId
-           , CAST(Movement_DocumentChild.InvNumber as TVarChar) AS DocumentChildName
+           , Movement_DocumentMaster.Id                                    AS DocumentMasterId
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS DocumentMasterName
+           , Movement_DocumentChild.Id                                     AS DocumentChildId
+           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS DocumentChildName
 
 
        FROM Movement
@@ -162,17 +162,20 @@ BEGIN
 
             LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentMaster
-                                         ON MovementLinkObject_DocumentMaster.MovementId = Movement.Id
-                                        AND MovementLinkObject_DocumentMaster.DescId = zc_MovementLinkObject_DocumentMaster()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
+                                           ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
+                                          AND MovementLinkMovement_DocumentMaster.DescId = zc_MovementLinkMovement_Master()
 
-            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkObject_DocumentMaster.ObjectId
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_DocumentMaster.MovementChildId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentChild
-                                         ON MovementLinkObject_DocumentChild.MovementId = Movement.Id
-                                        AND MovementLinkObject_DocumentChild.DescId = zc_MovementLinkObject_DocumentChild()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
+                                           ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
+                                          AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
 
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkObject_DocumentChild.ObjectId
+            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
+                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
 
 
        WHERE Movement.Id =  inMovementId
