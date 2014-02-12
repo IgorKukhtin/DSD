@@ -9,13 +9,15 @@ uses
   dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction,
   System.Classes, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, Vcl.Controls, cxCheckBox;
+  cxGrid, cxPC, Vcl.Controls, cxCheckBox, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TCountryForm = class(TAncestorDBGridForm)
     spErasedUnErased: TdsdStoredProc;
     spInsertUpdateObject: TdsdStoredProc;
     spGet: TdsdStoredProc;
+    dsdUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
