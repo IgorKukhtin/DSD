@@ -1055,6 +1055,7 @@
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

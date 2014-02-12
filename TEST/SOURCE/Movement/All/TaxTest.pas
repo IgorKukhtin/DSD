@@ -17,7 +17,7 @@ type
   public
     function InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
+             VATPercent: double;
              FromId, ToId, ContractId, DocumentTaxKindId: Integer
              ): integer;
     constructor Create; override;
@@ -43,7 +43,6 @@ var Id: Integer;
     OperDate: TDateTime;
     Checked, Document, PriceWithVAT: Boolean;
     VATPercent: double;
-    InvNumberOrder:String;
     FromId, ToId, ContractId, DocumentTaxKindId : Integer;
 begin
   Id:=0;
@@ -57,18 +56,19 @@ begin
 
   FromId := TPartnerTest.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  DocumentTaxKindId:=TDocumentTaxKindTest.GetDefault;
+  DocumentTaxKindId:=0;//TDocumentTaxKindTest.GetDefault;
+//  DocumentTaxKindId:=TDocumentTaxKindTest.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
 
-  result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, InvNumberOrder, OperDate,
-             OperDatePartner, Checked, Document, PriceWithVAT,
-             VATPercent, ChangePercent,
+  result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, OperDate,
+             Checked, Document, PriceWithVAT,
+             VATPercent,
              FromId, ToId,  ContractId, DocumentTaxKindId);
 end;
 
 function TTax.InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
-             VATPercent, ChangePercent: double;
+             VATPercent: double;
              FromId, ToId, ContractId, DocumentTaxKindId: Integer
              ): integer;
 begin
