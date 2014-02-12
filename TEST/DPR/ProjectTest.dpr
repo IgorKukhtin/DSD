@@ -118,7 +118,7 @@ uses
   CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
   Position in '..\..\Forms\Guides\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\Guides\PositionEdit.pas' {PositionEditForm},
-  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm},
+  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm: TParentForm},
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
@@ -356,7 +356,8 @@ uses
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  TaxTest in '..\SOURCE\Movement\All\TaxTest.pas';
 
 {$R *.RES}
 
