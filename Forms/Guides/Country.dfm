@@ -33,7 +33,6 @@ object CountryForm: TCountryForm
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Appending = True
-      OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
