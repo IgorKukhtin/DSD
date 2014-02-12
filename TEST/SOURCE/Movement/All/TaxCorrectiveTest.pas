@@ -1,21 +1,21 @@
-unit TaxTest;
+unit TaxCorrectiveTest;
 
 interface
 
 uses dbTest, dbMovementTest;
 
 type
-  TTaxTest = class (TdbMovementTestNew)
+  TTaxCorrectiveTest = class (TdbMovementTestNew)
   published
     procedure ProcedureLoad; override;
     procedure Test; override;
   end;
 
-  TTax = class(TMovementTest)
+  TTaxCorrective = class(TMovementTest)
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+    function InsertUpdateTaxCorrective(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
              FromId, ToId, ContractId, DocumentTaxKindId: Integer
@@ -25,19 +25,19 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, UnitsTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, UnitsTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
 
-{ TTax }
+{ TTaxCorrective }
 
-constructor TTax.Create;
+constructor TTaxCorrective.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_Movement_Tax';
-  spSelect := 'gpSelect_Movement_Tax';
-  spGet := 'gpGet_Movement_Tax';
+  spInsertUpdate := 'gpInsertUpdate_Movement_TaxCorrective';
+  spSelect := 'gpSelect_Movement_TaxCorrective';
+  spGet := 'gpGet_Movement_TaxCorrective';
 end;
 
-function TTax.InsertDefault: integer;
+function TTaxCorrective.InsertDefault: integer;
 var Id: Integer;
     InvNumber,InvNumberPartner: String;
     OperDate: TDateTime;
@@ -59,13 +59,13 @@ begin
   DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
 
-  result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, OperDate,
+  result := InsertUpdateTaxCorrective(Id, InvNumber, InvNumberPartner, OperDate,
              Checked, Document, PriceWithVAT,
              VATPercent,
              FromId, ToId,  ContractId, DocumentTaxKindId);
 end;
 
-function TTax.InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+function TTaxCorrective.InsertUpdateTaxCorrective(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
              FromId, ToId, ContractId, DocumentTaxKindId: Integer
@@ -88,37 +88,37 @@ begin
   result := InsertUpdate(FParams);
 end;
 
-{ TTaxTest }
+{ TTaxCorrectiveTest }
 
-procedure TTaxTest.ProcedureLoad;
+procedure TTaxCorrectiveTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Tax\';
+  ScriptDirectory := ProcedurePath + 'Movement\_TaxCorrective\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_Tax\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\_TaxCorrective\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Tax\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_TaxCorrective\';
   inherited;
 end;
 
-procedure TTaxTest.Test;
-var MovementTax: TTax;
+procedure TTaxCorrectiveTest.Test;
+var MovementTaxCorrective: TTaxCorrective;
     Id: Integer;
 begin
   inherited;
   // Создаем документ
-  MovementTax := TTax.Create;
-  Id := MovementTax.InsertDefault;
+  MovementTaxCorrective := TTaxCorrective.Create;
+  Id := MovementTaxCorrective.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
-    MovementTax.Delete(Id);
+    MovementTaxCorrective.Delete(Id);
   end;
 end;
 
 initialization
 
-  TestFramework.RegisterTest('Документы', TTaxTest.Suite);
+  TestFramework.RegisterTest('Документы', TTaxCorrectiveTest.Suite);
 
 end.
 

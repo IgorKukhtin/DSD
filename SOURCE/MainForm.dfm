@@ -1338,7 +1338,6 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1054#1057
       Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
       FormName = 'TMakerForm'
-      FormNameParam.Value = 'TMakerForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

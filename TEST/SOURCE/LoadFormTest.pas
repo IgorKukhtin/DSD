@@ -773,9 +773,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupEditForm');
 
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
-
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
 end;

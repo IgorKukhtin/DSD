@@ -15,6 +15,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , ContractStateKindCode Integer
              , OKPO TVarChar
              , isErased Boolean 
               )
@@ -38,6 +39,7 @@ BEGIN
        , Object_Juridical.ValueData    AS JuridicalName
        , Object_PaidKind.Id            AS PaidKindId
        , Object_PaidKind.ValueData     AS PaidKindName
+
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -45,6 +47,8 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyDestinationName
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
+
+       , Object_ContractStateKind.ObjectCode   AS ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -66,7 +70,13 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
         
+
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
@@ -86,11 +96,6 @@ BEGIN
                             AND ObjectLink_Contract_ContractArticle.DescId = zc_ObjectLink_Contract_ContractArticle()
         LEFT JOIN Object AS Object_ContractArticle ON Object_ContractArticle.Id = ObjectLink_Contract_ContractArticle.ChildObjectId                               
       
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
-                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
-
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
    ;

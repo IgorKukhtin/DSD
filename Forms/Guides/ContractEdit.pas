@@ -103,6 +103,14 @@ type
     actDeleteDocument: TdsdExecStoredProc;
     spDeleteDocument: TdsdStoredProc;
     bbDeleteDocument: TdxBarButton;
+    spGetStateKindUnSigned: TdsdStoredProc;
+    spGetStateKindSigned: TdsdStoredProc;
+    spGetStateKindClose: TdsdStoredProc;
+    actGetStateKindUnSigned: TdsdExecStoredProc;
+    actGetStateKindSigned: TdsdExecStoredProc;
+    actGetStateKindClose: TdsdExecStoredProc;
+    spGetStateKindPartner: TdsdStoredProc;
+    actGetStateKindPartner: TdsdExecStoredProc;
   private
     { Private declarations }
   public

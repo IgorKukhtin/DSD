@@ -120,7 +120,6 @@ type
     clContractArticleName: TcxGridDBColumn;
     clContractStateKindCode: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
-    clContractStateKindColor: TcxGridDBColumn;
   private
     { Private declarations }
   public

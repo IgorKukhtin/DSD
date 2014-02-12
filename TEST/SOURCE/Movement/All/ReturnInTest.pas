@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, DocumentTaxKindTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TReturnIn }
 
@@ -59,7 +59,7 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=TPaidKindTest.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
-  DocumentTaxKindId:=TDocumentTaxKindTest.Create.GetDefault;
+  DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   //
   result := InsertUpdateReturnIn(Id, InvNumber, OperDate,
              OperDatePartner, Checked, PriceWithVAT,

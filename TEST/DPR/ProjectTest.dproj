@@ -854,7 +854,7 @@
 				<Form>JuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ReturnOutTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
@@ -1021,10 +1021,6 @@
 				<Form>GoodsFuel_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
-				<Form>MakerForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\JuridicalGroupEdit.pas">
 				<Form>JuridicalGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1049,12 +1045,15 @@
 				<Form>SelectKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TaxCorrectiveTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\Country.pas">
 				<Form>CountryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -118,7 +118,7 @@ uses
   CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
   Position in '..\..\Forms\Guides\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\Guides\PositionEdit.pas' {PositionEditForm},
-  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm},
+  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm: TParentForm},
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
@@ -298,7 +298,7 @@ uses
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',
+  ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
@@ -347,16 +347,18 @@ uses
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
-  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
   AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm: TParentForm},
   Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
   AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  TaxCorrectiveTest in '..\SOURCE\Movement\All\TaxCorrectiveTest.pas',
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
+  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas';
 
 {$R *.RES}
 

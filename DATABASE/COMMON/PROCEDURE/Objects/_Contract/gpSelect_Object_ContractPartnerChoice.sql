@@ -11,6 +11,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractKindName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
+             , ContractStateKindCode Integer
              , PaidKindId Integer, PaidKindName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , InfoMoneyId Integer
@@ -47,6 +48,8 @@ BEGIN
        , Object_PaidKind.ValueData     AS PaidKindName
        , Object_PriceList.Id           AS PriceListId
        , Object_PriceList.ValueData    AS PriceListName
+       , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
+
 
        , Object_InfoMoney_View.InfoMoneyId
        , Object_InfoMoney_View.InfoMoneyGroupCode
@@ -77,6 +80,11 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+ 
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
 
