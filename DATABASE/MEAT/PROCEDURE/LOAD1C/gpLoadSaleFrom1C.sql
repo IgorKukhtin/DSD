@@ -177,9 +177,10 @@ BEGIN
         IF NOT FOUND THEN 
            EXIT;
         END IF;
-        vbMovementId := lpInsertUpdate_Movement_ReturnIn(ioId := 0, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := '', 
+
+        vbMovementId := lpInsertUpdate_Movement_ReturnIn(ioId := 0, inInvNumber := vbInvNumber, 
                           inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := false, inPriceWithVAT := true, inVATPercent := 20, 
-                          inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId := zc_Enum_PaidKind_FirstForm(), inContractId := 0, inRouteSortingId := 0, inUserId := vbUserId);
+                          inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm(), inContractId := 0, inDocumentTaxKindId := 0, inUserId := vbUserId);
         -- сохранили свойство <Загружен>
         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, true);
 
@@ -198,7 +199,7 @@ BEGIN
            AND ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind()
           JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind.ChildObjectId
 
-         WHERE InvNumber = vbInvNumber AND OperDate = vbOperDate AND VIDDOC = 1; --открываем курсор;
+         WHERE InvNumber = vbInvNumber AND OperDate = vbOperDate AND VIDDOC = 4; --открываем курсор;
         LOOP
           FETCH cursMovementItem INTO vbOperCount, vbOperPrice, vbGoodsId, vbGoodsKindId;
           --если такого периода и не возникнет, то мы выходим
