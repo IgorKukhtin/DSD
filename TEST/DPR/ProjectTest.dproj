@@ -146,9 +146,6 @@
 			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AssetGroup.pas">
-				<Form>AssetGroupForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
 				<Form>GoodsTreeForm</Form>
 			</DCCReference>
@@ -279,8 +276,8 @@
 			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
 				<Form>TradeMarkEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Asset.pas">
-				<Form>AssetForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AssetGroup.pas">
+				<Form>AssetGroupForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Route.pas">
 				<Form>RouteForm</Form>
@@ -318,8 +315,8 @@
 			<DCCReference Include="..\..\Forms\Guides\PositionEdit.pas">
 				<Form>PositionEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AssetEdit.pas">
-				<Form>AssetEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AssetGroupEdit.pas">
+				<Form>AssetGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
 				<Form>PersonalForm</Form>
@@ -335,9 +332,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AssetGroupEdit.pas">
-				<Form>AssetGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
@@ -1034,12 +1028,20 @@
 				<Form>SelectKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGroupEdit.pas">
+				<Form>JuridicalGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
 				<Form>JuridicalGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalGroupEdit.pas">
-				<Form>JuridicalGroupEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Asset.pas">
+				<Form>AssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AssetEdit.pas">
+				<Form>AssetEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

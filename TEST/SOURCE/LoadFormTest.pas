@@ -770,6 +770,8 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGroupEditForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;

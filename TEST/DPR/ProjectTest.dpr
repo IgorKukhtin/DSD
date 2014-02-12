@@ -58,7 +58,6 @@ uses
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
-  AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
@@ -107,7 +106,7 @@ uses
   dbTest in '..\SOURCE\dbTest.pas',
   TradeMark in '..\..\Forms\TradeMark.pas' {TradeMarkForm},
   TradeMarkEdit in '..\..\Forms\TradeMarkEdit.pas' {TradeMarkEditForm},
-  Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm},
+  AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm},
   Route in '..\..\Forms\Guides\Route.pas' {RouteForm},
   RouteEdit in '..\..\Forms\Guides\RouteEdit.pas' {RouteEditForm},
   RouteSorting in '..\..\Forms\Guides\RouteSorting.pas' {RouteSortingForm},
@@ -120,13 +119,12 @@ uses
   CarEdit in '..\..\Forms\CarEdit.pas' {CarEditForm},
   Position in '..\..\Forms\Guides\Position.pas' {PositionForm},
   PositionEdit in '..\..\Forms\Guides\PositionEdit.pas' {PositionEditForm},
-  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm},
+  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm},
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm},
-  AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
@@ -352,8 +350,10 @@ uses
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
+  JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
-  JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm};
+  Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
+  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm};
 
 {$R *.RES}
 
