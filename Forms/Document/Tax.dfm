@@ -924,7 +924,7 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'inDocumentTaxKind'
+        Name = 'inDocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'

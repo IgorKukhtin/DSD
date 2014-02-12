@@ -332,7 +332,6 @@ uses
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   Report_GoodsMI_IncomeByPartner in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas' {Report_GoodsMI_IncomeByPartnerForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
@@ -355,7 +354,9 @@ uses
   AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm};
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
 
 {$R *.RES}
 

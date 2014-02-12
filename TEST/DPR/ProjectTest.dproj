@@ -314,6 +314,7 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AssetGroupEdit.pas">
 				<Form>AssetGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
 				<Form>PersonalForm</Form>
@@ -962,7 +963,6 @@
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas">
 				<Form>Report_GoodsMI_IncomeByPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1053,6 +1053,8 @@
 				<Form>CountryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
