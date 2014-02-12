@@ -335,7 +335,7 @@ uses
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   PersonalSendCashTest in '..\SOURCE\Movement\All\PersonalSendCashTest.pas',
   SheetWorkTimeMovementItemTest in '..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas',
-  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
   Report_GoodsMI_IncomeByPartner in '..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas' {Report_GoodsMI_IncomeByPartnerForm: TParentForm},
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
@@ -353,7 +353,8 @@ uses
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
-  JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm};
+  JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
+  SaleTest in '..\SOURCE\Movement\All\SaleTest.pas';
 
 {$R *.RES}
 
