@@ -279,9 +279,9 @@ object Report_MotionGoodsDialogForm: TReport_MotionGoodsDialogForm
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TUnitCarMember_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TUnitCarMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

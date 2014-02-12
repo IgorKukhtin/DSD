@@ -20,7 +20,7 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
   TAssetEditForm = class(TParentForm)
@@ -44,6 +44,22 @@ type
     cxLabel4: TcxLabel;
     AssetGroupGuides: TdsdGuides;
     ceAssetGroup: TcxButtonEdit;
+    cxLabel3: TcxLabel;
+    ceSerialNumber: TcxTextEdit;
+    cxLabel5: TcxLabel;
+    edRelease: TcxDateEdit;
+    cxLabel6: TcxLabel;
+    cePassportNumber: TcxTextEdit;
+    cxLabel7: TcxLabel;
+    ceFullName: TcxTextEdit;
+    cxLabel8: TcxLabel;
+    ceComment: TcxTextEdit;
+    cxLabel9: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    ceMaker: TcxButtonEdit;
+    cxLabel10: TcxLabel;
+    MakerGuides: TdsdGuides;
   private
     { Private declarations }
   public

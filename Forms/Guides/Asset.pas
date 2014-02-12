@@ -57,6 +57,10 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clSerialNumber: TcxGridDBColumn;
+    clPassportNumber: TcxGridDBColumn;
+    clRelease: TcxGridDBColumn;
+    clMakerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

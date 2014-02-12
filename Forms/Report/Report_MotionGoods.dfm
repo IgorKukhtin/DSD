@@ -124,152 +124,152 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventoryCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventoryCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventorySumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndSumm
         end>
@@ -283,7 +283,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartCount
         end
@@ -292,7 +292,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndCount
         end
@@ -301,7 +301,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartSumm
         end
@@ -310,7 +310,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = skSum
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeSumm
         end
@@ -332,7 +332,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Column = EndCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndSumm
         end
@@ -351,127 +351,127 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.00'
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = StartCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = IncomeCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendInSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SendOutSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = SaleSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnOutSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = ReturnInSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = LossSumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventoryCount_Sh
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventoryCount
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = InventorySumm
         end
         item
-          Format = ',0.00'
+          Format = ',0.##'
           Kind = skSum
           Column = EndCount_Sh
         end>
@@ -1083,9 +1083,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
-    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.Value = 'TUnitCarMember_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPersonal_ObjectForm'
+    FormName = 'TUnitCarMember_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1165,8 +1165,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 728
-    Top = 75
+    Left = 704
+    Top = 67
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
