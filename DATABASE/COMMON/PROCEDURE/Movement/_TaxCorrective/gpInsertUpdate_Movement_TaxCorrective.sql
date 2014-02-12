@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inContractId          Integer   , -- Договора
-    IN inDocumentTaxKind     Integer   , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -40,7 +40,7 @@ BEGIN
 
      ioId := lpInsertUpdate_Movement_TaxCorrective(ioId, inInvNumber, inInvNumberPartner, inOperDate,
                                          inChecked, inDocument, inPriceWithVAT, inVATPercent,
-                                         inFromId, inToId, inContractId, inDocumentTaxKind, vbUserId);
+                                         inFromId, inToId, inContractId, inDocumentTaxKindId, vbUserId);
 
 END;
 $BODY$
@@ -54,4 +54,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective (ioId:= 0, inInvNumber:= '-1',inInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKind:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_TaxCorrective (ioId:= 0, inInvNumber:= '-1',inInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKindId:= 0, inSession:= '2')

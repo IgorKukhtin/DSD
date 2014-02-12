@@ -298,7 +298,7 @@ uses
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',
+  ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
@@ -355,8 +355,10 @@ uses
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
+  TaxCorrectiveTest in '..\SOURCE\Movement\All\TaxCorrectiveTest.pas',
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm};
+  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas';
 
 {$R *.RES}
 
