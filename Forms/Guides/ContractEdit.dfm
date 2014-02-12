@@ -233,9 +233,23 @@ inherited ContractEditForm: TContractEditForm
     Top = 231
     Properties.Buttons = <
       item
+        Action = actGetStateKindUnSigned
+        Kind = bkGlyph
+      end
+      item
+        Action = actGetStateKindPartner
+        Kind = bkGlyph
+      end
+      item
+        Action = actGetStateKindSigned
         Default = True
-        Kind = bkEllipsis
+        Kind = bkGlyph
+      end
+      item
+        Action = actGetStateKindClose
+        Kind = bkGlyph
       end>
+    Properties.Images = dmMain.ImageList
     Properties.ReadOnly = True
     TabOrder = 29
     Width = 162
@@ -562,6 +576,46 @@ inherited ContractEditForm: TContractEditForm
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 2
       QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1091#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+    end
+    object actGetStateKindUnSigned: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetStateKindUnSigned
+      StoredProcList = <
+        item
+          StoredProc = spGetStateKindUnSigned
+        end>
+      Caption = 'actGetStateKindUnSigned'
+      ImageIndex = 11
+    end
+    object actGetStateKindSigned: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetStateKindSigned
+      StoredProcList = <
+        item
+          StoredProc = spGetStateKindSigned
+        end>
+      Caption = 'actGetStateKindSigned'
+      ImageIndex = 12
+    end
+    object actGetStateKindPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetStateKindPartner
+      StoredProcList = <
+        item
+          StoredProc = spGetStateKindPartner
+        end>
+      Caption = 'actGetStateKindClose'
+      ImageIndex = 66
+    end
+    object actGetStateKindClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetStateKindClose
+      StoredProcList = <
+        item
+          StoredProc = spGetStateKindClose
+        end>
+      Caption = 'actGetStateKindClose'
+      ImageIndex = 13
     end
   end
   inherited FormParams: TdsdFormParams
@@ -1243,7 +1297,7 @@ inherited ContractEditForm: TContractEditForm
       WholeRow = False
     end
     object bbAddDocument: TdxBarButton
-      Action = actInsertDocument
+      Action = MultiActionInsertDocument
       Category = 0
     end
     object bbRefreshDoc: TdxBarButton
@@ -1324,7 +1378,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'ioid'
         Value = Null
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'indocumentname'
@@ -1414,6 +1468,7 @@ inherited ContractEditForm: TContractEditForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 616
     Top = 72
   end
@@ -1430,5 +1485,109 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 648
     Top = 272
+  end
+  object spGetStateKindUnSigned: TdsdStoredProc
+    StoredProcName = 'gpGetUpdate_Object_StateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractStateKindCode'
+        Value = 2
+        ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 352
+    Top = 224
+  end
+  object spGetStateKindSigned: TdsdStoredProc
+    StoredProcName = 'gpGetUpdate_Object_StateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractStateKindCode'
+        Value = 1
+        ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 368
+    Top = 240
+  end
+  object spGetStateKindClose: TdsdStoredProc
+    StoredProcName = 'gpGetUpdate_Object_StateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractStateKindCode'
+        Value = 3
+        ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 392
+    Top = 248
+  end
+  object spGetStateKindPartner: TdsdStoredProc
+    StoredProcName = 'gpGetUpdate_Object_StateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractStateKindCode'
+        Value = 4
+        ParamType = ptInput
+      end
+      item
+        Name = 'Id'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractStateKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 232
   end
 end

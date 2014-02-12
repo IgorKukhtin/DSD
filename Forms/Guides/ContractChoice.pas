@@ -11,7 +11,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus;
+  Vcl.Menus, cxImageComboBox;
 
 type
   TContractChoiceForm = class(TAncestorEnumForm)

@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
-             , ContractStateKindId Integer, ContractStateKindCode Integer, ContractStateKindColor Integer, ContractStateKindName TVarChar
+             , ContractStateKindCode Integer 
              , OKPO TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar                
              , Value TFloat
@@ -77,14 +77,7 @@ BEGIN
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_ContractStateKind.Id        AS ContractStateKindId
        , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
-       , CASE Object_ContractStateKind.ObjectCode 
-              WHEN 2 THEN 32768 -- Зеленый
-              WHEN 3 THEN   255 -- Красный        
-              ELSE  0 -- Не меняем цвет
-          END AS  ContractStateKindColor
-       , Object_ContractStateKind.ValueData AS ContractStateKindName
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
