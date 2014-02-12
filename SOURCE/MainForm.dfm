@@ -1338,6 +1338,7 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1054#1057
       Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
       FormName = 'TMakerForm'
+      FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2001,7 +2002,7 @@ object MainForm: TMainForm
       Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       Hint = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       FormName = 'TAssetForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TAssetForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

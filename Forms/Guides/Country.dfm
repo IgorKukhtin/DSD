@@ -78,7 +78,6 @@ inherited CountryForm: TCountryForm
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'Id'
-          DataType = ftString
         end
         item
           Name = 'TextValue'
@@ -89,7 +88,6 @@ inherited CountryForm: TCountryForm
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = MasterDS
     end
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
@@ -109,12 +107,12 @@ inherited CountryForm: TCountryForm
         item
           Name = 'key'
           Component = MasterCDS
-          ComponentItem = 'Id'
+          ComponentItem = 'Key'
         end
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'Name'
+          ComponentItem = 'TextValue'
           DataType = ftString
         end>
       isShowModal = False
@@ -160,6 +158,8 @@ inherited CountryForm: TCountryForm
     end
   end
   inherited MasterCDS: TClientDataSet
+    MasterFields = 'Id'
+    PacketRecords = 0
     AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc
@@ -168,6 +168,8 @@ inherited CountryForm: TCountryForm
     Top = 88
   end
   inherited BarManager: TdxBarManager
+    Left = 176
+    Top = 56
     DockControlHeights = (
       0
       0

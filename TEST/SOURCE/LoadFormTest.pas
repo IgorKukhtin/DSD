@@ -775,6 +775,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;

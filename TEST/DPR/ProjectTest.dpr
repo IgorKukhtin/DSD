@@ -356,9 +356,10 @@ uses
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   TaxCorrectiveTest in '..\SOURCE\Movement\All\TaxCorrectiveTest.pas',
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
-  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas';
+  ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm};
 
 {$R *.RES}
 
