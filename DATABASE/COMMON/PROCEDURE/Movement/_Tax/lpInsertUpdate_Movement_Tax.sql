@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inContractId          Integer   , -- Договора
-    IN inDocumentTaxKind     Integer   , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inUserId              Integer     -- пользователь
 )
 RETURNS INTEGER AS
@@ -55,7 +55,7 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Тип формирования налогового документа>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKind);
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), ioId, inDocumentTaxKindId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -72,6 +72,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 12.02.14                                                         * change to inDocumentTaxKindId
  11.02.14                                                         *  - registred
  09.02.14                                                         *
 */

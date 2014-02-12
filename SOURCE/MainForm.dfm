@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -62,10 +62,6 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbFinanceDocuments'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAsset'
         end
         item
           Visible = True
@@ -342,7 +338,23 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbGuideAsset'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAssetGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCountry'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMaker'
         end>
+    end
+    object bbAssetGroup: TdxBarButton
+      Action = actAssetGroup
+      Category = 0
     end
     object bbAsset_Separator: TdxBarSeparator
       Caption = 'bbAsset_Separator'
@@ -910,6 +922,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbAsset'
+        end
+        item
+          Visible = True
           ItemName = 'bbBusiness'
         end
         item
@@ -1305,10 +1321,28 @@ object MainForm: TMainForm
       Action = actExit
       Category = 0
     end
+    object bbCountry: TdxBarButton
+      Action = actCountry
+      Category = 0
+    end
+    object bbMaker: TdxBarButton
+      Action = actMaker
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
     Top = 48
+    object actMaker: TdsdOpenForm
+      Category = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
+      Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1054#1057
+      Hint = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
+      FormName = 'TMakerForm'
+      FormNameParam.Value = 'TMakerForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actTransport: TdsdOpenForm
       Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
       Caption = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090
@@ -2496,6 +2530,26 @@ object MainForm: TMainForm
       FormName = 'TTaxCorrectiveJournalForm'
       FormNameParam.Name = 'TTaxCorrectiveJournalForm'
       FormNameParam.Value = 'TTaxCorrectiveJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAssetGroup: TdsdOpenForm
+      Category = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
+      Caption = #1043#1088#1091#1087#1087#1099' '#1054#1057
+      Hint = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074' '
+      FormName = 'TAssetGroupForm'
+      FormNameParam.Value = 'TAssetGroupForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCountry: TdsdOpenForm
+      Category = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
+      Caption = #1057#1090#1088#1072#1085#1099
+      Hint = #1057#1090#1088#1072#1085#1099
+      FormName = 'TCountryForm'
+      FormNameParam.Value = 'TCountryForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

@@ -192,6 +192,8 @@
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
+    FormNameParam.Value = 'TJuridicalGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

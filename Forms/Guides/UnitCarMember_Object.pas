@@ -1,4 +1,4 @@
-unit Goods;
+unit UnitCarMember_Object;
 
 interface
 
@@ -17,23 +17,17 @@ uses
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, Data.DB, cxDBData, cxCheckBox, dxSkinsdxBarPainter,
-  dsdAddOn, dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
+  cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
+  dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid;
+  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TGoodsForm = class(TParentForm)
+  TUnitCarMember_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    clWeight: TcxGridDBColumn;
-    clGoodsGroupName: TcxGridDBColumn;
-    clMeasureName: TcxGridDBColumn;
-    clTradeMarkName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
-    clIsErased: TcxGridDBColumn;
     cxGridLevel: TcxGridLevel;
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
@@ -41,39 +35,31 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
+    dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
-    dsdChoiceGuides: TdsdChoiceGuides;
-    dsdGridToExcel1: TdsdGridToExcel;
+    dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
+    dsdChoiceGuides: TdsdChoiceGuides;
+    clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clFuelName: TcxGridDBColumn;
-    clInfoMoneyGroupCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationCode: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clBusinessName: TcxGridDBColumn;
-    clGoodsGroupNameFull: TcxGridDBColumn;
+    clDescName: TcxGridDBColumn;
+    FormParams: TdsdFormParams;
+
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+
 implementation
+
 {$R *.dfm}
+
 initialization
-  RegisterClass(TGoodsForm);
+  RegisterClass(TUnitCarMember_ObjectForm);
 end.

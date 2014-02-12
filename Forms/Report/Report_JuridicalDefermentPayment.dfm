@@ -2,8 +2,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1089#1088#1086#1095#1082#1077
   ClientHeight = 394
   ClientWidth = 869
-  ExplicitWidth = 877
-  ExplicitHeight = 421
+  ExplicitWidth = 885
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -140,19 +140,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 110
           end
-          object colSaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1085#1086
-            DataBinding.FieldName = 'SaleSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 2
-            Properties.DisplayFormat = ',0.00'
-            HeaderAlignmentHorz = taRightJustify
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 64
-          end
           object colKreditRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1082#1088#1077#1076#1080#1090
+            Caption = #1044#1086#1083#1075' '#1082#1088#1077#1076#1080#1090
             DataBinding.FieldName = 'KreditRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -163,7 +152,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Width = 65
           end
           object colDebetRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1076#1077#1073#1077#1090
+            Caption = #1044#1086#1083#1075' '#1076#1077#1073#1077#1090
             DataBinding.FieldName = 'DebetRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -173,14 +162,25 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 65
           end
+          object colSaleSumm: TcxGridDBColumn
+            Caption = #1055#1088#1086#1076#1072#1078#1072' - '#1042#1086#1079#1074#1088#1072#1090
+            DataBinding.FieldName = 'SaleSumm'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 2
+            Properties.DisplayFormat = ',0.00'
+            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 64
+          end
           object colDefermentPaymentRemains: TcxGridDBColumn
-            Caption = #1054#1089#1090#1072#1090#1086#1082' '#1089' '#1091#1095#1077#1090#1086#1084' '#1086#1090#1089#1088#1086#1095#1082#1080
+            Caption = #1044#1086#1083#1075' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081
             DataBinding.FieldName = 'DefermentPaymentRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 90
           end
           object colSaleSumm1: TcxGridDBColumn
             Caption = '7 '#1076#1085'.'
@@ -246,16 +246,22 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Width = 869
     ExplicitWidth = 869
     inherited deStart: TcxDateEdit
+      Left = 59
       EditValue = 41640d
+      ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
       Visible = False
+    end
+    inherited cxLabel1: TcxLabel
+      Caption = #1085#1072' '#1076#1072#1090#1091':'
+      ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
       Visible = False
     end
     object edAccount: TcxButtonEdit
-      Left = 234
+      Left = 178
       Top = 5
       Properties.Buttons = <
         item
@@ -266,7 +272,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Width = 400
     end
     object cxLabel3: TcxLabel
-      Left = 201
+      Left = 145
       Top = 6
       Caption = #1057#1095#1077#1090':'
     end

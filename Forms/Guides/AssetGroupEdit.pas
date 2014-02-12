@@ -1,4 +1,4 @@
-unit AssetEdit;
+unit AssetGroupEdit;
 
 interface
 
@@ -20,10 +20,10 @@ uses
   Datasnap.DBClient, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxPropertiesStore, dsdAddOn, dsdDB, dsdAction,
   Vcl.ActnList, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit,
-  cxButtonEdit;
+  cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
-  TAssetEditForm = class(TParentForm)
+  TAssetGroupEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -39,8 +39,6 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    ceInvNumber: TcxTextEdit;
-    cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     AssetGroupGuides: TdsdGuides;
     ceAssetGroup: TcxButtonEdit;
@@ -54,6 +52,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TAssetEditForm);
+  RegisterClass(TAssetGroupEditForm);
 
 end.

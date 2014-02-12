@@ -106,14 +106,13 @@ $BODY$BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_TransportHoursWork (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  10.02.14         * изменение условий ограничения филиала inBranchId 
  16.12.13         * add inBranchId             
  12.11.13                                        * add zc_MovementLinkObject_PersonalDriverMore

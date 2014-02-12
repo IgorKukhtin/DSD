@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inContractId          Integer   , -- Договора
-    IN inDocumentTaxKind     Integer   , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -40,7 +40,7 @@ BEGIN
 
      ioId := lpInsertUpdate_Movement_Tax(ioId, inInvNumber, inInvNumberPartner, inOperDate,
                                          inChecked, inDocument, inPriceWithVAT, inVATPercent,
-                                         inFromId, inToId, inContractId, inDocumentTaxKind, vbUserId);
+                                         inFromId, inToId, inContractId, inDocumentTaxKindId, vbUserId);
 
 END;
 $BODY$

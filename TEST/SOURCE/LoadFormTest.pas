@@ -241,10 +241,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsTree_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsTree_ObjectForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
-
 end;
 
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
@@ -510,6 +506,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProductionUnionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProductionUnionJournalForm');
+
 end;
 
 procedure TLoadFormTest.LoadTransportFormTest;
@@ -645,6 +642,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMoneyPlace_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMoneyPlace_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCarMember_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGUnitCarMember_ObjectForm');
+
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
@@ -763,6 +767,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TAssetForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAssetEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAssetGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAssetGroupEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;

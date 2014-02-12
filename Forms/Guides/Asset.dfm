@@ -1,9 +1,9 @@
-object GoodsForm: TGoodsForm
+object AssetForm: TAssetForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <T'#1086#1074#1072#1088#1099'>'
-  ClientHeight = 404
-  ClientWidth = 722
+  Caption = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072
+  ClientHeight = 391
+  ClientWidth = 895
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,15 @@ object GoodsForm: TGoodsForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 722
-    Height = 378
+    Width = 895
+    Height = 365
     Align = alClient
     TabOrder = 0
+    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    ExplicitWidth = 537
+    ExplicitHeight = 343
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,8 +46,9 @@ object GoodsForm: TGoodsForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
+      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -51,111 +56,62 @@ object GoodsForm: TGoodsForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 35
-      end
-      object clGoodsGroupName: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object clGoodsGroupNameFull: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072' ('#1074#1089#1077')'
-        DataBinding.FieldName = 'GoodsGroupNameFull'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 150
+        Width = 63
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 120
+        Width = 119
       end
-      object clMeasureName: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
+      object clInvNumber: TcxGridDBColumn
+        Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 35
+        Width = 154
       end
-      object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089
-        DataBinding.FieldName = 'Weight'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object clFuelName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clTradeMarkName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clBusinessName: TcxGridDBColumn
-        Caption = #1041#1080#1079#1085#1077#1089
-        DataBinding.FieldName = 'BusinessName'
-        Visible = False
+      object clSerialNumber: TcxGridDBColumn
+        Caption = #1047#1072#1074#1086#1076#1089#1082#1086#1081' '#1085#1086#1084#1077#1088
+        DataBinding.FieldName = 'SerialNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 74
       end
-      object clInfoMoneyGroupCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
-        DataBinding.FieldName = 'InfoMoneyGroupCode'
-        Visible = False
+      object clPassportNumber: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1087#1072#1089#1087#1086#1088#1090#1072
+        DataBinding.FieldName = 'PassportNumber'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 72
       end
-      object clInfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyGroupName'
-        Visible = False
+      object clRelease: TcxGridDBColumn
+        Caption = #1044#1072#1090#1072' '#1074#1099#1087#1091#1089#1082#1072
+        DataBinding.FieldName = 'Release'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 71
       end
-      object clInfoMoneyDestinationCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055' '#1085#1072#1079#1085#1072#1095'.'
-        DataBinding.FieldName = 'InfoMoneyDestinationCode'
-        Visible = False
+      object clAssetGroup: TcxGridDBColumn
+        Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
+        DataBinding.FieldName = 'AssetGroupName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 150
       end
-      object clInfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'InfoMoneyDestinationName'
-        Visible = False
+      object clMakerName: TcxGridDBColumn
+        Caption = #1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'MakerName'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 121
       end
-      object clInfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clInfoMoneyName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 80
-      end
-      object clIsErased: TcxGridDBColumn
+      object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
-        Visible = False
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 40
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -165,13 +121,13 @@ object GoodsForm: TGoodsForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 48
-    Top = 192
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 96
-    Top = 200
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -185,14 +141,14 @@ object GoodsForm: TGoodsForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 80
-    Top = 88
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -205,7 +161,7 @@ object GoodsForm: TGoodsForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 192
+    Left = 160
     Top = 96
     DockControlHeights = (
       0
@@ -226,15 +182,23 @@ object GoodsForm: TGoodsForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbSetErased'
+          ItemName = 'bbInsert'
         end
         item
           Visible = True
-          ItemName = 'bbSetUnErased'
+          ItemName = 'bbEdit'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           BeginGroup = True
@@ -247,7 +211,7 @@ object GoodsForm: TGoodsForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -264,35 +228,29 @@ object GoodsForm: TGoodsForm
       Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = actInsert
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      Action = actUpdate
       Category = 0
-      Visible = ivAlways
-      ImageIndex = 1
-      ShortCut = 115
     end
-    object bbSetErased: TdxBarButton
+    object bbErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
     end
-    object bbSetUnErased: TdxBarButton
+    object bbUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
     end
     object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel1
+      Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
-      Caption = '    '
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
-      Hint = '    '
+      Hint = '     '
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
@@ -302,8 +260,8 @@ object GoodsForm: TGoodsForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 136
-    Top = 96
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -316,6 +274,43 @@ object GoodsForm: TGoodsForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
+    end
+    object actInsert: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+      FormName = 'TAssetEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end>
+      isShowModal = True
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
+    end
+    object actUpdate: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
+      ShortCut = 115
+      ImageIndex = 1
+      FormName = 'TAssetEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = True
+      ActionType = acUpdate
+      DataSource = DataSource
+      DataSetRefresh = actRefresh
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -353,30 +348,21 @@ object GoodsForm: TGoodsForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
-        end
-        item
-          Name = 'Code'
-          Component = ClientDataSet
-          ComponentItem = 'Code'
+          DataType = ftString
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
-        end
-        item
-          Name = 'FuelName'
-          Component = ClientDataSet
-          ComponentItem = 'FuelName'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
       ImageIndex = 7
     end
-    object dsdGridToExcel1: TdsdGridToExcel
+    object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -384,18 +370,18 @@ object GoodsForm: TGoodsForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_Asset'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 112
-    Top = 152
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 40
+    Left = 160
     Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
@@ -409,8 +395,8 @@ object GoodsForm: TGoodsForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 152
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -420,6 +406,7 @@ object GoodsForm: TGoodsForm
         Action = dsdChoiceGuides
       end
       item
+        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -427,10 +414,12 @@ object GoodsForm: TGoodsForm
         ShortCut = 13
       end
       item
+        Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 160
-    Top = 184
+    Left = 328
+    Top = 264
   end
 end

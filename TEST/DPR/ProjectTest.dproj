@@ -146,9 +146,6 @@
 			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
-				<Form>JuridicalGroupForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
 				<Form>GoodsTreeForm</Form>
 			</DCCReference>
@@ -279,9 +276,6 @@
 			<DCCReference Include="..\..\Forms\TradeMarkEdit.pas">
 				<Form>TradeMarkEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Asset.pas">
-				<Form>AssetForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Route.pas">
 				<Form>RouteForm</Form>
 			</DCCReference>
@@ -318,8 +312,9 @@
 			<DCCReference Include="..\..\Forms\Guides\PositionEdit.pas">
 				<Form>PositionEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\AssetEdit.pas">
-				<Form>AssetEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\AssetGroupEdit.pas">
+				<Form>AssetGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Personal.pas">
 				<Form>PersonalForm</Form>
@@ -335,9 +330,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\JuridicalGroupEdit.pas">
-				<Form>JuridicalGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
@@ -579,9 +571,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
 				<Form>ModelServiceKindForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Kind\SelectKind.pas">
-				<Form>SelectKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
@@ -974,7 +963,6 @@
 			<DCCReference Include="..\SOURCE\Component\ExternalLoadTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalSendCashTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\SheetWorkTimeMovementItemTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_IncomeByPartner.pas">
 				<Form>Report_GoodsMI_IncomeByPartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1017,8 +1005,8 @@
 				<Form>PaidKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsFuel_Object.pas">
-				<Form>GoodsFuel_ObjectForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\UnitCarMember_Object.pas">
+				<Form>UnitCarMember_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Tax.pas">
@@ -1029,6 +1017,44 @@
 				<Form>TaxJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsFuel_Object.pas">
+				<Form>GoodsFuel_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGroupEdit.pas">
+				<Form>JuridicalGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AssetGroup.pas">
+				<Form>AssetGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Asset.pas">
+				<Form>AssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AssetEdit.pas">
+				<Form>AssetEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
+				<Form>JuridicalGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Kind\SelectKind.pas">
+				<Form>SelectKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -1,9 +1,9 @@
-﻿object AssetEditForm: TAssetEditForm
+﻿object AssetGroupEditForm: TAssetGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1053#1086#1074#1086#1077' '#1089#1088#1077#1076#1089#1090#1074#1086
-  ClientHeight = 263
-  ClientWidth = 403
+  Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072' '#1054#1057
+  ClientHeight = 216
+  ClientWidth = 380
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@
     Left = 40
     Top = 71
     TabOrder = 0
-    Width = 273
+    Width = 296
   end
   object cxLabel1: TcxLabel
     Left = 40
@@ -28,8 +28,8 @@
     Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
-    Left = 74
-    Top = 216
+    Left = 63
+    Top = 178
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -38,8 +38,8 @@
     TabOrder = 2
   end
   object cxButton2: TcxButton
-    Left = 208
-    Top = 216
+    Left = 233
+    Top = 178
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -59,38 +59,27 @@
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 5
-    Width = 273
-  end
-  object ceInvNumber: TcxTextEdit
-    Left = 40
-    Top = 127
-    TabOrder = 6
-    Width = 273
-  end
-  object cxLabel2: TcxLabel
-    Left = 40
-    Top = 104
-    Caption = #1048#1085#1074#1077#1085#1090#1072#1088#1085#1099#1081' '#1085#1086#1084#1077#1088
+    Width = 296
   end
   object cxLabel4: TcxLabel
     Left = 40
-    Top = 155
+    Top = 106
     Caption = #1043#1088#1091#1087#1087#1099' '#1086#1089#1085#1086#1074#1085#1099#1093' '#1089#1088#1077#1076#1089#1090#1074
   end
   object ceAssetGroup: TcxButtonEdit
     Left = 40
-    Top = 178
+    Top = 129
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
-    Width = 273
+    TabOrder = 7
+    Width = 296
   end
   object ActionList: TActionList
-    Left = 336
-    Top = 88
+    Left = 248
+    Top = 12
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -101,6 +90,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -116,7 +106,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Asset'
+    StoredProcName = 'gpInsertUpdate_Object_AssetGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -141,15 +131,14 @@
         ParamType = ptInput
       end
       item
-        Name = 'inInvNumber'
-        Value = Null
-      end
-      item
-        Name = 'inAssetGroup'
-        Value = Null
+        Name = 'inParentId'
+        Value = ''
+        Component = AssetGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 304
-    Top = 56
+    Top = 64
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -158,11 +147,11 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 336
-    Top = 56
+    Left = 304
+    Top = 16
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Asset'
+    StoredProcName = 'gpGet_Object_AssetGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -185,27 +174,23 @@
         Component = ceCode
       end
       item
-        Name = 'AssetGroupId'
+        Name = 'ParentId'
         Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'AssetGroupName'
+        Name = 'ParentName'
         Value = ''
         Component = AssetGroupGuides
         ComponentItem = 'TextValue'
-      end
-      item
-        Name = 'InvNumber'
-        Value = Null
       end>
-    Left = 304
+    Left = 344
     Top = 16
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 304
-    Top = 104
+    Left = 328
+    Top = 103
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -219,16 +204,33 @@
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 336
-    Top = 16
+    Left = 344
+    Top = 64
   end
   object AssetGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAssetGroup
+    FormNameParam.Value = 'TAssetGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TAssetGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 328
-    Top = 173
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AssetGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AssetGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 128
+    Top = 124
   end
 end
