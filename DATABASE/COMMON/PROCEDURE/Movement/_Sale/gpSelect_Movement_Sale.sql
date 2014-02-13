@@ -24,6 +24,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
+             , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , DocumentChildId Integer, DocumentChildName TVarChar
               )
 AS
 $BODY$
@@ -44,46 +46,41 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
      SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode    AS StatusCode
-           , Object_Status.ValueData     AS StatusName
+             Movement.Id                                    AS Id
+           , Movement.InvNumber                             AS InvNumber
+           , Movement.OperDate                              AS OperDate
+           , Object_Status.ObjectCode                       AS StatusCode
+           , Object_Status.ValueData                        AS StatusName
+           , MovementBoolean_Checked.ValueData              AS Checked
+           , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+           , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+           , MovementFloat_VATPercent.ValueData             AS VATPercent
+           , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+           , MovementFloat_TotalCount.ValueData             AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+           , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
+           , Object_From.Id                                 AS FromId
+           , Object_From.ValueData                          AS FromName
+           , Object_To.Id                                   AS ToId
+           , Object_To.ValueData                            AS ToName
+           , Object_PaidKind.Id                             AS PaidKindId
+           , Object_PaidKind.ValueData                      AS PaidKindName
+           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
+           , Object_RouteSorting.Id                         AS RouteSortingId
+           , Object_RouteSorting.ValueData                  AS RouteSortingName
+           , Object_TaxKind.Id                			    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         			    AS DocumentTaxKindName
+           , Movement_DocumentChild.Id                      AS DocumentChildId
+           , MS_DocumentChild_InvNumberPartner.ValueData    AS DocumentChildName
 
-           , MovementBoolean_Checked.ValueData           AS Checked
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
-
-           , MovementDate_OperDatePartner.ValueData      AS OperDatePartner
-
-           , MovementFloat_VATPercent.ValueData          AS VATPercent
-           , MovementFloat_ChangePercent.ValueData       AS ChangePercent
-
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
-
-           , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
-
-           , MovementString_InvNumberOrder.ValueData     AS InvNumberOrder
-
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
-
-           , Object_PaidKind.Id                AS PaidKindId
-           , Object_PaidKind.ValueData         AS PaidKindName
-
-           , View_Contract_InvNumber.ContractId
-           , View_Contract_InvNumber.InvNumber AS ContractName
-           , View_InfoMoney.InfoMoneyGroupName
-           , View_InfoMoney.InfoMoneyDestinationName
-           , View_InfoMoney.InfoMoneyCode
-           , View_InfoMoney.InfoMoneyName
-
-           , Object_RouteSorting.Id        AS RouteSortingId
-           , Object_RouteSorting.ValueData AS RouteSortingName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -103,6 +100,25 @@ BEGIN
 
             LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
+                                         ON MovementLinkObject_PriceList.MovementId = Movement.Id
+                                        AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
+                                           ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
+                                          AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+
+            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
+                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
 
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -179,7 +195,8 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.14                                                        * add DocumentChild, DocumentTaxKind
  10.02.14                                        * add Object_RoleAccessKey_View
  05.02.14                                        * add Object_InfoMoney_View
  30.01.14                                                       * add inIsPartnerDate, inIsErased

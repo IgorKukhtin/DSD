@@ -1251,6 +1251,6 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end>
     Left = 816
-    Top = 8
+    Top = 24
   end
 end
