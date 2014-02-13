@@ -427,6 +427,27 @@ object ContractConditionValueForm: TContractConditionValueForm
         item
           BeginGroup = True
           Visible = True
+          ItemName = 'bbUnSigned'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSigned'
+        end
+        item
+          Visible = True
+          ItemName = 'bbClose'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          BeginGroup = True
+          Visible = True
           ItemName = 'bbInsertJuridical'
         end
         item
@@ -500,6 +521,22 @@ object ContractConditionValueForm: TContractConditionValueForm
     end
     object bbUpdateJuridical: TdxBarButton
       Action = actUpdateJuridical
+      Category = 0
+    end
+    object bbUnSigned: TdxBarButton
+      Action = actContractUnRead
+      Category = 0
+    end
+    object bbInPartner: TdxBarButton
+      Action = actContractInPartner
+      Category = 0
+    end
+    object bbSigned: TdxBarButton
+      Action = actContractRead
+      Category = 0
+    end
+    object bbClose: TdxBarButton
+      Action = actContractClose
       Category = 0
     end
   end
@@ -642,14 +679,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end
-        item
-          StoredProc = dsdStoredProc
-        end>
+      StoredProcList = <>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource
     end
@@ -834,6 +864,50 @@ object ContractConditionValueForm: TContractConditionValueForm
         end>
       isShowModal = False
     end
+    object actContractUnRead: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spContractUnRead
+      StoredProcList = <
+        item
+          StoredProc = spContractUnRead
+        end>
+      Caption = 'dsdExecStoredProc1'
+      Hint = #1053#1072' '#1089#1086#1075#1083#1072#1089#1086#1074#1072#1085#1080#1080
+      ImageIndex = 11
+    end
+    object actContractInPartner: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spContractPartner
+      StoredProcList = <
+        item
+          StoredProc = spContractPartner
+        end>
+      Caption = 'dsdExecStoredProc2'
+      Hint = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 66
+    end
+    object actContractRead: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spContractRead
+      StoredProcList = <
+        item
+          StoredProc = spContractRead
+        end>
+      Caption = 'dsdExecStoredProc3'
+      Hint = #1055#1086#1076#1089#1087#1080#1089#1072#1085
+      ImageIndex = 12
+    end
+    object actContractClose: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spContractClose
+      StoredProcList = <
+        item
+          StoredProc = spContractClose
+        end>
+      Caption = 'dsdExecStoredProc4'
+      Hint = #1047#1072#1082#1088#1099#1090
+      ImageIndex = 13
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractConditionValue'
@@ -1004,5 +1078,121 @@ object ContractConditionValueForm: TContractConditionValueForm
       end>
     Left = 432
     Top = 176
+  end
+  object spContractUnRead: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractStateKindCode'
+        Value = '2'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outContractStateKindCode'
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindCode'
+      end
+      item
+        Name = 'outContractStateKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 480
+    Top = 104
+  end
+  object spContractRead: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractStateKindCode'
+        Value = '3'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outContractStateKindCode'
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindCode'
+      end
+      item
+        Name = 'outContractStateKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 504
+    Top = 144
+  end
+  object spContractPartner: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractStateKindCode'
+        Value = '4'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outContractStateKindCode'
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindCode'
+      end
+      item
+        Name = 'outContractStateKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 528
+    Top = 184
+  end
+  object spContractClose: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inContractId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractStateKindCode'
+        Value = '4'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outContractStateKindCode'
+        Component = ClientDataSet
+        ComponentItem = 'ContractStateKindCode'
+      end
+      item
+        Name = 'outContractStateKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 560
+    Top = 216
   end
 end
