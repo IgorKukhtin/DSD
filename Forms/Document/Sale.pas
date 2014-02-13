@@ -90,6 +90,14 @@ type
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    edDocumentTaxKind: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    DocumentTaxKindGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edTax: TcxTextEdit;
+    actTax: TdsdExecStoredProc;
+    spTax: TdsdStoredProc;
+    bbTax: TdxBarButton;
   private
     { Private declarations }
   public

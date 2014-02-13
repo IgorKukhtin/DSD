@@ -1,26 +1,26 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
-  ClientHeight = 676
+  ClientHeight = 703
   ClientWidth = 925
   ExplicitWidth = 933
-  ExplicitHeight = 710
+  ExplicitHeight = 737
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 128
     Width = 925
-    Height = 548
+    Height = 575
     ExplicitTop = 128
     ExplicitWidth = 925
     ExplicitHeight = 548
-    ClientRectBottom = 544
+    ClientRectBottom = 571
     ClientRectRight = 921
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 919
       ExplicitHeight = 522
       inherited cxGrid: TcxGrid
         Width = 919
-        Height = 522
+        Height = 549
         ExplicitWidth = 919
         ExplicitHeight = 522
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -198,7 +198,7 @@ inherited ReturnInForm: TReturnInForm
       ExplicitHeight = 522
       inherited cxGridEntry: TcxGrid
         Width = 919
-        Height = 522
+        Height = 549
         ExplicitWidth = 919
         ExplicitHeight = 522
         inherited cxGridEntryDBTableView: TcxGridDBTableView
@@ -377,6 +377,22 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 21
       Width = 137
     end
+    object edPriceList: TcxButtonEdit
+      Left = 781
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 22
+      Width = 124
+    end
+    object cxLabel11: TcxLabel
+      Left = 781
+      Top = 45
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
     Left = 781
@@ -387,7 +403,7 @@ inherited ReturnInForm: TReturnInForm
         Kind = bkEllipsis
       end>
     TabOrder = 6
-    Width = 91
+    Width = 124
   end
   object cxLabel5: TcxLabel [3]
     Left = 781
@@ -489,6 +505,29 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = 'actSPPrintProcName'
     end
+    object actTaxCorrective: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spTaxCorrectiv
+      StoredProcList = <
+        item
+          StoredProc = spTaxCorrectiv
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 41
+    end
+    object actRefreshPrice: TdsdDataSetRefresh
+      Category = 'DSDLib'
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
+      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 116
+      RefreshOnTabSetChanges = False
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -509,6 +548,13 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'inPriceListId'
+        Value = '0'
+        Component = GuidesPricelist
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inShowAll'
         Value = False
         Component = actShowAll
@@ -521,10 +567,6 @@ inherited ReturnInForm: TReturnInForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 248
@@ -537,8 +579,64 @@ inherited ReturnInForm: TReturnInForm
       0
       28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end>
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint
+    end
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrective
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -736,22 +834,30 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftBoolean
       end
       item
-        Name = 'TaxKindId'
+        Name = 'PriceListId'
+        Value = '0'
+        Component = GuidesPricelist
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PriceListName'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'DocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'TaxKindName'
+        Name = 'DocumentTaxKindName'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-        DataType = ftString
-        ParamType = ptUnknown
       end>
     Left = 224
     Top = 248
@@ -844,11 +950,8 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
-        Name = 'inDocumentTaxKindId'
         Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
+        ParamType = ptUnknown
       end
       item
         Value = ''
@@ -1251,6 +1354,68 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end>
     Left = 816
-    Top = 8
+  end
+  object GuidesPricelist: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPriceList
+    Key = '0'
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPriceListForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPricelist
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPricelist
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 820
+    Top = 48
+  end
+  object spTaxCorrectiv: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 280
+    Top = 336
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefreshPrice
+    ComponentList = <
+      item
+        Component = GuidesPricelist
+      end>
+    Left = 464
+    Top = 360
   end
 end

@@ -7,20 +7,20 @@ inherited SaleForm: TSaleForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 164
     Width = 1015
-    Height = 540
+    Height = 504
     ExplicitTop = 128
     ExplicitWidth = 1015
     ExplicitHeight = 540
-    ClientRectBottom = 536
+    ClientRectBottom = 500
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1009
-        Height = 514
+        Height = 478
         ExplicitWidth = 1009
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -217,7 +217,7 @@ inherited SaleForm: TSaleForm
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
         Width = 1009
-        Height = 514
+        Height = 478
         ExplicitWidth = 1009
         ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
@@ -242,10 +242,10 @@ inherited SaleForm: TSaleForm
   end
   inherited DataPanel: TPanel
     Width = 1015
-    Height = 100
+    Height = 136
     TabOrder = 3
     ExplicitWidth = 1015
-    ExplicitHeight = 100
+    ExplicitHeight = 136
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -449,6 +449,34 @@ inherited SaleForm: TSaleForm
       TabOrder = 29
       Width = 84
     end
+    object edDocumentTaxKind: TcxButtonEdit
+      Left = 7
+      Top = 110
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 30
+      Width = 91
+    end
+    object cxLabel14: TcxLabel
+      Left = 7
+      Top = 92
+      Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+    end
+    object cxLabel16: TcxLabel
+      Left = 104
+      Top = 92
+      Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083'.'
+    end
+    object edTax: TcxTextEdit
+      Left = 104
+      Top = 110
+      Enabled = False
+      TabOrder = 33
+      Width = 100
+    end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -615,6 +643,17 @@ inherited SaleForm: TSaleForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
+    object actTax: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spTax
+      StoredProcList = <
+        item
+          StoredProc = spTax
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -716,6 +755,10 @@ inherited SaleForm: TSaleForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTax'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -723,6 +766,10 @@ inherited SaleForm: TSaleForm
     end
     object bbPrintTax: TdxBarButton [5]
       Action = mactPrint_SaleTax
+      Category = 0
+    end
+    object bbTax: TdxBarButton
+      Action = actTax
       Category = 0
     end
   end
@@ -797,13 +844,13 @@ inherited SaleForm: TSaleForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 48
-    Top = 56
+    Left = 16
+    Top = 0
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Sale'
-    Left = 104
-    Top = 88
+    Left = 48
+    Top = 0
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale'
@@ -965,6 +1012,25 @@ inherited SaleForm: TSaleForm
         Value = ''
         Component = GuidesPricelist
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'DocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'DocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'DocumentChildName'
+        Value = ''
+        Component = edTax
         DataType = ftString
       end>
     Left = 216
@@ -1501,8 +1567,8 @@ inherited SaleForm: TSaleForm
       item
         Component = GuidesPricelist
       end>
-    Left = 496
-    Top = 96
+    Left = 528
+    Top = 320
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1555,5 +1621,65 @@ inherited SaleForm: TSaleForm
     DataSet = PrintItemsCDS
     Left = 552
     Top = 245
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 40
+    Top = 88
+  end
+  object spTax: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentChildName'
+        Value = ''
+        Component = edTax
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 296
+    Top = 312
   end
 end

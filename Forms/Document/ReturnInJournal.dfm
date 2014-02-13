@@ -1,27 +1,30 @@
 inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
-  ClientWidth = 982
-  ExplicitWidth = 998
-  ExplicitHeight = 570
+  ClientWidth = 1029
+  ExplicitWidth = 1037
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 982
-    Height = 478
+    Width = 1029
+    Height = 476
     TabOrder = 3
-    ExplicitWidth = 982
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 982
+    ExplicitTop = 59
+    ExplicitWidth = 1029
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1025
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1023
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 982
-        Height = 478
-        ExplicitWidth = 982
-        ExplicitHeight = 478
+        Width = 1023
+        Height = 470
+        ExplicitWidth = 1023
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -123,6 +126,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colDocumentTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -275,8 +285,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 982
-    ExplicitWidth = 982
+    Width = 1029
+    ExplicitWidth = 1029
     inherited deStart: TcxDateEdit
       EditValue = 41609d
     end
@@ -290,6 +300,22 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1055#1077#1088#1080#1086#1076' '#1087#1086' <'#1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
       TabOrder = 4
       Width = 270
+    end
+    object edDocumentTaxKind: TcxButtonEdit
+      Left = 895
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 122
+    end
+    object cxLabel14: TcxLabel
+      Left = 703
+      Top = 6
+      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -343,6 +369,17 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           DataType = ftDateTime
         end>
     end
+    object actTaxCorrectiv: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spTaxCorrectiv
+      StoredProcList = <
+        item
+          StoredProc = spTaxCorrectiv
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 41
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -386,8 +423,65 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end>
+    end
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrectiv
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -398,7 +492,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 152
   end
   inherited PeriodChoice: TPeriodChoice
-    Left = 248
+    Left = 296
     Top = 96
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -453,5 +547,58 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end>
     Left = 208
     Top = 376
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+  end
+  object spTaxCorrectiv: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end>
+    Left = 296
+    Top = 312
   end
 end

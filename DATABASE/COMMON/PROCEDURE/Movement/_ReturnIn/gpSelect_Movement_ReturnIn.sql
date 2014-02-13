@@ -21,7 +21,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-             , TaxKindId Integer, TaxKindName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
+             , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
               )
 AS
 $BODY$
@@ -69,8 +70,10 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName    AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode               AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName               AS InfoMoneyName
-           , Object_TaxKind.Id                	       	AS TaxKindId
-           , Object_TaxKind.ValueData         		    AS TaxKindName
+           , Object_PriceList.id                        AS PriceListId
+           , Object_PriceList.valuedata                 AS PriceListName
+           , Object_TaxKind.Id                		    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
 
 
        FROM (SELECT Movement.id
@@ -141,18 +144,67 @@ BEGIN
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+--add Tax
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
+--saved PriceList
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                              ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                             AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+-- PriceList Partner
+
+         LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
+                              ON ObjectDate_PartnerStartPromo.ObjectId = Object_From.Id
+                             AND ObjectDate_PartnerStartPromo.DescId = zc_ObjectDate_Partner_StartPromo()
+
+         LEFT JOIN ObjectDate AS ObjectDate_PartnerEndPromo
+                              ON ObjectDate_PartnerEndPromo.ObjectId = Object_From.Id
+                             AND ObjectDate_PartnerEndPromo.DescId = zc_ObjectDate_Partner_EndPromo()
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceListPromo
+                              ON ObjectLink_Partner_PriceListPromo.ObjectId = Object_From.Id
+                             AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
+                             AND Movement.operdate BETWEEN ObjectDate_PartnerStartPromo.valuedata AND ObjectDate_PartnerEndPromo.valuedata
+
+         LEFT JOIN ObjectLink AS ObjectLink_Partner_PriceList
+                              ON ObjectLink_Partner_PriceList.ObjectId = Object_From.Id
+                             AND ObjectLink_Partner_PriceList.DescId = zc_ObjectLink_Partner_PriceList()
+                             AND ObjectLink_Partner_PriceListPromo.ObjectId IS NULL
+-- PriceList Juridical
+         LEFT JOIN ObjectDate AS ObjectDate_JuridicalStartPromo
+                              ON ObjectDate_JuridicalStartPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectDate_JuridicalStartPromo.DescId = zc_ObjectDate_Juridical_StartPromo()
+
+         LEFT JOIN ObjectDate AS ObjectDate_JuridicalEndPromo
+                              ON ObjectDate_JuridicalEndPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectDate_JuridicalEndPromo.DescId = zc_ObjectDate_Juridical_EndPromo()
+
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceListPromo
+                              ON ObjectLink_Juridical_PriceListPromo.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_PriceListPromo.DescId = zc_ObjectLink_Juridical_PriceListPromo()
+                             AND (ObjectLink_Partner_PriceListPromo.ChildObjectId IS NULL OR ObjectLink_Partner_PriceList.ChildObjectId IS NULL)
+                             AND Movement.operdate BETWEEN ObjectDate_JuridicalStartPromo.valuedata AND ObjectDate_JuridicalEndPromo.valuedata
+
+         LEFT JOIN ObjectLink AS ObjectLink_Juridical_PriceList
+                              ON ObjectLink_Juridical_PriceList.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                             AND ObjectLink_Juridical_PriceList.DescId = zc_ObjectLink_Juridical_PriceList()
+                             AND ObjectLink_Juridical_PriceListPromo.ObjectId IS NULL
+
+         LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis())
+
             ;
 
 END;
@@ -162,7 +214,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.02.14                                                            * add PriceList
  10.02.14                                        * add Object_RoleAccessKey_View
  10.02.14                                                       * add TaxKind
  05.02.14                                        * add Object_InfoMoney_View
