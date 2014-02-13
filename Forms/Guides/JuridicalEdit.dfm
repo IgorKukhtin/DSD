@@ -3,7 +3,7 @@
   ClientHeight = 446
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 471
+  ExplicitHeight = 478
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -134,9 +134,10 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 446
-      ClientRectRight = 841
-      ClientRectTop = 24
+      ClientRectBottom = 442
+      ClientRectLeft = 2
+      ClientRectRight = 837
+      ClientRectTop = 22
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
@@ -165,10 +166,10 @@
           Width = 193
         end
         object JuridicalDetailsGrid: TcxGrid
-          Left = 456
+          Left = 450
           Top = 0
           Width = 385
-          Height = 422
+          Height = 420
           Align = alRight
           TabOrder = 8
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
@@ -285,6 +286,19 @@
           Top = 182
           Caption = #1057#1095#1077#1090
         end
+        object cxLabel18: TcxLabel
+          Left = 248
+          Top = 230
+          Caption = #1058#1077#1083#1077#1092#1086#1085
+        end
+        object edPhone: TcxDBTextEdit
+          Left = 248
+          Top = 250
+          DataBinding.DataField = 'Phone'
+          DataBinding.DataSource = JuridicalDetailsDS
+          TabOrder = 18
+          Width = 193
+        end
       end
       object PartnerTS: TcxTabSheet
         Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
@@ -292,16 +306,16 @@
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 841
-          Height = 26
+          Width = 835
+          Height = 28
           Align = dalTop
           BarManager = dxBarManager
         end
         object PartnerGrid: TcxGrid
           Left = 0
-          Top = 26
-          Width = 841
-          Height = 396
+          Top = 28
+          Width = 835
+          Height = 392
           Align = alClient
           TabOrder = 0
           object PartnerGridDBTableView: TcxGridDBTableView
@@ -346,16 +360,16 @@
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 841
-          Height = 26
+          Width = 835
+          Height = 28
           Align = dalTop
           BarManager = dxBarManager
         end
         object ContractGrid: TcxGrid
           Left = 0
-          Top = 26
-          Width = 841
-          Height = 396
+          Top = 28
+          Width = 835
+          Height = 392
           Align = alClient
           TabOrder = 0
           object ContractGridDBTableView: TcxGridDBTableView
@@ -1179,8 +1193,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 184
-    Top = 240
+    Left = 136
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1305,14 +1319,14 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 184
-    Top = 336
+    Left = 96
+    Top = 80
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 200
-    Top = 320
+    Left = 64
+    Top = 80
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -1367,8 +1381,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 304
+    Left = 208
+    Top = 264
   end
   object spPartner: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_PartnerJuridical'
@@ -1414,8 +1428,8 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
-    Left = 256
-    Top = 288
+    Left = 184
+    Top = 48
   end
   object PartnerAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1525,6 +1539,13 @@
         ComponentItem = 'BankAccount'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inphone'
+        Component = JuridicalDetailsCDS
+        ComponentItem = 'Phone'
+        DataType = ftString
+        ParamType = ptInput
       end>
     Left = 280
     Top = 216
@@ -1580,8 +1601,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 40
-    Top = 318
+    Left = 48
+    Top = 310
   end
   object spClearDefaluts: TdsdStoredProc
     StoredProcName = 'gpGet_JuridicalDetails_ClearDefault'

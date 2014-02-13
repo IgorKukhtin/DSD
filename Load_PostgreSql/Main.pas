@@ -1049,6 +1049,8 @@ begin
                      +'        when fCheckGoodsParentID(2631,Goods.ParentId) =zc_rvYes() then 10203' // !!!СД-СЫРЬЕ!!! - 10203		Основное сырье Прочее сырье	Упаковка
                      +'        when fCheckGoodsParentID(176,Goods.ParentId) =zc_rvYes() then 10203' // СЫРЬЕ ЭТИКЕТКИ И ТЕРМОЧЕКИ - 10203		Основное сырье Прочее сырье	Упаковка
 
+                     +'        when Goods.Id in (3924,8214,6504) then 10101' // !!!Живой вес!!!
+
                      +'        when fCheckGoodsParentID(2648,Goods.ParentId) =zc_rvYes() then 10204' // СО-СЫРЬЕ СЫР - 10204		Основное сырье Прочее сырье Прочее сырье
                      +'        when Goods.Id in (2792, 7001, 6710) then 10103' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10103		Основное сырье Мясное сырье Говядина
                      +'        when fCheckGoodsParentID(6435,Goods.ParentId) =zc_rvYes() then 10102' // !!!СО- ГОВ. И СВ. Н\К + СЫР!!! - 10102		Основное сырье Мясное сырье Свинина
@@ -6145,7 +6147,7 @@ end;
 function TMainForm.pLoadDocument_Income:Integer;
 var JuridicalId_pg,PartnerId_pg,ContractId_pg:Integer;
 begin
-     Result:=0;
+       Result:=0;
      if (not cbIncome.Checked)or(not cbIncome.Enabled) then exit;
      //
      myEnabledCB(cbIncome);
@@ -6261,6 +6263,9 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             PartnerId_pg:=0;
+             JuridicalId_pg:=0;
+             ContractId_pg:=0;
              //Сначала находим контрагента  и юр.лицо
              fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
                            +' from ObjectHistory_JuridicalDetails_View'
@@ -6291,6 +6296,16 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //если не нашли, находим договор без условия даты
+             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
+                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9323,6 +9338,9 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             PartnerId_pg:=0;
+             JuridicalId_pg:=0;
+             ContractId_pg:=0;
              //Сначала находим контрагента  и юр.лицо
              fOpenSqToQuery(' select coalesce(ObjectLink.ObjectId,0) as PartnerId, coalesce(ObjectHistory_JuridicalDetails_View.JuridicalId,0)as JuridicalId'
                            +' from ObjectHistory_JuridicalDetails_View'
@@ -9353,6 +9371,16 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //если не нашли, находим договор без условия даты
+             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
+                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;

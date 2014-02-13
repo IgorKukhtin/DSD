@@ -56,8 +56,7 @@ begin
 
   FromId := TPartnerTest.Create.GetDefault;
   ToId := TUnit.Create.GetDefault;
-  DocumentTaxKindId:=0;//TDocumentTaxKindTest.GetDefault;
-//  DocumentTaxKindId:=TDocumentTaxKindTest.GetDefault;
+  DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
 
   result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, OperDate,

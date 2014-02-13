@@ -62,7 +62,7 @@ type
     procedure JuridicalGroup_Test;
     procedure Measure_Test;
     procedure PaidKind_Test;
-    procedure DocumentTaxKind_Test;
+//    procedure DocumentTaxKind_Test;
     procedure Partner_Test;
     procedure PriceList_Test;
     procedure Route_Test;
@@ -190,14 +190,6 @@ type
     constructor Create; override;
   end;
 
-  TDocumentTaxKindTest = class(TObjectTest)
-  private
-    function InsertDefault: integer; override;
-  public
-    function InsertUpdateDocumentTaxKind(const Id: integer; Code: Integer;
-        Name: string): integer;
-    constructor Create; override;
-  end;
 
   TContractKindTest = class(TObjectTest)
   private
@@ -1212,7 +1204,8 @@ begin
 end;
 {=================}
 {TPaidKindTest}
-constructor TDocumentTaxKindTest.Create;
+{
+constructor TTaxKindTest.Create;
 begin
   inherited;
   spInsertUpdate := 'gpInsertUpdate_Object_DocumentTaxKind';
@@ -1220,13 +1213,13 @@ begin
   spGet := 'gpGet_Object_DocumentTaxKind';
 end;
 
-function TDocumentTaxKindTest.InsertDefault: integer;
+function TTaxKindTest.InsertDefault: integer;
 begin
   result := InsertUpdateDocumentTaxKind(0, -3, 'Тип формирования налогового документа');
   inherited;
 end;
 
-function TDocumentTaxKindTest.InsertUpdateDocumentTaxKind;
+function TTaxKindTest.InsertUpdateDocumentTaxKind;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -1253,6 +1246,7 @@ begin
     ObjectTest.Delete(Id);
   end;
 end;
+}
 {==================================}
 
 

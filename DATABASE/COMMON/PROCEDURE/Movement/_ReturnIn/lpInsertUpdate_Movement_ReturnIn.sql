@@ -18,7 +18,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
 )
 RETURNS Integer AS
 $BODY$
+   DECLARE vbAccessKeyId Integer;
 BEGIN
+     -- определяем ключ доступа
+--     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -57,7 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 11.02.14                         * 
+ 11.02.14                         *
 */
 
 -- тест
