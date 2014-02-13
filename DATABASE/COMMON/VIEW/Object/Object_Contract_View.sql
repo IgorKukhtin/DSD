@@ -15,6 +15,9 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
        , Object_Contract_InvNumber_View.InfoMoneyId
 
+       , Object_ContractStateKind.ObjectCode   AS ContractStateKindCode
+       , Object_ContractStateKind.ValueData    AS ContractStateKindName
+
          -- !!!ÂĞÅÌÅÍÍÎ ÂÎÑÑÒÀÍÎÂÈË!!!
        , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
        , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
@@ -40,6 +43,12 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
                             ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
                            AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
 
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                            ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
+                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+       LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
+
+
        -- !!!ÂĞÅÌÅÍÍÎ ÂÎÑÑÒÀÍÎÂÈË!!!
        LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
                              ON ObjectFloat_ChangePercent.ObjectId = Object_Contract_InvNumber_View.ContractId
@@ -57,6 +66,7 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 13.02.14                                        * add Object_ContractStateKind
  14.01.14                                        * add Object_Contract_InvNumber_View_InvNumber_View
  08.01.14                        * 
  18.11.13                                        * !!!ÂĞÅÌÅÍÍÎ ÂÎÑÑÒÀÍÎÂÈË!!!

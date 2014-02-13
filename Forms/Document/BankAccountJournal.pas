@@ -29,6 +29,9 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     colInvNumber_Parent: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
+    clOKPO_Parent: TcxGridDBColumn;
   private
     { Private declarations }
   public

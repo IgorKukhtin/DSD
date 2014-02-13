@@ -10,7 +10,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1056
     Height = 320
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1056
     ExplicitHeight = 320
     ClientRectBottom = 320
@@ -107,6 +106,18 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             Options.Editing = False
             Width = 64
           end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clOKPO_Parent: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054' '#1074' '#1073'/'#1074
+            DataBinding.FieldName = 'OKPO_Parent'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object colJuridical: TcxGridDBColumn
             Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
             DataBinding.FieldName = 'MoneyPlaceName'
@@ -155,6 +166,12 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 101
+          end
+          object clComment: TcxGridDBColumn
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentVert = vaCenter
+            Width = 100
           end
         end
       end

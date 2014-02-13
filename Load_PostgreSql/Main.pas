@@ -2714,7 +2714,121 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
+        function InsertData_pg(UnitId,PartnerId:Integer;inCode:Integer;inName:String):Boolean;
+        var findId:Integer;
+        begin
+             //нашли
+             fOpenSqToQuery(' select ObjectLink.ObjectId'
+                           +' from ObjectLink'
+                           +'      JOIN ObjectLink AS ObjectLink_Branch'
+                           +'                      ON ObjectLink_Branch.ObjectId = ObjectLink.ObjectId'
+                           +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_ClientByClientKind1CLink_Branch()'
+                           +'                     AND ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
+                           +' where ObjectLink.ChildObjectId = '+IntToStr(PartnerId)
+                           +'   and ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner()'
+                           );
+             findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+             //сохраняем
+             toStoredProc.Params.ParamByName('ioId').Value:=findId;
+             toStoredProc.Params.ParamByName('inCode').Value:=inCode;
+             toStoredProc.Params.ParamByName('inName').Value:=inName;
+             toStoredProc.Params.ParamByName('inClientId').Value:=PartnerId;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
+             Result:=myExecToStoredProc;
+         end;
 begin
+     if (not cbData1CLink.Checked)or(not cbData1CLink.Enabled) then exit;
+     //
+     myEnabledCB(cbData1CLink);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Client_by1CExternal.Id as ObjectId');
+        Add('     , ClientCode_byKiev,ClientName_byKiev'
+           +'     , ClientCode_byDoneck,ClientName_byDoneck'
+           +'     , ClientCode_byNikopol,ClientName_byNikopol'
+           +'     , ClientCode_byOdessa,ClientName_byOdessa'
+           +'     , ClientCode_byXerson,ClientName_byXerson'
+           +'     , ClientCode_byCherkassi,ClientName_byCherkassi'
+           +'     , ClientCode_bySimf,ClientName_bySimf'
+           +'     , ClientCode_byKrRog,ClientName_byKrRog'
+           +'     , ClientCode_byXarkov,ClientName_byXarkov');
+        Add('     , _pgUnitKiev.Id_Postgres_Branch as Is_pg_Kiev'
+           +'     , _pgUnitKrRog.Id_Postgres_Branch as Is_pg_KrRog'
+           +'     , _pgUnitCherkassi.Id_Postgres_Branch as Is_pg_Cherkassi'
+           +'     , _pgUnitXerson.Id_Postgres_Branch as Is_pg_Xerson'
+           +'     , _pgUnitSimf.Id_Postgres_Branch as Is_pg_Simf'
+           +'     , _pgUnitDoneck.Id_Postgres_Branch as Is_pg_Doneck'
+           +'     , _pgUnitOdessa.Id_Postgres_Branch as Is_pg_Odessa'
+           +'     , _pgUnitXarkov.Id_Postgres_Branch as Is_pg_Xarkov'
+           +'     , _pgUnitNikopol.Id_Postgres_Branch as Is_pg_Nikopol');
+        Add('     , _pgPartner.PartnerId_pg as ClientId_Postgres');
+        Add('from dba.Client_by1CExternal');
+        Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
+           +'                          ) as Unit_byLoad_Client on Unit_byLoad_Client.UnitId = Client_by1CExternal.ClientId');
+        Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
+           +'                          ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_Client.Id_byLoad');
+
+        Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
+        Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
+        Add('     left outer join dba._pgUnit as _pgUnitCherkassi  on _pgUnitCherkassi.ObjectCode = 22040');
+        Add('     left outer join dba._pgUnit as _pgUnitXerson     on _pgUnitXerson.ObjectCode    = 22050');
+        Add('     left outer join dba._pgUnit as _pgUnitSimf       on _pgUnitSimf.ObjectCode      = 22060');
+        Add('     left outer join dba._pgUnit as _pgUnitDoneck     on _pgUnitDoneck.ObjectCode    = 22070');
+        Add('     left outer join dba._pgUnit as _pgUnitOdessa     on _pgUnitOdessa.ObjectCode    = 22080');
+        Add('     left outer join dba._pgUnit as _pgUnitXarkov     on _pgUnitXarkov.ObjectCode    = 22090');
+        Add('     left outer join dba._pgUnit as _pgUnitNikopol    on _pgUnitNikopol.ObjectCode   = 22100');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpInsertUpdate_Object_Partner1CLink';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
+        toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inPartnerId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchTopId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             InsertData_pg(FieldByName('Is_pg_Kiev').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byKiev').AsInteger,FieldByName('ClientName_byKiev').AsString);
+             InsertData_pg(FieldByName('Is_pg_Doneck').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byDoneck').AsInteger,FieldByName('ClientName_byDoneck').AsString);
+             InsertData_pg(FieldByName('Is_pg_Nikopol').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byNikopol').AsInteger,FieldByName('ClientName_byNikopol').AsString);
+             InsertData_pg(FieldByName('Is_pg_Odessa').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byOdessa').AsInteger,FieldByName('ClientName_byOdessa').AsString);
+             InsertData_pg(FieldByName('Is_pg_Xerson').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byXerson').AsInteger,FieldByName('ClientName_byXerson').AsString);
+             InsertData_pg(FieldByName('Is_pg_Cherkassi').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byCherkassi').AsInteger,FieldByName('ClientName_byCherkassi').AsString);
+             InsertData_pg(FieldByName('Is_pg_Simf').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_bySimf').AsInteger,FieldByName('ClientName_bySimf').AsString);
+             InsertData_pg(FieldByName('Is_pg_KrRog').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byKrRog').AsInteger,FieldByName('ClientName_byKrRog').AsString);
+             InsertData_pg(FieldByName('Is_pg_Xarkov').AsInteger,FieldByName('ClientId_Postgres').AsInteger
+                          ,FieldByName('ClientCode_byXarkov').AsInteger,FieldByName('ClientName_byXarkov').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbData1CLink);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
@@ -6222,15 +6336,18 @@ begin
         Add('     , null as PersonalPackerId');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
         Add('     , Bill.FromId, Bill.ToId');
+        Add('     , Bill_findInfoMoney.findId');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
         Add('     left outer join (select Bill.Id as BillId'
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'                            ,max(isnull(BillItems_find.Id,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperPrice<>0 and BillItems.OperCount<>0'
-           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
+           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems_find.GoodsPropertyId'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -6352,7 +6469,7 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-от кого:'+FieldByName('UnitNameFrom').AsString
-                                 else if ContractId_pg=0
+                                 else if (ContractId_pg=0)and(FieldByName('findId').AsInteger<>0)
                                       then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка--договор:???'
                                       else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
 
@@ -9300,15 +9417,18 @@ begin
         Add('     , _pgInfoMoney.Id3_Postgres as InfoMoneyId_pg');
         Add('     , isnull (Information1.OKPO, isnull (Information2.OKPO, '+FormatToVarCharServer_notNULL('')+')) AS OKPO');
         Add('     , Bill.FromId, Bill.ToId');
+        Add('     , Bill_findInfoMoney.findId');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from dba.Bill');
         Add('     left outer join (select Bill.Id as BillId'
            +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'                            ,max(isnull(BillItems_find.Id,0))as findId'
            +'                      from dba.Bill'
-           +'                           left outer join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperPrice<>0 and BillItems.OperCount<>0'
-           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
+           +'                           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
+           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems_find.GoodsPropertyId'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'                         and Bill.BillKind=zc_bkReturnToClient()'
            +'                         and Bill.MoneyKindId = zc_mkBN()'
@@ -9427,7 +9547,7 @@ begin
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-кому:'+FieldByName('UnitNameTo').AsString
-                                 else if ContractId_pg=0
+                                 else if (ContractId_pg=0)and(FieldByName('findId').AsInteger<>0)
                                       then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка--договор:???'
                                       else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
 

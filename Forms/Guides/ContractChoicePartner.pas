@@ -27,7 +27,6 @@ type
   TContractChoicePartnerForm = class(TAncestorEnumForm)
     colInvNumber: TcxGridDBColumn;
     colStartDate: TcxGridDBColumn;
-    colContractKindName: TcxGridDBColumn;
     colJuridicalCode: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
@@ -41,7 +40,6 @@ type
     colPartnerCode: TcxGridDBColumn;
     colPartnerName: TcxGridDBColumn;
     colChangePercent: TcxGridDBColumn;
-    colPriceListName: TcxGridDBColumn;
   private
     { Private declarations }
   public

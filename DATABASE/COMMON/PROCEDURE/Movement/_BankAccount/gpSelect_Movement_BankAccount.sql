@@ -15,7 +15,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , AmountOut TFloat 
              , Comment TVarChar
              , BankAccountName TVarChar, BankName TVarChar
-             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar
+             , MoneyPlaceCode Integer, MoneyPlaceName TVarChar, OKPO TVarChar, OKPO_Parent TVarChar
              , InfoMoneyGroupName TVarChar
              , InfoMoneyDestinationName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -62,6 +62,8 @@ BEGIN
            , Object_BankAccount_View.BankName  AS BankName
            , Object_MoneyPlace.ObjectCode      AS MoneyPlaceCode
            , Object_MoneyPlace.ValueData       AS MoneyPlaceName
+           , ObjectHistory_JuridicalDetails_View.OKPO
+           , MovementString_OKPO.ValueData     AS OKPO_Parent
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
            , Object_InfoMoney_View.InfoMoneyCode
@@ -77,6 +79,10 @@ BEGIN
             LEFT JOIN Movement AS Movement_BankStatement ON Movement_BankStatement.Id = Movement_BankStatementItem.ParentId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementString AS MovementString_OKPO
+                                     ON MovementString_OKPO.MovementId =  Movement_BankStatementItem.Id
+                                    AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
             LEFT JOIN Object_BankAccount_View ON Object_BankAccount_View.Id = MovementItem.ObjectId
  
@@ -87,6 +93,7 @@ BEGIN
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
                                         AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
             LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = MILinkObject_MoneyPlace.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_MoneyPlace.Id
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
