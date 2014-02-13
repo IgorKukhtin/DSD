@@ -58,6 +58,9 @@ type
     colEndAmount_K: TcxGridDBColumn;
     colDebetSumm: TcxGridDBColumn;
     colKreditSumm: TcxGridDBColumn;
+    colContractCode: TcxGridDBColumn;
+    colJuridicalCode: TcxGridDBColumn;
+    colOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

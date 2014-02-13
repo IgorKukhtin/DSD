@@ -76,8 +76,6 @@ BEGIN
       AND MovementLinkObject.DescId = zc_MovementLinkObject_BankAccount()
     WHERE Movement.OperDate = inOperDate AND Movement.DescId = zc_Movement_BankStatement() AND Movement.StatusId = zc_Enum_Status_UnComplete();
 
-      RAISE EXCEPTION 'Валюта "%" ', vbMovementId;
-
 
     IF COALESCE(vbMovementId, 0) = 0 THEN
        -- 5. Если такого документа нет - создать его
@@ -158,10 +156,70 @@ BEGIN
         END IF;
     END IF;
 
-    -- Вычитываем свойство <Управленческие статьи>.
-    SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject 
-    WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
+    -- находим свойство <Договор>
+    -- SELECT ObjectId INTO vbContractId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_Contract() AND MovementId = vbMovementItemId;
+    -- находим свойство <УП статья назначения>
+    -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
+
+    -- если нен нашли, будем определять свойство <Договор>
+    IF COALESCE (vbContractId, 0) = 0 AND COALESCE (vbJuridicalId, 0) <> 0
+    THEN 
+        -- Находим <Договор> у Юр. Лица !!!в зависимоти от ...!!
+        SELECT MAX (View_Contract.ContractId) INTO vbContractId
+        FROM (SELECT zc_Enum_InfoMoney_30101()         AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
+                   , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
+              FROM Object_InfoMoney_View
+              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                AND inAmount > 0
+             UNION ALL
+              SELECT Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId
+                   , 0 AS InfoMoneyId_Next
+              FROM Object_InfoMoney_View
+              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
+                AND inAmount < 0
+             UNION ALL
+              SELECT 0 AS InfoMoneyId
+                   , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
+              FROM Object_InfoMoney_View
+              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyDestination_21500()) -- Основное сырье
+                AND inAmount < 0
+             ) AS tmpInfoMoney
+             LEFT JOIN Object_Contract_View AS View_Contract
+                                            ON View_Contract.JuridicalId = vbJuridicalId
+                                           AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
+                                           AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+             LEFT JOIN Object_Contract_View AS View_Contract_next
+                                            ON View_Contract_next.JuridicalId = vbJuridicalId
+                                           AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
+                                           AND COALESCE (View_Contract_next.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+                                           AND View_Contract.JuridicalId IS NULL
+        ;
+        -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
+        IF COALESCE (vbContractId, 0) = 0
+        THEN 
+            SELECT MAX (View_Contract.ContractId) INTO vbContractId
+            FROM Object_Contract_View AS View_Contract
+            WHERE View_Contract.JuridicalId = vbJuridicalId
+              AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close();
+        END IF;
+
+        -- Находим <УП статья назначения> !!!всегда!!! у Договора
+        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_View WHERE ContractId = vbContractId;
+
+
+        IF COALESCE (vbContractId, 0) <> 0 THEN
+           -- сохранили связь с <Договор>
+           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);     
+        END IF;
+        IF COALESCE (vbInfoMoneyId, 0) <> 0 THEN
+           -- сохранили связь с <УП статья назначения>
+           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
+        END IF;
+
+    END IF;  
+   
+/*
     IF (COALESCE(vbInfoMoneyId, 0) = 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN 
        -- Находим <Управленческие статьи> у Юр. Лица
        SELECT ChildObjectId INTO vbInfoMoneyId 
@@ -171,50 +229,21 @@ BEGIN
           -- сохранили связь с <Управленческие статьи>
           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
        END IF;
-    END IF;
+    END IF;*/
 
-
-    -- Вычитываем свойство Договор.
-    SELECT ObjectId INTO vbContractId FROM MovementLinkObject 
-    WHERE DescId = zc_MovementLinkObject_Contract() AND MovementId = vbMovementItemId;
-
-    IF (COALESCE(vbContractId, 0) = 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN 
-       -- Находим договор у Юр. Лица
-       SELECT ObjectLink_Contract_Juridical.ObjectId INTO vbContractId
-         FROM ObjectLink AS ObjectLink_Contract_Juridical 
-        WHERE ObjectLink_Contract_Juridical.ChildObjectId = vbJuridicalId
-          AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical() 
-        LIMIT 1;
-       IF COALESCE(vbContractId, 0) <> 0 THEN
-          -- сохранили связь с <Договор>
-          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);     
-       END IF;
-    END IF;  
-/*LEFT JOIN ObjectLink AS ObjectLink_Juridical_Contract_InfoMoney 
-           ON ObjectLink_Juridical_Contract_InfoMoney.ObjectId = ObjectLink_Contract_Juridical.ObjectId 
-          AND ObjectLink_Juridical_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney() 
-    LEFT JOIN ObjectLink AS ObjectLink_Juridical_Contract_ContractStateKind 
-           ON ObjectLink_Juridical_Contract_ContractStateKind.ObjectId = ObjectLink_Contract_Juridical.ObjectId 
-          AND ObjectLink_Juridical_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-    LEFT JOIN ObjectDate AS ObjectDate_Contract_Start
-           ON ObjectDate_Contract_Start.ObjectId = ObjectLink_Contract_Juridical.ObjectId 
-          AND ObjectDate_Contract_Start.DescId = zc_ObjectDate_Contract_Start() 
-    LEFT JOIN ObjectDate AS ObjectDate_Contract_End
-           ON ObjectDate_Contract_Start.ObjectId = ObjectLink_Contract_Juridical.ObjectId 
-          AND ObjectDate_Contract_Start.DescId = zc_ObjectDate_Contract_End() */
-   
 /*   -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
   */
+
    RETURN 0;
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+13.02.14                          * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора
 03.12.13                          *
 13.11.13                          *
 

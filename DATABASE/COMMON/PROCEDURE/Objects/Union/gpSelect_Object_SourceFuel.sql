@@ -54,6 +54,7 @@ BEGIN
      FROM Object_InfoMoney_View
           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
                                    AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                   AND COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
           JOIN ObjectLink AS ObjectLink_Partner_Juridical
                           ON ObjectLink_Partner_Juridical.ChildObjectId = Object_Contract_View.JuridicalId
                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -109,6 +110,7 @@ BEGIN
                      FROM Object_InfoMoney_View
                           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
                                                    AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
+                                                   AND COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ГСМ
                      ) AS tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id
                                      AND tmpContract.PaidKindId = Object_PaidKind.Id
@@ -178,7 +180,8 @@ ALTER FUNCTION gpSelect_Object_SourceFuel (TDateTime, TVarChar) OWNER TO postgre
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.13                                        * add zc_Enum_ContractStateKind_Close
  14.12.13                                        * add vbAccessKeyAll
  12.11.13                                        * rename to gpSelect_Object_SourceFuel
  20.10.13                                        * union

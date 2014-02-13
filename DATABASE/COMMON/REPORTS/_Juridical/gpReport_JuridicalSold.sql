@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalName TVarChar, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
+RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
                InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -28,7 +28,10 @@ BEGIN
      -- Один запрос, который считает остаток и движение. 
   RETURN QUERY  
      SELECT 
-        Object_Juridical.ValueData AS JuridicalName,   
+        Object_Juridical.ObjectCode AS JuridicalCode,   
+        Object_Juridical.ValueData AS JuridicalName,
+        ObjectHistory_JuridicalDetails_View.OKPO,
+        View_Contract_InvNumber.ContractCode,
         View_Contract_InvNumber.InvNumber AS ContractNumber,
         Object_PaidKind.ValueData AS PaidKindName,
         Object_Account_View.AccountName_all AS AccountName,
@@ -109,6 +112,8 @@ BEGIN
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId   
            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId         
            
+           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
            WHERE (Operation.StartAmount <> 0 OR Operation.EndAmount <> 0 OR Operation.SaleSumm <> 0 OR Operation.MoneySumm <> 0 OR Operation.ServiceSumm <> 0 OR Operation.OtherSumm <> 0);
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -121,6 +126,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.02.14                                        * add OKPO and ContractCode
  30.01.14                                        * 
  15.01.14                        * 
 */

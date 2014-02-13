@@ -11,6 +11,9 @@ $BODY$
 BEGIN
    
    -- !!!будем без партий!!!
+   RETURN (0);
+/*
+   -- !!!будем без партий!!!
    inMovementId:= 0;
 
 
@@ -25,9 +28,9 @@ BEGIN
            PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_PartionMovement_MovementId(), vbPartionMovementId, inMovementId);
 
    END IF;
-
    -- Возвращаем значение
    RETURN (vbPartionMovementId);
+*/
 
 END;
 $BODY$
@@ -39,6 +42,7 @@ ALTER FUNCTION lpInsertFind_Object_PartionMovement (Integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.02.14                                        * !!!будем без партий!!! но по другому
  27.09.13                                        * !!!будем без партий!!!
  02.07.13                                        * сначала Find, потом если надо Insert
  02.07.13          *
