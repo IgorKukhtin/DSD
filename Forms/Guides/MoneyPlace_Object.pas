@@ -9,7 +9,9 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
   dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB, Datasnap.DBClient,
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
-  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC;
+  cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
+  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxImageComboBox, Vcl.Menus;
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
@@ -19,8 +21,12 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colContractNumber: TcxGridDBColumn;
     colStartDate: TcxGridDBColumn;
-    colContractKindName: TcxGridDBColumn;
     colisErased: TcxGridDBColumn;
+    colOKPO: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clContractStateKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,9 +1,9 @@
 inherited ContractChoiceForm: TContractChoiceForm
-  Caption = #1042#1099#1073#1086#1088' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 861
-  ExplicitHeight = 523
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -22,6 +22,10 @@ inherited ContractChoiceForm: TContractChoiceForm
         ExplicitWidth = 853
         ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -60,7 +64,7 @@ inherited ContractChoiceForm: TContractChoiceForm
             Width = 76
           end
           object colInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -83,6 +87,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           object colContractKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
