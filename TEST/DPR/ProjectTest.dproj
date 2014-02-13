@@ -1029,12 +1029,12 @@
 				<Form>AssetGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Asset.pas">
-				<Form>AssetForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AssetEdit.pas">
-				<Form>AssetEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
@@ -1048,14 +1048,22 @@
 			<DCCReference Include="..\SOURCE\Objects\All\DocumentTaxKindTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\SaleTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TaxCorrectiveTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\AssetEdit.pas">
+				<Form>AssetEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Asset.pas">
+				<Form>AssetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
 				<Form>MakerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\TaxTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\ReturnInTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Country.pas">
-				<Form>CountryForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

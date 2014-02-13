@@ -349,17 +349,19 @@ uses
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
   AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm: TParentForm},
-  Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
-  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
   SaleTest in '..\SOURCE\Movement\All\SaleTest.pas',
   TaxCorrectiveTest in '..\SOURCE\Movement\All\TaxCorrectiveTest.pas',
-  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   TaxTest in '..\SOURCE\Movement\All\TaxTest.pas',
   ReturnInTest in '..\SOURCE\Movement\All\ReturnInTest.pas',
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm};
+  AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
+  Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
+  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
+  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm};
 
 {$R *.RES}
 
