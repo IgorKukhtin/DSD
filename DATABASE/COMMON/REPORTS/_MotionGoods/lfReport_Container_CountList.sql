@@ -17,7 +17,7 @@ BEGIN
     FROM _tmpGoods 
      -- список суммовых контейнеров (начали с ограниечения LocationId)
         JOIN  (SELECT Container.Id AS ContainerId_Goods
-		            , COALESCE (ContainerLinkObject_Unit.ObjectId, ContainerLinkObject_Member.ObjectId) AS LocationId
+		    , _tmpLocation.LocationId
                     , Container.ObjectId AS GoodsId
                     , Container.Amount
                FROM _tmpLocation
