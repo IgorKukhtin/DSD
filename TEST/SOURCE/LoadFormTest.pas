@@ -778,9 +778,13 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCountryForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCountryEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCountryEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
 end;
 
 procedure TLoadFormTest.LoadRoleFormTest;

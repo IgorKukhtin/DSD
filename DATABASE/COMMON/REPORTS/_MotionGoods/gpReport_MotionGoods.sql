@@ -88,35 +88,35 @@ $BODY$BEGIN
            , ObjectFloat_Weight.ValueData AS Weight
 
            , CAST (SUM (_tmp_All.StartSumm) AS TFloat)     AS StartSumm
-           , CAST (SUM (_tmp_All.IncomeSumm) AS TFloat)    AS IncomeSumm
+           , CAST (ABS (SUM (_tmp_All.IncomeSumm)) AS TFloat)    AS IncomeSumm
            , CAST (SUM (_tmp_All.SendInSumm) AS TFloat)    AS SendInSumm
            , CAST (SUM (_tmp_All.SendOutSumm) AS TFloat)   AS SendOutSumm
-           , CAST (SUM (_tmp_All.SaleSumm) AS TFloat)      AS SaleSumm
+           , CAST (ABS (SUM (_tmp_All.SaleSumm)) AS TFloat)      AS SaleSumm
            , CAST (SUM (_tmp_All.ReturnOutSumm) AS TFloat) AS ReturnOutSumm
            , CAST (SUM (_tmp_All.ReturnInSumm) AS TFloat)  AS ReturnInSumm
-           , CAST (SUM (_tmp_All.LossSumm) AS TFloat)      AS LossSumm
+           , CAST (ABS (SUM (_tmp_All.LossSumm)) AS TFloat)      AS LossSumm
            , CAST (SUM (_tmp_All.InventorySumm) AS TFloat) AS InventorySumm
            , CAST (SUM (_tmp_All.EndSumm) AS TFloat)       AS EndSumm
 
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.StartCount) ELSE 0 END AS TFloat) AS StartCount_Sh
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.IncomeCount) ELSE 0 END AS TFloat) AS IncomeCount_Sh   
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.IncomeCount) ELSE 0 END) AS TFloat) AS IncomeCount_Sh   
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.SendInCount) ELSE 0 END AS TFloat) AS SendInCount_Sh   
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.SendOutCount) ELSE 0 END AS TFloat) AS SendOutCount_Sh           
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.SaleCount) ELSE 0 END AS TFloat) AS SaleCount_Sh           
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.SaleCount) ELSE 0 END) AS TFloat) AS SaleCount_Sh           
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.ReturnOutCount) ELSE 0 END AS TFloat) AS ReturnOutCount_Sh           
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.ReturnInCount) ELSE 0 END AS TFloat) AS ReturnInCount_Sh           
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.LossCount) ELSE 0 END AS TFloat) AS LossCount_Sh           
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.LossCount) ELSE 0 END) AS TFloat) AS LossCount_Sh           
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.InventoryCount) ELSE 0 END AS TFloat) AS InventoryCount_Sh           
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN SUM (_tmp_All.EndCount) ELSE 0 END AS TFloat) AS EndCount_Sh           
 
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.StartCount)*ObjectFloat_Weight.ValueData) ELSE  SUM (_tmp_All.StartCount) END AS TFloat) AS StartCount
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.IncomeCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.IncomeCount) END AS TFloat) AS IncomeCount     
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.IncomeCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.IncomeCount) END) AS TFloat) AS IncomeCount     
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.SendInCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.SendInCount)  END AS TFloat) AS SendInCount   
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.SendOutCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.SendOutCount) END AS TFloat) AS SendOutCount   
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.SaleCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.SaleCount) END AS TFloat) AS SaleCount
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.SaleCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.SaleCount) END) AS TFloat) AS SaleCount
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.ReturnOutCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.ReturnOutCount) END AS TFloat) AS ReturnOutCount   
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.ReturnInCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.ReturnInCount) END AS TFloat) AS ReturnInCount   
-           , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.LossCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.LossCount) END AS TFloat) AS LossWeight   
+           , CAST (ABS (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.LossCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.LossCount) END) AS TFloat) AS LossWeight   
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.InventoryCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.InventoryCount) END AS TFloat) AS InventoryCount 
            , CAST (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN (SUM (_tmp_All.EndCount)*ObjectFloat_Weight.ValueData) ELSE SUM (_tmp_All.EndCount) END AS TFloat) AS EndCount
    

@@ -1,4 +1,4 @@
-unit SaleMovementItemTest;
+unit ReturnInMovementItemTest;
 
 interface
 
@@ -6,7 +6,7 @@ uses dbMovementItemTest, dbTest;
 
 type
 
-  TSaleMovementItemTest = class(TdbTest)
+  TReturnInMovementItemTest = class(TdbTest)
   protected
     procedure SetUp; override;
     // возвращаем данные для тестирования
@@ -17,13 +17,13 @@ type
     procedure Test; virtual;
   end;
 
-  TSaleMovementItem = class(TMovementItemTest)
+  TReturnInMovementItem = class(TMovementItemTest)
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateSaleMovementItem
+    function InsertUpdateReturnInMovementItem
       (Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
+       Amount, AmountPartner,
        Price, CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
     constructor Create; override;
@@ -33,25 +33,25 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants,SaleTest;
+     Variants,ReturnInTest;
 
-{ TSaleMovementItemTest }
+{ TReturnInMovementItemTest }
 
-procedure TSaleMovementItemTest.ProcedureLoad;
+procedure TReturnInMovementItemTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'MovementItem\Sale\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\ReturnIn\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'Movement\Sale\';
+  ScriptDirectory := ProcedurePath + 'Movement\ReturnIn\';
   inherited;
 end;
 
-procedure TSaleMovementItemTest.SetUp;
+procedure TReturnInMovementItemTest.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 
-procedure TSaleMovementItemTest.TearDown;
+procedure TReturnInMovementItemTest.TearDown;
 begin
   inherited;
   if Assigned(InsertedIdMovementItemList) then
@@ -70,62 +70,60 @@ begin
           Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
-function TSaleMovementItem.InsertDefault: integer;
+function TReturnInMovementItem.InsertDefault: integer;
 var Id, MovementId, GoodsId: Integer;
     Amount, AmountPartner, Price, CountForPrice,
-    HeadCount, AmountChangePercent, ChangePercentAmount: double;
+    HeadCount: double;
     PartionGoods:String;
     GoodsKindId, AssetId: Integer;
 begin
   Id:=0;
-  MovementId:= TSale.Create.GetDefault;
+  MovementId:= TReturnIn.Create.GetDefault;
   GoodsId:=TGoodsTest.Create.GetDefault;
   Amount:=10;
   AmountPartner:=11;
-  ChangePercentAmount := 10;
   Price:=2.34;
   CountForPrice:=1;
   HeadCount:=5;
   PartionGoods:='';
   GoodsKindId:=0;
   AssetId:=0;
-  AmountChangePercent := 0;
   //
-  result := InsertUpdateSaleMovementItem(Id, MovementId, GoodsId,
-                              Amount, AmountPartner, AmountChangePercent, ChangePercentAmount,
+  result := InsertUpdateReturnInMovementItem(Id, MovementId, GoodsId,
+                              Amount, AmountPartner,
                               Price, CountForPrice, HeadCount,
                               PartionGoods, GoodsKindId, AssetId);
 end;
 
-procedure TSaleMovementItemTest.Test;
-var SaleMovementItem: TSaleMovementItem;
+procedure TReturnInMovementItemTest.Test;
+var ReturnInMovementItem: TReturnInMovementItem;
     Id: Integer;
 begin
   inherited;
   // Создаем документ
-  SaleMovementItem := TSaleMovementItem.Create;
-  Id := SaleMovementItem.InsertDefault;
+  ReturnInMovementItem := TReturnInMovementItem.Create;
+  Id := ReturnInMovementItem.InsertDefault;
   // создание документа
   try
   // редактирование
   finally
-    SaleMovementItem.Delete(Id);
+    ReturnInMovementItem.Delete(Id);
   end;
 
 
 end;
 
-{ TSaleMovementItem }
+{ TReturnInMovementItem }
 
-constructor TSaleMovementItem.Create;
+constructor TReturnInMovementItem.Create;
 begin
   inherited;
-  spInsertUpdate := 'gpInsertUpdate_MovementItem_Sale';
+  spInsertUpdate := 'gpInsertUpdate_MovementItem_ReturnIn';
 end;
 
-function TSaleMovementItem.InsertUpdateSaleMovementItem(
+function TReturnInMovementItem.InsertUpdateReturnInMovementItem(
   Id, MovementId, GoodsId: Integer;
-       Amount, AmountPartner, AmountChangePercent, ChangePercentAmount, Price,
+       Amount, AmountPartner, Price,
        CountForPrice, HeadCount: double;
        PartionGoods:String; GoodsKindId, AssetId: Integer): integer;
 begin
@@ -135,10 +133,11 @@ begin
   FParams.AddParam('inGoodsId', ftInteger, ptInput, GoodsId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inAmountPartner', ftFloat, ptInput, AmountPartner);
-  FParams.AddParam('inAmountChangePercent', ftFloat, ptInput, AmountChangePercent);
-  FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
+//  FParams.AddParam('inAmountChangePercent', ftFloat, ptInput, AmountChangePercent);
+//  FParams.AddParam('inChangePercentAmount', ftFloat, ptInput, ChangePercentAmount);
   FParams.AddParam('inPrice', ftFloat, ptInput, Price);
-  FParams.AddParam('i0CountForPrice', ftFloat, ptInputOutput, CountForPrice);
+  FParams.AddParam('ioCountForPrice', ftFloat, ptInputOutput, CountForPrice);
+//  FParams.AddParam('outAmountSumm', ftFloat, ptOutput, AmountSumm);
   FParams.AddParam('inHeadCount', ftFloat, ptInput, HeadCount);
   FParams.AddParam('inPartionGoods', ftString, ptInput, PartionGoods);
   FParams.AddParam('inGoodsKindId', ftInteger, ptInput, GoodsKindId);
@@ -147,6 +146,7 @@ begin
 end;
 
 initialization
-  TestFramework.RegisterTest('Строки Документов', TSaleMovementItemTest.Suite);
+  TestFramework.RegisterTest('Строки Документов', TReturnInMovementItemTest.Suite);
 
 end.
+

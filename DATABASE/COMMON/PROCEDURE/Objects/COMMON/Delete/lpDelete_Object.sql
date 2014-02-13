@@ -20,6 +20,7 @@ BEGIN
   DELETE FROM ObjectLink WHERE ObjectId = inId;
   DELETE FROM ObjectLink WHERE ChildObjectId = inId;
   DELETE FROM ObjectString WHERE ObjectId = inId;
+  DELETE FROM ObjectBLOB WHERE ObjectId = inId;
   DELETE FROM ObjectFloat WHERE ObjectId = inId;
   DELETE FROM ObjectProtocol WHERE ObjectId = inId;
   DELETE FROM ObjectBoolean WHERE ObjectId = inId;
