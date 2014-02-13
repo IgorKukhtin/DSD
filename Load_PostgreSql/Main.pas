@@ -1057,6 +1057,7 @@ begin
                      +'        when fCheckGoodsParentID(3859,Goods.ParentId) =zc_rvYes() then 10105' // СО-БАРАНИНА - 10105		Основное сырье Мясное сырье Прочее мясное сырье
                      +'        when fCheckGoodsParentID(5676,Goods.ParentId) =zc_rvYes() then 10105' // СО-КАБАН и др. - 10105		Основное сырье Мясное сырье Прочее мясное сырье
                      +'        when fCheckGoodsParentID(5503,Goods.ParentId) =zc_rvYes() then 10105' // СО-ПТИЦА РАЗНАЯ - 10105		Основное сырье Мясное сырье Прочее мясное сырье
+                     +'        when fCheckGoodsParentID(7207,Goods.ParentId) =zc_rvYes() then 10105' // СО-КРОЛИК - 10105		Основное сырье Мясное сырье Прочее мясное сырье
 
                      +'        when fCheckGoodsParentID(5489,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВ.  ДЕЛ-СЫ* - 10103		Основное сырье Мясное сырье Говядина
                      +'        when fCheckGoodsParentID(5491,Goods.ParentId) =zc_rvYes() then 10103' // СО-ГОВ. ВЫС+ОДН.* - 10103		Основное сырье Мясное сырье Говядина
@@ -2718,24 +2719,46 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
         function InsertData_pg(UnitId,GoodsId,GoodsKindId:Integer;inCode:Integer;inName:String):Boolean;
-        var findId:Integer;
+        var findObjectLinkId,findId:Integer;
         begin
              //Сначала находим инфу в PG
-             fOpenSqToQuery(' select ObjectLink_Goods.ObjectId'
-                           +' from ObjectLink AS ObjectLink_Goods'
-                           +'      LEFT JOIN ObjectLink AS ObjectLink_Goods on ObjectLink_Goods.ObjectId=Object.Id'
-                           +'                                         and ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()'
-                           +'                                         and ObjectLink.ChildObjectId = '+IntToStr(GoodsId)
-                           +' where ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()'
-                           +'   and ObjectLink.ChildObjectId = '+IntToStr(GoodsId)
+             fOpenSqToQuery(' select Id '
+                           +' from Object_GoodsByGoodsKind_View'
+                           +' where GoodsId = '+IntToStr(GoodsId)
+                           +'   and GoodsKindId = '+IntToStr(GoodsKindId)
+                           );
+             //нашли в 1-ый раз
+             findObjectLinkId:=toSqlQuery.FieldByName('Id').AsInteger;
+             if (findObjectLinkId = 0)
+             then if (inCode = 0)and (trim(inName)='') then exit
+                  else begin
+                            fOpenSqToQuery(' select * from lpInsert_Object_GoodsByGoodsKind ('+IntToStr(GoodsId)+', '+IntToStr(GoodsKindId)+', 0)');
+                            fOpenSqToQuery(' select Id '
+                                          +' from Object_GoodsByGoodsKind_View'
+                                          +' where GoodsId = '+IntToStr(GoodsId)
+                                          +'   and GoodsKindId = '+IntToStr(GoodsKindId)
+                                          );
+                            //нашли во 2-ой раз
+                            findObjectLinkId:=toSqlQuery.FieldByName('Id').AsInteger;
+                       end;
+             //нашли
+             fOpenSqToQuery(' select ObjectLink.ObjectId'
+                           +' from ObjectLink'
+                           +'      JOIN ObjectLink AS ObjectLink_Branch'
+                           +'                      ON ObjectLink_Branch.ObjectId = ObjectLink.ObjectId'
+                           +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()'
+                           +'                     AND ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
+                           +' where ObjectLink.ChildObjectId = '+IntToStr(findObjectLinkId)
+                           +'   and ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind()'
                            );
              findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
-
-             if (inCode<>0)or(findId<>0) then findId:=1;
+             //сохраняем
              toStoredProc.Params.ParamByName('ioId').Value:=findId;
              toStoredProc.Params.ParamByName('inCode').Value:=inCode;
              toStoredProc.Params.ParamByName('inName').Value:=inName;
-             if not myExecToStoredProc then ;//exit;
+             toStoredProc.Params.ParamByName('inGoodsId').Value:=GoodsId;
+             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=GoodsKindId;
+             toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
              Result:=myExecToStoredProc;
          end;
 begin
@@ -2746,7 +2769,7 @@ begin
      with fromFlQuery,Sql do begin
         Close;
         Clear;
-        Add('select Unit_Alan.Id as ObjectId');
+        Add('select Goods_by1CExternal.Id as ObjectId');
         Add('     , GoodsCode_byKiev,GoodsName_byKiev'
            +'     , GoodsCode_byDoneck,GoodsName_byDoneck'
            +'     , GoodsCode_byNikopol,GoodsName_byNikopol'
@@ -2756,15 +2779,15 @@ begin
            +'     , GoodsCode_bySimf,GoodsName_bySimf'
            +'     , GoodsCode_byKrRog,GoodsName_byKrRog'
            +'     , GoodsCode_byXarkov,GoodsName_byXarkov');
-        Add('     , _pgUnitKiev.Id_Postgres as Is_pg_Kiev'
-           +'     , _pgUnitKrRog.Id_Postgres as Is_pg_KrRog'
-           +'     , _pgUnitCherkassi.Id_Postgres as Is_pg_Cherkassi'
-           +'     , _pgUnitXerson.Id_Postgres as Is_pg_Xerson'
-           +'     , _pgUnitSimf.Id_Postgres as Is_pg_Simf'
-           +'     , _pgUnitDoneck.Id_Postgres as Is_pg_Doneck'
-           +'     , _pgUnitOdessa.Id_Postgres as Is_pg_Odessa'
-           +'     , _pgUnitXarkov.Id_Postgres as Is_pg_Xarkov'
-           +'     , _pgUnitNikopol.Id_Postgres as Is_pg_Nikopol');
+        Add('     , _pgUnitKiev.Id_Postgres_Branch as Is_pg_Kiev'
+           +'     , _pgUnitKrRog.Id_Postgres_Branch as Is_pg_KrRog'
+           +'     , _pgUnitCherkassi.Id_Postgres_Branch as Is_pg_Cherkassi'
+           +'     , _pgUnitXerson.Id_Postgres_Branch as Is_pg_Xerson'
+           +'     , _pgUnitSimf.Id_Postgres_Branch as Is_pg_Simf'
+           +'     , _pgUnitDoneck.Id_Postgres_Branch as Is_pg_Doneck'
+           +'     , _pgUnitOdessa.Id_Postgres_Branch as Is_pg_Odessa'
+           +'     , _pgUnitXarkov.Id_Postgres_Branch as Is_pg_Xarkov'
+           +'     , _pgUnitNikopol.Id_Postgres_Branch as Is_pg_Nikopol');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
         Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
         Add('from dba.Goods_by1CExternal');
@@ -2776,7 +2799,7 @@ begin
         Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
         Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
         Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22021');
+        Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
         Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
         Add('     left outer join dba._pgUnit as _pgUnitCherkassi  on _pgUnitCherkassi.ObjectCode = 22040');
         Add('     left outer join dba._pgUnit as _pgUnitXerson     on _pgUnitXerson.ObjectCode    = 22050');
@@ -2799,17 +2822,34 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inCode',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inName',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inBranchTopId',ftInteger,ptInput, 0);
         //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
              //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
-             toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             if not myExecToStoredProc then ;//exit;
-             //
+             InsertData_pg(FieldByName('Is_pg_Kiev').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byKiev').AsInteger,FieldByName('GoodsName_byKiev').AsString);
+             InsertData_pg(FieldByName('Is_pg_Doneck').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byDoneck').AsInteger,FieldByName('GoodsName_byDoneck').AsString);
+             InsertData_pg(FieldByName('Is_pg_Nikopol').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byNikopol').AsInteger,FieldByName('GoodsName_byNikopol').AsString);
+             InsertData_pg(FieldByName('Is_pg_Odessa').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byOdessa').AsInteger,FieldByName('GoodsName_byOdessa').AsString);
+             InsertData_pg(FieldByName('Is_pg_Xerson').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byXerson').AsInteger,FieldByName('GoodsName_byXerson').AsString);
+             InsertData_pg(FieldByName('Is_pg_Cherkassi').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byCherkassi').AsInteger,FieldByName('GoodsName_byCherkassi').AsString);
+             InsertData_pg(FieldByName('Is_pg_Simf').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_bySimf').AsInteger,FieldByName('GoodsName_bySimf').AsString);
+             InsertData_pg(FieldByName('Is_pg_KrRog').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byKrRog').AsInteger,FieldByName('GoodsName_byKrRog').AsString);
+             InsertData_pg(FieldByName('Is_pg_Xarkov').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
+                          ,FieldByName('GoodsCode_byXarkov').AsInteger,FieldByName('GoodsName_byXarkov').AsString);
              //
              Next;
              Application.ProcessMessages;
