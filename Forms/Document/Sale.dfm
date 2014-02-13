@@ -1669,10 +1669,14 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_Tax_ForSale'
+        Name = 'outDocumentChildName'
+        Value = ''
+        Component = edTax
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindName'
         Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSale'
         DataType = ftString
       end>
     Left = 296

@@ -588,9 +588,15 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_Tax_ForSale'
-        Value = Null
-        ComponentItem = 'ReportNameSale'
+        Name = 'outDocumentChildName'
+        Component = MasterCDS
+        ComponentItem = 'DocumentChildName'
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindName'
         DataType = ftString
       end>
     Left = 296

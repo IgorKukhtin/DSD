@@ -18,7 +18,7 @@ type
     function InsertUpdateReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, DocumentTaxKindId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
     constructor Create; override;
   end;
 
@@ -43,7 +43,7 @@ var Id: Integer;
     OperDatePartner: TDateTime;
     Checked, PriceWithVAT: Boolean;
     VATPercent, ChangePercent: double;
-    FromId, ToId, PaidKindId, ContractId, DocumentTaxKindId: Integer;
+    FromId, ToId, PaidKindId, ContractId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -59,18 +59,17 @@ begin
   ToId := TUnit.Create.GetDefault;
   PaidKindId:=TPaidKindTest.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
-  DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   //
   result := InsertUpdateReturnIn(Id, InvNumber, OperDate,
              OperDatePartner, Checked, PriceWithVAT,
              VATPercent, ChangePercent,
-             FromId, ToId, PaidKindId, ContractId, DocumentTaxKindId);
+             FromId, ToId, PaidKindId, ContractId);
 end;
 
 function TReturnIn.InsertUpdateReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
-             FromId, ToId, PaidKindId, ContractId, DocumentTaxKindId: Integer):Integer;
+             FromId, ToId, PaidKindId, ContractId: Integer):Integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -88,8 +87,6 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
-  FParams.AddParam('inDocumentTaxKindId', ftInteger, ptInput, DocumentTaxKindId);
-
 
   result := InsertUpdate(FParams);
 end;
