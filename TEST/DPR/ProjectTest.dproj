@@ -565,7 +565,7 @@
 				<Form>StaffListEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\PersonalTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\TaxCorrectiveMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\ModelService.pas">
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
@@ -1066,6 +1066,9 @@
 				<Form>MakerEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\TaxMovementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

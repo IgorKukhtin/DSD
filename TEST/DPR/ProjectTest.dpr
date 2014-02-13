@@ -219,7 +219,7 @@ uses
   StaffListData in '..\..\Forms\StaffListData.pas' {StaffListDataForm},
   StaffListEdit in '..\..\Forms\StaffListEdit.pas' {StaffListEditForm},
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
-  SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
+  TaxCorrectiveMovementItemTest in '..\SOURCE\MovementItem\All\TaxCorrectiveMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
   ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
@@ -361,7 +361,10 @@ uses
   AssetEdit in '..\..\Forms\Guides\AssetEdit.pas' {AssetEditForm: TParentForm},
   Asset in '..\..\Forms\Guides\Asset.pas' {AssetForm: TParentForm},
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
-  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm};
+  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
+  SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
+  ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas',
+  TaxMovementItemTest in '..\SOURCE\MovementItem\All\TaxMovementItemTest.pas';
 
 {$R *.RES}
 
