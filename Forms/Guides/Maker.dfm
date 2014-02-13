@@ -1,156 +1,215 @@
-object MakerForm: TMakerForm
-  Left = 0
-  Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' ('#1054#1057')'
-  ClientHeight = 376
-  ClientWidth = 555
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
+inherited MakerForm: TMakerForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' '#1055#1088#1086#1080#1079#1074#1086#1076#1080#1090#1077#1083#1100' '#1054#1057
+  ClientHeight = 382
+  ClientWidth = 581
+  ExplicitWidth = 589
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
-    Left = 0
-    Top = 26
-    Width = 555
-    Height = 350
-    Align = alClient
-    TabOrder = 0
-    LookAndFeel.NativeStyle = True
-    LookAndFeel.SkinName = 'UserSkin'
+  inherited PageControl: TcxPageControl
+    Width = 581
+    Height = 356
     ExplicitWidth = 476
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Appending = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 95
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 238
-      end
-      object clCountryName: TcxGridDBColumn
-        Caption = #1057#1090#1088#1072#1085#1072
-        DataBinding.FieldName = 'CountryName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = CountryChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 148
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        PropertiesClassName = 'TcxCheckBoxProperties'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
+    ExplicitHeight = 350
+    ClientRectBottom = 356
+    ClientRectRight = 581
+    inherited tsMain: TcxTabSheet
+      ExplicitWidth = 476
+      ExplicitHeight = 350
+      inherited cxGrid: TcxGrid
+        Width = 581
+        Height = 356
+        ExplicitWidth = 476
+        ExplicitHeight = 350
+        inherited cxGridDBTableView: TcxGridDBTableView
+          OnDblClick = nil
+          OnKeyDown = nil
+          OnKeyPress = nil
+          OnCustomDrawCell = nil
+          DataController.Filter.OnChanged = nil
+          Images = dmMain.SortImageList
+          OptionsData.Appending = True
+          OptionsData.Inserting = True
+          OptionsView.Footer = False
+          OptionsView.GroupFooterMultiSummaries = True
+          OptionsView.GroupSummaryLayout = gslStandard
+          OptionsView.HeaderAutoHeight = False
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+          OnColumnHeaderClick = nil
+          OnCustomDrawColumnHeader = nil
+          object clCode: TcxGridDBColumn
+            Caption = #1050#1086#1076
+            DataBinding.FieldName = 'Code'
+            HeaderAlignmentVert = vaCenter
+            Width = 106
+          end
+          object clName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'Name'
+            HeaderAlignmentVert = vaCenter
+            Width = 257
+          end
+          object clCountryName: TcxGridDBColumn
+            Caption = #1057#1090#1088#1072#1085#1072
+            DataBinding.FieldName = 'CountryName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = CountryChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 147
+          end
+          object clErased: TcxGridDBColumn
+            Caption = #1059#1076#1072#1083#1077#1085
+            DataBinding.FieldName = 'isErased'
+            PropertiesClassName = 'TcxCheckBoxProperties'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 57
+          end
+        end
       end
     end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 315
+    Top = 64
+  end
+  inherited ActionList: TActionList
+    Left = 95
+    Top = 191
+    object dsdChoiceGuides: TdsdChoiceGuides
+      Category = 'DSDLib'
+      Params = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'CountryId'
+          Component = MasterCDS
+          ComponentItem = 'CountryId'
+        end
+        item
+          Name = 'CountryName'
+          Component = MasterCDS
+          ComponentItem = 'CountryName'
+        end>
+      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      ShortCut = 13
+      ImageIndex = 7
+      DataSource = MasterDS
+    end
+    object InsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Caption = 'InsertRecord'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ImageIndex = 0
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = MasterDS
+    end
+    object dsdUpdateErased1: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = MasterDS
+    end
+    object dsdUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdateObject
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateObject
+        end>
+      Caption = 'dsdUpdateDataSet'
+      DataSource = MasterDS
+    end
+    object CountryChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'CountryChoiceForm'
+      FormName = 'TCountryForm'
+      FormNameParam.Value = 'TCountryForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = MasterCDS
+          ComponentItem = 'CountryId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'CountryName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
   end
-  object DataSource: TDataSource
-    DataSet = ClientDataSet
-    Left = 40
+  inherited MasterDS: TDataSource
+    Left = 64
+    Top = 40
+  end
+  inherited MasterCDS: TClientDataSet
+    MasterFields = 'Id'
+    PacketRecords = 0
+    AfterInsert = nil
+    Top = 72
+  end
+  inherited spSelect: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_Maker'
+    Left = 96
     Top = 96
   end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 40
-    Top = 160
-  end
-  object cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 216
-    Top = 88
-  end
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    ImageOptions.Images = dmMain.ImageList
-    NotDocking = [dsNone, dsLeft, dsTop, dsRight, dsBottom]
-    PopupMenuLinks = <>
-    ShowShortCutInHint = True
-    UseSystemFont = True
-    Left = 128
-    Top = 96
+  inherited BarManager: TdxBarManager
+    Left = 176
+    Top = 56
     DockControlHeights = (
       0
       0
       26
       0)
-    object dxBarManagerBar1: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 671
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
+    inherited Bar: TdxBar
       ItemLinks = <
         item
           Visible = True
           ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
         end
         item
           Visible = True
@@ -182,23 +241,10 @@ object MakerForm: TMakerForm
           Visible = True
           ItemName = 'bbChoice'
         end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
-    object bbRefresh: TdxBarButton
-      Action = actRefresh
-      Category = 0
     end
     object bbInsert: TdxBarButton
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Action = InsertRecord
       Category = 0
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
-      Visible = ivAlways
-      ImageIndex = 0
-      ShortCut = 45
     end
     object bbEdit: TdxBarButton
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -209,29 +255,15 @@ object MakerForm: TMakerForm
       ShortCut = 115
     end
     object bbSetErased: TdxBarButton
-      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Action = dsdSetErased
       Category = 0
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 2
-      ShortCut = 46
     end
     object bbSetUnErased: TdxBarButton
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Action = dsdUpdateErased1
       Category = 0
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      Visible = ivAlways
-      ImageIndex = 8
-      ShortCut = 32776
     end
     object bbToExcel: TdxBarButton
-      Action = dsdGridToExcel
       Category = 0
-    end
-    object dxBarStatic: TdxBarStatic
-      Caption = '       '
-      Category = 0
-      Hint = '       '
       Visible = ivAlways
     end
     object bbChoice: TdxBarButton
@@ -239,81 +271,8 @@ object MakerForm: TMakerForm
       Category = 0
     end
   end
-  object ActionList: TActionList
-    Images = dmMain.ImageList
-    Left = 240
-    Top = 160
-    object actRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      StoredProc = dsdStoredProc
-      StoredProcList = <
-        item
-          StoredProc = dsdStoredProc
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object dsdChoiceGuides: TdsdChoiceGuides
-      Category = 'DSDLib'
-      Params = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          DataType = ftString
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'Name'
-          DataType = ftString
-        end>
-      Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
-      ImageIndex = 7
-      DataSource = DataSource
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
-    end
-    object CountryChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      Caption = 'CountryChoiceForm'
-      FormName = 'TCountryForm'
-      FormNameParam.Value = 'TCountryForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'CountryId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'CountryName'
-        end>
-      isShowModal = False
-    end
-  end
-  object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Country'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 40
-    Top = 224
+  inherited PopupMenu: TPopupMenu
+    Left = 168
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -322,64 +281,77 @@ object MakerForm: TMakerForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 224
-    Top = 224
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 128
-    Top = 160
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = dsdChoiceGuides
-      end
-      item
-      end>
-    ActionItemList = <
-      item
-        Action = dsdChoiceGuides
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    Left = 136
-    Top = 224
+    Left = 400
+    Top = 152
   end
   object spInsertUpdateObject: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Maker'
-    DataSets = <>
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
     OutputType = otResult
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
+        Name = 'inCode'
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
         Name = 'inName'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inCountryId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'CountryId'
+        ParamType = ptInput
       end>
-    Left = 128
-    Top = 288
+    Left = 240
+    Top = 168
+  end
+  object spGet: TdsdStoredProc
+    StoredProcName = 'gpGet_Object_Country'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Id'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'Code'
+        Component = MasterCDS
+        ComponentItem = 'Code'
+      end
+      item
+        Name = 'Name'
+        Component = MasterCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+      end>
+    Left = 408
+    Top = 72
   end
 end

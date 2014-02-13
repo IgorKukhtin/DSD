@@ -3,36 +3,38 @@
 DROP FUNCTION IF EXISTS gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_ObjectHistory_JuridicalDetails(
-    IN inJuridicalId        Integer   , -- Юр.лицо 
-    IN inFullName           TVarChar  , -- Название 
-    IN inOKPO               TVarChar  , -- ОКПО 
+    IN inJuridicalId        Integer   , -- Юр.лицо
+    IN inFullName           TVarChar  , -- Название
+    IN inOKPO               TVarChar  , -- ОКПО
     IN inSession            TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS TABLE (Id Integer, StartDate TDateTime, BankName TVarChar, BankId Integer,
-               FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar, 
-               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar)
+               FullName TVarChar, JuridicalAddress TVarChar, OKPO TVarChar, INN TVarChar,
+               NumberVAT TVarChar, AccounterName TVarChar, BankAccount TVarChar, Phone TVarChar)
 AS
 $BODY$
 BEGIN
 
      -- Выбираем данные
-     RETURN QUERY 
-       WITH ObjectHistory_JuridicalDetails AS 
-                        (SELECT * FROM ObjectHistory 
+     RETURN QUERY
+       WITH ObjectHistory_JuridicalDetails AS
+                        (SELECT * FROM ObjectHistory
                           WHERE ObjectHistory.ObjectId = inJuridicalId
                             AND ObjectHistory.DescId = zc_ObjectHistory_JuridicalDetails())
        SELECT
-             ObjectHistory_JuridicalDetails.Id
-           , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate) AS StartDate
-           , Object_Bank.ValueData AS BankName
-           , Object_Bank.Id        AS BankId
-           , COALESCE(ObjectHistoryString_JuridicalDetails_FullName.ValueData, inFullName) AS FullName
-           , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData AS JuridicalAddress
-           , COALESCE(ObjectHistoryString_JuridicalDetails_OKPO.ValueData, inOKPO) AS OKPO
-           , ObjectHistoryString_JuridicalDetails_INN.ValueData AS INN
-           , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData AS NumberVAT
-           , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData AS AccounterName
-           , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData AS BankAccount
+             ObjectHistory_JuridicalDetails.Id                                              AS Id
+           , COALESCE(ObjectHistory_JuridicalDetails.StartDate, Empty.StartDate)            AS StartDate
+           , Object_Bank.ValueData                                                          AS BankName
+           , Object_Bank.Id                                                                 AS BankId
+           , COALESCE(ObjectHistoryString_JuridicalDetails_FullName.ValueData, inFullName)  AS FullName
+           , ObjectHistoryString_JuridicalDetails_JuridicalAddress.ValueData                AS JuridicalAddress
+           , COALESCE(ObjectHistoryString_JuridicalDetails_OKPO.ValueData, inOKPO)          AS OKPO
+           , ObjectHistoryString_JuridicalDetails_INN.ValueData                             AS INN
+           , ObjectHistoryString_JuridicalDetails_NumberVAT.ValueData                       AS NumberVAT
+           , ObjectHistoryString_JuridicalDetails_AccounterName.ValueData                   AS AccounterName
+           , ObjectHistoryString_JuridicalDetails_BankAccount.ValueData                     AS BankAccount
+           , ObjectHistoryString_JuridicalDetails_Phone.ValueData                           AS Phone
+
        FROM ObjectHistory_JuridicalDetails
   FULL JOIN (SELECT zc_DateStart() AS StartDate, inJuridicalId AS ObjectId ) AS Empty
          ON Empty.ObjectId = ObjectHistory_JuridicalDetails.ObjectID
@@ -61,7 +63,12 @@ BEGIN
         AND ObjectHistoryString_JuridicalDetails_AccounterName.DescId = zc_ObjectHistoryString_JuridicalDetails_AccounterName()
   LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_BankAccount
          ON ObjectHistoryString_JuridicalDetails_BankAccount.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
-        AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount();
+        AND ObjectHistoryString_JuridicalDetails_BankAccount.DescId = zc_ObjectHistoryString_JuridicalDetails_BankAccount()
+  LEFT JOIN ObjectHistoryString AS ObjectHistoryString_JuridicalDetails_Phone
+         ON ObjectHistoryString_JuridicalDetails_Phone.ObjectHistoryId = ObjectHistory_JuridicalDetails.Id
+        AND ObjectHistoryString_JuridicalDetails_Phone.DescId = zc_ObjectHistoryString_JuridicalDetails_Phone();
+
+
 
 END;
 $BODY$
@@ -72,7 +79,8 @@ ALTER FUNCTION gpSelect_ObjectHistory_JuridicalDetails (Integer, TVarChar, TVarC
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 12.02.14                                                       * add phone
  22.01.14                        *
  28.11.13                        *
 */
