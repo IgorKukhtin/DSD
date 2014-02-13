@@ -1635,8 +1635,11 @@
     end
     object actPrintFrom: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProc = spSelectPrintHeader
+      StoredProc = spInsertUpdateMovement
       StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
         item
           StoredProc = spSelectPrintHeader
         end>
@@ -1651,17 +1654,22 @@
           DataType = ftBoolean
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProc = spSelectPrintHeader
+      StoredProc = spInsertUpdateMovement
       StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMovement
+        end
         item
           StoredProc = spSelectPrintHeader
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
-      ImageIndex = 3
+      ImageIndex = 16
       ShortCut = 16464
       Params = <
         item
@@ -1670,6 +1678,8 @@
           DataType = ftBoolean
         end>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1057#1073#1099#1090
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object actPrintAdmin: TdsdPrintAction
       Category = 'DSDLib'
@@ -1684,6 +1694,8 @@
       ShortCut = 16464
       Params = <>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1040#1076#1084#1080#1085
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -2974,8 +2986,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -3190,6 +3202,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
     Left = 261
     Top = 320
   end
@@ -3200,6 +3213,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
     Left = 320
     Top = 304
   end
@@ -3526,6 +3540,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
     Left = 263
     Top = 364
   end
@@ -3536,6 +3551,7 @@
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 379
     Top = 282
   end

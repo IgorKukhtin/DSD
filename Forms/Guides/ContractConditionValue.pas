@@ -93,6 +93,18 @@ type
     actMultiInsertJuridical: TMultiAction;
     actUpdateJuridical: TdsdInsertUpdateAction;
     bbUpdateJuridical: TdxBarButton;
+    actContractUnRead: TdsdExecStoredProc;
+    actContractInPartner: TdsdExecStoredProc;
+    actContractRead: TdsdExecStoredProc;
+    actContractClose: TdsdExecStoredProc;
+    bbUnSigned: TdxBarButton;
+    bbInPartner: TdxBarButton;
+    bbSigned: TdxBarButton;
+    bbClose: TdxBarButton;
+    spContractUnRead: TdsdStoredProc;
+    spContractRead: TdsdStoredProc;
+    spContractPartner: TdsdStoredProc;
+    spContractClose: TdsdStoredProc;
   private
     { Private declarations }
   public
