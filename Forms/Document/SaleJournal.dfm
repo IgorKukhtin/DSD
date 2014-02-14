@@ -546,7 +546,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_Sale'
     Params = <
       item
         Name = 'inmovementid'
@@ -558,7 +558,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_Sale'
     Params = <
       item
         Name = 'inmovementid'
