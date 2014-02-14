@@ -1,31 +1,30 @@
 ﻿/*
   Создание 
-    - таблицы ObjectProtocol (протокол)
+    - таблицы MovementItemProtocol (протокол)
     - связей
     - индексов
 */
 
 /*-------------------------------------------------------------------------------*/
 
-CREATE TABLE ObjectProtocol(
+CREATE TABLE MovementItemProtocol(
    Id                    SERIAL NOT NULL PRIMARY KEY, 
-   ObjectId              INTEGER,
+   MovementItemId        INTEGER,
    UserId                INTEGER,
    OperDate              TDateTime,
    ProtocolData          TBlob, 
-   isInsert              Boolean,
 
-   CONSTRAINT fk_ObjectProtocol_ObjectId FOREIGN KEY(ObjectId) REFERENCES Object(Id),
-   CONSTRAINT fk_ObjectProtocol_UserId FOREIGN KEY(UserId) REFERENCES Object(Id)
+   CONSTRAINT fk_MovementItemProtocol_MovementItemId FOREIGN KEY(MovementItemId) REFERENCES MovementItem(Id),
+   CONSTRAINT fk_MovementItemProtocol_UserId FOREIGN KEY(UserId) REFERENCES Object(Id)
 );
 
 /*-------------------------------------------------------------------------------*/
 
 /*                                  Индексы                                      */
 
-CREATE INDEX idx_ObjectProtocol_ObjectId ON ObjectProtocol (ObjectId);
-CREATE INDEX idx_ObjectProtocol_UserId ON ObjectProtocol (UserId);
-CREATE INDEX idx_ObjectProtocol_OperDate ON ObjectProtocol (OperDate);
+CREATE INDEX idx_MovementItemProtocol_MovementItemId ON MovementItemProtocol (MovementItemId);
+CREATE INDEX idx_MovementItemProtocol_UserId ON MovementItemProtocol (UserId);
+CREATE INDEX idx_MovementItemProtocol_OperDate ON MovementItemProtocol (OperDate);
 
 
 /*-------------------------------------------------------------------------------*/
@@ -37,6 +36,5 @@ CREATE INDEX idx_ObjectProtocol_OperDate ON ObjectProtocol (OperDate);
  ДАТА         АВТОР
  ----------------
                  Климентьев К.И.   Кухтин И.В.   
-18.06.02                                           
-19.09.02                                                       
+
 */

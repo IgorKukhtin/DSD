@@ -207,9 +207,9 @@ BEGIN
              EXIT;
           END IF;
 
-          PERFORM lpInsertUpdate_MovementItem_Sale(ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId, 
-              inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount, 
-              inChangePercentAmount := 0, inPrice := vbOperPrice, inCountForPrice := 1 , inHeadCount := 0, 
+          PERFORM lpInsertUpdate_MovementItem_ReturnIn(ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId, 
+              inAmount := vbOperCount, inAmountPartner := vbOperCount,  
+              inPrice := vbOperPrice, inCountForPrice := 1 , inHeadCount := 0, 
               inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
         END LOOP;--заканчиваем цикл по курсору
@@ -228,6 +228,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.14                        *  
  03.02.14                        *  
 */
 

@@ -11,8 +11,17 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_Transport_Child_byMaster(
 RETURNS void
 AS
 $BODY$
+   DECLARE vbBranchId Integer;
 BEGIN
-
+   -- !!!для филиалов не будем учитывать % дополнительного расхода в связи с сезоном/температурой!!!
+   vbBranchId:= (SELECT COALESCE (ObjectLink_UnitRoute_Branch.ChildObjectId, zc_Branch_Basis())
+                 FROM MovementLinkObject
+                      LEFT JOIN ObjectLink AS ObjectLink_UnitRoute_Branch
+                                           ON ObjectLink_UnitRoute_Branch.ObjectId = MovementLinkObject.ObjectId
+                                          AND ObjectLink_UnitRoute_Branch.DescId = zc_ObjectLink_Unit_Branch()
+                 WHERE MovementLinkObject.MovementId = inMovementId
+                   AND MovementLinkObject.DescId = zc_MovementLinkObject_UnitForwarding()
+                );
 
    -- пересчитали Child для существующих
    PERFORM lpInsertUpdate_MI_Transport_Child (ioId                 := MovementItem.Id
@@ -70,10 +79,10 @@ BEGIN
              -- выбрали у Вида топлива - Вид норм для топлива
              LEFT JOIN ObjectLink AS ObjectLink_Fuel_RateFuelKind ON ObjectLink_Fuel_RateFuelKind.ObjectId = ObjectLink_Car_FuelAll.ChildObjectId
                                                                  AND ObjectLink_Fuel_RateFuelKind.DescId = zc_ObjectLink_Fuel_RateFuelKind()
-
              -- выбрали у нормы для топлива - % дополнительного расхода в связи с сезоном/температурой
              LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                                   AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
+                                                                  AND vbBranchId = zc_Branch_Basis()
 
              -- выбрали норму для автомобиль + Тип маршрута
              LEFT JOIN (SELECT ObjectLink_RateFuel_Car.ChildObjectId       AS CarId
@@ -176,7 +185,8 @@ BEGIN
              -- выбрали у нормы для топлива - % дополнительного расхода в связи с сезоном/температурой
              LEFT JOIN ObjectFloat AS ObjectFloat_RateFuelKind_Tax ON ObjectFloat_RateFuelKind_Tax.ObjectId = ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                                                   AND ObjectFloat_RateFuelKind_Tax.DescId = zc_ObjectFloat_RateFuelKind_Tax()
-             -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
+                                                                  AND vbBranchId = zc_Branch_Basis()
+            -- этот нужен что б отбросить уже введенный вид топлива (если удален/не удален)
              LEFT JOIN MovementItem AS MovementItem_Find ON MovementItem_Find.MovementId = inMovementId
                                                         AND MovementItem_Find.ParentId   = inParentId
                                                         AND MovementItem_Find.ObjectId   = ObjectLink_Car_FuelAll.ChildObjectId
@@ -219,15 +229,14 @@ BEGIN
               -- если нормы нет, тогда формировать элементы не надо
          AND (tmpRateFuel.AmountFuel <> 0 OR tmpRateFuel.AmountColdHour <> 0 OR tmpRateFuel.AmountColdDistance <> 0);
 
-
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.02.13                                        * !!!для филиалов не будем учитывать % дополнительного расхода в связи с сезоном/температурой!!!
  11.12.13                                        * поменял приоритет в пересчитали Child - нормы для существующих
  24.10.13                                        * add zfCalc_RateFuelValue_...
  13.10.13                                        *

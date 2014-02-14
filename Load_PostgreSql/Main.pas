@@ -2722,17 +2722,20 @@ procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
                            +' from ObjectLink'
                            +'      JOIN ObjectLink AS ObjectLink_Branch'
                            +'                      ON ObjectLink_Branch.ObjectId = ObjectLink.ObjectId'
-                           +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_ClientByClientKind1CLink_Branch()'
+                           +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()'
                            +'                     AND ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
                            +' where ObjectLink.ChildObjectId = '+IntToStr(PartnerId)
                            +'   and ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner()'
                            );
              findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+             //
+             if (findId = 0)
+             then if (inCode = 0)and (trim(inName)='') then exit;
              //сохраняем
              toStoredProc.Params.ParamByName('ioId').Value:=findId;
              toStoredProc.Params.ParamByName('inCode').Value:=inCode;
              toStoredProc.Params.ParamByName('inName').Value:=inName;
-             toStoredProc.Params.ParamByName('inClientId').Value:=PartnerId;
+             toStoredProc.Params.ParamByName('inPartnerId').Value:=PartnerId;
              toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
              Result:=myExecToStoredProc;
          end;
@@ -6238,15 +6241,26 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as InvNumber');
+        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
         Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill_findInfoMoney.InfoMoneyCode as InfoMoneyCode');
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
+        Add('     left outer join (select Bill.Id as BillId'
+           +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
+           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems_find.GoodsPropertyId'
+           +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'                         and Bill.MoneyKindId = zc_mkBN()'
+           +'                      group by Bill.Id'
+           +'                     ) as Bill_findInfoMoney on Bill_findInfoMoney.BillId=Bill.Id');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Id_Postgres >0'
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
            );
-        Add('order by OperDate,ObjectId');
+        Add('order by InfoMoneyCode,OperDate,ObjectId');
         Open;
         cbCompleteIncome.Caption:='1. ('+IntToStr(RecordCount)+') Приход от поставщика';
         //
@@ -6429,6 +6443,7 @@ begin
                            +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
                            +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
                            +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                           +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
                            );
              PartnerId_pg:=toSqlQuery.FieldByName('PartnerId').AsInteger;
              JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
@@ -9507,6 +9522,7 @@ begin
                            +'      left join ObjectLink on ObjectLink.ChildObjectId = ObjectHistory_JuridicalDetails_View.JuridicalId'
                            +'                          and ObjectLink.DescId = zc_ObjectLink_Partner_Juridical()'
                            +' where OKPO='+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)
+                           +'   and '+FormatToVarCharServer_notNULL(FieldByName('OKPO').AsString)+'<>'+FormatToVarCharServer_notNULL('')
                            );
              PartnerId_pg:=toSqlQuery.FieldByName('PartnerId').AsInteger;
              JuridicalId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;

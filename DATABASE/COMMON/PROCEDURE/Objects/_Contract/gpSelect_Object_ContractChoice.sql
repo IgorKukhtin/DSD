@@ -92,6 +92,7 @@ BEGIN
       
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
+   WHERE COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
    ;
   
 END;
@@ -102,7 +103,8 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.14                                         * add zc_Enum_ContractStateKind_Close
  13.02.14                                         * change Object_Contract_View.ContractStateKindCode
  06.01.14                                         * add OKPO
  18.11.13                         *                

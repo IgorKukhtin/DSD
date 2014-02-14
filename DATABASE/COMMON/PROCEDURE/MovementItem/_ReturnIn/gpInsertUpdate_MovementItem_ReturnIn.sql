@@ -32,31 +32,8 @@ BEGIN
      END IF;
 
 
-     -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
-
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmountPartner);
-
-     -- сохранили свойство <Цена>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
-     -- сохранили свойство <Цена за количество>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
-
-     -- сохранили свойство <Количество голов>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_HeadCount(), ioId, inHeadCount);
-
-     -- сохранили свойство <Партия товара>
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_PartionGoods(), ioId, inPartionGoods);
-
-     -- сохранили связь с <Виды товаров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
-
-     -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, vbUserId);
+     PERFORM lpInsertUpdate_MovementItem_ReturnIn(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner,
+                 inPrice, ioCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, inUserId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -67,8 +44,6 @@ BEGIN
                            ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -77,6 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 13.02.14                        * lpInsertUpdate_MovementItem_ReturnIn
  28.01.14                                                          * add outAmountSumm
  13.01.14                                        * add RAISE EXCEPTION
  18.07.13         * add inAssetId

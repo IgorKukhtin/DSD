@@ -7,7 +7,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_MoneyPlace(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isErased Boolean
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
-             , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime)
+             , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime
+             , OKPO TVarChar
+              )
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -33,6 +35,7 @@ BEGIN
           , ''::TVarChar AS ContractNumber
           , 0::Integer AS ContractStateKindCode
           , NULL::TDateTime
+          , ''::TVarChar AS OKPO
      FROM Object AS Object_Cash
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Cash.DescId
      WHERE Object_Cash.DescId = zc_Object_Cash()
@@ -53,6 +56,7 @@ BEGIN
           , ''::TVarChar
           , 0::Integer AS ContractStateKindCode
           , NULL::TDateTime
+          , ''::TVarChar AS OKPO
      FROM Object_BankAccount_View, ObjectDesc 
      WHERE ObjectDesc.Id = zc_Object_BankAccount()
     UNION ALL
@@ -70,6 +74,7 @@ BEGIN
           , ''::TVarChar
           , 0::Integer AS ContractStateKindCode
           , NULL::TDateTime
+          , ''::TVarChar AS OKPO
      FROM Object AS Object_Member
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
     WHERE Object_Member.DescId = zc_Object_Member()
@@ -88,13 +93,17 @@ BEGIN
           , View_Contract.InvNumber
           , View_Contract.ContractStateKindCode
           , View_Contract.StartDate
+          , ObjectHistory_JuridicalDetails_View.OKPO
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+          LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
-       AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport));
+       AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
+       AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+    ;
 
 END;
 $BODY$
@@ -104,8 +113,8 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.02.14                                        * add ContractStateKindCode and InfoMoney...
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.14                                        * add ObjectHistory_JuridicalDetails_View and ContractStateKindCode and InfoMoney...
  22.01.14                                        * add tmpUserTransport
  15.01.14                         * add BankAccount
  05.01.14                                        * add zc_Enum_PaidKind_SecondForm
