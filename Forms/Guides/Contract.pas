@@ -98,6 +98,7 @@ type
     InfoMoneyChoiceForm: TOpenChoiceForm;
     clJuridicalBasisName: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
+    ChildViewAddOn: TdsdDBViewAddOn;
   private
     { Private declarations }
   public

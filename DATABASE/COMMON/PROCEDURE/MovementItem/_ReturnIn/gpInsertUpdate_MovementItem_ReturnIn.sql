@@ -33,7 +33,7 @@ BEGIN
 
 
      PERFORM lpInsertUpdate_MovementItem_ReturnIn(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner,
-                 inPrice, ioCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, inUserId);
+                 inPrice, ioCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, vbUserId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
@@ -60,4 +60,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1, outAmountSumm:= 0, inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_ReturnIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountPartner:= 0, inPrice:= 1, ioCountForPrice:= 1 , inHeadCount:= 0, inPartionGoods:= '', inGoodsKindId:= 0, inAssetId:= 0, inSession:= '2')

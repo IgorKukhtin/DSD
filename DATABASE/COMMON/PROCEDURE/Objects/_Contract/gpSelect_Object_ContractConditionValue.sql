@@ -131,16 +131,22 @@ BEGIN
         
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
-        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
-                             ON ObjectLink_ContractCondition_Contract.ChildObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+        LEFT JOIN (SELECT Object_ContractCondition.Id AS ContractConditionId
+                        , ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                   FROM Object AS Object_ContractCondition
+                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                             ON ObjectLink_ContractCondition_Contract.ObjectId = Object_ContractCondition.Id
+                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                   WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
+                     AND Object_ContractCondition.isErased = FALSE
+                  ) AS tmpContractCondition ON tmpContractCondition.ContractId = Object_Contract_View.ContractId
+          
         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
-                             ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                             ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
         LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
-           
         LEFT JOIN ObjectFloat AS ObjectFloat_Value 
-                              ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
+                              ON ObjectFloat_Value.ObjectId = tmpContractCondition.ContractConditionId
                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
    ;
   
@@ -152,7 +158,8 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.02.14                                        * add Object_ContractCondition.isErased = FALSE
  11.02.14                         * add ContractStateKindColor
  05.02.14                                        *
 */

@@ -410,8 +410,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1069,5 +1069,30 @@ object ContractForm: TContractForm
       end>
     Left = 432
     Top = 176
+  end
+  object ChildViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewContractCondition
+    OnDblClickActionList = <
+      item
+        Action = actUpdate
+      end
+      item
+        Action = dsdChoiceGuides
+      end>
+    ActionItemList = <
+      item
+        Action = dsdChoiceGuides
+        ShortCut = 13
+      end
+      item
+        Action = actUpdate
+        ShortCut = 13
+      end>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    Left = 448
+    Top = 360
   end
 end
