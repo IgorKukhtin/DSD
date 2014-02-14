@@ -107,13 +107,13 @@ BEGIN
                 , COALESCE (COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId), 0) AS JuridicalId_From
                 , COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) AS isCorporate_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner()    THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
-                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal()   THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+                , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member()     THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_CardFuel()   THEN Object_From.Id ELSE 0 END, 0) AS CardFuelId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_TicketFuel() THEN Object_From.Id ELSE 0 END, 0) AS TicketFuelId_From
-                  -- УП Статью назначения берем: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
-                , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_From
+                  -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
+                , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_From -- COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_From
 
-                , COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Car() THEN Object_To.Id ELSE 0 END, 0) AS UnitId
+                , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN Object_To.Id ELSE 0 END, 0) AS UnitId
                 , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Car() THEN Object_To.Id ELSE 0 END, 0) AS CarId
                 , COALESCE (ObjectLink_PersonalDriver_Member.ChildObjectId, 0) AS MemberDriverId
                 , COALESCE (ObjectLink_UnitTo_Branch.ChildObjectId, 0) AS BranchId_To
@@ -154,7 +154,6 @@ BEGIN
                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                 LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
-
                 LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
                                      ON ObjectLink_CardFuel_Juridical.ObjectId = MovementLinkObject_From.ObjectId
                                     AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
@@ -164,10 +163,10 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                         ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                        AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                                     ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId)
-                                    AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
-                                    AND ObjectBoolean_isCorporate.ValueData = TRUE
+                -- LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                --                      ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId)
+                --                     AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
+                --                     AND ObjectBoolean_isCorporate.ValueData = TRUE
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
@@ -237,6 +236,7 @@ BEGIN
              AND Movement.DescId = zc_Movement_Income()
              AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
           ) AS _tmp;
+
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
      SELECT lfObject_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfObject_InfoMoney;
@@ -393,7 +393,6 @@ BEGIN
                    , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE) AS isPartionCount
                    , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)  AS isPartionSumm
 
-
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
@@ -457,6 +456,12 @@ BEGIN
         ;
 
 
+     -- проверка
+     IF COALESCE (vbContractId, 0) = 0 AND EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+     END IF;
+
      -- проверка - если есть Суммы < 0, то <Ошибка>
      IF EXISTS (SELECT MovementItemId FROM _tmpItem WHERE tmpOperSumm_Partner < 0 OR OperSumm_Partner < 0)
      THEN
@@ -468,6 +473,7 @@ BEGIN
      -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF;
 
 
+     -- Расчеты сумм
      SELECT -- Расчет Итоговой суммы по Контрагенту
             CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки

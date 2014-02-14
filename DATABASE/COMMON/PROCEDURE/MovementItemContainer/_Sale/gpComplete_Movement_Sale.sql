@@ -70,19 +70,19 @@ BEGIN
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate -- Movement.OperDate
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
 
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN MovementLinkObject_From.ObjectId ELSE 0 END, 0) AS UnitId_From
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN Object_From.Id ELSE 0 END, 0) AS UnitId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
           , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Unit() THEN ObjectLink_UnitFrom_Branch.ChildObjectId WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalFrom_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_From
           , COALESCE (ObjectLink_UnitFrom_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_From -- Аналитики счетов - направления !!!нужны только для подразделения!!!
           , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
 
-          , COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Personal() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS vbJuridicalId_To
+          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS vbJuridicalId_To
           , COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) AS vbIsCorporate_To
-          , COALESCE (CASE WHEN Object_To.DescId <> zc_Object_Personal() THEN Object_To.Id ELSE 0 END, 0) AS PartnerId_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
+          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Partner() THEN Object_To.Id ELSE 0 END, 0) AS PartnerId_To
+          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
 
-            -- УП Статью назначения берем: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
-          , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_To
+            -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
+          , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_To -- COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_To
 
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
@@ -190,13 +190,6 @@ BEGIN
      WHERE Movement.Id = inMovementId
        AND Movement.DescId = zc_Movement_Sale()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-     
-     -- проверка
-     IF COALESCE (vbContractId, 0) = 0
-     THEN
-         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
-     END IF;
 
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках (для Покупателя)
@@ -431,6 +424,18 @@ BEGIN
              ) AS _tmp;
 
 
+     -- проверка
+     IF COALESCE (vbContractId, 0) = 0 AND EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+     END IF;
+
+
+     -- !!!
+     -- IF NOT EXISTS (SELECT MovementItemId FROM _tmpItem) THEN RETURN; END IF;
+
+
+     -- Расчеты сумм
      SELECT -- Расчет Итоговой суммы прайс-листа по Контрагенту
             CASE WHEN vbPriceWithVAT_PriceList OR vbVATPercent_PriceList = 0
                     -- если цены с НДС или %НДС=0, тогда ничего не делаем
@@ -529,9 +534,9 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
-     -- 1.1.1. определяется ContainerId_GoodsPartner для проводки по количественному учету - долги Покупателя или Сотрудника
+     -- 1.1.1. определяется ContainerId_GoodsPartner для проводки по количественному учету - долги Покупателя или Физ.лица
      UPDATE _tmpItem SET ContainerId_GoodsPartner = -- 0)Товар 1)Покупатель
-                                                    -- 0)Товар 1)Сотрудник
+                                                    -- 0)Товар 1)Физ.лицо
                                                     lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                                           , inParentId          := NULL
                                                                           , inObjectId          := _tmpItem.GoodsId
@@ -544,7 +549,7 @@ BEGIN
                                                                            )
      WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
 
-     -- 1.1.2. формируются Проводки для количественного учета - долги Покупателя или Сотрудника
+     -- 1.1.2. формируются Проводки для количественного учета - долги Покупателя или Физ.лица
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, inMovementId, MovementItemId, ContainerId_GoodsPartner, 0 AS ParentId, OperCount, vbOperDate, TRUE
        FROM _tmpItem
@@ -586,11 +591,11 @@ BEGIN
             , 0 AS ContainerId_ProfitLoss_10400 -- Счет - прибыль (ОПиУ - себестоимости реализации : с/с3)
             , COALESCE (lfContainerSumm_20901.ContainerId, COALESCE (Container_Summ.Id, 0)) AS ContainerId
             , COALESCE (lfContainerSumm_20901.AccountId, COALESCE (Container_Summ.ObjectId, 0)) AS AccountId
-              -- с/с1 - для количества расхода с остатка
+              -- с/с1 - для количества: расход с остатка
             , SUM (ABS (_tmpItem.OperCount * COALESCE (HistoryCost.Price, 0))) AS OperSumm
-              -- с/с2 - для количества с учетом % скидки
+              -- с/с2 - для количества: с учетом % скидки
             , SUM (ABS (_tmpItem.OperCount_ChangePercent * COALESCE (HistoryCost.Price, 0))) AS OperSumm_ChangePercent
-              -- с/с3 - для количества контрагента
+              -- с/с3 - для количества: контрагента
             , SUM (ABS (_tmpItem.OperCount_Partner * COALESCE (HistoryCost.Price, 0))) AS OperSumm_Partner
         FROM _tmpItem
              -- так находим для тары
@@ -783,7 +788,7 @@ BEGIN
        ;
 
 
-     -- 3.1. определяется Счет для проводок по долг Покупателю или Сотруднику
+     -- 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица
      UPDATE _tmpItem SET AccountId_Partner = _tmpItem_byAccount.AccountId
                        , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
@@ -822,7 +827,7 @@ BEGIN
       WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
 
-     -- 3.2. определяется ContainerId для проводок по долг Покупателю или Сотруднику
+     -- 3.2. определяется ContainerId для проводок по долг Покупателя или Физ.лица
      UPDATE _tmpItem SET ContainerId_Partner = _tmpItem_byInfoMoney.ContainerId
                        , ContainerId_Transit = _tmpItem_byInfoMoney.ContainerId_Transit
      FROM (SELECT CASE WHEN vbMemberId_To <> 0
@@ -906,7 +911,7 @@ BEGIN
      WHERE _tmpItem.InfoMoneyId = _tmpItem_byInfoMoney.InfoMoneyId
      ;
 
-     -- 3.3. формируются Проводки - долг Покупателю или Сотруднику
+     -- 3.3. формируются Проводки - долг Покупателя или Физ.лица
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_Partner, 0 AS ParentId, _tmpItem_group.OperSumm
