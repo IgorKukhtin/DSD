@@ -74,6 +74,14 @@ type
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
     DocumentTaxKindGuides: TdsdGuides;
+    edPriceList: TcxButtonEdit;
+    cxLabel11: TcxLabel;
+    GuidesPricelist: TdsdGuides;
+    spTaxCorrectiv: TdsdStoredProc;
+    actTaxCorrective: TdsdExecStoredProc;
+    bbTaxCorrective: TdxBarButton;
+    RefreshDispatcher: TRefreshDispatcher;
+    actRefreshPrice: TdsdDataSetRefresh;
   private
     { Private declarations }
   public

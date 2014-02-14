@@ -213,6 +213,19 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 55
       end
+      object colOKPO: TcxGridDBColumn
+        Caption = #1054#1050#1055#1054
+        DataBinding.FieldName = 'OKPO'
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object colJuridicalName_From: TcxGridDBColumn
+        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName_From'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
@@ -917,6 +930,7 @@ object IncomeJournalForm: TIncomeJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 248
     Top = 216
   end

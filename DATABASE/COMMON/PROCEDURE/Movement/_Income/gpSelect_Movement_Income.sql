@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractName TVarChar
+             , JuridicalName_From TVarChar, OKPO TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalPackerName TVarChar
               )
@@ -59,6 +60,8 @@ BEGIN
            , Object_To.ValueData               AS ToName
            , Object_PaidKind.ValueData         AS PaidKindName
            , View_Contract_InvNumber.InvNumber AS ContractName
+           , Object_JuridicalFrom.ValueData    AS JuridicalName_From
+           , ObjectHistory_JuridicalDetails_View.OKPO
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
@@ -134,6 +137,15 @@ BEGIN
                                         AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
             LEFT JOIN Object_Personal_View AS View_PersonalPacker ON View_PersonalPacker.PersonalId = MovementLinkObject_PersonalPacker.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_Juridical
+                                 ON ObjectLink_CardFuel_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_CardFuel_Juridical.DescId   = zc_ObjectLink_CardFuel_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_CardFuel_Juridical.ChildObjectId)
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
+
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -145,6 +157,7 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 12.02.14                                        * add JuridicalName_From TVarChar and OKPO
  10.02.14                                        * add TotalCountPartner
  10.02.14                                        * add Object_RoleAccessKey_View
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View

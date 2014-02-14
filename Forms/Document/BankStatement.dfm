@@ -134,6 +134,7 @@ inherited BankStatementForm: TBankStatementForm
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
@@ -141,6 +142,7 @@ inherited BankStatementForm: TBankStatementForm
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -148,6 +150,7 @@ inherited BankStatementForm: TBankStatementForm
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colInfoMoney: TcxGridDBColumn
@@ -201,7 +204,7 @@ inherited BankStatementForm: TBankStatementForm
             Width = 76
           end
           object colComment: TcxGridDBColumn
-            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             PropertiesClassName = 'TcxMemoProperties'
             HeaderAlignmentVert = vaCenter

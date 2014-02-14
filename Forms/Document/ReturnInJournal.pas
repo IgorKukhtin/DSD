@@ -23,7 +23,8 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
+  dsdGuides, cxButtonEdit;
 
 type
   TReturnInJournalForm = class(TAncestorJournalForm)
@@ -47,6 +48,13 @@ type
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
+    edDocumentTaxKind: TcxButtonEdit;
+    cxLabel14: TcxLabel;
+    DocumentTaxKindGuides: TdsdGuides;
+    spTaxCorrectiv: TdsdStoredProc;
+    actTaxCorrectiv: TdsdExecStoredProc;
+    bbTaxCorrective: TdxBarButton;
+    colDocumentTaxKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

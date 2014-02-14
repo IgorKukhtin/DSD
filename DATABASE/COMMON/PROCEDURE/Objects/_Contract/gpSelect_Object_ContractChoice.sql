@@ -48,7 +48,7 @@ BEGIN
        , Object_InfoMoney_View.InfoMoneyCode
        , Object_InfoMoney_View.InfoMoneyName
 
-       , Object_ContractStateKind.ObjectCode   AS ContractStateKindCode
+       , Object_Contract_View.ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -71,12 +71,6 @@ BEGIN
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
 
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
-                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
-        
-
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
@@ -98,6 +92,7 @@ BEGIN
       
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
+   WHERE COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
    ;
   
 END;
@@ -108,7 +103,9 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.02.14                                         * add zc_Enum_ContractStateKind_Close
+ 13.02.14                                         * change Object_Contract_View.ContractStateKindCode
  06.01.14                                         * add OKPO
  18.11.13                         *                
 */

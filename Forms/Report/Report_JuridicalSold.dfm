@@ -2,8 +2,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1127
-  ExplicitWidth = 1135
-  ExplicitHeight = 582
+  ExplicitWidth = 1143
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -216,12 +216,31 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colJuridicalCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
+            DataBinding.FieldName = 'JuridicalCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 142
+          end
+          object colOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'

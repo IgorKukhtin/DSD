@@ -3,11 +3,14 @@
 -- DROP FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Boolean, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Integer, Boolean, Boolean, TVarChar);
+
 
 
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId  Integer      , -- ключ Документа
+    IN inPriceListId Integer      , -- ключ Прайс листа
     IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
@@ -40,7 +43,7 @@ BEGIN
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
-           , CAST (NULL AS TFloat)      AS Price
+           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
            , CAST (NULL AS TFloat)      AS HeadCount
            , CAST (NULL AS TVarChar)    AS PartionGoods
@@ -83,7 +86,7 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (zc_PriceList_Basis()/*inPriceListId*/, inOperDate:= vbOperDate)
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
        WHERE tmpMI.GoodsId IS NULL
@@ -214,16 +217,17 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 12.02.14                                                        * inPriceListId
  30.01.14							* add inisErased
  18.07.13         * add Object_Asset
  17.07.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= FALSE, inSession:= '2')
+
+-- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inPriceListId:=18840, inSession:= '2')

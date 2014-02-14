@@ -40,7 +40,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = StartCount
@@ -51,7 +50,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = IncomeCount
@@ -62,7 +60,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = StartSumm
@@ -73,7 +70,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Format = ',0.00'
           Kind = skSum
           Position = spFooter
           Column = IncomeSumm
@@ -491,206 +487,190 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       object LocationName: TcxGridDBColumn
         Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072'-'#1084#1077#1089#1090#1086
         DataBinding.FieldName = 'LocationName'
-        Width = 70
+        Width = 39
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
-        Width = 30
+        Width = 20
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
-        Width = 70
+        Width = 40
       end
       object GoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsKindName'
-        Width = 40
+        Width = 22
       end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
-        Width = 50
+        Width = 29
       end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
-        Width = 75
+        Width = 42
       end
       object MeasureName: TcxGridDBColumn
         Caption = #1045#1076'.'#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
-        Width = 70
+        Width = 39
       end
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
-        Width = 50
+        Width = 28
       end
       object StartCount_Sh: TcxGridDBColumn
         Caption = #1053#1072#1095'.'#1086#1089#1090', '#1096#1090
         DataBinding.FieldName = 'StartCount_Sh'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
         HeaderAlignmentHorz = taRightJustify
-        Width = 75
+        Width = 33
       end
       object StartCount: TcxGridDBColumn
         Caption = #1053#1072#1095'.'#1086#1089#1090', '#1082#1075
         DataBinding.FieldName = 'StartCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
-        Width = 75
+        Width = 33
       end
       object StartSumm: TcxGridDBColumn
         Caption = #1053#1072#1095'.'#1086#1089#1090', '#1075#1088#1085
         DataBinding.FieldName = 'StartSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taRightJustify
-        Width = 75
+        Width = 33
       end
       object IncomeCount_Sh: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076', '#1096#1090
         DataBinding.FieldName = 'IncomeCount_Sh'
         HeaderAlignmentHorz = taRightJustify
-        Width = 50
+        Width = 33
       end
       object IncomeCount: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076', '#1082#1075
         DataBinding.FieldName = 'IncomeCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
         HeaderAlignmentHorz = taCenter
-        Width = 50
+        Width = 33
       end
       object IncomeSumm: TcxGridDBColumn
         Caption = #1055#1088#1080#1093#1086#1076', '#1075#1088#1085
         DataBinding.FieldName = 'IncomeSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        Width = 75
+        Width = 33
       end
       object SendInCount_Sh: TcxGridDBColumn
         DataBinding.FieldName = 'SendInCount_Sh'
         FooterAlignmentHorz = taRightJustify
-        Width = 75
+        Width = 33
       end
       object SendInCount: TcxGridDBColumn
         DataBinding.FieldName = 'SendInCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.AssignedValues.DisplayFormat = True
-        Width = 50
+        Width = 33
       end
       object SendInSumm: TcxGridDBColumn
         DataBinding.FieldName = 'SendInSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Width = 75
+        Width = 33
       end
       object SendOutCount_Sh: TcxGridDBColumn
         DataBinding.FieldName = 'SendOutCount_Sh'
         HeaderAlignmentHorz = taRightJustify
-        Width = 50
+        Width = 33
       end
       object SendOutCount: TcxGridDBColumn
         DataBinding.FieldName = 'SendOutCount'
-        Width = 50
+        Width = 33
       end
       object SendOutSumm: TcxGridDBColumn
         DataBinding.FieldName = 'SendOutSumm'
-        Width = 75
+        Width = 33
       end
       object SaleCount_Sh: TcxGridDBColumn
         Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090
         DataBinding.FieldName = 'SaleCount_Sh'
-        Width = 50
+        Width = 33
       end
       object SaleCount: TcxGridDBColumn
         Caption = #1055#1088#1086#1076#1072#1085#1086', '#1082#1075
         DataBinding.FieldName = 'SaleCount'
-        Width = 50
+        Width = 33
       end
       object SaleSumm: TcxGridDBColumn
         Caption = #1055#1088#1086#1076#1072#1085#1086', '#1075#1088#1085
         DataBinding.FieldName = 'SaleSumm'
-        Width = 75
+        Width = 33
       end
       object ReturnOutCount_Sh: TcxGridDBColumn
         DataBinding.FieldName = 'ReturnOutCount_Sh'
-        Width = 50
+        Width = 33
       end
       object ReturnOutCount: TcxGridDBColumn
         DataBinding.FieldName = 'ReturnOutCount'
-        Width = 50
+        Width = 33
       end
       object ReturnOutSumm: TcxGridDBColumn
         DataBinding.FieldName = 'ReturnOutSumm'
-        Width = 75
+        Width = 33
       end
       object ReturnInCount_Sh: TcxGridDBColumn
         Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1096#1090
         DataBinding.FieldName = 'ReturnInCount_Sh'
-        Width = 50
+        Width = 33
       end
       object ReturnInCount: TcxGridDBColumn
         Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1082#1075
         DataBinding.FieldName = 'ReturnInCount'
-        Width = 50
+        Width = 33
       end
       object ReturnInSumm: TcxGridDBColumn
         Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1075#1088#1085
         DataBinding.FieldName = 'ReturnInSumm'
-        Width = 75
+        Width = 33
       end
       object LossCount_Sh: TcxGridDBColumn
         Caption = #1057#1087#1080#1089#1072#1085#1086', '#1096#1090
         DataBinding.FieldName = 'LossCount_Sh'
-        Width = 50
+        Width = 33
       end
       object LossCount: TcxGridDBColumn
         Caption = #1057#1087#1080#1089#1072#1085#1086', '#1082#1075
         DataBinding.FieldName = 'LossCount'
-        Width = 50
+        Width = 33
       end
       object LossSumm: TcxGridDBColumn
         Caption = #1057#1087#1080#1089#1072#1085#1086', '#1075#1088#1085
         DataBinding.FieldName = 'LossSumm'
-        Width = 75
+        Width = 33
       end
       object InventoryCount_Sh: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090', '#1096#1090
         DataBinding.FieldName = 'InventoryCount_Sh'
-        Width = 50
+        Width = 33
       end
       object InventoryCount: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090', '#1082#1075
         DataBinding.FieldName = 'InventoryCount'
-        Width = 50
+        Width = 33
       end
       object InventorySumm: TcxGridDBColumn
         Caption = #1048#1085#1074#1077#1085#1090', '#1075#1088#1085
         DataBinding.FieldName = 'InventorySumm'
-        Width = 75
+        Width = 33
       end
       object EndCount_Sh: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090', '#1096#1090
         DataBinding.FieldName = 'EndCount_Sh'
-        Width = 75
+        Width = 33
       end
       object EndCount: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090', '#1082#1075
         DataBinding.FieldName = 'EndCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        Width = 75
+        Width = 33
       end
       object EndSumm: TcxGridDBColumn
         Caption = #1050#1086#1085'. '#1086#1089#1090', '#1075#1088#1085
         DataBinding.FieldName = 'EndSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.00;-,0.00'
-        Width = 75
+        Width = 33
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -704,8 +684,10 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 87
     Align = alTop
     TabOrder = 5
+    ExplicitLeft = -56
+    ExplicitTop = 50
     object edGoodsGroup: TcxButtonEdit
-      Left = 648
+      Left = 721
       Top = 9
       Properties.Buttons = <
         item
@@ -713,7 +695,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 0
-      Width = 137
+      Width = 192
     end
     object deStart: TcxDateEdit
       Left = 16
@@ -740,7 +722,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 1
-      Width = 137
+      Width = 203
     end
     object cxLabel3: TcxLabel
       Left = 316
@@ -748,17 +730,17 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Caption = #1043#1088'.'#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
     end
     object cxLabel1: TcxLabel
-      Left = 578
+      Left = 651
       Top = 10
       Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
     end
     object cxLabel2: TcxLabel
-      Left = 600
+      Left = 673
       Top = 50
       Caption = #1058#1086#1074#1072#1088
     end
     object edGoods: TcxButtonEdit
-      Left = 648
+      Left = 721
       Top = 50
       Properties.Buttons = <
         item
@@ -766,7 +748,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 137
+      Width = 192
     end
     object edLocation: TcxButtonEdit
       Left = 422
@@ -777,12 +759,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 137
+      Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 332
+      Left = 355
       Top = 50
-      Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072
     end
   end
   object DataSource: TDataSource
@@ -1046,6 +1028,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 216
     Top = 264
   end
@@ -1165,7 +1148,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 704
+    Left = 736
     Top = 67
   end
   object RefreshDispatcher: TRefreshDispatcher
