@@ -205,15 +205,14 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
- 10.02.14														*
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.02.14                                                       *
 */
 
 -- тест
