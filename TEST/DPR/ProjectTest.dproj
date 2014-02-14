@@ -918,7 +918,7 @@
 				<Form>MovementDescDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_SaleTax.pas">
+			<DCCReference Include="..\..\Forms\Report\Report_CheckTax.pas">
 				<Form>Report_CheckTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
