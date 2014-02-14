@@ -34,8 +34,8 @@ BEGIN
    WHERE ObjectLink.ObjectId = inObjectId
   ) AS D;
 
-  INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData)
-                       VALUES (inObjectId, current_timestamp, inUserId, ProtocolXML);
+  INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
+       SELECT inObjectId, current_timestamp, inUserId, ProtocolXML, COALESCE((SELECT 1 FROM ObjectProtocol WHERE ObjectId = inObjectId LIMIT 1), 0) = 0;
   
 END;           
 $BODY$
