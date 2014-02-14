@@ -338,7 +338,9 @@ type
   TAssetTest = class(TObjectTest)
   function InsertDefault: integer; override;
   public
-    function InsertUpdateAsset(const Id, Code : integer; Name, InvNumber: string; AssetGroupId: Integer): integer;
+    function InsertUpdateAsset(const Id, Code: integer; Name: string; Release: TDateTime;
+                               InvNumber,FullName,SerialNumber,PassportNumber,Comment : string;
+                               AssetGroupId,JuridicalId,MakerId: Integer): integer;
     constructor Create; override;
   end;
 
@@ -2185,9 +2187,12 @@ end;
 function TAssetTest.InsertDefault: integer;
 var
   AssetGroupId: Integer;
+  JuridicalId: Integer;
+  MakerId: Integer;
 begin
   AssetGroupId := TAssetGroupTest.Create.GetDefault;
-  result := InsertUpdateAsset(0, -1, 'Основные средства', 'АЕ2323', AssetGroupId);
+  result := InsertUpdateAsset(0, -1, 'Основные средства', date, 'InvNumber', 'FullName', 'SerialNumber'
+                            , 'PassportNumber', 'Comment', AssetGroupId,JuridicalId,MakerId);
 end;
 
 function TAssetTest.InsertUpdateAsset;
@@ -2196,8 +2201,17 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
   FParams.AddParam('inName', ftString, ptInput, Name);
+  FParams.AddParam('Release', ftDateTime, ptInput, Release);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inFullName', ftString, ptInput, FullName);
+  FParams.AddParam('inSerialNumber', ftString, ptInput, SerialNumber);
+  FParams.AddParam('inPassportNumber', ftString, ptInput, PassportNumber);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+
   FParams.AddParam('inAssetGroupId', ftInteger, ptInput, AssetGroupId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inMakerId', ftInteger, ptInput, MakerId);
+
   result := InsertUpdate(FParams);
 end;
 
