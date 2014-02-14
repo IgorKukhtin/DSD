@@ -31,18 +31,28 @@ BEGIN
          RAISE EXCEPTION 'Элемент не может корректироваться т.к. он <Удален>.';
      END IF;
 
-
+/*
      PERFORM lpInsertUpdate_MovementItem_ReturnIn(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner,
                  inPrice, ioCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, vbUserId);
+*/
 
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+            INTO ioId, ioCountForPrice, outAmountSumm
+     FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
+                                          , inMovementId         := inMovementId
+                                          , inGoodsId            := inGoodsId
+                                          , inAmount             := inAmount
+                                          , inAmountPartner      := inAmountPartner
+                                          , inPrice              := inPrice
+                                          , ioCountForPrice      := ioCountForPrice
+                                          , inHeadCount          := inHeadCount
+                                          , inPartionGoods       := inPartionGoods
+                                          , inGoodsKindId        := inGoodsKindId
+                                          , inAssetId            := inAssetId
+                                          , inUserId             := vbUserId
+                                           ) AS tmp;
 
-     -- расчитали сумму по элементу, для грида
-     outAmountSumm := CASE WHEN ioCountForPrice > 0
-                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
-                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
-                      END;
+
 
 
 END;
@@ -52,6 +62,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 14.02.14                                                         * fix lpInsertUpdate_MovementItem_ReturnIn
  13.02.14                        * lpInsertUpdate_MovementItem_ReturnIn
  28.01.14                                                          * add outAmountSumm
  13.01.14                                        * add RAISE EXCEPTION

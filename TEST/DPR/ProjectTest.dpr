@@ -122,8 +122,6 @@ uses
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
-  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm},
-  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
@@ -340,8 +338,8 @@ uses
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
-  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
+  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   UnitCarMember_Object in '..\..\Forms\Guides\UnitCarMember_Object.pas' {UnitCarMember_ObjectForm: TParentForm},
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
@@ -363,9 +361,12 @@ uses
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
-  ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas',
+  ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   TaxMovementItemTest in '..\SOURCE\MovementItem\All\TaxMovementItemTest.pas',
-  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas';
 
 {$R *.RES}
 

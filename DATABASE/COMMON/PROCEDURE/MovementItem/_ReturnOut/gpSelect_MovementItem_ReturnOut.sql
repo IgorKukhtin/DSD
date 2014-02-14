@@ -27,9 +27,9 @@ BEGIN
      RETURN QUERY
        SELECT
              0                          AS Id
-           , Object_Goods.Id            AS GoodsId
-           , Object_Goods.ObjectCode    AS GoodsCode
-           , Object_Goods.ValueData     AS GoodsName
+           , tmpGoods.GoodsId           AS GoodsId
+           , tmpGoods.GoodsCode         AS GoodsCode
+           , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
            , CAST (NULL AS TFloat)      AS AmountPartner
            , CAST (NULL AS TFloat)      AS Price
@@ -75,8 +75,10 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
+/*
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis()/*inPriceListId*/, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+*/
 
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
@@ -212,6 +214,7 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnOut (Integer, Boolean, Boolean, TVarC
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.02.14                                                       *
  10.02.14                                                       *
 */
 
