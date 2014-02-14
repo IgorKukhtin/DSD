@@ -325,12 +325,6 @@
 			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
 				<Form>SendJournalForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
-				<Form>ReturnOutJournalForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
-				<Form>ReturnOutForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
 				<Form>SendOnPriceJournalForm</Form>
@@ -993,12 +987,12 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnOutJournal.pas">
+				<Form>ReturnOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale.pas">
-				<Form>SaleForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
+				<Form>ReturnOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
@@ -1071,6 +1065,14 @@
 			<DCCReference Include="..\SOURCE\MovementItem\All\TaxMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
 				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale.pas">
+				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

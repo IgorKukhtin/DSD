@@ -29,7 +29,7 @@ BEGIN
      vbUserId:= lpGetUserBySession (inSession);
 
      -- Результат
-     RETURN QUERY 
+     RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
                   UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
                   UNION SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
@@ -39,33 +39,33 @@ BEGIN
                          UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
                               )
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+             Movement.Id                                    AS Id
+           , Movement.InvNumber                             AS InvNumber
+           , Movement.OperDate                              AS OperDate
+           , Object_Status.ObjectCode                       AS StatusCode
+           , Object_Status.ValueData                        AS StatusName
+           , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+           , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+           , MovementFloat_VATPercent.ValueData             AS VATPercent
+           , MovementFloat_ChangePercent.ValueData          AS ChangePercent
+           , MovementFloat_TotalCount.ValueData             AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData      AS TotalCountPartner
+           , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData              AS TotalSumm
+           , Object_From.Id                                 AS FromId
+           , Object_From.ValueData                          AS FromName
+           , Object_To.Id                                   AS ToId
+           , Object_To.ValueData                            AS ToName
+           , Object_PaidKind.Id                             AS PaidKindId
+           , Object_PaidKind.ValueData                      AS PaidKindName
+           , View_Contract_InvNumber.ContractId             AS ContractId
+           , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
 
-           , MovementDate_OperDatePartner.ValueData AS OperDatePartner
-           
-           , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData     AS VATPercent
-           , MovementFloat_ChangePercent.ValueData  AS ChangePercent           
-           
-           , MovementFloat_TotalCount.ValueData     AS TotalCount
-                                                                   
-           , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData      AS TotalSumm
-
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
-        
-           , Object_PaidKind.Id                AS PaidKindId
-           , Object_PaidKind.ValueData         AS PaidKindName
-           , Object_Contract.Id                AS ContractId
-           , Object_Contract.ValueData         AS ContractName
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -146,7 +146,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnOut (TDateTime, TDateTime, TVarChar) OWNE
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.02.14                                                         *
  10.02.14                                        * add Object_RoleAccessKey_View
  10.02.14                                                       *
  14.07.13         *
