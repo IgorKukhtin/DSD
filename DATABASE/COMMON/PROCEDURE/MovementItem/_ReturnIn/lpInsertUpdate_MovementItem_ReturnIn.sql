@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
     IN inAmountPartner       TFloat    , -- Количество у контрагента
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
+   OUT outAmountSumm         TFloat    , -- Сумма расчетная
     IN inHeadCount           TFloat    , -- Количество голов
     IN inPartionGoods        TVarChar  , -- Партия товара
     IN inGoodsKindId         Integer   , -- Виды товаров
@@ -48,6 +50,15 @@ BEGIN
 
 --     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     -- расчитали сумму по элементу, для грида
+     outAmountSumm := CASE WHEN ioCountForPrice > 0
+                                THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
+                           ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
+                      END;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -55,6 +66,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 14.02.14                                                         * add ioCountForPrice
  13.02.14                         *
 
 */
