@@ -11,17 +11,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1092
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 1054
+    ExplicitWidth = 1092
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 1088
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1048
+      ExplicitWidth = 1086
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1086
         Height = 514
-        ExplicitWidth = 1048
+        ExplicitWidth = 1086
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -156,12 +156,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     inherited tsEntry: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 1048
+      ExplicitWidth = 1086
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
         Width = 1086
         Height = 514
-        ExplicitWidth = 1048
+        ExplicitWidth = 1086
         ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -187,7 +187,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1092
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1054
+    ExplicitWidth = 1092
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -709,7 +709,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Tax'
+    StoredProcName = 'gpUpdate_Status_TaxCorrective'
     Left = 104
     Top = 88
   end

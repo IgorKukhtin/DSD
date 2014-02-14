@@ -525,7 +525,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement'
+    StoredProcName = 'gpUnComplete_Movement_ReturnIn'
     Params = <
       item
         Name = 'inmovementid'
@@ -537,7 +537,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement'
+    StoredProcName = 'gpSetErased_Movement_ReturnIn'
     Params = <
       item
         Name = 'inmovementid'
