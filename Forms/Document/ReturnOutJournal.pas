@@ -46,12 +46,6 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
-    spTax: TdsdStoredProc;
-    actTax: TdsdExecStoredProc;
-    bbTax: TdxBarButton;
-    cxLabel14: TcxLabel;
-    edDocumentTaxKind: TcxButtonEdit;
-    DocumentTaxKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

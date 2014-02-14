@@ -1061,7 +1061,7 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
-			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas"/>
+			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\TaxMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
 				<Form>Report_GoodsForm</Form>
@@ -1075,6 +1075,7 @@
 				<Form>SaleJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

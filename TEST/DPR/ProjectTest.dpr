@@ -361,11 +361,12 @@ uses
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
-  ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas',
+  ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   TaxMovementItemTest in '..\SOURCE\MovementItem\All\TaxMovementItemTest.pas',
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
-  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm};
+  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas';
 
 {$R *.RES}
 
