@@ -918,8 +918,8 @@
 				<Form>MovementDescDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
-				<Form>Report_GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_SaleTax.pas">
+				<Form>Report_CheckTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossDebtJournal.pas">
@@ -1069,6 +1069,10 @@
 			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\TaxMovementItemTest.pas"/>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

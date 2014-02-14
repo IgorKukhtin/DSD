@@ -301,6 +301,8 @@ type
     actCountry: TdsdOpenForm;
     bbCountry: TdxBarButton;
     bbMaker: TdxBarButton;
+    actReport_CheckTax: TdsdOpenForm;
+    bbReport_CheckTax: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
