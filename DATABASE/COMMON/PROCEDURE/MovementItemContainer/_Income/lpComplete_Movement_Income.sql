@@ -320,15 +320,15 @@ BEGIN
 
               -- Управленческие назначения (детализация с/с), она же !!!соответствует!!! УП долг Контрагента
             , CASE WHEN vbInfoMoneyDestinationId_From <> 0
-                        THEN vbInfoMoneyDestinationId_From -- УП берется по договору или по юр.лицу !!!(для наши компании)!!!
+                        THEN vbInfoMoneyDestinationId_From -- УП ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
                    ELSE _tmp.InfoMoneyDestinationId -- УП берется по товару
-               END AS InfoMoneyDestinationId_Detail
+              END AS InfoMoneyDestinationId_Detail
 
               -- Статьи назначения (детализация с/с), она же !!!соответствует!!! УП долг Контрагента
             , CASE WHEN vbInfoMoneyId_From <> 0
-                        THEN vbInfoMoneyId_From -- УП берется по договору или по юр.лицу !!!(для наши компании)!!!
+                        THEN vbInfoMoneyId_From -- УП ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
                    ELSE _tmp.InfoMoneyId -- Иначе УП берется по товару
-               END AS InfoMoneyId_Detail
+              END AS InfoMoneyId_Detail
 
               -- значение Бизнес !!!выбирается!!! из 1)Автомобиля или 2)Товара или 3)Подраделения
             , CASE WHEN _tmp.BusinessId = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId END AS BusinessId 
@@ -457,7 +457,9 @@ BEGIN
 
 
      -- проверка
-     IF COALESCE (vbContractId, 0) = 0 AND EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE)
+     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isCountSupplier FROM _tmpItem WHERE _tmpItem.isCountSupplier = FALSE)
+                                         -- OR !!! НАЛ !!!
+                                           )
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
      END IF;
@@ -732,7 +734,7 @@ BEGIN
          AND zc_isHistoryCost() = TRUE; -- !!!если нужны проводки!!!
 
 
-     -- 2.1. определяется Счет(справочника) для проводок по долг Поставщику или Сотруднику (подотчетные лица)
+     -- 2.1. определяется Счет(справочника) для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET AccountId         = _tmpItem_byAccount.AccountId
                                    , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
@@ -746,25 +748,25 @@ BEGIN
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы  -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
                              WHEN vbIsCorporate_From
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
-                            ELSE zc_Enum_AccountGroup_70000()  -- Кредиторы select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
+                             ELSE zc_Enum_AccountGroup_70000()  -- Кредиторы select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
                         END AS AccountGroupId
                       , CASE WHEN vbMemberId_From <> 0
                                   THEN zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)  -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30500())
                              WHEN vbIsCorporate_From
                                   THEN zc_Enum_AccountDirection_30200() -- наши компании -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30200())
-                            ELSE zc_Enum_AccountDirection_70100() -- поставщики select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70100())
+                             ELSE zc_Enum_AccountDirection_70100() -- поставщики select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70100())
                         END AS AccountDirectionId
-                     , _tmpItem_SummPartner.InfoMoneyDestinationId
+                      , _tmpItem_SummPartner.InfoMoneyDestinationId
                  FROM _tmpItem_SummPartner
                  GROUP BY _tmpItem_SummPartner.InfoMoneyDestinationId
                 ) AS _tmpItem_group
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummPartner.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
-     -- 2.2. определяется ContainerId для проводок по долг Поставщику или Сотруднику (подотчетные лица)
+     -- 2.2. определяется ContainerId для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET ContainerId =                 CASE WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                          AND vbMemberId_From = 0
-                                                                         AND NOT vbIsCorporate_From
+                                                                         AND vbIsCorporate_From = FALSE
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                                                       , inParentId          := NULL
