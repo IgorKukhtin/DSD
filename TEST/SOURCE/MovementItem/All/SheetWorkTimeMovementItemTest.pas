@@ -35,9 +35,9 @@ uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
 
 procedure TSheetWorkTimeMovementItemTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'MovementItem\_SheetWorkTime\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\SheetWorkTime\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'Movement\_SheetWorkTime\';
+  ScriptDirectory := ProcedurePath + 'Movement\SheetWorkTime\';
   inherited;
 end;
 

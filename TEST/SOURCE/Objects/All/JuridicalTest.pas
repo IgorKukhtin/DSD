@@ -33,7 +33,7 @@ uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB;
 
 procedure TJuridicalTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Juridical\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Juridical\';
   inherited;
 end;
 

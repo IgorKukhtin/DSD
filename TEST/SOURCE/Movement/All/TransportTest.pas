@@ -96,11 +96,11 @@ end;
 
 procedure TTransportTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Transport\';
+  ScriptDirectory := ProcedurePath + 'Movement\Transport\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_Transport\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\Transport\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Transport\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Transport\';
   inherited;
 end;
 

@@ -39,7 +39,7 @@ uses DB, UtilConst, TestFramework, Authentication, CommonData, Storage,
 
 procedure TPriceListItemTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTHistory\_PriceListItem\';
+  ScriptDirectory := ProcedurePath + 'OBJECTHistory\PriceListItem\';
   inherited;
 end;
 

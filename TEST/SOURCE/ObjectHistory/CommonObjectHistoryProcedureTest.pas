@@ -25,7 +25,7 @@ uses UtilConst, TestFramework, Storage, SysUtils;
 procedure TObjectHistoryProcedure.ProcedureLoad;
 begin
   inherited;
-  ScriptDirectory := ProcedurePath + 'ObjectHistory\Common\';
+  ScriptDirectory := ProcedurePath + 'ObjectHistory\_Common\';
   inherited;
 end;
 

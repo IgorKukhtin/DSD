@@ -21,7 +21,7 @@ uses UtilConst, TestFramework;
 procedure TCommonMovementProcedure.ProcedureLoad;
 begin
   inherited;
-  ScriptDirectory := ProcedurePath + 'Movement\Common\';
+  ScriptDirectory := ProcedurePath + 'Movement\_Common\';
   inherited;
 end;
 

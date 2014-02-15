@@ -24,7 +24,7 @@ uses DB, UtilConst, Classes, TestFramework, SysUtils, FormStorage,
 
 procedure TUpdaterTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Program\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Program\';
   inherited;
 end;
 

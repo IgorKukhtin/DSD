@@ -28,7 +28,7 @@ uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
 
 procedure TCashTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Cash\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Cash\';
   inherited;
 end;
 

@@ -94,7 +94,9 @@ end;
 
 procedure TServiceTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Service\';
+  ScriptDirectory := ProcedurePath + 'Movement\Service\';
+  inherited;
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Service\';
   inherited;
 end;
 

@@ -33,7 +33,7 @@ uses DB, UtilConst, TestFramework, SysUtils;
 
 procedure TUnitTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Unit\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Unit\';
   inherited;
 end;
 

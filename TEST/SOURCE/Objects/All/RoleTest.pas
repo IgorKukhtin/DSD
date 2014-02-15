@@ -27,7 +27,7 @@ uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
 
 procedure TRoleTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Role\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Role\';
   inherited;
 end;
 

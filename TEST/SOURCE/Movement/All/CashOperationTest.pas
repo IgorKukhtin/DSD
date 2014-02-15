@@ -111,9 +111,9 @@ end;
 
 procedure TCashOperationTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Cash\';
+  ScriptDirectory := ProcedurePath + 'Movement\Cash\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Cash\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Cash\';
   inherited;
 end;
 

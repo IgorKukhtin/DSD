@@ -95,11 +95,11 @@ end;
 
 procedure TReturnInTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_ReturnIn\';
+  ScriptDirectory := ProcedurePath + 'Movement\ReturnIn\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_ReturnIn\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\ReturnIn\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_ReturnIn\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\ReturnIn\';
   inherited;
 end;
 

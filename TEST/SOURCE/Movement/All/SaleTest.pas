@@ -121,11 +121,11 @@ end;
 
 procedure TSaleTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Sale\';
+  ScriptDirectory := ProcedurePath + 'Movement\Sale\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_Sale\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\Sale\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Sale\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Sale\';
   inherited;
 end;
 

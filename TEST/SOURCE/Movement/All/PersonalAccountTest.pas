@@ -68,11 +68,11 @@ end;
 
 procedure TPersonalAccountTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_PersonalAccount\';
+  ScriptDirectory := ProcedurePath + 'Movement\PersonalAccount\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_PersonalAccount\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\PersonalAccount\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_PersonalAccount\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\PersonalAccount\';
   inherited;
 end;
 
