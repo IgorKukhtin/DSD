@@ -89,7 +89,7 @@ BEGIN
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
 
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
-     AND COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
   ;
   
 END;

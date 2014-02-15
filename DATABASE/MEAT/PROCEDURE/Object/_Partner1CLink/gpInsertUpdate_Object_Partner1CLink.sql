@@ -58,7 +58,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Partner(), inId, inPartnerId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Branch(), inId, vbBranchId);
    IF inIsSybase IS NOT NULL
-   THEN PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Partner1CLink_Sybase(), inId, inIsSybase);
+   THEN PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner1CLink_Sybase(), inId, inIsSybase);
    END IF;
 
    RETURN 

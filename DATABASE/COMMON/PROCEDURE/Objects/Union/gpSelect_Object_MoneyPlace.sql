@@ -102,7 +102,7 @@ BEGIN
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
        -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
        AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
-       AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+       AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
     ;
 
 END;

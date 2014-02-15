@@ -18,7 +18,9 @@ $BODY$
    DECLARE vbOperDate TDateTime;  
    DECLARE vbMovementId Integer;
    DECLARE vbUnitId Integer;
+   DECLARE vbUnitId_1C Integer;
    DECLARE vbPartnerId Integer;
+   DECLARE vbContractId Integer;
    DECLARE vbOperCount TFloat;
    DECLARE vbOperPrice TFloat;
    DECLARE vbGoodsId Integer; 
@@ -34,33 +36,33 @@ BEGIN
 
      -- Определяем итого связанных записей (для проверка что все для переноса установлено)
      SELECT COUNT(*) INTO vbCount
-     FROM Sale1C
-          JOIN (SELECT Object_Partner1CLink.ObjectCode
-                     , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
-                FROM Object AS Object_Partner1CLink
-                     LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                          ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                         AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
-               ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
-                                    AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+      FROM Sale1C
+           JOIN (SELECT Object_Partner1CLink.ObjectCode
+                      , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
+                 FROM Object AS Object_Partner1CLink
+                      LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                           ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                 WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
+                                     AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
 
-          JOIN (SELECT Object_GoodsByGoodsKind1CLink.ObjectCode
-                     , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
-                FROM Object AS Object_GoodsByGoodsKind1CLink
-                     LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
-                                          ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
-                                         AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
-                WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
-               ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
-                                             AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
+           JOIN (SELECT Object_GoodsByGoodsKind1CLink.ObjectCode
+                      , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
+                 FROM Object AS Object_GoodsByGoodsKind1CLink
+                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
+                                           ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
+                                          AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
+                 WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
+                ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
+                                              AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
 
-    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
+     WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
 
 
      -- Проверка
      IF vbSaleCount <> vbCount THEN 
-        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен. <%> <%>', vbSaleCount, vbCount; 
+        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен.'; 
      END IF;
 
 
@@ -72,7 +74,7 @@ BEGIN
           JOIN MovementLinkObject AS MLO_From
                                   ON MLO_From.MovementId = Movement.Id
                                  AND MLO_From.DescId = zc_MovementLinkObject_From() 
-                                 AND MIO_From.ObjectId IN (SELECT zfGetUnitFromUnitId (UnitId) FROM Sale1C GROUP BY zfGetUnitFromUnitId (UnitId))
+                                 AND MLO_From.ObjectId IN (SELECT zfGetUnitFromUnitId (UnitId) FROM Sale1C GROUP BY zfGetUnitFromUnitId (UnitId))
           JOIN MovementBoolean AS MovementBoolean_isLoad 
                                ON MovementBoolean_isLoad.MovementId = Movement.Id
                               AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
@@ -86,7 +88,12 @@ BEGIN
 
      -- открыли курсор
      OPEN curMovement FOR 
-          SELECT DISTINCT InvNumber, OperDate, zfGetUnitFromUnitId(UnitId), ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
+          SELECT DISTINCT Sale1C.InvNumber
+                        , Sale1C.OperDate
+                        , zfGetUnitFromUnitId (Sale1C.UnitId) AS UnitId
+                        , Sale1C.UnitId AS UnitId_1C
+                        , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
+                        , View_Contract.ContractId
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -101,22 +108,31 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                     ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
                                    AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+               LEFT JOIN Object_Contract_View AS View_Contract
+                                              ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                             AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = 1;
+            AND Sale1C.VIDDOC = '1';
 
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbPartnerId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
           END IF;
           -- сохранили Документ
-          vbMovementId := lpInsertUpdate_Movement_Sale (ioId := 0, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
-                                                      , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
-                                                      , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
-                                                      , inContractId := 0, inRouteSortingId := 0, inUserId := vbUserId);
+          SELECT tmp.ioId INTO vbMovementId
+          FROM lpInsertUpdate_Movement_Sale (ioId := 0, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
+                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
+                                           , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= zc_Enum_PaidKind_FirstForm()
+                                           , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0, inUserId:= vbUserId
+                                            ) AS tmp;
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
@@ -142,8 +158,10 @@ BEGIN
                     LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsKind
                                          ON ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
                                         AND ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind()
-               WHERE InvNumber = vbInvNumber AND OperDate = vbOperDate
-                 AND VIDDOC = 1;
+               WHERE Sale1C.InvNumber = vbInvNumber
+                 AND Sale1C.OperDate = vbOperDate
+                 AND Sale1C.UnitId = vbUnitId_1C
+                 AND Sale1C.VIDDOC = '1';
           -- начало цикла по курсору
           LOOP
                -- данные для Элемента документа
@@ -156,7 +174,7 @@ BEGIN
                -- сохранили Элемент документа
                PERFORM lpInsertUpdate_MovementItem_Sale (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                        , inAmount := vbOperCount, inAmountPartner := vbOperCount, inAmountChangePercent := vbOperCount
-                                                       , inChangePercentAmount := 0, inPrice := vbOperPrice, inCountForPrice := 1 , inHeadCount := 0
+                                                       , inChangePercentAmount := 0, inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0
                                                        , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
           END LOOP; -- финиш цикла по курсору
@@ -188,7 +206,12 @@ BEGIN
 
      -- открыли курсор
      OPEN curMovement FOR 
-          SELECT DISTINCT InvNumber, OperDate, zfGetUnitFromUnitId (UnitId), ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
+          SELECT DISTINCT Sale1C.InvNumber
+                        , Sale1C.OperDate
+                        , zfGetUnitFromUnitId (Sale1C.UnitId) AS vbUnitId
+                        , Sale1C.UnitId AS vbUnitId
+                        , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
+                        , View_Contract.ContractId
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -203,13 +226,20 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                     ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
                                    AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+               LEFT JOIN Object_Contract_View AS View_Contract
+                                              ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                             AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = 4;
+            AND Sale1C.VIDDOC = '4';
 
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbPartnerId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
@@ -219,7 +249,7 @@ BEGIN
           vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := 0, inInvNumber := vbInvNumber
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
-                                                          , inContractId := 0, inDocumentTaxKindId := 0, inUserId := vbUserId);
+                                                          , inContractId := vbContractId, inUserId := vbUserId);
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
 
@@ -245,8 +275,10 @@ BEGIN
                     LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsKind
                                          ON ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
                                         AND ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind()
-               WHERE InvNumber = vbInvNumber AND OperDate = vbOperDate
-                 AND VIDDOC = 4;
+               WHERE Sale1C.InvNumber = vbInvNumber
+                 AND Sale1C.OperDate = vbOperDate
+                 AND Sale1C.UnitId = vbUnitId_1C
+                 AND Sale1C.VIDDOC = '4';
 
           -- начало цикла по курсору
           LOOP
@@ -260,7 +292,7 @@ BEGIN
                -- сохранили Элемент документа
               PERFORM lpInsertUpdate_MovementItem_ReturnIn (ioId := 0, inMovementId := vbMovementId, inGoodsId := vbGoodsId
                                                           , inAmount := vbOperCount, inAmountPartner := vbOperCount
-                                                          , inPrice := vbOperPrice, inCountForPrice := 1 , inHeadCount := 0
+                                                          , inPrice := vbOperPrice, ioCountForPrice := 1 , inHeadCount := 0
                                                           , inPartionGoods := '', inGoodsKindId := vbGoodsKindId, inAssetId := 0, inUserId := vbUserId);
 
           END LOOP; -- финиш цикла по курсору

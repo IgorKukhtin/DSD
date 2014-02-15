@@ -92,7 +92,7 @@ BEGIN
       
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
-   WHERE COALESCE (Object_Contract_View.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+   WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
    ;
   
 END;

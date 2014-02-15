@@ -46,4 +46,4 @@ ALTER FUNCTION gpSelect_Object_Partner1CLink (TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_Partner1CLink (zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_Partner1CLink (zfCalc_UserAdmin()) WHERE Code = 

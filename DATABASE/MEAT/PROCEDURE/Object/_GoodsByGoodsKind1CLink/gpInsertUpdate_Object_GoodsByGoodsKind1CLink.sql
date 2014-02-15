@@ -44,15 +44,17 @@ BEGIN
    END IF;
 
    -- проверка уникальность inCode для !!!одного!! Филиала
-   IF EXISTS (SELECT ObjectLink.ChildObjectId
-              FROM ObjectLink
-                   JOIN Object ON Object.Id = ObjectLink.ObjectId
-                              AND Object.ObjectCode = inCode
-              WHERE ObjectLink.ChildObjectId = vbBranchId
-                AND ObjectLink.ObjectId <> COALESCE (inId, 0)
-                AND ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch())
-   THEN
-       RAISE EXCEPTION 'Ошибка. Код 1С <%> уже установлен у <%>. ', inCode, lfGet_Object_ValueData (vbBranchId);
+   IF inCode <> 0
+   THEN IF EXISTS (SELECT ObjectLink.ChildObjectId
+                   FROM ObjectLink
+                        JOIN Object ON Object.Id = ObjectLink.ObjectId
+                                   AND Object.ObjectCode = inCode
+                   WHERE ObjectLink.ChildObjectId = vbBranchId
+                     AND ObjectLink.ObjectId <> COALESCE (inId, 0)
+                     AND ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch())
+        THEN
+            RAISE EXCEPTION 'Ошибка. Код 1С <%> уже установлен у <%>. ', inCode, lfGet_Object_ValueData (vbBranchId);
+        END IF;
    END IF;
 
 
@@ -60,7 +62,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind(), inId, inGoodsKindId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind1CLink_Branch(), inId, vbBranchId);
    IF inIsSybase IS NOT NULL
-   THEN PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase(), inId, inIsSybase);
+   THEN PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase(), inId, inIsSybase);
    END IF;
 
    -- сохранили протокол

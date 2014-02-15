@@ -309,6 +309,12 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         ParamType = ptInput
       end
       item
+        Name = 'inIsSybase'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
         Name = 'Id'
         Component = DetailCDS
         ComponentItem = 'Id'

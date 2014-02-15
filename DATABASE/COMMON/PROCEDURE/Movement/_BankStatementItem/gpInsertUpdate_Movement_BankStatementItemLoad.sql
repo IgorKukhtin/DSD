@@ -188,11 +188,11 @@ BEGIN
              LEFT JOIN Object_Contract_View AS View_Contract
                                             ON View_Contract.JuridicalId = vbJuridicalId
                                            AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
-                                           AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+                                           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
              LEFT JOIN Object_Contract_View AS View_Contract_next
                                             ON View_Contract_next.JuridicalId = vbJuridicalId
                                            AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
-                                           AND COALESCE (View_Contract_next.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close()
+                                           AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                            AND View_Contract.JuridicalId IS NULL
         ;
         -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
@@ -201,7 +201,7 @@ BEGIN
             SELECT MAX (View_Contract.ContractId) INTO vbContractId
             FROM Object_Contract_View AS View_Contract
             WHERE View_Contract.JuridicalId = vbJuridicalId
-              AND COALESCE (View_Contract.ContractStateKindId, 0) <> zc_Enum_ContractStateKind_Close();
+              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close();
         END IF;
 
         -- Находим <УП статья назначения> !!!всегда!!! у Договора
