@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxSplitter, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  dsdGuides;
+  dsdGuides, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TGoodsByGoodsKind1CLinkForm = class(TAncestorDBGridForm)
@@ -19,8 +20,8 @@ type
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
     cxSplitter: TcxSplitter;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
+    colGoodsCode: TcxGridDBColumn;
+    colGoodsName: TcxGridDBColumn;
     colDetailCode: TcxGridDBColumn;
     colDetailName: TcxGridDBColumn;
     colDetailBranch: TcxGridDBColumn;

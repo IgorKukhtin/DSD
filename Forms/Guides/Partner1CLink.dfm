@@ -2,8 +2,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 843
-  ExplicitHeight = 428
+  ExplicitWidth = 851
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -34,7 +34,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             Width = 107
           end
           object colName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'Name'
             Options.Editing = False
             Width = 296
@@ -71,12 +71,12 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDetailCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
             Width = 56
           end
           object colDetailName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057
             DataBinding.FieldName = 'Name'
             Width = 119
           end
@@ -102,6 +102,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         Top = 0
         Width = 5
         Height = 375
+        Control = cxGrid
       end
       object edBranch: TcxButtonEdit
         Left = 192

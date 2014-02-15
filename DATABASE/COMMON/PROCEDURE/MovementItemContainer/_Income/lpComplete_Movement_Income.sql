@@ -852,7 +852,7 @@ BEGIN
                                                                    END
                                                            END;
 
-     -- 2.3. формируются Проводки - долг Поставщику или Сотруднику (подотчетные лица)
+     -- 2.3. формируются Проводки - долг Поставщику или Физ.лицу (подотчетные лица)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- это обычная проводка
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_SummPartner.ContainerId, 0 AS ParentId, -1 * _tmpItem_SummPartner.OperSumm_Partner
@@ -872,7 +872,7 @@ BEGIN
       ;
 
 
-     -- 3.1. определяется Счет(справочника) для проводок по доплата Сотруднику (заготовитель)
+     -- 3.1. определяется Счет(справочника) для проводок по доплата Физ.лицу (заготовитель)
      UPDATE _tmpItem_SummPacker SET AccountId = _tmpItem_byAccount.AccountId
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_70000() -- Кредиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
                                              , inAccountDirectionId     := zc_Enum_AccountDirection_70600() -- Сотрудник (заготовитель) -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70600())
@@ -886,9 +886,9 @@ BEGIN
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummPacker.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
-     -- 3.2. определяется ContainerId для проводок по доплата Сотруднику (заготовитель)
+     -- 3.2. определяется ContainerId для проводок по доплата Физ.лицу(заготовитель)
      UPDATE _tmpItem_SummPacker SET ContainerId = 
-                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Сотрудники(поставщики) 3)Статьи назначения
+                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо(заготовитель) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                         , inParentId          := NULL
                                                                         , inObjectId          := _tmpItem_SummPacker.AccountId
@@ -901,14 +901,14 @@ BEGIN
                                                                         , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
                                                                         , inObjectId_2        := _tmpItem_SummPacker.InfoMoneyId
                                                                         );
-     -- 3.3. формируются Проводки - доплата Сотруднику (заготовитель)
+     -- 3.3. формируются Проводки - доплата Физ.лицу(заготовитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Packer, vbOperDate, FALSE
        FROM _tmpItem_SummPacker
        WHERE OperSumm_Packer <> 0;
 
 
-     -- 4.1. определяется Счет(справочника) для проводок по расчетам с поставщиком Сотрудником (Водитель)
+     -- 4.1. определяется Счет(справочника) для проводок по расчетам с поставщиком - Физ.лицо(Водитель)
      UPDATE _tmpItem_SummDriver SET AccountId = _tmpItem_byAccount.AccountId
                                   , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
      FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
@@ -923,9 +923,9 @@ BEGIN
           ) AS _tmpItem_byAccount
       WHERE _tmpItem_SummDriver.InfoMoneyDestinationId = _tmpItem_byAccount.InfoMoneyDestinationId;
 
-     -- 4.2. определяется ContainerId для проводок по расчетам с поставщиком Сотрудником (Водитель)
+     -- 4.2. определяется ContainerId для проводок по расчетам с поставщиком - Физ.лицо(Водитель)
      UPDATE _tmpItem_SummDriver SET ContainerId = 
-                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Сотрудники(поставщики) 3)Статьи назначения
+                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо(Водитель) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                         , inParentId          := NULL
                                                                         , inObjectId          := _tmpItem_SummDriver.AccountId
@@ -939,10 +939,10 @@ BEGIN
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
                                                                         , inDescId_3          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_3        := vbCarId
-                                                                        )
+                                                                         )
                                   ,ContainerId_Transit = CASE WHEN _tmpItem_SummDriver.AccountId_Transit = 0 THEN 0
                                                               ELSE
-                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Сотрудники(поставщики) 3)Статьи назначения
+                                                  -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1) Физ.лицо(Водитель) 3)Статьи назначения
                                                   lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                         , inParentId          := NULL
                                                                         , inObjectId          := _tmpItem_SummDriver.AccountId_Transit
@@ -956,10 +956,10 @@ BEGIN
                                                                         , inObjectId_2        := _tmpItem_SummDriver.InfoMoneyId
                                                                         , inDescId_3          := zc_ContainerLinkObject_Car()
                                                                         , inObjectId_3        := vbCarId
-                                                                        )
+                                                                         )
                                                          END;
 
-     -- 4.3. формируются Проводки - расчеты с поставщиком Сотрудником (Водитель)
+     -- 4.3. формируются Проводки - расчеты с поставщиком Физ.лицо(Водитель)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        -- это списание с водителя
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, ContainerId, 0 AS ParentId, -1 * OperSumm_Driver, vbOperDate, FALSE

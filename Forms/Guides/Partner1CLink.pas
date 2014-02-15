@@ -11,7 +11,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxSplitter, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
-  dsdGuides;
+  dsdGuides, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TPartner1CLinkForm = class(TAncestorDBGridForm)

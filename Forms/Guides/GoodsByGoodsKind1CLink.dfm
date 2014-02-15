@@ -2,8 +2,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 843
-  ExplicitHeight = 428
+  ExplicitWidth = 851
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,20 +27,20 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
             Width = 37
           end
-          object colName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+          object colGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             Options.Editing = False
             Width = 232
           end
           object colGoodsKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1090#1086#1074#1072#1088#1072
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             Width = 134
           end
@@ -76,12 +76,12 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDetailCode: TcxGridDBColumn
-            Caption = #1050#1086#1076
+            Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
             Width = 56
           end
           object colDetailName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057
             DataBinding.FieldName = 'Name'
             Width = 119
           end
@@ -170,7 +170,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind'
+    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink_Master'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -209,8 +209,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
   end
   object DetailCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'GoodsByGoodsKindId'
-    MasterFields = 'Id'
+    IndexFieldNames = 'MasterId'
+    MasterFields = 'MasterId'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>

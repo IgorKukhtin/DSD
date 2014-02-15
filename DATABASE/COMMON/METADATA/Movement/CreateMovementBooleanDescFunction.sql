@@ -11,7 +11,7 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_isLoad() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_isLoad'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
-  SELECT 'zc_MovementBoolean_isLoad', 'Проверен'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_isLoad');
+  SELECT 'zc_MovementBoolean_isLoad', 'Загружен из 1С'  WHERE NOT EXISTS (SELECT * FROM MovementBooleanDesc WHERE Code= 'zc_MovementBoolean_isLoad');
 
 CREATE OR REPLACE FUNCTION zc_MovementBoolean_Document() RETURNS integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementBooleanDesc WHERE Code = 'zc_MovementBoolean_Document'); END;  $BODY$ LANGUAGE plpgsql IMMUTABLE;
 INSERT INTO MovementBooleanDesc (Code, ItemName)
@@ -24,8 +24,8 @@ INSERT INTO MovementBooleanDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 09.02.14         												*    add zc_MovementBoolean_Registered
- 08.02.14         												*    add zc_MovementBoolean_Document
+ 09.02.14         						*    add zc_MovementBoolean_Registered
+ 08.02.14         						*    add zc_MovementBoolean_Document
  11.01.14                                        * add
  07.07.13         * НОВАЯ СХЕМА
 */

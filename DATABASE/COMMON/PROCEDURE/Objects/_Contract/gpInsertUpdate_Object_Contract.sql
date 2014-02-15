@@ -71,7 +71,7 @@ BEGIN
                     AND ObjectLink.ObjectId <> COALESCE (ioId, 0)
                     AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical())
        THEN
-           RAISE EXCEPTION 'Ошибка. Номер договора <%> уже установлено у <%>.', inInvNumber, lfGet_Object_ValueData (inJuridicalId);
+           RAISE EXCEPTION 'Ошибка. Номер договора <%> уже установлен у <%>.', inInvNumber, lfGet_Object_ValueData (inJuridicalId);
        END IF;
    END IF;
 

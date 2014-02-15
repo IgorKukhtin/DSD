@@ -1,4 +1,4 @@
--- Function: zfGetUnitId
+-- Function: zfGetUnitFromUnitId
 
 DROP FUNCTION IF EXISTS zfGetUnitFromUnitId (Integer);
 
@@ -31,5 +31,4 @@ ALTER FUNCTION zfGetUnitFromUnitId (Integer) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM zfConvert_StringToNumber ('TVarChar')
--- SELECT * FROM zfConvert_StringToNumber ('10')
+-- SELECT * FROM zfGetUnitFromUnitId (10)

@@ -49,14 +49,12 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  30.01.14                          *
-
 */
 
 -- тест

@@ -50,7 +50,7 @@ BEGIN
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 54)); -- Касса Днепр
       ELSE
-          RAISE EXCEPTION 'У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
+          RAISE EXCEPTION 'Ошибка.У Роли <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (zc_Enum_Role_Admin());
 
       END IF;
       END IF;
@@ -59,17 +59,23 @@ BEGIN
   END IF;
 
   -- проверка - должен быть только "один" процесс (доступ просмотра)
-  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportAll() HAVING Count (*) = 1)
+  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
+                                                                                                   , zc_Enum_Process_AccessKey_GuideAll()
+                                                                                                    )
+             HAVING Count(*) = 1)
   THEN
-      vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId <> zc_Enum_Process_AccessKey_TrasportAll());
+      vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
+                                                                                                                    , zc_Enum_Process_AccessKey_GuideAll()
+                                                                                                                     )
+                   );
   ELSE
-      RAISE EXCEPTION 'У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
   END IF;  
   
 
   IF COALESCE (vbValueId, 0) = 0
   THEN
-      RAISE EXCEPTION 'У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
+      RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
   ELSE RETURN vbValueId;
   END IF;  
 

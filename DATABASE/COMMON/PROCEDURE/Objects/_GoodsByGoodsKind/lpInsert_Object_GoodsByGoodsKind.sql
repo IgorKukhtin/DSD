@@ -15,7 +15,7 @@ BEGIN
      -- Проверка
      IF COALESCE (inGoodsId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Товар не определен';
+         RAISE EXCEPTION 'Ошибка.Товар не определен.';
      END IF;
 
      -- если связь не нужна, зачем ее создавать
