@@ -2,7 +2,7 @@ inherited UserProtocolForm: TUserProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1096#1080#1073#1086#1082
   ClientHeight = 323
   ClientWidth = 782
-  AddOnFormData.RefreshAction = nil
+  AddOnFormData.isSingle = False
   ExplicitWidth = 790
   ExplicitHeight = 350
   PixelsPerInch = 96
@@ -10,19 +10,18 @@ inherited UserProtocolForm: TUserProtocolForm
   inherited PageControl: TcxPageControl
     Width = 782
     Height = 266
-    ExplicitTop = 82
     ExplicitWidth = 782
-    ExplicitHeight = 241
+    ExplicitHeight = 266
     ClientRectBottom = 266
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
-      ExplicitHeight = 241
+      ExplicitHeight = 266
       inherited cxGrid: TcxGrid
         Width = 782
         Height = 266
         ExplicitWidth = 782
-        ExplicitHeight = 241
+        ExplicitHeight = 266
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsView.CellAutoHeight = True
           Styles.Inactive = nil
@@ -59,8 +58,12 @@ inherited UserProtocolForm: TUserProtocolForm
   inherited Panel: TPanel
     Width = 782
     ExplicitWidth = 782
+    inherited deStart: TcxDateEdit
+      EditValue = 41640d
+    end
     inherited deEnd: TcxDateEdit
       Left = 335
+      EditValue = 41640d
       ExplicitLeft = 335
     end
     object edUser: TcxButtonEdit [3]
@@ -91,18 +94,18 @@ inherited UserProtocolForm: TUserProtocolForm
     Top = 55
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Protocol'
+    StoredProcName = 'gpSelect_UserProtocol'
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -113,16 +116,6 @@ inherited UserProtocolForm: TUserProtocolForm
         Component = UserGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Name = 'inObjectDescId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inObjectId'
-        Value = ''
-        ParamType = ptInputOutput
       end>
     Top = 55
   end
@@ -135,7 +128,13 @@ inherited UserProtocolForm: TUserProtocolForm
       0)
   end
   inherited RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = nil
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = UserGuides
+      end>
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
