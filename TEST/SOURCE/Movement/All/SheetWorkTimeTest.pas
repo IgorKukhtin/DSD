@@ -74,9 +74,9 @@ end;
 
 procedure TSheetWorkTimeTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_SheetWorkTime\';
+  ScriptDirectory := ProcedurePath + 'Movement\SheetWorkTime\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_SheetWorkTime\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\SheetWorkTime\';
   inherited;
 end;
 

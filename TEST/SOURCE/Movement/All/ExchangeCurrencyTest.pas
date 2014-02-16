@@ -77,7 +77,7 @@ end;
 
 procedure TExchangeCurrencyTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_ExchangeCurrency\';
+  ScriptDirectory := ProcedurePath + 'Movement\ExchangeCurrency\';
   inherited;
 end;
 

@@ -12,17 +12,17 @@ inherited ReturnInForm: TReturnInForm
     Height = 575
     ExplicitTop = 128
     ExplicitWidth = 925
-    ExplicitHeight = 548
+    ExplicitHeight = 575
     ClientRectBottom = 571
     ClientRectRight = 921
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 919
-      ExplicitHeight = 522
+      ExplicitHeight = 549
       inherited cxGrid: TcxGrid
         Width = 919
         Height = 549
         ExplicitWidth = 919
-        ExplicitHeight = 522
+        ExplicitHeight = 549
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -195,12 +195,12 @@ inherited ReturnInForm: TReturnInForm
       ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 919
-      ExplicitHeight = 522
+      ExplicitHeight = 549
       inherited cxGridEntry: TcxGrid
         Width = 919
         Height = 549
         ExplicitWidth = 919
-        ExplicitHeight = 522
+        ExplicitHeight = 549
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -644,6 +644,7 @@ inherited ReturnInForm: TReturnInForm
     Top = 337
   end
   inherited PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem

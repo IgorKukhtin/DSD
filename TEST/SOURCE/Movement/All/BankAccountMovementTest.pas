@@ -90,9 +90,9 @@ end;
 
 procedure TBankAccountMovementTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_BankAccount\';
+  ScriptDirectory := ProcedurePath + 'Movement\BankAccount\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_BankAccount\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\BankAccount\';
   inherited;
 end;
 

@@ -29,7 +29,7 @@ uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB;
 
 procedure TDocumentTaxKindTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_DocumentTaxKind\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\DocumentTaxKind\';
   inherited;
 end;
 

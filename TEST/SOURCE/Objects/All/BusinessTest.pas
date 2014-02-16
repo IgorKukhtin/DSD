@@ -28,7 +28,7 @@ uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
 
 procedure TBusinessTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Business\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Business\';
   inherited;
 end;
 

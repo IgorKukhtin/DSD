@@ -642,6 +642,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_JuridicalDefermentPayment'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_JuridicalDefermentPayment');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

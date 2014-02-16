@@ -842,6 +842,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportProfitLoss'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_CheckTax'
         end>
     end
     object bbReportMain_Separator: TdxBarSeparator
@@ -1344,6 +1348,10 @@ object MainForm: TMainForm
     end
     object bbMovementProtocol: TdxBarButton
       Action = actProtocolMovement
+      Category = 0
+    end
+    object bbReport_CheckTax: TdxBarButton
+      Action = actReport_CheckTax
       Category = 0
     end
   end
@@ -2587,6 +2595,15 @@ object MainForm: TMainForm
       Hint = #1057#1090#1088#1072#1085#1099
       FormName = 'TCountryForm'
       FormNameParam.Value = 'TCountryForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_CheckTax: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1053#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      FormName = 'TReport_CheckTaxForm'
+      FormNameParam.Value = 'TReport_CheckTaxForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

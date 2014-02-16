@@ -68,11 +68,11 @@ end;
 
 procedure TSendDebtTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_SendDebt\';
+  ScriptDirectory := ProcedurePath + 'Movement\SendDebt\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_SendDebt\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\SendDebt\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_SendDebt\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\SendDebt\';
   inherited;
 end;
 

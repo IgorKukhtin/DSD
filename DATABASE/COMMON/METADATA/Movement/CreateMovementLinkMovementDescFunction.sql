@@ -14,5 +14,7 @@ INSERT INTO MovementLinkMovementDesc (Code, ItemName)
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  12.02.14                      	                                  *
-
 */
+
+-- INSERT INTO MovementLinkMovement( DescId, MovementId ,  MovementChildId )
+-- select zc_MovementLinkMovement_Child() , 19736,  122207

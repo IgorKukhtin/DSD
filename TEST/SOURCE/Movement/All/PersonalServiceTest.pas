@@ -83,7 +83,7 @@ end;
 
 procedure TPersonalServiceTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_PersonalService\';
+  ScriptDirectory := ProcedurePath + 'Movement\PersonalService\';
   inherited;
 end;
 

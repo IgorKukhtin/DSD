@@ -28,7 +28,7 @@ uses DB, UtilConst, TestFramework, SysUtils, Authentication, Storage, CommonData
 
 procedure TInfoMoneyTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_InfoMoney\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\InfoMoney\';
   inherited;
 end;
 

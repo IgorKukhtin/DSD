@@ -74,11 +74,11 @@ end;
 
 procedure TPersonalSendCashTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_PersonalSendCash\';
+  ScriptDirectory := ProcedurePath + 'Movement\PersonalSendCash\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_PersonalSendCash\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\PersonalSendCash\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_PersonalSendCash\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\PersonalSendCash\';
   inherited;
 end;
 

@@ -77,7 +77,7 @@ end;
 
 procedure TBankStatementItemTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_BankStatementItem\';
+  ScriptDirectory := ProcedurePath + 'Movement\BankStatementItem\';
   inherited;
 end;
 

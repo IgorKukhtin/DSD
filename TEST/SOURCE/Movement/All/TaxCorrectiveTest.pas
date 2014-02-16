@@ -92,11 +92,11 @@ end;
 
 procedure TTaxCorrectiveTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_TaxCorrective\';
+  ScriptDirectory := ProcedurePath + 'Movement\TaxCorrective\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_TaxCorrective\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\TaxCorrective\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_TaxCorrective\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\TaxCorrective\';
   inherited;
 end;
 

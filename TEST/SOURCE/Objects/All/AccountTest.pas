@@ -29,7 +29,7 @@ uses DB, UtilConst, TestFramework, SysUtils;
 
 procedure TAccountTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Account\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Account\';
   inherited;
 end;
 

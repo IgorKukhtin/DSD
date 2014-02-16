@@ -125,6 +125,7 @@ type
     cbCompleteReturnIn: TCheckBox;
     cbOnlyInsertDocument: TCheckBox;
     cbData1CLink: TCheckBox;
+    cbCompleteReturnOut: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -164,6 +165,7 @@ type
     procedure pInsertHistoryCost;
     // DocumentsCompelete :
     procedure pCompleteDocument_Income(isLastComplete:Boolean);
+    procedure pCompleteDocument_ReturnOut(isLastComplete:Boolean);
     procedure pCompleteDocument_Send(isLastComplete:Boolean);
     procedure pCompleteDocument_SendOnPrice(isLastComplete:Boolean);
     procedure pCompleteDocument_Sale(isLastComplete:Boolean);
@@ -779,6 +781,7 @@ begin
      if (cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled) then
      begin
           if not fStop then pCompleteDocument_Income(FALSE);
+          if not fStop then pCompleteDocument_ReturnOut(FALSE);
           if not fStop then pCompleteDocument_Send(FALSE);
           if not fStop then pCompleteDocument_SendOnPrice(FALSE);
           //Fl if not fStop then pCompleteDocument_Sale(FALSE);
@@ -790,6 +793,7 @@ begin
      if not fStop then pInsertHistoryCost;
      //
      if(not fStop)and(not ((cbInsertHistoryCost.Checked)and(cbInsertHistoryCost.Enabled)))then pCompleteDocument_Income(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_ReturnOut(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Send(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_SendOnPrice(cbLastComplete.Checked);
      //Fl if not fStop then pCompleteDocument_Sale(cbLastComplete.Checked);
@@ -2724,6 +2728,11 @@ procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
                            +'                      ON ObjectLink_Branch.ObjectId = ObjectLink.ObjectId'
                            +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()'
                            +'                     AND ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
+                           +'      JOIN Object ON Object.Id = ObjectLink.ObjectId'
+                           +'                 AND Object.ObjectCode = '+IntToStr(inCode)
+                           +'                 AND 0<>'+IntToStr(inCode)
+                           +'      JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink.ObjectId'
+                           +'                        AND ObjectBoolean.DescId = zc_ObjectBoolean_Partner1CLink_Sybase()'
                            +' where ObjectLink.ChildObjectId = '+IntToStr(PartnerId)
                            +'   and ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner()'
                            );
@@ -2737,6 +2746,7 @@ procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
              toStoredProc.Params.ParamByName('inName').Value:=inName;
              toStoredProc.Params.ParamByName('inPartnerId').Value:=PartnerId;
              toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
+             toStoredProc.Params.ParamByName('inIsSybase').Value:=true;
              Result:=myExecToStoredProc;
          end;
 begin
@@ -2768,10 +2778,10 @@ begin
            +'     , _pgUnitNikopol.Id_Postgres_Branch as Is_pg_Nikopol');
         Add('     , _pgPartner.PartnerId_pg as ClientId_Postgres');
         Add('from dba.Client_by1CExternal');
-        Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
-           +'                          ) as Unit_byLoad_Client on Unit_byLoad_Client.UnitId = Client_by1CExternal.ClientId');
-        Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
-           +'                          ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_Client.Id_byLoad');
+        Add('          join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
+           +'               ) as Unit_byLoad_Client on Unit_byLoad_Client.UnitId = Client_by1CExternal.ClientId');
+        Add('          join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
+           +'               ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_Client.Id_byLoad');
 
         Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
         Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
@@ -2782,6 +2792,7 @@ begin
         Add('     left outer join dba._pgUnit as _pgUnitOdessa     on _pgUnitOdessa.ObjectCode    = 22080');
         Add('     left outer join dba._pgUnit as _pgUnitXarkov     on _pgUnitXarkov.ObjectCode    = 22090');
         Add('     left outer join dba._pgUnit as _pgUnitNikopol    on _pgUnitNikopol.ObjectCode   = 22100');
+// Add('where 1=0');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2799,6 +2810,10 @@ begin
         toStoredProc.Params.AddParam ('inPartnerId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchTopId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsSybase',ftBoolean,ptInput, true);
+        //
+        //!!!Обнуляем признак!!!
+        fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update ObjectBoolean set ValueData=FALSE where DescId=zc_ObjectBoolean_Partner1CLink_Sybase()')+')');
         //
         while not EOF do
         begin
@@ -2831,44 +2846,44 @@ begin
         end;
      end;
      //
+     //!!!Обнуляем значения если не было обработки!!!
+     fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set ObjectCode=0,ValueData='+FormatToVarCharServer_notNULL('')+FormatToVarCharServer_notNULL('')+' where id in (select ObjectId from ObjectBoolean where ValueData=FALSE and DescId=zc_ObjectBoolean_Partner1CLink_Sybase())')+')');
+     //
      myDisabledCB(cbData1CLink);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
         function InsertData_pg(UnitId,GoodsId,GoodsKindId:Integer;inCode:Integer;inName:String):Boolean;
-        var findObjectLinkId,findId:Integer;
+        var findId:Integer;
+            addStr:String;
         begin
-             //Сначала находим инфу в PG
-             fOpenSqToQuery(' select Id '
-                           +' from Object_GoodsByGoodsKind_View'
-                           +' where GoodsId = '+IntToStr(GoodsId)
-                           +'   and GoodsKindId = '+IntToStr(GoodsKindId)
-                           );
-             //нашли в 1-ый раз
-             findObjectLinkId:=toSqlQuery.FieldByName('Id').AsInteger;
-             if (findObjectLinkId = 0)
-             then if (inCode = 0)and (trim(inName)='') then exit
-                  else begin
-                            fOpenSqToQuery(' select * from lpInsert_Object_GoodsByGoodsKind ('+IntToStr(GoodsId)+', '+IntToStr(GoodsKindId)+', 0)');
-                            fOpenSqToQuery(' select Id '
-                                          +' from Object_GoodsByGoodsKind_View'
-                                          +' where GoodsId = '+IntToStr(GoodsId)
-                                          +'   and GoodsKindId = '+IntToStr(GoodsKindId)
-                                          );
-                            //нашли во 2-ой раз
-                            findObjectLinkId:=toSqlQuery.FieldByName('Id').AsInteger;
-                       end;
+              if GoodsKindId<>0
+              then addStr:=' JOIN ObjectLink AS ObjectLink_GoodsKind'
+                          +'                 ON ObjectLink_GoodsKind.ObjectId = ObjectLink_Branch.ObjectId'
+                          +'                AND ObjectLink_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind()'
+                          +'                AND ObjectLink_GoodsKind.ChildObjectId = '+IntToStr(GoodsKindId)
+              else addStr:='';
+
              //нашли
-             fOpenSqToQuery(' select ObjectLink.ObjectId'
-                           +' from ObjectLink'
-                           +'      JOIN ObjectLink AS ObjectLink_Branch'
-                           +'                      ON ObjectLink_Branch.ObjectId = ObjectLink.ObjectId'
-                           +'                     AND ObjectLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()'
-                           +'                     AND ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
-                           +' where ObjectLink.ChildObjectId = '+IntToStr(findObjectLinkId)
-                           +'   and ObjectLink.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsByGoodsKind()'
+             fOpenSqToQuery(' select ObjectLink_Branch.ObjectId'
+                           +' from ObjectLink AS ObjectLink_Branch'
+                           +'      JOIN ObjectLink AS ObjectLink_Goods'
+                           +'                      ON ObjectLink_Goods.ObjectId = ObjectLink_Branch.ObjectId'
+                           +'                     AND ObjectLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()'
+                           +'                     AND ObjectLink_Goods.ChildObjectId = '+IntToStr(GoodsId)
+                           +addStr
+                           +'      JOIN Object ON Object.Id = ObjectLink_Branch.ObjectId'
+                           +'                 AND Object.ObjectCode = '+IntToStr(inCode)
+                           +'                 AND 0<>'+IntToStr(inCode)
+                           +'      JOIN ObjectBoolean ON ObjectBoolean.ObjectId = ObjectLink_Branch.ObjectId'
+                           +'                        AND ObjectBoolean.DescId = zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase()'
+                           +' where ObjectLink_Branch.ChildObjectId = '+IntToStr(UnitId)
+                           +'   and ObjectLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()'
                            );
              findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+             //
+             if (findId = 0)
+             then if (inCode = 0)and (trim(inName)='') then exit;
              //сохраняем
              toStoredProc.Params.ParamByName('ioId').Value:=findId;
              toStoredProc.Params.ParamByName('inCode').Value:=inCode;
@@ -2876,6 +2891,7 @@ procedure TMainForm.pLoadGuide_Goods1CLink_Fl;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=GoodsId;
              toStoredProc.Params.ParamByName('inGoodsKindId').Value:=GoodsKindId;
              toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
+             toStoredProc.Params.ParamByName('inIsSybase').Value:=true;
              Result:=myExecToStoredProc;
          end;
 begin
@@ -2925,6 +2941,7 @@ begin
         Add('     left outer join dba._pgUnit as _pgUnitOdessa     on _pgUnitOdessa.ObjectCode    = 22080');
         Add('     left outer join dba._pgUnit as _pgUnitXarkov     on _pgUnitXarkov.ObjectCode    = 22090');
         Add('     left outer join dba._pgUnit as _pgUnitNikopol    on _pgUnitNikopol.ObjectCode   = 22100');
+// Add('where  GoodsCode_byKiev=15487');
         Open;
         //
         fStop:=cbOnlyOpen.Checked;
@@ -2943,6 +2960,10 @@ begin
         toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchTopId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inIsSybase',ftBoolean,ptInput, true);
+        //
+        //!!!Обнуляем признак
+        fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update ObjectBoolean set ValueData=FALSE where DescId=zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase()')+')');
         //
         while not EOF do
         begin
@@ -2951,20 +2972,28 @@ begin
              //
              InsertData_pg(FieldByName('Is_pg_Kiev').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byKiev').AsInteger,FieldByName('GoodsName_byKiev').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Doneck').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byDoneck').AsInteger,FieldByName('GoodsName_byDoneck').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Nikopol').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byNikopol').AsInteger,FieldByName('GoodsName_byNikopol').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Odessa').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byOdessa').AsInteger,FieldByName('GoodsName_byOdessa').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Xerson').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byXerson').AsInteger,FieldByName('GoodsName_byXerson').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Cherkassi').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byCherkassi').AsInteger,FieldByName('GoodsName_byCherkassi').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Simf').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_bySimf').AsInteger,FieldByName('GoodsName_bySimf').AsString);
+
              InsertData_pg(FieldByName('Is_pg_KrRog').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byKrRog').AsInteger,FieldByName('GoodsName_byKrRog').AsString);
+
              InsertData_pg(FieldByName('Is_pg_Xarkov').AsInteger,FieldByName('GoodsId_Postgres').AsInteger,FieldByName('GoodsKindId_Postgres').AsInteger
                           ,FieldByName('GoodsCode_byXarkov').AsInteger,FieldByName('GoodsName_byXarkov').AsString);
              //
@@ -2974,6 +3003,9 @@ begin
              Application.ProcessMessages;
         end;
      end;
+     //
+     //!!!Обнуляем значения если не было обработки!!!
+     fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set ObjectCode=0,ValueData='+FormatToVarCharServer_notNULL('')+FormatToVarCharServer_notNULL('')+' where id in (select ObjectId from ObjectBoolean where ValueData=FALSE and DescId=zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase())')+')');
      //
      myDisabledCB(cbData1CLink);
 end;
@@ -6230,6 +6262,7 @@ begin
      //
      myDisabledCB(cbInsertHistoryCost);
 end;
+
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_Income(isLastComplete:Boolean);
 begin
@@ -6240,10 +6273,10 @@ begin
      with fromQuery,Sql do begin
         Close;
         Clear;
-        Add('select Bill.Id as ObjectId');
-        Add('     , cast (Bill.BillNumber as integer) as InvNumber');
+        Add('select cast (Bill.BillNumber as integer) as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill_findInfoMoney.InfoMoneyCode as InfoMoneyCode');
+        Add('     , Bill.Id as ObjectId');
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
         Add('     left outer join (select Bill.Id as BillId'
@@ -6252,17 +6285,17 @@ begin
            +'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
            +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems_find.GoodsPropertyId'
            +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
-           +'                         and Bill.BillKind=zc_bkIncomeToUnit()'
-           +'                         and Bill.MoneyKindId = zc_mkBN()'
+           +'                        and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'                        and Id_Postgres >0'
            +'                      group by Bill.Id'
            +'                     ) as Bill_findInfoMoney on Bill_findInfoMoney.BillId=Bill.Id');
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
-           +'  and Id_Postgres >0'
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
+           +'  and Id_Postgres >0'
            );
         Add('order by InfoMoneyCode,OperDate,ObjectId');
         Open;
-        cbCompleteIncome.Caption:='1. ('+IntToStr(RecordCount)+') Приход от поставщика';
+        cbCompleteIncome.Caption:='1.1. ('+IntToStr(RecordCount)+') Приход от поставщика';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -9395,6 +9428,87 @@ begin
      end;
      //
      myDisabledCB(cbProductionSeparate);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pCompleteDocument_ReturnOut(isLastComplete:Boolean);
+begin
+     if (not cbCompleteReturnOut.Checked)or(not cbCompleteReturnOut.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteReturnOut);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select cast (Bill.BillNumber as integer) as InvNumber');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill_findInfoMoney.InfoMoneyCode as InfoMoneyCode');
+        Add('     , Bill.Id as ObjectId');
+        Add('     , Bill.Id_Postgres as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join (select Bill.Id as BillId'
+           +'                            ,max(isnull(GoodsProperty.InfoMoneyCode,0))as InfoMoneyCode'
+           +'                      from dba.Bill'
+           +'                           left outer join dba.BillItems as BillItems_find on BillItems_find.BillId = Bill.Id and BillItems_find.OperPrice<>0 and BillItems_find.OperCount<>0'
+           +'                           left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems_find.GoodsPropertyId'
+           +'                      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'                        and Bill.BillKind=zc_bkReturnToClient()'
+           +'                        and Bill.Id_Postgres>0'
+           +'                      group by Bill.Id'
+           +'                     ) as Bill_findInfoMoney on Bill_findInfoMoney.BillId=Bill.Id');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind=zc_bkReturnToClient()'
+           +'  and Id_Postgres >0'
+           );
+        Add('order by InfoMoneyCode,OperDate,ObjectId');
+        Open;
+        cbCompleteReturnOut.Caption:='1.2. ('+IntToStr(RecordCount)+') Возврат поставщику';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        toStoredProc_two.StoredProcName:='gpComplete_Movement_ReturnOut';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        toStoredProc_two.Params.AddParam ('inIsLastComplete',ftBoolean, ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if cbComplete.Checked then
+             begin
+                  toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  toStoredProc_two.Params.ParamByName('inIsLastComplete').Value:=isLastComplete;
+                  if not myExecToStoredProc_two then ;//exit;
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteReturnOut);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_ReturnOut:Integer;

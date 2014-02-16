@@ -28,7 +28,7 @@ uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
 
 procedure TTradeMarkTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_TradeMark\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\TradeMark\';
   inherited;
 end;
 

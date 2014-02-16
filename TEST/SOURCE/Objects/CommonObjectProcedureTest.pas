@@ -25,7 +25,7 @@ end;
 
 procedure TCommonObjectProcedure.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\Common\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\_Common\';
   inherited;
 end;
 

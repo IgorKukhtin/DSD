@@ -48,7 +48,7 @@ end;
 
 procedure TIncomeCashJuridicalTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_IncomeCashJuridical\';
+  ScriptDirectory := ProcedurePath + 'Movement\IncomeCashJuridical\';
   inherited;
 end;
 

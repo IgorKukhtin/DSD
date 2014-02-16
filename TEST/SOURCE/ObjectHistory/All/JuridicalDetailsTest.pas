@@ -37,7 +37,7 @@ uses DB, UtilConst, TestFramework, Authentication, CommonData, Storage,
 
 procedure TJuridicalDetailsTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTHistory\_JuridicalDetails\';
+  ScriptDirectory := ProcedurePath + 'OBJECTHistory\JuridicalDetails\';
   inherited;
 end;
 

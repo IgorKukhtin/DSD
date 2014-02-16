@@ -15,7 +15,7 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
        , Object_Contract_InvNumber_View.InfoMoneyId
 
-       , ObjectLink_Contract_ContractStateKind.ChildObjectId AS ContractStateKindId
+       , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
        , Object_ContractStateKind.ObjectCode   AS ContractStateKindCode
        , Object_ContractStateKind.ValueData    AS ContractStateKindName
 

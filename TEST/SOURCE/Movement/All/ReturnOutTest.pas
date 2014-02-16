@@ -93,11 +93,11 @@ end;
 
 procedure TReturnOutTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_ReturnOut\';
+  ScriptDirectory := ProcedurePath + 'Movement\ReturnOut\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_ReturnOut\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\ReturnOut\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_ReturnOut\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\ReturnOut\';
   inherited;
 end;
 

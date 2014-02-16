@@ -1,0 +1,269 @@
+inherited Report_CheckTaxForm: TReport_CheckTaxForm
+  Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093'>'
+  ClientHeight = 341
+  ClientWidth = 754
+  ExplicitWidth = 762
+  ExplicitHeight = 375
+  PixelsPerInch = 96
+  TextHeight = 13
+  inherited PageControl: TcxPageControl
+    Width = 754
+    Height = 284
+    TabOrder = 3
+    ExplicitWidth = 754
+    ExplicitHeight = 284
+    ClientRectBottom = 284
+    ClientRectRight = 754
+    inherited tsMain: TcxTabSheet
+      ExplicitWidth = 754
+      ExplicitHeight = 284
+      inherited cxGrid: TcxGrid
+        Width = 754
+        Height = 284
+        ExplicitWidth = 754
+        ExplicitHeight = 284
+        inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSumm_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSumm_Tax
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSumm_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmount_Tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountSumm_Tax
+            end>
+          OptionsData.Editing = False
+          OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
+          object clInvNumber_Sale: TcxGridDBColumn
+            Caption = #8470' '#1055#1088#1086#1076#1072#1078#1072
+            DataBinding.FieldName = 'InvNumber_Sale'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
+          object clInvNumber_Tax: TcxGridDBColumn
+            Caption = #8470' '#1053#1053
+            DataBinding.FieldName = 'InvNumber_Tax'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clOperDate_Sale: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'OperDate_Sale'
+          end
+          object clOperDate_Tax: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1053#1053
+            DataBinding.FieldName = 'OperDate_Tax'
+          end
+          object clFromCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
+            DataBinding.FieldName = 'FromCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object clFromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+          end
+          object clToCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1082#1086#1084#1091')'
+            DataBinding.FieldName = 'ToCode'
+          end
+          object clToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+          end
+          object clPaidKindName: TcxGridDBColumn
+            Caption = #1060#1054
+            DataBinding.FieldName = 'PaidKindName'
+          end
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
+          end
+          object clGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 40
+          end
+          object clGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clPrice_Sale: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'Price_Sale'
+          end
+          object clPrice_Tax: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' ('#1053#1053')'
+            DataBinding.FieldName = 'Price_Tax'
+          end
+          object clAmount_Sale: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'Amount_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clAmount_Tax: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1053#1053')'
+            DataBinding.FieldName = 'Amount_Tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clAmountSumm_Sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+            DataBinding.FieldName = 'AmountSumm_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clAmountSumm_Tax: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1053#1053')'
+            DataBinding.FieldName = 'AmountSumm_Tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clDifference: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1086#1090#1083#1080#1095#1080#1103
+            DataBinding.FieldName = 'Difference'
+          end
+        end
+      end
+    end
+  end
+  inherited Panel: TPanel
+    Width = 754
+    ExplicitWidth = 754
+    inherited deStart: TcxDateEdit
+      EditValue = 41609d
+    end
+    inherited deEnd: TcxDateEdit
+      EditValue = 41639d
+    end
+  end
+  inherited MasterDS: TDataSource
+    Left = 72
+    Top = 208
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 40
+    Top = 208
+  end
+  inherited spSelect: TdsdStoredProc
+    StoredProcName = 'gpReport_CheckTax'
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41609d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 112
+    Top = 208
+  end
+  inherited BarManager: TdxBarManager
+    Left = 144
+    Top = 208
+    DockControlHeights = (
+      0
+      0
+      26
+      0)
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 368
+  end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 80
+    Top = 144
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+      end>
+    Left = 184
+    Top = 136
+  end
+end

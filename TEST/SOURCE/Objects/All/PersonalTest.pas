@@ -29,7 +29,7 @@ uses DB, UtilConst, TestFramework, SysUtils, UnitsTest;
 
 procedure TPersonalTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'OBJECTS\_Personal\';
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Personal\';
   inherited;
 end;
 

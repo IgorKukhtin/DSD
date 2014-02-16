@@ -81,7 +81,7 @@ end;
 
 procedure TPersonalReportTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_PersonalReport\';
+  ScriptDirectory := ProcedurePath + 'Movement\PersonalReport\';
   inherited;
 end;
 

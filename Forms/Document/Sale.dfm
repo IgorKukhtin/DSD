@@ -10,19 +10,19 @@ inherited SaleForm: TSaleForm
     Top = 164
     Width = 1015
     Height = 504
-    ExplicitTop = 128
+    ExplicitTop = 164
     ExplicitWidth = 1015
-    ExplicitHeight = 540
+    ExplicitHeight = 504
     ClientRectBottom = 500
     ClientRectRight = 1011
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1009
-      ExplicitHeight = 514
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1009
         Height = 478
         ExplicitWidth = 1009
-        ExplicitHeight = 514
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -214,12 +214,12 @@ inherited SaleForm: TSaleForm
       ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 1009
-      ExplicitHeight = 514
+      ExplicitHeight = 478
       inherited cxGridEntry: TcxGrid
         Width = 1009
         Height = 478
         ExplicitWidth = 1009
-        ExplicitHeight = 514
+        ExplicitHeight = 478
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -1216,11 +1216,12 @@ inherited SaleForm: TSaleForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
+    StoredProcName = 'gpMovementItem_Sale_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_Sale_SetUnErased'
     Left = 718
     Top = 464
   end

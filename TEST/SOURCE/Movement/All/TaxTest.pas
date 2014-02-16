@@ -92,11 +92,11 @@ end;
 
 procedure TTaxTest.ProcedureLoad;
 begin
-  ScriptDirectory := ProcedurePath + 'Movement\_Tax\';
+  ScriptDirectory := ProcedurePath + 'Movement\Tax\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\_Tax\';
+  ScriptDirectory := ProcedurePath + 'MovementItem\Tax\';
   inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItemContainer\_Tax\';
+  ScriptDirectory := ProcedurePath + 'MovementItemContainer\Tax\';
   inherited;
 end;
 
