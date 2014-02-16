@@ -1235,6 +1235,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUserProtocol'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementDesc'
         end
         item
@@ -1287,6 +1295,7 @@ object MainForm: TMainForm
     end
     object bbProtocol: TdxBarButton
       Action = actProtocol
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1086#1074
       Category = 0
     end
     object bbSetUserDefaults: TdxBarButton
@@ -1327,6 +1336,14 @@ object MainForm: TMainForm
     end
     object bbMaker: TdxBarButton
       Action = actMaker
+      Category = 0
+    end
+    object bbUserProtocol: TdxBarButton
+      Action = actProtocolUser
+      Category = 0
+    end
+    object bbMovementProtocol: TdxBarButton
+      Action = actProtocolMovement
       Category = 0
     end
   end
@@ -1409,6 +1426,26 @@ object MainForm: TMainForm
       Hint = #1050#1072#1083#1077#1085#1076#1072#1088#1100' '#1088#1072#1073#1086#1095#1080#1093' '#1076#1085#1077#1081
       FormName = 'TCalendarForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocolUser: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1077#1081
+      FormName = 'TUserProtocolForm'
+      FormNameParam.Value = 'TUserProtocolForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProtocolMovement: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1090#1086#1082#1086#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      FormName = 'TMovementProtocolForm'
+      FormNameParam.Value = 'TMovementProtocolForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2580,7 +2617,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
@@ -12382,5 +12419,19 @@ object MainForm: TMainForm
     AutoSize = False
     Left = 56
     Top = 104
+  end
+  object spUserProtocol: TdsdStoredProc
+    StoredProcName = 'gpInsert_UserProtocol'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inProtocolData'
+        Value = Null
+        DataType = ftBlob
+        ParamType = ptInput
+      end>
+    Left = 256
+    Top = 168
   end
 end

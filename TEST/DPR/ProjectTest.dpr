@@ -237,7 +237,6 @@ uses
   AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
-  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   AncestorDBGrid in '..\..\Forms\Ancestor\AncestorDBGrid.pas' {AncestorDBGridForm: TParentForm},
   AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   ObjectDesc in '..\..\Forms\System\ObjectDesc.pas' {ObjectDescForm: TParentForm},
@@ -364,7 +363,11 @@ uses
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   SaleMovementItemTest in '..\SOURCE\MovementItem\All\SaleMovementItemTest.pas',
   ReturnInMovementItemTest in '..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas',
-  TaxMovementItemTest in '..\SOURCE\MovementItem\All\TaxMovementItemTest.pas';
+  TaxMovementItemTest in '..\SOURCE\MovementItem\All\TaxMovementItemTest.pas',
+  UserProtocol in '..\..\Forms\System\UserProtocol.pas' {UserProtocolForm: TParentForm},
+  MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
+  Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
+  MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm};
 
 {$R *.RES}
 

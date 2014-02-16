@@ -301,6 +301,11 @@ type
     actCountry: TdsdOpenForm;
     bbCountry: TdxBarButton;
     bbMaker: TdxBarButton;
+    spUserProtocol: TdsdStoredProc;
+    actProtocolUser: TdsdOpenForm;
+    actProtocolMovement: TdsdOpenForm;
+    bbUserProtocol: TdxBarButton;
+    bbMovementProtocol: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -319,7 +324,7 @@ var
 implementation
 
 uses ParentForm, Storage, CommonData, MessagesUnit, UtilConst, Math,
-     AboutBoxUnit;
+     AboutBoxUnit, UtilConvert;
 
 {$R DevExpressRus.res}
 
@@ -428,12 +433,17 @@ end;
 
 procedure TMainForm.OnException(Sender: TObject; E: Exception);
 var TextMessage: String;
+    isMessage: boolean;
 begin
+
   if E is ESortException then begin
 
   end
   else begin
+     isMessage := false;
      if (E is EStorageException) then begin
+        isMessage := (E as EStorageException).ErrorCode = 'P0001';
+
         if pos('context', AnsilowerCase(E.Message)) = 0 then
            TextMessage := E.Message
          else
@@ -442,6 +452,16 @@ begin
      end
      else
         TextMessage := E.Message;
+     if not isMessage then begin
+        // Сохраняем протокол в базе
+        try
+          spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
+          spUserProtocol.Execute;
+        except
+
+        end;
+     end;
+
      TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
   end;
 end;

@@ -365,6 +365,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+
+
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;

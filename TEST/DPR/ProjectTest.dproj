@@ -625,10 +625,6 @@
 				<Form>AncestorReportForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\Protocol.pas">
-				<Form>ProtocolForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
 				<Form>AncestorDBGridForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1069,6 +1065,23 @@
 			<DCCReference Include="..\SOURCE\MovementItem\All\SaleMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\ReturnInMovementItemTest.pas"/>
 			<DCCReference Include="..\SOURCE\MovementItem\All\TaxMovementItemTest.pas"/>
+			<DCCReference Include="..\..\Forms\System\UserProtocol.pas">
+				<Form>UserProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementProtocol.pas">
+				<Form>MovementProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\Protocol.pas">
+				<Form>ProtocolForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\System\MovementItemProtocol.pas">
+				<Form>MovementItemProtocolForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

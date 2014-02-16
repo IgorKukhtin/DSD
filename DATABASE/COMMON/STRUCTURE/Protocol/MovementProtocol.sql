@@ -13,6 +13,7 @@ CREATE TABLE MovementProtocol(
    UserId                INTEGER,
    OperDate              TDateTime,
    ProtocolData          TBlob, 
+   isInsert              Boolean,
 
    CONSTRAINT fk_MovementProtocol_MovementId FOREIGN KEY(MovementId) REFERENCES Movement(Id),
    CONSTRAINT fk_MovementProtocol_UserId FOREIGN KEY(UserId) REFERENCES Object(Id)
