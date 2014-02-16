@@ -22,8 +22,9 @@ BEGIN
      UserProtocol.ProtocolData,
      Object_User.ValueData AS UserName
   FROM UserProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = UserProtocol.UserId AND (UserProtocol.UserId = inUserId OR 0 = inUserId)
- WHERE UserProtocol.OperDate BETWEEN inStartDate AND inEndDate;
+  JOIN Object AS Object_User ON Object_User.Id = UserProtocol.UserId
+ WHERE UserProtocol.OperDate BETWEEN inStartDate AND inEndDate
+   AND (UserProtocol.UserId = inUserId OR 0 = inUserId);
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта

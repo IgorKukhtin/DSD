@@ -2,7 +2,7 @@ inherited ProtocolForm: TProtocolForm
   Caption = #1055#1088#1086#1090#1086#1082#1086#1083
   ClientHeight = 323
   ClientWidth = 782
-  AddOnFormData.RefreshAction = nil
+  AddOnFormData.isSingle = False
   ExplicitWidth = 790
   ExplicitHeight = 350
   PixelsPerInch = 96
@@ -17,11 +17,11 @@ inherited ProtocolForm: TProtocolForm
     ClientRectBottom = 241
     ClientRectRight = 782
     inherited tsMain: TcxTabSheet
+      ExplicitWidth = 782
+      ExplicitHeight = 241
       inherited cxGrid: TcxGrid
-        Top = 0
         Width = 782
         Height = 241
-        ExplicitTop = 0
         ExplicitWidth = 782
         ExplicitHeight = 241
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -30,12 +30,25 @@ inherited ProtocolForm: TProtocolForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colInsert: TcxGridDBColumn
+            Caption = '+'
+            DataBinding.FieldName = 'IsInsert'
+            HeaderAlignmentVert = vaCenter
+            Width = 30
+          end
           object colDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 54
+          end
+          object colUserName: TcxGridDBColumn
+            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'UserName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 99
           end
           object colObjectName: TcxGridDBColumn
             Caption = #1054#1073#1098#1077#1082#1090
@@ -49,13 +62,6 @@ inherited ProtocolForm: TProtocolForm
             DataBinding.FieldName = 'ObjectTypeName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-          end
-          object colUserName: TcxGridDBColumn
-            Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'UserName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 99
           end
           object colProtocolData: TcxGridDBColumn
             Caption = #1044#1072#1085#1085#1099#1077
@@ -75,8 +81,12 @@ inherited ProtocolForm: TProtocolForm
     Height = 56
     ExplicitWidth = 782
     ExplicitHeight = 56
+    inherited deStart: TcxDateEdit
+      EditValue = 41640d
+    end
     inherited deEnd: TcxDateEdit
       Left = 335
+      EditValue = 41640d
       ExplicitLeft = 335
     end
     object edUser: TcxButtonEdit [3]
@@ -143,14 +153,14 @@ inherited ProtocolForm: TProtocolForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -186,12 +196,30 @@ inherited ProtocolForm: TProtocolForm
       26
       0)
   end
+  inherited PeriodChoice: TPeriodChoice
+    Left = 24
+    Top = 96
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = nil
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = UserGuides
+      end
+      item
+        Component = ObjectGuides
+      end
+      item
+        Component = ObjectDescGuides
+      end>
   end
   object UserGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUser
+    FormNameParam.Value = 'TUserForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUserForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -214,8 +242,10 @@ inherited ProtocolForm: TProtocolForm
   object ObjectDescGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edObjectDesc
+    FormNameParam.Value = 'TObjectDescForm'
+    FormNameParam.DataType = ftString
     FormName = 'TObjectDescForm'
-    PositionDataSet = 'MainDataCDS'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -236,8 +266,10 @@ inherited ProtocolForm: TProtocolForm
   object ObjectGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edObject
+    FormNameParam.Value = 'TObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TObjectForm'
-    PositionDataSet = 'MainDataCDS'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'

@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Protocol(
     IN inObjectId      Integer,    -- объект
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (OperDate TDateTime, ProtocolData TVarChar, UserName TVarChar, ObjectName TVarChar, ObjectTypeName TVarChar)
+RETURNS TABLE (OperDate TDateTime, ProtocolData TBlob, UserName TVarChar, ObjectName TVarChar, ObjectTypeName TVarChar, isInsert Boolean)
 AS
 $BODY$
 BEGIN
@@ -22,16 +22,18 @@ BEGIN
   RETURN QUERY 
   SELECT 
      ObjectProtocol.OperDate,
-     ObjectProtocol.ProtocolData::TVarChar,
+     ObjectProtocol.ProtocolData,
      Object_User.ValueData AS UserName,
      Object.ValueData AS ObjectName, 
-     ObjectDesc.ItemName AS ObjectTypeName
+     ObjectDesc.ItemName AS ObjectTypeName,
+     ObjectProtocol.isInsert
   FROM ObjectProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId
+  JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
   JOIN Object ON Object.Id = ObjectProtocol.ObjectId AND (Object.Id = inObjectId OR 0 = inObjectId)
    AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
   JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
- WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate;
+ WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate
+   AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId);
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта

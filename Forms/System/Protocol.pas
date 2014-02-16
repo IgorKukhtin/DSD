@@ -30,6 +30,7 @@ type
     ObjectGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
+    colInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public
