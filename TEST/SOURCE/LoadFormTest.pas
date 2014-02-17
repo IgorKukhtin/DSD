@@ -63,6 +63,7 @@ type
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
     procedure LoadProfitLossFormTest;
+    procedure LoadProfitLossServiceFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPositionFormTest;
@@ -365,6 +366,15 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemContainerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescDataForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescDataForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUserProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUserProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+
+
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
@@ -759,6 +769,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
 end;
+
+procedure TLoadFormTest.LoadProfitLossServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
+end;
+
+
 procedure TLoadFormTest.LoadTradeMarkFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTradeMarkForm'));

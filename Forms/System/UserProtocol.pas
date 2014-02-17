@@ -1,4 +1,4 @@
-unit Protocol;
+unit UserProtocol;
 
 interface
 
@@ -15,22 +15,13 @@ uses
   dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
 
 type
-  TProtocolForm = class(TAncestorReportForm)
+  TUserProtocolForm = class(TAncestorReportForm)
     colDate: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
     colProtocolData: TcxGridDBColumn;
-    colObjectName: TcxGridDBColumn;
     edUser: TcxButtonEdit;
-    edObjectDesc: TcxButtonEdit;
-    edObject: TcxButtonEdit;
     cxLabel3: TcxLabel;
     UserGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    ObjectDescGuides: TdsdGuides;
-    ObjectGuides: TdsdGuides;
-    cxLabel5: TcxLabel;
-    colObjectTypeName: TcxGridDBColumn;
-    colInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -42,7 +33,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProtocolForm);
+  RegisterClass(TUserProtocolForm);
 
 
 end.

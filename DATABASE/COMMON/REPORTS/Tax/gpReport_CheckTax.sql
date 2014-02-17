@@ -14,9 +14,9 @@ RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale T
               , PaidKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
               , Price_Sale TFloat, Price_Tax TFloat
-              , Amount_Sale TFloat, AmountSumm_Sale TFloat
-              , Amount_Tax TFloat, AmountSumm_Tax TFloat
-              , Difference TFloat
+              , Amount_Sale TFloat--, AmountSumm_Sale TFloat
+              , Amount_Tax TFloat--, AmountSumm_Tax TFloat
+              , Difference Boolean
               )  
 AS
 $BODY$
@@ -42,13 +42,13 @@ BEGIN
          , CAST (tmpGroupMovement.Price_Tax AS TFloat)
      
          , CAST (tmpGroupMovement.Amount_Sale AS TFloat)
-         , CAST (tmpGroupMovement.AmountSumm_Sale AS TFloat)          
+         --, CAST (tmpGroupMovement.AmountSumm_Sale AS TFloat)          
          , CAST (tmpGroupMovement.Amount_Tax AS TFloat)
-         , CAST (tmpGroupMovement.AmountSumm_Tax AS TFloat)
+         --, CAST (tmpGroupMovement.AmountSumm_Tax AS TFloat)
          , CAST (CASE WHEN (tmpGroupMovement.Price_Sale<>tmpGroupMovement.Price_Tax) 
                   OR (tmpGroupMovement.Amount_Sale<>tmpGroupMovement.Amount_Tax) 
-                  OR (tmpGroupMovement.AmountSumm_Sale<>tmpGroupMovement.AmountSumm_Tax)
-                THEN 1 ELSE 0 END AS TFloat) AS Difference 
+         --         OR (tmpGroupMovement.AmountSumm_Sale<>tmpGroupMovement.AmountSumm_Tax)
+                THEN TRUE ELSE FALSE END AS Boolean) AS Difference 
                 
          
     FROM (SELECT tmpMovement.MovementId_Sale
@@ -61,10 +61,10 @@ BEGIN
                , tmpMovement.GoodsKindId
                , MAX (tmpMovement.Price_Sale)     AS Price_Sale
                , SUM (tmpMovement.Amount_Sale)    AS Amount_Sale
-               , SUM(tmpMovement.AmountSumm_Sale) AS AmountSumm_Sale
+               --, SUM(tmpMovement.AmountSumm_Sale) AS AmountSumm_Sale
                , MAX (tmpMovement.Price_Tax)      AS Price_Tax
                , SUM (tmpMovement.Amount_Tax)     AS Amount_Tax
-               , SUM (tmpMovement.AmountSumm_Tax) AS AmountSumm_Tax
+               --, SUM (tmpMovement.AmountSumm_Tax) AS AmountSumm_Tax
       
           FROM (SELECT Movement.Id AS MovementId_Sale
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
@@ -77,18 +77,23 @@ BEGIN
                      , MovementItem.ObjectId AS GoodsId
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId 
                      , MIFloat_Price.ValueData AS Price_Sale
-                     , MovementItem.Amount AS Amount_Sale
-                     , MIFloat_Price.ValueData * MovementItem.Amount AS AmountSumm_Sale
+                     , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS Amount_Sale
+                     --, COALESCE (MIFloat_Price.ValueData * MIFloat_AmountPartner.ValueData , 0) AS AmountSumm_Sale
                      , 0 AS Price_Tax
                      , 0 AS Amount_Tax
-                     , 0 AS AmountSumm_Tax
+                     --, 0 AS AmountSumm_Tax
                 FROM Movement 
-                     join MovementItem ON MovementItem.MovementId = Movement.Id
-                    join MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
-                                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
+                     JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+                     JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
+                                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                
+                     LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                 
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -106,10 +111,10 @@ BEGIN
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                      , 0 AS Price_Sale
                      , 0 AS Amount_Sale
-                     , 0 AS AmountSumm_Sale
+                    -- , 0 AS AmountSumm_Sale
                      , MIFloat_Price.ValueData AS Price_Tax
                      , MovementItem.Amount AS Amount_Tax
-                     , MIFloat_Price.ValueData * MovementItem.Amount AS AmountSumm_Tax
+                    -- , MIFloat_Price.ValueData * MovementItem.Amount AS AmountSumm_Tax
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
@@ -159,6 +164,8 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postg
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+
+ 17.02.14         * change Amount =  MIFloat_AmountPartner, - summ
  14.02.14         *  
                 
 */

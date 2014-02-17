@@ -1,4 +1,4 @@
-unit Protocol;
+unit MovementProtocol;
 
 interface
 
@@ -15,7 +15,7 @@ uses
   dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
 
 type
-  TProtocolForm = class(TAncestorReportForm)
+  TMovementProtocolForm = class(TAncestorReportForm)
     colDate: TcxGridDBColumn;
     colUserName: TcxGridDBColumn;
     colProtocolData: TcxGridDBColumn;
@@ -30,7 +30,6 @@ type
     ObjectGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     colObjectTypeName: TcxGridDBColumn;
-    colInsert: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -42,7 +41,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TProtocolForm);
+  RegisterClass(TMovementProtocolForm);
 
 
 end.

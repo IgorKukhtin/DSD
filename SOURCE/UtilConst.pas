@@ -388,6 +388,7 @@ const
   gcAll = 'all'; {в лог-файл XMLLog.txt записываются все XML параметры, переданнные на 2-й уровень}
   gcError = 'error';{при возвращении ошибки со второго уровня в лог-файл XMLLog.txt записываются  XML параметры, переданнные на 2-й уровень}
   gcErrorMessage = 'ErrorMessage';
+  gcErrorCode = 'ErrorCode';
 
   gcDefaultPath: string = '';
   gcLogFileName: string = '';

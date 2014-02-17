@@ -58,12 +58,14 @@ else
    $query = 'select * from '.$StoredProcName.'('.$ParamName.')';
 };
 
-$result = pg_query_params($query, $ParamValues);
+$result = pg_send_query_params ($dbconn, $query, $ParamValues);
+$result = pg_get_result($dbconn);
+$result_error = pg_result_error($result);
 
-if ($result == false)
+if ($result_error != false)
 {
-     $res = '<error ';
-     $res .= 'ErrorMessage = "'.htmlspecialchars(pg_last_error(), ENT_COMPAT, 'WIN-1251').'"';
+     $res = '<error ';                                                   
+     $res .= 'ErrorCode = "'.pg_result_error_field($result, PGSQL_DIAG_SQLSTATE).'"'.' ErrorMessage = "'.htmlspecialchars($result_error, ENT_COMPAT, 'WIN-1251').'"';
      $res .= ' />';
      echo 'error        '.PrepareStr($res);
 }

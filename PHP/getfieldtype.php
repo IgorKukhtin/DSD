@@ -10,6 +10,9 @@ function GetFieldType($result, $i)
      case 'varchar':
         $type = 'string" WIDTH="255';
         break;
+     case 'text':
+        $type = 'bin.hex" SUBTYPE="Text" WIDTH="1';
+        break;
      case 'bool':
         $type = 'boolean';
         break;

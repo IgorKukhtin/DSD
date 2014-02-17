@@ -33,7 +33,11 @@ type
   end;
 
   EStorageException = class(Exception)
-
+  private
+    FErrorCode: string;
+  public
+    constructor Create(AMessage, AErrorCode: String);
+    property ErrorCode: string read FErrorCode write FErrorCode;
   end;
 
   function ConvertXMLParamToStrings(XMLParam: String): String;
@@ -147,7 +151,7 @@ procedure TStorage.ProcessErrorCode(pData: String);
 begin
   with LoadXMLData(pData).DocumentElement do
     if NodeName = gcError then
-       raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []));
+       raise EStorageException.Create(StringReplace(GetAttribute(gcErrorMessage), 'Œÿ»¡ ¿:  ', '', []), GetAttribute(gcErrorCode));
 end;
 
 function TStorage.ProcessMultiDataSet: Variant;
@@ -251,6 +255,14 @@ end;
 class function TStorageFactory.GetStorage: IStorage;
 begin
   result := TStorage(TStorage.NewInstance);
+end;
+
+{ EStorageException }
+
+constructor EStorageException.Create(AMessage, AErrorCode: String);
+begin
+  inherited Create(AMessage);
+  ErrorCode := AErrorCode;
 end;
 
 initialization
