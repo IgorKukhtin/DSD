@@ -17,8 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -103,6 +101,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     Top = 264
   end
   object PopupMenu: TPopupMenu
+    Images = dmMain.ImageList
     Left = 112
     Top = 264
     object N1: TMenuItem
