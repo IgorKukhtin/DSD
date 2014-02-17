@@ -60,4 +60,4 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolea
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ProfitLossService (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inIsErased:= FALSE, inSession:= zfCalc_UserAdmin())
