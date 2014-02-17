@@ -4,6 +4,7 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
     #1076#1086#1074')>'
   ClientHeight = 668
   ClientWidth = 1015
+  ExplicitTop = -36
   ExplicitWidth = 1023
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -31,50 +32,12 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmountPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colHeadCount
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
@@ -90,23 +53,40 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
           Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'ObjectCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
           object colName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+            Caption = #1054#1073#1098#1077#1082#1090
+            DataBinding.FieldName = 'ObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 150
           end
-          object colGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
+          object colAmount: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072
+            DataBinding.FieldName = 'Amount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colComment: TcxGridDBColumn
+            Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+            DataBinding.FieldName = 'Comment'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 120
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
             PropertiesClassName = 'TcxButtonEditProperties'
             Properties.Buttons = <
               item
@@ -119,76 +99,28 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colPartionGoods: TcxGridDBColumn
-            Caption = #1055#1072#1088#1090#1080#1103
-            DataBinding.FieldName = 'PartionGoods'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 120
-          end
-          object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-            DataBinding.FieldName = 'AmountPartner'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object colCountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colContractConditionKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087#1099' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+            DataBinding.FieldName = 'ContractConditionKindName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Default = True
+                Kind = bkEllipsis
+              end>
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 55
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1089#1090#1072#1090#1100#1080
+            DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 40
           end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
+          object cxGridDBTableViewColumn1: TcxGridDBColumn
           end
         end
       end
@@ -219,6 +151,9 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          inherited colInfoMoneyName: TcxGridDBColumn
+            Visible = True
+          end
         end
       end
     end
@@ -255,7 +190,6 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 24
       Width = 90
     end
     object edTo: TcxButtonEdit
@@ -974,9 +908,9 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inObjectId'
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
+        ComponentItem = 'ObjectId'
         ParamType = ptInput
       end
       item
@@ -987,57 +921,54 @@ inherited ProfitLossServiceForm: TProfitLossServiceForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'inComment'
         Component = MasterCDS
-        ComponentItem = 'AmountPartner'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrice'
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'ioCountForPrice'
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'outAmountSumm'
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
-      end
-      item
-        Name = 'inHeadCount'
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPartionGoods'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
+        ComponentItem = 'Comment'
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsKindId'
+        Name = 'inContractId'
         Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
-        Name = 'inAssetId'
+        Name = 'inContractConditionKindId'
         Component = MasterCDS
-        ComponentItem = 'AssetId'
+        ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Component = MasterCDS
+        ComponentItem = 'UnitId'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'outBranchName'
+        Component = MasterCDS
+        ComponentItem = 'BranchName'
+        DataType = ftFloat
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
       end
       item
         Value = Null

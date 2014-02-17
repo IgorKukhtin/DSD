@@ -38,15 +38,10 @@ type
     ContractGuides: TdsdGuides;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
-    colAmountPartner: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
-    colCountForPrice: TcxGridDBColumn;
-    colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
+    colContractConditionKindName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     frxDBDMaster: TfrxDBDataset;
     spSelectPrint: TdsdStoredProc;
@@ -61,6 +56,8 @@ type
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    colInfoMoneyCode: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public
