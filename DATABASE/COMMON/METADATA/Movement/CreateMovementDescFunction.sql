@@ -119,10 +119,14 @@ CREATE OR REPLACE FUNCTION zc_Movement_TaxCorrective() RETURNS Integer AS $BODY$
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_TaxCorrective', 'Корректировка к налоговой накладной' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TaxCorrective');
 
+CREATE OR REPLACE FUNCTION zc_Movement_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_ProfitLossService'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_ProfitLossService', 'Начисления по Юридическому лицу (расходы будущих периодов)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_ProfitLossService');
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.02.14         												*    add zc_Movement_ProfitLossService
  08.02.14         												*    add zc_Movement_Tax, zc_Movement_TaxCorrective
  24.01.14         *
  14.01.14                                        * add zc_Movement_LossDebt
