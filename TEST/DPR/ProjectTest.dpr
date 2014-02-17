@@ -295,7 +295,7 @@ uses
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
+  ProfitLossServiceTest in '..\SOURCE\Movement\All\ProfitLossServiceTest.pas',
   TransportTest in '..\SOURCE\Movement\All\TransportTest.pas',
   SheetWorkTimeAddRecord in '..\..\Forms\Document\SheetWorkTimeAddRecord.pas' {SheetWorkTimeAddRecordForm: TParentForm},
   PartnerJuridicalEdit in '..\..\Forms\Guides\PartnerJuridicalEdit.pas' {PartnerJuridicalEditForm: TParentForm},
@@ -337,8 +337,8 @@ uses
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
-  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
+  ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   UnitCarMember_Object in '..\..\Forms\Guides\UnitCarMember_Object.pas' {UnitCarMember_ObjectForm: TParentForm},
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
@@ -366,10 +366,14 @@ uses
   MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
-  ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
+  ProfitLossServiceMovementItemTest in '..\SOURCE\MovementItem\All\ProfitLossServiceMovementItemTest.pas',
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
-  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm};
+  SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
+  ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
+  ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
+  ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
+  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
 
 {$R *.RES}
 

@@ -89,7 +89,7 @@ BEGIN
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
 
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
-     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+--     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
   ;
   
 END;
@@ -102,10 +102,11 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 13.02.14                                         * add zc_Enum_ContractStateKind_Close
+ 13.02.14                                        * del zc_Enum_ContractStateKind_Close, здесь надо показывать все договора :)
+ 13.02.14                                        * add zc_Enum_ContractStateKind_Close
  12.02.14                         * add KindColor
- 05.02.14                                         * add all
- 06.01.14                                         * add Object_InfoMoney_View
+ 05.02.14                                        * add all
+ 06.01.14                                        * add Object_InfoMoney_View
  26.11.13                         *
 */
 

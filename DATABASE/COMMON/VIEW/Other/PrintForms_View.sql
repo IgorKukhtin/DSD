@@ -92,6 +92,18 @@ AS
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnOut' AS TVarChar)
 
+-- Начисления по Юридическому лицу
+      UNION
+      SELECT
+             zc_Movement_ProfitLossService()
+           , CAST ('ProfitLossService' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (0 AS INTEGER)
+           , CAST (0 AS INTEGER)
+           , CAST ('PrintMovement_ProfitLossService' AS TVarChar)
+
+
 --       ORDER BY 1,2,4
 
        ;
@@ -103,7 +115,8 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.02.14                                                        * + ProfitLossService
  10.02.14                                                        * + TaxCorrective, ReturnOut
  06.02.14                                                        * + ReturnIn
  05.02.14                                                        *

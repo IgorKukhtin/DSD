@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -272,6 +272,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbJuridicalService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLossService'
         end
         item
           Visible = True
@@ -699,6 +703,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CheckTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMI_Income'
         end
         item
@@ -842,10 +854,6 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportProfitLoss'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_CheckTax'
         end>
     end
     object bbReportMain_Separator: TdxBarSeparator
@@ -1352,6 +1360,11 @@ object MainForm: TMainForm
     end
     object bbReport_CheckTax: TdxBarButton
       Action = actReport_CheckTax
+      Category = 0
+    end
+    object bbProfitLossService: TdxBarButton
+      Action = actProfitLossService
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
       Category = 0
     end
   end
@@ -2608,6 +2621,16 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actProfitLossService: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = 'actProfitLossService'
+      FormName = 'TProfitLossServiceJournalForm'
+      FormNameParam.Name = 'TProfitLossServiceJournalForm'
+      FormNameParam.Value = 'TProfitLossServiceJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2634,7 +2657,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
