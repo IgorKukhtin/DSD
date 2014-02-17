@@ -126,6 +126,8 @@ type
     cbOnlyInsertDocument: TCheckBox;
     cbData1CLink: TCheckBox;
     cbCompleteReturnOut: TCheckBox;
+    cbTax: TCheckBox;
+    cbTaxCorrective: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -10485,26 +10487,38 @@ alter table dba.GoodsProperty_Detail add Id11_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id12_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id13_Postgres integer null;
 alter table dba.GoodsProperty_Detail add Id14_Postgres integer null;
+alter table dba.GoodsProperty_Detail add Id15_Postgres integer null;
+alter table dba.GoodsProperty_Detail add Id16_Postgres integer null;
+alter table dba.GoodsProperty_Detail add Id17_Postgres integer null;
+alter table dba.GoodsProperty_Detail add Id18_Postgres integer null;
 
 create table dba.GoodsProperty_Postgres (Id integer not null, Name_PG TVarCharMedium not null, Id_Postgres integer null);
 insert into dba.GoodsProperty_Postgres (Id, Name_PG)
-  select 1, 'АТБ' union all       // +fIsClient_ATB
-  select 2, 'Киев ОК' union all   // +fIsClient_OK
-  select 3, 'Метро' union all     // +fIsClient_Metro
-  select 4, 'Алан' union all      //
-  select 5, 'Фоззи' union all     // +fIsClient_Fozzi fIsClient_FozziM
-  select 6, 'Кишени' union all    // +fIsClient_Kisheni
-  select 7, 'Виват' union all     // +fIsClient_Vivat
-  select 8, 'Билла' union all     // +fIsClient_Billa
-  select 9, 'Амстор' union all    // +fIsClient_Amstor
-  select 10, 'Омега' union all    // ***fIsClient_Omega
-  select 11, 'Восторг' union all  // ***fIsClient_Vostorg
-  select 12, 'Ашан' union all     // +fIsClient_Ashan
-  select 13, 'Реал' union all     // +fIsClient_Real
-  select 14, 'ЖД';                // ***fIsClient_GD
+  select 1, 'АТБ' union all       // +fIsClient_ATB *** GoodsCodeScaner
+  select 2, 'Киев ОК' union all   // +fIsClient_OK  *** GoodsCodeScaner_byKievOK
+  select 3, 'Метро' union all     // +fIsClient_Metro  fIsClient_MetroTwo *** GoodsCodeScaner_byMetro
+  select 4, 'Алан' union all      //                  *** GoodsCodeScaner_byMain
+  select 5, 'Фоззи' union all     // +fIsClient_Fozzi fIsClient_FozziM  *** GoodsCodeScaner_byFozzi
+  select 6, 'Кишени' union all    // +fIsClient_Kisheni *** GoodsCodeScaner_byKisheni
+////////  select 7, 'Виват' union all     // +fIsClient_Vivat *** GoodsCodeScaner_byVivat
+  select 8, 'Билла' union all     // +fIsClient_Billa *** GoodsCodeScaner_byBilla
+  select 9, 'Билла-2' union all   // fIsClient_BillaTwo *** Code_byBillaTwo
+  select 10'Амстор' union all     // +fIsClient_Amstor *** GoodsCodeScaner_byAmstor
+  select 11 'Омега' union all     // ***fIsClient_Omega *** GoodsCodeScaner_byOmega
+  select 12 'Восторг' union all   // ***fIsClient_Vostorg *** GoodsCodeScaner_byVostorg
+  select 13 'Ашан' union all      // +fIsClient_Ashan *** GoodsCodeScaner_byAshan
+  select 14 'Реал' union all      // +fIsClient_Real  *** GoodsCodeScaner_byReal
+  select 15 'ЖД' union all        // ***fIsClient_GD  *** GoodsName_GD
+  select 16 'Таврия' union all    // fIsClient_Tavriya *** Code_byTavriya
+  select 17 'Адвентис' union all  // fIsClient_Adventis *** GoodsCodeScaner_byAdventis
+  select 18 'Край'                // fIsClient_Kray *** Code_byKray
+  ;                               // ------
                                   // fIsClient_Furshet
                                   // fIsClient_Obgora
-                                  // fIsClient_Tavriya
+
+
+
+
 
 
 alter table dba.Goods add Id_Postgres integer null;
