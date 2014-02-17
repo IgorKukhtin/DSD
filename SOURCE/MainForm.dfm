@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -272,6 +272,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbJuridicalService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProfitLossService'
         end
         item
           Visible = True
@@ -1356,6 +1360,11 @@ object MainForm: TMainForm
     end
     object bbReport_CheckTax: TdxBarButton
       Action = actReport_CheckTax
+      Category = 0
+    end
+    object bbProfitLossService: TdxBarButton
+      Action = actProfitLossService
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
       Category = 0
     end
   end
@@ -2608,6 +2617,16 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1053#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
       FormName = 'TReport_CheckTaxForm'
       FormNameParam.Value = 'TReport_CheckTaxForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProfitLossService: TdsdOpenForm
+      Category = #1060#1080#1085#1072#1085#1089#1086#1074#1099#1081' '#1091#1095#1077#1090
+      Caption = 'actProfitLossService'
+      FormName = 'TProfitLossServiceJournalForm'
+      FormNameParam.Name = 'TProfitLossServiceJournalForm'
+      FormNameParam.Value = 'TProfitLossServiceJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

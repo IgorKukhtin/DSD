@@ -63,6 +63,7 @@ type
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
     procedure LoadProfitLossFormTest;
+    procedure LoadProfitLossServiceFormTest;
     procedure LoadProfitLossGroupFormTest;
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPositionFormTest;
@@ -768,6 +769,16 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
 end;
+
+procedure TLoadFormTest.LoadProfitLossServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossServiceJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossServiceJournalForm');
+end;
+
+
 procedure TLoadFormTest.LoadTradeMarkFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTradeMarkForm'));

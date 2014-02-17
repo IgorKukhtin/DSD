@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_ProfitLossService(integer, i
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ProfitLossService(
  INOUT ioId                      Integer   , -- Ключ объекта <Элемент документа>
-    IN inMovementId              Integer   , -- Ключ объекта <Документ Возврат покупателя>
+    IN inMovementId              Integer   , -- Ключ объекта <Документ Начисления по Юридическому лицу (расходы будущих периодов)>
     IN inObjectId                Integer   , -- Юридические лица, Физические лица
     IN inAmount                  TFloat    , -- Сумма
     IN inComment                 TVarChar  , -- Комментарий
