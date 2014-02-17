@@ -2,8 +2,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 851
-  ExplicitHeight = 436
+  ExplicitWidth = 843
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,10 +17,9 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       ExplicitWidth = 835
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 417
+        Width = 835
         Height = 375
-        Align = alLeft
-        ExplicitWidth = 417
+        ExplicitWidth = 835
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -44,37 +43,6 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
             DataBinding.FieldName = 'GoodsKindName'
             Width = 134
           end
-        end
-      end
-      object cxDetailGrid: TcxGrid
-        Left = 422
-        Top = 0
-        Width = 413
-        Height = 375
-        Align = alClient
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DetailDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
-          OptionsData.CancelOnExit = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
@@ -98,16 +66,6 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
             Width = 121
           end
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter: TcxSplitter
-        Left = 417
-        Top = 0
-        Width = 5
-        Height = 375
-        Control = cxGrid
       end
       object edBranch: TcxButtonEdit
         Left = 192
@@ -117,20 +75,55 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 3
+        TabOrder = 1
         Width = 177
       end
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
           StoredProc = spSelect
         end
         item
-          StoredProc = spDetailSelect
         end>
+    end
+    object actInsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Params = <
+        item
+          Name = 'GoodsId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsCode'
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'GoodsKindId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'GoodsKindName'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 45
+      ImageIndex = 0
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
@@ -140,7 +133,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DetailDS
+      DataSource = MasterDS
     end
     object actChoiceBranchForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -151,12 +144,12 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       GuiParams = <
         item
           Name = 'Key'
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'BranchId'
         end
         item
           Name = 'TextValue'
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
         end>
@@ -170,7 +163,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink_Master'
+    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -182,6 +175,14 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbRefresh'
@@ -206,32 +207,10 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       Visible = ivAlways
       Control = edBranch
     end
-  end
-  object DetailCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'MasterId'
-    MasterFields = 'MasterId'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 448
-    Top = 136
-  end
-  object DetailDS: TDataSource
-    DataSet = DetailCDS
-    Left = 480
-    Top = 136
-  end
-  object spDetailSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink'
-    DataSet = DetailCDS
-    DataSets = <
-      item
-        DataSet = DetailCDS
-      end>
-    Params = <>
-    Left = 512
-    Top = 136
+    object bbInsertRecord: TdxBarButton
+      Action = actInsertRecord
+      Category = 0
+    end
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -266,19 +245,19 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     Params = <
       item
         Name = 'inId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inCode'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inName'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
@@ -297,7 +276,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       end
       item
         Name = 'inBranchId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
       end
@@ -316,17 +295,17 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       end
       item
         Name = 'Id'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
       end
       item
         Name = 'BranchId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchId'
       end
       item
         Name = 'BranchName'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchName'
         DataType = ftString
       end>

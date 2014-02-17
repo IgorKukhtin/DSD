@@ -4,18 +4,17 @@
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
+ INOUT ioMovementId          TVarChar  , -- Номер документа
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    
-    IN inServiceDate         TDateTime , -- Дата начисления
+    IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount              TFloat    , -- Сумма операции 
-    
-    IN inFromId              Integer   , -- Подразделение 	
-    IN inToId                Integer   , -- Сотрудники
-    IN inPaidKindId          Integer   , -- Виды форм оплаты
+    IN inComment             TVarChar  , -- Комментерий
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
-    IN inUnitId              Integer   , -- Подразделение
+    IN inUnitId              Integer   , -- Подразделение 	
     IN inPositionId          Integer   , -- Должность
+    IN inPaidKindId          Integer   , -- Виды форм оплаты
+    IN inServiceDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -28,30 +27,24 @@ BEGIN
      vbUserId := inSession;
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement (ioId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
+     ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
 
-     -- сохранили связь с <Дата начисления>
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_ServiceDate(), ioId, inServiceDate);
+          -- сохранили <Элемент документа>
+     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, ioMovementId, inAmount, NULL);
 
-     -- сохранили свойство <Сумма операции>
-     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_Amount(), ioId, inAmount);
+     -- Комментарий
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
 
-     -- сохранили связь с <Подразделение>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
-     -- сохранили связь с <Сотрудники>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
-     
-     -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
-    
-     -- сохранили связь с <Статьи назначения>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), ioId, inInfoMoneyId);
-     
-      -- сохранили связь с <Подразделение>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Unit(), ioId, inUnitId);
-    
+     -- сохранили связь с <Управленческие статьи>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
+     -- сохранили связь с <Подразделением>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
      -- сохранили связь с <Должность>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Position(), ioId, inPositionId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
+     -- сохранили связь с <Виды форм оплаты >
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), ioId, inPaidKindId);
+     -- сохранили связь с <Дата начисления>
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MovementItemDate_ServiceDate(), ioId, inServiceDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -64,7 +57,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 12.08.13         *
+ 17.02.14                         *
 
 */
 

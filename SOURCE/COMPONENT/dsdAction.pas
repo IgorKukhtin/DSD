@@ -310,15 +310,20 @@ type
   private
     FAction: TCustomAction;
     FView: TcxGridDBTableView;
+    FParams: TdsdParams;
+    FBuferParams: TParams;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure ChangeDSState; virtual; abstract;
     function LocalExecute: boolean; override;
   public
     constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
     property View: TcxGridDBTableView read FView write FView;
     property Action: TCustomAction read FAction write FAction;
+    // ≈сли определены, то заполн€ем оттуда значени€ми
+    property Params: TdsdParams read FParams write FParams;
     property Caption;
     property Hint;
     property ShortCut;
@@ -1022,6 +1027,7 @@ begin
   inherited;
   FAlreadyRun := false;
   FDataSetDataLink := TDataSetDataLink.Create(Self);
+  FPostDataSetBeforeExecute := false;
 end;
 
 destructor TdsdUpdateDataSet.Destroy;
@@ -1411,6 +1417,15 @@ constructor TDSAction.Create(AOwner: TComponent);
 begin
   inherited;
   FPostDataSetBeforeExecute := false;
+  FParams := TdsdParams.Create(Self, TdsdParam);
+  FBuferParams := TParams.Create(nil);
+end;
+
+destructor TDSAction.Destroy;
+begin
+  FreeAndNil(FParams);
+  FreeAndNil(FBuferParams);
+  inherited;
 end;
 
 function TDSAction.LocalExecute: boolean;
@@ -1424,8 +1439,15 @@ begin
      if Assigned(FView.DataController.DataSource) then
         if FView.DataController.DataSource.State in [dsInsert, dsEdit] then
            FView.DataController.DataSource.DataSet.Post;
+  FBuferParams.Clear;
+  for I := 0 to Params.Count - 1 do
+      FBuferParams.CreateParam(Params[i].DataType, Params[i].Name, Params[i].ParamType).Value := Params[i].Value;
   inherited;
   ChangeDSState;
+  //расставл€ем значени€ по датасету
+  for I := 0 to FBuferParams.Count - 1 do
+      FView.DataController.DataSource.DataSet.FieldByName(FBuferParams[i].Name).Value := FBuferParams[i].Value;
+
   // Ётот кусок кода написан как подарок  ост€нычу! :-)
   for I := 0 to FView.ColumnCount - 1 do
       if FView.Columns[i].Visible and FView.Columns[i].Editable then begin
@@ -1469,7 +1491,7 @@ begin
         if FView.DataController.DataSource.State = dsInactive then
            raise Exception.Create('DataSet ' + FView.DataController.DataSource.DataSet.Name + ' не открыт. ƒобавление не возможно');
         if FView.DataController.DataSource.State = dsBrowse then
-           FView.DataController.DataSource.DataSet.Append;
+           FView.DataController.DataSource.DataSet.Insert;
      end;
 end;
 

@@ -34,13 +34,13 @@ BEGIN
    END IF;
    
    IF COALESCE (inCode, 0) = 0 AND COALESCE (inName, '') = '' THEN
-       RAISE EXCEPTION 'Ошибка.Не установлен <Код>.';
+       RAISE EXCEPTION 'Ошибка. Не установлен <Код>.';
    END IF;
    IF COALESCE (inName, '') = '' THEN
-       RAISE EXCEPTION 'Ошибка.Не установлено <Название>.';
+       RAISE EXCEPTION 'Ошибка. Не установлено <Название>.';
    END IF;
    IF COALESCE (vbBranchId, 0) = 0 THEN
-       RAISE EXCEPTION 'Ошибка.Не установлен <Филиал>.';
+       RAISE EXCEPTION 'Ошибка. Не установлен <Филиал>.';
    END IF;
 
    -- проверка уникальность inCode для !!!одного!! Филиала
@@ -61,8 +61,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind1CLink_Goods(), inId, inGoodsId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind(), inId, inGoodsKindId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsByGoodsKind1CLink_Branch(), inId, vbBranchId);
-   IF inIsSybase IS NOT NULL
-   THEN PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase(), inId, inIsSybase);
+   IF inIsSybase IS NOT NULL THEN 
+      PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase(), inId, inIsSybase);
    END IF;
 
    -- сохранили протокол

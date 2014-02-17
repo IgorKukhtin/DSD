@@ -1,26 +1,26 @@
 inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1080#1079' 1'#1057
   ClientHeight = 408
-  ClientWidth = 853
-  ExplicitWidth = 861
+  ClientWidth = 901
+  ExplicitWidth = 909
   ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 853
+    Width = 901
     Height = 351
     TabOrder = 3
-    ExplicitWidth = 853
+    ExplicitWidth = 901
     ExplicitHeight = 351
     ClientRectBottom = 351
-    ClientRectRight = 853
+    ClientRectRight = 901
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 853
+      ExplicitWidth = 901
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
-        Width = 853
+        Width = 901
         Height = 351
-        ExplicitWidth = 853
+        ExplicitWidth = 901
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -32,28 +32,42 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 64
+          end
+          object colBranch: TcxGridDBColumn
+            Caption = #1060#1080#1083#1080#1072#1083
+            DataBinding.FieldName = 'BranchName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colDocType: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1076#1086#1082
+            DataBinding.FieldName = 'DocType'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 56
           end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 68
+            Width = 63
           end
           object colClientCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1082#1083#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'ClientCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 57
+            Width = 56
           end
           object colClientName: TcxGridDBColumn
             Caption = #1048#1084#1103' '#1082#1083#1080#1077#1085#1090#1072
             DataBinding.FieldName = 'ClientName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 69
+            Width = 83
           end
           object colDeliveryPoint: TcxGridDBColumn
             Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
@@ -67,64 +81,64 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 58
+            Width = 50
           end
           object colGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 67
+            Width = 58
           end
           object colGoodsGoodsKind: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1085#1099#1081
             DataBinding.FieldName = 'GoodsGoodsKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 160
+            Width = 139
           end
           object colOperCount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'OperCount'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 46
+            Width = 41
           end
           object colOperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 44
+            Width = 39
           end
           object colClientINN: TcxGridDBColumn
             Caption = #1048#1053#1053
             DataBinding.FieldName = 'ClientINN'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 44
+            Width = 38
           end
           object colClientOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'ClientOKPO'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 41
           end
           object colSuma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Suma'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 47
+            Width = 41
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 853
-    ExplicitWidth = 853
+    Width = 901
+    ExplicitWidth = 901
     inherited deStart: TcxDateEdit
       EditValue = 41640d
     end

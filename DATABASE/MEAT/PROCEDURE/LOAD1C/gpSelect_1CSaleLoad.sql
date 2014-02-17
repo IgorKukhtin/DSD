@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                Tax TFloat, Doc1Date TDateTime, Doc1Number TVarChar, Doc2Date TDateTime, Doc2Number TVarChar,
                Suma TFloat, PDV TFloat, SumaPDV TFloat, ClientINN TVarChar, ClientOKPO TVarChar,
                InvNalog TVarChar, BillId Integer, EkspCode Integer, ExpName TVarChar,
+               BranchName TVarChar,
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar
 )
@@ -51,6 +52,7 @@ BEGIN
       Sale1C.BillId      ,
       Sale1C.EkspCode    ,
       Sale1C.ExpName     ,
+      Object_Branch.ValueData AS BranchName,
       Object_Partner.ObjectCode,
       Object_Partner.ValueData,
       Object_Goods.ObjectCode AS GoodsGoodsKindCode,
@@ -58,6 +60,7 @@ BEGIN
       
 
       FROM Sale1C
+           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
            LEFT JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                            , Object_Partner1CLink.ObjectCode
                            , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
@@ -104,6 +107,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.02.14                         * 
  15.02.14                                        * all
  03.02.14                         * 
 */

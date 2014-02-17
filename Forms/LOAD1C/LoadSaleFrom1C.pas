@@ -37,6 +37,8 @@ type
     spDelete1CLoad: TdsdStoredProc;
     actLoad1C: TMultiAction;
     bbLoad1c: TdxBarButton;
+    colBranch: TcxGridDBColumn;
+    colDocType: TcxGridDBColumn;
   private
     { Private declarations }
   public

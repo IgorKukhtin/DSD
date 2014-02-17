@@ -2,8 +2,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 851
-  ExplicitHeight = 436
+  ExplicitWidth = 843
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,59 +17,30 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       ExplicitWidth = 835
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 417
+        Width = 835
         Height = 375
-        Align = alLeft
-        ExplicitWidth = 417
+        ExplicitWidth = 835
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
+            DataBinding.FieldName = 'PartnerCode'
             Options.Editing = False
+            Options.IncSearch = False
             Width = 107
           end
           object colName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'Name'
+            DataBinding.FieldName = 'PartnerName'
             Options.Editing = False
+            Options.IncSearch = False
             Width = 296
           end
-        end
-      end
-      object cxDetailGrid: TcxGrid
-        Left = 422
-        Top = 0
-        Width = 413
-        Height = 375
-        Align = alClient
-        PopupMenu = PopupMenu
-        TabOrder = 1
-        object cxGridDBTableView1: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = DetailDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <>
-          DataController.Summary.SummaryGroups = <>
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.Appending = True
-          OptionsData.CancelOnExit = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
@@ -93,16 +64,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             Width = 121
           end
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxGridDBTableView1
-        end
-      end
-      object cxSplitter: TcxSplitter
-        Left = 417
-        Top = 0
-        Width = 5
-        Height = 375
-        Control = cxGrid
       end
       object edBranch: TcxButtonEdit
         Left = 192
@@ -112,19 +73,19 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
             Default = True
             Kind = bkEllipsis
           end>
-        TabOrder = 3
+        TabOrder = 1
         Width = 177
       end
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
           StoredProc = spSelect
         end
         item
-          StoredProc = spDetailSelect
         end>
     end
     object actUpdateDataSet: TdsdUpdateDataSet
@@ -135,7 +96,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           StoredProc = spInsertUpdate
         end>
       Caption = 'actUpdateDataSet'
-      DataSource = DetailDS
+      DataSource = MasterDS
     end
     object actChoiceBranchForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -146,16 +107,40 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       GuiParams = <
         item
           Name = 'Key'
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'BranchId'
         end
         item
           Name = 'TextValue'
-          Component = DetailCDS
+          Component = MasterCDS
           ComponentItem = 'BranchName'
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object actInsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      View = cxGridDBTableView
+      Params = <
+        item
+          Name = 'PartnerId'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'PartnerName'
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerCode'
+          Component = MasterCDS
+          ComponentItem = 'PartnerCode'
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 45
+      ImageIndex = 0
     end
   end
   inherited MasterDS: TDataSource
@@ -165,7 +150,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Partner'
+    StoredProcName = 'gpSelect_Object_Partner1CLink'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -177,6 +162,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAddRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbRefresh'
@@ -201,32 +194,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Visible = ivAlways
       Control = edBranch
     end
+    object bbAddRecord: TdxBarButton
+      Action = actInsertRecord
+      Category = 0
+    end
   end
-  object DetailCDS: TClientDataSet
-    Aggregates = <>
-    IndexFieldNames = 'PartnerId'
-    MasterFields = 'Id'
-    MasterSource = MasterDS
-    PacketRecords = 0
-    Params = <>
-    Left = 448
-    Top = 136
-  end
-  object DetailDS: TDataSource
-    DataSet = DetailCDS
-    Left = 480
-    Top = 136
-  end
-  object spDetailSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Partner1CLink'
-    DataSet = DetailCDS
-    DataSets = <
-      item
-        DataSet = DetailCDS
-      end>
-    Params = <>
-    Left = 512
-    Top = 136
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 224
+    Top = 208
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -261,19 +236,19 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Params = <
       item
         Name = 'inId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'inCode'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inName'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Name'
         DataType = ftString
         ParamType = ptInput
@@ -281,12 +256,12 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       item
         Name = 'inPartnerId'
         Component = MasterCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
       end
       item
         Name = 'inBranchId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchId'
         ParamType = ptInput
       end
@@ -305,17 +280,17 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       end
       item
         Name = 'Id'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'Id'
       end
       item
         Name = 'BranchId'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchId'
       end
       item
         Name = 'BranchName'
-        Component = DetailCDS
+        Component = MasterCDS
         ComponentItem = 'BranchName'
         DataType = ftString
       end>
