@@ -699,6 +699,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CheckTax'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMI_Income'
         end
         item
@@ -842,10 +850,6 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportProfitLoss'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReport_CheckTax'
         end>
     end
     object bbReportMain_Separator: TdxBarSeparator
@@ -2634,7 +2638,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]
