@@ -43,6 +43,36 @@ begin
 
   // Считывание отчета из базы
   Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('Приходная накладная'));
+//=======================
+
+  // Загрузка из файла в репорт
+  Report.LoadFromFile(ReportPath + '\Товарный Учет\Расходная накладная бн.fr3');
+
+  // Сохранение отчета в базу
+  Stream.Clear;
+  Report.SaveToStream(Stream);
+  Stream.Position := 0;
+  TdsdFormStorageFactory.GetStorage.SaveReport(Stream, 'PrintMovement_Sale1');
+
+  // Считывание отчета из базы
+  Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('PrintMovement_Sale1'));
+
+//=======================
+
+  // Загрузка из файла в репорт
+  Report.LoadFromFile(ReportPath + '\Товарный Учет\Расходная накладная нал.fr3');
+
+  // Сохранение отчета в базу
+  Stream.Clear;
+  Report.SaveToStream(Stream);
+  Stream.Position := 0;
+  TdsdFormStorageFactory.GetStorage.SaveReport(Stream, 'PrintMovement_Sale2');
+
+  // Считывание отчета из базы
+  Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('PrintMovement_Sale2'));
+
+
+
 end;
 
 procedure TLoadReportTest.SetUp;
