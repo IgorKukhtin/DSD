@@ -313,7 +313,7 @@ uses
   Report_JuridicalCollation in '..\..\Forms\Report\Report_JuridicalCollation.pas' {Report_JuridicalCollationForm: TParentForm},
   Report_JuridicalSold in '..\..\Forms\Report\Report_JuridicalSold.pas' {Report_JuridicalSoldForm: TParentForm},
   MovementDescForms in '..\..\Forms\System\MovementDescForms.pas' {MovementDescDataForm: TParentForm},
-  Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm},
+  Report_CheckTaxCorrective in '..\..\Forms\Report\Report_CheckTaxCorrective.pas' {Report_CheckTaxCorrectiveForm: TParentForm},
   LossDebtJournal in '..\..\Forms\Document\LossDebtJournal.pas' {LossDebtJournalForm: TParentForm},
   LossDebt in '..\..\Forms\Document\LossDebt.pas' {LossDebtForm: TParentForm},
   TransportService in '..\..\Forms\Document\TransportService.pas' {TransportServiceForm: TParentForm},
@@ -373,7 +373,8 @@ uses
   ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
-  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm};
+  ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
+  Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm};
 
 {$R *.RES}
 

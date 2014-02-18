@@ -908,8 +908,8 @@
 				<Form>MovementDescDataForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_CheckTax.pas">
-				<Form>Report_CheckTaxForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckTaxCorrective.pas">
+				<Form>Report_CheckTaxCorrectiveForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\LossDebtJournal.pas">
@@ -1097,6 +1097,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ReturnOut.pas">
 				<Form>ReturnOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_CheckTax.pas">
+				<Form>Report_CheckTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
