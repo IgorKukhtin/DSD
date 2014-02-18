@@ -1,6 +1,6 @@
 create PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm, FromId_Postgres Integer, ToId_Postgres Integer
-     , PaidKindId_Postgres Integer, ContractId Integer, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
+     , PaidKindId_Postgres Integer, CodeIM Integer, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpList(
@@ -32,16 +32,17 @@ begin
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
                     , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres)
 select Bill.Id as ObjectId
-     , case when CheckBilNumber.BillDate is not null then 'ошибка моя BillId_byLoad-'
-            when fBill.BillId_byLoad is not null and fBill.MoneyKindId <> Bill.MoneyKindId then 'ошибка Нал/Бн-'
-            when fBill.BillId_byLoad is not null and fBill.DiscountTax <> Bill.DiscountTax then 'ошибка % скидки-'
-            when fBill.BillId_byLoad is not null and isnull(fUnitFrom.Id_byLoad,0) <> Bill.FromId then 'ошибка <> склады-'
-            when FromId_Postgres is null then 'ошибка склад-'+UnitFrom.UnitName+'-'
-            else ''
-       end + cast (Bill.BillNumber as TVarCharMedium) + case when fBill.BillId_byLoad is not null then '+f' else '' end as InvNumber_all
-     , Bill.BillNumber as InvNumber
-     , Bill.BillDate as OperDate
 
+     , cast (Bill.BillNumber as TVarCharMedium) ||
+       case when FromId_Postgres is null or ToId_Postgres is null or ContractId = 0
+                 then '-ошибка' || case when FromId_Postgres is null then '-от кого:' || UnitFrom.UnitName else '' end
+                                || case when ToId_Postgres is null then '-кому:' || UnitTo.UnitName else '' end
+                                || case when ContractId = 0 then '-договор:???' else '' end
+            else ''
+       end as InvNumber_all
+     , Bill.BillNumber as InvNumber
+
+     , Bill.BillDate as OperDate
      , OperDate + isnull(_toolsView_Client_isChangeDate.addDay,0) as OperDatePartner
 
      , Bill.isNds as PriceWithVAT
@@ -49,55 +50,52 @@ select Bill.Id as ObjectId
      , case when Bill.isByMinusDiscountTax=zc_rvYes() then -Bill.DiscountTax else Bill.DiscountTax end as ChangePercent
 
      , isnull(pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
-     , UnitTo.Id3_Postgres as ToId_Postgres
-     , MoneyKind.Id_Postgres as PaidKindId_Postgres
-     , null as ContractId
+     , _pgPartner.PartnerId_pg as ToId_Postgres
+     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
+     , AS CodeIM 
      , null as CarId
      , null as PersonalDriverId
 
      , null as RouteId
-     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres
-     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
+     , null as RouteSortingId_Postgres
+     , null as PersonalId_Postgres
+
+--     , null as RouteId
+--     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres
+--     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
 
      , zc_rvNo() as isFl
-
      , (Bill.Id_Postgres) as Id_Postgres
-from dba.Bill
-     left outer join dba.fBill on fBill.BillId_byLoad = Bill.Id
-     left outer join dba._fUnit_byLoadView AS fUnitFrom on fUnitFrom.UnitId = fBill.FromId
-     left outer join dba.fUnit_byLoad AS fUnitTo on fUnitTo.UnitId = fBill.ToId and fUnitTo.Id_byLoad=Bill.ToId
 
+from (select Bill.Id
+      from dba.Bill
+           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+      where Bill.BillDate between @inStartDate and @inEndDate
+        and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
+        and Bill.BillKind in (zc_bkSaleToClient())
+        and Bill.MoneyKindId = zc_mkBN()
+--       and Bill.BillNumber = 1635
+--       and Bill.Id = 1260716
+       group by BillId;
+     ) as Bill_find
+     left outer join dba.Bill on Bill.Id = Bill_find.Id
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
-     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId and (isnull(fUnitTo.Id_byLoad,0)=Bill.ToId or fBill.BillId_byLoad is null)
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId
-     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId
-     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres
-                                                      and pgPersonalFrom.Id2_Postgres>0
+
+     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId
+                     ) as _pgPartner on _pgPartner.UnitId = Bill.ToId
+     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
+
+     -- left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId
+     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
+                                                      and 1=0
      left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId
-     left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId
-     left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres
+     -- left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId
+     -- left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres
      left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID
+                                                          and 1=0
 
-     left outer join (select BillDate, BillNumber, max(fUnitFrom.Id_byLoad) as FromId, max(fUnitTo.Id_byLoad) as ToId
-                      from dba.fBill
-                           left outer join dba._fUnit_byLoadView AS fUnitFrom on fUnitFrom.UnitId = fBill.FromId
-                           left outer join dba._fUnit_byLoadView AS fUnitTo on fUnitTo.UnitId = fBill.ToId
-                      where isnull(BillId_byLoad,0)=0
-                        and MoneyKindId=zc_mkBN()
-                        and BillKind=zc_bkSaleToClient()
-                        and BillDate between @inStartDate and @inEndDate+3
-                      group by BillDate, BillNumber
-                     ) as CheckBilNumber on CheckBilNumber.BillNumber = Bill.BillNumber and CheckBilNumber.BillDate = OperDatePartner and CheckBilNumber.ToId=Bill.ToId and Bill.MoneyKindId=zc_mkNal()
-
-where Bill.BillDate between @inStartDate and @inEndDate
-  and Bill.FromId<>1022 -- ВИЗАРД 1
-  and Bill.ToId<>1022 -- ВИЗАРД 1
-  and Bill.FromId<>532 -- КЛИЕНТ БН
-  and Bill.ToId<>532 -- КЛИЕНТ БН
-  and CheckBilNumber.BillNumber is null
-  and Bill.BillKind in (zc_bkSendUnitToUnit(),zc_bkSaleToClient())
--- and Bill.BillNumber = 1635
--- and Bill.Id = 1260716
+/*
   and (((UnitFrom.pgUnitId is not null
      or UnitFrom.PersonalId_Postgres is not null
      or pgUnitFrom.Id_Postgres_Branch is not null)
@@ -108,7 +106,7 @@ where Bill.BillDate between @inStartDate and @inEndDate
      and isnull(UnitTo.ParentId,0)<>4137) -- МО ЛИЦА-ВСЕ
      or Bill.BillKind = zc_bkSaleToClient())
 -- and Bill.Id_Postgres is not null
-
+*/
 union all
 select Bill.Id as ObjectId
      , case when FromId_Postgres is null then 'ошибка склад-' +fUnit.UnitName + '-'
