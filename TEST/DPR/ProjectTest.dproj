@@ -392,7 +392,7 @@
 			<DCCReference Include="..\SOURCE\ObjectCost\CommonObjectCostProcedureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankStatementTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankAccountMovementTest.pas"/>
-			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
+			<DCCReference Include="..\SOURCE\Movement\All\ProfitLossServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\PersonalReportTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\BankStatementItemTest.pas"/>
@@ -717,16 +717,12 @@
 				<Form>ContractConditionKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
-				<Form>ServiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
 				<Form>MoneyPlace_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Service.pas">
-				<Form>ServiceForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ProfitLossService.pas">
+				<Form>ProfitLossServiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
@@ -844,7 +840,6 @@
 				<Form>JuridicalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Movement\All\ProfitLossServiceTest.pas"/>
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
@@ -983,14 +978,6 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProfitLossServiceJournal.pas">
-				<Form>ProfitLossServiceJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProfitLossService.pas">
-				<Form>ProfitLossServiceForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
 				<Form>PaidKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1076,7 +1063,6 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\MovementItem\All\ProfitLossServiceMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
 				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1103,6 +1089,19 @@
 				<Form>Report_CheckTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ServiceJournal.pas">
+				<Form>ServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProfitLossServiceJournal.pas">
+				<Form>ProfitLossServiceJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Service.pas">
+				<Form>ServiceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

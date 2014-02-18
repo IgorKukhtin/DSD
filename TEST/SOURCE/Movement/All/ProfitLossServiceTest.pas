@@ -15,13 +15,15 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateProfitLossService(Id: Integer; InvNumber: String; OperDate: TDateTime):Integer;
+    function InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
+        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TProfitLossService }
 
@@ -37,21 +39,51 @@ function TProfitLossService.InsertDefault: integer;
 var Id: Integer;
     InvNumber: String;
     OperDate: TDateTime;
+    AmountIn, AmountOut: Double;
+    Comment:String;
+    ContractId, ContractConditionKindId, InfoMoneyId, JuridicalId, PaidKindId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
   OperDate:= Date;
-  //
-  result := InsertUpdateProfitLossService(Id, InvNumber, OperDate);
+  AmountIn := 123.45;
+  AmountOut := 0;
+  Comment:='';
+  ContractId:=TContractTest.Create.GetDefault;
+  ContractConditionKindId:=0;
+  InfoMoneyId := 0;
+  with TInfoMoneyTest.Create.GetDataSet do begin
+     if Locate('Code', '21501', []) then
+        InfoMoneyId := FieldByName('Id').AsInteger;
+  end;
+  JuridicalId := TJuridical.Create.GetDefault;
+  UnitId := 0;
+  PaidKindId:=0;
+
+  result := InsertUpdateProfitLossService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
+              ContractId,InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId);
 end;
 
-function TProfitLossService.InsertUpdateProfitLossService(Id: Integer; InvNumber: String; OperDate: TDateTime):Integer;
+function TProfitLossService.InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
+        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inAmountIn', ftFloat, ptInput, AmountIn);
+  FParams.AddParam('inAmountOut', ftFloat, ptInput, AmountOut);
+  FParams.AddParam('inComment', ftString, ptInput, Comment);
+  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
+  FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
+  FParams.AddParam('inContractConditionKindId', ftInteger, ptInput, ContractConditionKindId);
+
   result := InsertUpdate(FParams);
+
 end;
 
 { TProfitLossServiceTest }
@@ -59,8 +91,6 @@ end;
 procedure TProfitLossServiceTest.ProcedureLoad;
 begin
   ScriptDirectory := ProcedurePath + 'Movement\ProfitLossService\';
-  inherited;
-  ScriptDirectory := ProcedurePath + 'MovementItem\ProfitLossService\';
   inherited;
   ScriptDirectory := ProcedurePath + 'MovementItemContainer\ProfitLossService\';
   inherited;
@@ -78,7 +108,6 @@ begin
   try
   // редактирование
   finally
-    MovementProfitLossService.Delete(Id);
   end;
 end;
 
