@@ -18,7 +18,7 @@ RETURNS TABLE ( InvNumber_ReturnIn TVarChar, InvNumber_TaxCorrective TVarChar, O
               , Amount_ReturnIn TFloat
               , Amount_TaxCorrective TFloat
               , Difference Boolean
-              ,DocumentTaxKindName TVarChar
+              , DocumentTaxKindName TVarChar
               )  
 AS
 $BODY$

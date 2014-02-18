@@ -34,6 +34,7 @@ type
     clPrice_Sale: TcxGridDBColumn;
     clPrice_Tax: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
+    clDocumentTaxKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
