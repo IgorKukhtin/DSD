@@ -21,7 +21,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-             , BranchId Integer, BranchName TVarChar
               )
 AS
 $BODY$
@@ -65,8 +64,6 @@ BEGIN
            , Object_PaidKind.ValueData                      AS PaidKindName
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData         AS ContractConditionKindName
-           , Object_Branch.Id                               AS BranchId
-           , Object_Branch.ValueData                        AS BranchName
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
@@ -107,12 +104,6 @@ BEGIN
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
 
       ;
 

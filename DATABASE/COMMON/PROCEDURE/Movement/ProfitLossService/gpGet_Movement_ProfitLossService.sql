@@ -20,7 +20,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-             , BranchId Integer, BranchName TVarChar
              )
 AS
 $BODY$
@@ -55,8 +54,6 @@ BEGIN
            , CAST ('' as TVarChar)            AS PaidKindName
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
-           , 0                                AS BranchId
-           , CAST ('' as TVarChar)            AS BranchName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
 
@@ -100,8 +97,6 @@ BEGIN
 
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
-           , Object_Branch.Id                       AS BranchId
-           , Object_Branch.ValueData                AS BranchName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -138,13 +133,6 @@ BEGIN
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_Branch
-                                             ON MILinkObject_Branch.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_Branch.DescId = zc_MILinkObject_Branch()
-
-            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = MILinkObject_Branch.ObjectId
-
 
        WHERE Movement.Id =  inMovementId_Value;
 

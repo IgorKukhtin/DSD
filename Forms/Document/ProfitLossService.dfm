@@ -187,15 +187,15 @@
     Width = 273
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 59
-    Top = 250
+    Left = 179
+    Top = 26
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 24
     Top = 250
   end
   inherited ActionList: TActionList
-    Left = 95
+    Left = 111
     Top = 249
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
@@ -205,84 +205,84 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 128
-    Top = 250
+    Left = 176
+    Top = 178
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService'
     Params = <
       item
-        Name = 'ioid'
+        Name = 'ioId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
-        Name = 'ininvnumber'
+        Name = 'inInvNumber'
         Value = 0.000000000000000000
         Component = ceInvNumber
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'inoperdate'
+        Name = 'inOperDate'
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inamountIn'
+        Name = 'inAmountIn'
         Value = 0.000000000000000000
         Component = ceAmountDebet
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inamountOut'
+        Name = 'inAmountOut'
         Value = 0.000000000000000000
         Component = ceAmountKredit
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'incomment'
+        Name = 'inComment'
         Value = ''
         Component = ceComment
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'incontactid'
+        Name = 'inContractId'
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'ininfomoneyid'
+        Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'injuridicalid'
+        Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inpaidkindid'
+        Name = 'inPaidKindId'
         Value = ''
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inunitid'
+        Name = 'inUnitId'
         Value = ''
         Component = UnitGuides
         ComponentItem = 'Key'

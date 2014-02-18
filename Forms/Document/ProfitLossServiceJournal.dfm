@@ -157,11 +157,6 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colBranchName: TcxGridDBColumn
-            Caption = #1060#1080#1083#1080#1072#1083
-            DataBinding.FieldName = 'BranchName'
-            Width = 50
-          end
         end
       end
     end

@@ -44,17 +44,6 @@ BEGIN
         RAISE EXCEPTION 'Должна быть введена только одна сумма: <Дебет> или <Кредит>.';
      END IF;
 
---   определяем Филиал по подразделению
-     SELECT COALESCE(Object_Branch.Id, 0)
-     INTO vbBranchId
-     FROM Object AS Object_Branch
-     LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                          ON ObjectLink_Unit_Branch.ObjectId = inUnitId
-                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-
-     WHERE Object_Branch.Id =  ObjectLink_Unit_Branch.ChildObjectId
-     ;
-
 
      -- расчет
      IF inAmountIn <> 0 THEN
@@ -64,7 +53,7 @@ BEGIN
      END IF;
 
      -- 1. Распроводим Документ
-     PERFORM gpUnComplete_Movement_ProfitLossService (inMovementId := ioId, inUserId := vbUserId);
+     PERFORM gpUnComplete_Movement_ProfitLossService (inMovementId := ioId, inSession := inSession);
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProfitLossService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -88,11 +77,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Типы условий договоров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
-     -- сохранили связь с <Филиал>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), vbMovementItemId, vbBranchId);
 
 
-/*
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -105,7 +91,7 @@ BEGIN
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
-*/
+
      -- 5.3. проводим Документ
         PERFORM gpComplete_Movement_ProfitLossService (inMovementId := ioId, inIsLastComplete := FALSE, inSession := inSession);
 
@@ -123,5 +109,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inAmountIn:= 20, inAmountOut:=0 ,inComment:='', inContractId:=1,  inInfoMoneyId:= 0, inJuridicalId:= 1, inPaidKindId:= 1, inUnitId:= 0, inContractConditionKindId:=0, inSession:= '2')
-
+-- SELECT * FROM gpInsertUpdate_Movement_ProfitLossService (ioId := 0 , inInvNumber := '-1' , inOperDate := '01.01.2013', inAmountIn:= 20 , inAmountOut := 0 , inComment := '' , inContractId :=1 ,      inInfoMoneyId := 0,     inJuridicalId:= 1,       inPaidKindId:= 1,   inUnitId:= 0,   inContractConditionKindId:=0,     inSession:= '2')
