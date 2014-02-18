@@ -46,6 +46,8 @@ uses DB;
    function gfGetDefaultByType(inType: string): string;  //tested
    {функция возвращает тип данных по его строковому названию}
    function gfStringToDataType(inType: String): TFieldType;  //tested
+   // Конвертируем строку в дату
+   function gfStrFormatToDate (s, fmt: string): TDateTime;
 
 implementation
 uses XSBuiltIns, SysUtils, UtilConst, variants, StrUtils;
@@ -67,6 +69,30 @@ const
   cpdInputOutput = 'ptInputOutput';
 
 {-----------------------------------------------------------------------------------------------}
+function gfStrFormatToDate (s, fmt: string): TDateTime;
+var
+  i, k: integer;
+  c: char;
+  f: TFormatSettings;
+  OldShortDateFormat: string;
+begin
+  GetLocaleFormatSettings (0, f);
+  c := fmt [1];
+  i := 1;
+  while i <= Length (fmt) do begin
+    if fmt [i] <> c then begin
+      Insert (f.DateSeparator, fmt, i);
+      Insert (f.DateSeparator, s, i);
+      Inc (i);
+    end;
+    c := fmt [i];
+    Inc (i);
+  end;
+  f.ShortDateFormat := fmt;
+  Result := StrToDate (s, f);
+end;
+{-----------------------------------------------------------------------------------------------}
+
 function gfIntToStr(const inInt: Longint): string;
 begin
   result:=IntToStr(inInt);

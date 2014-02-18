@@ -12,7 +12,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, DataModul,
-  ExternalLoad, ExternalDocumentLoad;
+  ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit;
 
 type
   TLoadSaleFrom1CForm = class(TAncestorReportForm)
@@ -39,6 +39,9 @@ type
     bbLoad1c: TdxBarButton;
     colBranch: TcxGridDBColumn;
     colDocType: TcxGridDBColumn;
+    edBranch: TcxButtonEdit;
+    BranchGuides: TdsdGuides;
+    cxLabel3: TcxLabel;
   private
     { Private declarations }
   public

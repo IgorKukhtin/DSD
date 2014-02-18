@@ -17,6 +17,7 @@ RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale T
               , Amount_Sale TFloat--, AmountSumm_Sale TFloat
               , Amount_Tax TFloat--, AmountSumm_Tax TFloat
               , Difference Boolean
+              , DocumentTaxKindName TVarChar
               )  
 AS
 $BODY$
@@ -48,8 +49,9 @@ BEGIN
          , CAST (CASE WHEN (tmpGroupMovement.Price_Sale<>tmpGroupMovement.Price_Tax) 
                   OR (tmpGroupMovement.Amount_Sale<>tmpGroupMovement.Amount_Tax) 
          --         OR (tmpGroupMovement.AmountSumm_Sale<>tmpGroupMovement.AmountSumm_Tax)
-                THEN TRUE ELSE FALSE END AS Boolean) AS Difference 
-                
+                THEN TRUE ELSE FALSE END AS Boolean) AS Difference
+                 
+         , Object_DocumentTaxKind.ValueData AS DocumentTaxKindName       
          
     FROM (SELECT tmpMovement.MovementId_Sale
                , tmpMovement.MovementId_Tax
@@ -65,7 +67,7 @@ BEGIN
                , MAX (tmpMovement.Price_Tax)      AS Price_Tax
                , SUM (tmpMovement.Amount_Tax)     AS Amount_Tax
                --, SUM (tmpMovement.AmountSumm_Tax) AS AmountSumm_Tax
-      
+               , tmpMovement.DocumentTaxKindId
           FROM (SELECT Movement.Id AS MovementId_Sale
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
                      , Movement.OperDate AS OperDate_Sale
@@ -82,6 +84,7 @@ BEGIN
                      , 0 AS Price_Tax
                      , 0 AS Amount_Tax
                      --, 0 AS AmountSumm_Tax
+                     , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
@@ -97,7 +100,9 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                                            
+                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()                                                                            
                 WHERE Movement.DescId = zc_Movement_Sale()
                   AND Movement.OperDate between inStartDate AND inEndDate
              UNION
@@ -115,6 +120,7 @@ BEGIN
                      , MIFloat_Price.ValueData AS Price_Tax
                      , MovementItem.Amount AS Amount_Tax
                     -- , MIFloat_Price.ValueData * MovementItem.Amount AS AmountSumm_Tax
+                    , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
@@ -125,6 +131,9 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
                 WHERE Movement.DescId = zc_Movement_Tax()
                   AND Movement.OperDate between inStartDate AND inEndDate
 
@@ -133,10 +142,12 @@ BEGIN
                       , tmpMovement.MovementId_Tax
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
+                      , tmpMovement.DocumentTaxKindId 
              ) AS tmpGroupMovement
 
          JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGroupMovement.GoodsId
          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGroupMovement.GoodsKindId
+         LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpGroupMovement.DocumentTaxKindId
 
          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                       ON MovementLinkObject_From.MovementId = tmpGroupMovement.MovementId_Sale
@@ -172,3 +183,9 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postg
 
 -- тест
 --SELECT * FROM gpReport_CheckTax (inStartDate:= '15.12.2013', inEndDate:= '1.1.2014', inSessiON:= zfCalc_UserAdmin());
+
+/*
+select * from Object where descId =91
+
+INSERT INTO MovementLinkObject( DescId, MovementId ,  ObjectId )
+select zc_MovementLinkObject_DocumentTaxKind(), 19736,  80770*/

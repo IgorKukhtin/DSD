@@ -1,4 +1,4 @@
-unit Report_CheckTax;
+unit Report_CheckTaxCorrective;
 
 interface
 
@@ -16,24 +16,24 @@ uses
   dsdGuides, cxButtonEdit, cxCurrencyEdit, Vcl.Menus;
 
 type
-  TReport_CheckTaxForm = class(TAncestorReportForm)
-    clInvNumber_Sale: TcxGridDBColumn;
-    clInvNumber_Tax: TcxGridDBColumn;
+  TReport_CheckTaxCorrectiveForm = class(TAncestorReportForm)
+    clInvNumber_ReturnIn: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clAmount_Sale: TcxGridDBColumn;
-    clAmount_Tax: TcxGridDBColumn;
+    clAmount_ReturnIn: TcxGridDBColumn;
+    clAmount_TaxCorrective: TcxGridDBColumn;
     clFromCode: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
-    clOperDate_Sale: TcxGridDBColumn;
-    clOperDate_Tax: TcxGridDBColumn;
+    clOperDate_ReturnIn: TcxGridDBColumn;
     clFromName: TcxGridDBColumn;
     clToCode: TcxGridDBColumn;
     clToName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
-    clPrice_Sale: TcxGridDBColumn;
-    clPrice_Tax: TcxGridDBColumn;
+    clPrice_ReturnIn: TcxGridDBColumn;
+    clPrice_TaxCorrective: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
+    clInvNumber_TaxCorrective: TcxGridDBColumn;
+    clOperDate_TaxCorrective: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
   private
     { Private declarations }
@@ -45,6 +45,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TReport_CheckTaxForm);
+  RegisterClass(TReport_CheckTaxCorrectiveForm);
 
 end.

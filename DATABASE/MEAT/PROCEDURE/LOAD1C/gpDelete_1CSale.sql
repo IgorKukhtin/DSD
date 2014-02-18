@@ -1,8 +1,13 @@
 -- Function: gpInsertUpdate_1CSaleLoad()
 
 DROP FUNCTION IF EXISTS gpDelete_1CSale(TVarChar);
+DROP FUNCTION IF EXISTS gpDelete_1CSale(TDateTime, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpDelete_1CSale(IN inSession             TVarChar    -- сессия пользователя
+CREATE OR REPLACE FUNCTION gpDelete_1CSale(
+    IN inStartDate           TDateTime  , -- Начальная дата переноса
+    IN inEndDate             TDateTime  , -- Конечная дата переноса
+    IN inBranchId            Integer    , -- Филиал
+    IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID AS
 $BODY$
@@ -10,7 +15,8 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
 
-     TRUNCATE TABLE Sale1C;
+     DELETE FROM Sale1C 
+            WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);

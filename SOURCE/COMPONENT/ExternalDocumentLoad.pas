@@ -2,22 +2,34 @@ unit ExternalDocumentLoad;
 
 interface
 
-uses ExternalLoad, dsdDB;
+uses ExternalLoad, dsdDB, Classes;
 
 type
 
   TSale1CLoadAction = class(TExternalLoadAction)
   private
+    FBranch: TdsdParam;
     function ToDate(S: string): Variant;
   protected
     function GetStoredProc: TdsdStoredProc; override;
     function GetExternalLoad: TExternalLoad; override;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
+  published
+    property Branch: TdsdParam read FBranch write FBranch;
   end;
 
   TSale1CLoad = class(TFileExternalLoad)
   private
+    function GetOperDate: TDateTime;
+  protected
+    procedure First; override;
   public
+    constructor Create(StartDate, EndDate: TDateTime);
+    procedure Next;     override;
+    property OperDate: TDateTime read GetOperDate;
     function GetData(FieldName: String): Variant;
   end;
 
@@ -25,7 +37,7 @@ type
 
 implementation
 
-uses VCL.ActnList, DB, Variants, SysUtils, Classes;
+uses VCL.ActnList, DB, Variants, SysUtils, UtilConvert;
 
 procedure Register;
 begin
@@ -34,9 +46,21 @@ end;
 
 { TSale1CLoadAction }
 
+constructor TSale1CLoadAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  Branch := TdsdParam.Create(nil);
+end;
+
+destructor TSale1CLoadAction.Destroy;
+begin
+  FreeAndNil(FBranch);
+  inherited;
+end;
+
 function TSale1CLoadAction.GetExternalLoad: TExternalLoad;
 begin
-  result := TSale1CLoad.Create
+  result := TSale1CLoad.Create(StartDateParam.Value, EndDateParam.Value)
 end;
 
 function TSale1CLoadAction.GetStoredProc: TdsdStoredProc;
@@ -69,6 +93,7 @@ begin
     Params.AddParam('inBillId', ftInteger, ptInput, null);
     Params.AddParam('inEkspCode', ftInteger, ptInput, null);
     Params.AddParam('inExpName', ftString, ptInput, null);
+    Params.AddParam('inBranchId', ftInteger, ptInput, null);
   end;
 end;
 
@@ -101,7 +126,7 @@ begin
     ParamByName('inBillId').Value := GetData('BillId');
     ParamByName('inEkspCode').Value := GetData('EkspCode');
     ParamByName('inExpName').Value := GetData('ExpName');
-
+    ParamByName('inBranchId').Value := Branch.Value;
     Execute;
   end;
 end;
@@ -116,9 +141,45 @@ end;
 
 { TSale1CLoad }
 
+constructor TSale1CLoad.Create(StartDate, EndDate: TDateTime);
+begin
+  inherited Create;
+  FStartDate := StartDate;
+  FEndDate := EndDate;
+end;
+
+procedure TSale1CLoad.First;
+begin
+  inherited;
+  // Установить на первую запись подходящей даты
+  while not FDataSet.EOF do begin
+    if (FStartDate <= OperDate) and (OperDate <= FEndDate) then
+             break;
+    FDataSet.Next;
+  end;
+end;
+
 function TSale1CLoad.GetData(FieldName: String): Variant;
 begin
   result := FDataSet.FieldByName(FieldName).AsString;
+end;
+
+function TSale1CLoad.GetOperDate: TDateTime;
+var S: string;
+begin
+  S := GetData('OperDate');
+  if S = '' then
+     result := StrToDate('01.01.1901')
+  else
+     result := gfStrFormatToDate(S, 'YYYYMMDD')
+end;
+
+procedure TSale1CLoad.Next;
+begin
+  inherited;
+  repeat
+    FDataSet.Next;
+  until ((FStartDate <= OperDate) and (OperDate <= FEndDate)) or FDataSet.EOF;
 end;
 
 initialization

@@ -16,7 +16,7 @@ $BODY$
 
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProfitLossService());
+--     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProfitLossService());
      -- 6.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ProfitLossService() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 

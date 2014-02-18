@@ -707,6 +707,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_CheckTaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'bbReportsGoods_Separator'
         end
         item
@@ -1364,7 +1368,11 @@ object MainForm: TMainForm
     end
     object bbProfitLossService: TdxBarButton
       Action = actProfitLossService
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')'
+      Category = 0
+    end
+    object bbReport_CheckTaxCorrective: TdxBarButton
+      Action = actReport_CheckTaxCorrective
       Category = 0
     end
   end
@@ -2613,7 +2621,7 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actReport_CheckTax: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1059#1055')'
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1053#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
       FormName = 'TReport_CheckTaxForm'
       FormNameParam.Value = 'TReport_CheckTaxForm'
@@ -2627,6 +2635,15 @@ object MainForm: TMainForm
       FormName = 'TProfitLossServiceJournalForm'
       FormNameParam.Name = 'TProfitLossServiceJournalForm'
       FormNameParam.Value = 'TProfitLossServiceJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_CheckTaxCorrective: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
+      FormName = 'TReport_CheckTaxCorrectiveForm'
+      FormNameParam.Value = 'TReport_CheckTaxCorrectiveForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

@@ -4,6 +4,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_1CSaleLoad(Integer, TVarChar, TVarChar, T
     TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TDateTime, TVarChar, TDateTime, TVarChar,
     TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_1CSaleLoad(Integer, TVarChar, TVarChar, TDateTime, Integer, 
+    TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TDateTime, TVarChar, TDateTime, TVarChar,
+    TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_1CSaleLoad(
     IN inUnitId Integer, 
     IN inVidDoc TVarChar, 
@@ -28,7 +32,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_1CSaleLoad(
     IN inInvNalog TVarChar, 
     IN inBillId Integer, 
     IN inEkspCode Integer, 
-    IN inExpName TVarChar,
+    IN inExpName TVarChar, 
+    IN inBranchId Integer,
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS VOID AS
@@ -36,6 +41,10 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
 --     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_BankAccount());
+    
+     IF inBranchId <> zfGetBranchFromUnitId(inUnitId) THEN
+        RAISE EXCEPTION 'Филиал в файле не соответсвует выбранному филиалу';
+     END IF;
 
      INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
                          GoodsName, OperCount, OperPrice, Tax, Doc1Date, Doc1Number, Doc2Date, Doc2Number,

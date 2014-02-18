@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                Tax TFloat, Doc1Date TDateTime, Doc1Number TVarChar, Doc2Date TDateTime, Doc2Number TVarChar,
                Suma TFloat, PDV TFloat, SumaPDV TFloat, ClientINN TVarChar, ClientOKPO TVarChar,
                InvNalog TVarChar, BillId Integer, EkspCode Integer, ExpName TVarChar,
-               BranchName TVarChar,
+               BranchName TVarChar, DocType TVarChar, 
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar
 )
@@ -53,6 +53,10 @@ BEGIN
       Sale1C.EkspCode    ,
       Sale1C.ExpName     ,
       Object_Branch.ValueData AS BranchName,
+      CASE Sale1C.VidDoc
+        WHEN '1' THEN 'Расход'
+        WHEN '4' THEN 'Возврат'
+      END::TVarChar AS DocType, 
       Object_Partner.ObjectCode,
       Object_Partner.ValueData,
       Object_Goods.ObjectCode AS GoodsGoodsKindCode,
@@ -96,7 +100,8 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsKind
                                 ON ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
                                AND ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind()
-           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId;
+           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId
+     WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
 
 END;
 $BODY$

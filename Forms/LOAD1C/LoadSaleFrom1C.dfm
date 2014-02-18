@@ -23,10 +23,6 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ExplicitWidth = 901
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
@@ -145,6 +141,22 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     inherited deEnd: TcxDateEdit
       EditValue = 41640d
     end
+    object edBranch: TcxButtonEdit
+      Left = 467
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Width = 177
+    end
+    object cxLabel3: TcxLabel
+      Left = 421
+      Top = 6
+      Caption = #1060#1080#1083#1080#1072#1083':'
+    end
   end
   inherited ActionList: TActionList
     object actMoveToDoc: TdsdExecStoredProc
@@ -162,7 +174,11 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
     object actTrancateTable: TdsdExecStoredProc
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spDelete1CLoad
+      StoredProcList = <
+        item
+          StoredProc = spDelete1CLoad
+        end>
       Caption = 'actTrancateTable'
     end
     object actSale1CLoadAction: TSale1CLoadAction
@@ -173,6 +189,10 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
+      Branch.Value = ''
+      Branch.Component = BranchGuides
+      Branch.ComponentItem = 'Key'
+      Branch.ParamType = ptInput
     end
     object actLoad1C: TMultiAction
       Category = 'DSDLib'
@@ -281,8 +301,55 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     StoredProcName = 'gpDelete_1CSale'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     Left = 176
     Top = 192
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 576
+    Top = 16
   end
 end
