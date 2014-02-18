@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TVarChar);
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inStartDate           TDateTime  , -- Начальная дата переноса
     IN inEndDate             TDateTime  , -- Конечная дата переноса
+    IN inBranchId            Integer    , -- Филиал
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Void AS
@@ -57,7 +58,7 @@ BEGIN
                 ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
                                               AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
 
-     WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
+     WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
 
      -- Проверка
@@ -74,7 +75,10 @@ BEGIN
           JOIN MovementLinkObject AS MLO_From
                                   ON MLO_From.MovementId = Movement.Id
                                  AND MLO_From.DescId = zc_MovementLinkObject_From() 
-                                 AND MLO_From.ObjectId IN (SELECT zfGetUnitFromUnitId (UnitId) FROM Sale1C GROUP BY zfGetUnitFromUnitId (UnitId))
+          JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           JOIN MovementBoolean AS MovementBoolean_isLoad 
                                ON MovementBoolean_isLoad.MovementId = Movement.Id
                               AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
@@ -116,7 +120,7 @@ BEGIN
                                              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '1';
+            AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
      LOOP
@@ -192,7 +196,10 @@ BEGIN
           JOIN MovementLinkObject AS MLO_To
                                   ON MLO_To.MovementId = Movement.Id
                                  AND MLO_To.DescId = zc_MovementLinkObject_To() 
-                                 AND MLO_To.ObjectId IN (SELECT zfGetUnitFromUnitId (UnitId) FROM Sale1C GROUP BY zfGetUnitFromUnitId (UnitId))
+          JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_To.ObjectId 
+                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           JOIN MovementBoolean AS MovementBoolean_isLoad 
                                ON MovementBoolean_isLoad.MovementId = Movement.Id
                               AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
@@ -234,7 +241,7 @@ BEGIN
                                              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '4';
+            AND Sale1C.VIDDOC = '4 AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)';
 
      -- начало цикла по курсору
      LOOP
@@ -311,6 +318,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.02.14                        * add inBranchId
  15.02.14                                        * исправил на "<>" там где Не все записи засинхронизированы
  15.02.14                                        * zfGetUnitFromUnitId
  13.02.14                        *  
