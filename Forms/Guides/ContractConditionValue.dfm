@@ -25,6 +25,8 @@ object ContractConditionValueForm: TContractConditionValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
+    ExplicitLeft = -72
+    ExplicitTop = -14
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -147,12 +149,26 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 81
       end
+      object clBonusKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+        DataBinding.FieldName = 'BonusKindName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
+      end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 59
+      end
+      object clContractConditionComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075'.)'
+        DataBinding.FieldName = 'ContractConditionComment'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 60
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -1134,8 +1150,8 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
-    Left = 504
-    Top = 144
+    Left = 592
+    Top = 128
   end
   object spContractPartner: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'
@@ -1163,8 +1179,8 @@ object ContractConditionValueForm: TContractConditionValueForm
         Value = Null
         DataType = ftString
       end>
-    Left = 528
-    Top = 184
+    Left = 480
+    Top = 248
   end
   object spContractClose: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract_ContractStateKind'

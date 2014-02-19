@@ -31,6 +31,7 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
+    clBonusKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

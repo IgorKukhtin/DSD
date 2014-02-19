@@ -342,8 +342,8 @@ uses
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
   JuridicalGroupEdit in '..\..\Forms\Guides\JuridicalGroupEdit.pas' {JuridicalGroupEditForm: TParentForm},
   AssetGroup in '..\..\Forms\Guides\AssetGroup.pas' {AssetGroupForm: TParentForm},
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
-  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
+  BonusKind in '..\..\Forms\Kind\BonusKind.pas' {BonusKindForm: TParentForm},
+  BonusKindEdit in '..\..\Forms\Kind\BonusKindEdit.pas' {BonusKindEditForm: TParentForm},
   JuridicalGroup in '..\..\Forms\Guides\JuridicalGroup.pas' {JuridicalGroupForm: TParentForm},
   SelectKind in '..\..\Forms\Kind\SelectKind.pas' {SelectKindForm: TParentForm},
   DocumentTaxKindTest in '..\SOURCE\Objects\All\DocumentTaxKindTest.pas',
@@ -373,7 +373,9 @@ uses
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
-  ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas';
+  ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm};
 
 {$R *.RES}
 

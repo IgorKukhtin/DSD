@@ -1006,12 +1006,12 @@
 				<Form>AssetGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Country.pas">
-				<Form>CountryForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\BonusKind.pas">
+				<Form>BonusKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
-				<Form>CountryEditForm</Form>
+			<DCCReference Include="..\..\Forms\Kind\BonusKindEdit.pas">
+				<Form>BonusKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\JuridicalGroup.pas">
@@ -1102,6 +1102,14 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -23,7 +23,9 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindCode Integer 
              , OKPO TVarChar
-             , ContractConditionKindId Integer, ContractConditionKindName TVarChar                
+             , ContractConditionKindId Integer, ContractConditionKindName TVarChar  
+             , BonusKindId Integer, BonusKindName TVarChar  
+             , ContractConditionComment TVarChar 
              , Value TFloat
              , isErased Boolean 
               )
@@ -83,7 +85,11 @@ BEGIN
 
        , Object_ContractConditionKind.Id        AS ContractConditionKindId
        , Object_ContractConditionKind.ValueData AS ContractConditionKindName
-       , ObjectFloat_Value.ValueData            AS Value  
+
+       , Object_BonusKind.Id               AS BonusKindId
+       , Object_BonusKind.ValueData        AS BonusKindName
+       , tmpContractCondition.Comment      AS ContractConditionComment
+       , ObjectFloat_Value.ValueData       AS Value  
 
        , Object_Contract_View.isErased
        
@@ -132,6 +138,7 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
         LEFT JOIN (SELECT Object_ContractCondition.Id AS ContractConditionId
+                        , Object_ContractCondition.ValueData AS Comment
                         , ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                    FROM Object AS Object_ContractCondition
                         LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
@@ -145,6 +152,12 @@ BEGIN
                              ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = tmpContractCondition.ContractConditionId
                             AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
         LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
+                             ON ObjectLink_ContractCondition_BonusKind.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
+        LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
+
         LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                               ON ObjectFloat_Value.ObjectId = tmpContractCondition.ContractConditionId
                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()

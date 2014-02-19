@@ -20,8 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractInvNumber TVarChar
              , UnitName TVarChar
              , PaidKindName TVarChar
-             , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-              )
+             )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -66,10 +65,6 @@ BEGIN
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.ValueData        AS PaidKindName
 
-           , Object_ContractConditionKind.Id        AS ContractConditionKindId
-           , Object_ContractConditionKind.ValueData AS ContractConditionKindName
-
-
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_Service()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -105,10 +100,7 @@ BEGIN
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
-                                             ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
-            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
+            
       ;
   
 END;
@@ -119,6 +111,7 @@ ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarCha
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.01.14         * del ContractConditionKind
  31.01.14                                        * add inIsErased
  28.01.14         * add ContractConditionKind
  14.01.14                                        * add Object_Contract_InvNumber_View
