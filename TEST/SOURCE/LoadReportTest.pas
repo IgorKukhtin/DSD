@@ -41,7 +41,6 @@ end;
 
 procedure TLoadReportTest.LoadReportFormTest;
 var
- OKPO:array of string;
  i : integer;
 begin
 
@@ -88,10 +87,13 @@ begin
 
 //==  Цикл по ОКПО
 {
- TStrArrAdd(['01074874','23193668','25288083','30487219','30982361',
-             '32334104','19202597','32049199','32294926','32516492',
-             '34356884','35231874','35275230','35442481','36387249',
+ TStrArrAdd(['01074874','23193668','30487219',
+             ,'32049199','32294926','32516492',
+             '34356884','35442481','36387249',
              '36387233','37910513','37910542']);
+ }
+
+   TStrArrAdd(['25288083','35275230','35231874','30982361','32334104','19202597']);
    for i:=Low(OKPO) to High(OKPO) do
    begin
   // Загрузка из файла в репорт
@@ -106,7 +108,7 @@ begin
   // Считывание отчета из базы
     Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport('PrintMovement_Sale'+OKPO[i]));
    end;
- }
+
  //END ==  Цикл по ОКПО
 
 end;

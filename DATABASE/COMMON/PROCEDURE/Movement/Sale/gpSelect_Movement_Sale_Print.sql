@@ -48,6 +48,9 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , Object_ContractKind.ValueData              AS ContractKind
+           , CAST('Бабенко В.П.' AS TVarChar)           AS StoreKeeper -- кладовщик
+           , CAST('' AS TVarChar)                       AS Through     -- через кого
+           , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
 
            , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
            , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
@@ -137,6 +140,7 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
+
             LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical ON ObjectLink_Unit_Juridical.objectid = MovementLinkObject_From.ObjectId
                                                              AND ObjectLink_Unit_Juridical.descid = zc_objectlink_unit_juridical()
 
@@ -183,6 +187,11 @@ BEGIN
                                                                 ON OH_JuridicalDetails_From.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
 
+           LEFT JOIN ObjectString AS ObjectString_ToAddress
+                                  ON ObjectString_ToAddress.ObjectId = Object_To.Id
+                                 AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
+
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
@@ -207,9 +216,25 @@ BEGIN
            , Object_Measure.ValueData               AS MeasureName
            , Object_Asset.Id                        AS AssetId
            , Object_Asset.ValueData                 AS AssetName
-           , COALESCE (ObjectString_GoodsPropertyValueArticle.ValueData,
+
+           , COALESCE (Object_GoodsByJuridical.ValueData,
                        CAST ('' AS TVarChar))
-                                                   AS ArticleByJuridical
+                                                   AS GoodsName_Juridical
+           , COALESCE (OF_GoodsPropertyValueAmount.ValueData,
+                       CAST (0 AS TFloat))
+                                                   AS AmountInPack_Juridical
+           , COALESCE (OS_GoodsPropertyValueArticle.ValueData,
+                       CAST ('' AS TVarChar))
+                                                   AS Article_Juridical
+           , COALESCE (OS_GoodsPropertyValueBarCode.ValueData,
+                       CAST ('' AS TVarChar))
+                                                   AS BarCode_Juridical
+           , COALESCE (OS_GoodsPropertyValueArticleGLN.ValueData,
+                       CAST ('' AS TVarChar))
+                                                   AS ArticleGLN_Juridical
+           , COALESCE (OS_GoodsPropertyValueBarCodeGLN.ValueData,
+                       CAST ('' AS TVarChar))
+                                                   AS BarCodeGLN_Juridical
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -232,9 +257,28 @@ BEGIN
                                  ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
 
-            LEFT JOIN ObjectString AS ObjectString_GoodsPropertyValueArticle
-                                   ON ObjectString_GoodsPropertyValueArticle.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND ObjectString_GoodsPropertyValueArticle.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+            LEFT JOIN Object AS Object_GoodsByJuridical ON Object_GoodsByJuridical.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+
+            LEFT JOIN ObjectFloat  AS OF_GoodsPropertyValueAmount
+                                   ON OF_GoodsPropertyValueAmount.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                  AND OF_GoodsPropertyValueAmount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+            LEFT JOIN ObjectString AS OS_GoodsPropertyValueArticle
+                                   ON OS_GoodsPropertyValueArticle.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                  AND OS_GoodsPropertyValueArticle.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+
+            LEFT JOIN ObjectString AS OS_GoodsPropertyValueBarCode
+                                   ON OS_GoodsPropertyValueBarCode.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                  AND OS_GoodsPropertyValueBarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+
+            LEFT JOIN ObjectString AS OS_GoodsPropertyValueArticleGLN
+                                   ON OS_GoodsPropertyValueArticleGLN.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                  AND OS_GoodsPropertyValueArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
+            LEFT JOIN ObjectString AS OS_GoodsPropertyValueBarCodeGLN
+                                   ON OS_GoodsPropertyValueBarCodeGLN.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                  AND OS_GoodsPropertyValueBarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -296,6 +340,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.02.14                                                       *  add by juridical
  07.02.14                                                       *  change to Cursor
  05.02.14                                                       *
 */
