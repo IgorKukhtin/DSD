@@ -19,7 +19,6 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , ContractId Integer, ContractInvNumber TVarChar
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              )
 AS
 $BODY$
@@ -56,9 +55,6 @@ BEGIN
            , 0                                AS PaidKindId
            , CAST ('' as TVarChar)            AS PaidKindName
 
-           , 0                                AS ContractConditionKindId
-           , CAST ('' as TVarChar)            AS ContractConditionKindName
-
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
   
      ELSE
@@ -90,16 +86,13 @@ BEGIN
            , Object_Juridical.ValueData       AS JuridicalName
 
            , View_InfoMoney.InfoMoneyId
-           , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
-           , Object_Contract.Id               AS ContractId
-           , Object_Contract.ValueData        AS ContractInvNumber
+           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , View_Contract_InvNumber.ContractId AS ContractId
+           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.Id                   AS UnitId
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.Id               AS PaidKindId
            , Object_PaidKind.ValueData        AS PaidKindName
-
-           , Object_ContractConditionKind.Id        AS ContractConditionKindId
-           , Object_ContractConditionKind.ValueData AS ContractConditionKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -120,7 +113,9 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber 
+                                                     ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -131,12 +126,7 @@ BEGIN
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
-
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
-                                             ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id 
-                                            AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
-            LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
-
+            
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;  
@@ -149,6 +139,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.02.14         * del ContractConditionKind )))
  28.01.14         * add ContractConditionKind
  22.01.14                                        * add inOperDate
  28.12.13                                        * add View_InfoMoney

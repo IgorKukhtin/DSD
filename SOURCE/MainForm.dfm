@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1368,7 +1368,7 @@ object MainForm: TMainForm
     end
     object bbProfitLossService: TdxBarButton
       Action = actProfitLossService
-      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1084#1091' '#1083#1080#1094#1091
+      Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076#1086#1074')'
       Category = 0
     end
     object bbReport_CheckTaxCorrective: TdxBarButton

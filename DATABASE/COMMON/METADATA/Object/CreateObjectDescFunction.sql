@@ -375,6 +375,9 @@ INSERT INTO ObjectDesc (Code, ItemName)
 -- INSERT INTO ObjectDesc (Code, ItemName)
 --  SELECT 'zc_Object_Document', 'Справочник Документы' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_Document');
 
+CREATE OR REPLACE FUNCTION zc_Object_BonusKind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM ObjectDesc WHERE Code = 'zc_Object_BonusKind'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectDesc (Code, ItemName)
+  SELECT 'zc_Object_BonusKind', 'Виды бонусов' WHERE NOT EXISTS (SELECT * FROM ObjectDesc WHERE Code = 'zc_Object_BonusKind');
 
 
 
@@ -395,6 +398,7 @@ INSERT INTO ObjectDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.02.14         * add zc_Object_BonusKind() 
  11.02.14                      	                 * del 11.02.14 :)
  11.02.14                      	                                * add zc_Object_Document
  09.02.14                      					* add zc_Object_DocumentTaxKind

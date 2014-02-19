@@ -24,7 +24,6 @@ type
     clComment: TcxGridDBColumn;
     clContractInvNumber: TcxGridDBColumn;
     clJuridicalCode: TcxGridDBColumn;
-    clContractConditionKindName: TcxGridDBColumn;
     actInsertMask: TdsdInsertUpdateAction;
     bbInsertMask: TdxBarButton;
     N13: TMenuItem;

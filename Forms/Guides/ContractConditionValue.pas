@@ -105,6 +105,8 @@ type
     spContractRead: TdsdStoredProc;
     spContractPartner: TdsdStoredProc;
     spContractClose: TdsdStoredProc;
+    clContractConditionComment: TcxGridDBColumn;
+    clBonusKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

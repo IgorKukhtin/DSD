@@ -11,7 +11,9 @@ type
   private
     Stream: TStringStream;
     Report: TfrxReport;
+    OKPO : array of string;
     procedure LoadReportFromFile(ReportName, ReportPath: string);
+    procedure TStrArrAdd(const A : array of string);
   protected
     // подготавливаем данные для тестирования
     procedure SetUp; override;
@@ -30,12 +32,12 @@ const
 
 { TLoadReportTest }
 
-procedure TLoadReportTest.LoadReportFormTest;
+procedure TLoadReportTest.TStrArrAdd(const A : array of string);
+var i : integer;
 begin
-  // Отчеты(Финансы)
-  LoadReportFromFile('Отчет Итог по покупателю (c долгом)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c долгом).fr3');
-  LoadReportFromFile('Акт сверки (бухгалтерский) АЛАН', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский) АЛАН.fr3');
-
+  SetLength(OKPO, Length(a));
+  for i := Low(A) to High(A) do
+    OKPO[i] := A[i];
 end;
 
 procedure TLoadReportTest.LoadReportFromFile(ReportName, ReportPath: string);
@@ -51,6 +53,23 @@ begin
 
   // Считывание отчета из базы
   Report.LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
+end;
+  
+procedure TLoadReportTest.LoadReportFormTest;
+var
+ i : integer;
+begin
+  // Отчеты(Финансы)
+  LoadReportFromFile('Отчет Итог по покупателю (c долгом)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (c долгом).fr3');
+  LoadReportFromFile('Акт сверки (бухгалтерский) АЛАН', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский) АЛАН.fr3');
+
+  // Печатные формы накладных
+  LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\Расходная накладная бн.fr3');
+  LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\Расходная накладная нал.fr3');
+
+  TStrArrAdd(['25288083','35275230','35231874','30982361','32334104','19202597']);
+  for i := Low(OKPO) to High(OKPO) do
+    LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 end;
 
 procedure TLoadReportTest.SetUp;

@@ -1,9 +1,9 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 387
-  ClientWidth = 789
-  ExplicitWidth = 795
-  ExplicitHeight = 412
+  ClientWidth = 885
+  ExplicitWidth = 891
+  ExplicitHeight = 419
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -255,13 +255,14 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   object Panel: TPanel [32]
-    Left = 356
+    Left = 452
     Top = 0
     Width = 433
     Height = 387
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
+    ExplicitLeft = 356
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -304,13 +305,33 @@ inherited ContractEditForm: TContractEditForm
             end>
           Properties.ReadOnly = True
           HeaderAlignmentVert = vaCenter
-          Width = 601
+          Width = 157
+        end
+        object clBonusKindName: TcxGridDBColumn
+          Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+          DataBinding.FieldName = 'BonusKindName'
+          PropertiesClassName = 'TcxButtonEditProperties'
+          Properties.Buttons = <
+            item
+              Action = BonusKindChoiceForm
+              Default = True
+              Kind = bkEllipsis
+            end>
+          Properties.ReadOnly = True
+          HeaderAlignmentVert = vaCenter
+          Width = 108
         end
         object clValue: TcxGridDBColumn
           Caption = #1047#1085#1072#1095#1077#1085#1080#1077
           DataBinding.FieldName = 'Value'
           HeaderAlignmentVert = vaCenter
-          Width = 553
+          Width = 66
+        end
+        object colComment: TcxGridDBColumn
+          Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+          DataBinding.FieldName = 'Comment'
+          HeaderAlignmentVert = vaCenter
+          Width = 86
         end
         object colisErased: TcxGridDBColumn
           Caption = #1059#1076#1072#1083#1077#1085
@@ -466,6 +487,26 @@ inherited ContractEditForm: TContractEditForm
         end>
       Caption = 'actUpdateDataSetCCK'
       DataSource = ContractConditionDS
+    end
+    object BonusKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'BonusKindChoiceForm'
+      FormName = 'TBonusKindForm'
+      FormNameParam.Value = 'TBonusKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = ContractConditionCDS
+          ComponentItem = 'BonusKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ContractConditionCDS
+          ComponentItem = 'BonusKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
     end
     object actInsertDocument: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -1143,7 +1184,7 @@ inherited ContractEditForm: TContractEditForm
     Aggregates = <>
     PacketRecords = 0
     Params = <>
-    Left = 433
+    Left = 385
     Top = 149
   end
   object spInsertUpdateContractCondition: TdsdStoredProc
@@ -1156,6 +1197,13 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inComment'
+        Component = ContractConditionCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'inValue'
@@ -1176,9 +1224,15 @@ inherited ContractEditForm: TContractEditForm
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inBonusKindId'
+        Component = ContractConditionCDS
+        ComponentItem = 'BonusKindId'
+        ParamType = ptInput
       end>
     Left = 392
-    Top = 88
+    Top = 40
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractConditionByContract'
@@ -1195,8 +1249,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 418
-    Top = 117
+    Left = 378
+    Top = 77
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET

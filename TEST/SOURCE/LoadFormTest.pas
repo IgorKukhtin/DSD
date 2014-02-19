@@ -25,6 +25,7 @@ type
     procedure LoadBankAccountFormTest;
     procedure LoadBankAccountDocumentFormTest;
     procedure LoadBankStatementFormTest;
+    procedure LoadBonusKindFormTest;
     procedure LoadBranchFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadCashFormTest;
@@ -140,6 +141,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementJournalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankStatementForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBankStatementForm');
+end;
+
+procedure TLoadFormTest.LoadBonusKindFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBonusKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBonusKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBonusKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBonusKindEditForm');
 end;
 
 procedure TLoadFormTest.LoadBranchFormTest;

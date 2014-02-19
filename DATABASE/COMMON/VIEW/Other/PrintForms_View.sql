@@ -36,7 +36,11 @@ AS
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('32049199','32516492')
+       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668','25288083','30487219','30982361',
+                                        '32334104','19202597','32049199','32294926','32516492',
+                                        '34356884','35231874','35275230','35442481','36387249',
+                                        '36387233','37910513','37910542'
+                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 --налоговая
@@ -116,6 +120,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.02.14                                                        * + OKPO
  17.02.14                                                        * + ProfitLossService
  10.02.14                                                        * + TaxCorrective, ReturnOut
  06.02.14                                                        * + ReturnIn
