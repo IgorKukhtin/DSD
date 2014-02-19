@@ -111,6 +111,9 @@ type
     actGetStateKindClose: TdsdExecStoredProc;
     spGetStateKindPartner: TdsdStoredProc;
     actGetStateKindPartner: TdsdExecStoredProc;
+    clBonusKindName: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    BonusKindChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
