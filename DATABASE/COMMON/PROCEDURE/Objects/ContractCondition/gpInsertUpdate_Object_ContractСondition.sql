@@ -1,12 +1,15 @@
 -- Function: gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition(Integer, TFloat, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractCondition(Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
  INOUT ioId                        Integer   , -- ключ объекта <Условия договора>
+    IN inComment                   TVarChar  , -- примечание
     IN inValue                     TFloat    , -- значение
     IN inContractId                Integer   , -- Договор
-    IN inContractConditionKindId   Integer   , -- Типы условий договоров 	
+    IN inContractConditionKindId   Integer   , -- Типы условий договоров 
+    IN inBonusKindId               Integer   , -- Виды бонусов
     IN inSession                   TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -25,7 +28,7 @@ BEGIN
    END IF;
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractCondition(), 0, '');
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractCondition(), 0, inComment);
    
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectFloat (zc_ObjectFloat_ContractCondition_Value(), ioId, inValue);
@@ -34,6 +37,9 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_Contract(), ioId, inContractId);   
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_ContractConditionKind(), ioId, inContractConditionKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_BonusKind(), ioId, inBonusKindId);
+
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -42,12 +48,13 @@ END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TFloat, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.02.14         * add inBonusKindId, inComment
  16.11.13         * 
 
 */

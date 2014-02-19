@@ -8,7 +8,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionByContract(
 )
 RETURNS TABLE (Id Integer
              , Value TFloat
-             , ContractConditionKindId Integer, ContractConditionKindName TVarChar                
+             , ContractConditionKindId Integer, ContractConditionKindName TVarChar      
+             , BonusKindId Integer, BonusKindName TVarChar
+             , Comment TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -26,6 +28,11 @@ BEGIN
          , Object_ContractConditionKind.Id          AS ContractConditionKindId
          , Object_ContractConditionKind.ValueData   AS ContractConditionKindName
 
+         , Object_BonusKind.Id          AS BonusKindId
+         , Object_BonusKind.ValueData   AS BonusKindName
+         
+         , Object_ContractCondition.ValueData AS Comment
+         
          , Object_ContractCondition.isErased AS isErased
          
      FROM ObjectLink AS ObjectLink_ContractCondition_Contract
@@ -35,6 +42,11 @@ BEGIN
                                ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = Object_ContractCondition.Id
                               AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
           LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId
+          
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
+                               ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
+          LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
            
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
