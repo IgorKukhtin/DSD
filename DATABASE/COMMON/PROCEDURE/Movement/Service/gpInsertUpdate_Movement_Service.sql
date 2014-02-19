@@ -5,6 +5,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdat
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
+
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
     IN inInvNumber                TVarChar  , -- Номер документа
@@ -19,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
     IN inJuridicalBasisId         Integer   , -- Главное юр. лицо	
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
-    IN inContractConditionKindId  Integer   , -- Типы условий договоров
+
     IN inSession                  TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -79,7 +81,7 @@ BEGIN
      -- сохранили связь с <Подразделением>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Типы условий договоров>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
+     --PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
 
 
      -- 5.1. таблица - Проводки
@@ -111,6 +113,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.01.14         * del ContractConditionKind
  28.01.14         * add ContractConditionKind
  22.01.14                                        * add IsMaster
  26.12.13                                        * add lpComplete_Movement_Service
