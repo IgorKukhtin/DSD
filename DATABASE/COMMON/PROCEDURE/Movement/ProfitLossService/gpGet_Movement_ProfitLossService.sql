@@ -20,7 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitId Integer, UnitName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
-             )
+             , BonusKindId Integer, BonusKindName TVarChar)
 AS
 $BODY$
   DECLARE vbUserId Integer;
@@ -54,6 +54,8 @@ BEGIN
            , CAST ('' as TVarChar)            AS PaidKindName
            , 0                                AS ContractConditionKindId
            , CAST ('' as TVarChar)            AS ContractConditionKindName
+           , 0                                AS BonusKindId
+           , CAST ('' as TVarChar)            AS BonusKindName
 
        FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status;
 
@@ -88,8 +90,8 @@ BEGIN
            , Object_Juridical.ValueData             AS JuridicalName
            , View_InfoMoney.InfoMoneyId             AS InfoMoneyId
            , View_InfoMoney.InfoMoneyName_all       AS InfoMoneyName
-           , Object_Contract.Id                     AS ContractId
-           , Object_Contract.ValueData              AS ContractInvNumber
+           , View_Contract_InvNumber.ContractId     AS ContractId
+           , View_Contract_InvNumber.InvNumber      AS ContractInvNumber
            , Object_Unit.Id                         AS UnitId
            , Object_Unit.ValueData                  AS UnitName
            , Object_PaidKind.Id                     AS PaidKindId
@@ -97,6 +99,9 @@ BEGIN
 
            , Object_ContractConditionKind.Id        AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData AS ContractConditionKindName
+
+           , Object_BonusKind.Id                    AS BonusKindId
+           , Object_BonusKind.ValueData             AS BonusKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
@@ -117,7 +122,9 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber 
+                                                     ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
+            --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
@@ -134,6 +141,11 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                             ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+            LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MILinkObject_BonusKind.ObjectId
+
        WHERE Movement.Id =  inMovementId_Value;
 
    END IF;
@@ -146,6 +158,7 @@ ALTER FUNCTION gpGet_Movement_ProfitLossService (Integer, Integer, TDateTime, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿
+ 19.02.14         * add BonusKind
  18.02.14                                                         *
 */
 

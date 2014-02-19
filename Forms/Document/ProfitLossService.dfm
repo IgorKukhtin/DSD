@@ -44,13 +44,13 @@
     Width = 129
   end
   object cxLabel2: TcxLabel [5]
-    Left = 297
-    Top = 151
+    Left = 9
+    Top = 201
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel4: TcxLabel [6]
-    Left = 314
-    Top = 105
+    Left = 301
+    Top = 109
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
   object cxLabel5: TcxLabel [7]
@@ -59,8 +59,8 @@
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cePaidKind: TcxButtonEdit [8]
-    Left = 297
-    Top = 174
+    Left = 9
+    Top = 224
     Properties.Buttons = <
       item
         Default = True
@@ -70,7 +70,7 @@
     Width = 97
   end
   object ceUnit: TcxButtonEdit [9]
-    Left = 295
+    Left = 296
     Top = 128
     Properties.Buttons = <
       item
@@ -78,7 +78,7 @@
         Kind = bkEllipsis
       end>
     TabOrder = 10
-    Width = 304
+    Width = 303
   end
   object ceInfoMoney: TcxButtonEdit [10]
     Left = 295
@@ -113,7 +113,7 @@
     Caption = #1044#1077#1073#1077#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1086#1082#1072#1079#1072#1083#1080')'
   end
   object ceJuridical: TcxButtonEdit [14]
-    Left = 8
+    Left = 296
     Top = 174
     Properties.Buttons = <
       item
@@ -121,10 +121,10 @@
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 273
+    Width = 301
   end
   object cxLabel6: TcxLabel [15]
-    Left = 8
+    Left = 296
     Top = 151
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
@@ -145,15 +145,15 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [18]
-    Left = 7
-    Top = 203
+    Left = 138
+    Top = 205
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
-    Left = 7
+    Left = 136
     Top = 224
     TabOrder = 11
-    Width = 592
+    Width = 463
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
     Left = 447
@@ -170,7 +170,7 @@
   end
   object cxLabel9: TcxLabel [22]
     Left = 8
-    Top = 106
+    Top = 109
     Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object ceContractConditionKind: TcxButtonEdit [23]
@@ -183,6 +183,22 @@
       end>
     TabOrder = 23
     Width = 273
+  end
+  object cxLabel11: TcxLabel [24]
+    Left = 8
+    Top = 154
+    Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+  end
+  object ceBonusKind: TcxButtonEdit [25]
+    Left = 9
+    Top = 174
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 25
+    Width = 272
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
@@ -294,12 +310,11 @@
         ParamType = ptInput
       end
       item
+        Name = 'InBonusKindId'
         Value = ''
-        ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
+        Component = BonusKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 472
     Top = 160
@@ -457,6 +472,19 @@
         Component = ContractConditionKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BonusKindId'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BonusKindName'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 536
     Top = 160
@@ -482,8 +510,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 321
-    Top = 173
+    Left = 57
+    Top = 215
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
@@ -567,7 +595,7 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 128
+    Left = 416
     Top = 165
   end
   object GuidesFiller: TGuidesFiller
@@ -589,7 +617,7 @@
         Guides = InfoMoneyGuides
       end>
     ActionItemList = <>
-    Left = 408
+    Left = 344
     Top = 200
   end
   object ContractGuides: TdsdGuides
@@ -684,5 +712,29 @@
       end>
     Left = 160
     Top = 114
+  end
+  object BonusKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBonusKind
+    FormNameParam.Value = 'TBonusKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBonusKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 96
+    Top = 162
   end
 end

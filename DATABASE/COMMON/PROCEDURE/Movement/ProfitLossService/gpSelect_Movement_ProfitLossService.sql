@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , UnitName TVarChar
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
+             , BonusKindId Integer, BonusKindName TVarChar
               )
 AS
 $BODY$
@@ -65,6 +66,9 @@ BEGIN
            , Object_ContractConditionKind.Id                AS ContractConditionKindId
            , Object_ContractConditionKind.ValueData         AS ContractConditionKindName
 
+           , Object_BonusKind.Id                            AS BonusKindId
+           , Object_BonusKind.ValueData                     AS BonusKindName
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -105,6 +109,11 @@ BEGIN
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = MILinkObject_ContractConditionKind.ObjectId
 
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_BonusKind
+                                             ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
+            LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MILinkObject_BonusKind.ObjectId
+
       ;
 
 END;
@@ -115,6 +124,7 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.02.14         * add BonusKind
  18.02.14                                                         *
 
 */

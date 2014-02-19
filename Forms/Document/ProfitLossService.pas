@@ -41,6 +41,9 @@ type
     cxLabel9: TcxLabel;
     ceContractConditionKind: TcxButtonEdit;
     ContractConditionKindGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    ceBonusKind: TcxButtonEdit;
+    BonusKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
