@@ -99,6 +99,9 @@ type
     clJuridicalBasisName: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
     ChildViewAddOn: TdsdDBViewAddOn;
+    clBonusKindName: TcxGridDBColumn;
+    BonusKindChoiceForm: TOpenChoiceForm;
+    colComment: TcxGridDBColumn;
   private
     { Private declarations }
   public

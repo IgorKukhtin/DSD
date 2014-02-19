@@ -325,6 +325,7 @@ object ContractForm: TContractForm
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitTop = 335
     object cxGridDBTableViewContractCondition: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ContractConditionDS
@@ -358,11 +359,31 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Width = 300
       end
+      object clBonusKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+        DataBinding.FieldName = 'BonusKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = BonusKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
         Width = 100
+      end
+      object colComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentVert = vaCenter
+        Width = 116
       end
       object clsfcisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -410,8 +431,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -809,6 +830,26 @@ object ContractForm: TContractForm
         end>
       isShowModal = False
     end
+    object BonusKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      Caption = 'BonusKindChoiceForm'
+      FormName = 'TBonusKindForm'
+      FormNameParam.Value = 'TBonusKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ContractConditionCDS
+          ComponentItem = 'BonusKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ContractConditionCDS
+          ComponentItem = 'BonusKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
       View = cxGridDBTableViewContractCondition
@@ -922,6 +963,13 @@ object ContractForm: TContractForm
         ParamType = ptInputOutput
       end
       item
+        Name = 'inComment'
+        Component = ContractConditionCDS
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inValue'
         Component = ContractConditionCDS
         ComponentItem = 'Value'
@@ -938,6 +986,12 @@ object ContractForm: TContractForm
         Name = 'inContractConditionKindId'
         Component = ContractConditionCDS
         ComponentItem = 'ContractConditionKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBonusKindId'
+        Component = ContractConditionCDS
+        ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end>
     Left = 368

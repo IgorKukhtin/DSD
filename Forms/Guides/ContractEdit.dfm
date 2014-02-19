@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 387
   ClientWidth = 789
   ExplicitWidth = 795
-  ExplicitHeight = 412
+  ExplicitHeight = 419
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
