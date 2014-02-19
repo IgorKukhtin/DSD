@@ -34,6 +34,7 @@ BEGIN
      -- Один запрос, который считает остаток и движение. 
      -- Главная задача - выбор контейнера. Выбираем контейнеры по группе счетов 20400 для топлива и 30500 для денежных средств
   RETURN QUERY  
+  WITH Object_Account_View AS (SELECT Object_Account_View.AccountCode, Object_Account_View.AccountName_all, Object_Account_View.AccountId FROM Object_Account_View)
   SELECT 
           Operation.MovementSumm::TFloat,
           (CASE WHEN Operation.MovementSumm > 0 THEN Operation.MovementSumm ELSE 0 END)::TFloat AS Debet,
@@ -89,6 +90,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.14                        * add WITH для ускорения запроса. 
  25.01.14                        * 
  15.01.14                        * 
 */

@@ -48,7 +48,7 @@ begin
   ExecFile(MetadataPath + 'Movement\CreateMovementFloatDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\CreateMovementDateDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\CreateMovementBooleanDescFunction.sql', ZQuery);
-  ExecFile(MetadataPath + 'Movement\CreateMovementLinkMovementDescFunction.sql .sql', ZQuery);
+  ExecFile(MetadataPath + 'Movement\CreateMovementLinkMovementDescFunction.sql', ZQuery);
   ExecFile(MetadataPath + 'Movement\CreateMovementStringDescFunction.sql', ZQuery);
 end;
 

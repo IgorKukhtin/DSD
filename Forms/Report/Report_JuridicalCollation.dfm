@@ -229,30 +229,88 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       TabOrder = 5
       Width = 280
     end
+    object cxLabel3: TcxLabel
+      Left = 505
+      Top = 8
+      Caption = #1053#1072#1096#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+    end
+    object edMainJuridical: TcxButtonEdit
+      Left = 505
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 280
+    end
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = gpGetDefault
+      StoredProcList = <
+        item
+          StoredProc = gpGetDefault
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProcList = <>
+      StoredProc = spJuridicalBalance
+      StoredProcList = <
+        item
+          StoredProc = spJuridicalBalance
+        end
+        item
+          StoredProc = gpGetJuridical
+        end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
       Params = <
         item
-          Name = 'StartDate'
-          Value = 41395d
-          Component = deStart
-          DataType = ftDateTime
-        end
-        item
           Name = 'EndDate'
           Value = 41395d
           Component = deEnd
           DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalance'
+          Component = FormParams
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'OurFirm'
+          Value = ''
+          Component = MainJuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName'
+          Component = FormParams
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
         end>
-      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
-      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
+      ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
+      ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
       ReportNameParam.DataType = ftString
     end
     object actOpenForm: TdsdOpenForm
@@ -446,5 +504,121 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 208
     Top = 160
+  end
+  object spJuridicalBalance: TdsdStoredProc
+    StoredProcName = 'gpReport_JuridicalBalance'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 41395d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'StartBalance'
+        Component = FormParams
+        ComponentItem = 'StartBalance'
+        DataType = ftFloat
+      end
+      item
+        Name = 'OurFirm'
+        Component = FormParams
+        ComponentItem = 'OurFirm'
+        DataType = ftString
+      end>
+    Left = 88
+    Top = 176
+  end
+  object MainJuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edMainJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 512
+    Top = 56
+  end
+  object gpGetDefault: TdsdStoredProc
+    StoredProcName = 'gpGetJuridicalCollation'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'OperDate'
+        Value = 41395d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'MainJuridicalId'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MainJuridicalName'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 576
+    Top = 64
+  end
+  object gpGetJuridical: TdsdStoredProc
+    StoredProcName = 'gpGet_ObjectHistory_JuridicalDetails'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = MainJuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 41395d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'AccounterName'
+        Component = FormParams
+        ComponentItem = 'AccounterName'
+        DataType = ftString
+      end>
+    Left = 296
+    Top = 192
   end
 end

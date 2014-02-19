@@ -15,6 +15,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_DefaultValue(
   AS
 $BODY$
 BEGIN
+  
+  IF COALESCE(inUserKey, 0) = 0 THEN
+    inUserKey := NULL;
+  END IF;
 
   UPDATE DefaultValue SET DefaultValue = inDefaultValue, DefaultKeyId = inDefaultKeyId, UserKeyId = inUserKey WHERE Id = ioId;
   IF NOT FOUND THEN 

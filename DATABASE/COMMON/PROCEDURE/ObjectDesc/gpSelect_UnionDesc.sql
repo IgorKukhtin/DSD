@@ -13,6 +13,12 @@ $BODY$BEGIN
 
      RETURN QUERY 
     SELECT 
+           ObjectDesc.Id,
+           ObjectDesc.Code,
+           ObjectDesc.ItemName 
+      FROM ObjectDesc
+     UNION
+    SELECT 
            ObjectLinkDesc.Id,
            ObjectLinkDesc.Code,
            ObjectLinkDesc.ItemName 
