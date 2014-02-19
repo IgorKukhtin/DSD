@@ -10,20 +10,13 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   inherited PageControl: TcxPageControl
     Width = 982
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 982
-    ExplicitHeight = 270
-    ClientRectRight = 978
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 976
-      ExplicitHeight = 264
+      ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 976
-        Height = 264
-        ExplicitWidth = 976
-        ExplicitHeight = 264
+        Width = 982
+        ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,6 +147,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           object clContractConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractConditionKindName'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clBonusKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+            DataBinding.FieldName = 'BonusKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object clComment: TcxGridDBColumn
@@ -289,7 +290,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

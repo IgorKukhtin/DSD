@@ -86,9 +86,9 @@ BEGIN
            , Object_Juridical.ValueData       AS JuridicalName
 
            , View_InfoMoney.InfoMoneyId
-           , View_InfoMoney.InfoMoneyName_all AS InfoMoneyName
-           , Object_Contract.Id               AS ContractId
-           , Object_Contract.ValueData        AS ContractInvNumber
+           , View_InfoMoney.InfoMoneyName_all   AS InfoMoneyName
+           , View_Contract_InvNumber.ContractId AS ContractId
+           , View_Contract_InvNumber.InvNumber  AS ContractInvNumber
            , Object_Unit.Id                   AS UnitId
            , Object_Unit.ValueData            AS UnitName
            , Object_PaidKind.Id               AS PaidKindId
@@ -113,7 +113,9 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                              ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
-            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            --LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber 
+                                                     ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id

@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -19,6 +20,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inPaidKindId               Integer   , -- Виды форм оплаты
     IN inUnitId                   Integer   , -- Подразделение
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
+    IN inBonusKindId              Integer   , -- Виды бонусов
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -77,6 +79,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Типы условий договоров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
+     -- сохранили связь с <Виды бонусов>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BonusKind(), vbMovementItemId, inBonusKindId);
 
 
      -- 5.1. таблица - Проводки
@@ -105,6 +109,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.02.14         * add BonusKind
  18.02.14                                                         *
 */
 

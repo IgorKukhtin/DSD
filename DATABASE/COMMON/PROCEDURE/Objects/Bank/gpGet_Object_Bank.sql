@@ -1,16 +1,16 @@
-п»ї-- Function: gpGet_Object_Bank(Integer,TVarChar)
+-- Function: gpGet_Object_Bank(Integer,TVarChar)
 
 --DROP FUNCTION gpGet_Object_Bank(Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Bank(
-    IN inId          Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р‘Р°РЅРєРё>
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- ключ объекта <Банки>
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
                JuridicalId Integer, JuridicalName TVarChar, MFO TVarChar) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
    IF COALESCE (inId, 0) = 0
    THEN
@@ -45,22 +45,16 @@ $BODY$BEGIN
    END IF;
      
 END;$BODY$
-
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 1000;
-ALTER FUNCTION gpGet_Object_Bank(integer, TVarChar)
-  OWNER TO postgres;
-
--- SELECT * FROM gpSelect_User('2')
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_Bank (Integerб TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.02.14                                        * Cyr-1251
  10.06.13          *
- 05.06.13          
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM  gpGet_Object_Bank (2, '')

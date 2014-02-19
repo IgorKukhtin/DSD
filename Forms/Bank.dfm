@@ -51,18 +51,25 @@ object BankForm: TBankForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 95
+        Width = 30
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 224
+        Width = 100
+      end
+      object clMFO: TcxGridDBColumn
+        Caption = #1052#1060#1054
+        DataBinding.FieldName = 'MFO'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 105
@@ -101,8 +108,8 @@ object BankForm: TBankForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -228,6 +235,7 @@ object BankForm: TBankForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 4
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -236,6 +244,8 @@ object BankForm: TBankForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TBankEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -252,6 +262,8 @@ object BankForm: TBankForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TBankEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -353,6 +365,7 @@ object BankForm: TBankForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 328
     Top = 264
   end

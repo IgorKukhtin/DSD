@@ -56,6 +56,7 @@ type
     clName: TcxGridDBColumn;
     clErased: TcxGridDBColumn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    clMFO: TcxGridDBColumn;
   private
     { Private declarations }
   public
