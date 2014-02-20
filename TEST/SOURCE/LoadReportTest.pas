@@ -67,7 +67,7 @@ begin
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\Расходная накладная бн.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\Расходная накладная нал.fr3');
 
-  TStrArrAdd(['25288083','35275230','35231874','30982361','32334104','19202597']);
+  TStrArrAdd(['25288083','35275230','35231874','30982361','32334104','19202597','30487219','37910513','37910542','32294926']);
   for i := Low(OKPO) to High(OKPO) do
     LoadReportFromFile('PrintMovement_Sale' + OKPO[i], ReportPath + '\Товарный Учет\PrintMovement_Sale' + OKPO[i] + '.fr3');
 end;
