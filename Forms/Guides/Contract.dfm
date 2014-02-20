@@ -822,10 +822,6 @@ object ContractForm: TContractForm
           Component = ContractConditionCDS
           ComponentItem = 'ContractConditionKindName'
           DataType = ftString
-        end
-        item
-          Name = 'inContractId'
-          Value = 0
         end>
       isShowModal = False
     end

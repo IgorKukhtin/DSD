@@ -196,14 +196,7 @@ object ContractConditionKindForm: TContractConditionKindForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <
-      item
-        Name = 'inContractId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'inContractId'
-        ParamType = ptInput
-      end>
+    Params = <>
     Left = 144
     Top = 120
   end
@@ -230,12 +223,7 @@ object ContractConditionKindForm: TContractConditionKindForm
     Top = 200
   end
   object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'inContractId'
-        Value = Null
-        ParamType = ptInput
-      end>
+    Params = <>
     Left = 424
     Top = 152
   end
