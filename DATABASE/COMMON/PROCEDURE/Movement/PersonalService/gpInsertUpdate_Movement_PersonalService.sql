@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_PersonalService()
 
--- DROP FUNCTION gpInsertUpdate_Movement_PersonalService();
+DROP FUNCTION gpselect_movement_personalservice(tdatetime,tdatetime,tvarchar);
+DROP FUNCTION gpInsertUpdate_Movement_PersonalService(Integer, TVarChar, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -17,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN

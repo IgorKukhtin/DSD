@@ -13,7 +13,7 @@ BEGIN
   RETURN
   COALESCE((SELECT DefaultValue FROM DefaultValue 
     JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
-    JOIN (SELECT RoleId, 2 AS TypeId 
+LEFT JOIN (SELECT RoleId, 2 AS TypeId 
             FROM ObjectLink_UserRole_View
            WHERE UserId = inUserId
            UNION 
@@ -32,6 +32,7 @@ ALTER FUNCTION lpGet_DefaultValue(TVarChar, integer) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.02.14                         * add LEFT для пользователя.
  20.12.13                         *
 
 */

@@ -25,9 +25,9 @@ BEGIN
               Object.ObjectCode AS ObjectCode,
               Object.ValueData AS ObjectName 
          FROM DefaultValue
-         JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
-         JOIN Object AS Object_User ON Object_User.Id = UserKeyId
-         JOIN Object ON Object.Id = zfConvert_StringToNumber(DefaultValue.DefaultValue);
+              JOIN DefaultKeys ON DefaultKeys.Id = DefaultValue.DefaultKeyId
+         LEFT JOIN Object AS Object_User ON Object_User.Id = UserKeyId
+              JOIN Object ON Object.Id = zfConvert_StringToNumber(DefaultValue.DefaultValue);
 
 END;
 $BODY$

@@ -15,7 +15,7 @@ BEGIN
      END IF;
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql IMMUTABLE;
 ALTER FUNCTION lpGetUserBySession (TVarChar) OWNER TO postgres;
 
 /*

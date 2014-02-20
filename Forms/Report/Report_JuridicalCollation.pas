@@ -43,6 +43,12 @@ type
     colInfoMoneyGroupName: TcxGridDBColumn;
     colInfoMoneyDestinationCode: TcxGridDBColumn;
     colInfoMoneyDestinationName: TcxGridDBColumn;
+    spJuridicalBalance: TdsdStoredProc;
+    cxLabel3: TcxLabel;
+    edMainJuridical: TcxButtonEdit;
+    MainJuridicalGuides: TdsdGuides;
+    gpGetDefault: TdsdStoredProc;
+    gpGetJuridical: TdsdStoredProc;
   private
     { Private declarations }
   public
