@@ -89,9 +89,9 @@ type
     cbSendUnit: TCheckBox;
     cbSendPersonal: TCheckBox;
     cbSendUnitBranch: TCheckBox;
-    cbSale: TCheckBox;
+    cbSaleFl: TCheckBox;
     cbReturnOut: TCheckBox;
-    cbReturnIn: TCheckBox;
+    cbReturnInFl: TCheckBox;
     cbProductionUnion: TCheckBox;
     cbProductionSeparate: TCheckBox;
     cbLoss: TCheckBox;
@@ -128,6 +128,8 @@ type
     cbCompleteReturnOut: TCheckBox;
     cbTax: TCheckBox;
     cbTaxCorrective: TCheckBox;
+    cbReturnInInt: TCheckBox;
+    cbSaleInt: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -140,7 +142,7 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
-    procedure cbReturnInClick(Sender: TObject);
+    procedure cbReturnInFlClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -192,8 +194,7 @@ type
     function pLoadDocument_Sale:Integer;
     procedure pLoadDocumentItem_Sale(SaveCount:Integer);
     function pLoadDocument_Sale_Fl:Integer;
-    function pLoadDocumentItem_Sale_Fl(SaveCount:Integer):Integer;
-    procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1, SaveCount2:Integer);
+    procedure pLoadDocumentItem_Sale_Fl_Int(SaveCount1:Integer);
 
     function pLoadDocument_ReturnOut:Integer;
     procedure pLoadDocumentItem_ReturnOut(SaveCount:Integer);
@@ -481,7 +482,7 @@ procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
-procedure TMainForm.cbReturnInClick(Sender: TObject);
+procedure TMainForm.cbReturnInFlClick(Sender: TObject);
 begin
 
 end;
@@ -670,8 +671,7 @@ begin
      DataSource.DataSet:=fromFlQuery;
 
      if not fStop then myRecordCount1:=pLoadDocument_Sale_Fl;
-     if not fStop then myRecordCount2:=pLoadDocumentItem_Sale_Fl(myRecordCount1);
-     if not fStop then pLoadDocumentItem_Sale_Fl_Int(myRecordCount1,myRecordCount2);
+     if not fStop then pLoadDocumentItem_Sale_Fl_Int(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnIn_Fl;
      if not fStop then pLoadDocumentItem_ReturnIn_Fl(myRecordCount1);
@@ -697,8 +697,8 @@ begin
      if not fStop then myRecordCount1:=pLoadDocument_SendUnitBranch;
      if not fStop then pLoadDocumentItem_SendUnitBranch(myRecordCount1);
 
-     //Fl if not fStop then myRecordCount1:=pLoadDocument_Sale;
-     //Fl if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
+     if not fStop then myRecordCount1:=pLoadDocument_Sale;
+     if not fStop then pLoadDocumentItem_Sale(myRecordCount1);
 
      if not fStop then myRecordCount1:=pLoadDocument_ReturnOut;
      if not fStop then pLoadDocumentItem_ReturnOut(myRecordCount1);
@@ -8054,9 +8054,9 @@ end;
 function TMainForm.pLoadDocument_Sale:Integer;
 begin
      Result:=0;
-     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
      //
-     myEnabledCB(cbSale);
+     myEnabledCB(cbSaleInt);
      //
      with fromQuery,Sql do begin
         Close;
@@ -8064,7 +8064,7 @@ begin
         Add('call dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
         Open;
         Result:=RecordCount;
-        cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSaleInt.Caption:='3.3.('+IntToStr(RecordCount)+')Прод.пок.Int';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -8148,16 +8148,16 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbSale);
+     myDisabledCB(cbSaleInt);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!INTEGER
 procedure TMainForm.pLoadDocumentItem_Sale (SaveCount:Integer);
 begin
 //exit;
-     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     if (not cbSaleInt.Checked)or(not cbSaleInt.Enabled) then exit;
      //
-     myEnabledCB(cbSale);
+     myEnabledCB(cbSaleInt);
      //
      fExecSqFromQuery('call dba._pgInsertClient_byScaleDiscountWeight ('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
      //
@@ -8311,7 +8311,7 @@ begin
            );
         Add('order by 2,3,1');
         Open;
-        cbSale.Caption:='3.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSaleInt.Caption:='3.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Прод.пок.Int';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -8382,7 +8382,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbSale);
+     myDisabledCB(cbSaleInt);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
@@ -8390,9 +8390,9 @@ function TMainForm.pLoadDocument_Sale_Fl:Integer;
 var PriceListId:Integer;
 begin
      Result:=0;
-     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     if (not cbSaleFl.Checked)or(not cbSaleFl.Enabled) then exit;
      //
-     myEnabledCB(cbSale);
+     myEnabledCB(cbSaleFl);
      //
      with fromFlQuery,Sql do begin
         Close;
@@ -8403,7 +8403,7 @@ begin
 
         Open;
         Result:=RecordCount;
-        cbSale.Caption:='3.1. ('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSaleFl.Caption:='3.1.('+IntToStr(RecordCount)+')Прод.пок.Fl';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -8489,143 +8489,15 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbSale);
+     myDisabledCB(cbSaleFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
-function TMainForm.pLoadDocumentItem_Sale_Fl (SaveCount:Integer):Integer;
+procedure TMainForm.pLoadDocumentItem_Sale_Fl_Int (SaveCount1:Integer);
 begin
-//exit;
-     Result:=0;
-     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
+     if (not cbSaleFl.Checked)or(not cbSaleFl.Enabled) then exit;
      //
-     myEnabledCB(cbSale);
-     //
-{     with fromFlQuery,Sql do begin
-        Close;
-        Clear;
-        Add('select BillItems.Id as ObjectId');
-        Add('     , Bill.BillDate as BillDate');
-        Add('     , Bill.BillNumber as BillNumber');
-        Add('     , Bill.Id_Postgres as MovementId_Postgres');
-        Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
-
-        Add('     , case when Bill.FromId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
-        Add('     , -1 * BillItems.OperCount as AmountPartner');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as AmountChangePercent');
-        Add('     , 0  as ChangePercentAmount');
-
-        Add('     , BillItems.OperPrice as Price');
-        Add('     , 1 as CountForPrice');
-        Add('     , KindPackage.Id_Postgres as GoodsKindId_Postgres');
-        Add('     , zc_rvYes() as isFl');
-        Add('     , case when GoodsProperty.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка товар')
-           +'            when KindPackage.Id_Postgres is null then cast (Bill.BillNumber as TVarCharMedium)+'+FormatToVarCharServer_notNULL('-ошибка вид')
-           +'            else '+FormatToVarCharServer_notNULL('')
-           +'       end as errInvNumber');
-        Add('     , zc_rvYes() as zc_rvYes');
-        Add('     , BillItems.Id_Postgres as Id_Postgres');
-        Add('from dba.Bill');
-        Add('     join (select Bill.Id as BillId'
-           +'           from dba.Bill'
-           +'                join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
-           +'           where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'             and Bill.BillKind in (zc_bkSaleToClient())'
-           +'           group by BillId'
-           +'          ) as Bill_NotNalog on Bill_NotNalog.BillId=Bill.Id');
-        Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
-        Add('     left outer join (select max(GoodsProperty_Detail_byLoad.Id_byLoad) as Id_byLoad, GoodsPropertyId, KindPackageId from dba.GoodsProperty_Detail_byLoad where GoodsProperty_Detail_byLoad.Id_byLoad<>0 group by GoodsPropertyId, KindPackageId');
-        Add('                     ) as GoodsProperty_Detail_byLoad on GoodsProperty_Detail_byLoad.GoodsPropertyId = BillItems.GoodsPropertyId');
-        Add('                                                     and GoodsProperty_Detail_byLoad.KindPackageId = BillItems.KindPackageId');
-        Add('     left outer join dba.GoodsProperty_Detail_byServer on GoodsProperty_Detail_byServer.Id = GoodsProperty_Detail_byLoad.Id_byLoad');
-        Add('     left outer join dba.GoodsProperty_i as GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail_byServer.GoodsPropertyId');
-        Add('     left outer join dba.Goods_i as Goods on Goods.Id = GoodsProperty.GoodsId');
-        Add('     left outer join dba.KindPackage_i as KindPackage on KindPackage.Id = GoodsProperty_Detail_byServer.KindPackageId');
-        Add('                                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind in (zc_bkSaleToClient())'
-           +'  and Bill.Id_Postgres>0'
-// +'  and 1=0'
-// +'  and MovementId_Postgres = 10154'
-           );
-        Add('order by 2,3,1');
-        Open;
-        Result:=RecordCount;
-        cbSale.Caption:='3.1. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Продажа покупателю';
-        //
-        fStop:=cbOnlyOpen.Checked;
-        if cbOnlyOpen.Checked then exit;
-        //
-        Gauge.Progress:=0;
-        Gauge.MaxValue:=RecordCount;
-        //
-        toStoredProc.StoredProcName:='gpInsertUpdate_MovementItem_Sale_SybaseFl';
-        toStoredProc.OutputType := otResult;
-        toStoredProc.Params.Clear;
-        toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
-        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inChangeAmount',ftBoolean,ptInput, false);
-        toStoredProc.Params.AddParam ('inAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountPartner',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inAmountChangePercent',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inChangePercentAmount',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inCountForPrice',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inGoodsKindId',ftInteger,ptInput, 0);
-        //
-        toStoredProc_two.StoredProcName:='gtmpUpdate_Movement_InvNumber';
-        toStoredProc_two.OutputType := otResult;
-        toStoredProc_two.Params.Clear;
-        toStoredProc_two.Params.AddParam ('inId',ftInteger,ptInputOutput, 0);
-        toStoredProc_two.Params.AddParam ('inInvNumber',ftString,ptInput, '');
-        //
-        //DisableControls;
-        while not EOF do
-        begin
-             //!!!
-             if fStop then begin exit;end;
-             //
-             toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
-             toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inChangeAmount').Value:=FieldByName('IsChangeAmount').AsInteger=zc_rvYes;
-             toStoredProc.Params.ParamByName('inAmount').Value:=FieldByName('Amount').AsFloat;
-             toStoredProc.Params.ParamByName('inAmountPartner').Value:=FieldByName('AmountPartner').AsFloat;
-             toStoredProc.Params.ParamByName('inAmountChangePercent').Value:=FieldByName('AmountChangePercent').AsFloat;
-             toStoredProc.Params.ParamByName('inChangePercentAmount').Value:=FieldByName('ChangePercentAmount').AsFloat;
-             toStoredProc.Params.ParamByName('inPrice').Value:=FieldByName('Price').AsFloat;
-             toStoredProc.Params.ParamByName('inCountForPrice').Value:=FieldByName('CountForPrice').AsFloat;
-             toStoredProc.Params.ParamByName('inGoodsKindId').Value:=FieldByName('GoodsKindId_Postgres').AsInteger;
-             if not myExecToStoredProc then ;//exit;
-             //
-             if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
-             then fExecFlSqFromQuery('update dba.BillItems set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString);
-             //
-             if (FieldByName('errInvNumber').AsString<>'')
-             then begin
-                  toStoredProc_two.Params.ParamByName('inId').Value:=FieldByName('MovementId_Postgres').AsInteger;
-                  toStoredProc_two.Params.ParamByName('inInvNumber').Value:=FieldByName('errInvNumber').AsString;
-                  if not myExecToStoredProc_two then;
-             end;
-             //
-             Next;
-             Application.ProcessMessages;
-             Gauge.Progress:=Gauge.Progress+1;
-             Application.ProcessMessages;
-        end;
-     end;}
-     //
-     myDisabledCB(cbSale);
-end;
-//----------------------------------------------------------------------------------------------------------------------------------------------------
-//!!!!FLOAT
-procedure TMainForm.pLoadDocumentItem_Sale_Fl_Int (SaveCount1,SaveCount2:Integer);
-begin
-     if (not cbSale.Checked)or(not cbSale.Enabled) then exit;
-     //
-     myEnabledCB(cbSale);
+     myEnabledCB(cbSaleFl);
      //
      with fromFlQuery,Sql do begin
         Close;
@@ -8693,7 +8565,7 @@ begin
         Add('order by 2,3,1');
         Open;
 
-        cbSale.Caption:='3.1. ('+IntToStr(SaveCount1)+')('+IntToStr(SaveCount2)+')('+IntToStr(RecordCount)+') Продажа покупателю';
+        cbSaleFl.Caption:='3.1.('+IntToStr(SaveCount1)+')('+IntToStr(RecordCount)+')Прод.пок.Fl';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -8762,7 +8634,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbSale);
+     myDisabledCB(cbSaleFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
@@ -9818,9 +9690,9 @@ end;
 function TMainForm.pLoadDocument_ReturnIn_Fl:Integer;
 begin
      Result:=0;
-     if (not cbReturnIn.Checked)or(not cbReturnIn.Enabled) then exit;
+     if (not cbReturnInFl.Checked)or(not cbReturnInFl.Enabled) then exit;
      //
-     myEnabledCB(cbReturnIn);
+     myEnabledCB(cbReturnInFl);
      //
      with fromFlQuery,Sql do begin
         Close;
@@ -9912,7 +9784,7 @@ begin
         Open;
 
         Result:=RecordCount;
-        cbReturnIn.Caption:='3.2. ('+IntToStr(RecordCount)+') Возврат от покупателя';
+        cbReturnInFl.Caption:='3.2.('+IntToStr(RecordCount)+')Воз.от пок.Fl';
         //
         fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
         if cbOnlyOpen.Checked then exit;
@@ -9973,16 +9845,16 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbReturnIn);
+     myDisabledCB(cbReturnInFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
 procedure TMainForm.pLoadDocumentItem_ReturnIn_Fl(SaveCount:Integer);
 begin
 //exit;
-     if (not cbReturnIn.Checked)or(not cbReturnIn.Enabled) then exit;
+     if (not cbReturnInFl.Checked)or(not cbReturnInFl.Enabled) then exit;
      //
-     myEnabledCB(cbReturnIn);
+     myEnabledCB(cbReturnInFl);
      //
      with fromFlQuery,Sql do begin
         Close;
@@ -10032,7 +9904,7 @@ begin
         Add('order by 2,3,1');
         Open;
 
-        cbReturnIn.Caption:='3.2. ('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+') Возврат от покупателя';
+        cbReturnInFl.Caption:='3.2.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Воз.от пок.Fl';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -10093,7 +9965,7 @@ begin
         end;
      end;
      //
-     myDisabledCB(cbReturnIn);
+     myDisabledCB(cbReturnInFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Loss:Integer;
