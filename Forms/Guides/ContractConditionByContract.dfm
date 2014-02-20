@@ -1,7 +1,7 @@
-object ContractConditionKindForm: TContractConditionKindForm
+object ContractConditionByContractForm: TContractConditionByContractForm
   Left = 0
   Top = 0
-  Caption = #1058#1080#1087#1099' '#1091#1089#1083#1086#1074#1080#1081' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
+  Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
   ClientHeight = 380
   ClientWidth = 599
   Color = clBtnFace
@@ -33,7 +33,7 @@ object ContractConditionKindForm: TContractConditionKindForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
+      OptionsBehavior.IncSearchItem = clContractConditionKindName
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
@@ -44,19 +44,39 @@ object ContractConditionKindForm: TContractConditionKindForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+      object clContractConditionKindName: TcxGridDBColumn
+        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 252
+        Width = 204
+      end
+      object clBonusKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+        DataBinding.FieldName = 'BonusKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 114
+      end
+      object clValue: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'Value'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 105
+      end
+      object clComment: TcxGridDBColumn
+        Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+        DataBinding.FieldName = 'Comment'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 121
+      end
+      object colisErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085
+        DataBinding.FieldName = 'isErased'
+        Visible = False
+        Width = 30
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -77,7 +97,7 @@ object ContractConditionKindForm: TContractConditionKindForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
+        Component = clContractConditionKindName
         Properties.Strings = (
           'Width')
       end>
@@ -177,12 +197,23 @@ object ContractConditionKindForm: TContractConditionKindForm
         item
           Name = 'Key'
           Component = ClientDataSet
-          ComponentItem = 'Id'
+          ComponentItem = 'ContractConditionKindId'
         end
         item
           Name = 'TextValue'
           Component = ClientDataSet
-          ComponentItem = 'Name'
+          ComponentItem = 'ContractConditionKindName'
+          DataType = ftString
+        end
+        item
+          Name = 'BonusKindId'
+          Component = ClientDataSet
+          ComponentItem = 'BonusKindId'
+        end
+        item
+          Name = 'BonusKindName'
+          Component = ClientDataSet
+          ComponentItem = 'BonusKindName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -190,7 +221,7 @@ object ContractConditionKindForm: TContractConditionKindForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ContractConditionKind'
+    StoredProcName = 'gpSelect_Object_ContractConditionByContract'
     DataSet = ClientDataSet
     DataSets = <
       item

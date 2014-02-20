@@ -210,7 +210,9 @@ begin
   // Типы условий договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionKindForm');
-
+  // Условия договоров
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionByContractForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractConditionByContractForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
