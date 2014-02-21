@@ -83,7 +83,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 46
       end
       object clInvNumberArchive: TcxGridDBColumn
         Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
@@ -99,7 +99,7 @@ object ContractForm: TContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 80
+        Width = 79
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -124,14 +124,14 @@ object ContractForm: TContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 150
+        Width = 151
       end
       object clOKPO: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 69
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -147,28 +147,28 @@ object ContractForm: TContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 45
+        Width = 46
       end
       object clSigningDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'SigningDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 75
       end
       object clStartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object clEndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 69
       end
       object clContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -183,7 +183,7 @@ object ContractForm: TContractForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 99
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
@@ -256,7 +256,7 @@ object ContractForm: TContractForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 80
+        Width = 79
       end
       object clPersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
@@ -293,13 +293,29 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 70
       end
+      object clBankAccount: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090
+        DataBinding.FieldName = 'BankAccount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 54
+      end
+      object clBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 69
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 120
+        Width = 80
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -1042,6 +1058,13 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end
       item
+        Name = 'inBankAccount'
+        Component = ClientDataSet
+        ComponentItem = 'BankAccount'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inSigningDate'
         Component = ClientDataSet
         ComponentItem = 'SigningDate'
@@ -1114,6 +1137,12 @@ object ContractForm: TContractForm
         Name = 'inContractStateKindId'
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankId'
+        Component = ClientDataSet
+        ComponentItem = 'BankId'
         ParamType = ptInput
       end>
     Left = 432
