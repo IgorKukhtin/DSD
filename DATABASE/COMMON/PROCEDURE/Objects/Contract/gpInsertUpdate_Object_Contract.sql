@@ -3,6 +3,8 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (integer, tvarchar, tdatetime, tdatetime, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -10,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inInvNumber           TVarChar,      -- Номер договора
     IN inInvNumberArchive    TVarChar,      -- Номер архивирования
     IN inComment             TVarChar,      -- Комментарий
+    IN inBankAccount         TVarChar,      -- р.счет
     
     IN inSigningDate         TDateTime,     -- свойство Дата заключения договора
     IN inStartDate           TDateTime,     -- свойство Дата с которой действует договор
@@ -25,6 +28,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inAreaId              Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
+    IN inBankId              Integer  ,     -- Банк
     
     IN inSession          TVarChar       -- сессия пользователя
 )
@@ -115,6 +119,8 @@ BEGIN
 
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccount);
 
    -- сохранили связь с <Юридическое лицо>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
@@ -135,6 +141,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractArticle(), ioId, inContractArticleId);
    -- сохранили связь с <Состояние договора>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), ioId, inContractStateKindId);   
+   -- сохранили связь с <Банк>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -147,6 +155,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.02.14         * add Bank, BankAccount              
  08.11.14                        * 
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица
  04.01.14                                        * add !!!inInvNumber not unique!!!
