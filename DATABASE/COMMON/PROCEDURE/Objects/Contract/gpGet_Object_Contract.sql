@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar
+             , Comment TVarChar, BankAccount TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
-             
+             , BankId Integer, BankName TVarChar
              , isErased Boolean
               )
 AS
@@ -39,8 +39,9 @@ BEGIN
            , lfGet_ObjectCode(0, zc_Object_Contract()) AS Code
            , '' :: TVarChar  AS InvNumber
            , '' :: TVarChar  AS InvNumberArchive
-           , '' :: TVarChar   AS Comment
-           
+           , '' :: TVarChar  AS Comment
+           , '' :: TVarChar  AS BankAccount
+
            , CURRENT_DATE :: TDateTime AS SigningDate
            , CURRENT_DATE :: TDateTime AS StartDate
            , CURRENT_DATE :: TDateTime AS EndDate
@@ -65,6 +66,9 @@ BEGIN
            , '' :: TVarChar AS ContractArticleName
            , 0 :: Integer   AS ContractStateKindId
            , '' :: TVarChar AS ContractStateKindName          
+
+           , 0 :: Integer   AS BankId
+           , '' :: TVarChar AS BankName
            
            , NULL :: Boolean  AS isErased
        FROM Object AS Object_PaidKind
@@ -80,7 +84,8 @@ BEGIN
            , Object_Contract_View.InvNumber
            
            , ObjectString_InvNumberArchive.ValueData AS InvNumberArchive
-           , ObjectString_Comment.ValueData AS Comment
+           , ObjectString_Comment.ValueData          AS Comment
+           , ObjectString_BankAccount.ValueData      AS BankAccount
                       
            , ObjectDate_Signing.ValueData AS SigningDate
            , Object_Contract_View.StartDate
@@ -107,6 +112,9 @@ BEGIN
            , Object_ContractStateKind.Id        AS ContractStateKindId
            , Object_ContractStateKind.ValueData AS ContractStateKindName          
 
+           , Object_Bank.Id          AS BankId
+           , Object_Bank.ValueData   AS BankName
+       
            , Object_Contract_View.isErased
 
        FROM Object_Contract_View
@@ -121,7 +129,11 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_Comment
                                    ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()                                  
-            
+
+            LEFT JOIN ObjectString AS ObjectString_BankAccount
+                                   ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
+                                  AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                                  ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -146,6 +158,11 @@ BEGIN
                                  ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
                                 AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
             LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_Bank
+                                 ON ObjectLink_Contract_Bank.ObjectId = Object_Contract_View.ContractId 
+                                AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
+            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Contract_Bank.ChildObjectId   
                                 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
@@ -166,6 +183,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.02.14         * add Bank, BankAccount
  08.11.14                        * 
  14.11.13         * add from redmaine
  20.10.13                                        * add from redmaine
