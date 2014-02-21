@@ -114,6 +114,11 @@ type
     clBonusKindName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;
     BonusKindChoiceForm: TOpenChoiceForm;
+    cxLabel16: TcxLabel;
+    edBankId: TcxButtonEdit;
+    BankGuides: TdsdGuides;
+    edBankAccount: TcxTextEdit;
+    cxLabel17: TcxLabel;
   private
     { Private declarations }
   public

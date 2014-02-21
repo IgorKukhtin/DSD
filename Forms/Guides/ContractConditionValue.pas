@@ -107,6 +107,8 @@ type
     spContractClose: TdsdStoredProc;
     clContractConditionComment: TcxGridDBColumn;
     clBonusKindName: TcxGridDBColumn;
+    clBankName: TcxGridDBColumn;
+    clBankAccount: TcxGridDBColumn;
   private
     { Private declarations }
   public

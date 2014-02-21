@@ -102,6 +102,8 @@ type
     clBonusKindName: TcxGridDBColumn;
     BonusKindChoiceForm: TOpenChoiceForm;
     colComment: TcxGridDBColumn;
+    clBankAccount: TcxGridDBColumn;
+    clBankName: TcxGridDBColumn;
   private
     { Private declarations }
   public
