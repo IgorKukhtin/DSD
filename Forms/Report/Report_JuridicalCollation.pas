@@ -49,6 +49,8 @@ type
     MainJuridicalGuides: TdsdGuides;
     gpGetDefault: TdsdStoredProc;
     gpGetJuridical: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrintReport: TdxBarButton;
   private
     { Private declarations }
   public

@@ -69,14 +69,14 @@ type
 
   TdsdDataSetLink = class (TCollectionItem)
   private
-    FDataSet: TClientDataSet;
-    procedure SetDataSet(const Value: TClientDataSet);
+    FDataSet: TDataSet;
+    procedure SetDataSet(const Value: TDataSet);
   protected
     function GetDisplayName: string; override;
   public
     procedure Assign(Source: TPersistent); override;
   published
-    property DataSet: TClientDataSet read FDataSet write SetDataSet;
+    property DataSet: TDataSet read FDataSet write SetDataSet;
   end;
 
   TdsdDataSets = class (TOwnedCollection)
@@ -97,8 +97,8 @@ type
     // Возвращает XML строку заполненных параметров
     function FillParams: String;
     procedure FillOutputParams(XML: String);
-    function GetDataSet: TClientDataSet;
-    procedure SetDataSet(const Value: TClientDataSet);
+    function GetDataSet: TDataSet;
+    procedure SetDataSet(const Value: TDataSet);
     procedure DataSetRefresh;
     procedure MultiDataSetRefresh;
     procedure SetStoredProcName(const Value: String);
@@ -116,7 +116,7 @@ type
     // Название процедуры на сервере
     property StoredProcName: String read FStoredProcName write SetStoredProcName;
     // ДатаСет с данными. Введен для удобства, так как зачастую DataSet = DataSets[0]
-    property DataSet: TClientDataSet read GetDataSet write SetDataSet;
+    property DataSet: TDataSet read GetDataSet write SetDataSet;
     // Обновляемые ДатаСеты
     property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property OutputType: TOutputType read FOutputType write FOutputType default otDataSet;
@@ -191,7 +191,8 @@ begin
      end;
      if DataSets[0].DataSet.Active and (DataSets[0].DataSet.RecordCount > 0) then
         B := DataSets[0].DataSet.GetBookmark;
-     DataSets[0].DataSet.XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+     if DataSets[0].DataSet is TClientDataSet then
+        TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
      if Assigned(B) then
      begin
         try
@@ -264,7 +265,7 @@ begin
 
 end;
 
-function TdsdStoredProc.GetDataSet: TClientDataSet;
+function TdsdStoredProc.GetDataSet: TDataSet;
 begin
   if DataSets.Count > 0 then
      result := DataSets[0].DataSet
@@ -272,7 +273,7 @@ begin
      result := nil
 end;
 
-procedure TdsdStoredProc.SetDataSet(const Value: TClientDataSet);
+procedure TdsdStoredProc.SetDataSet(const Value: TDataSet);
 begin
   // Если устанавливается или
   if Value <> nil then begin
@@ -393,7 +394,8 @@ begin
     for I := 0 to DataSets.Count - 1 do begin
        if DataSets[i].DataSet.Active then
           B := DataSets[i].DataSet.GetBookmark;
-       DataSets[i].DataSet.XMLData := XMLResult[i];
+       if DataSets[i].DataSet is TClientDataSet then
+          TClientDataSet(DataSets[i].DataSet).XMLData := XMLResult[i];
        if Assigned(B) then
           try
             DataSets[i].DataSet.GotoBookmark(B);
@@ -837,7 +839,7 @@ begin
      Result := inherited;
 end;
 
-procedure TdsdDataSetLink.SetDataSet(const Value: TClientDataSet);
+procedure TdsdDataSetLink.SetDataSet(const Value: TDataSet);
 begin
   if FDataSet <> Value then begin
      if Assigned(Collection) and Assigned(Value) then
