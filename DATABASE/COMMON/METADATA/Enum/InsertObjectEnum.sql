@@ -162,14 +162,15 @@ BEGIN
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayCalendarSale()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 5,  inName:= 'Отсрочка по реализации в календарных днях'  , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayCalendarSale');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayBankSale()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 6,  inName:= 'Отсрочка по реализации в банковских днях'   , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayBankSale');
 
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentSale()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 21,  inName:= '% бонуса за отгрузку'         , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentSale');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 22,  inName:= '% бонуса за отгрузку-возврат' , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentSaleReturn');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentAccount()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 23,  inName:= '% бонуса за оплату'           , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentAccount');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusMonthlyPayment()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 24,  inName:= 'бонус - ежемесячный платеж'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusMonthlyPayment');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusMonthlyPaymentAdv(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 25,  inName:= 'реклама - ежемесячный платеж'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusMonthlyPaymentAdv');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusUpSaleSummPVAT()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 26,  inName:= 'бонусы роста,при достижении плана продаж (от суммы с НДС)'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusUpSaleSummPVAT');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentSale()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 21, inName:= '% бонуса за отгрузку'         , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentSale');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 22, inName:= '% бонуса за отгрузку-возврат' , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentSaleReturn');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusPercentAccount()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 23, inName:= '% бонуса за оплату'           , inEnumName:= 'zc_Enum_ContractConditionKind_BonusPercentAccount');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusMonthlyPayment()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 24, inName:= 'бонус - ежемесячный платеж'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusMonthlyPayment');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusMonthlyPaymentAdv(), inDescId:= zc_Object_ContractConditionKind(), inCode:= 25, inName:= 'реклама - ежемесячный платеж'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusMonthlyPaymentAdv');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusUpSaleSummPVAT()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 26, inName:= 'бонусы роста,при достижении плана продаж (от суммы с НДС)'   , inEnumName:= 'zc_Enum_ContractConditionKind_BonusUpSaleSummPVAT');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusUpSaleSummMVAT()   , inDescId:= zc_Object_ContractConditionKind(), inCode:= 27, inName:= 'бонусы роста,при достижении плана продаж (от суммы без НДС)' , inEnumName:= 'zc_Enum_ContractConditionKind_BonusUpSaleSummMVAT');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_BonusYearlyPayment()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 28, inName:= 'годовой бюджет'               , inEnumName:= 'zc_Enum_ContractConditionKind_BonusYearlyPayment');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_LimitReturn()           , inDescId:= zc_Object_ContractConditionKind(), inCode:= 29, inName:= 'ограничение по возвратам'     , inEnumName:= 'zc_Enum_ContractConditionKind_LimitReturn');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime1()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 101, inName:= 'Ставка за время (без экспедитора с холодильником), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime1');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_TransportTime2()    , inDescId:= zc_Object_ContractConditionKind(), inCode:= 102, inName:= 'Ставка за время (с экспедитором без холодильника), грн/ч'  , inEnumName:= 'zc_Enum_ContractConditionKind_TransportTime2');
@@ -403,7 +404,6 @@ BEGIN
 
 END $$;
 
-
 DO $$
 BEGIN
 
@@ -428,7 +428,8 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 09.02.14							* add Типы формирования налогового документа
+ 21.02.14                                        * add zc_Enum_ContractConditionKind_LimitReturn
+ 09.02.14                                                       * add Типы формирования налогового документа
  30.01.14                                        * add zc_Enum_ProfitLoss_80301
  25.01.14                                        * add zc_Enum_ContractConditionKind_...
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900

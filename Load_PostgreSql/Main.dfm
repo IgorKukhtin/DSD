@@ -216,31 +216,31 @@ object MainForm: TMainForm
       Caption = '2.2. '#1042#1080#1076#1099' '#1076#1086#1075#1086#1074#1086#1088#1086#1074
       TabOrder = 7
     end
-    object cbContract: TCheckBox
+    object cbContractFl: TCheckBox
       Tag = 10
       Left = 15
-      Top = 151
+      Top = 154
       Width = 138
       Height = 17
-      Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072
+      Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
       TabOrder = 8
     end
-    object cbJuridical: TCheckBox
+    object cbJuridicalFl: TCheckBox
       Tag = 10
       Left = 15
       Top = 201
       Width = 225
       Height = 17
-      Caption = '3.2. '#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072
+      Caption = '3.2. '#1070#1088'.'#1083#1080#1094#1072' Fl'
       TabOrder = 9
     end
-    object cbPartner: TCheckBox
+    object cbPartnerFl: TCheckBox
       Tag = 10
       Left = 15
       Top = 221
       Width = 119
       Height = 17
-      Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+      Caption = '3.3. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Fl'
       TabOrder = 10
     end
     object cbBusiness: TCheckBox
@@ -542,6 +542,33 @@ object MainForm: TMainForm
       Height = 17
       Caption = '3.5. '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080' 1'#1057' '#1092#1080#1083#1080#1072#1083#1099
       TabOrder = 39
+    end
+    object cbContractInt: TCheckBox
+      Tag = 10
+      Left = 159
+      Top = 131
+      Width = 138
+      Height = 17
+      Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
+      TabOrder = 40
+    end
+    object cbJuridicalInt: TCheckBox
+      Tag = 10
+      Left = 159
+      Top = 111
+      Width = 225
+      Height = 17
+      Caption = '2.4. '#1070#1088'.'#1083#1080#1094#1072' Int'
+      TabOrder = 41
+    end
+    object cbPartnerInt: TCheckBox
+      Tag = 10
+      Left = 159
+      Top = 151
+      Width = 146
+      Height = 17
+      Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
+      TabOrder = 42
     end
   end
   object DocumentPanel: TPanel

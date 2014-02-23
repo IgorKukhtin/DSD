@@ -1,11 +1,11 @@
 create PROCEDURE DBA._pgInsertClient_byScaleDiscountWeight (in @inStartDate date, in @inEndDate date)
 begin
-
   --
-  delete dba._Client_byDiscountWeight;
+  delete dba._Client_byDiscountWeight where @inStartDate between StartDate and EndDate;
   --
-  insert into dba._Client_byDiscountWeight (ToId, GoodsPropertyId, KindPackageId, DiscountWeight)
-     select Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight
+  insert into dba._Client_byDiscountWeight (ToId, StartDate, EndDate, GoodsPropertyId, KindPackageId, DiscountWeight)
+     select Bill.ToId, zf_CalcDate_onMonthStart(Bill.BillDate) as StartDate, zf_CalcDate_onMonthEnd(Bill.BillDate) as EndDate
+          , BillItems.GoodsPropertyId, BillItems.KindPackageId, max (isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight)) as DiscountWeight
      from dba.Bill
            left outer join dba.isUnit as isUnit_to on isUnit_to.UnitId = Bill.ToID
            left outer join dba.BillItems on BillItems.BillId=Bill.Id
@@ -16,7 +16,7 @@ begin
            and BillItems.OperCount <> 0
            and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0
            and isUnit_to.UnitId is null
-     group by Bill.ToId, BillItems.GoodsPropertyId, BillItems.KindPackageId
+     group by Bill.ToId, StartDate, EndDate, BillItems.GoodsPropertyId, BillItems.KindPackageId ; 
 
 end
 //
@@ -25,9 +25,12 @@ end
 CREATE TABLE "DBA"."_Client_byDiscountWeight"
 (
 	ToId        		integer NOT NULL ,
-	GoodsPropertyId     		integer NOT NULL ,
-        KindPackageId     		integer NOT NULL ,
-        DiscountWeight     		TSumm NOT NULL ,
-        PRIMARY KEY (GoodsPropertyId,KindPackageId,ToId)
+        StartDate   		date NOT NULL ,
+        EndDate   		date NOT NULL ,
+	GoodsPropertyId     	integer NOT NULL ,
+        KindPackageId     	integer NOT NULL ,
+        DiscountWeight     	TSumm NOT NULL ,
+        PRIMARY KEY (GoodsPropertyId, KindPackageId, ToId, StartDate)
 )
+go
 */
