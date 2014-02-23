@@ -2122,107 +2122,6 @@ begin
         Clear;
                   Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
-                  Add('     , trim(isnull(ContractKind_byHistory.ContractNumber,_pgPartner.ContractNumber)) as inInvNumber');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as inInvNumberArchive');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as inComment');
-                  Add('     , dba.zf_Calc_Str_toDate(_pgPartner.Date0) as Date0');
-                  Add('     , dba.zf_Calc_Str_toDate(_pgPartner.Date1) as Date1');
-                  Add('     , dba.zf_Calc_Str_toDate(_pgPartner.Date2) as Date2');
-                  Add('     , case when isnull(ContractKind_byHistory.ContractDate,zc_DateStart())=zc_DateStart() then Date0 else isnull(ContractKind_byHistory.ContractDate,Date0) end as inSigningDate_calc');
-                  Add('     , case when isnull(ContractKind_byHistory.StartDate,zc_DateStart())=zc_DateStart() then Date1 else isnull(ContractKind_byHistory.StartDate,Date1) end as inStartDate_calc');
-                  Add('     , case when isnull(ContractKind_byHistory.EndDateContract,zc_DateEnd())=zc_DateEnd() then Date2 else isnull(ContractKind_byHistory.EndDateContract,Date2) end as inEndDate_calc');
-
-                  Add('     , case when inSigningDate_calc=zc_DateStart() then inStartDate else inSigningDate_calc end as inSigningDate');
-                  Add('     , case when inStartDate_calc=zc_DateStart() then '+FormatToDateServer_notNULL(StrToDate('01.01.2000'))+' else inStartDate_calc end as inStartDate');
-                  Add('     , case when inEndDate_calc=zc_DateStart() or inEndDate_calc=zc_DateEnd() then '+FormatToDateServer_notNULL(StrToDate('31.12.2020'))+' else inEndDate_calc end as inEndDate');
-
-                  Add('     , _pgPartner_find.JuridicalId_pg as inJuridicalId');
-                  Add('     , _pgInfoMoney.Id3_Postgres AS inInfoMoneyId');
-                  Add('     , case when ContractKind.Id=15 then '+ContractKindID_15); //договiр поставки
-                  Add('            when ContractKind.Id=16 then '+ContractKindID_16); //договiр купiвлi-продажу
-                  Add('            when ContractKind.Id=17 then '+ContractKindID_17); //договiр комiсii
-                  Add('            when ContractKind.Id=18 then '+ContractKindID_18); //договiр постачанн€
-                  Add('            else '+ContractKindID_15); //договiр поставки
-                  Add('       end as inContractKindId');
-                  Add('     , '+PaidKindBN+' as inPaidKindId');
-                  Add('     , null as inPersonalId');
-                  Add('     , null as inAreaId');
-                  Add('     , null as inContractArticleId');
-                  Add('     , null as inContractStateKindId');
-                  Add('     , isnull(ClientSumm_find.DayCount_Real,0) as DayCount_Real');
-                  Add('     , isnull(ClientSumm_find.DayCount_Bank,0) as DayCount_Bank');
-                  //Add('     , isnull(ClientSumm_find.PercentBonus_bySale,0) as PercentBonus_bySale');
-                  //Add('     , isnull(ClientSumm_find.PercentBonus_byMoney,0) as PercentBonus_byMoney');
-                  Add('     , 0 as PercentBonus_bySale');
-                  Add('     , 0 as PercentBonus_byMoney');
-                  Add('     , _pgPartner_my.Name');
-                  Add('     , _pgPartner_my.NumberSheet');
-                  Add('     , _pgPartner_find.JuridicalId_pg');
-                  Add('     , _pgPartner_find.CodeIM');
-                  Add('     , _pgPartner_find.OKPO');
-                  Add('     , _pgPartner_find.ContractId_pg as Id_Postgres');
-                  Add('from (select JuridicalId_pg, CodeIM, trim (_pgPartner.OKPO)as OKPO'
-                    + '           , max (isnull(_pgPartner.ContractId_pg,0)) as ContractId_pg, max (_pgPartner.Id) as Id'
-                    + '      from dba._pgPartner'
-                    + '      where JuridicalId_pg<>0'
-                    + '        and CodeIM=30101'
-                    + '      group by JuridicalId_pg, CodeIM, OKPO'
-                    + '     ) as _pgPartner_find'
-                    + '     left join (select JuridicalId_pg, CodeIM, trim (_pgPartner.OKPO)as OKPO, max (_pgPartner.Id) as Id'
-                     +'                from dba._pgPartner'
-                     +'                where JuridicalId_pg<>0'
-                    + '                  and CodeIM=30101'
-                    + '                  and trim(_pgPartner.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
-                    + '                group by JuridicalId_pg, CodeIM, OKPO'
-                     +'               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
-                     +'                                       and _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
-                     +'                                       and _pgPartner_find_two.CodeIM = _pgPartner_find.CodeIM'
-                    + '     left join dba._pgPartner on _pgPartner.Id = _pgPartner_find_two.Id'
-                    + '     left join dba._pgPartner as _pgPartner_my on _pgPartner_my.Id = _pgPartner_find.Id');
-                  Add('     left join (select trim(ClientInformation.OKPO) as OKPO, max (ContractKind_byHistory.Id) as Id'
-                     +'                from dba.Unit'
-                     +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
-                     +'                                                                                    and trim(ClientInformation_find.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id'
-                     +'                     join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_find.ClientID,ClientInformation_child.ClientID)'
-                     +'                                               and trim(ClientInformation.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ContractKind_byHistory as find1'
-                     +'                                  on find1.ClientId = Unit.DolgByUnitID'
-                     +'                                 and find1.EndDate=zc_DateEnd()'
-                     +'                                 and trim(find1.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ContractKind_byHistory as find2'
-                     +'                                  on find2.ClientId = Unit.Id'
-                     +'                                 and find2.EndDate=zc_DateEnd()'
-                     +'                                 and trim(find2.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-                     +'                where trim(ContractKind_byHistory.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                group by OKPO'
-                     +'               ) as ContractKind_byHistory_find on ContractKind_byHistory_find.OKPO = _pgPartner_find.OKPO'
-                     +'     left join dba.ContractKind_byHistory on ContractKind_byHistory.Id = ContractKind_byHistory_find.Id'
-                     +'     left join dba.ContractKind on ContractKind.Id = ContractKind_byHistory.ContractKindId');
-
-                  Add('     left join (select trim(ClientInformation.OKPO) as OKPO'
-                     +'                      ,max (ClientSumm.DayCount_Real)as DayCount_Real'
-                     +'                      ,max (ClientSumm.DayCount_Bank) as DayCount_Bank'
-                     +'                      ,max (ClientSumm.PercentBonus_bySale) as PercentBonus_bySale'
-                     +'                      ,max (ClientSumm.PercentBonus_byMoney) as PercentBonus_byMoney'
-                     +'                from dba.ClientSumm'
-                     +'                     left outer join dba.Unit on Unit.ID = ClientSumm.ClientId'
-                     +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
-                     +'                                                                                    and trim(ClientInformation_find.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id'
-                     +'                     join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_find.ClientID,ClientInformation_child.ClientID)'
-                     +'                                               and trim(ClientInformation.OKPO) <> ' + FormatToVarCharServer_notNULL('')
-                     +'                group by OKPO'
-                     +'               ) as ClientSumm_find on ClientSumm_find.OKPO = _pgPartner_find.OKPO');
-
-                  Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _pgPartner_find.CodeIM');
-                  //Add('where inInvNumber <> '+FormatToVarCharServer_notNULL(''));
-                  Add('where _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37121835')
-                    + '  and _pgPartner_find.OKPO <> '+FormatToVarCharServer_notNULL('37425075'));
-                  Add('union all');
-                  Add('select 0 as ObjectId');
-                  Add('     , 0 as ObjectCode');
                   Add('     , trim(_pgPartner.ContractNumber) as inInvNumber');
                   Add('     , '+FormatToVarCharServer_notNULL('')+' as inInvNumberArchive');
                   Add('     , '+FormatToVarCharServer_notNULL('')+' as inComment');
@@ -2255,23 +2154,24 @@ begin
                   Add('     , _pgPartner_find.CodeIM');
                   Add('     , _pgPartner_find.OKPO');
                   Add('     , _pgPartner_find.ContractId_pg as Id_Postgres');
-                  Add('from (select JuridicalId_pg, case when NumberSheet=2 then 21501 else _pgPartner.CodeIM end as CodeIM, trim (_pgPartner.OKPO)as OKPO'
+                  Add('from (select JuridicalId_pg, 30201 as CodeIM, trim (_pgPartner.OKPO)as OKPO'
                     + '           , max (isnull(_pgPartner.ContractId_pg,0)) as ContractId_pg, max (_pgPartner.Id) as Id'
                     + '      from dba._pgPartner'
                     + '      where JuridicalId_pg<>0'
-                    + '        and (CodeIM in(30201,30103) or NumberSheet in (2,3))'
-                    + '      group by JuridicalId_pg, CodeIM, OKPO'
+                    + '        and Id>10000'
+                    + '      group by JuridicalId_pg, OKPO'
                     + '     ) as _pgPartner_find'
                     + '     left join (select JuridicalId_pg, case when NumberSheet=2 then 21501 else _pgPartner.CodeIM end as CodeIM, trim (_pgPartner.OKPO)as OKPO, max (_pgPartner.Id) as Id'
                      +'                from dba._pgPartner'
                      +'                where JuridicalId_pg<>0'
                     + '                  and (CodeIM in(30201,30103) or NumberSheet in (2,3))'
                     + '                  and trim(_pgPartner.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
+                    + '                  and 1=0'
                     + '                group by JuridicalId_pg, CodeIM, OKPO'
                      +'               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
                      +'                                       and _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
                      +'                                       and _pgPartner_find_two.CodeIM = _pgPartner_find.CodeIM'
-                    + '     left join dba._pgPartner on _pgPartner.Id = _pgPartner_find_two.Id'
+                    + '     left join dba._pgPartner on _pgPartner.Id = _pgPartner_find.Id'
                     + '     left join dba._pgPartner as _pgPartner_my on _pgPartner_my.Id = _pgPartner_find.Id');
 
                   Add('     left join (select trim(ClientInformation.OKPO) as OKPO'
@@ -2287,8 +2187,7 @@ begin
                      +'                     join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_find.ClientID,ClientInformation_child.ClientID)'
                      +'                                               and trim(ClientInformation.OKPO) <> ' + FormatToVarCharServer_notNULL('')
                      +'                group by OKPO'
-                     +'               ) as ClientSumm_find on ClientSumm_find.OKPO = _pgPartner_find.OKPO'
-                     +'                                   and _pgPartner_my.NumberSheet = 2');
+                     +'               ) as ClientSumm_find on ClientSumm_find.OKPO = _pgPartner_find.OKPO');
 
                   Add('     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _pgPartner_find.CodeIM');
                   //Add('where inInvNumber <> '+FormatToVarCharServer_notNULL(''));
@@ -2342,7 +2241,8 @@ begin
              then ContractId_pg:=FieldByName('Id_Postgres').AsInteger
              else
                  begin
-                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InvNumber='+FormatToVarCharServer_notNULL(FieldByName('inInvNumber').AsString)+' and JuridicalId='+FieldByName('inJuridicalId').AsString);
+                  // ѕытаемс€ найти
+                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InfoMoneyId = '+FieldByName('inInfoMoneyId').AsString+' and ContractStateKindId <> zc_Enum_ContractStateKind_Close() and JuridicalId='+FieldByName('inJuridicalId').AsString);
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
                  end;
 
@@ -2415,7 +2315,7 @@ begin
 
              ContractId_pg:=toStoredProc.Params.ParamByName('ioId').Value
 
-             end;
+             end;//if (1=0)or(ContractId_pg=0)
              //
 
              if (FieldByName('NumberSheet').AsInteger=2)
@@ -2703,7 +2603,8 @@ begin
              then ContractId_pg:=FieldByName('Id_Postgres').AsInteger
              else
                  begin
-                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InvNumber='+FormatToVarCharServer_notNULL(FieldByName('inInvNumber').AsString)+' and JuridicalId='+FieldByName('inJuridicalId').AsString);
+                  //fOpenSqToQuery ('select ContractId from Object_Contract_View where InvNumber='+FormatToVarCharServer_notNULL(FieldByName('inInvNumber').AsString)+' and JuridicalId='+FieldByName('inJuridicalId').AsString);
+                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InfoMoneyId = '+FieldByName('inInfoMoneyId').AsString+' and ContractStateKindId <> zc_Enum_ContractStateKind_Close() and JuridicalId='+FieldByName('inJuridicalId').AsString);
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
                  end;
 
@@ -6882,6 +6783,7 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -6892,6 +6794,17 @@ begin
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //если не нашли, находим договор хоть один !!!у поставщика!!!
+             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9884,6 +9797,7 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9894,6 +9808,17 @@ begin
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //если не нашли, находим договор хоть один !!!у поставщика!!!
+             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
