@@ -25,8 +25,6 @@ object ContractConditionValueForm: TContractConditionValueForm
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitLeft = -72
-    ExplicitTop = -14
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -78,14 +76,14 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 64
       end
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 49
+        Width = 41
       end
       object clInvNumberArchive: TcxGridDBColumn
         Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
@@ -93,7 +91,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 51
       end
       object clInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -101,7 +99,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 61
+        Width = 51
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -126,7 +124,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 142
+        Width = 120
       end
       object clJuridicalName_find: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1087#1086#1080#1089#1082')'
@@ -140,35 +138,35 @@ object ContractConditionValueForm: TContractConditionValueForm
         DataBinding.FieldName = 'OKPO'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 76
+        Width = 64
       end
       object clContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 81
+        Width = 68
       end
       object clBonusKindName: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'BonusKindName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 51
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 59
+        Width = 50
       end
       object clContractConditionComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077' ('#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075'.)'
         DataBinding.FieldName = 'ContractConditionComment'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 60
+        Width = 51
       end
       object clPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -184,28 +182,28 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 48
+        Width = 40
       end
       object clSigningDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1079#1072#1082#1083#1102#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'SigningDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 63
       end
       object clStartDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1089
         DataBinding.FieldName = 'StartDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 44
       end
       object clEndDate: TcxGridDBColumn
         Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
         DataBinding.FieldName = 'EndDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 53
+        Width = 46
       end
       object clContractKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
@@ -220,7 +218,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 63
       end
       object clInfoMoneyGroupCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1059#1055' '#1075#1088#1091#1087#1087#1099
@@ -278,7 +276,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 36
       end
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -293,7 +291,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Properties.ReadOnly = True
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 86
+        Width = 78
       end
       object clPersonalName: TcxGridDBColumn
         Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
@@ -330,13 +328,29 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
+      object clBankAccount: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090
+        DataBinding.FieldName = 'BankAccount'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 46
+      end
+      object clBankName: TcxGridDBColumn
+        Caption = #1041#1072#1085#1082
+        DataBinding.FieldName = 'BankName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 56
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 128
+        Width = 82
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -933,8 +947,8 @@ object ContractConditionValueForm: TContractConditionValueForm
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 216
-    Top = 224
+    Left = 256
+    Top = 304
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 104
@@ -1018,6 +1032,12 @@ object ContractConditionValueForm: TContractConditionValueForm
         ParamType = ptInput
       end
       item
+        Name = 'inBankAccount'
+        Component = ClientDataSet
+        ComponentItem = 'BankAccount'
+        DataType = ftString
+      end
+      item
         Name = 'inSigningDate'
         Component = ClientDataSet
         ComponentItem = 'SigningDate'
@@ -1090,6 +1110,12 @@ object ContractConditionValueForm: TContractConditionValueForm
         Name = 'inContractStateKindId'
         Component = ClientDataSet
         ComponentItem = 'ContractStateKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankId'
+        Component = ClientDataSet
+        ComponentItem = 'BankId'
         ParamType = ptInput
       end>
     Left = 432

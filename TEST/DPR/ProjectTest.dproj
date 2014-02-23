@@ -713,8 +713,8 @@
 				<Form>ContractChoicePartnerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
-				<Form>ContractConditionKindForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractConditionByContract.pas">
+				<Form>ContractConditionByContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\MoneyPlace_Object.pas">
@@ -1108,6 +1108,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
 				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
+				<Form>ContractConditionKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -1,19 +1,19 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
-  ClientHeight = 387
+  ClientHeight = 439
   ClientWidth = 885
   ExplicitWidth = 891
-  ExplicitHeight = 419
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 353
+    Top = 396
     TabOrder = 2
-    ExplicitTop = 353
+    ExplicitTop = 396
   end
   inherited bbCancel: TcxButton
-    Top = 353
-    ExplicitTop = 353
+    Top = 396
+    ExplicitTop = 396
   end
   object edInvNumber: TcxTextEdit [2]
     Left = 116
@@ -38,13 +38,13 @@ inherited ContractEditForm: TContractEditForm
   end
   object ceComment: TcxTextEdit [6]
     Left = 16
-    Top = 317
+    Top = 357
     TabOrder = 4
     Width = 328
   end
   object cxLabel5: TcxLabel [7]
     Left = 16
-    Top = 302
+    Top = 342
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edContractKind: TcxButtonEdit [8]
@@ -258,11 +258,11 @@ inherited ContractEditForm: TContractEditForm
     Left = 452
     Top = 0
     Width = 433
-    Height = 387
+    Height = 439
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitLeft = 356
+    ExplicitHeight = 387
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -363,7 +363,7 @@ inherited ContractEditForm: TContractEditForm
       Left = 0
       Top = 224
       Width = 433
-      Height = 163
+      Height = 215
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -379,6 +379,7 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
+      ExplicitHeight = 163
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -418,17 +419,45 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 38
     Width = 162
   end
+  object cxLabel16: TcxLabel [35]
+    Left = 16
+    Top = 301
+    Caption = #1041#1072#1085#1082
+  end
+  object edBankId: TcxButtonEdit [36]
+    Left = 16
+    Top = 319
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 40
+    Width = 162
+  end
+  object edBankAccount: TcxTextEdit [37]
+    Left = 184
+    Top = 319
+    TabOrder = 41
+    Width = 161
+  end
+  object cxLabel17: TcxLabel [38]
+    Left = 184
+    Top = 301
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 331
-    Top = 360
+    Top = 403
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 184
-    Top = 344
+    Top = 387
   end
   inherited ActionList: TActionList
     Left = 159
-    Top = 343
+    Top = 386
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -679,7 +708,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end>
     Left = 112
-    Top = 316
+    Top = 359
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -715,6 +744,13 @@ inherited ContractEditForm: TContractEditForm
         Name = 'inComment'
         Value = ''
         Component = ceComment
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankAccount'
+        Value = ''
+        Component = edBankAccount
         DataType = ftString
         ParamType = ptInput
       end
@@ -793,9 +829,15 @@ inherited ContractEditForm: TContractEditForm
         Value = ''
         Component = ContractStateKindGuides
         ParamType = ptInput
+      end
+      item
+        Name = 'inBankId'
+        Value = ''
+        Component = BankGuides
+        ParamType = ptInput
       end>
-    Left = 320
-    Top = 336
+    Left = 368
+    Top = 347
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -940,6 +982,12 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end
       item
+        Name = 'BankAccount'
+        Value = ''
+        Component = edBankAccount
+        DataType = ftString
+      end
+      item
         Name = 'JuridicalBasisId'
         Value = ''
         Component = MainJuridicalGuides
@@ -951,9 +999,22 @@ inherited ContractEditForm: TContractEditForm
         Component = MainJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'BankId'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BankName'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 272
-    Top = 320
+    Top = 363
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1006,7 +1067,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 232
+    Left = 256
     Top = 143
   end
   object ContractKindGuides: TdsdGuides
@@ -1184,8 +1245,8 @@ inherited ContractEditForm: TContractEditForm
     Aggregates = <>
     PacketRecords = 0
     Params = <>
-    Left = 385
-    Top = 149
+    Left = 353
+    Top = 93
   end
   object spInsertUpdateContractCondition: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_ContractCondition'
@@ -1231,8 +1292,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'BonusKindId'
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 40
+    Left = 416
+    Top = 8
   end
   object spSelectContractCondition: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractConditionByContract'
@@ -1249,8 +1310,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 378
-    Top = 77
+    Left = 370
+    Top = 53
   end
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -1268,7 +1329,7 @@ inherited ContractEditForm: TContractEditForm
     PopupMenuLinks = <>
     UseSystemFont = True
     Left = 32
-    Top = 344
+    Top = 387
     DockControlHeights = (
       0
       0
@@ -1564,7 +1625,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end>
     Left = 352
-    Top = 224
+    Top = 176
   end
   object spGetStateKindSigned: TdsdStoredProc
     StoredProcName = 'gpGetUpdate_Object_StateKind'
@@ -1589,8 +1650,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 368
-    Top = 240
+    Left = 376
+    Top = 280
   end
   object spGetStateKindClose: TdsdStoredProc
     StoredProcName = 'gpGetUpdate_Object_StateKind'
@@ -1615,8 +1676,8 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 392
-    Top = 248
+    Left = 408
+    Top = 224
   end
   object spGetStateKindPartner: TdsdStoredProc
     StoredProcName = 'gpGetUpdate_Object_StateKind'
@@ -1641,7 +1702,34 @@ inherited ContractEditForm: TContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 416
-    Top = 232
+    Left = 360
+    Top = 136
+  end
+  object BankGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edBankId
+    FormNameParam.Value = 'TBankForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBankForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 80
+    Top = 311
   end
 end

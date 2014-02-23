@@ -33,6 +33,14 @@ type
     property Items[Index: Integer]: TdsdStoredProcItem read GetItem write SetItem; default;
   end;
 
+  TAddOnDataSet = class (TdsdDataSetLink)
+  private
+    FIndexFieldNames: String;
+  published
+    property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
+  end;
+
+
   // Вызываем события при изменении каких параметров датасета
   IDataSetAction = interface
     procedure DataSetChanged;
@@ -425,6 +433,7 @@ type
     FReportName: String;
     FParams: TdsdParams;
     FReportNameParam: TdsdParam;
+    FDataSets: TdsdDataSets;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
   protected
@@ -434,6 +443,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property DataSets: TdsdDataSets read FDataSets write FDataSets;
     property Params: TdsdParams read FParams write FParams;
     property ReportName: String read GetReportName write SetReportName;
     property ReportNameParam: TdsdParam read FReportNameParam write FReportNameParam;
@@ -1113,7 +1123,6 @@ end;
 
 { TdsdPrintAction }
 
-
 constructor TdsdPrintAction.Create(AOwner: TComponent);
 begin
   inherited;
@@ -1122,12 +1131,14 @@ begin
   FReportNameParam := TdsdParam.Create(nil);
   FReportNameParam.DataType := ftString;
   FReportNameParam.Value := '';
+  FDataSets := TdsdDataSets.Create(Self, TAddOnDataSet);
 end;
 
 destructor TdsdPrintAction.Destroy;
 begin
   FreeAndNil(FParams);
   FreeAndNil(FReportNameParam);
+  FreeAndNil(FDataSets);
   inherited;
 end;
 
@@ -1145,6 +1156,10 @@ begin
   inherited;
   result := true;
   Stream := TStringStream.Create;
+  for I := 0 to DataSets.Count - 1 do
+      if Assigned(DataSets[i].DataSet) then
+         if DataSets[i].DataSet is TClientDataSet then
+            TClientDataSet(DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(DataSets[i]).IndexFieldNames;
   try
     with TfrxReport.Create(nil) do begin
       if ShiftDown then begin
@@ -1152,8 +1167,12 @@ begin
            LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
          except
          end;
-         for i := 0 to Params.Count - 1 do
-             Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
+         for i := 0 to Params.Count - 1 do begin
+             if Params[i].DataType in [ftString, ftDate, ftDateTime] then
+                Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39)
+             else
+                Variables[Params[i].Name] := Params[i].Value
+         end;
          DesignReport;
          Stream.Clear;
          SaveToStream(Stream);

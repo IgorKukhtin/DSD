@@ -261,7 +261,7 @@ uses
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
-  ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
+  ContractConditionByContract in '..\..\Forms\Guides\ContractConditionByContract.pas' {ContractConditionByContractForm: TParentForm},
   MoneyPlace_Object in '..\..\Forms\Guides\MoneyPlace_Object.pas' {MoneyPlace_ObjectForm: TParentForm},
   ProfitLossService in '..\..\Forms\Document\ProfitLossService.pas' {ProfitLossServiceForm: TParentForm},
   AncestorGuides in '..\..\Forms\Ancestor\AncestorGuides.pas' {AncestorGuidesForm: TParentForm},
@@ -375,7 +375,8 @@ uses
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
-  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm};
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
+  ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm};
 
 {$R *.RES}
 

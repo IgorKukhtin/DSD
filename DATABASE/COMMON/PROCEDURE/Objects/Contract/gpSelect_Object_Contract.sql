@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar 
+             , Comment TVarChar, BankAccount TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindCode Integer
              , OKPO TVarChar
+             , BankId Integer, BankName TVarChar
              , isErased Boolean 
               )
 AS
@@ -39,7 +40,8 @@ BEGIN
        , Object_Contract_View.InvNumber
        
        , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
-       , ObjectString_Comment.ValueData   AS Comment 
+       , ObjectString_Comment.ValueData            AS Comment 
+       , ObjectString_BankAccount.ValueData        AS BankAccount
       
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -75,10 +77,13 @@ BEGIN
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_ContractStateKind.ObjectCode      AS ContractStateKindCode
+       , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
+       , Object_Bank.Id          AS BankId
+       , Object_Bank.ValueData   AS BankName
+       
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
@@ -89,9 +94,14 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_InvNumberArchive.DescId = zc_objectString_Contract_InvNumberArchive()
+
         LEFT JOIN ObjectString AS ObjectString_Comment
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
+
+        LEFT JOIN ObjectString AS ObjectString_BankAccount
+                               ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
+                              AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
@@ -122,7 +132,12 @@ BEGIN
                              ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
         LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
-        
+
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_Bank
+                             ON ObjectLink_Contract_Bank.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
+        LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Contract_Bank.ChildObjectId   
+                
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
    ;
@@ -136,6 +151,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.02.14         * add Bank, BankAccount
  09.01.14         * add PaidKindId
  06.01.14                                         * add OKPO
  14.11.13         * add from redmaine               
@@ -148,3 +164,4 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+

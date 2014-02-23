@@ -34,6 +34,8 @@ BEGIN
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSummPVAT.ValueData
+            -MovementFloat_TotalSummMVAT.ValueData      AS SummVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , Object_From.Id                    			AS FromId
            , Object_From.ValueData             			AS FromName

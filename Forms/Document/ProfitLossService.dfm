@@ -192,11 +192,13 @@
   object ceBonusKind: TcxButtonEdit [25]
     Left = 9
     Top = 174
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
+    Properties.ReadOnly = True
     TabOrder = 25
     Width = 272
   end
@@ -686,9 +688,9 @@
   object ContractConditionKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceContractConditionKind
-    FormNameParam.Value = 'TContractConditionKindForm'
+    FormNameParam.Value = 'TContractConditionByContractForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractConditionKindForm'
+    FormName = 'TContractConditionByContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -709,6 +711,18 @@
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Id'
+      end
+      item
+        Name = 'BonusKindId'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BonusKindName'
+        Value = ''
+        Component = BonusKindGuides
+        ComponentItem = 'TextValue'
       end>
     Left = 160
     Top = 114

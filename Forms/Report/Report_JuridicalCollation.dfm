@@ -268,9 +268,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           StoredProc = gpGetJuridical
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
-      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'EndDate'
@@ -352,6 +353,66 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ImageIndex = 28
       ShortCut = 13
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProc = spJuridicalBalance
+      StoredProcList = <
+        item
+          StoredProc = spJuridicalBalance
+        end
+        item
+          StoredProc = gpGetJuridical
+        end>
+      Caption = 'actPrint'
+      Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080
+      ImageIndex = 17
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          IndexFieldNames = 'ItemName;OperDate'
+        end>
+      Params = <
+        item
+          Name = 'EndDate'
+          Value = 41395d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalance'
+          Component = FormParams
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'OurFirm'
+          Value = ''
+          Component = MainJuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName'
+          Component = FormParams
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterCDS: TClientDataSet
     IndexFieldNames = 'ItemName;OperDate'
@@ -395,6 +456,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbPrintReport'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -426,9 +491,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Action = actOpenDocument
       Category = 0
     end
-  end
-  inherited PeriodChoice: TPeriodChoice
-    Top = 72
+    object bbPrintReport: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
