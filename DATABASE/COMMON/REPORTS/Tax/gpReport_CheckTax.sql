@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckTax (
 RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale TDateTime, OperDate_Tax TDateTime
               , FromCode Integer, FromName TVarChar
               , ToCode Integer, TOName TVarChar              
-              , PaidKindName TVarChar
+              --, PaidKindName TVarChar
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
               , Price_Sale TFloat, Price_Tax TFloat
               , Amount_Sale TFloat--, AmountSumm_Sale TFloat
@@ -29,11 +29,12 @@ BEGIN
          , CAST (tmpGroupMovement.InvNumber_Tax AS TVarChar)
          , CAST (tmpGroupMovement.OperDate_Sale AS TDateTime)
          , CAST (tmpGroupMovement.OperDate_Tax AS TDateTime)
-         , Object_From.ObjectCode    AS FromCode
-         , Object_From.ValueData     AS FromName
-         , Object_To.ObjectCode      AS ToCode
-         , Object_To.ValueData       AS TOName
-         , Object_PaidKind.ValueData AS PaidKindName
+         , tmpGroupMovement.FromCode
+         , tmpGroupMovement.FromName
+         , tmpGroupMovement.ToCode
+         , tmpGroupMovement.ToName
+               
+        -- , Object_PaidKind.ValueData AS PaidKindName
      
          , Object_Goods.ObjectCode    AS GoodsCode
          , Object_Goods.ValueData     AS GoodsName
@@ -53,8 +54,12 @@ BEGIN
                  
          , Object_DocumentTaxKind.ValueData AS DocumentTaxKindName       
          
-    FROM (SELECT tmpMovement.MovementId_Sale
+    FROM (SELECT /*tmpMovement.MovementId_Sale
                , tmpMovement.MovementId_Tax
+               , */tmpMovement.FromCode
+               , tmpMovement.FromName
+               , tmpMovement.ToCode
+               , tmpMovement.ToName
                , MAX (tmpMovement.OperDate_Sale)  AS OperDate_Sale
                , MAX (tmpMovement.OperDate_Tax)   AS OperDate_Tax
                , MAX (tmpMovement.InvNumber_Sale) AS InvNumber_Sale
@@ -68,13 +73,18 @@ BEGIN
                , SUM (tmpMovement.Amount_Tax)     AS Amount_Tax
                --, SUM (tmpMovement.AmountSumm_Tax) AS AmountSumm_Tax
                , tmpMovement.DocumentTaxKindId
-          FROM (SELECT Movement.Id AS MovementId_Sale
+          FROM (SELECT Object_Unit_Juridical.JuridicalCode AS FromCode
+                     , Object_Unit_Juridical.JuridicalName AS FromName
+                     , Object_Juridical.ObjectCode         AS ToCode
+                     , Object_Juridical.ValueData          AS ToName
+                     
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.Id ELSE 0 END AS MovementId_Sale
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
-                     , Movement.OperDate AS OperDate_Sale
-                     , zc_DateStart() AS OperDate_Tax
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.OperDate ELSE zc_DateStart() END AS OperDate_Sale
+                     , Movement_Tax.OperDate AS OperDate_Tax
 
-                     , Movement.InvNumber AS InvNumber_Sale
-                     , '' AS InvNumber_Tax
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.InvNumber ELSE '' END AS InvNumber_Sale
+                     , Movement_Tax.InvNumber AS InvNumber_Tax
 
                      , MovementItem.ObjectId AS GoodsId
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId 
@@ -89,6 +99,8 @@ BEGIN
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
                                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
+                     LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
+                     
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -102,11 +114,30 @@ BEGIN
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
-                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()                                                                            
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()    
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN Object_Unit_View AS Object_Unit_Juridical on Object_Unit_Juridical.Id = MovementLinkObject_From.ObjectId
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                     LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                                                                         
                 WHERE Movement.DescId = zc_Movement_Sale()
                   AND Movement.OperDate between inStartDate AND inEndDate
              UNION
-                SELECT MovementLinkMovement.MovementId AS MovementId_Sale
+                SELECT Object_Juridical.ObjectCode           AS FromCode
+                     , Object_Juridical.ValueData            AS FromName
+                     , Object_Contract_Juridical.ObjectCode  AS ToCode
+                     , Object_Contract_Juridical.ValueData   AS ToName
+                     , MovementLinkMovement.MovementId AS MovementId_Sale
                      , Movement.Id  AS MovementId_Tax
                      , zc_DateStart() AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
@@ -134,12 +165,27 @@ BEGIN
                      LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                  ON MovementLinkObject_From.MovementId = Movement.Id
+                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                     LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id =  MovementLinkObject_From.ObjectId
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                     LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id =  MovementLinkObject_To.ObjectId
+                     
                 WHERE Movement.DescId = zc_Movement_Tax()
                   AND Movement.OperDate between inStartDate AND inEndDate
 
                 ) AS tmpMovement
-               GROUP BY tmpMovement.MovementId_Sale
+               GROUP BY /*tmpMovement.MovementId_Sale
                       , tmpMovement.MovementId_Tax
+                      , */tmpMovement.FromCode
+                      , tmpMovement.FromName
+                      , tmpMovement.ToCode
+                      , tmpMovement.ToName
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
                       , tmpMovement.DocumentTaxKindId 
@@ -149,21 +195,6 @@ BEGIN
          LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGroupMovement.GoodsKindId
          LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = tmpGroupMovement.DocumentTaxKindId
 
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = tmpGroupMovement.MovementId_Sale
-                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-         LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                  ON MovementLinkObject_To.MovementId = tmpGroupMovement.MovementId_Sale
-                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-         LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                      ON MovementLinkObject_PaidKind.MovementId = tmpGroupMovement.MovementId_Sale
-                                     AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
-
          ORDER BY 1,3,2,4,11
  ;
             
@@ -171,6 +202,7 @@ END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+
 
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
