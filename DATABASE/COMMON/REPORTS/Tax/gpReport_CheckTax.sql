@@ -73,8 +73,12 @@ BEGIN
                , SUM (tmpMovement.Amount_Tax)     AS Amount_Tax
                --, SUM (tmpMovement.AmountSumm_Tax) AS AmountSumm_Tax
                , tmpMovement.DocumentTaxKindId
-          FROM (SELECT Object_Unit_Juridical.JuridicalCode AS FromCode
+          FROM (SELECT /*Object_Unit_Juridical.JuridicalCode AS FromCode
                      , Object_Unit_Juridical.JuridicalName AS FromName
+
+                    , */Object_JuridicalBasis.ObjectCode   AS FromCode
+                    , Object_JuridicalBasis.ValueData    AS FromName
+
                      , Object_Juridical.ObjectCode         AS ToCode
                      , Object_Juridical.ValueData          AS ToName
                      
@@ -116,20 +120,27 @@ BEGIN
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()    
 
-                     LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                     /*LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                     LEFT JOIN Object_Unit_View AS Object_Unit_Juridical on Object_Unit_Juridical.Id = MovementLinkObject_From.ObjectId
+                     LEFT JOIN Object_Unit_View AS Object_Unit_Juridical on Object_Unit_Juridical.Id = MovementLinkObject_From.ObjectId*/
 
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                      LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
-                                                                                                                         
+
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                          ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
+                                         AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                     LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectLink_Contract_JuridicalBasis.ChildObjectId
+                                                                                                                  
                 WHERE Movement.DescId = zc_Movement_Sale()
                   AND Movement.OperDate between inStartDate AND inEndDate
              UNION
@@ -202,6 +213,7 @@ END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+
 
 
 /*-------------------------------------------------------------------------------
