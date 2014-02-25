@@ -28,7 +28,6 @@ type
     clFromName: TcxGridDBColumn;
     clToCode: TcxGridDBColumn;
     clToName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
     clPrice_ReturnIn: TcxGridDBColumn;
     clPrice_TaxCorrective: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
