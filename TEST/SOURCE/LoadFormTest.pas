@@ -76,16 +76,16 @@ type
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
+    procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
-    procedure LoadSaleFormTest;
-    procedure LoadTaxFormTest;
-    procedure LoadTaxCorrectiveTest;
-    procedure LoadSheetWorkTimeFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadTaxFormTest;
+    procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
     procedure LoadTransportServiceFormTest;
     procedure LoadTradeMarkFormTest;
@@ -384,6 +384,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
 
 
 end;

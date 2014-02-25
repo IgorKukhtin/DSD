@@ -3,7 +3,8 @@ DROP FUNCTION IF EXISTS gpSelect_PeriodClose (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_PeriodClose(
     IN inSession       TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, UserId Integer, RoleId Integer, RoleName TVarChar, UnitId Integer, UnitName TVarChar, OperDate TDateTime, Period Integer)
+RETURNS TABLE (Id Integer, UserId Integer, UserName TVarChar, RoleId Integer, RoleName TVarChar, 
+                           UnitId Integer, UnitName TVarChar, CloseDate TDateTime, Period Integer)
 AS
 $BODY$
 BEGIN
@@ -15,6 +16,7 @@ BEGIN
   SELECT 
     PeriodClose.Id        AS Id,
     PeriodClose.UserId    AS UserId,
+    Object_User.ValueData AS UserName,
     Object_Role.Id        AS RoleId,
     Object_Role.ValueData AS RoleName,
     Object_Unit.Id        AS UnitId,
@@ -22,6 +24,7 @@ BEGIN
     PeriodClose.CloseDate,
     EXTRACT(DAY FROM PeriodClose.Period)::Integer AS Period  FROM PeriodClose
   LEFT JOIN Object AS Object_Role ON Object_Role.Id = PeriodClose.RoleId
+  LEFT JOIN Object AS Object_User ON Object_User.Id = PeriodClose.UserId
   LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = PeriodClose.UnitId;
 
 END;

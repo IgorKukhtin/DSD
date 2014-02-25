@@ -312,6 +312,8 @@ type
     bbProfitLossService: TdxBarButton;
     actReport_CheckTaxCorrective: TdsdOpenForm;
     bbReport_CheckTaxCorrective: TdxBarButton;
+    actPeriodClose: TdsdOpenForm;
+    bbPeriodClose: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

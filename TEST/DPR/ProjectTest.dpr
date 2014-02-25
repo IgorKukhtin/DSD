@@ -376,7 +376,8 @@ uses
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
-  ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm};
+  ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
+  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm};
 
 {$R *.RES}
 

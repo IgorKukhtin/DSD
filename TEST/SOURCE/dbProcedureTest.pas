@@ -11,6 +11,7 @@ type
     procedure CreateMovementProcedure;
     procedure CreateMovementItemProcedure;
     procedure CreateObjectProcedure;
+    procedure CreatePeriodCloseProcedure;
     procedure CreateReportProcedure;
   end;
 
@@ -270,6 +271,12 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpSelect_Object_Receipt.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpGet_Object_Receipt.sql', ZQuery);
 
+end;
+
+procedure TdbProcedureTest.CreatePeriodCloseProcedure;
+begin
+  ScriptDirectory := ProcedurePath + 'PeriodClose\';
+  ProcedureLoad;
 end;
 
 procedure TdbProcedureTest.CreateReportProcedure;

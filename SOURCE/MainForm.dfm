@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
-  ClientHeight = 407
+  ClientHeight = 247
   ClientWidth = 1118
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1263,6 +1263,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPeriodClose'
+        end
+        item
+          Visible = True
           ItemName = 'bbPartner1CLink'
         end
         item
@@ -1373,6 +1377,10 @@ object MainForm: TMainForm
     end
     object bbReport_CheckTaxCorrective: TdxBarButton
       Action = actReport_CheckTaxCorrective
+      Category = 0
+    end
+    object bbPeriodClose: TdxBarButton
+      Action = actPeriodClose
       Category = 0
     end
   end
@@ -2644,6 +2652,15 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082
       FormName = 'TReport_CheckTaxCorrectiveForm'
       FormNameParam.Value = 'TReport_CheckTaxCorrectiveForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPeriodClose: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+      FormName = 'TPeriodCloseForm'
+      FormNameParam.Value = 'TPeriodCloseForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

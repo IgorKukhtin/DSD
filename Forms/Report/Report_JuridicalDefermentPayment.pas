@@ -13,7 +13,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, dsdGuides, cxButtonEdit, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, frxClass, frxDBSet;
 
 type
   TReport_JuridicalDefermentPayment = class(TAncestorReportForm)
@@ -33,6 +33,15 @@ type
     edAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
     AccountGuides: TdsdGuides;
+    actPrintOneWeek: TdsdPrintAction;
+    dsdPrintAction2: TdsdPrintAction;
+    dsdPrintAction3: TdsdPrintAction;
+    dsdPrintAction4: TdsdPrintAction;
+    dsdPrintAction5: TdsdPrintAction;
+    spWeek: TdsdStoredProc;
+    frxDBDataset1: TfrxDBDataset;
+    cdsReport1: TClientDataSet;
+    bbReportOneWeek: TdxBarButton;
   private
     { Private declarations }
   public

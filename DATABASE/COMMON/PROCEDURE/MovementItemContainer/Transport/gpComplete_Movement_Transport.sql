@@ -13,6 +13,8 @@ $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Transport());
+     -- Проверка закрытия периодов
+     PERFORM lpCheckPeriodClose(vbUserId, inMovementId);
 
      -- таблица - Проводки 
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
@@ -71,6 +73,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.02.13                        * lpCheckPeriodClose                
  03.11.13                                        * add RouteId_ProfitLoss
  02.11.13                                        * add BranchId_ProfitLoss, UnitId_Route, BranchId_Route
  26.10.13                                        * add CREATE TEMP TABLE...
