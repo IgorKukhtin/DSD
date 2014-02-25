@@ -243,7 +243,59 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
+           , CAST (CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
+                        THEN MIFloat_Price.ValueData +
+                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                    ELSE MIFloat_Price.ValueData  END
+                   AS NUMERIC (16, 3))             AS PriceWVAT
+
+           , CAST (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                        THEN MIFloat_Price.ValueData -
+                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                    ELSE MIFloat_Price.ValueData  END
+                   AS NUMERIC (16, 3))             AS PriceNoVAT
+
+           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                        THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) *
+                        CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                             THEN MIFloat_Price.ValueData -
+                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MIFloat_Price.ValueData  END
+                        / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3))
+
+                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) *
+                        CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                             THEN MIFloat_Price.ValueData -
+                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MIFloat_Price.ValueData  END
+                        AS NUMERIC (16, 3))
+                   END AS NUMERIC (16, 3))                   AS AmountSummNoVAT
+
+           , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
+                        THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) *
+                        CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
+                             THEN MIFloat_Price.ValueData +
+                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MIFloat_Price.ValueData  END
+                        / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3))
+
+                        ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) *
+                        CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
+                             THEN MIFloat_Price.ValueData +
+                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MIFloat_Price.ValueData  END
+                        AS NUMERIC (16, 3))
+                   END AS NUMERIC (16, 3))                   AS AmountSummWVAT
+
        FROM MovementItem
+
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  MovementItem.MovementId
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  MovementItem.MovementId
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -342,6 +394,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
  19.02.14                                                       *  add by juridical
  07.02.14                                                       *  change to Cursor
  05.02.14                                                       *
