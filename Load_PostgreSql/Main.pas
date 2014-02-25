@@ -1814,7 +1814,7 @@ begin
                   //Add('   or isnull(_pgPartner_find.JuridicalId_pg,0)=0)');
                   Add('order by ObjectName, ObjectId');
         Open;
-        cbJuridicalInt.Caption:='3.4. ('+IntToStr(RecordCount)+') Юр.лица Int';
+        cbJuridicalInt.Caption:='2.4. ('+IntToStr(RecordCount)+') Юр.лица Int';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -2480,16 +2480,16 @@ begin
                   Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
                   Add('     , case when trim(_pgPartner.UnitName) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.UnitName)');
-                  Add('            else trim(isnull(Unit.UnitName,_pgPartner.UnitName))');
+                  Add('            else trim(_pgPartner.UnitName)'); // trim(isnull(Unit.UnitName,_pgPartner.UnitName))
                   Add('       end as ObjectName');
-                  Add('     , case when Unit.AddressFirm is not null then Unit.AddressFirm');
-                  Add('            when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
+                  //Add('     , case when Unit.AddressFirm is not null then Unit.AddressFirm');
+                  Add('     , case when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
                   Add('            else ObjectName');
                   Add('       end as inAddress');
                   Add('     , '+FormatToVarCharServer_notNULL('')+' as inGLNCode');
                   Add('     , null AS inPrepareDayCount');
                   Add('     , null AS inDocumentDayCount');
-                  Add('     , Unit.Id_byLoad, Unit.Id');
+                  //Add('     , Unit.Id_byLoad, Unit.Id');
                   Add('     , _pgPartner.OKPO');
                   Add('     , _pgPartner.UnitId');
                   Add('     , _pgPartner_find.Main');
@@ -2502,7 +2502,7 @@ begin
                   Add('from (select min (_pgPartner.Id) as Id'
                     + '           , max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg'
                     + '           , JuridicalId_pg'
-                    + '           , UnitId'
+                    + '           , OKPO'
                     + '           , Main'
                     + '      from dba._pgPartner'
                     + '      where JuridicalId_pg<>0'
@@ -2513,12 +2513,12 @@ begin
                     + '        and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
 //                    + '        and _pgPartner.Id = 938'
                     + '      group by JuridicalId_pg'
-                    + '             , UnitId'
+                    + '             , OKPO'
                     + '             , Main'
                     + '     ) as _pgPartner_find'
                     + '     left join (select min (_pgPartner.Id) as Id'
                     + '                     , JuridicalId_pg'
-                    + '                     , UnitId'
+                    + '                     , OKPO'
                     + '                     , Main'
                     + '                from dba._pgPartner'
                     + '                where JuridicalId_pg<>0'
@@ -2529,27 +2529,25 @@ begin
                     + '                  and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (AdrUnit) <> '+FormatToVarCharServer_notNULL('')
                     + '                group by JuridicalId_pg'
-                    + '                       , UnitId'
+                    + '                       , OKPO'
                     + '                       , Main'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
                     + '                                       and _pgPartner_find_two.Main = _pgPartner_find.Main'
-                    + '                                       and _pgPartner_find_two.UnitId = _pgPartner_find.UnitId'
+                    + '                                       and _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
                     + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
-                  Add('          join (select Unit.Id AS Id_byLoad, Unit.Id, Unit.UnitName, ClientInformation.AddressFirm'
+
+                  Add('          join (select trim(isnull(ClientInformation_child.OKPO,isnull(ClientInformation_find.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO'
                      +'                from dba.Unit'
-                     +'                     left join dba.ClientInformation on ClientInformation.ClientId = Unit.Id'
-                     +'                                                    and trim(ClientInformation.AddressFirm)<>'+FormatToVarCharServer_notNULL('')
-                     +'                where zc_def_IsInteger() = zc_rvYes()'
-                     +'                  and Unit.isFindBill = zc_rvYes()'
-                     +'               union all'
-                     +'                select Unit_byServer.Id AS Id_byLoad, Unit.Id, Unit_byServer.UnitName, ClientInformation.AddressFirm'
-                     +'                from dba.Unit_byServer'
-                     +'                     left outer join dba.Unit_byLoad on Unit_byLoad.Id_byLoad = Unit_byServer.Id'
-                     +'                     join dba.Unit on Unit.Id=Unit_byLoad.UnitId and Unit.isFindBill = zc_rvYes()'
-                     +'                     left join dba.ClientInformation on ClientInformation.ClientId = Unit.Id'
-                     +'                                                    and trim(ClientInformation.AddressFirm)<>'+FormatToVarCharServer_notNULL('')
-                     +'                where zc_def_IsInteger() = zc_rvNo()'
-                     +'               ) as Unit on Unit.Id_byLoad = _pgPartner.UnitId');
+                     +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
+                     +'                                                                                    and trim(ClientInformation_find.OKPO) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id'
+                     +'                                                                                    and trim(ClientInformation_child.OKPO) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                where Unit.isFindBill = zc_rvYes()'
+                     +'                  and OKPO <> ' + FormatToVarCharServer_notNULL('')
+                     +'                group by OKPO'
+                     +'               ) as Unit on Unit.OKPO = _pgPartner_find.OKPO');
+
+
                   Add('order by inJuridicalId, ObjectName, ObjectId');
 
         Open;
@@ -2639,16 +2637,15 @@ begin
                   Add('select 0 as ObjectId');
                   Add('     , 0 as ObjectCode');
                   Add('     , case when trim(_pgPartner.UnitName) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.UnitName)');
-                  Add('            else trim(isnull(Unit.UnitName,_pgPartner.UnitName))');
+                  Add('            else trim(_pgPartner.UnitName)');//trim(isnull(Unit.UnitName,_pgPartner.UnitName))
                   Add('       end as ObjectName');
-                  Add('     , case when Unit.AddressFirm is not null then Unit.AddressFirm');
-                  Add('            when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
+                  Add('     , case when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
                   Add('            else ObjectName');
                   Add('       end as inAddress');
                   Add('     , '+FormatToVarCharServer_notNULL('')+' as inGLNCode');
                   Add('     , null AS inPrepareDayCount');
                   Add('     , null AS inDocumentDayCount');
-                  Add('     , Unit.Id_byLoad, Unit.Id');
+                  //Add('     , Unit.Id_byLoad, Unit.Id');
                   Add('     , _pgPartner.OKPO');
                   Add('     , _pgPartner.UnitId');
                   Add('     , _pgPartner_find.Main');
@@ -2661,7 +2658,7 @@ begin
                   Add('from (select min (_pgPartner.Id) as Id'
                     + '           , max (isnull(_pgPartner.PartnerId_pg,0)) as PartnerId_pg'
                     + '           , JuridicalId_pg'
-                    + '           , UnitId'
+                    + '           , OKPO'
                     + '           , Main'
                     + '      from dba._pgPartner'
                     + '      where JuridicalId_pg<>0'
@@ -2672,12 +2669,12 @@ begin
                     + '        and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
 //                    + '        and _pgPartner.Id = 938'
                     + '      group by JuridicalId_pg'
-                    + '             , UnitId'
+                    + '             , OKPO'
                     + '             , Main'
                     + '     ) as _pgPartner_find'
                     + '     left join (select min (_pgPartner.Id) as Id'
                     + '                     , JuridicalId_pg'
-                    + '                     , UnitId'
+                    + '                     , OKPO'
                     + '                     , Main'
                     + '                from dba._pgPartner'
                     + '                where JuridicalId_pg<>0'
@@ -2688,28 +2685,23 @@ begin
                     + '                  and trim (UnitName) <> '+FormatToVarCharServer_notNULL('')
                     + '                  and trim (AdrUnit) <> '+FormatToVarCharServer_notNULL('')
                     + '                group by JuridicalId_pg'
-                    + '                       , UnitId'
+                    + '                       , OKPO'
                     + '                       , Main'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
                     + '                                       and _pgPartner_find_two.Main = _pgPartner_find.Main'
-                    + '                                       and _pgPartner_find_two.UnitId = _pgPartner_find.UnitId'
+                    + '                                       and _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
                     + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
-                  Add('     left join (select Unit.Id AS Id_byLoad, Unit.Id, Unit.UnitName, ClientInformation.AddressFirm'
+                  Add('     left join (select trim(isnull(ClientInformation_child.OKPO,isnull(ClientInformation_find.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO'
                      +'                from dba.Unit'
-                     +'                     left join dba.ClientInformation on ClientInformation.ClientId = Unit.Id'
-                     +'                                                    and trim(ClientInformation.AddressFirm)<>'+FormatToVarCharServer_notNULL('')
-                     +'                where zc_def_IsInteger() = zc_rvYes()'
-                     +'                  and Unit.isFindBill = zc_rvYes()'
-                     +'               union all'
-                     +'                select Unit_byServer.Id AS Id_byLoad, Unit.Id, Unit_byServer.UnitName, ClientInformation.AddressFirm'
-                     +'                from dba.Unit_byServer'
-                     +'                     left outer join dba.Unit_byLoad on Unit_byLoad.Id_byLoad = Unit_byServer.Id'
-                     +'                     join dba.Unit on Unit.Id=Unit_byLoad.UnitId and Unit.isFindBill = zc_rvYes()'
-                     +'                     left join dba.ClientInformation on ClientInformation.ClientId = Unit.Id'
-                     +'                                                    and trim(ClientInformation.AddressFirm)<>'+FormatToVarCharServer_notNULL('')
-                     +'                where zc_def_IsInteger() = zc_rvNo()'
-                     +'               ) as Unit on Unit.Id_byLoad = _pgPartner.UnitId');
-                  Add('where Unit.Id_byLoad is not null or Id_Postgres is not null');
+                     +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
+                     +'                                                                                    and trim(ClientInformation_find.OKPO) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id'
+                     +'                                                                                    and trim(ClientInformation_child.OKPO) <> ' + FormatToVarCharServer_notNULL('')
+                     +'                where Unit.isFindBill = zc_rvYes()'
+                     +'                  and OKPO <> ' + FormatToVarCharServer_notNULL('')
+                     +'                group by OKPO'
+                     +'               ) as Unit on Unit.OKPO = _pgPartner_find.OKPO');
+                  Add('where Unit.OKPO is not null or isnull(Id_Postgres,0) <> 0');
                   //Add('and _pgPartner_find.PartnerId_pg=0');
                   Add('order by inJuridicalId, ObjectName, ObjectId');
 
@@ -2777,7 +2769,10 @@ begin
                                   +'                                          end'
                                   +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                   +'   and Main = '+FieldByName('Main').AsString
-                                  +'   and CodeIM = 30201'
+                                  +'   and (CodeIM = 30201'
+                                  +'     or Id=1310'
+                                  +'     or Id=2859'
+                                  +'       )'
                                   );
 
              //
@@ -8084,7 +8079,7 @@ begin
            );
         Add('order by OperDate,InvNumber,ObjectId');
         Open;
-        cbCompleteReturnInFl.Caption:='3.4.('+IntToStr(RecordCount)+')Воз.от пок.Int';
+        cbCompleteReturnInInt.Caption:='3.4.('+IntToStr(RecordCount)+')Воз.от пок.Int';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
@@ -8273,7 +8268,7 @@ begin
              end
              else PriceListId:=0;
              //
-             // Пытаемся найти
+             // В 1-ый раз Пытаемся найти <Договор>
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
@@ -8285,6 +8280,23 @@ begin
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             // Во 2-ой раз Пытаемся найти <Договор>
+             if ContractId_pg=0 then
+             begin
+
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
@@ -9935,18 +9947,36 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             // Пытаемся найти
+             // В 1-ый раз Пытаемся найти <Договор>
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(FieldByName('CodeIM').AsInteger)
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
                                  +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
                                  +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
                                  +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('CodeIM').AsInteger)
                                  //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             // Во 2-ой раз Пытаемся найти <Договор>
+             if ContractId_pg=0 then
+             begin
+
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
