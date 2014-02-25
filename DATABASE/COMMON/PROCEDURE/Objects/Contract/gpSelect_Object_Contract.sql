@@ -24,12 +24,13 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractStateKindCode Integer
              , OKPO TVarChar
              , BankId Integer, BankName TVarChar
+             , InsertName TVarChar, UpdateName TVarChar
+             , InsertDate TDateTime, UpdateDate TDateTime
              , isErased Boolean 
               )
 AS
 $BODY$
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_Contract());
 
@@ -83,6 +84,11 @@ BEGIN
 
        , Object_Bank.Id          AS BankId
        , Object_Bank.ValueData   AS BankName
+
+       , Object_Insert.ValueData   AS InsertName
+       , Object_Update.ValueData   AS UpdateName
+       , ObjectDate_Protocol_Insert.ValueData AS InsertDate
+       , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
        , Object_Contract_View.isErased
        
@@ -137,9 +143,25 @@ BEGIN
                              ON ObjectLink_Contract_Bank.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
         LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_Contract_Bank.ChildObjectId   
-                
-        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
 
+        LEFT JOIN ObjectDate AS ObjectDate_Protocol_Insert
+                             ON ObjectDate_Protocol_Insert.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_Protocol_Insert.DescId = zc_ObjectDate_Protocol_Insert()
+        LEFT JOIN ObjectDate AS ObjectDate_Protocol_Update
+                             ON ObjectDate_Protocol_Update.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_Protocol_Update.DescId = zc_ObjectDate_Protocol_Update()
+
+        LEFT JOIN ObjectLink AS ObjectLink_Insert
+                             ON ObjectLink_Insert.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Insert.DescId = zc_ObjectLink_Protocol_Insert()
+        LEFT JOIN Object AS Object_Insert ON Object_Insert.Id = ObjectLink_Insert.ChildObjectId   
+
+        LEFT JOIN ObjectLink AS ObjectLink_Update
+                             ON ObjectLink_Update.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
+        LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
+
+        LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
    ;
   
 END;
@@ -151,9 +173,10 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...
  21.02.14         * add Bank, BankAccount
  09.01.14         * add PaidKindId
- 06.01.14                                         * add OKPO
+ 06.01.14                                        * add OKPO
  14.11.13         * add from redmaine               
  20.10.13                                        * add Object_Contract_View
  20.10.13                                        * add from redmine
@@ -164,4 +187,3 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
-

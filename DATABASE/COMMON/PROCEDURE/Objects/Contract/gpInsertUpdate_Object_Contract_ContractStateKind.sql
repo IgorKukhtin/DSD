@@ -16,7 +16,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    SELECT
         Object_ContractStateKind.Id  
@@ -32,7 +32,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractStateKind(), inContractId, vbContractStateKindId);   
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inContractId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= inContractId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= NULL);
 
 END;
 $BODY$
@@ -42,6 +42,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.02.14                                        * add inIsUpdate and inIsErased
  13.02.14                        * 
 */
 

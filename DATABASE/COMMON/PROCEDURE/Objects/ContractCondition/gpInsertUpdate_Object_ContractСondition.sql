@@ -16,15 +16,14 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractCondition()());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
    
     -- проверка
    IF COALESCE (inContractId, 0) = 0
    THEN
-       RAISE EXCEPTION 'Ошибка! Договор не установлен!';
+       RAISE EXCEPTION 'Ошибка.Договор не установлен.';
    END IF;
    
    -- сохранили <Объект>
@@ -40,25 +39,22 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_BonusKind(), ioId, inBonusKindId);
 
-
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloat, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.02.14                                        * add inIsUpdate and inIsErased
  19.02.14         * add inBonusKindId, inComment
  16.11.13         * 
-
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ContractCondition (ioId:=0, inValue:=100, inContractId:=5, inContractConditionKindId:=6, inSession:='2')
-    

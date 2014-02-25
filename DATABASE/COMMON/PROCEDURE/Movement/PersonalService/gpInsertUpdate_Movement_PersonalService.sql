@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_PersonalService()
 
-DROP FUNCTION gpselect_movement_personalservice(tdatetime,tdatetime,tvarchar);
-DROP FUNCTION gpInsertUpdate_Movement_PersonalService(Integer, TVarChar, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpselect_movement_personalservice(tdatetime,tdatetime,tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>

@@ -960,10 +960,6 @@
 				<Form>AccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
-				<Form>ContractForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\Log.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
 				<Form>Report_GoodsMIForm</Form>
@@ -1117,6 +1113,9 @@
 			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
 				<Form>PeriodCloseForm</Form>
 				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
+				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

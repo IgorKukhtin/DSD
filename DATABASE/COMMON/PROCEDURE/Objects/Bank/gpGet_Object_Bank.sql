@@ -46,7 +46,7 @@ $BODY$BEGIN
      
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Bank (Integerá TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Bank (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*

@@ -137,13 +137,6 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 54
           end
-          object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 53
-          end
           object clGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
             DataBinding.FieldName = 'GoodsKindName'
