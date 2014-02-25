@@ -26,6 +26,7 @@ AS
 --если с определенной даты появится новая форма добавляем запись, а у предидущей уменьшаем EndDate до StartDate этой записи
 
 -- добавляем записи для покупаетелей с нестандартными формами накладных
+-- с одной формой на ОКПО
       SELECT
              zc_movement_sale()
            , CAST ('Sale' AS TVarChar)
@@ -36,13 +37,56 @@ AS
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668','25288083','30487219','30982361',
-                                        '32334104','19202597','32049199','32294926','32516492',
-                                        '34356884','35231874','35275230','35442481','36387249',
-                                        '36387233','37910513','37910542'
-                                        )
+       AND OH_JuridicalDetails.OKPO IN ('25288083','35275230','35231874','30487219','32294926')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+
+-- Omega_Tavr
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale30982361' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('30982361','32334104','19202597')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- Furshet
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale37910513' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('37910513','37910542')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- ЖД
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale01074874' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668'
+                                        '01074791','25774961','01074302','01074064','01073981','26139824',
+                                        '01074874','24755803','04791599','01073946','01074741','25927436'
+                                       )
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+
 --налоговая
       SELECT
              zc_movement_sale()
@@ -120,6 +164,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.02.14                                                        * + fix milti OKPO
  18.02.14                                                        * + OKPO
  17.02.14                                                        * + ProfitLossService
  10.02.14                                                        * + TaxCorrective, ReturnOut

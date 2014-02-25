@@ -1,4 +1,4 @@
-create PROCEDURE DBA._pgInsertClient_byScaleDiscountWeight (in @inStartDate date, in @inEndDate date)
+alter PROCEDURE DBA._pgInsertClient_byScaleDiscountWeight (in @inStartDate date, in @inEndDate date)
 begin
   --
   delete dba._Client_byDiscountWeight where @inStartDate between StartDate and EndDate;
@@ -11,7 +11,7 @@ begin
            left outer join dba.BillItems on BillItems.BillId=Bill.Id
            left outer join dba.ScaleHistory on ScaleHistory.Id = BillItems.ScaleHistoryId
            left outer join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.Id = BillItems.ScaleHistoryId_byObvalka
-     where  Bill.BillDate between @inStartDate and @inEndDate + 1
+     where  Bill.BillDate between @inStartDate and @inEndDate 
            and Bill.BillKind in (zc_bkSaleToClient(), zc_bkSendUnitToUnit())
            and BillItems.OperCount <> 0
            and isnull(ScaleHistory.DiscountWeight,ScaleHistory_byObvalka.DiscountWeight) <> 0

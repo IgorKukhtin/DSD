@@ -17,7 +17,7 @@ type
   public
     function InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer): integer;
     constructor Create; override;
   end;
 
@@ -41,7 +41,7 @@ var Id: Integer;
     OperDate: TDateTime;
     AmountIn, AmountOut: Double;
     Comment:String;
-    ContractId, ContractConditionKindId, InfoMoneyId, JuridicalId, PaidKindId, UnitId: Integer;
+    ContractId, ContractConditionKindId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,BonusKindId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -59,14 +59,15 @@ begin
   JuridicalId := TJuridical.Create.GetDefault;
   UnitId := 0;
   PaidKindId:=0;
+  BonusKindId:=0;
 
   result := InsertUpdateProfitLossService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
-              ContractId,InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId);
+              ContractId,InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId);
 end;
 
 function TProfitLossService.InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId: integer): integer;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -81,6 +82,7 @@ begin
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
   FParams.AddParam('inContractConditionKindId', ftInteger, ptInput, ContractConditionKindId);
+  FParams.AddParam('inBonusKindId', ftInteger, ptInput, BonusKindId);
 
   result := InsertUpdate(FParams);
 
