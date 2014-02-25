@@ -36,6 +36,7 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
+   DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
@@ -101,6 +102,9 @@ BEGIN
    END IF;
 
 
+   -- определили <Признак>
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode, inInvNumber);
 
@@ -146,6 +150,9 @@ BEGIN
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, vbIsUpdate);
 
 END;
 $BODY$

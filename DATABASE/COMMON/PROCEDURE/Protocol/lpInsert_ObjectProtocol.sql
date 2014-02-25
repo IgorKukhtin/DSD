@@ -1,14 +1,36 @@
-п»ї--DROP FUNCTION lpInsert_ObjectProtocol(IN inObjectId integer, IN inUserId integer);
+-- DROP FUNCTION lpInsert_ObjectProtocol (IN inObjectId Integer, IN inUserId Integer);
+
+DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsert_ObjectProtocol (Integer, Integer, Boolean);
 
 CREATE OR REPLACE FUNCTION lpInsert_ObjectProtocol(
-IN inObjectId integer, 
-IN inUserId integer)
- RETURNS void
- AS $BODY$
- DECLARE 
-   ProtocolXML TBlob;
+    IN inObjectId Integer, 
+    IN inUserId   Integer,
+    IN inIsUpdate Boolean DEFAULT NULL  -- Признак
+)
+RETURNS void
+AS
+$BODY$
+   DECLARE ProtocolXML TBlob;
 BEGIN
-  -- РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј XML РґР»СЏ Р·Р°РїРёСЃРё РІ РїСЂРѕС‚РѕРєРѕР»
+     IF inIsUpdate = TRUE
+     THEN
+         -- сохранили свойство <Дата корректировки>
+         PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Update(), inId, CURRENT_TIMESTAMP);
+         -- сохранили свойство <Пользователь (корректировка)>
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Update(), inId, inUserId);
+     ELSE
+         IF inIsUpdate = FALSE
+         THEN
+             -- сохранили свойство <Дата создания>
+             PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_Protocol_Insert(), inId, CURRENT_TIMESTAMP);
+             -- сохранили свойство <Пользователь (создание)>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Protocol_Insert(), inId, inUserId);
+         END IF;
+     END IF;
+
+
+  -- Подготавливаем XML для записи в протокол
   SELECT '<XML>' || STRING_AGG(FieldXML, '') || '</XML>' INTO ProtocolXML FROM
   (
   SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'||
@@ -39,7 +61,13 @@ BEGIN
   
 END;           
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsert_ObjectProtocol(integer, integer)
-  OWNER TO postgres; 
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION lpInsert_ObjectProtocol (Integer, Integer, Boolean) OWNER TO postgres;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.02.14                                        *
+*/
+
+

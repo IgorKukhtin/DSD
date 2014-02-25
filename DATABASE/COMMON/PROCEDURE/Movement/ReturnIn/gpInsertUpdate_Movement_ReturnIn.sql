@@ -25,13 +25,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
-     vbUserId:= 2;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+         RAISE EXCEPTION 'Ошибка.Не установлен договор.'; -- , <%>vbUserId
      END IF;
 
      -- сохранили <Документ>
