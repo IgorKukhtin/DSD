@@ -40,7 +40,7 @@ $BODY$
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
-   vbUserId := inSession;
+   vbUserId:= lpGetUserBySession (inSession);
 
    /*
    IF ioId <> 0 
@@ -149,10 +149,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
    -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId, vbIsUpdate);
+   PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
 END;
 $BODY$
@@ -162,8 +159,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 21.02.14         * add Bank, BankAccount              
- 08.11.14                        * 
+ 25.02.14                                        * add inIsUpdate and inIsErased
+ 21.02.14         * add Bank, BankAccount
+ 08.11.14                        *
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица
  04.01.14                                        * add !!!inInvNumber not unique!!!
  14.11.13         * add from redmaine               

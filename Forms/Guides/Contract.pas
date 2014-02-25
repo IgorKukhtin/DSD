@@ -104,6 +104,10 @@ type
     colComment: TcxGridDBColumn;
     clBankAccount: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
+    clInsertName: TcxGridDBColumn;
+    clUpdateName: TcxGridDBColumn;
+    clInsertDate: TcxGridDBColumn;
+    clUpdateDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
