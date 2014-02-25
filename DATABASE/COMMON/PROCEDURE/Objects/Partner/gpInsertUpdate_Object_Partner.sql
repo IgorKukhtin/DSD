@@ -53,7 +53,7 @@ BEGIN
    -- проверка уникальности <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), vbName);
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode);
+   IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
 
    -- сохранили <Объект>
