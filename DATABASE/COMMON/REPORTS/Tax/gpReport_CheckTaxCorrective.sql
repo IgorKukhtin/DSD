@@ -1,35 +1,3 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 -- FunctiON: gpReport_CheckTaxCorrective ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckTaxCorrective (TDateTime, TDateTime, TVarChar);
@@ -106,7 +74,7 @@ BEGIN
                      , Object_JuridicalBasis.ObjectCode   AS ToCode
                      , Object_JuridicalBasis.ValueData    AS ToName
 
-                     , MovementLinkMovement.MovementId AS MovementId_TaxCorrective
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_TaxCorrective
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.Id ELSE 0 END AS MovementId_ReturnIn
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.OperDate ELSE zc_DateStart() END AS OperDate_ReturnIn
                      , zc_DateStart() AS OperDate_TaxCorrective
@@ -115,13 +83,13 @@ BEGIN
                      , MovementItem.ObjectId AS GoodsId
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId 
                      , MIFloat_Price.ValueData AS Price_ReturnIn
-                     , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS Amount_ReturnIn
+                     , COALESCE (SUM (MIFloat_AmountPartner.ValueData), 0) AS Amount_ReturnIn
                      , 0 AS Price_TaxCorrective
                      , 0 AS Amount_TaxCorrective
                      , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                     JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = Movement.Id
+                     LEFT  JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = Movement.Id
                                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                                      
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
@@ -136,9 +104,9 @@ BEGIN
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                                      
-                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
-                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
-                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()         
+                     JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                             ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
+                                            AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()         
 
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
@@ -149,7 +117,6 @@ BEGIN
                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                      LEFT JOIN Object AS Object_Juridical_From ON Object_Juridical_From.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
-
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                   ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                  AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -157,23 +124,33 @@ BEGIN
                                           ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
                      LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectLink_Contract_JuridicalBasis.ChildObjectId
-                     
-                     
                                                                               
                 WHERE Movement.DescId = zc_Movement_ReturnIn()
                   AND Movement.OperDate between inStartDate AND inEndDate
+                GROUP BY Object_Juridical_From.ObjectCode 
+                     , Object_Juridical_From.ValueData
+                     , Object_JuridicalBasis.ObjectCode
+                     , Object_JuridicalBasis.ValueData 
+                     , MovementLinkMovement.MovementId 
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.Id ELSE 0 END
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.OperDate ELSE zc_DateStart() END
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.InvNumber ELSE '' END
+                     , MovementItem.ObjectId 
+                     , MILinkObject_GoodsKind.ObjectId
+                     , MIFloat_Price.ValueData 
+                     , MovementLO_DocumentTaxKind.ObjectId
              UNION
                 SELECT Object_Juridical.ObjectCode           AS FromCode
                      , Object_Juridical.ValueData            AS FromName
                      , Object_Contract_Juridical.ObjectCode  AS ToCode
                      , Object_Contract_Juridical.ValueData   AS ToName
                      
-                     , Movement.Id AS MovementId_TaxCorrective
-                     , MovementLinkMovement.MovementChildId AS MovementId_ReturnIn
-                     , Movement_ReturnIn.OperDate AS OperDate_ReturnIn
-                     , Movement.OperDate AS OperDate_TaxCorrective
-                     , Movement_ReturnIn.InvNumber AS InvNumber_ReturnIn
-                     , Movement.InvNumber AS InvNumber_TaxCorrective
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.Id ELSE 0 END AS MovementId_TaxCorrective
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN MovementLinkMovement.MovementChildId ELSE 0 END AS MovementId_ReturnIn
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement_ReturnIn.OperDate ELSE zc_DateStart() END AS OperDate_ReturnIn
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.OperDate ELSE zc_DateStart() END AS OperDate_TaxCorrective
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement_ReturnIn.InvNumber ELSE '' END AS InvNumber_ReturnIn
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80775 THEN Movement.InvNumber ELSE '' END AS InvNumber_TaxCorrective
                      , MovementItem.ObjectId AS GoodsId
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                      , 0 AS Price_ReturnIn
@@ -248,6 +225,11 @@ ALTER FUNCTION gpReport_CheckTaxCorrective (TDateTime, TDateTime, TVarChar) OWNE
 
 -- тест
 --SELECT * FROM gpReport_CheckTaxCorrective (inStartDate:= '15.12.2013', inEndDate:= '1.1.2014', inSession:= zfCalc_UserAdmin());
+/*
+SELECT * FROM Object where id >= 80770
+insert into MovementLinkObject (descid, movementid, Objectid)
+SELECT zc_MovementLinkObject_DocumentTaxKind(), 30102, 80776
 
+*/
 
 --select * from MovementLinkMovement
