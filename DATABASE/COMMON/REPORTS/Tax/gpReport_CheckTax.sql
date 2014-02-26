@@ -148,7 +148,7 @@ BEGIN
                      , Object_Juridical.ValueData            AS FromName
                      , Object_Contract_Juridical.ObjectCode  AS ToCode
                      , Object_Contract_Juridical.ValueData   AS ToName
-                     , MovementLinkMovement.MovementId AS MovementId_Sale
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_Sale
                      , Movement.Id  AS MovementId_Tax
                      , zc_DateStart() AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
