@@ -86,6 +86,20 @@ AS
                                        )
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
+-- FM
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale36387249' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36387249','36387233')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 
 --налоговая
       SELECT
@@ -164,6 +178,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.02.14                                                        * + FM
  25.02.14                                                        * + OKPO
  24.02.14                                                        * + fix milti OKPO
  18.02.14                                                        * + OKPO
