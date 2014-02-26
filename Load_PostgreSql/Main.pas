@@ -2364,7 +2364,7 @@ begin
              else
                  begin
                   //fOpenSqToQuery ('select ContractId from Object_Contract_View where InvNumber='+FormatToVarCharServer_notNULL(FieldByName('inInvNumber').AsString)+' and JuridicalId='+FieldByName('inJuridicalId').AsString);
-                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InfoMoneyId = '+FieldByName('inInfoMoneyId').AsString+' and ContractStateKindId <> zc_Enum_ContractStateKind_Close() and JuridicalId='+FieldByName('inJuridicalId').AsString);
+                  fOpenSqToQuery ('select ContractId from Object_Contract_View where InfoMoneyId = '+FieldByName('inInfoMoneyId').AsString+' and ContractStateKindId <> zc_Enum_ContractStateKind_Close() and isErased = FALSE and JuridicalId='+FieldByName('inJuridicalId').AsString);
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
                  end;
 
@@ -6571,6 +6571,7 @@ begin
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -6582,6 +6583,7 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -6592,6 +6594,7 @@ begin
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -8278,6 +8281,7 @@ begin
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('ContractId').AsInteger)
                                  //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              // Во 2-ой раз Пытаемся найти <Договор>
@@ -8294,6 +8298,7 @@ begin
                                  +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
                                  //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9699,6 +9704,7 @@ begin
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9710,6 +9716,7 @@ begin
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9720,6 +9727,7 @@ begin
                                  +' from Object_Contract_View'
                                  +' where JuridicalId='+IntToStr(JuridicalId_pg)
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
@@ -9958,6 +9966,7 @@ begin
                                  +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
                                  //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              // Во 2-ой раз Пытаемся найти <Договор>
@@ -9974,6 +9983,7 @@ begin
                                  +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
                                  //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
                                  +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;

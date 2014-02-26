@@ -165,6 +165,7 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 80
           end
           object colUnitName: TcxGridDBColumn

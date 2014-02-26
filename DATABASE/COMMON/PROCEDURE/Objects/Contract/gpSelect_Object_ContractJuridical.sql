@@ -90,6 +90,7 @@ BEGIN
 
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
 --     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+     AND Object_Contract_View.isErased = FALSE
   ;
   
 END;

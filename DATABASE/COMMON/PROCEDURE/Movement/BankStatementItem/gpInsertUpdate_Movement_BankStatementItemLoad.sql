@@ -189,10 +189,12 @@ BEGIN
                                             ON View_Contract.JuridicalId = vbJuridicalId
                                            AND View_Contract.InfoMoneyId = tmpInfoMoney.InfoMoneyId
                                            AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                           AND View_Contract.isErased = FALSE
              LEFT JOIN Object_Contract_View AS View_Contract_next
                                             ON View_Contract_next.JuridicalId = vbJuridicalId
                                            AND View_Contract_next.InfoMoneyId = tmpInfoMoney.InfoMoneyId_next
                                            AND View_Contract_next.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                           AND View_Contract_next.isErased = FALSE
                                            AND View_Contract.JuridicalId IS NULL
         ;
         -- Находим <Договор> у Юр. Лица !!!БЕЗ зависимоти от ...!!
@@ -201,7 +203,8 @@ BEGIN
             SELECT MAX (View_Contract.ContractId) INTO vbContractId
             FROM Object_Contract_View AS View_Contract
             WHERE View_Contract.JuridicalId = vbJuridicalId
-              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close();
+              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+              AND View_Contract.isErased = FALSE;
         END IF;
 
         -- Находим <УП статья назначения> !!!всегда!!! у Договора
@@ -246,7 +249,6 @@ $BODY$
 13.02.14                          * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора
 03.12.13                          *
 13.11.13                          *
-
 */
 
 -- тест
