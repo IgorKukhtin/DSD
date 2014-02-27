@@ -29,6 +29,8 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     FormParams: TdsdFormParams;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public
