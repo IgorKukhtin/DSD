@@ -37,7 +37,7 @@ AS
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('25288083','35275230','35231874','30487219','32294926','32516492','35442481')
+       AND OH_JuridicalDetails.OKPO IN ('25288083','35275230','35231874','30487219','32294926','32516492','35442481','32049199')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 
@@ -84,6 +84,20 @@ AS
                                         '01074791','25774961','01074302','01074064','01073981','26139824',
                                         '01074874','24755803','04791599','01073946','01074741','25927436'
                                        )
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
+-- FM
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale36387249' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('36387249','36387233')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 
@@ -164,6 +178,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.02.14                                                        * + FM, Metro
  25.02.14                                                        * + OKPO
  24.02.14                                                        * + fix milti OKPO
  18.02.14                                                        * + OKPO
