@@ -79,6 +79,17 @@ from (select Bill.Id
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
        group by Bill.Id
+     union
+      select Bill.Id
+      from dba.Bill
+           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+      where Bill.BillDate between @inStartDate and @inEndDate
+        and Bill.FromId in (zc_UnitId_StoreSale())
+        and Bill.BillKind in (zc_bkSaleToClient())
+        and Bill.MoneyKindId = zc_mkBN()
+--       and Bill.BillNumber = 1635
+--       and Bill.Id = 1260716
+       group by Bill.Id
      ) as Bill_find
      left outer join dba.Bill on Bill.Id = Bill_find.Id
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId

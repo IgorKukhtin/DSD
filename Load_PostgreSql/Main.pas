@@ -1014,7 +1014,8 @@ begin
      fExecSqFromQuery(' update dba.GoodsProperty'
                      +'        left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
                      +'        left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode'
-                     +' = case when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
+                     +' = case when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
+                     +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
                      +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
