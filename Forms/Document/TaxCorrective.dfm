@@ -237,6 +237,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     object edTo: TcxButtonEdit
       Left = 374
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -433,6 +434,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      DataSets = <>
       Params = <
         item
           Name = 'Id'
@@ -639,7 +641,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem
@@ -992,7 +993,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Guides = GuidesFrom
       end
       item
-        Guides = GuidesTo
       end>
     Left = 160
     Top = 192

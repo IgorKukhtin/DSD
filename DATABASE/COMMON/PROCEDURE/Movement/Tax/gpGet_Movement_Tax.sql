@@ -45,8 +45,8 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
              , tmpInvNum.InvNumber                  AS InvNumberPartner
-             , 0                     				AS FromId
-             , CAST ('' as TVarChar) 				AS FromName
+             , Object_Juridical_Basis.Id			AS FromId
+             , Object_Juridical_Basis.ValueData		AS FromName
              , 0                     				AS ToId
              , CAST ('' as TVarChar) 				AS ToName
              , 0                     				AS ContractId
@@ -56,7 +56,8 @@ BEGIN
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
-          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate;
+          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
 
      ELSE
 
@@ -168,6 +169,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.02.14                                                        *
  09.02.14                                                        *
 */
 

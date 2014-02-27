@@ -47,8 +47,8 @@ BEGIN
              , tmpInvNum.InvNumber                  AS InvNumberPartner
              , 0                     				AS FromId
              , CAST ('' as TVarChar) 				AS FromName
-             , 0                     				AS ToId
-             , CAST ('' as TVarChar) 				AS ToName
+             , Object_Juridical_Basis.Id			AS ToId
+             , Object_Juridical_Basis.ValueData		AS ToName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
              , 0                     				AS TaxKindId
@@ -60,7 +60,8 @@ BEGIN
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
-          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate;
+          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
 
      ELSE
 
@@ -191,6 +192,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А
+ 27.02.14                                                        *
  17.02.14                                                        *   fix is default is null
  10.02.14                                                        *
 */
