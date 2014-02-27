@@ -1279,6 +1279,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSaveTaxDocument'
+        end
+        item
+          Visible = True
           ItemName = 'bbService_Separator'
         end
         item
@@ -1381,6 +1385,10 @@ object MainForm: TMainForm
     end
     object bbPeriodClose: TdxBarButton
       Action = actPeriodClose
+      Category = 0
+    end
+    object bbSaveTaxDocument: TdxBarButton
+      Action = actSaveTaxDocument
       Category = 0
     end
   end
@@ -2661,6 +2669,15 @@ object MainForm: TMainForm
       Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
       FormName = 'TPeriodCloseForm'
       FormNameParam.Value = 'TPeriodCloseForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSaveTaxDocument: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      FormName = 'TSaveTaxDocumentForm'
+      FormNameParam.Value = 'TSaveTaxDocumentForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

@@ -386,7 +386,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
 
 end;
 

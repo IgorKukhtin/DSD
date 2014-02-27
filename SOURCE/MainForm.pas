@@ -314,6 +314,8 @@ type
     bbReport_CheckTaxCorrective: TdxBarButton;
     actPeriodClose: TdsdOpenForm;
     bbPeriodClose: TdxBarButton;
+    actSaveTaxDocument: TdsdOpenForm;
+    bbSaveTaxDocument: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
