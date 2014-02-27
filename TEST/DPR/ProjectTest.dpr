@@ -376,7 +376,11 @@ uses
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
-  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm};
+  PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
+  Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
+  SaveTaxDocument in '..\..\Forms\System\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas';
 
 {$R *.RES}
 

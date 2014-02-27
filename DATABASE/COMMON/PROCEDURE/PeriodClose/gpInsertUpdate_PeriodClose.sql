@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_PeriodClose (Integer, Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
  INOUT ioId	        Integer   ,     -- ключ объекта связи 
@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_PeriodClose(
     IN inRoleId         Integer   ,     -- Роль
     IN inUnitId         Integer   ,     -- Подразделение
     IN inPeriod         Integer   ,     -- Дни
+    IN inCloseDate      TDateTime ,     -- Закрытый период
     IN inSession        TVarChar        -- сессия пользователя
 )
   RETURNS Integer AS
@@ -19,7 +20,10 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UserRole());
 
-   UserId := inSession;
+   IF inUserId = 0 THEN
+      inUserId := NULL;
+   END IF;
+
    vbInterval := (to_char(inPeriod, '999')||' day')::interval;
    IF inRoleId = 0 THEN
       inRoleId := NULL;
@@ -30,16 +34,17 @@ BEGIN
 
    IF COALESCE (ioId, 0) = 0 THEN
       -- добавили новый элемент справочника и вернули значение <Ключ объекта>
-      INSERT INTO PeriodClose (UserId, RoleId, UnitId, Period)
-                  VALUES (inUserId, inRoleId, inUnitId, vbInterval) RETURNING Id INTO ioId;
+      INSERT INTO PeriodClose (UserId, RoleId, UnitId, Period, CloseDate)
+                  VALUES (inUserId, inRoleId, inUnitId, vbInterval, inCloseDate) RETURNING Id INTO ioId;
    ELSE
        -- изменили элемент справочника по значению <Ключ объекта>
-       UPDATE Object SET UserId = inUserId, RoleId = inRoleId, UnitId = inUnitId, Period = vbPeriod WHERE Id = ioId;
+       UPDATE PeriodClose SET UserId = inUserId, RoleId = inRoleId, UnitId = inUnitId, Period = vbInterval, CloseDate = inCloseDate
+              WHERE Id = ioId;
        -- если такой элемент не был найден
        IF NOT FOUND THEN
           -- добавили новый элемент справочника со значением <Ключ объекта>
-          INSERT INTO PeriodClose (Id, UserId, RoleId, UnitId, Period)
-               VALUES (ioId, inUserId, inRoleId, inUnitId, vbInterval) RETURNING Id INTO ioId;
+          INSERT INTO PeriodClose (Id, UserId, RoleId, UnitId, Period, CloseDate)
+               VALUES (ioId, inUserId, inRoleId, inUnitId, vbInterval, inCloseDate) RETURNING Id INTO ioId;
        END IF; -- if NOT FOUND
 
    END IF; -- if COALESCE (ioId, 0) = 0
@@ -47,7 +52,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

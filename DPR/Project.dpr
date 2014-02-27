@@ -34,7 +34,9 @@ uses
   dialogs,
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
-  Log in '..\SOURCE\Log.pas';
+  Log in '..\SOURCE\Log.pas',
+  ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
 
 {$R *.res}
 

@@ -70,6 +70,9 @@ type
     bbInsert: TdxBarButton;
     UpdateAction: TdsdInsertUpdateAction;
     bbUpdate: TdxBarButton;
+    spInsertUpdate_SheetWorkTime_FromTransport: TdsdStoredProc;
+    actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc;
+    bbLoadFromTransport: TdxBarButton;
   private
   public
   end;
