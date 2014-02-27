@@ -64,7 +64,7 @@ type
     PrintHeaderCDS: TClientDataSet;
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
-    mactPrint_SaleTax: TMultiAction;
+    mactPrint_Tax: TMultiAction;
     actPrintTax: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;

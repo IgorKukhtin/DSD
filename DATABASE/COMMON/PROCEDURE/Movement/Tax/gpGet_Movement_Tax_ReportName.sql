@@ -49,4 +49,4 @@ ALTER FUNCTION gpGet_Movement_Tax_ReportName (Integer, TVarChar) OWNER TO postgr
 */
 
 -- тест
---SELECT gpGet_Movement_Tax_ReportName FROM gpGet_Movement_Tax_ReportName(inMovementId := 40874,  inSession := '5'); -- все
+--SELECT gpGet_Movement_Tax_ReportName FROM gpGet_Movement_Tax_ReportName(inMovementId := 122823,  inSession := '5'); -- все

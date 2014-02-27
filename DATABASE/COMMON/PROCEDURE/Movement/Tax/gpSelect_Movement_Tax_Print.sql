@@ -196,7 +196,7 @@ BEGIN
 
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Sale();
+         AND Movement.DescId = zc_Movement_Tax();
     RETURN NEXT Cursor1;
     OPEN Cursor2 FOR
        SELECT

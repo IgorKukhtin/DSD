@@ -376,7 +376,7 @@ inherited TaxForm: TTaxForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object mactPrint_SaleTax: TMultiAction [9]
+    object mactPrint_Tax: TMultiAction [9]
       Category = 'DSDLib'
       ActionList = <
         item
@@ -410,7 +410,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = Null
       ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -532,10 +532,10 @@ inherited TaxForm: TTaxForm
       28
       0)
     inherited bbPrint: TdxBarButton
-      Action = mactPrint_SaleTax
+      Action = mactPrint_Tax
     end
     object bbPrintTax: TdxBarButton [5]
-      Action = mactPrint_SaleTax
+      Action = mactPrint_Tax
       Category = 0
     end
   end
@@ -600,7 +600,7 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSaleTax'
+        Name = 'ReportNameTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -1164,7 +1164,7 @@ inherited TaxForm: TTaxForm
     Top = 245
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1244,10 +1244,10 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_Sale_ReportNameTax'
+        Name = 'gpGet_Movement_Tax_ReportName'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ReportNameSaleTax'
+        ComponentItem = 'ReportNameTax'
         DataType = ftString
       end>
     Left = 416
