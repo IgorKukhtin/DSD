@@ -376,31 +376,19 @@ inherited TaxForm: TTaxForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object mactPrint_Sale: TMultiAction [9]
+    object mactPrint_SaleTax: TMultiAction [9]
       Category = 'DSDLib'
       ActionList = <
         item
-          Action = actSPPrintSaleProcName
+          Action = actSPPrintTaxProcName
         end
         item
-          Action = actPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
-    object mactPrint_SaleTax: TMultiAction [10]
-      Category = 'DSDLib'
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintSaleTax
+          Action = actPrintTax
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 16
     end
-    object actPrintSaleTax: TdsdPrintAction [11]
+    object actPrintTax: TdsdPrintAction [10]
       Category = 'DSDLib'
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -466,7 +454,7 @@ inherited TaxForm: TTaxForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
@@ -486,23 +474,14 @@ inherited TaxForm: TTaxForm
         end>
       isShowModal = True
     end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
+    object actSPPrintTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
           StoredProc = spGetReporNameTax
         end>
-      Caption = 'actSPPrintSaleTaxProcName'
-    end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actSPPrintSaleProcName'
+      Caption = 'actSPPrintTaxProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -552,60 +531,8 @@ inherited TaxForm: TTaxForm
       0
       28
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
-        end>
-    end
     inherited bbPrint: TdxBarButton
-      Action = mactPrint_Sale
+      Action = mactPrint_SaleTax
     end
     object bbPrintTax: TdxBarButton [5]
       Action = mactPrint_SaleTax
@@ -1305,7 +1232,7 @@ inherited TaxForm: TTaxForm
     Top = 192
   end
   object spGetReporNameTax: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
+    StoredProcName = 'gpGet_Movement_Tax_ReportName'
     DataSets = <>
     OutputType = otResult
     Params = <
