@@ -3,7 +3,7 @@
   ClientHeight = 270
   ClientWidth = 542
   ExplicitWidth = 548
-  ExplicitHeight = 295
+  ExplicitHeight = 302
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -180,7 +180,7 @@
     Width = 260
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 115
+    Left = 131
     Top = 227
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -188,10 +188,21 @@
     Top = 227
   end
   inherited ActionList: TActionList
-    Left = 143
+    Left = 183
     Top = 226
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '3'
+        ParamType = ptInput
+      end>
     Left = 88
     Top = 195
   end
@@ -570,6 +581,12 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '3'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 420
     Top = 110
