@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsUpdate Boolean;   
 BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractCondition()());
@@ -25,7 +26,11 @@ BEGIN
    THEN
        RAISE EXCEPTION 'Ошибка.Договор не установлен.';
    END IF;
+
    
+   -- определили <Признак>
+   vbIsUpdate:= COALESCE (ioId, 0) > 0;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractCondition(), 0, inComment);
    

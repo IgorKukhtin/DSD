@@ -221,6 +221,17 @@
     end
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        ParamType = ptInput
+      end>
     Left = 176
     Top = 178
   end
@@ -681,6 +692,12 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 128
     Top = 69

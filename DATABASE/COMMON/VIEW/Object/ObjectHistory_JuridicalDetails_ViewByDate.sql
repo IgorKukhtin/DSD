@@ -17,7 +17,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , Object_Bank.Id                                 AS BankId
        , Object_Bank.valuedata                          AS BankName
        , ObjectString_MFO.ValueData                     AS MFO
-       , COALESCE (ObjectHistoryString_Phone.ValueData, CAST ('не указан' AS TVarChar)) AS Phone
+       , COALESCE (ObjectHistoryString_Phone.ValueData, CAST ('' AS TVarChar)) AS Phone
 
   FROM ObjectHistory AS ObjectHistory_JuridicalDetails
 

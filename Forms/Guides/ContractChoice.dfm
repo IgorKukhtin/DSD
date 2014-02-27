@@ -2,8 +2,10 @@ inherited ContractChoiceForm: TContractChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 861
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -224,6 +226,14 @@ inherited ContractChoiceForm: TContractChoiceForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractChoice'
+    Params = <
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+        ParamType = ptInput
+      end>
     Top = 82
   end
   inherited BarManager: TdxBarManager
@@ -233,5 +243,15 @@ inherited ContractChoiceForm: TContractChoiceForm
       0
       26
       0)
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    Left = 424
+    Top = 152
   end
 end

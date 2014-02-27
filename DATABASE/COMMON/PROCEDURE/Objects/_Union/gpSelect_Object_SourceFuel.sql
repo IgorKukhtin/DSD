@@ -55,6 +55,7 @@ BEGIN
           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
                                    AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                   AND Object_Contract_View.isErased = FALSE
           JOIN ObjectLink AS ObjectLink_Partner_Juridical
                           ON ObjectLink_Partner_Juridical.ChildObjectId = Object_Contract_View.JuridicalId
                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
@@ -111,6 +112,7 @@ BEGIN
                           JOIN Object_Contract_View ON Object_Contract_View.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId
                                                    AND inOperDate BETWEEN Object_Contract_View.StartDate AND Object_Contract_View.EndDate
                                                    AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                   AND Object_Contract_View.isErased = FALSE
                      WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20400() -- ÃÑÌ
                      ) AS tmpContract ON tmpContract.JuridicalId = Object_Juridical.Id
                                      AND tmpContract.PaidKindId = Object_PaidKind.Id

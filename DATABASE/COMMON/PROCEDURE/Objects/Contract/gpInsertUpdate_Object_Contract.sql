@@ -65,11 +65,15 @@ BEGIN
    -- проверка уникальности для свойства <Номер договора>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
-   -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица
+   -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
    IF inInvNumber <> '' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
    THEN
        IF EXISTS (SELECT ObjectLink.ChildObjectId
                   FROM ObjectLink
+                       JOIN ObjectLink AS ObjectLink_InfoMoney
+                                       ON ObjectLink_InfoMoney.ObjectId = ObjectLink.ObjectId
+                                      AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
+                                      AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                        JOIN Object ON Object.Id = ObjectLink.ObjectId
                                   AND Object.ValueData = inInvNumber
                   WHERE ObjectLink.ChildObjectId = inJuridicalId
@@ -99,6 +103,11 @@ BEGIN
    IF COALESCE (inPaidKindId, 0) = 0
    THEN
       RAISE EXCEPTION 'Ошибка.<Форма оплаты> не выбрана.';
+   END IF;
+   -- проверка
+   IF inPaidKindId = zc_Enum_PaidKind_FirstForm() AND NOT EXISTS (SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_View WHERE JuridicalId = inJuridicalId AND OKPO <> '')
+   THEN
+      RAISE EXCEPTION 'Ошибка.У <Юридическое лицо> не установлен <ОКПО>.';
    END IF;
 
 
@@ -159,6 +168,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
  25.02.14                                        * add inIsUpdate and inIsErased
  21.02.14         * add Bank, BankAccount
  08.11.14                        *

@@ -102,6 +102,7 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
    WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+     AND Object_Contract_View.isErased = FALSE
    ;
 
 END;

@@ -103,6 +103,7 @@ BEGIN
        -- AND COALESCE (View_Contract.PaidKindId, zc_Enum_PaidKind_SecondForm()) = zc_Enum_PaidKind_SecondForm();
        AND (View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
        AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+       AND View_Contract.isErased = FALSE
     ;
 
 END;
