@@ -40,6 +40,8 @@ type
     colPartnerCode: TcxGridDBColumn;
     colPartnerName: TcxGridDBColumn;
     colChangePercent: TcxGridDBColumn;
+    actShowAll: TBooleanStoredProcAction;
+    bbShowAll: TdxBarButton;
   private
     { Private declarations }
   public

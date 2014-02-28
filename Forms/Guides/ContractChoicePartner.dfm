@@ -2,8 +2,8 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099'>'
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  ExplicitWidth = 861
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -245,6 +245,24 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           DataType = ftFloat
         end>
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -255,6 +273,14 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractPartnerChoice'
+    Params = <
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Left = 112
     Top = 82
   end
@@ -266,6 +292,37 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end>
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
   end
   inherited PopupMenu: TPopupMenu
     Left = 160
