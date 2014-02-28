@@ -566,8 +566,8 @@ object PersonalAccountForm: TPersonalAccountForm
         ParamType = ptInputOutput
       end
       item
-        Value = ''
-        DataType = ftString
+        Name = 'inPaidKindId'
+        Value = '0'
         ParamType = ptInput
       end>
     Left = 240
@@ -607,8 +607,8 @@ object PersonalAccountForm: TPersonalAccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -820,6 +820,7 @@ object PersonalAccountForm: TPersonalAccountForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'InvNumber'
@@ -844,6 +845,8 @@ object PersonalAccountForm: TPersonalAccountForm
           ParamType = ptInput
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -868,6 +871,7 @@ object PersonalAccountForm: TPersonalAccountForm
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
       Action = ContractChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       ShortCut = 45
@@ -961,6 +965,12 @@ object PersonalAccountForm: TPersonalAccountForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inPaidKindId'
         end>
       isShowModal = True
     end
@@ -1207,6 +1217,7 @@ object PersonalAccountForm: TPersonalAccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
     Left = 328
     Top = 312
   end
@@ -1221,6 +1232,7 @@ object PersonalAccountForm: TPersonalAccountForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 368
     Top = 272
   end
