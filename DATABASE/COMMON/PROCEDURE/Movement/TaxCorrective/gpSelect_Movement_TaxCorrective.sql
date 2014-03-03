@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -52,6 +52,7 @@ BEGIN
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                    			AS FromId
            , Object_From.ValueData             			AS FromName
@@ -105,6 +106,10 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -173,7 +178,8 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 10.02.14                                                         *
+ 03.03.14                                                        *
+ 10.02.14                                                        *
 */
 
 -- тест
