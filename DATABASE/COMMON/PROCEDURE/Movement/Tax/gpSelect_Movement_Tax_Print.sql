@@ -12,10 +12,23 @@ $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
     DECLARE vbUserId Integer;
+    DECLARE vbMovementId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
+     SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
+            THEN inMovementId
+            ELSE MovementLinkMovement_DocumentChild.MovementChildId
+            END
+     INTO vbMovementId
+     FROM Movement
+     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
+                                    ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
+                                   AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+
+     WHERE Movement.Id =  inMovementId;
+
 
      --
     OPEN Cursor1 FOR
@@ -142,10 +155,6 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
 
-
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical ON ObjectLink_Unit_Juridical.objectid = MovementLinkObject_From.ObjectId
-                                                             AND ObjectLink_Unit_Juridical.descid = zc_objectlink_unit_juridical()
-
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
@@ -176,27 +185,21 @@ BEGIN
 
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
-                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
 
            LEFT JOIN ObjectString AS ObjectString_ToAddress
                                   ON ObjectString_ToAddress.ObjectId = Object_To.Id
                                  AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
+       WHERE Movement.Id =  vbMovementId;
 
-
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Tax();
     RETURN NEXT Cursor1;
     OPEN Cursor2 FOR
        SELECT
@@ -375,7 +378,7 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-       WHERE MovementItem.MovementId = inMovementId
+       WHERE MovementItem.MovementId = vbMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
        ;
@@ -394,6 +397,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer,TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
  19.02.14                                                       *  add by juridical
  07.02.14                                                       *  change to Cursor
