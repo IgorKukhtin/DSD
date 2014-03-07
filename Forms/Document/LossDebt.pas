@@ -141,6 +141,9 @@ type
     colBranchCode: TcxGridDBColumn;
     colBranchName: TcxGridDBColumn;
     PaidKindChoiceForm: TOpenChoiceForm;
+    cxLabel6: TcxLabel;
+    edAccount: TcxButtonEdit;
+    GuidesAccount: TdsdGuides;
   private
   public
   end;

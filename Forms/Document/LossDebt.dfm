@@ -26,6 +26,7 @@ object LossDebtForm: TLossDebtForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -8
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -116,6 +117,22 @@ object LossDebtForm: TLossDebtForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 150
+    end
+    object cxLabel6: TcxLabel
+      Left = 730
+      Top = 5
+      Caption = #1057#1095#1077#1090
+    end
+    object edAccount: TcxButtonEdit
+      Left = 731
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 191
     end
   end
   object cxPageControl: TcxPageControl
@@ -1387,6 +1404,13 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 387
     Top = 177
@@ -1408,6 +1432,9 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Control = edBusiness
+      end
+      item
+        Control = edAccount
       end>
     GetStoredProc = spGet
     Left = 306
@@ -1485,6 +1512,18 @@ object LossDebtForm: TLossDebtForm
         Name = 'BusinessName'
         Value = ''
         Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
       end>
     Left = 552
@@ -1610,7 +1649,33 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 656
+    Left = 632
     Top = 24
+  end
+  object GuidesAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormNameParam.Value = 'TAccountForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 792
+    Top = 16
   end
 end
