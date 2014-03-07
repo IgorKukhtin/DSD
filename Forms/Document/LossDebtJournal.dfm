@@ -197,6 +197,12 @@ object LossDebtJournalForm: TLossDebtJournalForm
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
+      object colAccountName: TcxGridDBColumn
+        Caption = #1057#1095#1077#1090
+        DataBinding.FieldName = 'AccountName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
         DataBinding.FieldName = 'TotalSumm'
@@ -251,8 +257,8 @@ object LossDebtJournalForm: TLossDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -604,6 +610,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 248
     Top = 216
   end
