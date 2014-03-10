@@ -346,6 +346,8 @@
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -355,6 +357,8 @@
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -383,6 +387,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -392,6 +398,8 @@
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -401,6 +409,8 @@
   object StatusKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceStatusKind
+    FormNameParam.Value = 'TStatusKindForm'
+    FormNameParam.DataType = ftString
     FormName = 'TStatusKindForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -410,6 +420,8 @@
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>

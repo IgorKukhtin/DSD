@@ -2,26 +2,15 @@ unit ExternalLoad;
 
 interface
 
-uses dsdAction, dsdDb, Classes, DB;
+uses dsdAction, dsdDb, Classes, DB, ExternalData;
 
 type
 
-  TExternalLoad = class
+  TExternalLoad = class(TExternalData)
   protected
-    FActive: boolean;
-    FDataSet: TDataSet;
-    FOEM: boolean;
     FStartDate: TDateTime;
     FEndDate: TDateTime;
-    // Установка на первую запись
-    procedure First; virtual;
   public
-    constructor Create; virtual;
-    destructor Destroy;
-    function EOF: boolean;
-    function RecordCount: integer;
-    procedure Next;     virtual;
-    procedure Activate; virtual;
     property Active: boolean read FActive;
   end;
 
@@ -63,45 +52,6 @@ type
 implementation
 
 uses SysUtils, MemDBFTable, Dialogs, SimpleGauge;
-
-{ TExternalLoad }
-
-procedure TExternalLoad.Activate;
-begin
-
-end;
-
-constructor TExternalLoad.Create;
-begin
-  FActive := false;
-  FOEM := false;
-end;
-
-destructor TExternalLoad.Destroy;
-begin
-  if Assigned(FDataSet) then
-     FreeAndNil(FDataSet);
-end;
-
-function TExternalLoad.EOF: boolean;
-begin
-  result := (not Assigned(FDataSet)) or (not FDataSet.Active) or FDataSet.Eof;
-end;
-
-procedure TExternalLoad.First;
-begin
-
-end;
-
-procedure TExternalLoad.Next;
-begin
-  FDataSet.Next;
-end;
-
-function TExternalLoad.RecordCount: integer;
-begin
-  result  := FDataSet.RecordCount
-end;
 
 { TFileExternalLoad }
 

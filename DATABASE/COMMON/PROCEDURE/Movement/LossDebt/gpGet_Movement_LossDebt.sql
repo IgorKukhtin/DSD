@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , BusinessId Integer, BusinessName TVarChar
+             , AccountId Integer, AccountName TVarChar
               )
 AS
 $BODY$
@@ -37,6 +38,9 @@ BEGIN
            , Object_Business.Id              AS BusinesId
            , Object_Business.ValueData       AS BusinessName
 
+           , 0             AS AccountId
+           , ''::TVarChar  AS AccountName
+
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
                LEFT JOIN Object AS Object_Business ON Object_Business.Id = 0
@@ -54,7 +58,10 @@ BEGIN
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            , Object_Business.Id              AS BusinesId
            , Object_Business.ValueData       AS BusinessName
-  
+
+           , Object_Account.Id              AS AccountId
+           , Object_Account.ValueData       AS AccountName
+             
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -68,6 +75,11 @@ BEGIN
                                         AND MovementLinkObject_Business.DescId = zc_MovementLinkObject_Business()
             LEFT JOIN Object AS Object_Business ON Object_Business.Id = MovementLinkObject_Business.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Account
+                                         ON MovementLinkObject_Account.MovementId = Movement.Id
+                                        AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
+            LEFT JOIN Object AS Object_Account ON Object_Account.Id = MovementLinkObject_Account.ObjectId
+            
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_LossDebt();
 
@@ -81,6 +93,7 @@ ALTER FUNCTION gpGet_Movement_LossDebt (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.03.14         * add Account
  25.01.14                                        * add inOperDate
  14.01.14                                        *
 */

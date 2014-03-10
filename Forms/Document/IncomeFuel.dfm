@@ -682,6 +682,11 @@ object IncomeFuelForm: TIncomeFuelForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        ParamType = ptInput
       end>
     Left = 216
     Top = 327
@@ -722,8 +727,8 @@ object IncomeFuelForm: TIncomeFuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -954,6 +959,7 @@ object IncomeFuelForm: TIncomeFuelForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'InvNumber'
@@ -1679,6 +1685,12 @@ object IncomeFuelForm: TIncomeFuelForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 648
     Top = 88

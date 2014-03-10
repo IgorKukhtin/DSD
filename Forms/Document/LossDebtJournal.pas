@@ -77,6 +77,7 @@ type
     bbReCompleteAll: TdxBarButton;
     actReCompleteAll: TdsdExecStoredProc;
     colBusinessName: TcxGridDBColumn;
+    colAccountName: TcxGridDBColumn;
   private
   public
   end;

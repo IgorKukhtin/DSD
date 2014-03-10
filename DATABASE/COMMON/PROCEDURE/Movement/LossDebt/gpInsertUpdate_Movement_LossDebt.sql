@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_LossDebt()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LossDebt (Integer, TVarChar, TDateTime, Integer, Integer, Integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LossDebt(
     IN inOperDate            TDateTime , -- Дата документа
     IN inBusinessId          Integer   , -- Бизнес
     IN inJuridicalBasisId    Integer   , -- Главное юр. лицо
+    IN inAccountId           Integer   , -- Счет
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -30,6 +32,9 @@ BEGIN
      
      -- сохранили связь с <Главное юр. лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_JuridicalBasis(), ioId, inJuridicalBasisId);
+     
+     -- сохранили связь с <Счет>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Account(), ioId, inAccountId);
 
      -- пересчитали Итоговые суммы по накладной
      -- PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -44,6 +49,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.14         * add Account               
  14.01.14                                        *
 */
 

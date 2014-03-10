@@ -104,12 +104,12 @@ AS
 --налоговая
       SELECT
              zc_movement_sale()
-           , CAST ('SaleTax' AS TVarChar)
+           , CAST ('Tax' AS TVarChar)
            , CAST ('01.01.2000' AS TDateTime)
            , CAST ('01.02.2214' AS TDateTime)
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
-           , CAST ('PrintMovement_SaleTax' AS TVarChar)
+           , CAST ('PrintMovement_Tax' AS TVarChar)
       UNION
 --коррект
       SELECT
@@ -178,6 +178,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.02.14                                                        * + Tax
  26.02.14                                                        * + FM, Metro
  25.02.14                                                        * + OKPO
  24.02.14                                                        * + fix milti OKPO

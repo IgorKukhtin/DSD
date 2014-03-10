@@ -390,20 +390,6 @@ object ContractForm: TContractForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object cContractConditionKindName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractConditionKindName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContractConditionKindChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 150
-      end
       object clBonusKindName: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'BonusKindName'
@@ -411,6 +397,20 @@ object ContractForm: TContractForm
         Properties.Buttons = <
           item
             Action = BonusKindChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        HeaderAlignmentVert = vaCenter
+        Width = 150
+      end
+      object cContractConditionKindName: TcxGridDBColumn
+        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractConditionKindName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContractConditionKindChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
@@ -506,8 +506,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

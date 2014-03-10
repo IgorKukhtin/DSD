@@ -2,8 +2,10 @@ inherited ContractChoiceForm: TContractChoiceForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1044#1086#1075#1086#1074#1086#1088#1072'>'
   ClientHeight = 496
   ClientWidth = 853
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  AddOnFormData.isAlwaysRefresh = True
+  AddOnFormData.Params = FormParams
+  ExplicitWidth = 861
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -215,6 +217,24 @@ inherited ContractChoiceForm: TContractChoiceForm
           ComponentItem = 'InfoMoneyName'
         end>
     end
+    object actShowAll: TBooleanStoredProcAction
+      Category = 'DSDLib'
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndex = 63
+      Value = False
+      HintTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      HintFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      CaptionTrue = #1055#1086#1082#1072#1079#1072#1090#1100' '#1089#1087#1080#1089#1086#1082' '#1080#1079' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+      CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1077#1089#1100' '#1089#1087#1080#1089#1086#1082
+      ImageIndexTrue = 62
+      ImageIndexFalse = 63
+    end
   end
   inherited MasterDS: TDataSource
     Top = 82
@@ -224,6 +244,21 @@ inherited ContractChoiceForm: TContractChoiceForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_ContractChoice'
+    Params = <
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
     Top = 82
   end
   inherited BarManager: TdxBarManager
@@ -233,5 +268,46 @@ inherited ContractChoiceForm: TContractChoiceForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbShowAll: TdxBarButton
+      Action = actShowAll
+      Category = 0
+    end
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    Left = 424
+    Top = 152
   end
 end

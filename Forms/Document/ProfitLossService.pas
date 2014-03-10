@@ -40,10 +40,10 @@ type
     cxLabel3: TcxLabel;
     cxLabel9: TcxLabel;
     ceContractConditionKind: TcxButtonEdit;
-    ContractConditionKindGuides: TdsdGuides;
+    BonusKindGuides: TdsdGuides;
     cxLabel11: TcxLabel;
     ceBonusKind: TcxButtonEdit;
-    BonusKindGuides: TdsdGuides;
+    ContractConditionKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

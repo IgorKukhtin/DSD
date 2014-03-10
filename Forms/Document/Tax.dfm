@@ -7,22 +7,24 @@ inherited TaxForm: TTaxForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1054
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1054
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1050
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1048
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1054
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1048
-        Height = 514
-        ExplicitWidth = 1048
-        ExplicitHeight = 514
+        Width = 1054
+        Height = 518
+        ExplicitWidth = 1054
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,15 +156,14 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1048
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1054
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1048
-        Height = 514
-        ExplicitWidth = 1048
-        ExplicitHeight = 514
+        Width = 1054
+        Height = 518
+        ExplicitWidth = 1054
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -215,7 +216,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -226,6 +227,7 @@ inherited TaxForm: TTaxForm
     object edFrom: TcxButtonEdit
       Left = 210
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -375,31 +377,19 @@ inherited TaxForm: TTaxForm
         end>
       RefreshOnTabSetChanges = True
     end
-    object mactPrint_Sale: TMultiAction [9]
+    object mactPrint_Tax: TMultiAction [9]
       Category = 'DSDLib'
       ActionList = <
         item
-          Action = actSPPrintSaleProcName
+          Action = actSPPrintTaxProcName
         end
         item
-          Action = actPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
-    object mactPrint_SaleTax: TMultiAction [10]
-      Category = 'DSDLib'
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintSaleTax
+          Action = actPrintTax
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 16
     end
-    object actPrintSaleTax: TdsdPrintAction [11]
+    object actPrintTax: TdsdPrintAction [10]
       Category = 'DSDLib'
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -409,6 +399,7 @@ inherited TaxForm: TTaxForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      DataSets = <>
       Params = <
         item
           Name = 'Id'
@@ -420,7 +411,7 @@ inherited TaxForm: TTaxForm
       ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ReportNameParam.Value = Null
       ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
+      ReportNameParam.ComponentItem = 'ReportNameTax'
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
@@ -464,7 +455,7 @@ inherited TaxForm: TTaxForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [15]
       Category = 'DSDLib'
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
@@ -484,23 +475,14 @@ inherited TaxForm: TTaxForm
         end>
       isShowModal = True
     end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
+    object actSPPrintTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
           StoredProc = spGetReporNameTax
         end>
-      Caption = 'actSPPrintSaleTaxProcName'
-    end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actSPPrintSaleProcName'
+      Caption = 'actSPPrintTaxProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -548,65 +530,14 @@ inherited TaxForm: TTaxForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrintTax'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
-        end>
-    end
     inherited bbPrint: TdxBarButton
-      Action = mactPrint_Sale
+      Action = mactPrint_Tax
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
     object bbPrintTax: TdxBarButton [5]
-      Action = mactPrint_SaleTax
+      Action = mactPrint_Tax
       Category = 0
     end
   end
@@ -615,7 +546,6 @@ inherited TaxForm: TTaxForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem
@@ -672,10 +602,14 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSaleTax'
+        Name = 'ReportNameTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
       end>
     Left = 280
     Top = 552
@@ -960,7 +894,6 @@ inherited TaxForm: TTaxForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesFrom
       end
       item
         Guides = GuidesTo
@@ -1171,6 +1104,12 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 408
     Top = 8
@@ -1237,7 +1176,7 @@ inherited TaxForm: TTaxForm
     Top = 245
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1305,7 +1244,7 @@ inherited TaxForm: TTaxForm
     Top = 192
   end
   object spGetReporNameTax: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
+    StoredProcName = 'gpGet_Movement_Tax_ReportName'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1317,10 +1256,10 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_Sale_ReportNameTax'
+        Name = 'gpGet_Movement_Tax_ReportName'
         Value = Null
         Component = FormParams
-        ComponentItem = 'ReportNameSaleTax'
+        ComponentItem = 'ReportNameTax'
         DataType = ftString
       end>
     Left = 416

@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1100
-  ExplicitHeight = 451
+  ExplicitWidth = 1092
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -420,6 +420,13 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '3'
+          Component = FormParams
+          ComponentItem = 'inPaidKindId'
+          ParamType = ptInput
         end>
       isShowModal = False
     end
@@ -582,9 +589,14 @@ inherited BankStatementForm: TBankStatementForm
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '3'
+        ParamType = ptInput
       end>
-    Left = 112
-    Top = 224
+    Left = 184
+    Top = 208
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_BankStatement'
@@ -675,8 +687,8 @@ inherited BankStatementForm: TBankStatementForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 208
-    Top = 144
+    Left = 200
+    Top = 152
   end
   object RefreshAddOn: TRefreshAddOn
     FormName = 'BankStatementJournalForm'

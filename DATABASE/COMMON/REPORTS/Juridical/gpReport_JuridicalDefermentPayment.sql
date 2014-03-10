@@ -8,10 +8,10 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inAccountId        Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalName TVarChar, ContractNumber TVarChar, KreditRemains TFloat, DebetRemains TFloat
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ContractNumber TVarChar, KreditRemains TFloat, DebetRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
-             , Condition TVarChar)
+             , Condition TVarChar, StartContractDate TDateTime)
 AS
 $BODY$
    DECLARE vbLenght Integer;
@@ -27,6 +27,7 @@ BEGIN
   RETURN QUERY  
   SELECT 
      Object_Account.Valuedata AS AccountName
+   , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
    , Object_Contract_View.InvNumber
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS KreditRemains
@@ -47,6 +48,7 @@ BEGIN
       ELSE 0 END)::TFloat AS SaleSumm4
    , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat
    , (RESULT.DayCount||' '||Object_ContractConditionKind.ValueData)::TVarChar AS Condition
+   , RESULT.ContractDate::TDateTime AS ContractDate
 
   FROM (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -60,6 +62,7 @@ BEGIN
              , SUM (CASE WHEN (MIContainer.OperDate <= ContractDate - 3 * vbLenght AND MIContainer.OperDate > ContractDate - 4 * vbLenght) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
              , ContractKind.ContractConditionKindId
              , ContractKind.DayCount
+             , ContractDate
          FROM ContainerLinkObject AS CLO_Juridical 
          JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
     LEFT JOIN ContainerLinkObject AS CLO_Contract
@@ -93,7 +96,8 @@ BEGIN
              , Container.ObjectId
              , Container.Id
              , ContractConditionKindId
-             , DayCount) AS RESULT
+             , DayCount
+             , ContractDate) AS RESULT
   JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
   JOIN Object AS Object_Account ON Object_Account.Id = RESULT.AccountId
   JOIN Object_Contract_View ON Object_Contract_View.ContractId = RESULT.ContractId

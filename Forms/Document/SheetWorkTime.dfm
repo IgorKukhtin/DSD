@@ -284,6 +284,14 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadFromTransport'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -325,6 +333,10 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Action = UpdateAction
       Category = 0
     end
+    object bbLoadFromTransport: TdxBarButton
+      Action = actInsertUpdate_SheetWorkTime_FromTransport
+      Category = 0
+    end
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -362,6 +374,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'InvNumber'
@@ -383,6 +396,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
           ParamType = ptInput
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -395,6 +410,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     object OpenWorkTimeKindForm: TOpenChoiceForm
       Category = 'DSDLib'
       FormName = 'TWorkTimeKind_ObjectForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -432,6 +449,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TSheetWorkTimeAddRecordForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'MemberId'
@@ -470,6 +489,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TSheetWorkTimeAddRecordForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'MemberId'
@@ -507,6 +528,21 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       ActionType = acUpdate
       DataSetRefresh = actRefresh
     end
+    object actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spInsertUpdate_SheetWorkTime_FromTransport
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate_SheetWorkTime_FromTransport
+        end
+        item
+          StoredProc = spSelectMI
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1076#1072#1085#1085#1099#1093' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074
+      ImageIndex = 27
+      QuestionBeforeExecute = #1042#1099' '#1076#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1093#1086#1090#1080#1090#1077' '#1079#1072#1075#1088#1091#1079#1080#1090#1100' '#1076#1072#1085#1085#1099#1077' '#1080#1079' '#1087#1091#1090#1077#1074#1099#1093' '#1083#1080#1089#1090#1086#1074'?'
+      InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+    end
   end
   object MasterDS: TDataSource
     DataSet = MasterCDS
@@ -522,6 +558,8 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
   object GuidesUnit: TdsdGuides
     KeyField = 'Id'
     LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -618,6 +656,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = TemplateColumn
@@ -641,5 +680,27 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       end>
     Left = 344
     Top = 16
+  end
+  object spInsertUpdate_SheetWorkTime_FromTransport: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_SheetWorkTime_FromTransport'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = GuidesUnit
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 80
+    Top = 296
   end
 end

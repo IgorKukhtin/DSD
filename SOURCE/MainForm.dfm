@@ -2,7 +2,7 @@ object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
-  ClientHeight = 407
+  ClientHeight = 247
   ClientWidth = 1118
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1263,6 +1263,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPeriodClose'
+        end
+        item
+          Visible = True
           ItemName = 'bbPartner1CLink'
         end
         item
@@ -1272,6 +1276,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbLoad1CSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSaveTaxDocument'
         end
         item
           Visible = True
@@ -1373,6 +1381,14 @@ object MainForm: TMainForm
     end
     object bbReport_CheckTaxCorrective: TdxBarButton
       Action = actReport_CheckTaxCorrective
+      Category = 0
+    end
+    object bbPeriodClose: TdxBarButton
+      Action = actPeriodClose
+      Category = 0
+    end
+    object bbSaveTaxDocument: TdxBarButton
+      Action = actSaveTaxDocument
       Category = 0
     end
   end
@@ -2648,6 +2664,24 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actPeriodClose: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1047#1072#1082#1088#1099#1090#1080#1077' '#1087#1077#1088#1080#1086#1076#1072
+      FormName = 'TPeriodCloseForm'
+      FormNameParam.Value = 'TPeriodCloseForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSaveTaxDocument: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      FormName = 'TSaveTaxDocumentForm'
+      FormNameParam.Value = 'TSaveTaxDocumentForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -2674,7 +2708,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

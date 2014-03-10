@@ -35,7 +35,7 @@
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
   object ceInvNumber: TcxCurrencyEdit [4]
-    Left = 8
+    Left = 9
     Top = 34
     Enabled = False
     Properties.DecimalPlaces = 0
@@ -129,7 +129,7 @@
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceContract: TcxButtonEdit [16]
-    Left = 8
+    Left = 9
     Top = 84
     Properties.Buttons = <
       item
@@ -169,13 +169,14 @@
     Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
   end
   object cxLabel9: TcxLabel [22]
-    Left = 8
-    Top = 109
+    Left = 9
+    Top = 155
     Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object ceContractConditionKind: TcxButtonEdit [23]
-    Left = 8
-    Top = 128
+    Left = 9
+    Top = 174
+    Enabled = False
     Properties.Buttons = <
       item
         Default = True
@@ -186,19 +187,17 @@
   end
   object cxLabel11: TcxLabel [24]
     Left = 8
-    Top = 154
+    Top = 111
     Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
   end
   object ceBonusKind: TcxButtonEdit [25]
-    Left = 9
-    Top = 174
-    Enabled = False
+    Left = 8
+    Top = 128
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 25
     Width = 272
   end
@@ -221,7 +220,18 @@
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 176
+    Params = <
+      item
+        Name = 'Id'
+        Value = '0'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        ParamType = ptInput
+      end>
+    Left = 208
     Top = 178
   end
   inherited spInsertUpdate: TdsdStoredProc
@@ -681,13 +691,19 @@
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 128
     Top = 69
   end
-  object ContractConditionKindGuides: TdsdGuides
+  object BonusKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceContractConditionKind
+    LookupControl = ceBonusKind
     FormNameParam.Value = 'TContractConditionByContractForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractConditionByContractForm'
@@ -723,28 +739,29 @@
         Value = ''
         Component = BonusKindGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 160
-    Top = 114
+    Top = 122
   end
-  object BonusKindGuides: TdsdGuides
+  object ContractConditionKindGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = ceBonusKind
-    FormNameParam.Value = 'TBonusKindForm'
+    LookupControl = ceContractConditionKind
+    FormNameParam.Value = 'TContractConditionByContractForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBonusKindForm'
+    FormName = 'TContractConditionByContractForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = BonusKindGuides
+        Component = ContractConditionKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = BonusKindGuides
+        Component = ContractConditionKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>

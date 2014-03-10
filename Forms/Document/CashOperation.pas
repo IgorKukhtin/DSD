@@ -3,7 +3,7 @@ unit CashOperation;
 interface
 
 uses
-   AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
+  AncestorEditDialog, cxGraphics, cxLookAndFeels, cxLookAndFeelPainters,
   Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,

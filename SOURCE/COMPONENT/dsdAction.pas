@@ -378,6 +378,12 @@ type
   TdsdFormClose = class(TdsdCustomAction)
   protected
     function LocalExecute: boolean; override;
+  published
+    property Caption;
+    property Hint;
+    property ShortCut;
+    property ImageIndex;
+    property SecondaryShortCuts;
   end;
 
   // Действие выбора значения из справочника

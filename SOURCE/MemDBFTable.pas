@@ -593,6 +593,8 @@ procedure Register;
 
 implementation
 
+uses TypInfo;
+
 {$IFNDEF D2009PLUS}
 function CharInSet(C: Char; const CharSet: TSysCharSet): Boolean;
 begin
@@ -1648,8 +1650,8 @@ begin
 
             ftBCD, ftFMTBcd:
               begin
-                pField.Size := 20;
-                pField.Decimals := 4;
+                pField.Size := FieldDefs[I].Size;
+                pField.Decimals := FieldDefs[I].Precision;
               end; 
 
             ftDate: pField.Size := 8;
@@ -1661,7 +1663,7 @@ begin
               end;
             ftBoolean: pField.Size := 1;
           else
-            raise Exception.Create('CreateTable -> Invalid field type: ' + IntToStr(Integer(FieldDefs[I].DataType)));
+            raise Exception.Create('CreateTable -> Invalid field type: ' + IntToStr(Integer(FieldDefs[I].DataType)) + '  ' + GetEnumName(TypeInfo(TFieldType), Ord(FieldDefs[I].DataType)) );
           end;
 
           if pField.Decimals = 0 then

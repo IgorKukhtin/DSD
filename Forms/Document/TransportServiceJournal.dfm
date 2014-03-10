@@ -375,6 +375,11 @@ inherited TransportServiceJournalForm: TTransportServiceJournalForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          ParamType = ptInput
         end>
       isShowModal = True
     end

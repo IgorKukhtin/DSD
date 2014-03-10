@@ -2,8 +2,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1089#1088#1086#1095#1082#1077
   ClientHeight = 394
   ClientWidth = 869
-  ExplicitWidth = 885
-  ExplicitHeight = 429
+  ExplicitWidth = 877
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -255,7 +255,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Visible = False
@@ -296,6 +296,59 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           'Date')
       end>
   end
+  inherited ActionList: TActionList
+    object actPrintOneWeek: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProc = spWeek
+      StoredProcList = <
+        item
+          StoredProc = spWeek
+        end>
+      Caption = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
+      Hint = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
+      ImageIndex = 21
+      DataSets = <>
+      Params = <>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+    object dsdPrintAction2: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'dsdPrintAction1'
+      DataSets = <>
+      Params = <>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+    object dsdPrintAction3: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'dsdPrintAction1'
+      DataSets = <>
+      Params = <>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+    object dsdPrintAction4: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'dsdPrintAction1'
+      DataSets = <>
+      Params = <>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+    object dsdPrintAction5: TdsdPrintAction
+      Category = 'DSDLib'
+      StoredProcList = <>
+      Caption = 'dsdPrintAction1'
+      DataSets = <>
+      Params = <>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+  end
   inherited MasterDS: TDataSource
     Top = 112
   end
@@ -335,6 +388,33 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbReportOneWeek'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbReportOneWeek: TdxBarButton
+      Action = actPrintOneWeek
+      Category = 0
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
@@ -373,5 +453,55 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end>
     Left = 456
     Top = 8
+  end
+  object spWeek: TdsdStoredProc
+    StoredProcName = 'gpReport_JuridicalDefermentPaymentByDocument'
+    DataSet = cdsReport1
+    DataSets = <
+      item
+        DataSet = cdsReport1
+      end>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractDate'
+        Component = MasterCDS
+        ComponentItem = 'StartContractDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPeriodCount'
+        Value = '1'
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 192
+  end
+  object frxDBDataset1: TfrxDBDataset
+    UserName = 'frxDBDataset1'
+    CloseDataSource = False
+    DataSet = cdsReport1
+    BCDToCurrency = False
+    Left = 248
+    Top = 216
+  end
+  object cdsReport1: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 224
+    Top = 200
   end
 end

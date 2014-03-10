@@ -66,11 +66,12 @@ type
     { Public declarations }
   end;
 
-var
-  PersonalServiceEditForm: TPersonalServiceEditForm;
-
 implementation
 
 {$R *.dfm}
+
+initialization
+
+  RegisterClass(TPersonalServiceEditForm);
 
 end.

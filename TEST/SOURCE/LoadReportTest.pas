@@ -67,6 +67,8 @@ begin
   // Печатные формы накладных
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\Расходная накладная бн.fr3');
   LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\Расходная накладная нал.fr3');
+  LoadReportFromFile('PrintMovement_Tax', ReportPath + '\Товарный Учет\Налоговая накладная.fr3');
+
 
   TStrArrAdd(['25288083','35275230','35231874','30982361','30487219','37910513','32294926','01074874','32516492','35442481','36387249','32049199']);
   for i := Low(OKPO) to High(OKPO) do

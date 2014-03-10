@@ -69,6 +69,7 @@ type
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
+    procedure LoadPersonalServiceFormTest;
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
@@ -76,16 +77,16 @@ type
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
     procedure LoadRateFuelKindFormTest;
+    procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
     procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
-    procedure LoadSaleFormTest;
-    procedure LoadTaxFormTest;
-    procedure LoadTaxCorrectiveTest;
-    procedure LoadSheetWorkTimeFormTest;
     procedure LoadServiceDocumentFormTest;
     procedure LoadServiceFormTest;
+    procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadTaxFormTest;
+    procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
     procedure LoadTransportServiceFormTest;
     procedure LoadTradeMarkFormTest;
@@ -302,6 +303,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashJournalForm');
 end;
 
+procedure TLoadFormTest.LoadPersonalServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
+end;
+
 procedure TLoadFormTest.LoadIncomeFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
@@ -384,7 +393,10 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemProtocolForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
-
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
 
 end;
 

@@ -328,6 +328,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = MasterCDS
           ComponentItem = 'MovementId'
           ParamType = ptInput
+        end
+        item
+          Name = 'inOperDate'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+          ParamType = ptInput
         end>
       isShowModal = False
     end
