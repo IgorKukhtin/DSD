@@ -4,7 +4,7 @@
   ClientWidth = 592
   AddOnFormData.isSingle = False
   ExplicitWidth = 598
-  ExplicitHeight = 343
+  ExplicitHeight = 350
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -223,6 +223,10 @@
         Name = 'Id'
         Value = Null
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
       end>
     Left = 136
     Top = 267
@@ -652,6 +656,12 @@
         Component = InfoMoneyFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 216
     Top = 185

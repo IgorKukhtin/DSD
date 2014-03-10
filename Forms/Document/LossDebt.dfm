@@ -26,6 +26,7 @@ object LossDebtForm: TLossDebtForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitLeft = -8
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -116,6 +117,22 @@ object LossDebtForm: TLossDebtForm
       Properties.ReadOnly = True
       TabOrder = 9
       Width = 150
+    end
+    object cxLabel6: TcxLabel
+      Left = 730
+      Top = 5
+      Caption = #1057#1095#1077#1090
+    end
+    object edAccount: TcxButtonEdit
+      Left = 731
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 191
     end
   end
   object cxPageControl: TcxPageControl
@@ -406,9 +423,6 @@ object LossDebtForm: TLossDebtForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -650,8 +664,8 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInputOutput
       end
       item
-        Value = ''
-        DataType = ftString
+        Name = 'inPaidKindId'
+        Value = '0'
         ParamType = ptInput
       end>
     Left = 240
@@ -692,8 +706,8 @@ object LossDebtForm: TLossDebtForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -932,6 +946,7 @@ object LossDebtForm: TLossDebtForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'InvNumber'
@@ -982,6 +997,7 @@ object LossDebtForm: TLossDebtForm
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
       Action = ContractChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
       ShortCut = 45
@@ -1075,6 +1091,12 @@ object LossDebtForm: TLossDebtForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+        end
+        item
+          Name = 'inPaidKindId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'inPaidKindId'
         end>
       isShowModal = True
     end
@@ -1324,6 +1346,7 @@ object LossDebtForm: TLossDebtForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
     Left = 328
     Top = 312
   end
@@ -1338,6 +1361,7 @@ object LossDebtForm: TLossDebtForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
     Left = 368
     Top = 272
   end
@@ -1380,6 +1404,13 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesJuridicalBasis
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 387
     Top = 177
@@ -1401,6 +1432,9 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Control = edBusiness
+      end
+      item
+        Control = edAccount
       end>
     GetStoredProc = spGet
     Left = 306
@@ -1478,6 +1512,18 @@ object LossDebtForm: TLossDebtForm
         Name = 'BusinessName'
         Value = ''
         Component = GuidesBusiness
+        ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        Component = GuidesAccount
         ComponentItem = 'TextValue'
       end>
     Left = 552
@@ -1603,7 +1649,33 @@ object LossDebtForm: TLossDebtForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 656
+    Left = 632
     Top = 24
+  end
+  object GuidesAccount: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormNameParam.Value = 'TAccountForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesAccount
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 792
+    Top = 16
   end
 end

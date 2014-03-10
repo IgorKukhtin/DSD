@@ -7,22 +7,24 @@ inherited TaxForm: TTaxForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1054
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1054
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1050
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1054
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1048
-      ExplicitHeight = 514
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1054
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1048
-        Height = 514
-        ExplicitWidth = 1048
-        ExplicitHeight = 514
+        Width = 1054
+        Height = 518
+        ExplicitWidth = 1054
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,15 +156,14 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1048
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1054
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1048
-        Height = 514
-        ExplicitWidth = 1048
-        ExplicitHeight = 514
+        Width = 1054
+        Height = 518
+        ExplicitWidth = 1054
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -215,7 +216,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -529,10 +530,11 @@ inherited TaxForm: TTaxForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
     object bbPrintTax: TdxBarButton [5]
       Action = mactPrint_Tax
@@ -604,6 +606,10 @@ inherited TaxForm: TTaxForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
       end>
     Left = 280
     Top = 552
@@ -1098,6 +1104,12 @@ inherited TaxForm: TTaxForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
       end>
     Left = 408
     Top = 8

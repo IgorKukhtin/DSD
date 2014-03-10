@@ -44,33 +44,33 @@ object ContractConditionByContractForm: TContractConditionByContractForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clContractConditionKindName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractConditionKindName'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 204
-      end
       object clBonusKindName: TcxGridDBColumn
         Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
         DataBinding.FieldName = 'BonusKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 114
+        Width = 170
+      end
+      object clContractConditionKindName: TcxGridDBColumn
+        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractConditionKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 196
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 105
+        Width = 102
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 121
+        Width = 117
       end
       object colisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
