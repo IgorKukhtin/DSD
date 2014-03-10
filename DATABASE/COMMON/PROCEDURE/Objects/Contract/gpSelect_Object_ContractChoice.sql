@@ -205,4 +205,4 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, TVarChar) OWNER
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_ContractChoice (inPaidKindId:=NULL, inShowAll:= true, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractChoice (inPaidKindId:=NULL, inShowAll:= true, inSession := zfCalc_UserAdmin())

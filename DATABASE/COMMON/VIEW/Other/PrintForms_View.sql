@@ -80,7 +80,7 @@ AS
            , CAST ('PrintMovement_Sale01074874' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668'
+       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668',
                                         '01074791','25774961','01074302','01074064','01073981','26139824',
                                         '01074874','24755803','04791599','01073946','01074741','25927436'
                                        )

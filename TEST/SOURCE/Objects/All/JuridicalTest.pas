@@ -16,6 +16,10 @@ type
   private
     function InsertDefault: integer; override;
   public
+   function InsertUpdateJuridicalHistory(JuridicalId: Integer; OperDate: TDateTime;
+       BankId: Integer;
+       FullName, JuridicalAddress, OKPO, INN, NumberVAT,
+       AccounterName, BankAccount, Phone: String): integer;
    function InsertUpdateJuridical(const Id: integer; Code: Integer;
         Name, GLNCode: string; isCorporate: boolean;
         JuridicalGroupId, GoodsPropertyId, InfoMoneyId: integer;
@@ -97,6 +101,9 @@ begin
   result := InsertUpdateJuridical(0, -1, 'ёр. лицо', 'GLNCode', false,
           JuridicalGroupId, GoodsPropertyId, InfoMoneyId, PriceListId, PriceListPromoId,
           StartPromo, EndPromo);
+
+  InsertUpdateJuridicalHistory(result, Date, 0, 'ёр. лицо 12', '', '1212121212', '',
+          '', '', '', '');
   inherited;
 end;
 
@@ -116,6 +123,31 @@ begin
   FParams.AddParam('inStartPromo', ftDateTime, ptInput, StartPromo);
   FParams.AddParam('inEndPromo', ftDateTime, ptInput, EndPromo);
   result := InsertUpdate(FParams);
+end;
+
+function TJuridical.InsertUpdateJuridicalHistory(JuridicalId: Integer;
+  OperDate: TDateTime; BankId: Integer; FullName, JuridicalAddress, OKPO, INN,
+  NumberVAT, AccounterName, BankAccount, Phone: String): integer;
+begin
+  FParams.Clear;
+  FParams.AddParam('ioId', ftInteger, ptInputOutput, 0);
+  FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
+  FParams.AddParam('inFullName', ftString, ptInput, FullName);
+  FParams.AddParam('inJuridicalAddress', ftString, ptInput, JuridicalAddress);
+  FParams.AddParam('isOKPO', ftString, ptInput, OKPO);
+  FParams.AddParam('inINN', ftString, ptInput, INN);
+  FParams.AddParam('inNumberVAT', ftString, ptInput, NumberVAT);
+  FParams.AddParam('inAccounterName', ftString, ptInput, AccounterName);
+  FParams.AddParam('inBankAccount', ftString, ptInput, BankAccount);
+  FParams.AddParam('inPhone', ftString, ptInput, Phone);
+  spInsertUpdate := 'gpInsertUpdate_ObjectHistory_JuridicalDetails';
+  try
+    result := InsertUpdate(FParams);
+  finally
+    spInsertUpdate := 'gpInsertUpdate_Object_Juridical';
+  end;
 end;
 
 initialization

@@ -9,6 +9,13 @@ IN Session tvarchar)
 $BODY$
 BEGIN
 
+  DELETE FROM ObjectHistoryFloat WHERE ObjectHistoryFloat.objecthistoryid IN 
+        (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
+  DELETE FROM ObjectHistoryString WHERE ObjectHistoryString.objecthistoryid IN 
+        (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
+  DELETE FROM ObjectHistoryLink WHERE ObjectHistoryLink.objecthistoryid IN 
+        (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
+  DELETE FROM ObjectHistory  WHERE ObjectId = inId;
   DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemString WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);

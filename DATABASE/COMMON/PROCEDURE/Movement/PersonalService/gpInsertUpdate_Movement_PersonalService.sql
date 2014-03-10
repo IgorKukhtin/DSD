@@ -3,6 +3,9 @@
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_PersonalService (integer, tvarchar, tdatetime, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -18,7 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Record AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
            vbMovementItemId Integer;
@@ -32,7 +35,7 @@ BEGIN
      ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
 
      -- определяем <Элемент документа>
-     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioMovementId AND MovementItem.DescId = zc_MI_Master();
 
           -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inPersonalId, ioMovementId, inAmount, NULL);
@@ -51,7 +54,7 @@ BEGIN
      -- сохранили связь с <Виды форм оплаты >
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), vbMovementItemId, inPaidKindId);
      -- сохранили связь с <Дата начисления>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MovementItemDate_ServiceDate(), vbMovementItemId, inServiceDate);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MIDate_ServiceDate(), vbMovementItemId, inServiceDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
