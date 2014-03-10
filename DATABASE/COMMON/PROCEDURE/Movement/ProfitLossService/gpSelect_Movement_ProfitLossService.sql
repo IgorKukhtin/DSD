@@ -73,7 +73,7 @@ BEGIN
             JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                          AND Movement.StatusId = tmpStatus.StatusId
---            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -124,9 +124,9 @@ ALTER FUNCTION gpSelect_Movement_ProfitLossService (TDateTime, TDateTime, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.14                                        * add Object_RoleAccessKey_View
  19.02.14         * add BonusKind
  18.02.14                                                         *
-
 */
 
 -- тест

@@ -32,7 +32,8 @@ BEGIN
      PERFORM lpComplete_Movement_Service (inMovementId := inMovementId
                                         , inUserId     := vbUserId);
 
-END;$BODY$
+END;
+$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 

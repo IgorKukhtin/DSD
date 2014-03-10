@@ -111,7 +111,6 @@
   object ceInfoMoney: TcxButtonEdit [15]
     Left = 8
     Top = 113
-    Enabled = False
     Properties.Buttons = <
       item
         Default = True

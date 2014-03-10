@@ -53,6 +53,35 @@ BEGIN
      END IF;
 
 
+     -- !!!В этом случае сохраняем одно свойство и выходим!!!
+     IF ioId <> 0 AND EXISTS (SELECT Id
+                              FROM gpGet_Movement_Transport (inMovementId:= ioId, inSession:= inSession)
+                              WHERE InvNumber = inInvNumber
+                                AND OperDate = inOperDate
+                                AND StartRunPlan = inStartRunPlan
+                                AND EndRunPlan = inEndRunPlan
+                                AND StartRun = inStartRun
+                                AND EndRun = inEndRun
+                                AND COALESCE (HoursAdd, 0) = inHoursAdd
+                                AND COALESCE (Comment, '') = inComment
+                                AND COALESCE (CarId, 0) = inCarId
+                                AND COALESCE (CarTrailerId, 0) = inCarTrailerId
+                                AND COALESCE (PersonalDriverId, 0) = inPersonalDriverId
+                                AND COALESCE (PersonalDriverMoreId, 0) = inPersonalDriverMoreId
+                                -- AND COALESCE (PersonalId, 0) = inPersonalId
+                                AND COALESCE (UnitForwardingId, 0) = inUnitForwardingId
+                             )
+     THEN
+         -- сохранили связь с <Сотрудник (экспедитор)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
+         -- сохранили протокол
+         -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+         --
+         -- !!!ВЫХОД!!!
+         RETURN;
+     END IF;
+
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
@@ -127,6 +156,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.03.14                                        * add В этом случае сохраняем одно свойство и выходим
  07.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal (changes in wiki)
  31.10.13                                        * add lpInsertUpdate_Movement - Изменили свойства у подчиненных Документов

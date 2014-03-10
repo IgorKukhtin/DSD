@@ -64,6 +64,9 @@ BEGIN
                   
        FROM Object AS Object_Juridical
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id
+                                                           AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+                                                           AND View_Contract.isErased = FALSE
+
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract.InfoMoneyId
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
 
@@ -264,6 +267,7 @@ ALTER FUNCTION gpSelect_MovementItem_LossDebt (Integer, Boolean, Boolean, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.14                                        * add zc_Enum_ContractStateKind_Close
  16.01.14                                        *
 */
 

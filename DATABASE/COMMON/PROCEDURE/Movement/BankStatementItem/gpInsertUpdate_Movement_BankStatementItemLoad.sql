@@ -209,6 +209,12 @@ BEGIN
 
         -- Находим <УП статья назначения> !!!всегда!!! у Договора
         SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_View WHERE ContractId = vbContractId;
+        -- !!!Но если это расход денег, тогда меняем <УП статья назначения> на "Бонусы за продукцию"
+        IF vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
+           AND inAmount < 0
+        THEN
+            vbInfoMoneyId:= zc_Enum_InfoMoney_21501(); -- Бонусы за продукцию
+        END IF;
 
 
         IF COALESCE (vbContractId, 0) <> 0 THEN

@@ -4,24 +4,15 @@ DROP FUNCTION IF EXISTS gpSetErased_Movement_ProfitLossService (Integer, TVarCha
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_ProfitLossService(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )
 RETURNS VOID
 AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_ProfitLossService());
-     vbUserId:=2;
-
-
-     -- проверка - если <Master> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
-
-     -- проверка - если есть <Child> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_ProfitLossService());
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
@@ -30,12 +21,13 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 17.02.14				                                            *
+ 06.03.14                                        * add lpCheckRight
+ 17.02.14				                        *
 */
 
 -- тест

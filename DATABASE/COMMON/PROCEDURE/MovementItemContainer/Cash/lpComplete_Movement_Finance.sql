@@ -16,7 +16,10 @@ BEGIN
      -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
      -- 1.1.1 определяется AccountDirectionId для проводок суммового учета
-     UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
+     UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
+                                                           THEN _tmpItem.AccountDirectionId
+
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_40200() -- касса филиалов
@@ -100,7 +103,9 @@ BEGIN
 
 
      -- 1.1.3. определяется Счет для проводок суммового учета
-     UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.ObjectDescId = 0
+     UPDATE _tmpItem SET AccountId = CASE WHEN _tmpItem.AccountId <> 0
+                                               THEN _tmpItem.AccountId
+                                          WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
                                                THEN zc_Enum_Account_110101() -- Транзит
@@ -345,6 +350,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.03.14                                        * add no calc AccountId
  28.01.14                                        * add zc_Movement_SendDebt
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
  22.01.14                                        * add IsMaster

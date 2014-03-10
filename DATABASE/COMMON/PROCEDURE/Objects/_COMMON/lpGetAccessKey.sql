@@ -39,7 +39,9 @@ BEGIN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)
       ELSE
       -- Service
-      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service())
+      IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                       , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService()
+                        )
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 44)); -- Начисления Днепр
       ELSE
@@ -62,11 +64,27 @@ BEGIN
   IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
                                                                                                    , zc_Enum_Process_AccessKey_GuideAll()
                                                                                                     )
+                                                                             AND RoleCode NOT IN (22 -- Транспорт-просмотр ВСЕХ документов
+                                                                                                , 32 -- Начисления транспорт-просмотр ВСЕХ документов
+                                                                                                , 42 -- Начисления-просмотр ВСЕХ документов
+                                                                                                , 48 -- Начисления(п.б.)-просмотр ВСЕХ документов
+                                                                                                , 52 -- Касса-просмотр ВСЕХ документов
+                                                                                                , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
+                                                                                                , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
+                                                                                                 )
              HAVING Count(*) = 1)
   THEN
       vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
                                                                                                                     , zc_Enum_Process_AccessKey_GuideAll()
                                                                                                                      )
+                                                                             AND RoleCode NOT IN (22 -- Транспорт-просмотр ВСЕХ документов
+                                                                                                , 32 -- Начисления транспорт-просмотр ВСЕХ документов
+                                                                                                , 42 -- Начисления-просмотр ВСЕХ документов
+                                                                                                , 48 -- Начисления(п.б.)-просмотр ВСЕХ документов
+                                                                                                , 52 -- Касса-просмотр ВСЕХ документов
+                                                                                                , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
+                                                                                                , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
+                                                                                                 )
                    );
   ELSE
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
@@ -89,6 +107,7 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 06.03.14                                        * add RoleCode
  10.02.14                                        * add Document...
  13.01.14                                        * возвращаем права админу :-)
  15.12.13                                        * add zc_Enum_Process_AccessKey_TrasportAll

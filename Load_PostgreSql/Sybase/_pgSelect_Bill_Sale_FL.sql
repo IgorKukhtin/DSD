@@ -111,7 +111,7 @@ select Bill.Id as ObjectId
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
-     , isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
+     , _pgInfoMoney.Id3_Postgres as ContractId -- isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
      , null as CarId
      , null as PersonalDriverId
 
@@ -134,7 +134,7 @@ from _tmpBill_NotNalog
                      ) as _pgPartner on _pgPartner.UnitId = isnull (Bill_find.ToId, Unit_byLoad_To.Id_byLoad)
      left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId
 
-     left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
+     /*left outer join (select _pgPartner.JuridicalId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
                       from dba._pgPartner
                       where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '30101'
                       group by _pgPartner.JuridicalId_pg
@@ -145,7 +145,7 @@ from _tmpBill_NotNalog
                       where _pgPartner.JuridicalId_pg <> 0 and _pgPartner.ContractId_pg <> 0 and _pgPartner.CodeIM = '30103'
                       group by _pgPartner.JuridicalId_pg
                      ) as _pgContract_30103 on _pgContract_30103.JuridicalId_pg = _pgPartner.JuridicalId_pg
-                                           and _tmpBill_NotNalog.CodeIM = 30103
+                                           and _tmpBill_NotNalog.CodeIM = 30103*/
      /*left outer join (select _pgPartner.PartnerId_pg, max (isnull(_pgContract_find.ContractId_pg, _pgPartner.ContractId_pg)) as ContractId_pg
                       from dba._pgPartner
                            left outer join (select _pgPartner.PartnerId_pg, max (_pgPartner.ContractId_pg) as ContractId_pg
@@ -176,6 +176,7 @@ from _tmpBill_NotNalog
                                                                      then 5 else Bill.FromId end 
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
      left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
+     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _tmpBill_NotNalog.CodeIM
 ;
 
    //

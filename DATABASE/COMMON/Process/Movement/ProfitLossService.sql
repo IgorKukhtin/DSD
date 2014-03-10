@@ -1,9 +1,5 @@
 -- ƒокумент <Ќачислени€ по ёридическому лицу (расходы будущих периодов)>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
--- строки
-CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
-CREATE OR REPLACE FUNCTION zc_Enum_Process_SetUnErased_MI_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetUnErased_MI_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- Status
 CREATE OR REPLACE FUNCTION zc_Enum_Process_UnComplete_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_UnComplete_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_Complete_ProfitLossService() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Complete_ProfitLossService' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -21,21 +17,6 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement
                                   , inCode:= 1
                                   , inName:= 'ƒокумент <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProfitLossService())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_ProfitLossService');
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_ProfitLossService()
-                                  , inDescId:= zc_Object_Process()
-                                  , inCode:= 4
-                                  , inName:= '—троки документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProfitLossService())||'> - сохранение данных.'
-                                  , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_ProfitLossService');
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_ProfitLossService()
-                                  , inDescId:= zc_Object_Process()
-                                  , inCode:= 1
-                                  , inName:= 'Ёлемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProfitLossService())||'> - удаление.'
-                                  , inEnumName:= 'zc_Enum_Process_SetErased_MI_ProfitLossService');
-PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetUnErased_MI_ProfitLossService()
-                                  , inDescId:= zc_Object_Process()
-                                  , inCode:= 1
-                                  , inName:= 'Ёлемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_ProfitLossService())||'> - восстановление.'
-                                  , inEnumName:= 'zc_Enum_Process_SetUnErased_MI_ProfitLossService');
 -- Status_ProfitLossService
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_UnComplete_ProfitLossService()
                                   , inDescId:= zc_Object_Process()
