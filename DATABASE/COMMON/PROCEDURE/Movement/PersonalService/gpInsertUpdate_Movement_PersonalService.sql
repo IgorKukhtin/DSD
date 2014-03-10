@@ -18,7 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inServiceDate         TDateTime , -- Дата начисления
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Record AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
            vbMovementItemId Integer;

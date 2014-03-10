@@ -1,10 +1,10 @@
 -- Function: gpComplete_Movement_ProfitLossService()
 
 DROP FUNCTION IF EXISTS gpComplete_Movement_ProfitLossService (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ProfitLossService (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ProfitLossService(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
  RETURNS VOID

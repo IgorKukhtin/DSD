@@ -22,8 +22,12 @@ BEGIN
      vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0);
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate
+     WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate, COALESCE (MovementLinkObject_Account.ObjectId, 0) AS AccountId
                           FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Account
+                                                            ON MovementLinkObject_Account.MovementId = Movement.Id
+                                                           AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
+                                                           AND MovementLinkObject_Account.ObjectId = zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
                           WHERE Movement.Id = inMovementId
                             AND Movement.DescId = zc_Movement_LossDebt()
                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -33,8 +37,13 @@ BEGIN
                                    , COALESCE (Object.DescId, 0) AS ObjectDescId
                                    , CASE WHEN MIBoolean_Calculated.ValueData = TRUE THEN COALESCE (MIFloat_Summ.ValueData, 0) ELSE MovementItem.Amount END AS OperSumm
                                    , MovementItem.Id AS MovementItemId
-                                   , 0 AS ContainerId                                               -- сформируем позже
-                                   , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+                                   , tmpMovement.MovementId
+                                   , 0 AS ContainerId                             -- сформируем позже
+                                   , 0 AS AccountGroupId, 0 AS AccountDirectionId -- сформируем позже, или ...
+                                   , CASE WHEN MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                                               THEN tmpMovement.AccountId
+                                          ELSE 0
+                                     END AS AccountId 
                                      -- Группы ОПиУ
                                    , 0 AS ProfitLossGroupId
                                      -- Аналитики ОПиУ - направления
@@ -79,7 +88,26 @@ BEGIN
                                                                                              AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
                                    LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
                              )
-        , tmpListContainer AS (SELECT tmpMovementItem.MovementItemId, Container.Id AS ContainerId, Container.Amount
+        , tmpListContainer AS (SELECT tmpMovementItem.MovementItemId
+                                    , tmpMovementItem.MovementId
+                                    , Container.Id AS ContainerId
+                                    , Container.Amount
+                                    , COALESCE (ContainerLO_Contract.ObjectId, 0) AS ContractId
+
+                                    , tmpMovementItem.OperDate
+                                    , tmpMovementItem.ObjectId
+                                    , tmpMovementItem.ObjectDescId
+                                    , tmpMovementItem.AccountGroupId, tmpMovementItem.AccountDirectionId, tmpMovementItem.AccountId
+                                    , tmpMovementItem.ProfitLossGroupId
+                                    , tmpMovementItem.ProfitLossDirectionId
+                                    , tmpMovementItem.InfoMoneyGroupId
+                                    , tmpMovementItem.InfoMoneyDestinationId
+                                    , tmpMovementItem.InfoMoneyId
+                                    , tmpMovementItem.BusinessId
+                                    , tmpMovementItem.JuridicalId_Basis
+                                    , tmpMovementItem.UnitId
+                                    , tmpMovementItem.BranchId
+                                    , tmpMovementItem.PaidKindId
                                FROM tmpMovementItem
                                     JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -113,7 +141,26 @@ BEGIN
                                WHERE tmpMovementItem.isCalculated = TRUE
                                  AND tmpMovementItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
                               UNION ALL
-                               SELECT tmpMovementItem.MovementItemId, Container.Id AS ContainerId, Container.Amount
+                               SELECT tmpMovementItem.MovementItemId
+                                    , tmpMovementItem.MovementId
+                                    , Container.Id AS ContainerId
+                                    , Container.Amount
+                                    , COALESCE (ContainerLO_Contract.ObjectId, 0) AS ContractId
+
+                                    , tmpMovementItem.OperDate
+                                    , tmpMovementItem.ObjectId
+                                    , tmpMovementItem.ObjectDescId
+                                    , tmpMovementItem.AccountGroupId, tmpMovementItem.AccountDirectionId, tmpMovementItem.AccountId
+                                    , tmpMovementItem.ProfitLossGroupId
+                                    , tmpMovementItem.ProfitLossDirectionId
+                                    , tmpMovementItem.InfoMoneyGroupId
+                                    , tmpMovementItem.InfoMoneyDestinationId
+                                    , tmpMovementItem.InfoMoneyId
+                                    , tmpMovementItem.BusinessId
+                                    , tmpMovementItem.JuridicalId_Basis
+                                    , tmpMovementItem.UnitId
+                                    , tmpMovementItem.BranchId
+                                    , tmpMovementItem.PaidKindId
                                FROM tmpMovementItem
                                     JOIN ContainerLinkObject AS ContainerLO_Juridical
                                                              ON ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -140,19 +187,55 @@ BEGIN
                                                             AND ContainerLO_Business.ObjectId = tmpMovementItem.BusinessId
                                     JOIN Container ON Container.Id = ContainerLO_Juridical.ContainerId
                                                   AND Container.DescId = zc_Container_Summ()
+                                                  AND (Container.ObjectId = tmpMovementItem.AccountId
+                                                    OR (tmpMovementItem.AccountId = 0 AND Container.ObjectId <> zc_Enum_Account_50401()) -- Расходы будущих периодов - Маркетинг
+                                                      )
                                WHERE tmpMovementItem.isCalculated = TRUE
                                  AND tmpMovementItem.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье
                               )
         , tmpContainerSumm AS (SELECT tmpListContainer.MovementItemId
                                     , tmpListContainer.ContainerId
                                     , tmpListContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummRemainsEnd
+
+                                    , tmpListContainer.MovementId
+                                    , tmpListContainer.ContractId
+                                    , tmpListContainer.OperDate
+                                    , tmpListContainer.ObjectId
+                                    , tmpListContainer.ObjectDescId
+                                    , tmpListContainer.AccountGroupId, tmpListContainer.AccountDirectionId, tmpListContainer.AccountId
+                                    , tmpListContainer.ProfitLossGroupId
+                                    , tmpListContainer.ProfitLossDirectionId
+                                    , tmpListContainer.InfoMoneyGroupId
+                                    , tmpListContainer.InfoMoneyDestinationId
+                                    , tmpListContainer.InfoMoneyId
+                                    , tmpListContainer.BusinessId
+                                    , tmpListContainer.JuridicalId_Basis
+                                    , tmpListContainer.UnitId
+                                    , tmpListContainer.BranchId
+                                    , tmpListContainer.PaidKindId
+
                                FROM tmpListContainer
-                                    LEFT JOIN tmpMovement ON 1 = 1
                                     LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpListContainer.ContainerId
-                                                                                  AND MIContainer.OperDate > tmpMovement.OperDate
+                                                                                  AND MIContainer.OperDate > tmpListContainer.OperDate
                                GROUP BY tmpListContainer.MovementItemId
                                       , tmpListContainer.ContainerId
                                       , tmpListContainer.Amount
+                                      , tmpListContainer.MovementId
+                                      , tmpListContainer.ContractId
+                                      , tmpListContainer.OperDate
+                                      , tmpListContainer.ObjectId
+                                      , tmpListContainer.ObjectDescId
+                                      , tmpListContainer.AccountGroupId, tmpListContainer.AccountDirectionId, tmpListContainer.AccountId
+                                      , tmpListContainer.ProfitLossGroupId
+                                      , tmpListContainer.ProfitLossDirectionId
+                                      , tmpListContainer.InfoMoneyGroupId
+                                      , tmpListContainer.InfoMoneyDestinationId
+                                      , tmpListContainer.InfoMoneyId
+                                      , tmpListContainer.BusinessId
+                                      , tmpListContainer.JuridicalId_Basis
+                                      , tmpListContainer.UnitId
+                                      , tmpListContainer.BranchId
+                                      , tmpListContainer.PaidKindId
                               )
         , tmpResult AS (SELECT tmpMovementItem.OperDate
                              , tmpMovementItem.ObjectId
@@ -178,6 +261,40 @@ BEGIN
                              , tmpMovementItem.PaidKindId
                         FROM tmpMovementItem
                              LEFT JOIN tmpContainerSumm ON tmpContainerSumm.MovementItemId = tmpMovementItem.MovementItemId
+                      UNION ALL
+                        SELECT tmpContainerSumm.OperDate
+                             , tmpContainerSumm.ObjectId
+                             , tmpContainerSumm.ObjectDescId
+                             , -1 * tmpContainerSumm.SummRemainsEnd AS OperSumm
+                             , lpInsertUpdate_MovementItem_LossDebt (ioId                 := 0
+                                                                   , inMovementId         := tmpContainerSumm.MovementId
+                                                                   , inJuridicalId        := tmpContainerSumm.ObjectId
+                                                                   , inAmount             := 0
+                                                                   , inSumm               := 0
+                                                                   , inIsCalculated       := TRUE
+                                                                   , inContractId         := tmpContainerSumm.ContractId
+                                                                   , inPaidKindId         := tmpContainerSumm.PaidKindId
+                                                                   , inInfoMoneyId        := tmpContainerSumm.InfoMoneyId
+                                                                   , inUnitId             := NULL
+                                                                   , inUserId             := inUserId
+                                                                    ) AS MovementItemId
+                             , tmpContainerSumm.ContainerId
+                             , tmpContainerSumm.AccountGroupId, tmpContainerSumm.AccountDirectionId, tmpContainerSumm.AccountId
+
+                             , tmpContainerSumm.ProfitLossGroupId
+                             , tmpContainerSumm.ProfitLossDirectionId
+                             , tmpContainerSumm.InfoMoneyGroupId
+                             , tmpContainerSumm.InfoMoneyDestinationId
+                             , tmpContainerSumm.InfoMoneyId
+                             , tmpContainerSumm.BusinessId
+                             , tmpContainerSumm.JuridicalId_Basis
+                             , tmpContainerSumm.UnitId
+                             , tmpContainerSumm.BranchId
+                             , tmpContainerSumm.ContractId
+                             , tmpContainerSumm.PaidKindId
+                        FROM tmpContainerSumm
+                        WHERE tmpContainerSumm.MovementItemId = 0
+                          AND tmpContainerSumm.SummRemainsEnd <> 0
                        )
      -- Расчет
      INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
@@ -218,7 +335,7 @@ BEGIN
              , -1 * tmpResult.OperSumm
              , tmpResult.MovementItemId
              , tmpResult.ContainerId
-             , tmpResult.AccountGroupId, tmpResult.AccountDirectionId, tmpResult.AccountId
+             , tmpResult.AccountGroupId, tmpResult.AccountDirectionId, 0 AccountId /*AS tmpResult.AccountId*/
 
              , tmpResult.ProfitLossGroupId
              , CASE WHEN tmpResult.OperDate < '01.01.2014' THEN tmpResult.ProfitLossDirectionId ELSE zc_Enum_ProfitLossDirection_80300() END AS ProfitLossDirectionId -- Списание дебиторской задолженности
@@ -255,7 +372,7 @@ BEGIN
      END IF;
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0 AND _tmpItem.IsMaster = TRUE)
      THEN
-         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр.лицо.Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено <Главное юридическое лицо>.Проведение невозможно.';
      END IF;
 
      -- проводим Документ
@@ -267,8 +384,8 @@ BEGIN
      FROM _tmpItem
           JOIN MovementItemBoolean AS MIBoolean_Calculated
                                    ON MIBoolean_Calculated.MovementItemId = _tmpItem.MovementItemId
-                                   AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
-                                   AND MIBoolean_Calculated.ValueData = TRUE
+                                  AND MIBoolean_Calculated.DescId = zc_MIBoolean_Calculated()
+                                  AND MIBoolean_Calculated.ValueData = TRUE
      WHERE MovementItem.Id = _tmpItem.MovementItemId
        AND _tmpItem.IsMaster = TRUE
     ;
@@ -284,6 +401,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.03.14                                        * add zc_Enum_Account_50401
  30.01.14                                        * all
  27.01.14         * 
 */
