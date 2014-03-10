@@ -1,21 +1,21 @@
 -- Function: gpGet_Movement_PersonalService()
 
--- DROP FUNCTION gpGet_Movement_PersonalService (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_PersonalService (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inMovementId        Integer  , -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
              , Amount TFloat
-             , FromId Integer, FromName TVarChar
-             , ToId Integer, ToName TVarChar
+             , PersonalId Integer, PersonalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
+             , ContractId Integer, ContractName TVarChar
              , PositionId Integer, PositionName TVarChar
+             , Comment TVarChar
              )
 AS
 $BODY$
@@ -24,78 +24,101 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_PersonalService());
 
-     RETURN QUERY 
-       SELECT
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+       RETURN QUERY 
+         SELECT
+               0 AS Id
+             , CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) AS InvNumber
+             , CAST (CURRENT_DATE as TDateTime)      AS OperDate
+             , CAST (CURRENT_DATE as TDateTime)      AS ServiceDate
+             , CAST (0 as TFloat)                    AS Amount
+
+             , 0                     AS PersonalId
+             , CAST ('' as TVarChar) AS PersonalName
+             , 0                     AS PaidKindId
+             , CAST ('' as TVarChar) AS PaidKindName
+             , 0                     AS InfoMoneyId
+             , CAST ('' as TVarChar) AS InfoMoneyName
+             , 0                     AS UnitId
+             , CAST ('' as TVarChar) AS UnitName
+             , 0                     AS ContractId
+             , CAST ('' as TVarChar) AS ContractName
+
+             , 0                     AS PositionId
+             , CAST ('' as TVarChar) AS PositionName
+             , CAST ('' as TVarChar) AS COMMENT;
+
+     ELSE
+       RETURN QUERY 
+         SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
            
-           , MovementDate_ServiceDate.ValueData AS ServiceDate           
-           , MovementFloat_Amount.ValueData     AS Amount
+           , MIDate_ServiceDate.ValueData AS ServiceDate           
+           , MovementItem.Amount 
 
-           , Object_From.Id               AS FromId
-           , Object_From.ValueData        AS FromName
-           , Object_To.Id                 AS ToId
-           , Object_To.ValueData          AS ToName
+           , Object_Personal.Id           AS PersonalId
+           , Object_Personal.ValueData    AS PersonalName
 
            , Object_PaidKind.Id           AS PaidKindId
            , Object_PaidKind.ValueData    AS PaidKindName
    
-           , Object_InfoMoney.Id          AS InfoMoneyId
-           , Object_InfoMoney.ValueData   AS InfoMoneyName
+           , Object_InfoMoney_View.InfoMoneyId          
+           , Object_InfoMoney_View.InfoMoneyName
+
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
 
+           , Object_Contract.Id           AS ContractId
+           , Object_Contract.ValueData    AS ContractName
+
            , Object_Position.Id           AS PositionId
            , Object_Position.ValueData    AS PositionName
+           , MIString_Comment.ValueData        AS Comment
  
-       FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+         FROM Movement
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN MovementDate AS MovementDate_ServiceDate
-                                   ON MovementDate_ServiceDate.MovementId = Movement.Id
-                                  AND MovementDate_ServiceDate.DescId = zc_MovementDate_ServiceDate()
+            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementFloat AS MovementFloat_Amount
-                                    ON MovementFloat_Amount.MovementId =  Movement.Id
-                                   AND MovementFloat_Amount.DescId = zc_MovementFloat_Amount()
+            LEFT JOIN MovementItemDate AS MIDate_ServiceDate
+                                   ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
+                                  AND MIDate_ServiceDate.DescId = zc_MIDate_ServiceDate()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Unit_Parent ON ObjectLink_Unit_Parent.ObjectId = Object_To.Id AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
+                                             ON MILinkObject_Contract.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MILinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
-                                         ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
-                                        AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Unit
-                                         ON MovementLinkObject_Unit.MovementId = Movement.Id
-                                        AND MovementLinkObject_Unit.DescId = zc_MovementLinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_Unit.ObjectId
-            
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Position
-                                         ON MovementLinkObject_Position.MovementId = Movement.Id
-                                        AND MovementLinkObject_Position.DescId = zc_MovementLinkObject_Position()
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = MovementLinkObject_Position.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_PersonalService();
-  
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                             ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
+                                             ON MILinkObject_Position.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
+            LEFT JOIN Object AS Object_Position ON Object_Position.Id = MILinkObject_Position.ObjectId
+
+            LEFT JOIN MovementItemString AS MIString_Comment 
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
+
+         WHERE Movement.Id =  inMovementId
+           AND Movement.DescId = zc_Movement_PersonalService();
+     END IF;
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -105,7 +128,7 @@ ALTER FUNCTION gpGet_Movement_PersonalService (Integer, TVarChar) OWNER TO postg
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+ 27.02.14                         *
  12.08.13         *
 
 */

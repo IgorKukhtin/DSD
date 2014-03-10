@@ -1,16 +1,16 @@
 -- Function: gpInsertUpdate_Movement_PersonalService()
 
-DROP FUNCTION IF EXISTS gpselect_movement_personalservice(tdatetime,tdatetime,tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_PersonalService (Integer, TVarChar, TDateTime, Integer, TFloat, TVarChar, Integer, Integer, Integer, Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ>
- INOUT ioMovementId          TVarChar  , -- Номер документа
+ INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount              TFloat    , -- Сумма операции 
     IN inComment             TVarChar  , -- Комментерий
+    IN inContractId          Integer   , -- Договор 
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inUnitId              Integer   , -- Подразделение 	
     IN inPositionId          Integer   , -- Должность
@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
 RETURNS Record AS
 $BODY$
    DECLARE vbUserId Integer;
+           vbMovementItemId Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -30,22 +31,27 @@ BEGIN
      -- сохранили <Документ>
      ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
 
+     -- определяем <Элемент документа>
+     SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
+
           -- сохранили <Элемент документа>
-     ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inPersonalId, ioMovementId, inAmount, NULL);
+     vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inPersonalId, ioMovementId, inAmount, NULL);
 
      -- Комментарий
-     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), ioId, inComment);
+     PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
+     -- сохранили связь с <Договором>
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Управленческие статьи>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), ioId, inInfoMoneyId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Подразделением>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), ioId, inUnitId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Должность>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), ioId, inPositionId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Position(), vbMovementItemId, inPositionId);
      -- сохранили связь с <Виды форм оплаты >
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), ioId, inPaidKindId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_PaidKind(), vbMovementItemId, inPaidKindId);
      -- сохранили связь с <Дата начисления>
-     PERFORM lpInsertUpdate_MovementItemDate (zc_MovementItemDate_ServiceDate(), ioId, inServiceDate);
+     PERFORM lpInsertUpdate_MovementItemDate (zc_MovementItemDate_ServiceDate(), vbMovementItemId, inServiceDate);
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);

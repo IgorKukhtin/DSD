@@ -157,8 +157,6 @@ uses
   CashTest in '..\SOURCE\Objects\All\CashTest.pas',
   InfoMoneyTest in '..\SOURCE\Objects\All\InfoMoneyTest.pas',
   TransportServiceTest in '..\SOURCE\Movement\All\TransportServiceTest.pas',
-  PersonalServiceEdit in '..\..\Forms\PersonalServiceEdit.pas' {PersonalServiceEditForm},
-  PersonalService in '..\..\Forms\PersonalService.pas' {PersonalServiceForm},
   Goods_Object in '..\..\Forms\Guides\Goods_Object.pas' {Goods_ObjectForm},
   Unit_Object in '..\..\Forms\Guides\Unit_Object.pas' {Unit_ObjectForm},
   JuridicalTree in '..\..\Forms\Guides\JuridicalTree.pas' {JuridicalTreeForm},
@@ -380,7 +378,9 @@ uses
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\System\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
-  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
+  PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
+  PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm};
 
 {$R *.RES}
 

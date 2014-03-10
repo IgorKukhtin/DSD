@@ -1,4 +1,4 @@
-unit CashOperation;
+unit PersonalServiceEdit;
 
 interface
 
@@ -7,37 +7,38 @@ uses
   Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
-  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons;
 
 type
-  TCashOperationForm = class(TAncestorEditDialogForm)
+  TPersonalServiceEditForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
     ceInvNumber: TcxCurrencyEdit;
+    cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
-    ceCash: TcxButtonEdit;
+    cePersonal: TcxButtonEdit;
+    cePaidKind: TcxButtonEdit;
     ceUnit: TcxButtonEdit;
     ceInfoMoney: TcxButtonEdit;
-    ceOperDate: TcxDateEdit;
-    ceAmountIn: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    CashGuides: TdsdGuides;
+    PersonalGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
     UnitGuides: TdsdGuides;
     InfoMoneyGuides: TdsdGuides;
-    ceObject: TcxButtonEdit;
-    ObjectlGuides: TdsdGuides;
+    ceOperDate: TcxDateEdit;
+    ceServiceDate: TcxDateEdit;
     cxLabel6: TcxLabel;
-    GuidesFiller: TGuidesFiller;
+    ceAmount: TcxCurrencyEdit;
+    cxLabel7: TcxLabel;
+    PositionGuides: TdsdGuides;
+    cePosition: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edComment: TcxTextEdit;
     cxLabel10: TcxLabel;
-    ceComment: TcxTextEdit;
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
-    cxLabel3: TcxLabel;
-    ceAmountOut: TcxCurrencyEdit;
   private
     { Private declarations }
   public
@@ -47,7 +48,9 @@ type
 implementation
 
 {$R *.dfm}
+
 initialization
-  RegisterClass(TCashOperationForm);
+
+  RegisterClass(TPersonalServiceEditForm);
 
 end.

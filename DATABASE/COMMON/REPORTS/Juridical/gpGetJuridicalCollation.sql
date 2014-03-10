@@ -1,8 +1,9 @@
 -- Function: gpReport_JuridicalCollation()
 
-DROP FUNCTION IF EXISTS gpGetJuridicalCollation (TVarChar);
+DROP FUNCTION IF EXISTS gpGetJuridicalCollation (TDateTime ,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetJuridicalCollation(
+    IN inOperDate         TDateTime , 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MainJuridicalId Integer, MainJuridicalName TVarChar)
@@ -32,7 +33,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGetJuridicalCollation (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGetJuridicalCollation (TDateTime, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

@@ -69,6 +69,7 @@ type
     procedure LoadProfitLossDirectionFormTest;
     procedure LoadPositionFormTest;
     procedure LoadPersonalFormTest;
+    procedure LoadPersonalServiceFormTest;
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
@@ -300,6 +301,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalSendCashJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPersonalSendCashJournalForm');
+end;
+
+procedure TLoadFormTest.LoadPersonalServiceFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPersonalServiceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPersonalServiceEditForm');
 end;
 
 procedure TLoadFormTest.LoadIncomeFormTest;
