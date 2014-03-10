@@ -1647,6 +1647,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1054#1090' '#1082#1086#1075#1086
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'isFrom'
@@ -1671,6 +1672,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
       ImageIndex = 16
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'isFrom'
@@ -1692,6 +1694,7 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1040#1076#1084#1080#1085
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1040#1076#1084#1080#1085
       ReportNameParam.Value = ''
@@ -1742,6 +1745,7 @@
       TabSheet = cxTabSheetMain
       View = cxGridDBTableView
       Action = RouteChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1052#1072#1088#1096#1088#1091#1090'>'
       ShortCut = 45
@@ -1880,6 +1884,7 @@
       TabSheet = cxTabSheetIncome
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1055#1088#1080#1093#1086#1076' ('#1047#1072#1087#1088#1072#1074#1082#1072' '#1072#1074#1090#1086')>'
       ShortCut = 45
@@ -2974,6 +2979,9 @@
         Control = edPersonalDriverMore
       end
       item
+        Control = edPersonal
+      end
+      item
         Control = edBranchForwarding
       end
       item
@@ -2986,8 +2994,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

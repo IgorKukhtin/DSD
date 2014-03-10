@@ -15,7 +15,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_ProfitLossService (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_ProfitLossService (inMovementId, FALSE, inSession);
+            PERFORM gpComplete_Movement_ProfitLossService (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_ProfitLossService (inMovementId, inSession);
          ELSE
@@ -24,14 +24,13 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 17.02.14                                        	              *
-
+ 06.03.14                                        * 
+ 17.02.14                                        	        *
 */
 
 -- тест

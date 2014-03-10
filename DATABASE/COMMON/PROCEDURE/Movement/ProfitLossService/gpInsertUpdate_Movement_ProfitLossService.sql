@@ -32,9 +32,9 @@ $BODY$
    DECLARE vbBranchId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
      -- определяем ключ доступа
----     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
+     vbAccessKeyId:= lpGetAccessKey (vbUserId, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
 
      -- проверка
      IF (COALESCE(inAmountIn, 0) = 0) AND (COALESCE(inAmountOut, 0) = 0) THEN
@@ -95,9 +95,12 @@ BEGIN
                                , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
                                , IsActive Boolean, IsMaster Boolean
                                 ) ON COMMIT DROP;
-
      -- 5.3. проводим Документ
-        PERFORM gpComplete_Movement_ProfitLossService (inMovementId := ioId, inIsLastComplete := FALSE, inSession := inSession);
+     IF vbUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
+     THEN
+          PERFORM lpComplete_Movement_Service (inMovementId := ioId
+                                             , inUserId     := vbUserId);
+     END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -109,6 +112,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.03.14                                        * add lpComplete_Movement_Service
  19.02.14         * add BonusKind
  18.02.14                                                         *
 */

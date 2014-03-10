@@ -4,7 +4,7 @@ DROP FUNCTION IF EXISTS gpSetErased_Movement_Service (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement_Service(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inSession           TVarChar                -- сессия пользователя
 )                              
 RETURNS VOID
 AS
@@ -21,7 +21,7 @@ BEGIN
 
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

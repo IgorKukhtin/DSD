@@ -31,6 +31,16 @@ BEGIN
         inUnitId := NULL;
      END IF; 
 
+   -- Проверка установки значений
+   IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_40800())) -- Маркетинг and Внутренний оборот
+      -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
+      AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)
+      AND inContractId > 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Неверное значение для <УП статья назначения>.';
+   END IF;
+
+
      -- сохранили связь с <Юр. лицо>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), ioId, inJuridicalId);
      -- сохранили связь с <Управленческие статьи>

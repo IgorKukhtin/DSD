@@ -10,7 +10,23 @@ RETURNS void
 --  RETURNS TABLE (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat, ContainerId Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, ProfitLossGroupId Integer, ProfitLossDirectionId Integer, InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer, BusinessId Integer, JuridicalId_Basis Integer, UnitId Integer, ContractId Integer, PaidKindId Integer, IsActive Boolean)
 AS
 $BODY$
+  DECLARE vbMovementDescId Integer;
+  DECLARE vbIsAccount_50401 Boolean;
 BEGIN
+     -- нужен тип документа, т.к. проведение для двух разных видов документов
+     SELECT Movement.DescId
+          , CASE WHEN MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                 THEN TRUE
+                 ELSE FALSE
+            END
+            INTO vbMovementDescId, vbIsAccount_50401
+     FROM Movement
+          JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+          LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                           ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                          AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+     WHERE Movement.Id = inMovementId;
+
 
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
@@ -32,8 +48,12 @@ BEGIN
              , COALESCE (Object.DescId, 0) AS ObjectDescId
              , MovementItem.Amount AS OperSumm
              , MovementItem.Id AS MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+             , 0 AS ContainerId                              -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId  -- сформируем позже, или ...
+             , CASE WHEN vbMovementDescId = zc_Movement_ProfitLossService() AND vbIsAccount_50401 = TRUE
+                         THEN zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
+                    ELSE 0
+               END AS AccountId 
                -- Группы ОПиУ
              , COALESCE (lfObject_Unit_byProfitLossDirection.ProfitLossGroupId, 0) AS ProfitLossGroupId
                -- Аналитики ОПиУ - направления
@@ -81,7 +101,7 @@ BEGIN
              LEFT JOIN lfSelect_Object_Unit_byProfitLossDirection() AS lfObject_Unit_byProfitLossDirection ON lfObject_Unit_byProfitLossDirection.UnitId = MILinkObject_Unit.ObjectId
              LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
         WHERE Movement.Id = inMovementId
-          AND Movement.DescId = zc_Movement_Service()
+          AND Movement.DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService())
           AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
        ;
 
@@ -95,7 +115,7 @@ BEGIN
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN
-         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено главное юр лицо.Проведение невозможно.';
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлено <Главное юридическое лицо>.Проведение невозможно.';
      END IF;
 
 
@@ -110,12 +130,22 @@ BEGIN
                          , IsActive, IsMaster
                           )
         SELECT _tmpItem.OperDate
-             , 0 AS ObjectId
-             , 0 AS ObjectDescId
+             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
+                         THEN _tmpItem.ObjectId
+                    ELSE 0
+               END AS ObjectId
+             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
+                         THEN _tmpItem.ObjectDescId
+                    ELSE 0
+               END AS ObjectDescId
              , -1 * _tmpItem.OperSumm
              , _tmpItem.MovementItemId
-             , 0 AS ContainerId                                               -- сформируем позже
-             , 0 AS AccountGroupId, 0 AS AccountDirectionId, 0 AS AccountId   -- сформируем позже
+             , 0 AS ContainerId                              -- сформируем позже
+             , 0 AS AccountGroupId, 0 AS AccountDirectionId  -- сформируем позже, или ...
+             , CASE WHEN vbMovementDescId = zc_Movement_Service() AND vbIsAccount_50401 = TRUE
+                         THEN zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
+                    ELSE 0
+               END AS AccountId 
              , _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId
              , _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId
                -- Бизнес: всегда по подразделению
@@ -140,7 +170,7 @@ BEGIN
      -- return;
 
      -- 5. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Service() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -148,6 +178,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.03.14                                        * add zc_Movement_ProfitLossService
  22.01.14                                        * add IsMaster
  28.12.13                                        *
 */
