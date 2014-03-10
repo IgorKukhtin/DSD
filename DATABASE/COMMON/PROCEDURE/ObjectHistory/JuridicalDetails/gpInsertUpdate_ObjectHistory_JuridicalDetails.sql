@@ -8,10 +8,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_JuridicalDetails(
     IN inOperDate               TDateTime,  -- Дата действия прайс-листа
     IN inBankId                 Integer,    -- Банк
     IN inFullName               TVarChar,   -- Юр. лицо полное наименование
-    IN inJuridicalAddress	    TVarChar,   -- Юридический адрес
+    IN inJuridicalAddress	TVarChar,   -- Юридический адрес
     IN inOKPO                   TVarChar,   -- ОКПО
     IN inINN	                TVarChar,   -- ИНН
-    IN inNumberVAT	            TVarChar,   -- Номер свидетельства плательщика НДС
+    IN inNumberVAT	        TVarChar,   -- Номер свидетельства плательщика НДС
     IN inAccounterName	        TVarChar,   -- ФИО бухг.
     IN inBankAccount	        TVarChar,   -- р.счет
     IN inPhone      	        TVarChar,   -- телефон

@@ -3,8 +3,6 @@
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
   ClientHeight = 308
   ClientWidth = 601
-  AddOnFormData.RefreshAction = nil
-  AddOnFormData.Params = nil
   ExplicitWidth = 607
   ExplicitHeight = 333
   PixelsPerInch = 96
@@ -12,14 +10,14 @@
   inherited bbOk: TcxButton
     Left = 177
     Top = 266
-    TabOrder = 6
+    TabOrder = 4
     ExplicitLeft = 177
     ExplicitTop = 266
   end
   inherited bbCancel: TcxButton
     Left = 321
     Top = 266
-    TabOrder = 7
+    TabOrder = 6
     ExplicitLeft = 321
     ExplicitTop = 266
   end
@@ -70,7 +68,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 12
+    TabOrder = 11
     Width = 273
   end
   object cePaidKind: TcxButtonEdit [10]
@@ -81,7 +79,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 15
+    TabOrder = 13
     Width = 139
   end
   object ceUnit: TcxButtonEdit [11]
@@ -92,7 +90,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 17
+    TabOrder = 16
     Width = 273
   end
   object ceInfoMoney: TcxButtonEdit [12]
@@ -103,7 +101,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 21
+    TabOrder = 20
     Width = 273
   end
   object ceOperDate: TcxDateEdit [13]
@@ -115,7 +113,7 @@
   object ceServiceDate: TcxDateEdit [14]
     Left = 144
     Top = 76
-    TabOrder = 11
+    TabOrder = 10
     Width = 139
   end
   object cxLabel6: TcxLabel [15]
@@ -126,9 +124,9 @@
   object ceAmount: TcxCurrencyEdit [16]
     Left = 10
     Top = 178
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 14
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 12
     Width = 128
   end
   object cxLabel7: TcxLabel [17]
@@ -144,7 +142,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 18
+    TabOrder = 17
     Width = 273
   end
   object cxLabel9: TcxLabel [19]
@@ -176,7 +174,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 19
+    TabOrder = 18
     Width = 273
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -413,7 +411,20 @@
     FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 96
     Top = 109
   end
@@ -424,7 +435,20 @@
     FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 208
     Top = 117
   end
@@ -435,7 +459,20 @@
     FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 400
     Top = 13
   end
@@ -446,7 +483,20 @@
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 480
     Top = 173
   end
@@ -457,7 +507,20 @@
     FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PositionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
     Left = 352
     Top = 56
   end
