@@ -21,16 +21,13 @@ object MainForm: TMainForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = 122
-    ExplicitWidth = 680
-    ExplicitHeight = 615
     object DBGrid: TDBGrid
       Left = 0
       Top = 33
       Width = 767
       Height = 523
       Align = alClient
-      DataSource = DataSource
+      DataSource = DataSource1
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
       TabOrder = 0
       TitleFont.Charset = DEFAULT_CHARSET
@@ -164,7 +161,6 @@ object MainForm: TMainForm
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitWidth = 682
       object ButtonSaveAllItem: TSpeedButton
         Left = 16
         Top = 3
@@ -480,8 +476,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 2
-      ExplicitTop = 574
-      ExplicitWidth = 682
       object GBTotalSummGoods_Weight: TGroupBox
         Left = 130
         Top = 0
@@ -565,7 +559,6 @@ object MainForm: TMainForm
         Align = alRight
         Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072', '#1075#1088#1085
         TabOrder = 3
-        ExplicitLeft = 574
         object PanelTotalSumm: TPanel
           Left = 2
           Top = 15
@@ -592,8 +585,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 3
-      ExplicitTop = 537
-      ExplicitWidth = 682
       object GroupBox1: TGroupBox
         Left = 249
         Top = 0
@@ -733,7 +724,6 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 5
-        ExplicitLeft = 605
         object TotalDiffZakazSalePanel: TPanel
           Left = 2
           Top = 15
@@ -753,7 +743,6 @@ object MainForm: TMainForm
         Align = alRight
         Caption = #1048#1058#1054#1043#1054' '#1047#1072#1103#1074#1082#1072
         TabOrder = 6
-        ExplicitLeft = 514
         object TotalZakazCountPanel: TPanel
           Left = 2
           Top = 15
@@ -822,8 +811,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 0
       Visible = False
-      ExplicitTop = 121
-      ExplicitWidth = 122
     end
     object EnterGoodsCodeScanerPanel: TPanel
       Left = 0
@@ -838,8 +825,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 1
-      ExplicitTop = 194
-      ExplicitWidth = 122
       object EnterGoodsCodeScanerLabel: TLabel
         Left = 1
         Top = 1
@@ -878,8 +863,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 2
-      ExplicitTop = 564
-      ExplicitWidth = 122
       object EnterWeightLabel: TLabel
         Left = 1
         Top = 1
@@ -940,8 +923,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 4
-      ExplicitTop = 474
-      ExplicitWidth = 122
       object EnterGoodsCode_byZakazLabel: TLabel
         Left = 1
         Top = 1
@@ -980,8 +961,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 5
-      ExplicitTop = 351
-      ExplicitWidth = 122
       object LabelCountTare: TLabel
         Left = 1
         Top = 1
@@ -1014,8 +993,6 @@ object MainForm: TMainForm
       Height = 29
       Align = alTop
       TabOrder = 8
-      ExplicitTop = 92
-      ExplicitWidth = 122
       object ScaleLabel: TLabel
         Left = 1
         Top = 1
@@ -1047,7 +1024,6 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 0
-        ExplicitWidth = 120
       end
     end
     object EnterKindPackageCode_byZakazPanel: TPanel
@@ -1063,8 +1039,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 9
-      ExplicitTop = 519
-      ExplicitWidth = 122
       object EnterKindPackageCode_byZakazLabel: TLabel
         Left = 1
         Top = 1
@@ -1105,7 +1079,6 @@ object MainForm: TMainForm
         Font.Style = []
         ParentFont = False
         TabOrder = 1
-        ExplicitLeft = 49
       end
     end
     object gbPartionDate: TGroupBox
@@ -1143,8 +1116,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 6
-      ExplicitTop = 392
-      ExplicitWidth = 122
       object LabelCountPoddon: TLabel
         Left = 1
         Top = 1
@@ -1183,8 +1154,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 7
-      ExplicitTop = 433
-      ExplicitWidth = 122
       object LabelCountVanna: TLabel
         Left = 1
         Top = 1
@@ -1223,8 +1192,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 11
-      ExplicitTop = 310
-      ExplicitWidth = 122
       object LabelCountUpakovka: TLabel
         Left = 1
         Top = 1
@@ -1264,8 +1231,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 12
-      ExplicitTop = 143
-      ExplicitWidth = 122
       object PartionStr_MBLabel: TLabel
         Left = 0
         Top = 7
@@ -1290,7 +1255,6 @@ object MainForm: TMainForm
         Align = alTop
         BevelOuter = bvNone
         TabOrder = 0
-        ExplicitWidth = 122
       end
       object infoPanelPartionStr_MB: TPanel
         Left = 0
@@ -1299,7 +1263,6 @@ object MainForm: TMainForm
         Height = 30
         Align = alClient
         TabOrder = 1
-        ExplicitWidth = 122
         object PartionStr_MBEdit: TEdit
           Left = 3
           Top = 3
@@ -1323,8 +1286,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 13
-      ExplicitTop = 269
-      ExplicitWidth = 122
       object LabelOperCount_sh: TLabel
         Left = 1
         Top = 1
@@ -1360,9 +1321,6 @@ object MainForm: TMainForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitLeft = 130
-    ExplicitTop = 74
-    ExplicitHeight = 615
     object PanelProduction_Goods: TPanel
       Left = 0
       Top = 15
@@ -1623,7 +1581,6 @@ object MainForm: TMainForm
       Align = alBottom
       BevelOuter = bvNone
       TabOrder = 4
-      ExplicitTop = 578
       object GBTotalWeight: TGroupBox
         Left = 0
         Top = 0
@@ -1703,7 +1660,6 @@ object MainForm: TMainForm
     Font.Style = [fsBold]
     ParentFont = False
     TabOrder = 3
-    ExplicitWidth = 804
     object PanelMessage: TPanel
       Left = 429
       Top = 0
@@ -1719,7 +1675,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitWidth = 231
     end
     object GBPassword: TGroupBox
       Left = 756
@@ -1729,7 +1684,6 @@ object MainForm: TMainForm
       Align = alRight
       Caption = #1055#1072#1088#1086#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       TabOrder = 1
-      ExplicitLeft = 660
       object PanelPassword: TPanel
         Left = 2
         Top = 15
@@ -1777,7 +1731,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 3
-      ExplicitWidth = 804
       object PanelPartner: TPanel
         Left = 117
         Top = 0
@@ -1959,7 +1912,6 @@ object MainForm: TMainForm
         Font.Style = [fsBold]
         ParentFont = False
         TabOrder = 3
-        ExplicitLeft = 660
       end
     end
   end
@@ -2275,13 +2227,24 @@ object MainForm: TMainForm
   end
   object spTest: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
-    DataSet = Query
+    DataSet = ClientDataSet
     DataSets = <
       item
-        DataSet = Query
+        DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 256
-    Top = 88
+    Left = 224
+    Top = 384
+  end
+  object DataSource1: TDataSource
+    DataSet = ClientDataSet
+    Left = 320
+    Top = 400
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 304
+    Top = 448
   end
 end

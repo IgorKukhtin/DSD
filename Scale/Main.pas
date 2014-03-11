@@ -19,7 +19,7 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB;
+  cxCalendar, dsdDB, Datasnap.DBClient;
 
 type
   TMainForm = class(TForm)
@@ -213,6 +213,8 @@ type
     PartionDateEdit: TcxDateEdit;
     cxDateEdit1: TcxDateEdit;
     spTest: TdsdStoredProc;
+    DataSource1: TDataSource;
+    ClientDataSet: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
   private
     { Private declarations }
