@@ -149,8 +149,8 @@
 			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
 				<Form>GoodsTreeForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ToolsWeighingEdit.pas">
+				<Form>ToolsWeighingEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
 				<Form>MeasureEditForm</Form>
@@ -198,8 +198,8 @@
 				<Form>Juridical_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdDB.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\UnitTree.pas">
-				<Form>UnitTreeForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ToolsWeighingTree.pas">
+				<Form>ToolsWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbMovementItemTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\Income.pas">
@@ -1126,6 +1126,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\PersonalServiceEdit.pas">
 				<Form>PersonalServiceEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\UnitTree.pas">
+				<Form>UnitTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
