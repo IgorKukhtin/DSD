@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1014,6 +1014,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbToolsWeighingTree'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1391,6 +1395,10 @@ object MainForm: TMainForm
       Action = actSaveTaxDocument
       Category = 0
     end
+    object bbToolsWeighingTree: TdxBarButton
+      Action = actToolsWeighingTree
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1734,6 +1742,16 @@ object MainForm: TMainForm
       Caption = #1041#1072#1085#1082#1080
       Hint = #1041#1072#1085#1082#1080
       FormName = 'TBankForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1043#1086#1088#1086#1076#1072
+      Hint = #1041#1072#1085#1082#1080
+      FormName = 'TCityForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <>
@@ -2385,9 +2403,9 @@ object MainForm: TMainForm
     object actCity: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1043#1086#1088#1086#1076#1072
-      Hint = #1041#1072#1085#1082#1080
+      Hint = #1043#1086#1088#1086#1076#1072
       FormName = 'TCityForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TCityForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2678,6 +2696,16 @@ object MainForm: TMainForm
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
       FormName = 'TSaveTaxDocumentForm'
       FormNameParam.Value = 'TSaveTaxDocumentForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actToolsWeighingTree: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' ('#1044#1077#1088#1077#1074#1086')'
+      Hint = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      FormName = 'TToolsWeighingTreeForm'
+      FormNameParam.Value = 'TToolsWeighingTreeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
