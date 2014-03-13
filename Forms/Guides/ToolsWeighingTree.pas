@@ -55,7 +55,7 @@ type
     spGrid: TdsdStoredProc;
     ceCode: TcxGridDBColumn;
     ceName: TcxGridDBColumn;
-    ceBranchName: TcxGridDBColumn;
+    ceNameUser: TcxGridDBColumn;
     ceisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdFormParams: TdsdFormParams;
@@ -67,6 +67,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
     dsdOpenUnitForm: TdsdOpenForm;
+    ceNameFull: TcxGridDBColumn;
+    ceValueData: TcxGridDBColumn;
   private
     { Private declarations }
   public

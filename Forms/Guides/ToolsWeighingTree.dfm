@@ -2,8 +2,8 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103'>'
-  ClientHeight = 403
-  ClientWidth = 768
+  ClientHeight = 617
+  ClientWidth = 1051
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -22,7 +22,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Left = 0
     Top = 28
     Width = 313
-    Height = 375
+    Height = 589
     Align = alLeft
     Bands = <
       item
@@ -44,6 +44,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 1
+    ExplicitHeight = 375
     object ceParentName: TcxDBTreeListColumn
       Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
@@ -61,16 +62,19 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Left = 313
     Top = 28
     Width = 8
-    Height = 375
+    Height = 589
     Control = cxDBTreeList
+    ExplicitHeight = 375
   end
   object cxGrid: TcxGrid
     Left = 321
     Top = 28
-    Width = 447
-    Height = 375
+    Width = 730
+    Height = 589
     Align = alClient
     TabOrder = 6
+    ExplicitWidth = 447
+    ExplicitHeight = 375
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -106,14 +110,15 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
           end>
         SortIndex = 0
         SortOrder = soAscending
-        Width = 20
+        Width = 33
       end
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 75
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -121,13 +126,13 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         HeaderAlignmentVert = vaCenter
         SortIndex = 1
         SortOrder = soAscending
-        Width = 163
+        Width = 180
       end
-      object ceBranchName: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
+      object ceNameUser: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1076#1083#1103' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'NameUser'
         HeaderAlignmentVert = vaCenter
-        Width = 92
+        Width = 150
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -137,6 +142,16 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 94
+      end
+      object ceNameFull: TcxGridDBColumn
+        Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
+        DataBinding.FieldName = 'NameFull'
+        Width = 250
+      end
+      object ceValueData: TcxGridDBColumn
+        Caption = #1047#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'ValueData'
+        Width = 130
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -409,7 +424,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     end
   end
   object spTree: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit_Tree'
+    StoredProcName = 'gpSelect_Object_ToolsWeighing_Tree'
     DataSet = TreeDataSet
     DataSets = <
       item
@@ -435,7 +450,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Top = 152
   end
   object spGrid: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Unit'
+    StoredProcName = 'gpSelect_Object_ToolsWeighing'
     DataSet = ClientDataSet
     DataSets = <
       item
