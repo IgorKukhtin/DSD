@@ -42,7 +42,7 @@ BEGIN
        SELECT
              Movement.Id
            , Movement.InvNumber
-           , (Movement_BankStatementItem.InvNumber || ' от ' || Movement_BankStatement.OperDate :: Date :: TVarChar || ' (' ||  Movement_BankStatementItem.ParentId :: TVarChar || ')' ) :: TVarChar AS InvNumber_Parent
+           , (Movement_BankStatementItem.InvNumber || ' от ' || Movement_BankStatement.OperDate :: Date :: TVarChar || ' (' ||  Movement_BankStatement.InvNumber :: TVarChar || ')' ) :: TVarChar AS InvNumber_Parent
            , Movement.ParentId
            , Movement.OperDate
            , Object_Status.ObjectCode   AS StatusCode

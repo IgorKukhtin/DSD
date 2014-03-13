@@ -16,6 +16,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         Width = 873
         ExplicitWidth = 873
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

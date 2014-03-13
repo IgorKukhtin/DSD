@@ -377,12 +377,12 @@ uses
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\System\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
-  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
-  UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm};
+  UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas';
 
 {$R *.RES}
 
