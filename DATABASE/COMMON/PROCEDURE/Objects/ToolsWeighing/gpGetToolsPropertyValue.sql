@@ -1,4 +1,4 @@
-DROP FUNCTION IF EXISTS gpGetToolsPropertyValue (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpGetToolsPropertyValue (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGetToolsPropertyValue(
@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION gpGetToolsPropertyValue(
     IN inLevel3                  TVarChar  ,
     IN inLevel4                  TVarChar  ,
     IN inValueData               TVarChar  ,
-    IN inNameUser                TVarChar  ,
     IN inSession                 TVarChar
 )
   RETURNS TVarChar
@@ -51,7 +50,7 @@ BEGIN
                       AND ((Object_ToolsWeighing_View.ParentID = vbParentId) OR (Object_ToolsWeighing_View.ParentID IS NULL)));
 
       IF COALESCE(vbToolsId, 0) = 0 THEN
-        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel1, inLevel1, inNameUser, vbParentId, inSession);
+        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel1, inLevel1, '', vbParentId, inSession);
       END IF;
       vbParentId := vbToolsId;
     END IF;
@@ -66,7 +65,7 @@ BEGIN
                       AND Object_ToolsWeighing_View.ParentID = vbParentId);
 
       IF COALESCE(vbToolsId, 0) = 0 THEN
-        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel2, inLevel1||' '||inLevel2, inNameUser, vbParentId, inSession);
+        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel2, inLevel1||' '||inLevel2, '', vbParentId, inSession);
       END IF;
       vbParentId := vbToolsId;
     END IF;
@@ -81,7 +80,7 @@ BEGIN
                       AND Object_ToolsWeighing_View.ParentID = vbParentId);
 
       IF COALESCE(vbToolsId, 0) = 0 THEN
-        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel3, inLevel1||' '||inLevel2||' '||inLevel3, inNameUser, vbParentId, inSession);
+        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel3, inLevel1||' '||inLevel2||' '||inLevel3, '', vbParentId, inSession);
       END IF;
       vbParentId := vbToolsId;
     END IF;
@@ -96,7 +95,7 @@ BEGIN
                       AND Object_ToolsWeighing_View.ParentID = vbParentId);
 
       IF COALESCE(vbToolsId, 0) = 0 THEN
-        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel4, vbNameFull, inNameUser, vbParentId, inSession);
+        vbToolsId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, vbValueData, inLevel4, vbNameFull, '', vbParentId, inSession);
       END IF;
       vbParentId := vbToolsId;
     END IF;
@@ -125,10 +124,11 @@ ALTER FUNCTION gpGetToolsPropertyValue (TVarChar, TVarChar, TVarChar, TVarChar, 
 */
 
 -- тест
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_Income', '', '98751', 'Форма оплаты', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'DescId', '6', 'Название операции', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'FromId', '0', 'От кого', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'ToId', '0', 'Кому', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'PaidKindId', '0', 'Форма оплаты', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_Income', '', '98751', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'DescId', '6',  '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'FromId', '0', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'ToId', '0', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'PaidKindId', '0', '2');
 -- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'ComPort', '', '1', 'Ком порт', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'isPreviewPrint', '', 'false', 'Просмотр перед печатью', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'isPreviewPrint', '', 'false', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'isActive', '', 'false', '2');
