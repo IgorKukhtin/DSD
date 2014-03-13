@@ -32,6 +32,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
+      OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
