@@ -2,7 +2,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
   Left = 0
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103'>'
-  ClientHeight = 617
+  ClientHeight = 690
   ClientWidth = 1051
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -22,7 +22,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Left = 0
     Top = 28
     Width = 313
-    Height = 589
+    Height = 662
     Align = alLeft
     Bands = <
       item
@@ -62,7 +62,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Left = 313
     Top = 28
     Width = 8
-    Height = 589
+    Height = 662
     Control = cxDBTreeList
     ExplicitHeight = 375
   end
@@ -70,7 +70,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Left = 321
     Top = 28
     Width = 730
-    Height = 589
+    Height = 662
     Align = alClient
     TabOrder = 6
     ExplicitWidth = 447
@@ -86,7 +86,6 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
@@ -281,11 +280,13 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
+      Visible = ivNever
       ImageIndex = 0
     end
     object bbEdit: TdxBarButton
       Action = actUpdate
       Category = 0
+      Visible = ivNever
       ImageIndex = 1
     end
     object bbErased: TdxBarButton
@@ -308,9 +309,9 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       Visible = ivAlways
     end
     object bbUnitChoiceForm: TdxBarButton
-      Action = dsdOpenUnitForm
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1089#1087#1080#1089#1086#1082
       Category = 0
+      Visible = ivNever
       ImageIndex = 28
     end
   end
@@ -413,14 +414,15 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       isSetErased = False
       DataSource = TreeDS
     end
-    object dsdOpenUnitForm: TdsdOpenForm
+    object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
-      Caption = 'dsdOpenUnitForm'
-      FormName = 'TUnitForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = GridDS
     end
   end
   object spTree: TdsdStoredProc
@@ -513,6 +515,40 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     Left = 432
+    Top = 240
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_ToolsWeighing'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inNameUser'
+        Component = ClientDataSet
+        ComponentItem = 'NameUser'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inValueData'
+        Component = ClientDataSet
+        ComponentItem = 'ValueData'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 552
     Top = 240
   end
 end

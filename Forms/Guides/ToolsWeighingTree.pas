@@ -66,9 +66,10 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     bbUnitChoiceForm: TdxBarButton;
-    dsdOpenUnitForm: TdsdOpenForm;
     ceNameFull: TcxGridDBColumn;
     ceValueData: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public
