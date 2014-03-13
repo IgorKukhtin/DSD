@@ -44,7 +44,6 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     RootValue = -1
     Styles.StyleSheet = dmMain.cxTreeListStyleSheet
     TabOrder = 1
-    ExplicitHeight = 375
     object ceParentName: TcxDBTreeListColumn
       Caption.AlignVert = vaCenter
       Caption.Text = #1043#1088#1091#1087#1087#1072
@@ -64,7 +63,6 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Width = 8
     Height = 662
     Control = cxDBTreeList
-    ExplicitHeight = 375
   end
   object cxGrid: TcxGrid
     Left = 321
@@ -73,8 +71,6 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     Height = 662
     Align = alClient
     TabOrder = 6
-    ExplicitWidth = 447
-    ExplicitHeight = 375
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -107,6 +103,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
             ImageIndex = 2
             Value = True
           end>
+        Options.Editing = False
         SortIndex = 0
         SortOrder = soAscending
         Width = 33
@@ -117,12 +114,14 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 75
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         SortIndex = 1
         SortOrder = soAscending
         Width = 180
@@ -140,11 +139,13 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 94
       end
       object ceNameFull: TcxGridDBColumn
         Caption = #1055#1086#1083#1085#1086#1077' '#1085#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'NameFull'
+        Options.Editing = False
         Width = 250
       end
       object ceValueData: TcxGridDBColumn
