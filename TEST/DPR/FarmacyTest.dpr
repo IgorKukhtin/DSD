@@ -39,7 +39,9 @@ uses
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
-  Log in '..\..\SOURCE\Log.pas';
+  Log in '..\..\SOURCE\Log.pas',
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas';
 
 {$R *.res}
 
