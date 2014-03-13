@@ -59,7 +59,6 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
      END IF;
 
-
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
 

@@ -83,7 +83,7 @@ BEGIN
                                                  , inPaidKindId         := inPaidKindId
                                                  , inInfoMoneyId        := inInfoMoneyId
                                                  , inUnitId             := inUnitId
-                                                 , inUserId             := inUserId
+                                                 , inUserId             := vbUserId
                                                   );
 
 END;

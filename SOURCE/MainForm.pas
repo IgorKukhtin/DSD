@@ -316,6 +316,9 @@ type
     bbPeriodClose: TdxBarButton;
     actSaveTaxDocument: TdsdOpenForm;
     bbSaveTaxDocument: TdxBarButton;
+    dsdOpenForm1: TdsdOpenForm;
+    actToolsWeighingTree: TdsdOpenForm;
+    bbToolsWeighingTree: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

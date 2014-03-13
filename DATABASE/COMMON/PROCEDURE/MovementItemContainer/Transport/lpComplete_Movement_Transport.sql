@@ -246,11 +246,14 @@ BEGIN
 
      -- !!!формируются расчитанные свойства в Подчиненых элементах документа!!!
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_StartAmountFuel(), tmp.MovementItemId, tmp.StartAmountFuel)
-     FROM (SELECT _tmpItem_Transport.MovementItemId, _tmpPropertyRemains.Amount AS StartAmountFuel
-           FROM (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
+     FROM (SELECT _tmpItem_Transport.MovementItemId, COALESCE (_tmpPropertyRemains.Amount, 0) AS StartAmountFuel
+           FROM (SELECT (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport
                 ) AS _tmpItem_Transport
+                LEFT JOIN (SELECT MAX (MovementItemId) AS MovementItemId, GoodsId FROM _tmpItem_Transport GROUP BY GoodsId
+                          ) AS _tmpItem_Transport_max ON _tmpItem_Transport_max.GoodsId = _tmpItem_Transport.GoodsId
                 LEFT JOIN _tmpPropertyRemains ON _tmpPropertyRemains.FuelId = _tmpItem_Transport.GoodsId
                                              AND _tmpPropertyRemains.Kind = 3
+                                             AND _tmpItem_Transport_max.MovementItemId = _tmpItem_Transport.MovementItemId
           UNION ALL
            -- Прийдется сформировать элементы, если в документе их нет, а остаток по топливу есть
            SELECT (SELECT ioId FROM lpInsertUpdate_MI_Transport_Child (ioId                 := 0
@@ -445,6 +448,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.03.14                                        * err on zc_MIFloat_StartAmountFuel
  26.01.14                                        * правильные проводки по филиалу
  21.12.13                                        * Personal -> Member
  11.12.13                                        * убрал пересчитали Child - нормы

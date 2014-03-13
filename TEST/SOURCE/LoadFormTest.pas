@@ -92,6 +92,7 @@ type
     procedure LoadTradeMarkFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
+    procedure LoadToolsWeighingFormTest;
     procedure LoadWorkTimeKindFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
@@ -703,6 +704,17 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
+
+
+procedure TLoadFormTest.LoadToolsWeighingFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TToolsWeighingEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingEditForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TToolsWeighingTreeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TToolsWeighingTreeForm');
+end;
+
+
 
 {procedure TLoadFormTest.LoadUnitGroupFormTest;
 begin
