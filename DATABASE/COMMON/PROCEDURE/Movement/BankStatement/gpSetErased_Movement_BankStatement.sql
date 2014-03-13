@@ -12,11 +12,19 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_BankAccount());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_SetErased_BankStatement());
 
-     IF (SELECT StatusId FROM Movement WHERE Id = inMovementId) = zc_Enum_Status_Complete() THEN
+
+     /*IF (SELECT StatusId FROM Movement WHERE Id = inMovementId) = zc_Enum_Status_Complete() THEN
         RAISE EXCEPTION 'По выписке сформированы документы. Удаление не возможно';
-     END IF;
+     END IF;*/
+
+     -- Удаляем все Документы
+     PERFORM lpSetErased_Movement (inMovementId := Movement_BankAccount.Id
+                                 , inUserId     := vbUserId)
+     FROM Movement AS Movement_BankStatementItem
+          JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.ParentId = Movement_BankStatementItem.Id
+     WHERE Movement_BankStatementItem.ParentId = inMovementId;
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
@@ -29,6 +37,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.03.14                                        * add Удаляем все Документы
  17.01.14                                        *
 */
 

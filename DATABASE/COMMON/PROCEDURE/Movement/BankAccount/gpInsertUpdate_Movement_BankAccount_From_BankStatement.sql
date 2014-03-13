@@ -30,8 +30,7 @@ BEGIN
 
 
      -- Выбираем все данные и сразу вызываем процедуры
-     PERFORM             
-       lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
+     PERFORM lpInsertUpdate_Movement_BankAccount(ioId := COALESCE(Movement_BankAccount.Id, 0), 
                inInvNumber := Movement.InvNumber, 
                inOperDate := Movement.OperDate, 
                inAmount := MovementFloat_Amount.ValueData, 
@@ -42,7 +41,8 @@ BEGIN
                inInfoMoneyId := MovementLinkObject_InfoMoney.ObjectId, 
                inUnitId := MovementLinkObject_Unit.ObjectId, 
                inCurrencyId := MovementLinkObject_Currency.ObjectId, 
-               inParentId := Movement.Id)
+               inParentId := Movement.Id, 
+               inUserId:= vbUserId)
 
        FROM Movement
             LEFT JOIN Movement AS Movement_BankAccount 

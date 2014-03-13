@@ -11,7 +11,9 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , Debet TFloat, Kredit TFloat
              , OKPO TVarChar, Juridicalname TVarChar, Comment TVarChar
              , LinkJuridicalId integer, LinkJuridicalName TVarChar
-             , InfoMoneyId integer, InfoMoneyName TVarChar
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyId integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractId integer, ContractName TVarChar
              , UnitId integer, UnitName TVarChar, CurrencyName TVarChar
              , BankAccount TVarChar, BankMFO TVarChar, BankName TVarChar
@@ -51,8 +53,13 @@ BEGIN
 
            , Object_Juridical.Id          AS LinkJuridicalId
            , Object_Juridical.ValueData   AS LinkJuridicalName
-           , Object_InfoMoney.Id          AS InfoMoneyId
-           , Object_InfoMoney.ValueData   AS InfoMoneyName
+
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyId
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+
            , View_Contract_InvNumber.ContractId
            , View_Contract_InvNumber.InvNumber AS ContractName          
            , Object_Unit.Id               AS UnitId
@@ -102,8 +109,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_InfoMoney
                                          ON MovementLinkObject_InfoMoney.MovementId = Movement.Id
                                         AND MovementLinkObject_InfoMoney.DescId = zc_MovementLinkObject_InfoMoney()
-            LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = MovementLinkObject_InfoMoney.ObjectId
-            
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MovementLinkObject_InfoMoney.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
@@ -141,9 +148,9 @@ ALTER FUNCTION gpSelect_Movement_BankStatementItem (Integer, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.03.14                                        * add Object_InfoMoney_View
  15.11.13                        *              
  13.08.13         *
-
 */
 
 -- ÚÂÒÚ

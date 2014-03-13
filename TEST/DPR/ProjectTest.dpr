@@ -59,7 +59,7 @@ uses
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
-  UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm},
+  ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
   Partner_Object in '..\..\Forms\Guides\Partner_Object.pas' {Partner_ObjectForm},
@@ -76,7 +76,7 @@ uses
   Business in '..\..\Forms\Business.pas' {BusinessForm},
   Juridical_Object in '..\..\Forms\Guides\Juridical_Object.pas' {Juridical_ObjectForm},
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
-  UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm},
+  ToolsWeighingTree in '..\..\Forms\Guides\ToolsWeighingTree.pas' {ToolsWeighingTreeForm},
   dbMovementItemTest in '..\SOURCE\dbMovementItemTest.pas',
   Income in '..\..\Forms\Document\Income.pas' {IncomeForm},
   IncomeJournal in '..\..\Forms\Document\IncomeJournal.pas' {ParentForm2},
@@ -377,11 +377,13 @@ uses
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\System\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
-  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
-  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm};
+  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
+  UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
+  UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas';
 
 {$R *.RES}
 

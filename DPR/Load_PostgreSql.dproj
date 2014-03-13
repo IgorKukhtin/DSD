@@ -87,7 +87,6 @@
 			<DCCReference Include="..\Load_PostgreSql\Main.pas">
 				<Form>MainForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\Storage.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConvert.pas"/>
@@ -116,6 +115,9 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\SOURCE\Log.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
+			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

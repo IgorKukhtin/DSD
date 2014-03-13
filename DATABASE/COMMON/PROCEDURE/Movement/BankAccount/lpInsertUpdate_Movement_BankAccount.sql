@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer,
-                      Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -16,7 +16,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inUnitId              Integer   , -- Подразделение
     IN inCurrencyId          Integer   , -- Валюта 
-    IN inParentId            Integer   DEFAULT  NULL
+    IN inParentId            Integer   , -- 
+    IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer AS
 $BODY$
@@ -27,6 +28,25 @@ BEGIN
      IF COALESCE (inContractId, 0) = 0 AND EXISTS (SELECT Id FROM Object WHERE Id = inMoneyPlaceId AND DescId = zc_Object_Juridical())
      THEN
         RAISE EXCEPTION 'Ошибка.<№ договора> не выбран.';
+     END IF;
+
+     -- Проверка установки значений
+     IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40200() -- Прочие кредиты
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40300() -- Овердрафт
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
+                                                                                                                                 -- , zc_Enum_InfoMoneyDestination_40500() -- Ссуды
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40600() -- Депозиты
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40800() -- Внутренний оборот
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40900() -- Финансовая помощь
+                                                                                                                                 ))
+        -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
+        AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)
+        AND inContractId > 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Для <№ договора> = <%> неверное значение <УП статья назначения> = <%>.', (SELECT InvNumber FROM Object_Contract_InvNumber_View WHERE ContractId = inContractId), lfGet_Object_ValueData (inInfoMoneyId);
      END IF;
 
      -- проверка
@@ -59,18 +79,22 @@ BEGIN
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
 
+     -- сохранили протокол
+     -- PERFORM lpInsert_MovementProtocol (ioId, inUserId);
+
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.03.14                                        * add lpInsert_MovementProtocol
+ 13.03.14                                        * err inParentId NOT NULL
+ 13.03.14                                        * add Проверка установки значений
  15.01.14                         *
  06.12.13                         *
-
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_BankAccount (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_BankAccount (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')

@@ -52,23 +52,20 @@ BEGIN
      END IF;
 
 
-     PERFORM lpInsertUpdate_Movement_BankAccount(ioId, inInvNumber, inOperDate, vbAmount, 
-             inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId);
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount, 
+             inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId, (SELECT ParentId FROM Movement WHERE Id = ioId), vbUserId);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.03.14                                        * add vbUserId
+ 13.03.14                                        * err inParentId NOT NULL
  06.12.13                          *
  09.08.13         *
-
 */
 
 -- тест
