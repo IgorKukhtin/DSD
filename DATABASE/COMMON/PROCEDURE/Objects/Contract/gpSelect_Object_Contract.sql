@@ -26,6 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
+             , Default Boolean
              , isErased Boolean 
               )
 AS
@@ -90,6 +91,8 @@ BEGIN
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
+       , ObjectBoolean_Default.ValueData AS Default
+       
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
@@ -108,6 +111,10 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_BankAccount
                                ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
+                                ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
@@ -173,6 +180,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.03.14         * add zc_ObjectBoolean_Contract_Default
  25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...
  21.02.14         * add Bank, BankAccount
  09.01.14         * add PaidKindId
