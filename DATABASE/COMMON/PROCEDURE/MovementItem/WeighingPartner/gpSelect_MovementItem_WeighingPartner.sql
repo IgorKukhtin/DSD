@@ -8,9 +8,10 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingPartner(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat
-             , InsertDate TDateTime, UpdateDate TDateTime, PartionGoodsDate TDateTime
+             , InsertDate TDateTime, UpdateDate TDateTime
              , RealWeight TFloat, ChangePercentAmount TFloat, CountTare TFloat, WeightTare TFloat, Count TFloat
-             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
+             , PartionGoodsDate TDateTime, PartionGoods TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
              , isErased Boolean
               )
 AS
@@ -31,14 +32,14 @@ BEGIN
            
            , MIDate_Insert.ValueData        AS InsertDate
            , MIDate_Update.ValueData        AS UpdateDate
-           , MIDate_PartionGoods.ValueData  AS PartionGoodsDate
-
+           
            , MIFloat_RealWeight.ValueData          AS RealWeight
            , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
            , MIFloat_CountTare.ValueData           AS CountTare
            , MIFloat_WeightTare.ValueData          AS WeightTare
            , MIFloat_Count.ValueData               AS Count
            
+           , MIDate_PartionGoods.ValueData   AS PartionGoodsDate
            , MIString_PartionGoods.ValueData AS PartionGoods
 
            , Object_GoodsKind.Id        AS GoodsKindId
@@ -104,5 +105,4 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inShowAll:= TRUE, inIsErased:= TRUE, inSession:= '2')
--- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inShowAll:= FALSE, inIsErased:= FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
