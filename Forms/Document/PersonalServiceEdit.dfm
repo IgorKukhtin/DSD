@@ -1,23 +1,23 @@
 ﻿inherited PersonalServiceEditForm: TPersonalServiceEditForm
   ActiveControl = ceOperDate
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
-  ClientHeight = 308
-  ClientWidth = 601
-  ExplicitWidth = 607
-  ExplicitHeight = 333
+  ClientHeight = 315
+  ClientWidth = 588
+  ExplicitWidth = 594
+  ExplicitHeight = 340
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 177
     Top = 266
-    TabOrder = 4
+    TabOrder = 2
     ExplicitLeft = 177
     ExplicitTop = 266
   end
   inherited bbCancel: TcxButton
     Left = 321
     Top = 266
-    TabOrder = 6
+    TabOrder = 5
     ExplicitLeft = 321
     ExplicitTop = 266
   end
@@ -90,7 +90,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 16
+    TabOrder = 15
     Width = 273
   end
   object ceInfoMoney: TcxButtonEdit [12]
@@ -142,7 +142,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 17
+    TabOrder = 16
     Width = 273
   end
   object cxLabel9: TcxLabel [19]
@@ -174,7 +174,7 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 18
+    TabOrder = 17
     Width = 273
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn

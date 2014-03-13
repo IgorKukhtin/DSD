@@ -61,6 +61,14 @@ type
     colContractCode: TcxGridDBColumn;
     colJuridicalCode: TcxGridDBColumn;
     colOKPO: TcxGridDBColumn;
+    SaleJournal: TdsdOpenForm;
+    ReturnInJournal: TdsdOpenForm;
+    IncomeJournal: TdsdOpenForm;
+    ReturnOutJournal: TdsdOpenForm;
+    MoneyJournal: TdsdOpenForm;
+    ServiceJournal: TdsdOpenForm;
+    SendDebtJournal: TdsdOpenForm;
+    OtherJournal: TdsdOpenForm;
   private
     { Private declarations }
   public

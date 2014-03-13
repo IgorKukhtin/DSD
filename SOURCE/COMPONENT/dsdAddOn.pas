@@ -97,6 +97,19 @@ type
     property ColorValueList: TCollection read FColorValueList write FColorValueList;
   end;
 
+  TColumnAddOn = class(TCollectionItem)
+  private
+    FAction: TCustomAction;
+    FColumn: TcxGridColumn;
+  protected
+    function GetDisplayName: string; override;
+  public
+    procedure Init;
+  published
+    property Column: TcxGridColumn read FColumn write FColumn;
+    property Action: TCustomAction read FAction write FAction;
+  end;
+
   // Добавляет ряд функционала на GridView
   // 1. Быстрая установка фильтров
   // 2. Рисование иконок сортировки
@@ -116,6 +129,7 @@ type
     FBeforeOpen: TDataSetNotifyEvent;
     FAfterOpen: TDataSetNotifyEvent;
     FColorRuleList: TCollection;
+    FColumnAddOnList: TCollection;
     procedure OnBeforeOpen(ADataSet: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
     procedure ActionOnlyEditingCellOnEnter;
@@ -150,6 +164,7 @@ type
     function GetErasedColumn(Sender: TObject): TcxGridColumn;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+    procedure Loaded; override;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
@@ -167,6 +182,8 @@ type
     property OnlyEditingCellOnEnter: boolean read FOnlyEditingCellOnEnter write SetOnlyEditingCellOnEnter;
     // Правила разукрашивания грида
     property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
+    // Дополнительные установки для колонок
+    property ColumnAddOnList: TCollection read FColumnAddOnList write FColumnAddOnList;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -521,6 +538,8 @@ begin
   FErasedStyle.TextColor := clRed;
 
   FColorRuleList := TCollection.Create(TColorRule);
+  FColumnAddOnList := TCollection.Create(TColumnAddOn);
+
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -704,6 +723,7 @@ begin
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterInsert := nil;
   end;
   FErasedStyle.Free;
+  FreeAndNil(FColumnAddOnList);
   inherited;
 end;
 
@@ -734,6 +754,15 @@ begin
      ActionOnlyEditingCellOnEnter;
      Key := 0;
   end;
+end;
+
+procedure TdsdDBViewAddOn.Loaded;
+var i: integer;
+begin
+  inherited;
+  // обработаем список ColumnAddOnList
+  for I := 0 to ColumnAddOnList.Count - 1 do
+      TColumnAddOn(ColumnAddOnList.Items[i]).Init
 end;
 
 procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
@@ -1545,6 +1574,26 @@ begin
   FreeAndNil(FColorValueList);
   FreeAndNil(FStyle);
   inherited;
+end;
+
+{ TColumnAddOn }
+
+function TColumnAddOn.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(Column) then
+     result := Column.Name
+end;
+
+procedure TColumnAddOn.Init;
+begin
+  if Assigned(Column) and Assigned(Action) then
+     if Assigned(Column.Properties) then
+        with Column.Properties.Buttons.Add as TcxEditButton do begin
+          Default := True;
+          Kind := bkEllipsis;
+          Action := Self.Action;
+        end;
 end;
 
 end.

@@ -2,8 +2,9 @@ inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
   ClientHeight = 439
   ClientWidth = 885
+  ExplicitTop = -45
   ExplicitWidth = 891
-  ExplicitHeight = 471
+  ExplicitHeight = 464
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -262,7 +263,6 @@ inherited ContractEditForm: TContractEditForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitHeight = 387
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -379,7 +379,6 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitHeight = 163
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -416,7 +415,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 38
+    TabOrder = 35
     Width = 162
   end
   object cxLabel16: TcxLabel [35]
@@ -433,7 +432,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 40
+    TabOrder = 38
     Width = 162
   end
   object edBankAccount: TcxTextEdit [37]
@@ -503,6 +502,7 @@ inherited ContractEditForm: TContractEditForm
       Category = 'DSDLib'
       View = cxGridDBTableViewContractCondition
       Action = ContractConditionKindChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1090#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
       Hint = #1058#1080#1087' '#1091#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
       ImageIndex = 0
@@ -614,7 +614,6 @@ inherited ContractEditForm: TContractEditForm
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 2
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       DataSource = ContractConditionDS
     end
@@ -628,7 +627,6 @@ inherited ContractEditForm: TContractEditForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ImageIndex = 8
-      ShortCut = 46
       ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = ContractConditionDS
@@ -1580,10 +1578,23 @@ inherited ContractEditForm: TContractEditForm
     ErasedFieldName = 'isErased'
     View = cxGridDBTableViewContractCondition
     OnDblClickActionList = <>
-    ActionItemList = <>
+    ActionItemList = <
+      item
+        Action = actSetErasedContractCondition
+        ShortCut = 46
+        SecondaryShortCuts.Strings = (
+          'Del')
+      end
+      item
+        Action = actSetUnErasedContractCondition
+        ShortCut = 46
+        SecondaryShortCuts.Strings = (
+          'Del')
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 616
     Top = 72
   end

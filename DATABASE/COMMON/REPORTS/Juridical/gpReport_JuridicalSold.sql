@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
+RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractId Integer, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
                InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
@@ -28,9 +28,11 @@ BEGIN
      -- Один запрос, который считает остаток и движение. 
   RETURN QUERY  
      SELECT 
+        Object_Juridical.Id AS JuridicalId,   
         Object_Juridical.ObjectCode AS JuridicalCode,   
         Object_Juridical.ValueData AS JuridicalName,
         ObjectHistory_JuridicalDetails_View.OKPO,
+        View_Contract_InvNumber.ContractId,
         View_Contract_InvNumber.ContractCode,
         View_Contract_InvNumber.InvNumber AS ContractNumber,
         Object_PaidKind.ValueData AS PaidKindName,

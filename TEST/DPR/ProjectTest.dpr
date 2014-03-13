@@ -380,7 +380,8 @@ uses
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
-  PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm};
+  PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
+  Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm};
 
 {$R *.RES}
 

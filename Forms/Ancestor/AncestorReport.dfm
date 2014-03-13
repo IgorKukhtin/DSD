@@ -15,12 +15,6 @@ inherited AncestorReportForm: TAncestorReportForm
       inherited cxGrid: TcxGrid
         Height = 251
         ExplicitHeight = 251
-        inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
-        end
       end
     end
   end
@@ -71,6 +65,14 @@ inherited AncestorReportForm: TAncestorReportForm
           'Date')
       end>
   end
+  inherited MasterDS: TDataSource
+    Left = 56
+    Top = 56
+  end
+  inherited MasterCDS: TClientDataSet
+    Left = 24
+    Top = 56
+  end
   inherited spSelect: TdsdStoredProc
     Params = <
       item
@@ -87,8 +89,12 @@ inherited AncestorReportForm: TAncestorReportForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
+    Left = 88
+    Top = 56
   end
   inherited BarManager: TdxBarManager
+    Left = 128
+    Top = 56
     DockControlHeights = (
       0
       0

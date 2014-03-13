@@ -357,6 +357,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Action = actOpenForm
         end>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 28
       ShortCut = 13
     end

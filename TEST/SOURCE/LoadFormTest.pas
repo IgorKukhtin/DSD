@@ -55,6 +55,7 @@ type
     procedure LoadMeasureFormTest;
     procedure LoadMemberFormTest;
     procedure LoadModelServiceFormTest;
+    procedure LoadMovementFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
     procedure LoadDocumentTaxKindFormTest;
@@ -915,6 +916,12 @@ begin
   //Типы документов
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementDescForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMovementDescForm');
+end;
+
+procedure TLoadFormTest.LoadMovementFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPositionFormTest;
