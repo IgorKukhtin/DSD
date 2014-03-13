@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractCondition(
     IN inContractId                Integer   , -- Договор
     IN inContractConditionKindId   Integer   , -- Типы условий договоров 
     IN inBonusKindId               Integer   , -- Виды бонусов
+    IN inInfoMoneyId               Integer   , -- Статьи назначения
     IN inSession                   TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -43,6 +44,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_ContractConditionKind(), ioId, inContractConditionKindId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_BonusKind(), ioId, inBonusKindId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractCondition_InfoMoney(), ioId, inInfoMoneyId);
 
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
@@ -56,6 +59,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ContractCondition (Integer, TVarChar, TFloa
 /*---------------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 14.03.14         * add InfoMoney
  25.02.14                                        * add inIsUpdate and inIsErased
  19.02.14         * add inBonusKindId, inComment
  16.11.13         * 

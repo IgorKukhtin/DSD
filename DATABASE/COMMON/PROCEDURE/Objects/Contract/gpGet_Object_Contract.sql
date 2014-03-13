@@ -22,6 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , BankId Integer, BankName TVarChar
+             , Default Boolean
              , isErased Boolean
               )
 AS
@@ -69,7 +70,7 @@ BEGIN
 
            , 0 :: Integer   AS BankId
            , '' :: TVarChar AS BankName
-           
+           , NULL :: Boolean  AS Default
            , NULL :: Boolean  AS isErased
        FROM Object AS Object_PaidKind
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399 -- ŒŒŒ ¿À¿Õ
@@ -114,7 +115,9 @@ BEGIN
 
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
-       
+
+           , ObjectBoolean_Default.ValueData AS Default
+
            , Object_Contract_View.isErased
 
        FROM Object_Contract_View
@@ -133,6 +136,10 @@ BEGIN
             LEFT JOIN ObjectString AS ObjectString_BankAccount
                                    ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                                   AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
+                                    ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
 
             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                                  ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
@@ -183,6 +190,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 13.03.14         * add zc_ObjectBoolean_Contract_Default
  21.02.14         * add Bank, BankAccount
  08.11.14                        * 
  14.11.13         * add from redmaine

@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer
              , Value TFloat
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar      
              , BonusKindId Integer, BonusKindName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
              , Comment TVarChar
              , isErased boolean
              ) AS
@@ -30,7 +31,10 @@ BEGIN
 
          , Object_BonusKind.Id          AS BonusKindId
          , Object_BonusKind.ValueData   AS BonusKindName
-         
+ 
+         , Object_InfoMoney.Id          AS InfoMoneyId
+         , Object_InfoMoney.ValueData   AS InfoMoneyName
+          
          , Object_ContractCondition.ValueData AS Comment
          
          , Object_ContractCondition.isErased AS isErased
@@ -47,6 +51,11 @@ BEGIN
                                ON ObjectLink_ContractCondition_BonusKind.ObjectId = Object_ContractCondition.Id
                               AND ObjectLink_ContractCondition_BonusKind.DescId = zc_ObjectLink_ContractCondition_BonusKind()
           LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = ObjectLink_ContractCondition_BonusKind.ChildObjectId
+
+          LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_InfoMoney
+                               ON ObjectLink_ContractCondition_InfoMoney.ObjectId = Object_ContractCondition.Id
+                              AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
+          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
            
           LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                                 ON ObjectFloat_Value.ObjectId = Object_ContractCondition.Id 
@@ -65,6 +74,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionByContract (Integer, TVarChar) O
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 14.03.14         * add InfoMoney
  18.12.13                        *
 */
 
