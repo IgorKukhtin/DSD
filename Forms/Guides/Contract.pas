@@ -108,6 +108,9 @@ type
     clUpdateName: TcxGridDBColumn;
     clInsertDate: TcxGridDBColumn;
     clUpdateDate: TcxGridDBColumn;
+    clisDefault: TcxGridDBColumn;
+    clccInfoMoneyName: TcxGridDBColumn;
+    InfoMoneyChoiceForm1: TOpenChoiceForm;
   private
     { Private declarations }
   public

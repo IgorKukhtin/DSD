@@ -99,8 +99,8 @@ type
   public
     function InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
-  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer
-                                 ): integer;
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+  isDefault: boolean ): integer;
     constructor Create; override;
   end;
 
@@ -1005,6 +1005,7 @@ var Id,Code: integer;
     InvNumber,InvNumberArchive,Comment,BankAccount: string;
     SigningDate, StartDate, EndDate: TDateTime;
     JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+    isDefault: boolean;
 begin
     Id:=0;
     Code:=0;
@@ -1023,18 +1024,19 @@ begin
     ContractArticleId:=0;
     ContractStateKindId:=0;
     BankId:=0;
+    isDefault:=True;
 
   result := InsertUpdateContract(Id,Code,
     InvNumber,InvNumberArchive,Comment,BankAccount,
     SigningDate, StartDate, EndDate,
-    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId);
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault);
   inherited;
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
-  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer
- ): integer;
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+  isDefault: boolean): integer;
 
 begin
   FParams.Clear;
@@ -1057,6 +1059,7 @@ begin
   FParams.AddParam('inContractArticleId', ftInteger, ptInput, ContractArticleId);
   FParams.AddParam('inContractStateKindId', ftInteger, ptInput, ContractStateKindId);
   FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
+  FParams.AddParam('inDefault', ftboolean, ptInput, isDefault);
 
   result := InsertUpdate(FParams);
 end;

@@ -10,6 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
              , Comment TVarChar, BankAccount TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
+             
              , ContractKindId Integer, ContractKindName TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
@@ -22,7 +23,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , BankId Integer, BankName TVarChar
-             , Default Boolean
+             , isDefault Boolean
              , isErased Boolean
               )
 AS
@@ -70,8 +71,11 @@ BEGIN
 
            , 0 :: Integer   AS BankId
            , '' :: TVarChar AS BankName
-           , NULL :: Boolean  AS Default
+           
+           , CAST (false as Boolean)  AS isDefault 
+
            , NULL :: Boolean  AS isErased
+
        FROM Object AS Object_PaidKind
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399 -- ŒŒŒ ¿À¿Õ
        WHERE Object_PaidKind.Id = zc_Enum_PaidKind_FirstForm()
@@ -116,7 +120,7 @@ BEGIN
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
 
-           , ObjectBoolean_Default.ValueData AS Default
+           , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
 
            , Object_Contract_View.isErased
 

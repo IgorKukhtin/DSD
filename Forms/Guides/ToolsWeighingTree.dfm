@@ -111,7 +111,6 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
       object ceCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
-        Visible = False
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -515,6 +514,7 @@ object ToolsWeighingTreeForm: TToolsWeighingTreeForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 432
     Top = 240
   end

@@ -49,28 +49,38 @@ object ContractConditionByContractForm: TContractConditionByContractForm
         DataBinding.FieldName = 'BonusKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 170
+        Options.Editing = False
+        Width = 152
       end
       object clContractConditionKindName: TcxGridDBColumn
         Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 196
+        Options.Editing = False
+        Width = 175
+      end
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'lInfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 113
       end
       object clValue: TcxGridDBColumn
         Caption = #1047#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'Value'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 102
+        Width = 68
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 117
+        Width = 77
       end
       object colisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -257,6 +267,7 @@ object ContractConditionByContractForm: TContractConditionByContractForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 120
     Top = 200
   end

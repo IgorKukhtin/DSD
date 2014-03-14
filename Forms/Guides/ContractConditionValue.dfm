@@ -344,6 +344,13 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 56
       end
+      object clisDefault: TcxGridDBColumn
+        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        DataBinding.FieldName = 'isDefault'
+        Visible = False
+        Options.Editing = False
+        Width = 20
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -990,6 +997,7 @@ object ContractConditionValueForm: TContractConditionValueForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 272
     Top = 184
   end
