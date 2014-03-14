@@ -32,7 +32,17 @@ BEGIN
      END IF; 
 
      -- Проверка установки значений
-     IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_40800())) -- Маркетинг and Внутренний оборот
+     IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40200() -- Прочие кредиты
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40300() -- Овердрафт
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
+                                                                                                                                 -- , zc_Enum_InfoMoneyDestination_40500() -- Ссуды
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40600() -- Депозиты
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40800() -- Внутренний оборот
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_40900() -- Финансовая помощь
+                                                                                                                                 ))
         -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
         AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)
         AND inContractId > 0

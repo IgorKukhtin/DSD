@@ -3,7 +3,6 @@ program Load_PostgreSql;
 uses
   Forms,
   Main in '..\Load_PostgreSql\Main.pas' {MainForm},
-  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   Storage in '..\SOURCE\Storage.pas',
   UtilConst in '..\SOURCE\UtilConst.pas',
   UtilConvert in '..\SOURCE\UtilConvert.pas',
@@ -23,7 +22,10 @@ uses
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  Log in '..\SOURCE\Log.pas';
+  Log in '..\SOURCE\Log.pas',
+  ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
+  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
 
 {$R *.res}
 

@@ -2,8 +2,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1127
-  ExplicitWidth = 1143
-  ExplicitHeight = 590
+  ExplicitWidth = 1135
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -210,7 +210,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
-          OptionsData.Editing = False
           OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -344,6 +343,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -354,6 +354,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -364,9 +365,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 55
           end
           object colReturnInSumm: TcxGridDBColumn
@@ -375,6 +377,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -385,9 +388,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colServiceSumm: TcxGridDBColumn
@@ -396,9 +399,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colSendDebtSumm: TcxGridDBColumn
@@ -407,6 +410,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -417,9 +421,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
           object colDebetSumm: TcxGridDBColumn
@@ -639,6 +643,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'StartDate'
@@ -655,6 +660,293 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1076#1086#1083#1075#1086#1084')'
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
+    end
+    object IncomeJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'IncomeJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'Income'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object ReturnOutJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'ReturnOutJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'ReturnOut'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object SaleJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'Sale'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object ReturnInJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'ReturnInJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'ReturnIn'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object MoneyJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'MoneyJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'Cash;BankAccount'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object ServiceJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'ServiceJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'Service'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object SendDebtJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'SendDebtJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'SendDebt'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
+    end
+    object OtherJournal: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'OtherJournal'
+      FormName = 'TMovementJournalForm'
+      FormNameParam.Value = 'TMovementJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41609d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41639d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'DescSet'
+          Value = 'Sale'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end>
+      isShowModal = False
     end
   end
   inherited MasterDS: TDataSource
@@ -746,6 +1038,41 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Action = dsdPrintAction
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    ColumnAddOnList = <
+      item
+        Column = colIncomeSumm
+        Action = IncomeJournal
+      end
+      item
+        Column = colReturnOutSumm
+        Action = ReturnOutJournal
+      end
+      item
+        Column = colSaleSumm
+        Action = SaleJournal
+      end
+      item
+        Column = colReturnInSumm
+        Action = ReturnInJournal
+      end
+      item
+        Column = colMoneySumm
+        Action = MoneyJournal
+      end
+      item
+        Column = colServiceSumm
+        Action = ServiceJournal
+      end
+      item
+        Column = colSendDebtSumm
+        Action = SendDebtJournal
+      end
+      item
+        Column = colOtherSumm
+        Action = OtherJournal
+      end>
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <

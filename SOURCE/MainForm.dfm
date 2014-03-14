@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1006,15 +1006,15 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsPropertyValue'
+        end
+        item
+          Visible = True
           ItemName = 'bbTradeMark'
         end
         item
           Visible = True
           ItemName = 'bbPriceList'
-        end
-        item
-          Visible = True
-          ItemName = 'bbToolsWeighingTree'
         end
         item
           Visible = True
@@ -1134,6 +1134,10 @@ object MainForm: TMainForm
     end
     object bbGoodsProperty: TdxBarButton
       Action = actGoodsProperty
+      Category = 0
+    end
+    object bbGoodsPropertyValue: TdxBarButton
+      Action = actGoodsPropertyValue
       Category = 0
     end
     object bbTradeMark: TdxBarButton
@@ -1284,6 +1288,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbSaveTaxDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbToolsWeighingTree'
         end
         item
           Visible = True
@@ -1747,16 +1755,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object dsdOpenForm1: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1043#1086#1088#1086#1076#1072
-      Hint = #1041#1072#1085#1082#1080
-      FormName = 'TCityForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <>
-      isShowModal = False
-    end
     object actBankAccount: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
@@ -1900,9 +1898,19 @@ object MainForm: TMainForm
     object actGoodsProperty: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
-      Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088#1099' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsPropertyValue: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      Hint = #1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
+      FormName = 'TGoodsPropertyValueForm'
+      FormNameParam.Value = 'TGoodsPropertyValueForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2323,12 +2331,6 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUpdateProgram: TAction
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
-      ShortCut = 57429
-      OnExecute = actUpdateProgramExecute
-    end
     object actModelService: TdsdOpenForm
       Category = #1055#1077#1088#1089#1086#1085#1072#1083
       Caption = #1052#1086#1076#1077#1083#1080' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103
@@ -2338,11 +2340,6 @@ object MainForm: TMainForm
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
-    end
-    object actAbout: TAction
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
-      OnExecute = actAboutExecute
     end
     object actProtocol: TdsdOpenForm
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
@@ -2701,14 +2698,25 @@ object MainForm: TMainForm
       isShowModal = False
     end
     object actToolsWeighingTree: TdsdOpenForm
-      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103' ('#1044#1077#1088#1077#1074#1086')'
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       Hint = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
       FormName = 'TToolsWeighingTreeForm'
       FormNameParam.Value = 'TToolsWeighingTreeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
+    end
+    object actAbout: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
+      OnExecute = actAboutExecute
+    end
+    object actUpdateProgram: TAction
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
+      ShortCut = 57429
+      OnExecute = actUpdateProgramExecute
     end
   end
   object cxLocalizer: TcxLocalizer

@@ -1127,6 +1127,11 @@
 				<Form>PersonalServiceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Movement_Journal.pas">
+				<Form>MovementJournalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\UnitTree.pas">
 				<Form>UnitTreeForm</Form>
 				<DesignClass>TParentForm</DesignClass>

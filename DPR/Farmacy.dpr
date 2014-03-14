@@ -24,7 +24,9 @@ uses
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
-  Log in '..\SOURCE\Log.pas';
+  Log in '..\SOURCE\Log.pas',
+  ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
 
 {$R *.res}
 

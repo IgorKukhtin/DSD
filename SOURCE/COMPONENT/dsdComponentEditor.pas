@@ -43,7 +43,7 @@ implementation
 
 uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
      cxCalendar, cxButtonEdit, dsdAction, ChoicePeriod, ParentForm, Document, Defaults,
-     cxGrid, cxCustomPivotGrid, cxControls;
+     cxGrid, cxCustomPivotGrid, cxControls, VCLEditors;
 
 procedure Register;
 begin
@@ -54,6 +54,8 @@ begin
    RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel , 'Grid', TExcelGridProperty);
    RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component', TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
+
+   RegisterPropertyEditor(TypeInfo(TShortCut), TShortCutActionItem, 'ShortCut', TShortCutProperty);
 end;
 
 

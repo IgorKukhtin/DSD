@@ -1,19 +1,19 @@
-п»ї-- Function: gpInsertUpdate_Object_GoodsPropertyValue()
+-- Function: gpInsertUpdate_Object_GoodsPropertyValue()
 
 -- DROP FUNCTION gpInsertUpdate_Object_GoodsPropertyValue();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
- INOUT ioId                  Integer   ,   	-- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р—РЅР°С‡РµРЅРёСЏ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ РґР»СЏ РєР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂР°> 
-    IN inName                TVarChar  ,    -- РќР°Р·РІР°РЅРёРµ С‚РѕРІР°СЂР°(РїРѕРєСѓРїР°С‚РµР»СЏ) 
-    IN inAmount              TFloat    ,    -- РљРѕР»РёС‡РµСЃС‚РІРѕ С€С‚СѓРє РІ СѓРїР°РєРѕРІРєРµ  
-    IN inBarCode             TVarChar  ,    -- РЁС‚СЂРёС…-РєРѕРґ                   
-    IN inArticle             TVarChar  ,    -- РђСЂС‚РёРєСѓР»                     
-    IN inBarCodeGLN          TVarChar  ,    -- РЁС‚СЂРёС…-РєРѕРґ GLN               
-    IN inArticleGLN          TVarChar  ,    -- РђСЂС‚РёРєСѓР» GLN                 
-    IN inGoodsPropertyId     Integer   ,    -- РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ 
-    IN inGoodsId             Integer   ,    -- РўРѕРІР°СЂС‹ 
-    IN inGoodsKindId         Integer   ,    -- Р’РёРґС‹ С‚РѕРІР°СЂР°            
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                  Integer   ,   	-- ключ объекта <Значения свойств товаров для классификатора> 
+    IN inName                TVarChar  ,    -- Название товара(покупателя) 
+    IN inAmount              TFloat    ,    -- Количество штук в упаковке  
+    IN inBarCode             TVarChar  ,    -- Штрих-код                   
+    IN inArticle             TVarChar  ,    -- Артикул                     
+    IN inBarCodeGLN          TVarChar  ,    -- Штрих-код GLN               
+    IN inArticleGLN          TVarChar  ,    -- Артикул GLN                 
+    IN inGoodsPropertyId     Integer   ,    -- Классификатор свойств товаров 
+    IN inGoodsId             Integer   ,    -- Товары 
+    IN inGoodsKindId         Integer   ,    -- Виды товара            
+    IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -21,31 +21,31 @@ $BODY$
  
  BEGIN
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
    UserId := inSession;
   
    ioId := lpInsertUpdate_Object(ioId, zc_Object_GoodsPropertyValue(), 0, inName);
 
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ
+   -- Вставляем свойство
    PERFORM lpInsertUpdate_ObjectFloat(zc_objectFloat_GoodsPropertyValue_Amount(), ioId, inAmount);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ
+   -- Вставляем свойство
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCode(), ioId, inBarCode);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ
+   -- Вставляем свойство
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_Article(), ioId, inArticle);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ
+   -- Вставляем свойство
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_BarCodeGLN(), ioId, inBarCodeGLN);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃРІРѕР№СЃС‚РІРѕ
+   -- Вставляем свойство
    PERFORM lpInsertUpdate_ObjectString(zc_objectString_GoodsPropertyValue_ArticleGLN(), ioId, inArticleGLN);
 
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsProperty(), ioId, inGoodsPropertyId);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_Goods(), ioId, inGoodsId);
-   -- Р’СЃС‚Р°РІР»СЏРµРј СЃСЃС‹Р»РєСѓ
+   -- Вставляем ссылку
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_GoodsPropertyValue_GoodsKind(), ioId, inGoodsKindId);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
    
 END;$BODY$
@@ -58,12 +58,10 @@ ALTER FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(Integer, TVarChar, TFloa
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          *
- 00.06.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_GoodsPropertyValue()

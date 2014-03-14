@@ -1,10 +1,10 @@
-п»ї-- Function: gpGet_Object_GoodsPropertyValue()
+-- Function: gpGet_Object_GoodsPropertyValue()
 
 --DROP FUNCTION gpGet_Object_GoodsPropertyValue();
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsPropertyValue(
-    IN inId          Integer,       -- РљР»Р°СЃСЃРёС„РёРєР°С‚РѕСЂ СЃРІРѕР№СЃС‚РІ С‚РѕРІР°СЂРѕРІ 
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Классификатор свойств товаров 
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BarCode TVarChar, Article TVarChar, 
                BarCodeGLN TVarChar, ArticleGLN TVarChar, GoodsPropertyId Integer, GoodsPropertyName TVarChar, 
@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, Name TVarChar, isErased Boolean, Amount TFloat, BarCo
 $BODY$
 BEGIN
 
-     -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+     -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
    
    IF COALESCE (inId, 0) = 0
@@ -89,12 +89,10 @@ ALTER FUNCTION gpGet_Object_GoodsPropertyValue(integer, TVarChar) OWNER TO postg
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  12.06.13          *
- 00.06.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_GoodsPropertyValue('2')
