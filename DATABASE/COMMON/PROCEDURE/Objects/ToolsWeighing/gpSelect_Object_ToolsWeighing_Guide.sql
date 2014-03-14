@@ -11,7 +11,8 @@ RETURNS TABLE (
                FromId     Integer, FromName     TVarChar,
                ToId       Integer, ToName       TVarChar,
                PaidKindId Integer, PaidKindName TVarChar,
-               ColorGridName TVarChar
+               ColorGridName TVarChar,
+               Code       Integer
                ) AS
 $BODY$
    DECLARE vbUserId         Integer;
@@ -51,16 +52,21 @@ BEGIN
            , Object_PaidKind.Id                     AS PaidKindId
            , Object_PaidKind.ValueData              AS PaidKindName
            , ColorGridValue.Value                   AS ColorGridName
+           , Object_MovementDesc.ObjectCode         AS Code
+
        FROM tmpDesc
        LEFT JOIN gpGetToolsPropertyValue (vbRootName, 'Movement', tmpDesc.DescName, 'ColorGrid', '0',  inSession)  AS ColorGridValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue (vbRootName, 'Movement', tmpDesc.DescName, 'DescId', '0', inSession)      AS DescIdValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue (vbRootName, 'Movement', tmpDesc.DescName, 'FromId', '0', inSession)      AS FromIdValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue (vbRootName, 'Movement', tmpDesc.DescName, 'ToId', '0', inSession)        AS ToIdValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue (vbRootName, 'Movement', tmpDesc.DescName, 'PaidKindId', '0', inSession)  AS PaidKindIdValue ON 1 = 1
+       LEFT JOIN gpGetToolsPropertyId (vbRootName, 'Movement', tmpDesc.DescName, '', inSession)                    AS ObjectMovementDescId ON 1 = 1
        LEFT JOIN MovementDesc ON MovementDesc.Id = COALESCE (CAST(DescIdValue.Value AS Integer),0)
        LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (CAST(FromIdValue.Value AS Integer),0)
        LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (CAST(ToIdValue.Value AS Integer),0)
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = COALESCE (CAST(PaidKindIdValue.Value AS Integer),0)
+       LEFT JOIN Object AS Object_MovementDesc ON Object_MovementDesc.Id = ObjectMovementDescId.Value
+       ORDER BY 1, 4, 7
       ;
 
     DROP TABLE tmpDesc;
@@ -80,4 +86,4 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Guide (Integer, TVarChar) OWNER TO 
 -- тест
 
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (88952, zfCalc_UserAdmin()) --Scale_1
--- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (89036, zfCalc_UserAdmin()) --Scale_77
+ SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (89036, zfCalc_UserAdmin()) --Scale_77
