@@ -69,6 +69,8 @@ type
     ServiceJournal: TdsdOpenForm;
     SendDebtJournal: TdsdOpenForm;
     OtherJournal: TdsdOpenForm;
+    spGetDescSets: TdsdStoredProc;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public
