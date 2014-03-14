@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
-             , Default Boolean
+             , isDefault Boolean
              , isErased Boolean 
               )
 AS
@@ -91,7 +91,7 @@ BEGIN
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
-       , ObjectBoolean_Default.ValueData AS Default
+       , ObjectBoolean_Default.ValueData AS isDefault
        
        , Object_Contract_View.isErased
        

@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , BankId Integer, BankName TVarChar
-             , Default Boolean
+             , isDefault Boolean
              , isErased Boolean
               )
 AS
@@ -70,7 +70,7 @@ BEGIN
 
            , 0 :: Integer   AS BankId
            , '' :: TVarChar AS BankName
-           , NULL :: Boolean  AS Default
+           , NULL :: Boolean  AS isDefault
            , NULL :: Boolean  AS isErased
        FROM Object AS Object_PaidKind
             LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399 -- ŒŒŒ ¿À¿Õ
@@ -116,7 +116,7 @@ BEGIN
            , Object_Bank.Id          AS BankId
            , Object_Bank.ValueData   AS BankName
 
-           , ObjectBoolean_Default.ValueData AS Default
+           , ObjectBoolean_Default.ValueData AS isDefault
 
            , Object_Contract_View.isErased
 
