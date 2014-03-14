@@ -66,10 +66,9 @@ uses
   Currency in '..\..\Forms\Currency.pas' {CurrencyForm},
   BankEdit in '..\..\Forms\BankEdit.pas' {BankEditForm},
   PriceListGoodsItem in '..\..\Forms\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
-  GoodsPropertyValue in '..\..\Forms\GoodsPropertyValue.pas' {GoodsPropertyValueForm},
   ContractKindEdit in '..\..\Forms\Guides\ContractKindEdit.pas' {ContractKindEditForm},
   ContractKind in '..\..\Forms\Guides\ContractKind.pas' {ContractKindForm},
-  GoodsPropertyValueEdit in '..\..\Forms\GoodsPropertyValueEdit.pas' {GoodsPropertyValueEditForm},
+  GoodsPropertyValueEdit in '..\..\Forms\Guides\GoodsPropertyValueEdit.pas' {GoodsPropertyValueEditForm},
   BankAccount in '..\..\Forms\BankAccount.pas' {BankAccountForm},
   BankAccountEdit in '..\..\Forms\BankAccountEdit.pas' {BankAccountEditForm},
   BusinessEdit in '..\..\Forms\BusinessEdit.pas' {BusinessEditForm},
@@ -302,7 +301,7 @@ uses
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  GoodsPropertyValue in '..\..\Forms\Guides\GoodsPropertyValue.pas' {GoodsPropertyValueForm: TParentForm},
   ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
   ReturnIn in '..\..\Forms\Document\ReturnIn.pas' {ReturnInForm: TParentForm},
@@ -383,7 +382,8 @@ uses
   Movement_Journal in '..\..\Forms\Report\Movement_Journal.pas' {MovementJournalForm: TParentForm},
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
-  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas';
+  ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm};
 
 {$R *.RES}
 

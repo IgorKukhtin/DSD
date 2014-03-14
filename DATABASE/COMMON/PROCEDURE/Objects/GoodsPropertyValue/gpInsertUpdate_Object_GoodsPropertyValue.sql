@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Object_GoodsPropertyValue();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsPropertyValue(
- INOUT ioId                  Integer   ,   	-- ключ объекта <Значения свойств товаров для классификатора> 
+ INOUT ioId                  Integer   ,    -- ключ объекта <Значения свойств товаров для классификатора> 
     IN inName                TVarChar  ,    -- Название товара(покупателя) 
     IN inAmount              TFloat    ,    -- Количество штук в упаковке  
     IN inBarCode             TVarChar  ,    -- Штрих-код                   
