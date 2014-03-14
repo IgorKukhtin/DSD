@@ -28,6 +28,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , ContractConditionComment TVarChar 
              , Value TFloat
+             , isDefault Boolean
              , isErased Boolean 
               )
 AS
@@ -96,6 +97,8 @@ BEGIN
               
        , tmpContractCondition.Comment      AS ContractConditionComment
        , ObjectFloat_Value.ValueData       AS Value  
+       
+       , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
 
        , Object_Contract_View.isErased
        
@@ -115,7 +118,11 @@ BEGIN
         LEFT JOIN ObjectString AS ObjectString_BankAccount
                                ON ObjectString_BankAccount.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_BankAccount.DescId = zc_objectString_Contract_BankAccount()
-                              
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
+                                ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                      
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -188,6 +195,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.03.14         * add isDefault
  21.02.14         * add Bank, BankAccount
  14.02.14                                        * add Object_ContractCondition.isErased = FALSE
  11.02.14                         * add ContractStateKindColor

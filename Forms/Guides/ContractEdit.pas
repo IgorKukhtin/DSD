@@ -13,7 +13,7 @@ uses
   cxTextEdit, dsdDB, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   dsdAddOn, Vcl.StdCtrls, cxButtons, cxInplaceContainer, cxVGrid, cxDBVGrid,
   Document, dxBarExtItems, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCheckBox;
 
 type
   TContractEditForm = class(TAncestorEditDialogForm)
@@ -119,6 +119,9 @@ type
     BankGuides: TdsdGuides;
     edBankAccount: TcxTextEdit;
     cxLabel17: TcxLabel;
+    clccInfoMoneyName: TcxGridDBColumn;
+    InfoMoneyChoiceForm: TOpenChoiceForm;
+    cbisDefault: TcxCheckBox;
   private
     { Private declarations }
   public
