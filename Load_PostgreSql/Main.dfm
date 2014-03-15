@@ -834,7 +834,7 @@ object MainForm: TMainForm
       TabOrder = 16
       OnClick = cbCompleteClick
     end
-    object cbTax: TCheckBox
+    object cbTaxFl: TCheckBox
       Tag = 20
       Left = 15
       Top = 391
