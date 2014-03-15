@@ -636,6 +636,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
   end
   inherited ActionList: TActionList
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProc = spGetDescSets
+      StoredProcList = <
+        item
+          StoredProc = spGetDescSets
+        end
+        item
+          StoredProc = spSelect
+        end>
+    end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
       StoredProcList = <>
@@ -687,7 +697,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'Income'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'IncomeDesc'
           DataType = ftString
         end
         item
@@ -723,7 +735,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'ReturnOut'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReturnOutDesc'
           DataType = ftString
         end
         item
@@ -758,7 +772,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'Sale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SaleDesc'
           DataType = ftString
         end
         item
@@ -794,7 +810,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'ReturnIn'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ReturnInDesc'
           DataType = ftString
         end
         item
@@ -830,7 +848,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'Cash;BankAccount'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'MoneyDesc'
           DataType = ftString
         end
         item
@@ -866,7 +886,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'Service'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'ServiceDesc'
           DataType = ftString
         end
         item
@@ -902,7 +924,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'SendDebt'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'SendDebtDesc'
           DataType = ftString
         end
         item
@@ -938,7 +962,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Name = 'DescSet'
-          Value = 'Sale'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'OtherDesc'
           DataType = ftString
         end
         item
@@ -1203,5 +1229,114 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
     Left = 312
     Top = 48
+  end
+  object spGetDescSets: TdsdStoredProc
+    StoredProcName = 'gpGetDescSets'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'IncomeDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'IncomeDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnOutDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnOutDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'SaleDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReturnInDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'MoneyDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'MoneyDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'ServiceDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ServiceDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'SendDebtDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SendDebtDesc'
+        DataType = ftString
+      end
+      item
+        Name = 'OtherDesc'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'OtherDesc'
+        DataType = ftString
+      end>
+    Left = 272
+    Top = 176
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'IncomeDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnOutDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'SaleDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ReturnInDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'MoneyDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'ServiceDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'SendDebtDesc'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'OtherDesc'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 272
+    Top = 144
   end
 end

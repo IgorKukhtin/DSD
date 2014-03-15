@@ -361,6 +361,7 @@ object ContractForm: TContractForm
         DataBinding.FieldName = 'isDefault'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 31
       end
     end
@@ -1045,6 +1046,7 @@ object ContractForm: TContractForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 272
     Top = 184
   end
@@ -1253,7 +1255,7 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end
       item
-        Name = 'inDefault'
+        Name = 'inisDefault'
         Component = ClientDataSet
         ComponentItem = 'isDefault'
         DataType = ftBoolean
@@ -1284,6 +1286,7 @@ object ContractForm: TContractForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 448
     Top = 360
   end

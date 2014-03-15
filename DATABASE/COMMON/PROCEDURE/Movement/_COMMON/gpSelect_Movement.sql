@@ -33,7 +33,7 @@ BEGIN
 
      WHILE split_part(inDescSet, ';', vbIndex) <> '' LOOP
 
-         EXECUTE 'SELECT zc_Movement_'||split_part(inDescSet, ';', vbIndex)||'() ' INTO vbDescId;
+         EXECUTE 'SELECT '||split_part(inDescSet, ';', vbIndex) INTO vbDescId;
          INSERT INTO _tmpMovementDesc SELECT vbDescId;
          vbIndex := vbIndex + 1;
 
@@ -68,13 +68,20 @@ BEGIN
                                  ON ObjectLink_Partner_JuridicalTo.ObjectId = MovementLinkObject_To.ObjectId 
                                 AND ObjectLink_Partner_JuridicalTo.DescId = zc_ObjectLink_Partner_Juridical()
 
+
             LEFT JOIN Object AS PlaceTo ON PlaceTo.Id = COALESCE(ObjectLink_Partner_JuridicalTo.ChildObjectId, MovementLinkObject_To.ObjectId)
+                                       AND PlaceTo.DescId = zc_Object_Juridical()
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalFrom
                                  ON ObjectLink_Partner_JuridicalFrom.ObjectId = MovementLinkObject_From.ObjectId 
                                 AND ObjectLink_Partner_JuridicalFrom.DescId = zc_ObjectLink_Partner_Juridical()
 
-            LEFT JOIN Object AS PlaceFrom ON PlaceFrom.Id = COALESCE(ObjectLink_Partner_JuridicalFrom.ChildObjectId, MovementLinkObject_From.ObjectId)
+            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_JuridicalFrom
+                                 ON ObjectLink_CardFuel_JuridicalFrom.ObjectId = MovementLinkObject_From.ObjectId 
+                                AND ObjectLink_CardFuel_JuridicalFrom.DescId = zc_ObjectLink_CardFuel_Juridical()
+
+            LEFT JOIN Object AS PlaceFrom ON PlaceFrom.Id = COALESCE(ObjectLink_Partner_JuridicalFrom.ChildObjectId, MovementLinkObject_From.ObjectId, ObjectLink_CardFuel_JuridicalFrom.ChildObjectId)
+                                         AND PlaceFrom.DescId = zc_Object_Juridical() 
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() 
                                   AND Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount())

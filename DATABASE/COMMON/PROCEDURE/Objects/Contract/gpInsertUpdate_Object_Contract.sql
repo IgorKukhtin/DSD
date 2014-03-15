@@ -30,7 +30,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
     IN inBankId              Integer  ,     -- Банк
-    IN inDefault             Boolean  ,     -- по умолчанию
+    IN inisDefault           Boolean  ,     -- по умолчанию
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -137,7 +137,7 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccount);
 
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Default(), ioId, inDefault);
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Default(), ioId, inisDefault);
 
 
    -- сохранили связь с <Юридическое лицо>
@@ -173,7 +173,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.03.14         * add inDefault
+ 13.03.14         * add inisDefault
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
  25.02.14                                        * add inIsUpdate and inIsErased
  21.02.14         * add Bank, BankAccount

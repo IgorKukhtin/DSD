@@ -9,7 +9,8 @@ CREATE OR REPLACE FUNCTION gpGetToolsPropertyValue(
     IN inValueData               TVarChar  ,
     IN inSession                 TVarChar
 )
-  RETURNS TVarChar
+RETURNS TABLE (Value TVarChar)
+--  RETURNS TVarChar
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -101,14 +102,12 @@ BEGIN
     END IF;
     -- 4
 
-
    END IF;
 
+-- RETURN (vbValueData);
+    RETURN QUERY
+       SELECT vbValueData;
 
---  select ToolsValue into @ToolsValue from "dba".ToolsProperty where ToolsGroupsName=@ToolsGroupsName and ToolsName=@ToolsName and UserID=@UserID;
-
- RETURN (vbValueData);
--- RETURN (vbNameFull);
 
 
 END;
@@ -120,15 +119,16 @@ ALTER FUNCTION gpGetToolsPropertyValue (TVarChar, TVarChar, TVarChar, TVarChar, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.03.14                                                         * change result to table
  13.03.14                                                         *
 */
 
 -- тест
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_Income', '', '98751', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'DescId', '6',  '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'FromId', '0', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'ToId', '0', '2');
--- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'zc_Movement_ReturnIn', 'PaidKindId', '0', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'MovementDesc_1', '', '98751', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'MovementDesc_1', 'DescId', '6',  '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'MovementDesc_1', 'FromId', '0', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'MovementDesc_1', 'ToId', '0', '2');
+-- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Movement', 'MovementDesc_1', 'PaidKindId', '0', '2');
 -- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'ComPort', '', '1', 'Ком порт', '2');
 -- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'isPreviewPrint', '', 'false', '2');
 -- SELECT * FROM gpGetToolsPropertyValue ('Scale_1', 'Service', 'isActive', '', 'false', '2');

@@ -1,4 +1,4 @@
-unit ContractConditionByContract;
+unit GoodsPropertyValue;
 
 interface
 
@@ -9,7 +9,8 @@ uses
   cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, ParentForm, dsdDB, dsdAction, dsdAddOn, dxBarExtItems,
+  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
   dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel,
   dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
   dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
@@ -20,14 +21,11 @@ uses
   dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
+  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit;
 
 type
-  TContractConditionByContractForm = class(TParentForm)
-    cxGridDBTableView: TcxGridDBTableView;
-    cxGridLevel: TcxGridLevel;
-    cxGrid: TcxGrid;
-    clContractConditionKindName: TcxGridDBColumn;
+  TGoodsPropertyValueForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -36,18 +34,41 @@ type
     ActionList: TActionList;
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    bbInsert: TdxBarButton;
     dsdStoredProc: TdsdStoredProc;
+    actUpdate: TdsdInsertUpdateAction;
+    bbEdit: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
+    spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    bbStatic: TdxBarStatic;
+    dsdGridToExcel: TdsdGridToExcel;
+    bbGridToExel: TdxBarButton;
     bbChoiceGuides: TdxBarButton;
+    dxBarStatic1: TdxBarStatic;
+    cxGrid: TcxGrid;
+    cxGridDBTableView: TcxGridDBTableView;
+    ceBarCode: TcxGridDBColumn;
+    ceisErased: TcxGridDBColumn;
+    cxGridLevel: TcxGridLevel;
+    ceName: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    FormParams: TdsdFormParams;
-    clBonusKindName: TcxGridDBColumn;
-    clValue: TcxGridDBColumn;
-    clComment: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    ceAmount: TcxGridDBColumn;
+    clArticle: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
+    clBarCodeGLN: TcxGridDBColumn;
+    clArticleGLN: TcxGridDBColumn;
+    clGoodsPropertyName: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
+    GoodsKindChoiceForm: TOpenChoiceForm;
+    GoodsChoiceForm: TOpenChoiceForm;
+    clGoodsKindName: TcxGridDBColumn;
+    GoodsPropertyChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
@@ -59,6 +80,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TContractConditionByContractForm);
+  RegisterClass(TGoodsPropertyValueForm);
 
 end.

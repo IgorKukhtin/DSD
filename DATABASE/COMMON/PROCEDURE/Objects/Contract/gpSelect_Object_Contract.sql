@@ -91,7 +91,7 @@ BEGIN
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
-       , ObjectBoolean_Default.ValueData AS isDefault
+       , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
        
        , Object_Contract_View.isErased
        

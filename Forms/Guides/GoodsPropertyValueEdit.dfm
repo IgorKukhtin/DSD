@@ -2,8 +2,8 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   Left = 0
   Top = 0
   Caption = #1047#1085#1072#1095#1077#1085#1080#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 277
-  ClientWidth = 560
+  ClientHeight = 293
+  ClientWidth = 563
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,7 +20,7 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
     Left = 16
     Top = 31
     TabOrder = 0
-    Width = 322
+    Width = 357
   end
   object cxLabel1: TcxLabel
     Left = 16
@@ -29,136 +29,133 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
   end
   object cxButton1: TcxButton
     Left = 167
-    Top = 244
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
     Default = True
     ModalResult = 8
-    TabOrder = 9
+    TabOrder = 2
   end
   object cxButton2: TcxButton
     Left = 311
-    Top = 240
+    Top = 260
     Width = 75
     Height = 25
     Action = dsdFormClose1
     Cancel = True
     Caption = #1054#1090#1084#1077#1085#1072
     ModalResult = 8
-    TabOrder = 17
+    TabOrder = 8
   end
   object cxLabel3: TcxLabel
-    Left = 355
-    Top = 8
+    Left = 18
+    Top = 97
     Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
   end
-  object ceGoodsProperty: TcxLookupComboBox
-    Left = 355
-    Top = 31
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = GoodsPropertyDS
-    TabOrder = 2
-    Width = 197
-  end
-  object cxLabel2: TcxLabel
-    Left = 16
-    Top = 63
-    Caption = #1041#1072#1085#1082#1080
-  end
-  object ceGoods: TcxLookupComboBox
-    Left = 16
-    Top = 86
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = GoodsDS
-    TabOrder = 3
-    Width = 322
-  end
-  object cxLabel4: TcxLabel
-    Left = 355
-    Top = 63
-    Caption = #1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1086#1074
-  end
-  object ceGoodsKind: TcxLookupComboBox
-    Left = 355
-    Top = 86
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
-      item
-        FieldName = 'Name'
-      end>
-    Properties.ListSource = GoodsKindDS
-    TabOrder = 4
-    Width = 197
-  end
   object cxLabel5: TcxLabel
-    Left = 16
-    Top = 120
+    Left = 17
+    Top = 152
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076
-  end
-  object edBarCode: TcxTextEdit
-    Left = 16
-    Top = 143
-    TabOrder = 5
-    Width = 261
   end
   object cxLabel6: TcxLabel
     Left = 290
-    Top = 120
+    Top = 154
     Caption = #1064#1090#1088#1080#1093'-'#1082#1086#1076' GLN'
-  end
-  object edBarCodeGLN: TcxTextEdit
-    Left = 290
-    Top = 143
-    TabOrder = 6
-    Width = 261
   end
   object cxLabel7: TcxLabel
     Left = 16
-    Top = 176
+    Top = 205
     Caption = #1040#1088#1090#1080#1082#1091#1083
   end
-  object edArticle: TcxTextEdit
-    Left = 16
-    Top = 199
-    TabOrder = 7
-    Width = 189
-  end
-  object edArticleGLN: TcxTextEdit
-    Left = 221
-    Top = 199
-    TabOrder = 8
-    Width = 189
-  end
   object cxLabel8: TcxLabel
-    Left = 221
-    Top = 176
+    Left = 290
+    Top = 205
     Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
   end
-  object ceAmount: TcxCurrencyEdit
-    Left = 431
-    Top = 199
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 18
-    Width = 121
-  end
   object cxLabel9: TcxLabel
-    Left = 431
-    Top = 176
+    Left = 392
+    Top = 15
     Caption = #1064#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
   end
+  object ceGoodsProperty: TcxButtonEdit
+    Left = 17
+    Top = 120
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 10
+    Width = 267
+  end
+  object ceAmount: TcxCurrencyEdit
+    Left = 392
+    Top = 31
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####'
+    TabOrder = 11
+    Width = 160
+  end
+  object ceBarCode: TcxTextEdit
+    Left = 17
+    Top = 175
+    TabOrder = 12
+    Width = 267
+  end
+  object ceBarCodeGLN: TcxTextEdit
+    Left = 290
+    Top = 175
+    TabOrder = 13
+    Width = 262
+  end
+  object ceArticle: TcxTextEdit
+    Left = 17
+    Top = 224
+    TabOrder = 14
+    Width = 267
+  end
+  object ceArticleGLN: TcxTextEdit
+    Left = 290
+    Top = 224
+    TabOrder = 15
+    Width = 262
+  end
+  object cxLabel2: TcxLabel
+    Left = 290
+    Top = 97
+    Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+  end
+  object ceGoodsKind: TcxButtonEdit
+    Left = 290
+    Top = 120
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 17
+    Width = 262
+  end
+  object cxLabel4: TcxLabel
+    Left = 18
+    Top = 58
+    Caption = #1058#1086#1074#1072#1088
+  end
+  object ceGoods: TcxButtonEdit
+    Left = 17
+    Top = 77
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 19
+    Width = 535
+  end
   object ActionList: TActionList
-    Left = 456
-    Top = 214
+    Left = 432
+    Top = 246
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = spGet
@@ -167,11 +164,11 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
           StoredProc = spGet
         end
         item
-          StoredProc = spGetGoodsProperty
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
     end
@@ -214,51 +211,54 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       item
         Name = 'inBarCode'
         Value = ''
-        Component = edBarCode
+        Component = ceBarCode
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inArticle'
         Value = ''
-        Component = edArticle
+        Component = ceArticle
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inBarCodeGLN'
         Value = ''
-        Component = edBarCodeGLN
+        Component = ceBarCodeGLN
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inArticleGLN'
         Value = ''
-        Component = edArticleGLN
+        Component = ceArticleGLN
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'inGoodsPropertyId'
-        Value = '0'
+        Value = ''
         Component = dsdGoodsPropertyGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
-        Value = '0'
-        Component = dsdGoodsGuides
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsKindId'
-        Value = '0'
-        Component = dsdGoodsKindGuides
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 16
-    Top = 214
+    Left = 88
+    Top = 245
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -267,12 +267,14 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 504
-    Top = 214
+    Left = 512
+    Top = 246
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_GoodsPropertyValue'
-    DataSets = <>
+    DataSets = <
+      item
+      end>
     OutputType = otResult
     Params = <
       item
@@ -292,30 +294,35 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
         Name = 'Amount'
         Value = 0.000000000000000000
         Component = ceAmount
+        DataType = ftFloat
       end
       item
         Name = 'BarCode'
         Value = ''
-        Component = edBarCode
+        Component = ceBarCode
+        DataType = ftString
       end
       item
         Name = 'Article'
         Value = ''
-        Component = edArticle
+        Component = ceArticle
+        DataType = ftString
       end
       item
         Name = 'BarCodeGLN'
         Value = ''
-        Component = edBarCodeGLN
+        Component = ceBarCodeGLN
+        DataType = ftString
       end
       item
         Name = 'ArticleGLN'
         Value = ''
-        Component = edArticleGLN
+        Component = ceArticleGLN
+        DataType = ftString
       end
       item
         Name = 'GoodsPropertyId'
-        Value = '0'
+        Value = ''
         Component = dsdGoodsPropertyGuides
         ComponentItem = 'Key'
       end
@@ -328,120 +335,109 @@ object GoodsPropertyValueEditForm: TGoodsPropertyValueEditForm
       end
       item
         Name = 'GoodsId'
-        Value = '0'
-        Component = dsdGoodsGuides
+        Value = ''
+        Component = GoodsGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsName'
         Value = ''
-        Component = dsdGoodsGuides
+        Component = GoodsGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'GoodsKindId'
-        Value = '0'
-        Component = dsdGoodsKindGuides
+        Value = ''
+        Component = GoodsKindGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'GoodsKindName'
         Value = ''
-        Component = dsdGoodsKindGuides
+        Component = GoodsKindGuides
         ComponentItem = 'TextValue'
-        ParamType = ptInput
+        DataType = ftString
       end>
-    Left = 83
-    Top = 214
-  end
-  object GoodsPropertyDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 403
-    Top = 21
-  end
-  object spGetGoodsProperty: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsProperty'
-    DataSet = GoodsPropertyDataSet
-    DataSets = <
-      item
-        DataSet = GoodsPropertyDataSet
-      end>
-    Params = <>
-    Left = 443
-    Top = 21
-  end
-  object GoodsPropertyDS: TDataSource
-    DataSet = GoodsPropertyDataSet
-    Left = 483
-    Top = 21
+    Left = 259
+    Top = 246
   end
   object dsdGoodsPropertyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsProperty
+    FormNameParam.Value = 'TGoodsPropertyForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsPropertyForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 523
-    Top = 21
-  end
-  object GoodsDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 155
-    Top = 69
-  end
-  object spGetGoods: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
-    DataSet = GoodsDataSet
-    DataSets = <
+    Params = <
       item
-        DataSet = GoodsDataSet
-      end>
-    Params = <>
-    Left = 195
-    Top = 69
-  end
-  object GoodsDS: TDataSource
-    DataSet = GoodsDataSet
-    Left = 235
-    Top = 69
-  end
-  object dsdGoodsGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceGoods
-    PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 267
-    Top = 69
-  end
-  object GoodsKindDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 363
-    Top = 93
-  end
-  object spGetGoodsKind: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsPropertyValue'
-    DataSet = GoodsKindDataSet
-    DataSets = <
+        Name = 'Key'
+        Value = ''
+        Component = dsdGoodsPropertyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
       item
-        DataSet = GoodsKindDataSet
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdGoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end>
-    Params = <>
-    Left = 403
-    Top = 93
+    Left = 108
+    Top = 110
   end
-  object GoodsKindDS: TDataSource
-    DataSet = GoodsKindDataSet
-    Left = 443
-    Top = 93
-  end
-  object dsdGoodsKindGuides: TdsdGuides
+  object GoodsKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceGoodsKind
+    FormNameParam.Value = 'TGoodsKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsKindForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 499
-    Top = 101
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 372
+    Top = 102
+  end
+  object GoodsGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoods_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 180
+    Top = 62
   end
 end

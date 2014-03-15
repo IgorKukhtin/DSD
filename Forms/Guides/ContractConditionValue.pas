@@ -109,6 +109,7 @@ type
     clBonusKindName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
     clBankAccount: TcxGridDBColumn;
+    clisDefault: TcxGridDBColumn;
   private
     { Private declarations }
   public

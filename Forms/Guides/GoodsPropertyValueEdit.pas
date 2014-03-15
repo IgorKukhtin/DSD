@@ -21,7 +21,7 @@ uses
   dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
   dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TGoodsPropertyValueEditForm = class(TParentForm)
@@ -36,34 +36,25 @@ type
     dsdDataSetRefresh: TdsdDataSetRefresh;
     dsdFormClose1: TdsdFormClose;
     cxLabel3: TcxLabel;
-    ceGoodsProperty: TcxLookupComboBox;
-    GoodsPropertyDataSet: TClientDataSet;
-    spGetGoodsProperty: TdsdStoredProc;
-    GoodsPropertyDS: TDataSource;
     dsdGoodsPropertyGuides: TdsdGuides;
-    cxLabel2: TcxLabel;
-    ceGoods: TcxLookupComboBox;
-    cxLabel4: TcxLabel;
-    ceGoodsKind: TcxLookupComboBox;
-    GoodsDataSet: TClientDataSet;
-    spGetGoods: TdsdStoredProc;
-    GoodsDS: TDataSource;
-    dsdGoodsGuides: TdsdGuides;
-    GoodsKindDataSet: TClientDataSet;
-    spGetGoodsKind: TdsdStoredProc;
-    GoodsKindDS: TDataSource;
-    dsdGoodsKindGuides: TdsdGuides;
     cxLabel5: TcxLabel;
-    edBarCode: TcxTextEdit;
     cxLabel6: TcxLabel;
-    edBarCodeGLN: TcxTextEdit;
     cxLabel7: TcxLabel;
-    edArticle: TcxTextEdit;
-    edArticleGLN: TcxTextEdit;
     cxLabel8: TcxLabel;
-    ceAmount: TcxCurrencyEdit;
     cxLabel9: TcxLabel;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    ceGoodsProperty: TcxButtonEdit;
+    ceAmount: TcxCurrencyEdit;
+    ceBarCode: TcxTextEdit;
+    ceBarCodeGLN: TcxTextEdit;
+    ceArticle: TcxTextEdit;
+    ceArticleGLN: TcxTextEdit;
+    cxLabel2: TcxLabel;
+    ceGoodsKind: TcxButtonEdit;
+    GoodsKindGuides: TdsdGuides;
+    cxLabel4: TcxLabel;
+    ceGoods: TcxButtonEdit;
+    GoodsGuides: TdsdGuides;
   private
     { Private declarations }
   public
