@@ -8,10 +8,12 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_WeighingProduction(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat
+             , StartWeighing Boolean
              , InsertDate TDateTime, UpdateDate TDateTime
-             , RealWeight TFloat, ChangePercentAmount TFloat, CountTare TFloat, WeightTare TFloat, Count TFloat
+             , RealWeight TFloat, WeightTare TFloat, LiveWeight TFloat, HeadCount TFloat,  Count TFloat
+             , CountSkewer1 TFloat, WeightSkewer1 TFloat, CountSkewer2 TFloat, WeightSkewer2 TFloat,  WeightOther TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
-             , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
              , isErased Boolean
               )
 AS
@@ -29,16 +31,24 @@ BEGIN
            , Object_Goods.ObjectCode  AS GoodsCode
            , Object_Goods.ValueData   AS GoodsName
            , MovementItem.Amount
+
+           , MIBoolean_StartWeighing.ValueData AS StartWeighing
+           , MIDate_Insert.ValueData           AS InsertDate
+           , MIDate_Update.ValueData           AS UpdateDate
            
-           , MIDate_Insert.ValueData        AS InsertDate
-           , MIDate_Update.ValueData        AS UpdateDate
-           
-           , MIFloat_RealWeight.ValueData          AS RealWeight
-           , MIFloat_ChangePercentAmount.ValueData AS ChangePercentAmount
-           , MIFloat_CountTare.ValueData           AS CountTare
-           , MIFloat_WeightTare.ValueData          AS WeightTare
-           , MIFloat_Count.ValueData               AS Count
-           
+           , MIFloat_RealWeight.ValueData   AS RealWeight
+           , MIFloat_WeightTare.ValueData   AS WeightTare
+           , MIFloat_LiveWeight.ValueData   AS LiveWeight
+           , MIFloat_HeadCount.ValueData    AS HeadCount
+           , MIFloat_Count.ValueData        AS Count
+
+           , MIFloat_CountSkewer1.ValueData   AS CountSkewer1
+           , MIFloat_WeightSkewer1.ValueData  AS WeightSkewer1
+           , MIFloat_CountSkewer2.ValueData   AS CountSkewer2
+           , MIFloat_WeightSkewer2.ValueData  AS WeightSkewer2
+           , MIFloat_WeightOther.ValueData    AS WeightOther
+
+
            , MIDate_PartionGoods.ValueData   AS PartionGoodsDate
            , MIString_PartionGoods.ValueData AS PartionGoods
 
@@ -52,6 +62,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+
+            LEFT JOIN MovementItemBoolean AS MIBoolean_StartWeighing
+                                          ON MIBoolean_StartWeighing.MovementItemId = MovementItem.Id
+                                         AND MIBoolean_StartWeighing.DescId = zc_MIBoolean_StartWeighing()
 
             LEFT JOIN MovementItemDate AS MIDate_Insert
                                        ON MIDate_Insert.MovementItemId = MovementItem.Id
@@ -67,13 +81,13 @@ BEGIN
                                         ON MIFloat_RealWeight.MovementItemId = MovementItem.Id
                                        AND MIFloat_RealWeight.DescId = zc_MIFloat_RealWeight()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
-                                        ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
-                                       AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
+            LEFT JOIN MovementItemFloat AS MIFloat_LiveWeight
+                                        ON MIFloat_LiveWeight.MovementItemId = MovementItem.Id
+                                       AND MIFloat_LiveWeight.DescId = zc_MIFloat_LiveWeight()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_CountTare
-                                        ON MIFloat_CountTare.MovementItemId = MovementItem.Id
-                                       AND MIFloat_CountTare.DescId = zc_MIFloat_CountTare()
+            LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
+                                        ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
+                                       AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
                                        
             LEFT JOIN MovementItemFloat AS MIFloat_WeightTare
                                         ON MIFloat_WeightTare.MovementItemId = MovementItem.Id
@@ -82,6 +96,26 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_Count
                                         ON MIFloat_Count.MovementItemId = MovementItem.Id
                                        AND MIFloat_Count.DescId = zc_MIFloat_Count()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_CountSkewer1
+                                        ON MIFloat_CountSkewer1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountSkewer1.DescId = zc_MIFloat_CountSkewer1()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightSkewer1
+                                        ON MIFloat_WeightSkewer1.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightSkewer1.DescId = zc_MIFloat_WeightSkewer1()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_CountSkewer2
+                                        ON MIFloat_CountSkewer2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_CountSkewer2.DescId = zc_MIFloat_CountSkewer2()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightSkewer2
+                                        ON MIFloat_WeightSkewer2.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightSkewer2.DescId = zc_MIFloat_WeightSkewer2()
+
+            LEFT JOIN MovementItemFloat AS MIFloat_WeightOther
+                                        ON MIFloat_WeightOther.MovementItemId = MovementItem.Id
+                                       AND MIFloat_WeightOther.DescId = zc_MIFloat_WeightOther()
 
             LEFT JOIN MovementItemString AS MIString_PartionGoods
                                          ON MIString_PartionGoods.MovementItemId = MovementItem.Id

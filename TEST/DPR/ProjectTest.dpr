@@ -383,7 +383,11 @@ uses
   UnitTree in '..\..\Forms\Guides\UnitTree.pas' {UnitTreeForm: TParentForm},
   UnitEdit in '..\..\Forms\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
-  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm};
+  Partner in '..\..\Forms\Guides\Partner.pas' {PartnerForm: TParentForm},
+  WeighingProductionJournal in '..\..\Forms\Document\WeighingProductionJournal.pas' {WeighingProductionJournalForm: TParentForm},
+  WeighingProduction in '..\..\Forms\Document\WeighingProduction.pas' {WeighingProductionForm: TParentForm},
+  WeighingPartner in '..\..\Forms\Document\WeighingPartner.pas' {WeighingPartnerForm: TParentForm},
+  WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm};
 
 {$R *.RES}
 

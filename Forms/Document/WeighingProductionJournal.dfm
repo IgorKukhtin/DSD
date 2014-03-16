@@ -1,7 +1,7 @@
-object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
+object WeighingProductionJournalForm: TWeighingProductionJournalForm
   Left = 0
   Top = 0
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 427
   ClientWidth = 1240
   Color = clBtnFace
@@ -176,42 +176,42 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
           end>
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 91
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 92
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 91
       end
       object colInvNumberParent: TcxGridDBColumn
         Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1088#1086#1076#1080#1090#1077#1083#1100
         DataBinding.FieldName = 'InvNumberParent'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 91
       end
       object colMovementDesc: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'MovementDesc'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 84
       end
       object colStartWeighing: TcxGridDBColumn
         Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1085#1072#1095#1072#1083#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
         DataBinding.FieldName = 'StartWeighing'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 70
+        Width = 116
       end
       object colEndWeighing: TcxGridDBColumn
         Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1082#1086#1085#1095#1072#1085#1080#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
@@ -225,14 +225,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 149
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 90
+        Width = 136
       end
       object colInvNumberOrder: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
@@ -242,14 +242,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 95
       end
       object colInvNumberTransport: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
         DataBinding.FieldName = 'InvNumberTransport'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 58
+        Width = 100
       end
       object colRouteSorting: TcxGridDBColumn
         Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
@@ -257,14 +257,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 55
+        Width = 95
       end
       object colUserName: TcxGridDBColumn
         Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
         DataBinding.FieldName = 'UserName'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 50
+        Width = 86
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -638,8 +638,8 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TWeighingPartnerForm'
-      FormNameParam.Value = 'TWeighingPartnerForm'
+      FormName = 'TWeighingProductionForm'
+      FormNameParam.Value = 'TWeighingProductionForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -711,7 +711,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_WeighingPartner'
+    StoredProcName = 'gpSelect_Movement_WeighingProduction'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -736,7 +736,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Top = 184
   end
   object spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_WeighingPartner'
+    StoredProcName = 'gpComplete_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -837,7 +837,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
-    StoredProcName = 'gpCompletePeriod_Movement_WeighingPartner'
+    StoredProcName = 'gpCompletePeriod_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <

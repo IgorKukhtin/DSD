@@ -1,4 +1,4 @@
-unit WeighingPartner;
+unit WeighingProduction;
 
 interface
 
@@ -26,7 +26,7 @@ uses
   DataModul, dxBarExtItems, dsdAddOn, cxCheckBox, cxCurrencyEdit;
 
 type
-  TWeighingPartnerForm = class(TParentForm)
+  TWeighingProductionForm = class(TParentForm)
     FormParams: TdsdFormParams;
     spSelectMI: TdsdStoredProc;
     dxBarManager: TdxBarManager;
@@ -156,6 +156,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingPartnerForm);
+  RegisterClass(TWeighingProductionForm);
 
 end.
