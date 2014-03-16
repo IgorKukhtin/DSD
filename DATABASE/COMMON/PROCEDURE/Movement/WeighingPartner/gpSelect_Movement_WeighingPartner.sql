@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingPartner(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , InvNumberParent TVarChar--, ParentId Integer
+             , OperDateParent TDateTime, InvNumberParent TVarChar--, ParentId Integer
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDesc TFloat, InvNumberTransport TFloat, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
@@ -35,8 +35,9 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
-             , Movement_Parent.InvNumber         AS Parent
-              
+             , Movement_Parent.OperDate          AS OperDateParent
+             , Movement_Parent.InvNumber         AS InvNumberParent
+
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 
@@ -68,6 +69,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_MovementDesc
                                     ON MovementFloat_MovementDesc.MovementId =  Movement.Id
                                    AND MovementFloat_MovementDesc.DescId = zc_MovementFloat_MovementDesc()
+
             LEFT JOIN MovementFloat AS MovementFloat_InvNumberTransport
                                     ON MovementFloat_InvNumberTransport.MovementId =  Movement.Id
                                    AND MovementFloat_InvNumberTransport.DescId = zc_MovementFloat_InvNumberTransport()

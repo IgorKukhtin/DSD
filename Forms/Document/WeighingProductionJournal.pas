@@ -1,4 +1,4 @@
-unit WeighingPartnerJournal;
+unit WeighingProductionJournal;
 
 interface
 
@@ -27,7 +27,7 @@ uses
   dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
 
 type
-  TWeighingPartnerJournalForm = class(TParentForm)
+  TWeighingProductionJournalForm = class(TParentForm)
     DataSource: TDataSource;
     ClientDataSet: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
@@ -93,6 +93,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TWeighingPartnerJournalForm);
+  RegisterClass(TWeighingProductionJournalForm);
 
 end.

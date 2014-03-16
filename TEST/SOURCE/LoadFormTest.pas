@@ -95,6 +95,8 @@ type
     procedure LoadUnitFormTest;
     procedure LoadToolsWeighingFormTest;
     procedure LoadWorkTimeKindFormTest;
+    procedure LoadWeighingPartnerFormTest;
+    procedure LoadWeighingProductionFormTest;
     procedure LoadZakazExternalFormTest;
     procedure LoadZakazInternalFormTest;
   end;
@@ -1026,6 +1028,21 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCityEditForm');
 end;
 
+ procedure TLoadFormTest.LoadWeighingPartnerFormTest;
+ begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingPartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingPartnerJournalForm');
+end;
+
+ procedure TLoadFormTest.LoadWeighingProductionFormTest;
+ begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
+end;
 
 procedure TLoadFormTest.SetUp;
 begin

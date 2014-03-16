@@ -1,7 +1,7 @@
-object WeighingPartnerForm: TWeighingPartnerForm
+object WeighingProductionForm: TWeighingProductionForm
   Left = 0
   Top = 0
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086')>'
   ClientHeight = 462
   ClientWidth = 969
   Color = clBtnFace
@@ -26,6 +26,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 971
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -215,12 +216,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 971
     ClientRectBottom = 336
     ClientRectRight = 969
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 971
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -228,6 +231,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 971
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -446,6 +450,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 971
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -453,6 +458,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 971
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -711,7 +717,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Top = 375
   end
   object spSelectMI: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_WeighingPartner'
+    StoredProcName = 'gpSelect_MovementItem_WeighingProduction'
     DataSet = MasterCDS
     DataSets = <
       item
@@ -1288,7 +1294,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Top = 217
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_WeighingPartner'
+    StoredProcName = 'gpGet_Movement_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1474,8 +1480,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 312
+    StoredProcName = 'gpUpdate_Status_WeighingProduction'
+    Left = 360
     Top = 88
   end
   object spErasedMIMaster: TdsdStoredProc
@@ -1529,7 +1535,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Top = 24
   end
   object spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_WeighingPartner'
+    StoredProcName = 'gpUpdate_Status_WeighingProduction'
     DataSets = <>
     OutputType = otResult
     Params = <
