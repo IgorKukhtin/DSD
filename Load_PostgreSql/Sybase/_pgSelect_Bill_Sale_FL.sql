@@ -1,6 +1,6 @@
 alter PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm, FromId_Postgres Integer, ToId_Postgres Integer
-     , PaidKindId_Postgres Integer, ContractId Integer, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
+     , PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, StatusId smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_NotNalog(
@@ -24,7 +24,8 @@ begin
      , FromId_Postgres Integer
      , ToId_Postgres Integer
      , PaidKindId_Postgres Integer
-     , ContractId Integer
+     , CodeIM Integer
+     , ContractNumber TVarCharMedium
      , CarId Integer
      , PersonalDriverId Integer
 
@@ -90,13 +91,13 @@ and StatusId = zc_Enum_Status_UnComplete()
    and Bill.Id_Postgres is not null;
 */
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
-                    , PaidKindId_Postgres, ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
+                    , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
 select Bill.Id as ObjectId
      , cast (Bill.BillNumber as TVarCharMedium) ||
-       case when FromId_Postgres is null or ToId_Postgres is null or ContractId = 0
+       case when FromId_Postgres is null or ToId_Postgres is null or CodeIM = 0
                  then '-ошибка' || case when FromId_Postgres is null then '-от кого:' || UnitFrom.UnitName else '' end
                                 || case when ToId_Postgres is null then '-кому:' || UnitTo.UnitName else '' end
-                                || case when ContractId = 0 then '-договор:???' else '' end
+                                || case when CodeIM = 0 then '-УП статья:???' else '' end
             else ''
        end as InvNumber_all
      , Bill.BillNumber as InvNumber
@@ -111,7 +112,8 @@ select Bill.Id as ObjectId
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
-     , _pgInfoMoney.Id3_Postgres as ContractId -- isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
+     , _tmpBill_NotNalog.CodeIM as CodeIM -- _pgInfoMoney.Id3_Postgres as ContractId -- isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
+     , isnull(Contract.ContractNumber,'') as ContractNumber
      , null as CarId
      , null as PersonalDriverId
 
@@ -126,6 +128,20 @@ select Bill.Id as ObjectId
 
 from _tmpBill_NotNalog
      left outer join dba.Bill on Bill.Id = _tmpBill_NotNalog.BillId
+
+     left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber
+                      from dba.Unit
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and @inStartDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and @inStartDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)
+                     ) as Contract on Contract.ClientId = Bill.ToId
+
      left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad
      left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId
                      ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId
@@ -176,7 +192,7 @@ from _tmpBill_NotNalog
                                                                      then 5 else Bill.FromId end 
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
      left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
-     left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _tmpBill_NotNalog.CodeIM
+     -- left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = _tmpBill_NotNalog.CodeIM
 ;
 
    //
@@ -211,7 +227,8 @@ from _tmpBill_NotNalog
         , isnull(_tmpList2.FromId_Postgres, _tmpList.FromId_Postgres)as FromId_Postgres
         , isnull(_tmpList2.ToId_Postgres, _tmpList.ToId_Postgres)as ToId_Postgres
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
-        , isnull(_tmpList2.ContractId, _tmpList.ContractId)as ContractId
+        , isnull(_tmpList2.CodeIM, _tmpList.CodeIM)as CodeIM
+        , isnull (_tmpList.ContractNumber, '') as ContractNumber
         , isnull(_tmpList2.CarId, _tmpList.CarId)as CarId
         , isnull(_tmpList2.PersonalDriverId, _tmpList.PersonalDriverId) as PersonalDriverId
         , isnull(_tmpList2.RouteId, _tmpList.RouteId) as RouteId
@@ -223,7 +240,7 @@ from _tmpBill_NotNalog
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0 -- _tmpList2.ObjectId = _tmpList.BillId_calc
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres
-          , ContractId, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres
+          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres
    order by 5, 3, 1
    ;
 

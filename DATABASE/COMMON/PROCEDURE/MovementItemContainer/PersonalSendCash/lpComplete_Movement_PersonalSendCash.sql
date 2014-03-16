@@ -42,7 +42,7 @@ BEGIN
                                             AND MovementLinkObject_Personal.DescId = zc_MovementLinkObject_Personal()
                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Unit
                                      ON ObjectLink_Personal_Unit.ObjectId = MovementLinkObject_Personal.ObjectId
-                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Car_Unit()
+                                    AND ObjectLink_Personal_Unit.DescId = zc_ObjectLink_Personal_Unit()
                 LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
                                      ON ObjectLink_Personal_Member.ObjectId = MovementLinkObject_Personal.ObjectId
                                     AND ObjectLink_Personal_Member.DescId = zc_ObjectLink_Personal_Member()

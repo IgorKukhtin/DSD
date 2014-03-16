@@ -143,6 +143,7 @@ BEGIN
                   , tmpContainer.AccountId
                   , 0 AS ContainerId_inf
                   , 0 AS AccountId_inf
+                  , 0 AS ContainerId_ProfitLoss
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
                   , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
@@ -165,6 +166,7 @@ BEGIN
                   , tmpMIReport.AccountId
                   , tmpMIReport.ContainerId_inf
                   , tmpMIReport.AccountId_inf
+                  , tmpMIReport.ContainerId_ProfitLoss
                   , 0 AS SummStart
                   , 0 AS SummEnd
                   , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN tmpMIReport.SummIn - tmpMIReport.SummOut ELSE tmpMIReport.SummIn END)  AS SummIn
@@ -192,6 +194,14 @@ BEGIN
                                  WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
                                       THEN MIReport.ActiveAccountId
                             END AS AccountId_inf
+                          , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                      THEN tmpContainer.ContainerId
+                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
+                                      THEN MIReport.PassiveContainerId
+                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
+                                      THEN MIReport.ActiveContainerId
+                                 ELSE 0
+                            END AS ContainerId_ProfitLoss
                           , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.ActiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
                                            THEN MIReport.Amount
                                       ELSE 0
@@ -252,6 +262,7 @@ BEGIN
                     , tmpMIReport.AccountId
                     , tmpMIReport.ContainerId_inf
                     , tmpMIReport.AccountId_inf
+                    , tmpMIReport.ContainerId_ProfitLoss
                     , tmpMIReport.MovementDescId
                     , tmpMIReport.OperDate
                     , tmpMIReport.InvNumber
@@ -294,7 +305,7 @@ BEGIN
                                                                  AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                                                  AND ContainerLO_Contract.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_ProfitLoss -- ContainerId_inf
                                                                        AND ContainerLO_ProfitLoss_inf.DescId = zc_ContainerLinkObject_ProfitLoss()
                                                                        AND ContainerLO_ProfitLoss_inf.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Business_inf ON ContainerLO_Business_inf.ContainerId = tmpReport_All.ContainerId_inf

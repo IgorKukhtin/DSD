@@ -167,6 +167,7 @@ type
     function fGetSession:String;
     function fOpenSqToQuery (mySql:String):Boolean;
     function fExecSqToQuery (mySql:String):Boolean;
+    function fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
 
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
@@ -304,6 +305,65 @@ var
 implementation
 uses Authentication,CommonData,Storage;
 {$R *.dfm}
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
+begin
+             // В 1-ый раз Пытаемся найти <Договор>
+             Result:=0;
+             if myContractNumber<>'' then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // Во 2-ой раз Пытаемся найти <Договор>
+             if Result=0 then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // В 3-ий раз Пытаемся найти <Договор>
+             if (Result=0)and(IMCode_two<>0) then
+             begin
+
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode_two)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.StopButtonClick(Sender: TObject);
 begin
@@ -8609,6 +8669,8 @@ begin
         Close;
         Clear;
         Add('select * from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')'); //  where Id_Postgres = 123517
+        if cbOnlyInsertDocument.Checked
+        then Add('where isnull(Id_Postgres,0)=0');
         Open;
         Result:=RecordCount;
         cbSaleInt.Caption:='3.3.('+IntToStr(RecordCount)+')Прод.пок.Int';
@@ -8658,6 +8720,7 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Прайс-лист не должен измениться
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
                   fOpenSqToQuery ('select ObjectId AS PriceListId from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_PriceList()');
@@ -8665,37 +8728,8 @@ begin
              end
              else PriceListId:=0;
              //
-             // В 1-ый раз Пытаемся найти <Договор>
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('ContractId').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             // Во 2-ой раз Пытаемся найти <Договор>
-             if ContractId_pg=0 then
-             begin
-
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+             //Определяем Договор
+             ContractId_pg:=fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
@@ -9006,6 +9040,7 @@ begin
              //!!!
              if fStop then begin exit;end;
              //
+             //Прайс-лист не должен измениться
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
                   fOpenSqToQuery ('select ObjectId AS PriceListId from MovementLinkObject where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementLinkObject_PriceList()');
@@ -9013,37 +9048,8 @@ begin
              end
              else PriceListId:=0;
              //
-             // В 1-ый раз Пытаемся найти <Договор>
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('ContractId').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             // Во 2-ой раз Пытаемся найти <Договор>
-             if ContractId_pg=0 then
-             begin
-
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+             //Определяем Договор
+             ContractId_pg:=fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
@@ -10321,6 +10327,7 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres');
         Add('     , CodeIM');
+        Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -10336,6 +10343,18 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+           +'                           from dba.Unit'
+           +'                            left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
+           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                          ) as _pgPartner on _pgPartner.UnitId = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
@@ -10344,7 +10363,7 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(Bill.Id_Postgres,0)=0');
+        then Add('where isnull(Bill.Id_Postgres,0)=0');
         Add('order by OperDate, ObjectId');
         Open;
 
@@ -10383,38 +10402,8 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             // В 1-ый раз Пытаемся найти <Договор>
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(FieldByName('CodeIM').AsInteger)
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             // Во 2-ой раз Пытаемся найти <Договор>
-             if ContractId_pg=0 then
-             begin
-
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+             //Определяем Договор
+             ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
@@ -10596,6 +10585,7 @@ begin
         Add('     , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres');
         //Add('     , isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId');
         Add('     , Bill_find.CodeIM');
+        Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
 
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
@@ -10617,6 +10607,18 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+           +'                           from dba.Unit'
+           +'                            left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
+           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
         Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -10654,7 +10656,7 @@ begin
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
 
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(Bill.Id_Postgres,0)=0');
+        then Add('where isnull(Bill.Id_Postgres,0)=0');
         Add('order by OperDate, ObjectId');
         Open;
 
@@ -10693,38 +10695,8 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             // В 1-ый раз Пытаемся найти <Договор>
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(FieldByName('CodeIM').AsInteger)
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             // Во 2-ой раз Пытаемся найти <Договор>
-             if ContractId_pg=0 then
-             begin
-
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+             //Определяем Договор
+             ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
@@ -10880,10 +10852,18 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
 function TMainForm.pLoadDocument_Tax_Fl:Integer;
-var ContractId_pg:Integer;
+var ContractId_pg,ToId_pg:Integer;
+    zc_Enum_DocumentTaxKind_Tax,zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS,zc_Enum_DocumentTaxKind_TaxSummaryPartnerS:String;
 begin
      Result:=0;
      if (not cbTaxFl.Checked)or(not cbTaxFl.Enabled) then exit;
+     //
+     fOpenSqToQuery ('select zc_Enum_DocumentTaxKind_Tax from zc_Enum_DocumentTaxKind_Tax()');
+     zc_Enum_DocumentTaxKind_Tax:=toSqlQuery.FieldByName('zc_Enum_DocumentTaxKind_Tax').AsString;
+     fOpenSqToQuery ('select zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS from zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()');
+     zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS:=toSqlQuery.FieldByName('zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS').AsString;
+     fOpenSqToQuery ('select zc_Enum_DocumentTaxKind_TaxSummaryPartnerS from zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()');
+     zc_Enum_DocumentTaxKind_TaxSummaryPartnerS:=toSqlQuery.FieldByName('zc_Enum_DocumentTaxKind_TaxSummaryPartnerS').AsString;
      //
      myEnabledCB(cbTaxFl);
      //
@@ -10891,49 +10871,70 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as InvNumber');
-        Add('     , Bill.BillNumberNalog as InvNumberNalog');
-        Add('     , Bill.BillDate as OperDate');
+        Add('     , Bill.BillNumber as inInvNumber');
+        Add('     , Bill.BillNumberNalog as inInvNumberPartner');
+        Add('     , Bill.BillDate as inOperDate');
 
         Add('     , isnull(Bill.StatusId, zc_rvNo()) as StatusId');
 
-        Add('     , Bill.isNds as PriceWithVAT');
-        Add('     , Bill.Nds as VATPercent');
+        Add('     , Bill.isNds as inPriceWithVAT');
+        Add('     , Bill.Nds as inVATPercent');
 
         Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , ClientInformation.OKPO as From_OKPO');
+        Add('     , 9399 as inFromId');
         Add('     , _pgPartner.PartnerId_pg as ToId_Postgres');
-        Add('     , _pgPartner.OKPO as To_OKPO');
 
+        Add('     , case when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
+           //+'            when isnull(Bill_find.findId2,0)>0 and isnull(OperCount2,0)=0 then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS
+           +'            else '+zc_Enum_DocumentTaxKind_Tax
+           +'       end as inDocumentTaxKindId');
         Add('     , Bill_find.CodeIM');
+        Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
 
-        Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
+        Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from (select Bill.Id as BillId'
            +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
+           +'           , max(isnull(BillItems.OperCount,0)) as OperCount1'
+           +'           , max(isnull(BillItems_byParent.OperCount,0)) as OperCount2'
+           +'           , max(isnull(BillItems_byParent.Id,0)) as findId1'
+           +'           , max(isnull(BillItems_byParent_find.Id,0)) as findId2'
            +'      from dba.Bill'
-           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id'
            +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
+           +'           left join dba.BillItems_byParent on BillItems_byParent.BillItemsId = BillItems.Id'
+           +'           left join dba.BillItems_byParent as BillItems_byParent_find on BillItems_byParent_find.ParentBillItemsId = BillItems.Id and BillItems_byParent_find.ParentBillItemsId<>BillItems_byParent_find.BillItemsId'
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'        and Bill.BillKind in (zc_bkReturnToUnit())'
-//!!!           +'       and Bill.FromId<>1022' // ВИЗАРД 1
-//!!!           +'       and Bill.FromId<>1037' // ВИЗАРД 1037
-//!!!           +'       and Bill.ToId<>1022' // ВИЗАРД 1
-//!!!           +'       and Bill.ToId<>1037' // ВИЗАРД 1037
+           +'        and Bill.BillKind in (zc_bkSaleToClient())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
+           +'        and Bill.BillNumberNalog <> 0'
+           +'        and (BillItems.OperCount <> 0 or isnull(BillItems_byParent.OperCount,0) <> 0 or BillItems_byParent_find.ParentBillItemsId is not null)'
            +'      group by Bill.Id'
+           +'      having isnull (findId1,0) = 0 or isnull (findId2,0) <> 0 or isnull (OperCount2,0)<>0'
            +'      ) as Bill_find');
 
-        Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
-           +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
-        Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
-           +'                          ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_From.Id_byLoad');
+        Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+           +'                           from dba.Unit'
+           +'                            left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
+           +'                          ) as Contract on Contract.ClientId = Bill.ToId');
+        Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
+           +'                     ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId');
+        Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
+           +'                     ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_To.Id_byLoad');
+        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
 
-        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
-        Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = case when Bill.ToId in (1388' //ГРИВА Р.
+        Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = case when Bill.FromId in (1388' //ГРИВА Р.
            +'                                                                             , 1799' //ДРОВОРУБ
            +'                                                                             , 1288' //ИЩИК К.
            +'                                                                             , 956' //КОЖУШКО С.
@@ -10948,13 +10949,13 @@ begin
 
            +'                                                                             , 1022' //ВИЗАРД 1
            +'                                                                             , 1037' //ВИЗАРД 1037
-           +'                                                                              ) then 5 else Bill.ToId end');
-        Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
-        Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+           +'                                                                              ) then 5 else Bill.FromId end');
+        Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
+        Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
 
         if cbOnlyInsertDocument.Checked
-        then Add('and isnull(Bill.Id_Postgres,0)=0');
-        Add('order by OperDate, ObjectId');
+        then Add('where isnull(Bill.NalogId_PG,0)=0');
+        Add('order by inOperDate, ObjectId');
         Open;
 
         Result:=RecordCount;
@@ -10966,24 +10967,24 @@ begin
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
-        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_ReturnIn';
+        toStoredProc.StoredProcName:='gpInsertUpdate_Movement_Tax';
         toStoredProc.OutputType := otResult;
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
-        toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
         toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
+        toStoredProc.Params.AddParam ('inDocument',ftBoolean,ptInput, false);
 
         toStoredProc.Params.AddParam ('inPriceWithVAT',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inVATPercent',ftFloat,ptInput, 0);
-        toStoredProc.Params.AddParam ('inChangePercent',ftFloat,ptInput, 0);
 
         toStoredProc.Params.AddParam ('inFromId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inToId',ftInteger,ptInput, 0);
-        toStoredProc.Params.AddParam ('inPaidKindId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inDocumentTaxKindId',ftInteger,ptInput, 0);
 
         //
         while not EOF do
@@ -10992,60 +10993,36 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             // В 1-ый раз Пытаемся найти <Договор>
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(FieldByName('CodeIM').AsInteger)
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
+             // Пытаемся найти <Юр.Лицо>
+                  fOpenSqToQuery (' select ObjectLink_Partner_Juridical.childobjectid as JuridicalId'
+                                 +' from ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('ToId_Postgres').AsInteger)
+                                 +'   and ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
                                  );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             // Во 2-ой раз Пытаемся найти <Договор>
-             if ContractId_pg=0 then
-             begin
-
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = 30101'
-                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
-                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
-                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
-                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(FieldByName('FromId_Postgres').AsInteger)
-                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+                  ToId_pg:=toSqlQuery.FieldByName('JuridicalId').AsInteger;
+             //Определяем Договор
+             ContractId_pg:=fFind_ContractId_pg(FieldByName('ToId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if ContractId_pg=0
-             then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка договор:???'
-             else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
-             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
-             toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
+             then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString+'-ошибка договор:???'
+             else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
+             toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
-             if FieldByName('PriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
-             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('VATPercent').AsFloat;
-             toStoredProc.Params.ParamByName('inChangePercent').Value:=FieldByName('ChangePercent').AsFloat;
+             if FieldByName('inPriceWithVAT').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
+             toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('inVATPercent').AsFloat;
 
-             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('FromId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inToId').Value:=FieldByName('ToId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inPaidKindId').Value:=FieldByName('PaidKindId_Postgres').AsInteger;
-             toStoredProc.Params.ParamByName('inContractId').Value:=FieldByName('ContractId').AsInteger;
+             toStoredProc.Params.ParamByName('inFromId').Value:=FieldByName('inFromId').AsInteger;
+             toStoredProc.Params.ParamByName('inToId').Value:=ToId_pg;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId_pg;
+             toStoredProc.Params.ParamByName('inDocumentTaxKindId').Value:=FieldByName('inDocumentTaxKindId').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
              //
              if (FieldByName('Id_Postgres').AsInteger=0)
-             then fExecFlSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             then fExecFlSqFromQuery('update dba.Bill set NalogId_PG=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
              //
              Next;
              Application.ProcessMessages;
@@ -11060,7 +11037,7 @@ end;
 //!!!!FLOAT
 procedure TMainForm.pLoadDocumentItem_Tax_Fl(SaveCount:Integer);
 begin
-//exit;
+exit;
      if (not cbTaxFl.Checked)or(not cbTaxFl.Enabled) then exit;
      //
      myEnabledCB(cbTaxFl);
