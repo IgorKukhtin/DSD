@@ -97,7 +97,7 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colTotalCountPartner: TcxGridDBColumn;
     colJuridicalName_From: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
+    colOKPO_From: TcxGridDBColumn;
   private
   public
   end;

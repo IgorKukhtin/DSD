@@ -86,4 +86,4 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Guide (Integer, TVarChar) OWNER TO 
 -- тест
 
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (88952, zfCalc_UserAdmin()) --Scale_1
- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (89036, zfCalc_UserAdmin()) --Scale_77
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (89036, zfCalc_UserAdmin()) --Scale_77

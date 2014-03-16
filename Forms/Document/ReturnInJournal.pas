@@ -55,6 +55,8 @@ type
     actTaxCorrectiv: TdsdExecStoredProc;
     bbTaxCorrective: TdxBarButton;
     colDocumentTaxKindName: TcxGridDBColumn;
+    colOKPO_From: TcxGridDBColumn;
+    colJuridicalName_From: TcxGridDBColumn;
   private
     { Private declarations }
   public

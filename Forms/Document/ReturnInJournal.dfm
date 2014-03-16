@@ -2,29 +2,26 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1029
-  ExplicitWidth = 1037
-  ExplicitHeight = 569
+  ExplicitWidth = 1045
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1029
-    Height = 476
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1029
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1025
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1029
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1023
-      ExplicitHeight = 470
+      ExplicitWidth = 1029
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1023
-        Height = 470
-        ExplicitWidth = 1023
-        ExplicitHeight = 470
+        Width = 1029
+        Height = 478
+        ExplicitWidth = 1029
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -130,6 +127,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083'. '#1076#1086#1082'.'
             DataBinding.FieldName = 'DocumentTaxKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colOKPO_From: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_From'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colJuridicalName_From: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName_From'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -250,6 +262,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
@@ -257,6 +270,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -264,12 +278,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -423,7 +439,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

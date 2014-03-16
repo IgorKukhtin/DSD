@@ -58,6 +58,8 @@ type
     DocumentTaxKindGuides: TdsdGuides;
     colInvNumberOrderTax: TcxGridDBColumn;
     colDocumentTaxKindName: TcxGridDBColumn;
+    colOKPO_To: TcxGridDBColumn;
+    colJuridicalName_To: TcxGridDBColumn;
   private
     { Private declarations }
   public

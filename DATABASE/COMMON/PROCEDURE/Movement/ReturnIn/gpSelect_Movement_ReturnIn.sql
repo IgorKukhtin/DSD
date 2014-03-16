@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
@@ -66,14 +67,16 @@ BEGIN
            , Object_PaidKind.ValueData                  AS PaidKindName
            , View_Contract_InvNumber.ContractId         AS ContractId
            , View_Contract_InvNumber.InvNumber          AS ContractName
+           , Object_JuridicalFrom.ValueData             AS JuridicalName_From
+           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
            , View_InfoMoney.InfoMoneyGroupName          AS InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName    AS InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode               AS InfoMoneyCode
            , View_InfoMoney.InfoMoneyName               AS InfoMoneyName
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.valuedata                 AS PriceListName
-           , Object_TaxKind.Id                		    AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+           , Object_TaxKind.Id                	        AS DocumentTaxKindId
+           , Object_TaxKind.ValueData        	        AS DocumentTaxKindName
 
 
        FROM (SELECT Movement.id
@@ -138,6 +141,12 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                 ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
+                                AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = ObjectLink_Partner_Juridical.ChildObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -215,6 +224,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.03.14                                        * add JuridicalName_From and OKPO_From
  13.02.14                                                            * add PriceList
  10.02.14                                        * add Object_RoleAccessKey_View
  10.02.14                                                       * add TaxKind

@@ -14,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractName TVarChar
-             , JuridicalName_From TVarChar, OKPO TVarChar
+             , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalPackerName TVarChar
               )
@@ -61,7 +61,7 @@ BEGIN
            , Object_PaidKind.ValueData         AS PaidKindName
            , View_Contract_InvNumber.InvNumber AS ContractName
            , Object_JuridicalFrom.ValueData    AS JuridicalName_From
-           , ObjectHistory_JuridicalDetails_View.OKPO
+           , ObjectHistory_JuridicalDetails_View.OKPO AS OKPO_From
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
@@ -157,7 +157,8 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 12.02.14                                        * add JuridicalName_From TVarChar and OKPO
+ 16.03.14                                        * change OKPO_From
+ 12.02.14                                        * add JuridicalName_From and OKPO
  10.02.14                                        * add TotalCountPartner
  10.02.14                                        * add Object_RoleAccessKey_View
  09.02.14                                        * add Object_Contract_InvNumber_View and Object_InfoMoney_View

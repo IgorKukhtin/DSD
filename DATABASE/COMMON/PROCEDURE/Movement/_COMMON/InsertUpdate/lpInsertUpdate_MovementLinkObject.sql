@@ -1,7 +1,7 @@
-п»їCREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkObject(
- inDescId                Integer           ,  /* РєРѕРґ РєР»Р°СЃСЃР° СЃРІРѕР№СЃС‚РІР°       */
- inMovementId            Integer           ,  /* РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°     */
- inObjectId              Integer              /* РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р° */
+CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementLinkObject(
+ inDescId                Integer           ,  /* код класса свойства       */
+ inMovementId            Integer           ,  /* ключ главного объекта     */
+ inObjectId              Integer              /* ключ подчиненного объекта */
 )
   RETURNS boolean AS
 $BODY$BEGIN
@@ -9,10 +9,10 @@ $BODY$BEGIN
        inObjectId := NULL;
     END IF;
 
-    /* РёР·РјРµРЅРёС‚СЊ РґР°РЅРЅС‹Рµ РїРѕ Р·РЅР°С‡РµРЅРёСЋ <РєР»СЋС‡ РѕР±СЉРµРєС‚Р°> */
+    /* изменить данные по значению <ключ объекта> */
     UPDATE MovementLinkObject SET ObjectId = inObjectId WHERE MovementId = inMovementId AND DescId = inDescId;
     IF NOT found THEN            
-       /* РІСЃС‚Р°РІРёС‚СЊ <РєР»СЋС‡ СЃРІРѕР№СЃС‚РІР°> , <РєР»СЋС‡ РіР»Р°РІРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> Рё <РєР»СЋС‡ РїРѕРґС‡РёРЅРµРЅРЅРѕРіРѕ РѕР±СЉРµРєС‚Р°> */
+       /* вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта> */
        INSERT INTO MovementLinkObject (DescId, MovementId, ObjectId)
            VALUES (inDescId, inMovementId, inObjectId);
     END IF;             

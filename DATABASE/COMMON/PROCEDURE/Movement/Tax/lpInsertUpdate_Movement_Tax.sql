@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
     IN inVATPercent          TFloat    , -- % НДС
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inPartnerId           Integer   , -- Контрагент
     IN inContractId          Integer   , -- Договора
     IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inUserId              Integer     -- пользователь
@@ -24,6 +26,12 @@ $BODY$
 BEGIN
      -- определяем ключ доступа
 --      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 -- AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+     END IF;
 
 
      -- сохранили <Документ>
@@ -52,6 +60,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+     -- сохранили связь с <Контрагент>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Тип формирования налогового документа>
@@ -63,8 +73,6 @@ BEGIN
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
-
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -72,6 +80,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.03.14                                        * add inPartnerId
  12.02.14                                                         * change to inDocumentTaxKindId
  11.02.14                                                         *  - registred
  09.02.14                                                         *

@@ -82,4 +82,4 @@ ALTER FUNCTION gpInsertUpdate_Object_ToolsWeighing (Integer, Integer, TVarChar, 
 */
 
 -- тест
- SELECT * FROM gpInsertUpdate_Object_ToolsWeighing (0,0, '','Name','Name Full','Name User',88935,'2')
+-- SELECT * FROM gpInsertUpdate_Object_ToolsWeighing (0,0, '','Name','Name Full','Name User',88935,'2')
