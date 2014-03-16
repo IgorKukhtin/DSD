@@ -12,7 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDesc TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
+             
              , UserId Integer, UserName TVarChar
               )
 AS

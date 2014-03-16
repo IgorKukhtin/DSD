@@ -127,9 +127,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_WeighingPartner() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_WeighingPartner', 'Взвешивание (контрагент)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WeighingPartner');
 
+CREATE OR REPLACE FUNCTION zc_Movement_WeighingProduction() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_WeighingProduction'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_WeighingProduction', 'Взвешивание (производство)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WeighingProduction');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 15.03.14         * add 
  11.03.14         * add zc_Movement_WeighingPartner              
  17.02.14         												*    add zc_Movement_ProfitLossService
  08.02.14         												*    add zc_Movement_Tax, zc_Movement_TaxCorrective
