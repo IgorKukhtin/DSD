@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Service(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , StatusCode Integer, StatusName TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , AmountIn TFloat, AmountOut TFloat 
              , Comment TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
@@ -40,6 +41,9 @@ BEGIN
            , lfObject_Status.Code             AS StatusCode
            , lfObject_Status.Name             AS StatusName
            
+           , CAST (CURRENT_DATE AS TDateTime) AS OperDatePartner
+           , ''::TVarChar                     AS InvNumberPartner
+           
            , 0::TFloat                        AS AmountIn
            , 0::TFloat                        AS AmountOut
 
@@ -66,6 +70,9 @@ BEGIN
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
+
+           , COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
                       
            , CASE WHEN inMovementId = 0 
                        THEN 0
@@ -96,6 +103,14 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
+            
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
@@ -139,6 +154,7 @@ ALTER FUNCTION gpGet_Movement_Service (Integer, Integer, TDateTime, TVarChar) OW
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner              
  19.02.14         * del ContractConditionKind )))
  28.01.14         * add ContractConditionKind
  22.01.14                                        * add inOperDate

@@ -38,6 +38,10 @@ type
     ContractGuides: TdsdGuides;
     ceAmountKredit: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
+    cxLabel9: TcxLabel;
+    ceOperDatePartner: TcxDateEdit;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel11: TcxLabel;
   private
     { Private declarations }
   public

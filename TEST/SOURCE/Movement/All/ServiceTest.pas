@@ -16,7 +16,7 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
+        OperDate, OperDatePartner: TDateTime; InvNumberPartner :String; AmountIn, AmountOut: Double;Comment:String;
         BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
     constructor Create; override;
   end;
@@ -37,15 +37,17 @@ end;
 
 function TService.InsertDefault: integer;
 var Id: Integer;
-    InvNumber: String;
-    OperDate: TDateTime;
+    InvNumber, InvNumberPartner: String;
+    OperDate, OperDatePartner: TDateTime;
     AmountIn, AmountOut: Double;
     Comment:String;
     BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: Integer;
 begin
   Id:=0;
   InvNumber:='1';
+  InvNumberPartner :='1';
   OperDate:= Date;
+  OperDatePartner:= Date;
   AmountIn := 123.45;
   AmountOut := 0;
   Comment:='';
@@ -61,18 +63,20 @@ begin
   UnitId := 0;
   PaidKindId:=0;
 
-  result := InsertUpdateService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
+  result := InsertUpdateService(Id, InvNumber, OperDate, OperDatePartner, InvNumberPartner, AmountIn, AmountOut, Comment,
               BusinessId, ContractId,InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId);
 end;
 
 function TService.InsertUpdateService(const Id: integer; InvNumber: String;
-        OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
+        OperDate, OperDatePartner: TDateTime; InvNumberPartner: String; AmountIn, AmountOut: Double;Comment:String;
         BusinessId, ContractId, InfoMoneyId, JuridicalId, JuridicalBasisId, PaidKindId, UnitId: integer): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
+  FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
+  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumberPartner);
   FParams.AddParam('inAmountIn', ftFloat, ptInput, AmountIn);
   FParams.AddParam('inAmountOut', ftFloat, ptInput, AmountOut);
   FParams.AddParam('inComment', ftString, ptInput, Comment);

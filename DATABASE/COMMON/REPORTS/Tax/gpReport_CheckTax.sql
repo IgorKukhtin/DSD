@@ -63,7 +63,7 @@ BEGIN
                , MAX (tmpMovement.OperDate_Sale)  AS OperDate_Sale
                , MAX (tmpMovement.OperDate_Tax)   AS OperDate_Tax
                , MAX (tmpMovement.InvNumber_Sale) AS InvNumber_Sale
-               , MAX (tmpMovement.InvNumber_Tax)  AS InvNumber_Tax
+               , (tmpMovement.InvNumber_Tax)  AS InvNumber_Tax
                , tmpMovement.GoodsId
                , tmpMovement.GoodsKindId
                , MAX (tmpMovement.Price_Sale)     AS Price_Sale
@@ -82,12 +82,12 @@ BEGIN
                      , Object_Juridical.ObjectCode         AS ToCode
                      , Object_Juridical.ValueData          AS ToName
                      
-                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.Id ELSE 0 END AS MovementId_Sale
+                     , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.Id ELSE 0 END AS MovementId_Sale
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
-                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.OperDate ELSE zc_DateStart() END AS OperDate_Sale
+                     , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.OperDate ELSE zc_DateStart() END AS OperDate_Sale
                      , Movement_Tax.OperDate AS OperDate_Tax
 
-                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.InvNumber ELSE '' END AS InvNumber_Sale
+                     , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.InvNumber ELSE '' END AS InvNumber_Sale
                      , Movement_Tax.InvNumber AS InvNumber_Tax
 
                      , MovementItem.ObjectId AS GoodsId
@@ -114,14 +114,13 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                     /*LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()    
-
-                     /*LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                                  ON MovementLinkObject_From.MovementId = Movement.Id
-                                                 AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-                     LEFT JOIN Object_Unit_View AS Object_Unit_Juridical on Object_Unit_Juridical.Id = MovementLinkObject_From.ObjectId*/
+                     */
+                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
@@ -141,15 +140,16 @@ BEGIN
                                                                                                                   
                 WHERE Movement.DescId = zc_Movement_Sale()
                   AND Movement.OperDate between inStartDate AND inEndDate
+                  --and Movement.id=25220
                 GROUP BY Object_JuridicalBasis.ObjectCode
                        , Object_JuridicalBasis.ValueData
                        , Object_Juridical.ObjectCode   
                        , Object_Juridical.ValueData    
-                       , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.Id ELSE 0 END
+                       , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.Id ELSE 0 END
                        , MovementLinkMovement.MovementChildId
-                       , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.OperDate ELSE zc_DateStart() END
+                       , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.OperDate ELSE zc_DateStart() END
                        , Movement_Tax.OperDate
-                       , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN Movement.InvNumber ELSE '' END
+                       , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = 80787)OR(COALESCE(MovementLO_DocumentTaxKind.ObjectId,0) = 0) THEN Movement.InvNumber ELSE '' END
                        , Movement_Tax.InvNumber
                        , MovementItem.ObjectId 
                        , MILinkObject_GoodsKind.ObjectId 
@@ -160,7 +160,7 @@ BEGIN
                      , Object_Juridical.ValueData            AS FromName
                      , Object_Contract_Juridical.ObjectCode  AS ToCode
                      , Object_Contract_Juridical.ValueData   AS ToName
-                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80770 THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_Sale
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = 80787 THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_Sale
                      , Movement.Id  AS MovementId_Tax
                      , zc_DateStart() AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
@@ -201,6 +201,7 @@ BEGIN
                      
                 WHERE Movement.DescId = zc_Movement_Tax()
                   AND Movement.OperDate between inStartDate AND inEndDate
+                 -- and Movement.Id =130365 
 
                 ) AS tmpMovement
                GROUP BY /*tmpMovement.MovementId_Sale
@@ -212,6 +213,7 @@ BEGIN
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
                       , tmpMovement.DocumentTaxKindId 
+                      , tmpMovement.InvNumber_Tax
              ) AS tmpGroupMovement
 
          JOIN Object AS Object_Goods ON Object_Goods.Id = tmpGroupMovement.GoodsId
@@ -238,7 +240,7 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postg
 */
 
 -- тест
---SELECT * FROM gpReport_CheckTax (inStartDate:= '15.12.2013', inEndDate:= '1.1.2014', inSessiON:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_CheckTax (inStartDate:= '20.12.2013', inEndDate:= '22.12.2013', inSessiON:= zfCalc_UserAdmin());
 
 /*
 select * from Object where descId =91

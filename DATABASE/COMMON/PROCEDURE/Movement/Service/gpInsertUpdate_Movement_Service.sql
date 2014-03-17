@@ -5,6 +5,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdat
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Service (integer, tvarchar, tdatetime, TDateTime, TVarChar, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 
 
 
@@ -12,6 +13,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Service(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
     IN inInvNumber                TVarChar  , -- Номер документа
     IN inOperDate                 TDateTime , -- Дата документа
+    IN inOperDatePartner          TDateTime , -- Дата акта(контрагента)
+    IN inInvNumberPartner         TVarChar  , -- Номер акта (контрагента)
     IN inAmountIn                 TFloat    , -- Сумма операции 
     IN inAmountOut                TFloat    , -- Сумма операции 
     IN inComment                  TVarChar  , -- Комментарий
@@ -64,6 +67,11 @@ BEGIN
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Service(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), ioId, inOperDatePartner);
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
@@ -114,6 +122,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner
  19.01.14         * del ContractConditionKind
  28.01.14         * add ContractConditionKind
  22.01.14                                        * add IsMaster
