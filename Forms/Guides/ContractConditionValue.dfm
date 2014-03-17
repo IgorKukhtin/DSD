@@ -408,8 +408,8 @@ object ContractConditionValueForm: TContractConditionValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1171,7 +1171,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inContractStateKindCode'
-        Value = '3'
+        Value = '1'
         ParamType = ptInput
       end
       item
@@ -1229,7 +1229,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       end
       item
         Name = 'inContractStateKindCode'
-        Value = '4'
+        Value = '3'
         ParamType = ptInput
       end
       item

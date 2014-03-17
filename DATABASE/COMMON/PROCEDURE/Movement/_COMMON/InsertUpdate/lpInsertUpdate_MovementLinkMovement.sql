@@ -15,7 +15,7 @@ BEGIN
     END IF;
 
     -- изменить данные по значению <ключ объекта>
-    UPDATE MovementLinkMovement SET MovementChildId = MovementChildId WHERE MovementId = inMovementId AND DescId = inDescId;
+    UPDATE MovementLinkMovement SET MovementChildId = inMovementChildId WHERE MovementId = inMovementId AND DescId = inDescId;
     IF NOT FOUND THEN            
        -- вставить <ключ свойства> , <ключ главного объекта> и <ключ подчиненного объекта>
        INSERT INTO MovementLinkMovement (DescId, MovementId, MovementChildId)
