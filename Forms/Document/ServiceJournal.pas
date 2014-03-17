@@ -30,6 +30,8 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
+    clOperDatePartner: TcxGridDBColumn;
+    clInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

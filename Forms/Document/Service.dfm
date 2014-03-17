@@ -1,27 +1,27 @@
 ﻿inherited ServiceForm: TServiceForm
   ActiveControl = ceAmountDebet
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-  ClientHeight = 244
+  ClientHeight = 287
   ClientWidth = 605
   AddOnFormData.isSingle = False
   ExplicitWidth = 611
-  ExplicitHeight = 276
+  ExplicitHeight = 319
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 167
-    Top = 210
+    Top = 251
     Height = 26
     ExplicitLeft = 167
-    ExplicitTop = 210
+    ExplicitTop = 251
     ExplicitHeight = 26
   end
   inherited bbCancel: TcxButton
     Left = 311
-    Top = 210
+    Top = 251
     Height = 26
     ExplicitLeft = 311
-    ExplicitTop = 210
+    ExplicitTop = 251
     ExplicitHeight = 26
   end
   object cxLabel1: TcxLabel [2]
@@ -145,15 +145,15 @@
     Caption = #1044#1086#1075#1086#1074#1086#1088
   end
   object cxLabel10: TcxLabel [18]
-    Left = 127
-    Top = 151
+    Left = 10
+    Top = 190
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object ceComment: TcxTextEdit [19]
-    Left = 127
-    Top = 169
+    Left = 10
+    Top = 208
     TabOrder = 11
-    Width = 470
+    Width = 587
   end
   object ceAmountKredit: TcxCurrencyEdit [20]
     Left = 447
@@ -168,17 +168,41 @@
     Top = 11
     Caption = #1050#1088#1077#1076#1080#1090', '#1089#1091#1084#1084#1072' ('#1084#1099' '#1087#1086#1083#1091#1095#1080#1083#1080')'
   end
+  object cxLabel9: TcxLabel [22]
+    Left = 150
+    Top = 151
+    Caption = #1044#1072#1090#1072' '#1072#1082#1090#1072'('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+  end
+  object ceOperDatePartner: TcxDateEdit [23]
+    Left = 150
+    Top = 169
+    Properties.SaveTime = False
+    Properties.ShowTime = False
+    TabOrder = 23
+    Width = 131
+  end
+  object edInvNumberPartner: TcxTextEdit [24]
+    Left = 296
+    Top = 169
+    TabOrder = 24
+    Width = 153
+  end
+  object cxLabel11: TcxLabel [25]
+    Left = 296
+    Top = 151
+    Caption = #1053#1086#1084#1077#1088' '#1072#1082#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 403
-    Top = 154
+    Left = 11
+    Top = 242
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 304
-    Top = 154
+    Left = 104
+    Top = 242
   end
   inherited ActionList: TActionList
-    Left = 255
-    Top = 153
+    Left = 423
+    Top = 217
     inherited InsertUpdateGuides: TdsdInsertUpdateGuides [0]
     end
     inherited actRefresh: TdsdDataSetRefresh [1]
@@ -198,8 +222,8 @@
         Value = '0'
         ParamType = ptInput
       end>
-    Left = 560
-    Top = 154
+    Left = 56
+    Top = 242
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Service'
@@ -223,6 +247,20 @@
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDatePartner'
+        Value = 0d
+        Component = ceOperDatePartner
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -291,8 +329,8 @@
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 456
-    Top = 152
+    Left = 488
+    Top = 224
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Service'
@@ -334,6 +372,18 @@
         Value = 0d
         Component = ceOperDate
         DataType = ftDateTime
+      end
+      item
+        Name = 'OperDatePartner'
+        Value = 0d
+        Component = ceOperDatePartner
+        DataType = ftDateTime
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
       end
       item
         Name = 'AmountIn'
@@ -435,8 +485,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 512
-    Top = 152
+    Left = 544
+    Top = 216
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -460,7 +510,7 @@
         DataType = ftString
       end>
     Left = 34
-    Top = 168
+    Top = 152
   end
   object UnitGuides: TdsdGuides
     KeyField = 'Id'

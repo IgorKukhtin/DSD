@@ -71,7 +71,7 @@ BEGIN
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
 
-           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, zc_DateStart()) AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
                       
            , CASE WHEN inMovementId = 0 

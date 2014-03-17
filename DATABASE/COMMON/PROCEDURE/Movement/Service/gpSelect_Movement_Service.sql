@@ -1,132 +1,136 @@
--- Function: gpSelect_Movement_Send()
+-- Function: gpSelect_Movement_Service()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar);
 
-
-CREATE OR REPLACE FUNCTION gpSelect_Movement(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Service(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
-    IN inJuridicalId INTEGER   , 
-    IN inContractId  Integer   , 
-    IN inDescSet     TVarChar  ,  
+    IN inIsErased    Boolean ,
     IN inSession     TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, DescId Integer, DescName TVarChar
-             , TotalSumm TFloat
-             , JuridicalId Integer, JuridicalName TVarChar)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
+             , AmountIn TFloat, AmountOut TFloat
+             , Comment TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar
+             , InfoMoneyGroupName TVarChar
+             , InfoMoneyDestinationName TVarChar
+             , InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , ContractInvNumber TVarChar
+             , UnitName TVarChar
+             , PaidKindName TVarChar
+             )
 AS
 $BODY$
-   DECLARE vbDescId integer; 
-           vbIndex  Integer;
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Send());
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Service());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     -- таблица - MovementDesc
-     CREATE TEMP TABLE _tmpMovementDesc (DescId Integer) ON COMMIT DROP;
-     vbIndex := 1;
-
-     WHILE split_part(inDescSet, ';', vbIndex) <> '' LOOP
-
-         EXECUTE 'SELECT '||split_part(inDescSet, ';', vbIndex) INTO vbDescId;
-         INSERT INTO _tmpMovementDesc SELECT vbDescId;
-         vbIndex := vbIndex + 1;
-
-     END LOOP;
-
-
+     -- Результат
      RETURN QUERY 
+       WITH tmpStatus AS (SELECT zc_Enum_Status_Complete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_UnComplete() AS StatusId
+                         UNION
+                          SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
+                         )
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Movement.DescId
-           , MovementDesc.ItemName  
-           , COALESCE(MovementFloat_TotalSumm.ValueData, MovementItem.Amount)  AS TotalSumm
+           , Object_Status.ObjectCode   AS StatusCode
+           , Object_Status.ValueData    AS StatusName
 
-           , COALESCE(Object_MoneyPlace.Id, PlaceFrom.Id, PlaceTo.Id)           AS JuridicalId
-           , COALESCE(Object_MoneyPlace.ValueData, PlaceFrom.ValueData, PlaceTo.ValueData)           AS JuridicalName
-             
-       FROM Movement
-            LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                         ON MovementLinkObject_To.MovementId = Movement.Id
-                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                         ON MovementLinkObject_From.MovementId = Movement.Id
-                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+           , MovementDate_OperDatePartner.ValueData    AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalTo
-                                 ON ObjectLink_Partner_JuridicalTo.ObjectId = MovementLinkObject_To.ObjectId 
-                                AND ObjectLink_Partner_JuridicalTo.DescId = zc_ObjectLink_Partner_Juridical()
+           , CASE WHEN MovementItem.Amount > 0
+                       THEN MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountIn
+           , CASE WHEN MovementItem.Amount < 0
+                       THEN -1 * MovementItem.Amount
+                  ELSE 0
+             END::TFloat AS AmountOut
 
+           , MIString_Comment.ValueData        AS Comment
 
-            LEFT JOIN Object AS PlaceTo ON PlaceTo.Id = COALESCE(ObjectLink_Partner_JuridicalTo.ChildObjectId, MovementLinkObject_To.ObjectId)
-                                       AND PlaceTo.DescId = zc_Object_Juridical()
+           , Object_Juridical.ObjectCode      AS JuridicalCode
+           , Object_Juridical.ValueData       AS JuridicalName
+           , Object_InfoMoney_View.InfoMoneyGroupName
+           , Object_InfoMoney_View.InfoMoneyDestinationName
+           , Object_InfoMoney_View.InfoMoneyCode
+           , Object_InfoMoney_View.InfoMoneyName
+           , View_Contract_InvNumber.InvNumber AS ContractInvNumber
+           , Object_Unit.ValueData            AS UnitName
+           , Object_PaidKind.ValueData        AS PaidKindName
 
-            LEFT JOIN ObjectLink AS ObjectLink_Partner_JuridicalFrom
-                                 ON ObjectLink_Partner_JuridicalFrom.ObjectId = MovementLinkObject_From.ObjectId 
-                                AND ObjectLink_Partner_JuridicalFrom.DescId = zc_ObjectLink_Partner_Juridical()
+       FROM tmpStatus
+            JOIN Movement ON Movement.DescId = zc_Movement_Service()
+                         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                         AND Movement.StatusId = tmpStatus.StatusId
+            JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
-            LEFT JOIN ObjectLink AS ObjectLink_CardFuel_JuridicalFrom
-                                 ON ObjectLink_CardFuel_JuridicalFrom.ObjectId = MovementLinkObject_From.ObjectId 
-                                AND ObjectLink_CardFuel_JuridicalFrom.DescId = zc_ObjectLink_CardFuel_Juridical()
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
-            LEFT JOIN Object AS PlaceFrom ON PlaceFrom.Id = COALESCE(ObjectLink_CardFuel_JuridicalFrom.ChildObjectId, ObjectLink_Partner_JuridicalFrom.ChildObjectId, MovementLinkObject_From.ObjectId)
-                                         AND PlaceFrom.DescId = zc_Object_Juridical() 
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
 
-            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() 
-                                  AND Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount(), zc_Movement_Service(), zc_Movement_TransportService())
+            LEFT JOIN MovementItemString AS MIString_Comment 
+                                         ON MIString_Comment.MovementItemId = MovementItem.Id
+                                        AND MIString_Comment.DescId = zc_MIString_Comment()
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
-                                         ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
-                                        AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
-            LEFT JOIN Object AS Object_MoneyPlace ON Object_MoneyPlace.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, MovementItem.ObjectId)
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
+                                         ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Contract
                                          ON MILinkObject_Contract.MovementItemId = MovementItem.Id
                                         AND MILinkObject_Contract.DescId = zc_MILinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MILinkObject_Contract.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                         ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                
-       WHERE Movement.statusid = zc_enum_status_complete() AND  Movement.DescId IN (SELECT _tmpMovementDesc.DescId FROM _tmpMovementDesc) AND Movement.OperDate BETWEEN inStartDate AND inEndDate 
-         AND (COALESCE(ObjectLink_Partner_JuridicalTo.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId 
-                 OR ObjectLink_Partner_JuridicalFrom.ChildObjectId = inJuridicalId 
-                 OR MovementLinkObject_From.ObjectId = inJuridicalId 
-                 OR ObjectLink_CardFuel_JuridicalFrom.ChildObjectId = inJuridicalId
-                 OR MILinkObject_MoneyPlace.ObjectId = inJuridicalId
-                 OR MovementItem.ObjectId = inJuridicalId
-                 OR inJuridicalId = 0)
-         AND (MILinkObject_Contract.ObjectId = inContractId 
-           OR MovementLinkObject_Contract.ObjectId = inContractId 
-           OR inContractId = 0)
-                 ;
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                             ON MILinkObject_Unit.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
+                                             ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
+;
   
-   
 END;
 $BODY$
-  LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpSelect_Movement_Service (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 14.03.14                         *
- 11.03.14                         *
-
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.03.14         * add zc_MovementDate_OperDatePartner, zc_MovementString_InvNumberPartner
+ 14.01.14         * del ContractConditionKind
+ 31.01.14                                        * add inIsErased
+ 28.01.14         * add ContractConditionKind
+ 14.01.14                                        * add Object_Contract_InvNumber_View
+ 28.12.13                                        * add Object_InfoMoney_View
+ 28.12.13                                        * add Object_RoleAccessKey_View
+ 27.12.13                         *
+ 11.08.13         *
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Send (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+--  SELECT * FROM gpSelect_Movement_Service (inStartDate:= '30.01.2013', inEndDate:= '01.02.2014', inIsErased:=false , inSession:= zfCalc_UserAdmin())
