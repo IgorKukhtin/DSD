@@ -167,11 +167,11 @@ BEGIN
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
 --saved PriceList
-
+/*
          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                               ON ObjectLink_Partner_Juridical.ObjectId = Object_From.Id
                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-
+*/
 -- PriceList Partner
 
          LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
@@ -236,4 +236,4 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 */
 
 -- тест
---  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+--  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

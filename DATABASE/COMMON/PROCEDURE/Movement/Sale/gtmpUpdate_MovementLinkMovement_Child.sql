@@ -50,11 +50,14 @@ BEGIN
                                   AND ObjectLink_Partner_Juridical.ChildObjectId = vbJuridicalId
               WHERE Movement.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
                 AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                AND Movement.DescId = zc_Movement_Sale();
+                AND Movement.DescId = zc_Movement_Sale()
+                AND ((Movement.InvNumber <> '58440' AND Movement.OperDate = '31.12.2013' :: TDateTime)
+                  OR Movement.OperDate <> '31.12.2013' :: TDateTime)
+             ;
          ELSE
              IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
              THEN 
-                 -- сформировали связь для всех по юр лицу
+                 -- сформировали связь для всех по контрагенту
                  PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), Movement.Id, inMovementChildId)
                  FROM Movement 
                       JOIN MovementLinkObject AS MovementLinkObject_To
@@ -63,7 +66,10 @@ BEGIN
                                              AND MovementLinkObject_To.ObjectId = vbPartnerId
                  WHERE Movement.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
                    AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                   AND Movement.DescId = zc_Movement_Sale();
+                   AND Movement.DescId = zc_Movement_Sale()
+                   AND ((Movement.InvNumber <> '58440' AND Movement.OperDate = '31.12.2013' :: TDateTime)
+                     OR Movement.OperDate <> '31.12.2013' :: TDateTime)
+                ;
              END IF;
          END IF;
 
@@ -77,8 +83,7 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  16.03.14                                        * эта процка только для Load_PostgreSql
-
 */
 
 -- тест
--- SELECT * FROM gtmpUpdate_MovementLinkMovement_Child (inId:= 0, inInvNumber:= '-1', inSession:= '2');
+-- SELECT * FROM gtmpUpdate_MovementLinkMovement_Child (inMovementId:= 114768, inMovementChildId:= 130627, inDocumentTaxKindId:= 80787, inSession:='5');
