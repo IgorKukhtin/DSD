@@ -166,7 +166,7 @@ BEGIN
     SELECT MAX (View_Contract.ContractId) INTO vbContractId
     FROM Object_Contract_View AS View_Contract
          JOIN ObjectBoolean AS ObjectBoolean_Default
-                            ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
+                            ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
                            AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
                            AND ObjectBoolean_Default.ValueData = TRUE
     WHERE View_Contract.JuridicalId = vbJuridicalId

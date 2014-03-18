@@ -9042,6 +9042,7 @@ begin
         Close;
         Clear;
         Add('select * from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+')');
+//Add('where BillId=1702760');
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(Id_Postgres,0)=0');
 
@@ -10676,7 +10677,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                             and BillItems.GoodsPropertyId<>1041' //  Œ¬¡¿—ÕI ¬»–Œ¡»
@@ -10968,6 +10969,7 @@ begin
 
         Add('     , Bill.isNds as inPriceWithVAT');
         Add('     , Bill.Nds as inVATPercent');
+        Add('     , Bill.ToId');
 
         Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
         Add('     , 9399 as inFromId');
@@ -10988,7 +10990,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres_two');
         Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
            +'           , max(isnull(BillItems.OperCount,0)) as OperCount1'
            +'           , max(isnull(BillItems_byParent.OperCount,0)) as OperCount2'
            +'           , max(isnull(BillItems_byParent.Id,0)) as findId1'
@@ -11010,6 +11012,7 @@ begin
            +'      ) as Bill_find');
 
         Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+        Add('     left outer join dba.Bill_i AS Bill_find_i on Bill_find_i.Id = Bill.BillId_byLoad');
         Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
@@ -11023,9 +11026,10 @@ begin
            +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
            +'                          ) as Contract on Contract.ClientId = Bill.ToId');
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
-           +'                     ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId');
+           +'                     ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId'
+           +'                                        and Bill_find_i.Id is null');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
-           +'                     ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_To.Id_byLoad');
+           +'                     ) as _pgPartner on _pgPartner.UnitId = isnull (Bill_find_i.ToId, Unit_byLoad_To.Id_byLoad)');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
 
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = case when Bill.FromId in (1388' //√–»¬¿ –.
@@ -11046,7 +11050,7 @@ begin
            +'                                                                              ) then 5 else Bill.FromId end');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
-// Add('where Bill.BillNumber in (58439, 58440)');
+ //Add('where Bill.BillNumber in (136565)');
 
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(Bill.NalogId_PG,0)=0');
@@ -11310,7 +11314,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                             and BillItems.GoodsPropertyId<>1041' //  Œ¬¡¿—ÕI ¬»–Œ¡»
