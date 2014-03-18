@@ -32,6 +32,9 @@ BEGIN
 
      -- Проверка установки значений
      IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40200() -- Прочие кредиты
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40300() -- Овердрафт

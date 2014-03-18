@@ -31,8 +31,17 @@ BEGIN
         inUnitId := NULL;
      END IF; 
 
+
+     -- проверили статус
+     PERFORM lpInsertUpdate_Movement (ioId:= Id, inDescId:= DescId, inInvNumber:= InvNumber, inOperDate:= OperDate, inParentId:= ParentId, inAccessKeyId:= AccessKeyId)
+     FROM Movement WHERE Id = ioId;
+
+
      -- Проверка установки значений
      IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40200() -- Прочие кредиты
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40300() -- Овердрафт
@@ -75,6 +84,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.03.14                                        * lpInsertUpdate_Movement
  13.03.14                                        * add Проверка установки значений
  03.12.13                        *
  13.08.13          *
@@ -82,3 +92,4 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUpdate_Movement_BankStatementItem (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inFileName:= 'xxx', inBankAccountId:= 1, inSession:= '2')
+

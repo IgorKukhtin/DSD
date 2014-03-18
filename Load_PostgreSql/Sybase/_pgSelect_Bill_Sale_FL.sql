@@ -38,7 +38,7 @@ begin
   ) on commit preserve rows;
 
   insert into _tmpBill_NotNalog (BillId, CodeIM)
-           select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 else 30101 end) as CodeIM
+           select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM
            from dba.Bill
                 join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
                                   and BillItems.GoodsPropertyId<>1041 --  Œ¬¡¿—ÕI ¬»–Œ¡»
@@ -114,7 +114,7 @@ select Bill.Id as ObjectId
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
      , _tmpBill_NotNalog.CodeIM as CodeIM -- _pgInfoMoney.Id3_Postgres as ContractId -- isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
      , isnull(Contract.ContractNumber,'') as ContractNumber
-     , null as CarId
+     , Bill.ToId as CarId
      , null as PersonalDriverId
 
      , null as RouteId
