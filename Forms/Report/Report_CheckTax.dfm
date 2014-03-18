@@ -107,6 +107,12 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
+          object clContract_InvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'Contract_InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object clFromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromCode'
