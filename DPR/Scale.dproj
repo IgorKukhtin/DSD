@@ -120,6 +120,13 @@
 			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\Scale\DialogBillKind.pas">
+				<Form>DialogBillKindForm</Form>
+				<FormType>dfm</FormType>
+			</DCCReference>
+			<DCCReference Include="..\Scale\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
