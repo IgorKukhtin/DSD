@@ -124,6 +124,9 @@
 				<Form>DialogBillKindForm</Form>
 				<FormType>dfm</FormType>
 			</DCCReference>
+			<DCCReference Include="..\Scale\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

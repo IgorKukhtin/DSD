@@ -11,6 +11,7 @@ object DialogBillKindForm: TDialogBillKindForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object gbPartnerAll: TGroupBox
@@ -21,7 +22,6 @@ object DialogBillKindForm: TDialogBillKindForm
     Align = alTop
     Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     TabOrder = 0
-    ExplicitWidth = 882
     object PanelPartner: TPanel
       Left = 2
       Top = 15
@@ -30,9 +30,6 @@ object DialogBillKindForm: TDialogBillKindForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 0
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitHeight = 48
       object LabelPartner: TLabel
         Left = 0
         Top = 0
@@ -57,7 +54,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitHeight = 185
         object EditPartnerCode: TEdit
           Left = 6
           Top = 15
@@ -75,7 +71,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alClient
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         TabOrder = 1
-        ExplicitHeight = 185
         object PanelPartnerName: TPanel
           Left = 2
           Top = 15
@@ -91,7 +86,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitHeight = 168
         end
       end
     end
@@ -103,9 +97,6 @@ object DialogBillKindForm: TDialogBillKindForm
       Align = alLeft
       BevelOuter = bvNone
       TabOrder = 1
-      ExplicitLeft = 270
-      ExplicitTop = 0
-      ExplicitHeight = 48
       object LabelRouteUnit: TLabel
         Left = 0
         Top = 0
@@ -130,7 +121,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
-        ExplicitHeight = 185
         object EditRouteUnitCode: TEdit
           Left = 6
           Top = 15
@@ -148,7 +138,6 @@ object DialogBillKindForm: TDialogBillKindForm
         Align = alClient
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         TabOrder = 1
-        ExplicitHeight = 185
         object PanelRouteUnitName: TPanel
           Left = 2
           Top = 15
@@ -164,9 +153,124 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          ExplicitHeight = 168
         end
       end
     end
+  end
+  object gbGrid: TGroupBox
+    Left = 0
+    Top = 73
+    Width = 548
+    Height = 629
+    Align = alClient
+    Caption = #1054#1087#1077#1088#1072#1094#1080#1080
+    TabOrder = 1
+    ExplicitTop = 8
+    ExplicitHeight = 73
+    object cxGrid: TcxGrid
+      Left = 2
+      Top = 15
+      Width = 544
+      Height = 612
+      Align = alClient
+      TabOrder = 0
+      LookAndFeel.Kind = lfStandard
+      LookAndFeel.NativeStyle = False
+      LookAndFeel.SkinName = ''
+      ExplicitLeft = 0
+      ExplicitTop = 28
+      ExplicitWidth = 853
+      ExplicitHeight = 339
+      object cxGridDBTableView: TcxGridDBTableView
+        Navigator.Buttons.CustomButtons = <>
+        DataController.DataSource = DataSource
+        DataController.Filter.Options = [fcoCaseInsensitive]
+        DataController.Filter.Active = True
+        DataController.Summary.DefaultGroupSummaryItems = <>
+        DataController.Summary.FooterSummaryItems = <>
+        DataController.Summary.SummaryGroups = <>
+        Images = dmMain.SortImageList
+        OptionsBehavior.IncSearch = True
+        OptionsCustomize.ColumnHiding = True
+        OptionsCustomize.ColumnsQuickCustomization = True
+        OptionsData.Deleting = False
+        OptionsData.DeletingConfirmation = False
+        OptionsData.Editing = False
+        OptionsData.Inserting = False
+        OptionsView.ColumnAutoWidth = True
+        OptionsView.HeaderHeight = 40
+        OptionsView.Indicator = True
+        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+        object clCarModel: TcxGridDBColumn
+          DataBinding.FieldName = 'DisplayName'
+          HeaderAlignmentVert = vaCenter
+          Width = 120
+        end
+      end
+      object cxGridLevel: TcxGridLevel
+        GridView = cxGridDBTableView
+      end
+    end
+  end
+  object ClientDataSet: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 272
+    Top = 384
+  end
+  object DataSource: TDataSource
+    DataSet = ClientDataSet
+    Left = 336
+    Top = 384
+  end
+  object spData: TdsdStoredProc
+    StoredProcName = 'gpSelect_Object_ToolsWeighing_Guide'
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inRootId'
+        Value = 77
+        ParamType = ptInput
+      end>
+    Left = 264
+    Top = 296
+  end
+  object BindingsList1: TBindingsList
+    Methods = <>
+    OutputConverters = <>
+    UseAppManager = True
+    Left = 20
+    Top = 5
+    object BindGridListDBGrid1: TBindGridList
+      Category = 'Lists'
+      ColumnExpressions = <>
+      FormatControlExpressions = <>
+      ClearControlExpressions = <>
+    end
+  end
+  object dsdDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableView
+    OnDblClickActionList = <
+      item
+      end
+      item
+      end>
+    ActionItemList = <
+      item
+        ShortCut = 13
+      end
+      item
+        ShortCut = 13
+      end>
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    Left = 136
+    Top = 448
   end
 end
