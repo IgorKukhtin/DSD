@@ -60,7 +60,7 @@ object DialogBillKindForm: TDialogBillKindForm
           Width = 55
           Height = 21
           TabOrder = 0
-          Text = 'EditPartnerCode'
+          OnExit = EditPartnerCodeExit
         end
       end
       object gbPartnerName: TGroupBox
@@ -78,7 +78,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Height = 26
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelPartnerName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -12
@@ -127,7 +126,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Width = 55
           Height = 21
           TabOrder = 0
-          Text = 'EditRouteUnitCode'
         end
       end
       object gbRouteUnitName: TGroupBox
@@ -145,7 +143,6 @@ object DialogBillKindForm: TDialogBillKindForm
           Height = 26
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -12
@@ -165,51 +162,36 @@ object DialogBillKindForm: TDialogBillKindForm
     Align = alClient
     Caption = #1054#1087#1077#1088#1072#1094#1080#1080
     TabOrder = 1
-    ExplicitTop = 8
-    ExplicitHeight = 73
-    object cxGrid: TcxGrid
+    object DBGrid: TDBGrid
       Left = 2
       Top = 15
       Width = 544
       Height = 612
       Align = alClient
+      DataSource = DataSource
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      Options = [dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect]
+      ParentFont = False
       TabOrder = 0
-      LookAndFeel.Kind = lfStandard
-      LookAndFeel.NativeStyle = False
-      LookAndFeel.SkinName = ''
-      ExplicitLeft = 0
-      ExplicitTop = 28
-      ExplicitWidth = 853
-      ExplicitHeight = 339
-      object cxGridDBTableView: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = DataSource
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Filter.Active = True
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        Images = dmMain.SortImageList
-        OptionsBehavior.IncSearch = True
-        OptionsCustomize.ColumnHiding = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
-        OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
-        OptionsView.HeaderHeight = 40
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object clCarModel: TcxGridDBColumn
-          DataBinding.FieldName = 'DisplayName'
-          HeaderAlignmentVert = vaCenter
-          Width = 120
-        end
-      end
-      object cxGridLevel: TcxGridLevel
-        GridView = cxGridDBTableView
-      end
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnCellClick = DBGridCellClick
+      OnDrawColumnCell = DBGridDrawColumnCell
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'DisplayName'
+          Title.Caption = #1054#1087#1077#1088#1072#1094#1080#1103
+          Width = 501
+          Visible = True
+        end>
     end
   end
   object ClientDataSet: TClientDataSet
@@ -238,39 +220,5 @@ object DialogBillKindForm: TDialogBillKindForm
       end>
     Left = 264
     Top = 296
-  end
-  object BindingsList1: TBindingsList
-    Methods = <>
-    OutputConverters = <>
-    UseAppManager = True
-    Left = 20
-    Top = 5
-    object BindGridListDBGrid1: TBindGridList
-      Category = 'Lists'
-      ColumnExpressions = <>
-      FormatControlExpressions = <>
-      ClearControlExpressions = <>
-    end
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-      end
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    Left = 136
-    Top = 448
   end
 end

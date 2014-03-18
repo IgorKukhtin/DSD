@@ -1864,7 +1864,8 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 44
+          ExplicitLeft = 5
+          ExplicitTop = 23
         end
         object PanelRouteUnitCode: TPanel
           Left = 1
