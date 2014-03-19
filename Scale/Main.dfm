@@ -12,6 +12,7 @@ object MainForm: TMainForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  OnCreate = FormCreate
   OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
@@ -1654,7 +1655,6 @@ object MainForm: TMainForm
     Height = 66
     Align = alTop
     BevelOuter = bvNone
-    Caption = 'PanelInfo'
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clMaroon
     Font.Height = -11
@@ -1663,9 +1663,9 @@ object MainForm: TMainForm
     ParentFont = False
     TabOrder = 3
     object PanelMessage: TPanel
-      Left = 429
+      Left = 633
       Top = 0
-      Width = 327
+      Width = 267
       Height = 28
       Align = alClient
       BevelOuter = bvNone
@@ -1677,36 +1677,13 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-    end
-    object GBPassword: TGroupBox
-      Left = 756
-      Top = 0
-      Width = 144
-      Height = 28
-      Align = alRight
-      Caption = #1055#1072#1088#1086#1083#1100' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
-      TabOrder = 1
-      object PanelPassword: TPanel
-        Left = 2
-        Top = 15
-        Width = 140
-        Height = 11
-        Align = alClient
-        BevelOuter = bvNone
-        Caption = 'PanelPassword'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clNavy
-        Font.Height = -11
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        TabOrder = 0
-      end
+      ExplicitLeft = 429
+      ExplicitWidth = 471
     end
     object PanelBillKind: TPanel
       Left = 0
       Top = 0
-      Width = 429
+      Width = 633
       Height = 28
       Align = alLeft
       BevelOuter = bvNone
@@ -1717,7 +1694,7 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = [fsBold]
       ParentFont = False
-      TabOrder = 2
+      TabOrder = 1
     end
     object infoPanel: TPanel
       Left = 0
@@ -1732,11 +1709,11 @@ object MainForm: TMainForm
       Font.Name = 'MS Sans Serif'
       Font.Style = []
       ParentFont = False
-      TabOrder = 3
+      TabOrder = 2
       object PanelPartner: TPanel
         Left = 117
         Top = 0
-        Width = 245
+        Width = 392
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1745,7 +1722,7 @@ object MainForm: TMainForm
         object LabelPartner: TLabel
           Left = 1
           Top = 1
-          Width = 243
+          Width = 390
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1773,21 +1750,14 @@ object MainForm: TMainForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
-          object EditPartnerCode: TEdit
-            Left = 1
-            Top = 2
-            Width = 39
-            Height = 21
-            TabOrder = 0
-            Text = 'EditPartnerCode'
-          end
         end
         object PanelPartnerName: TPanel
           Left = 48
           Top = 14
-          Width = 196
+          Width = 343
           Height = 23
           Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
           Caption = 'PanelPartnerName'
           Font.Charset = DEFAULT_CHARSET
@@ -1830,6 +1800,7 @@ object MainForm: TMainForm
           Width = 115
           Height = 23
           Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
           Caption = 'PanelPriceListName'
           Font.Charset = DEFAULT_CHARSET
@@ -1842,9 +1813,9 @@ object MainForm: TMainForm
         end
       end
       object PanelRouteUnit: TPanel
-        Left = 362
+        Left = 509
         Top = 0
-        Width = 245
+        Width = 284
         Height = 38
         Align = alLeft
         BevelInner = bvRaised
@@ -1853,7 +1824,7 @@ object MainForm: TMainForm
         object LabelRouteUnit: TLabel
           Left = 1
           Top = 1
-          Width = 243
+          Width = 282
           Height = 13
           Align = alTop
           Alignment = taCenter
@@ -1864,8 +1835,7 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitLeft = 5
-          ExplicitTop = 23
+          ExplicitWidth = 44
         end
         object PanelRouteUnitCode: TPanel
           Left = 1
@@ -1874,7 +1844,7 @@ object MainForm: TMainForm
           Height = 23
           Align = alLeft
           BevelOuter = bvNone
-          Caption = 'PanelPartnerCode'
+          Caption = 'PanelRouteUnitCode'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -11
@@ -1886,9 +1856,10 @@ object MainForm: TMainForm
         object PanelRouteUnitName: TPanel
           Left = 48
           Top = 14
-          Width = 196
+          Width = 235
           Height = 23
           Align = alClient
+          Alignment = taLeftJustify
           BevelOuter = bvNone
           Caption = 'PanelRouteUnitName'
           Font.Charset = DEFAULT_CHARSET
@@ -1901,9 +1872,9 @@ object MainForm: TMainForm
         end
       end
       object PanelIsRecalc: TPanel
-        Left = 756
+        Left = 794
         Top = 0
-        Width = 144
+        Width = 106
         Height = 38
         Align = alRight
         BevelOuter = bvNone
