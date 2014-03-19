@@ -153,6 +153,8 @@ BEGIN
            , tmpData.DisplayName                    AS DisplayName
 
        FROM tmpData
+       WHERE tmpData.DescId IS NOT NULL
+
        UNION
        SELECT
              tmpData.DescId                         AS DescId
@@ -167,10 +169,12 @@ BEGIN
            , 0                                      AS Code
            , tmpData.GroupNum                       AS GroupNum
            , 0                                      AS GroupSubNum
-           , CAST('          '||tmpData.GroupNum||'. '||tmpData.DescName AS TVarChar) AS DisplayName
+           , CAST('              '||tmpData.GroupNum||'. '||tmpData.DescName AS TVarChar) AS DisplayName
 
        FROM tmpData
+       WHERE tmpData.DescId IS NOT NULL
        GROUP BY tmpData.DescId, tmpData.DescName, tmpData.GroupNum, tmpData.DescName
+
        ORDER BY 11, 12;
 
 
@@ -195,4 +199,3 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Guide (Integer, TVarChar) OWNER TO 
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (88952, zfCalc_UserAdmin()) --Scale_1
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (89036, zfCalc_UserAdmin()) --Scale_77
 -- SELECT * FROM gpSelect_Object_ToolsWeighing_Guide (77, zfCalc_UserAdmin()) --Scale_77
-

@@ -52,7 +52,7 @@ BEGIN
            , MovementString_Comment.ValueData AS Comment
 
            , Object_Juridical.Id          AS LinkJuridicalId
-           , Object_Juridical.ValueData   AS LinkJuridicalName
+           , (Object_Juridical.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS LinkJuridicalName
 
            , Object_InfoMoney_View.InfoMoneyGroupName
            , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -131,6 +131,11 @@ BEGIN
                                         AND MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementLinkObject_Juridical.ObjectId
 
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                 ON ObjectLink_BankAccount_Bank.ObjectId = MovementLinkObject_Juridical.ObjectId
+                                AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+            LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.Id
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
@@ -148,10 +153,11 @@ ALTER FUNCTION gpSelect_Movement_BankStatementItem (Integer, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  13.03.14                                        * add Object_InfoMoney_View
  15.11.13                        *              
  13.08.13         *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_BankStatementItem (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_BankStatementItem (inMovementId:= 1, inSession:= '5')

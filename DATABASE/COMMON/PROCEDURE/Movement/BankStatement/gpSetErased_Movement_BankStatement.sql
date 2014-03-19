@@ -19,16 +19,25 @@ BEGIN
         RAISE EXCEPTION 'По выписке сформированы документы. Удаление не возможно';
      END IF;*/
 
-     -- Удаляем все Документы
+
+     -- Удаляем все Документы BankAccount
      PERFORM lpSetErased_Movement (inMovementId := Movement_BankAccount.Id
                                  , inUserId     := vbUserId)
      FROM Movement AS Movement_BankStatementItem
           JOIN Movement AS Movement_BankAccount ON Movement_BankAccount.ParentId = Movement_BankStatementItem.Id
-     WHERE Movement_BankStatementItem.ParentId = inMovementId;
+     WHERE Movement_BankStatementItem.ParentId = inMovementId
+       AND Movement_BankStatementItem.DescId = zc_Movement_BankStatementItem();
 
      -- Удаляем Документ
      PERFORM lpSetErased_Movement (inMovementId := inMovementId
                                  , inUserId     := vbUserId);
+
+     -- Удаляем элементы документа выписки
+     PERFORM lpSetErased_Movement (inMovementId := Movement_BankStatementItem.Id
+                                 , inUserId     := vbUserId)
+     FROM Movement AS Movement_BankStatementItem
+     WHERE Movement_BankStatementItem.ParentId = inMovementId
+       AND Movement_BankStatementItem.DescId = zc_Movement_BankStatementItem();
 
 END;
 $BODY$
@@ -37,6 +46,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.03.14                                        * add Удаляем элементы документа выписки
  13.03.14                                        * add Удаляем все Документы
  17.01.14                                        *
 */

@@ -206,8 +206,9 @@ type
     DataSource1: TDataSource;
     ClientDataSet: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
+    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
   private
-    { Private declarations }
+    procedure GetParams;
   public
     { Public declarations }
   end;
@@ -219,9 +220,30 @@ implementation
 
 {$R *.dfm}
 
+uses DialogBillKind;
+
 procedure TMainForm.ButtonExportToEDIClick(Sender: TObject);
 begin
  spTest.Execute;
 end;
+
+procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
+  Shift: TShiftState);
+begin
+     if Key = VK_F2 then GetParams;
+end;
+
+
+procedure TMainForm.GetParams;
+var
+myCodeBillKind:String;
+    tmpFormParams: TParams;
+begin
+
+     with DialogBillKindForm do begin
+       if Execute(tmpFormParams) then begin end;
+     end;
+end;
+
 
 end.

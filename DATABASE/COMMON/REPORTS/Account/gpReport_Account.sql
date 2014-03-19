@@ -70,7 +70,7 @@ BEGIN
          , '' :: TVarChar AS CarName -- Object_Car.ValueData
 
          , Object_Direction.ObjectCode     AS ObjectCode_Direction
-         , Object_Direction.ValueData      AS ObjectName_Direction
+         , (Object_Direction.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination
          , ObjectDesc_Direction.ItemName   AS DescName_Direction
@@ -387,6 +387,12 @@ BEGIN
 
        LEFT JOIN ObjectDesc AS ObjectDesc_Direction ON ObjectDesc_Direction.Id = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
+
+       LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                            ON ObjectLink_BankAccount_Bank.ObjectId = tmpReport.ObjectId_Direction
+                           AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+       LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
     ;
 
 END;
@@ -398,6 +404,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
