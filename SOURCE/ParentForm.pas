@@ -295,6 +295,7 @@ initialization
   RegisterClass (TMultiAction);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
+  RegisterClass (TPivotAddOn);
   RegisterClass (TRefreshAddOn);
   RegisterClass (TRefreshDispatcher);
   RegisterClass (TUpdateRecord);

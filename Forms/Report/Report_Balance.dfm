@@ -357,7 +357,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Left = 208
     Top = 208
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 528
   end
   object PeriodChoice: TPeriodChoice
@@ -374,5 +374,30 @@ object Report_BalanceForm: TReport_BalanceForm
       end>
     Left = 488
     Top = 48
+  end
+  object PivotAddOn: TPivotAddOn
+    ErasedFieldName = 'isErased'
+    PivotGrid = cxDBPivotGrid
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    Left = 392
+    Top = 272
+  end
+  object spGetBalanceParam: TdsdStoredProc
+    DataSets = <>
+    Params = <
+      item
+        Name = 'inPivotData'
+        Component = PivotAddOn
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 304
+  end
+  object FormParams: TdsdFormParams
+    Params = <>
+    Left = 360
+    Top = 184
   end
 end

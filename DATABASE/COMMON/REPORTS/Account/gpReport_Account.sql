@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_Account (
     IN inAccountId    Integer   ,
     IN inSession      TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
               , PersonalCode Integer, PersonalName TVarChar
               , JuridicalCode Integer, JuridicalName TVarChar
@@ -49,6 +49,7 @@ BEGIN
                          )
     SELECT -- 0 :: Integer AS InvNumber
            zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
+         , tmpReport.MovementId
          , tmpReport.OperDate
          , MovementDesc.ItemName AS MovementDescName
          , View_InfoMoney.InfoMoneyCode
@@ -126,6 +127,7 @@ BEGIN
 
              , tmpReport_All.MovementDescId
              , tmpReport_All.InvNumber
+             , tmpReport_All.MovementId
              , tmpReport_All.OperDate
 
              , tmpReport_All.AccountId
@@ -149,6 +151,7 @@ BEGIN
                   , 0 AS SummOut
                   , 0 AS MovementDescId
                   , ''   :: TVarChar  AS InvNumber
+                  , 0 AS MovementId
                   , NULL :: TDateTime AS OperDate
                   , 0 AS RouteId_inf
                   , 0 AS UnitId_inf
@@ -171,6 +174,7 @@ BEGIN
                   , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.SummOut END) AS SummOut
                   , tmpMIReport.MovementDescId
                   , tmpMIReport.InvNumber
+                  , tmpMIReport.MovementId
                   , tmpMIReport.OperDate
 
                   , tmpMIReport.RouteId_inf
@@ -203,6 +207,7 @@ BEGIN
                                       ELSE 0
                                  END) AS SummOut
                           , Movement.DescId   AS MovementDescId
+                          , Movement.Id       AS MovementId
                           , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
                           , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
 
@@ -238,6 +243,7 @@ BEGIN
                             , MIReport.PassiveAccountId
                             , MIReport.ActiveAccountId
                             , Movement.DescId
+                            , Movement.Id  
                             , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END
                             , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END
 
@@ -255,6 +261,7 @@ BEGIN
                     , tmpMIReport.MovementDescId
                     , tmpMIReport.OperDate
                     , tmpMIReport.InvNumber
+                    , tmpMIReport.MovementId
                     , tmpMIReport.RouteId_inf
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
@@ -337,6 +344,7 @@ BEGIN
 
                , tmpReport_All.MovementDescId
                , tmpReport_All.OperDate
+               , tmpReport_All.MovementId  
                , tmpReport_All.InvNumber
 
                , tmpReport_All.AccountId
@@ -387,6 +395,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 17.03.14                          * add MovementId                          
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member

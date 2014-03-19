@@ -85,6 +85,10 @@ type
     BusinessName: TcxGridDBColumn;
     DescName_Direction: TcxGridDBColumn;
     DescName_Destination: TcxGridDBColumn;
+    getMovementForm: TdsdStoredProc;
+    bbStatic: TdxBarButton;
+    bbOpenDocument: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
   public
   end;

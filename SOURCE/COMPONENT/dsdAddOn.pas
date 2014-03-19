@@ -6,7 +6,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxEdit;
+     VCL.ActnList, cxDBPivotGrid, cxEdit;
 
 type
 
@@ -219,6 +219,24 @@ type
     property TemplateColumn: TcxGridColumn read FTemplateColumn write FTemplateColumn;
   end;
 
+  TPivotAddOn = class(TCustomDBControlAddOn)
+  private
+    FPivotGrid: TcxDBPivotGrid;
+    FonDblClick: TNotifyEvent;
+    procedure SetPivotGrid(const Value: TcxDBPivotGrid);
+  protected
+    procedure Notification(AComponent: TComponent; Operation: TOperation); override;
+  public
+    function GetCurrentData: string;
+  published
+    property PivotGrid: TcxDBPivotGrid read FPivotGrid write SetPivotGrid;
+    // список событий на DblClick
+    property OnDblClickActionList;
+    // список событий, реагирующих на нажатие клавиш в гриде
+    property ActionItemList;
+  end;
+
+
   TdsdUserSettingsStorageAddOn = class(TComponent)
   private
     FOnDestroy: TNotifyEvent;
@@ -386,7 +404,8 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
-     cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView;
+     cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
+     cxCustomPivotGrid;
 
 type
 
@@ -401,6 +420,7 @@ begin
    RegisterComponents('DSDComponent', [TdsdUserSettingsStorageAddOn]);
    RegisterComponents('DSDComponent', [TRefreshAddOn]);
    RegisterComponents('DSDComponent', [TRefreshDispatcher]);
+   RegisterComponents('DSDComponent', [TPivotAddOn]);
    RegisterActions('DSDLib', [TExecuteDialog], TExecuteDialog);
 end;
 
@@ -1594,6 +1614,65 @@ begin
           Kind := bkEllipsis;
           Action := Self.Action;
         end;
+end;
+
+{ TPivotAddOn }
+
+function TPivotAddOn.GetCurrentData: string;
+// <xml><field name="" value=""/><field name="" value=""/></xml>
+var
+  PivotGridViewDataItem: TcxPivotGridViewDataItem;
+  i: integer;
+  List: TStringList;
+begin
+  result := '';
+  List := TStringList.Create;
+  try
+    with PivotGrid.ViewData do begin
+      PivotGridViewDataItem := Columns[Selection.FocusedCell.X].Parent;
+      while Assigned(PivotGridViewDataItem) do begin
+         if PivotGridViewDataItem.Value <> '' then
+            List.Add(PivotGridViewDataItem.Value);
+         PivotGridViewDataItem := PivotGridViewDataItem.Parent;
+      end;
+
+      for i := 0 to DataBuilder.ColumnFields.Count - 1 do
+          if List.Count > i then
+             result := result + TcxDBPivotGridField(DataBuilder.ColumnFields[i]).DataBinding.DBField.FieldName +
+                       '=' + List[List.Count - 1 - i] + ';';
+
+      List.Clear;
+      PivotGridViewDataItem := Rows[Selection.FocusedCell.Y];
+      while Assigned(PivotGridViewDataItem) do begin
+         if PivotGridViewDataItem.Value <> '' then
+            List.Add(PivotGridViewDataItem.Value);
+         PivotGridViewDataItem := PivotGridViewDataItem.Parent;
+      end;
+
+      for i := 0 to DataBuilder.RowFields.Count - 1 do
+          if List.Count > i then
+             result := result + TcxDBPivotGridField(DataBuilder.RowFields[i]).DataBinding.DBField.FieldName +
+                       '=' + List[List.Count - 1 - i] + ';';
+    end;
+  finally
+    List.Free
+  end;
+end;
+
+procedure TPivotAddOn.Notification(AComponent: TComponent;
+  Operation: TOperation);
+begin
+  inherited;
+  if csDesigning in ComponentState then
+     if Operation = opRemove then begin
+        if AComponent = PivotGrid then
+           PivotGrid := nil;
+     end;
+end;
+
+procedure TPivotAddOn.SetPivotGrid(const Value: TcxDBPivotGrid);
+begin
+  FPivotGrid := Value;
 end;
 
 end.

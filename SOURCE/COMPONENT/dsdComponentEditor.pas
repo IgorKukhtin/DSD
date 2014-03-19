@@ -48,12 +48,12 @@ uses dsdDB, TypInfo, Db, dsdGuides, cxTextEdit, cxCurrencyEdit, cxCheckBox,
 procedure Register;
 begin
    RegisterCustomModule(TParentForm, TCustomModule);
-   RegisterPropertyEditor(TypeInfo(String), TdsdParam, 'ComponentItem', TComponentItemTextProperty);
-   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam, 'DataType', TDataTypeProperty);
-   RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam, 'Component', TdsdParamComponentProperty);
-   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel , 'Grid', TExcelGridProperty);
-   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component', TdsdParamComponentProperty);
    RegisterPropertyEditor(TypeInfo(boolean),TExecuteDialog,'isShowModal',nil);
+   RegisterPropertyEditor(TypeInfo(TcxControl), TdsdGridToExcel,    'Grid',          TExcelGridProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TdsdParam,          'Component',     TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TComponent), TComponentListItem, 'Component',     TdsdParamComponentProperty);
+   RegisterPropertyEditor(TypeInfo(TFieldType), TdsdParam,          'DataType',      TDataTypeProperty);
+   RegisterPropertyEditor(TypeInfo(String),     TdsdParam,          'ComponentItem', TComponentItemTextProperty);
 
    RegisterPropertyEditor(TypeInfo(TShortCut), TShortCutActionItem, 'ShortCut', TShortCutProperty);
 end;
@@ -64,20 +64,22 @@ end;
 procedure TdsdParamComponentProperty.GetValues(Proc: TGetStrProc);
 begin
   // ќтображаем только те компоненты, с которыми умеет работать TdsdParam
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TChangeStatus)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCurrencyEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxDateEdit)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxTextEdit)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TDataSet)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TDefaultKey)), Proc);
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdFormParams)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TdsdGuides)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TChangeStatus)), Proc);
   Designer.GetComponentNames(GetTypeData(TypeInfo(TPeriodChoice)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TcxCheckBox)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TBooleanStoredProcAction)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TDocument)), Proc);
-  Designer.GetComponentNames(GetTypeData(TypeInfo(TDefaultKey)), Proc);
   // и даже такой. ѕриходитс€ использовать дл€ кросса
   Designer.GetComponentNames(GetTypeData(TypeInfo(TCrossDBViewAddOn)), Proc);
+  // и примерно такой же дл€ Pivot
+  Designer.GetComponentNames(GetTypeData(TypeInfo(TPivotAddOn)), Proc);
 end;
 
 { TComponentItemTextProperty }

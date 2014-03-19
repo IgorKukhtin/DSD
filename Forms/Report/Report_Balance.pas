@@ -38,7 +38,7 @@ type
     dsdStoredProc: TdsdStoredProc;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -62,6 +62,9 @@ type
     cxLabel2: TcxLabel;
     pvJuridicalBasisName: TcxDBPivotGridField;
     pvBusinessName: TcxDBPivotGridField;
+    PivotAddOn: TPivotAddOn;
+    spGetBalanceParam: TdsdStoredProc;
+    FormParams: TdsdFormParams;
   private
   public
   end;

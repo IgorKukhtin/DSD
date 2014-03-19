@@ -562,8 +562,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -597,6 +597,18 @@ object Report_AccountForm: TReport_AccountForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -625,6 +637,16 @@ object Report_AccountForm: TReport_AccountForm
       Visible = ivAlways
       ImageIndex = 35
     end
+    object bbStatic: TdxBarButton
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = actOpenDocument
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -650,6 +672,51 @@ object Report_AccountForm: TReport_AccountForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actMovementForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 28
+      ShortCut = 13
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 41609d
+          Component = deStart
+          ComponentItem = 'OperDate'
+        end
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'MovementId'
+        end>
+      isShowModal = False
+    end
+    object actMovementForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actMovementForm'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -690,6 +757,8 @@ object Report_AccountForm: TReport_AccountForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 312
     Top = 264
   end
@@ -740,5 +809,36 @@ object Report_AccountForm: TReport_AccountForm
       end>
     Left = 640
     Top = 32
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+      end>
+    Left = 344
+    Top = 128
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 192
+    Top = 160
   end
 end
