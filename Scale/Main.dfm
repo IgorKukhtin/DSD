@@ -10,7 +10,9 @@ object MainForm: TMainForm
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
+  OnKeyDown = FormKeyDown
   PixelsPerInch = 96
   TextHeight = 13
   object GridPanel: TPanel
@@ -1862,7 +1864,8 @@ object MainForm: TMainForm
           Font.Name = 'MS Sans Serif'
           Font.Style = [fsBold]
           ParentFont = False
-          ExplicitWidth = 44
+          ExplicitLeft = 5
+          ExplicitTop = 23
         end
         object PanelRouteUnitCode: TPanel
           Left = 1

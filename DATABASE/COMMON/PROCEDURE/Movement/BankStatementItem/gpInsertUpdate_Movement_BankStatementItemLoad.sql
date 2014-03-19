@@ -162,7 +162,24 @@ BEGIN
     -- находим свойство <УП статья назначения>
     -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
-    -- если нен нашли, будем определять свойство <Договор>
+    -- находим свойство <Договор> "по умолчанию"
+    SELECT MAX (View_Contract.ContractId) INTO vbContractId
+    FROM Object_Contract_View AS View_Contract
+         JOIN ObjectBoolean AS ObjectBoolean_Default
+                            ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                           AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                           AND ObjectBoolean_Default.ValueData = TRUE
+    WHERE View_Contract.JuridicalId = vbJuridicalId
+      AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+      AND View_Contract.isErased = FALSE;
+
+    IF vbContractId <> 0
+    THEN
+        -- Находим <УП статья назначения> !!!всегда!!! у Договора
+        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
+    END IF;
+
+    -- если не нашли, будем определять свойство <Договор>
     IF COALESCE (vbContractId, 0) = 0 AND COALESCE (vbJuridicalId, 0) <> 0
     THEN 
         -- Находим <Договор> у Юр. Лица !!!в зависимоти от ...!!
@@ -208,7 +225,7 @@ BEGIN
         END IF;
 
         -- Находим <УП статья назначения> !!!всегда!!! у Договора
-        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_View WHERE ContractId = vbContractId;
+        SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
         -- !!!Но если это расход денег, тогда меняем <УП статья назначения> на "Бонусы за продукцию"
         IF vbInfoMoneyId = zc_Enum_InfoMoney_30101() -- Готовая продукция
            AND inAmount < 0
@@ -252,9 +269,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
-13.02.14                          * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора
-03.12.13                          *
-13.11.13                          *
+ 17.03.14                                        * находим свойство <Договор> "по умолчанию"
+ 13.02.14                                        * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора
+ 03.12.13                                        *
+ 13.11.13                        *
 */
 
 -- тест

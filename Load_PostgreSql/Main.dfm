@@ -685,7 +685,7 @@ object MainForm: TMainForm
       Tag = 20
       Left = 15
       Top = 171
-      Width = 194
+      Width = 200
       Height = 17
       Caption = '2.3. '#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1089' '#1092#1080#1083#1080#1072#1083#1072#1084#1080
       Font.Charset = DEFAULT_CHARSET
@@ -700,7 +700,7 @@ object MainForm: TMainForm
       Tag = 20
       Left = 15
       Top = 201
-      Width = 105
+      Width = 200
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -730,7 +730,7 @@ object MainForm: TMainForm
       Tag = 20
       Left = 15
       Top = 221
-      Width = 100
+      Width = 200
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -745,7 +745,7 @@ object MainForm: TMainForm
     object cbProductionUnion: TCheckBox
       Tag = 20
       Left = 15
-      Top = 251
+      Top = 311
       Width = 213
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -760,7 +760,7 @@ object MainForm: TMainForm
     object cbProductionSeparate: TCheckBox
       Tag = 20
       Left = 15
-      Top = 271
+      Top = 331
       Width = 213
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -775,7 +775,7 @@ object MainForm: TMainForm
     object cbLoss: TCheckBox
       Tag = 20
       Left = 15
-      Top = 301
+      Top = 361
       Width = 213
       Height = 17
       Caption = '5. '#1057#1087#1080#1089#1072#1085#1080#1077
@@ -791,7 +791,7 @@ object MainForm: TMainForm
     object cbInventory: TCheckBox
       Tag = 20
       Left = 15
-      Top = 331
+      Top = 391
       Width = 213
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -806,7 +806,7 @@ object MainForm: TMainForm
     object cbZakaz: TCheckBox
       Tag = 20
       Left = 15
-      Top = 361
+      Top = 421
       Width = 213
       Height = 17
       Caption = '7. '#1047#1072#1103#1074#1082#1080
@@ -834,10 +834,10 @@ object MainForm: TMainForm
       TabOrder = 16
       OnClick = cbCompleteClick
     end
-    object cbTax: TCheckBox
+    object cbTaxFl: TCheckBox
       Tag = 20
       Left = 15
-      Top = 391
+      Top = 451
       Width = 213
       Height = 17
       Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077
@@ -852,7 +852,7 @@ object MainForm: TMainForm
     object cbTaxCorrective: TCheckBox
       Tag = 20
       Left = 15
-      Top = 411
+      Top = 471
       Width = 213
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
@@ -867,9 +867,9 @@ object MainForm: TMainForm
     end
     object cbReturnInInt: TCheckBox
       Tag = 20
-      Left = 123
-      Top = 221
-      Width = 104
+      Left = 15
+      Top = 261
+      Width = 200
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int'
       Font.Charset = DEFAULT_CHARSET
@@ -883,9 +883,9 @@ object MainForm: TMainForm
     end
     object cbSaleInt: TCheckBox
       Tag = 20
-      Left = 123
-      Top = 201
-      Width = 98
+      Left = 15
+      Top = 241
+      Width = 200
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int'
       Font.Charset = DEFAULT_CHARSET
@@ -1043,7 +1043,7 @@ object MainForm: TMainForm
     object cbCompleteProductionUnion: TCheckBox
       Tag = 30
       Left = 15
-      Top = 251
+      Top = 311
       Width = 194
       Height = 17
       Caption = '4.1. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1089#1084#1077#1096#1080#1074#1072#1085#1080#1077
@@ -1059,7 +1059,7 @@ object MainForm: TMainForm
     object cbCompleteProductionSeparate: TCheckBox
       Tag = 30
       Left = 15
-      Top = 274
+      Top = 334
       Width = 194
       Height = 17
       Caption = '4.2. '#1055#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1086' '#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -1090,7 +1090,7 @@ object MainForm: TMainForm
     object cbCompleteInventory: TCheckBox
       Tag = 30
       Left = 15
-      Top = 331
+      Top = 391
       Width = 194
       Height = 17
       Caption = '6. '#1048#1085#1074#1077#1085#1090#1072#1088#1080#1079#1072#1094#1080#1103
@@ -1107,7 +1107,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 15
       Top = 201
-      Width = 105
+      Width = 200
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -1123,7 +1123,7 @@ object MainForm: TMainForm
       Tag = 30
       Left = 15
       Top = 221
-      Width = 105
+      Width = 200
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -1153,9 +1153,9 @@ object MainForm: TMainForm
     end
     object cbCompleteSaleInt: TCheckBox
       Tag = 30
-      Left = 117
-      Top = 201
-      Width = 105
+      Left = 15
+      Top = 241
+      Width = 200
       Height = 17
       Caption = '3.3.'#1055#1088#1086#1076'.'#1087#1086#1082'.Int'
       Font.Charset = DEFAULT_CHARSET
@@ -1169,9 +1169,9 @@ object MainForm: TMainForm
     end
     object cbCompleteReturnInInt: TCheckBox
       Tag = 30
-      Left = 117
-      Top = 221
-      Width = 105
+      Left = 15
+      Top = 261
+      Width = 200
       Height = 17
       Caption = '3.4.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Int'
       Font.Charset = DEFAULT_CHARSET

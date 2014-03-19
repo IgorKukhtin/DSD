@@ -49,7 +49,6 @@ type
     colOperDate: TcxGridDBColumn;
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -65,18 +64,10 @@ type
     bbDelete: TdxBarButton;
     actSetErased: TdsdChangeMovementStatus;
     spMovementSetErased: TdsdStoredProc;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colTotalSummVAT: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colContractName: TcxGridDBColumn;
-    colPersonalPackerName: TcxGridDBColumn;
-    colTotalSummPacker: TcxGridDBColumn;
-    colTotalSummSpending: TcxGridDBColumn;
+    colInvNumberOrder: TcxGridDBColumn;
+    colMovementDesc: TcxGridDBColumn;
+    colInvNumberTransport: TcxGridDBColumn;
+    colEndWeighing: TcxGridDBColumn;
     bbStatic: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
@@ -86,18 +77,13 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
-    colOperDatePartner: TcxGridDBColumn;
-    colInvNumberPartner: TcxGridDBColumn;
+    colInvNumberParent: TcxGridDBColumn;
     actReCompleteAll: TdsdExecStoredProc;
     bbReCompleteAll: TdxBarButton;
     spMovementReCompleteAll: TdsdStoredProc;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colTotalCountPartner: TcxGridDBColumn;
-    colJuridicalName_From: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
+    colUserName: TcxGridDBColumn;
+    colRouteSorting: TcxGridDBColumn;
+    colStartWeighing: TcxGridDBColumn;
   private
   public
   end;

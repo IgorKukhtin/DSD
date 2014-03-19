@@ -123,7 +123,10 @@ BEGIN
 
      -- Ставим статус у документа выписки
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-         WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- Ставим статус у элементов документа выписки
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
+     WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
 
      -- сохранили протокол
@@ -136,6 +139,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.03.14                                        * add Ставим статус у элементов документа выписки
  23.01.14                        *  меняем статус после загрузки
  22.01.14                                        * add IsMaster
  16.01.13                                        * add lpComplete_Movement_BankAccount

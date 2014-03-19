@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
              , InsertDate TDateTime, UpdateDate TDateTime
              , RealWeight TFloat, ChangePercentAmount TFloat, CountTare TFloat, WeightTare TFloat, Count TFloat
              , PartionGoodsDate TDateTime, PartionGoods TVarChar
-             , GoodsKindId Integer, GoodsKindName TVarChar, AssetId  Integer, AssetName  TVarChar
+             , GoodsKindId Integer, GoodsKindName TVarChar
+             , PriceListId  Integer, PriceListName  TVarChar
              , isErased Boolean
               )
 AS
@@ -45,6 +46,9 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
 
+           , Object_PriceList.Id        AS PriceListId
+           , Object_PriceList.ValueData AS PriceListName
+           
            , MovementItem.isErased
 
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
@@ -91,6 +95,12 @@ BEGIN
                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
+
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_PriceList
+                                             ON MILinkObject_PriceList.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_PriceList.DescId = zc_MILinkObject_PriceList()
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = MILinkObject_PriceList.ObjectId
+            
 ;
 
 END;
@@ -105,4 +115,4 @@ ALTER FUNCTION gpSelect_MovementItem_WeighingPartner (Integer, Boolean, TVarChar
 */
 
 -- тест
--- SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')
+--SELECT * FROM gpSelect_MovementItem_WeighingPartner (inMovementId:= 25173, inIsErased:= TRUE, inSession:= '2')

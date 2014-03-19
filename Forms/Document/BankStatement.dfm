@@ -4,8 +4,8 @@ inherited BankStatementForm: TBankStatementForm
   ClientWidth = 1084
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1092
-  ExplicitHeight = 450
+  ExplicitWidth = 1100
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -113,6 +113,7 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 65
           end
           object colLinkJuridicalName: TcxGridDBColumn
@@ -127,7 +128,6 @@ inherited BankStatementForm: TBankStatementForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 96
           end
           object clInfoMoneyCode: TcxGridDBColumn
@@ -358,14 +358,41 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'LinkJuridicalName'
           DataType = ftString
+        end
+        item
+          Name = 'ContractId'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'ContractName'
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
         end>
       isShowModal = False
     end
     object actChoiceInfoMoney: TOpenChoiceForm
       Category = 'DSDLib'
       Caption = 'actChoiceInfoMoney'
-      FormName = 'TInfoMoneyForm'
-      FormNameParam.Value = ''
+      FormName = 'TInfoMoney_ObjectForm'
+      FormNameParam.Value = 'TInfoMoney_ObjectForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -378,6 +405,11 @@ inherited BankStatementForm: TBankStatementForm
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
         end>
       isShowModal = False
     end
@@ -416,17 +448,15 @@ inherited BankStatementForm: TBankStatementForm
           ComponentItem = 'InfoMoneyId'
         end
         item
+          Name = 'InfoMoneyCode'
+          Component = MasterCDS
+          ComponentItem = 'InfoMoneyCode'
+        end
+        item
           Name = 'InfoMoneyName'
           Component = MasterCDS
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
-        end
-        item
-          Name = 'inPaidKindId'
-          Value = '3'
-          Component = FormParams
-          ComponentItem = 'inPaidKindId'
-          ParamType = ptInput
         end>
       isShowModal = False
     end

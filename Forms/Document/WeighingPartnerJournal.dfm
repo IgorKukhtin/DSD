@@ -73,83 +73,71 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPacker
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummSpending
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummMVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = colInvNumberOrder
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountPartner
+          Column = colRouteSorting
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCount
+          Column = colInvNumberOrder
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSumm
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPacker
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummSpending
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummMVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalSummPVAT
         end
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colTotalCountPartner
+          Column = colRouteSorting
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -187,199 +175,96 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
-      object colInvNumberPartner: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'InvNumberPartner'
+      object colInvNumberParent: TcxGridDBColumn
+        Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1088#1086#1076#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'InvNumberParent'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
-      object colOperDatePartner: TcxGridDBColumn
-        Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
-        DataBinding.FieldName = 'OperDatePartner'
+      object colMovementDesc: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+        DataBinding.FieldName = 'MovementDesc'
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Options.Editing = False
+        Width = 50
       end
-      object colOKPO: TcxGridDBColumn
-        Caption = #1054#1050#1055#1054
-        DataBinding.FieldName = 'OKPO'
+      object colStartWeighing: TcxGridDBColumn
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1085#1072#1095#1072#1083#1086' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'StartWeighing'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
+      end
+      object colEndWeighing: TcxGridDBColumn
+        Caption = #1055#1088#1086#1090#1086#1082#1086#1083' '#1086#1082#1086#1085#1095#1072#1085#1080#1077' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+        DataBinding.FieldName = 'EndWeighing'
         Visible = False
         HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object colJuridicalName_From: TcxGridDBColumn
-        Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName_From'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 97
       end
       object colFromName: TcxGridDBColumn
         Caption = #1054#1090' '#1082#1086#1075#1086
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 90
       end
-      object colPaidKindName: TcxGridDBColumn
-        Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-        DataBinding.FieldName = 'PaidKindName'
+      object colInvNumberOrder: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+        DataBinding.FieldName = 'InvNumberOrder'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Options.Editing = False
+        Width = 55
       end
-      object colPersonalPackerName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1079#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100')'
-        DataBinding.FieldName = 'PersonalPackerName'
-        Visible = False
+      object colInvNumberTransport: TcxGridDBColumn
+        Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
+        DataBinding.FieldName = 'InvNumberTransport'
         HeaderAlignmentVert = vaCenter
-        Width = 97
-      end
-      object colContractName: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1075'.'
-        DataBinding.FieldName = 'ContractName'
-        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 58
       end
-      object colTotalCount: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
-        DataBinding.FieldName = 'TotalCount'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colTotalCountPartner: TcxGridDBColumn
-        Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
-        DataBinding.FieldName = 'TotalCountPartner'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      object colRouteSorting: TcxGridDBColumn
+        Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
+        DataBinding.FieldName = 'RouteSorting'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 55
       end
-      object colTotalSumm: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-        DataBinding.FieldName = 'TotalSumm'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      object colUserName: TcxGridDBColumn
+        Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+        DataBinding.FieldName = 'UserName'
         HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colTotalSummPacker: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1075#1086#1090#1086#1074'.'
-        DataBinding.FieldName = 'TotalSummPacker'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colTotalSummSpending: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1079#1072#1090#1088#1072#1090
-        DataBinding.FieldName = 'TotalSummSpending'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 53
-      end
-      object colChangePercent: TcxGridDBColumn
-        Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
-        DataBinding.FieldName = 'ChangePercent'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DisplayFormat = ',0.##;-,0.##; ;'#39
-        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
-      end
-      object colPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-        DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object colVATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentVert = vaCenter
-        Width = 42
-      end
-      object colTotalSummVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colTotalSummMVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1073#1077#1079' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummMVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colTotalSummPVAT: TcxGridDBColumn
-        Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'TotalSummPVAT'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object colInfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object colInfoMoneyGroupName: TcxGridDBColumn
-        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyGroupName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colInfoMoneyDestinationName: TcxGridDBColumn
-        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-        DataBinding.FieldName = 'InfoMoneyDestinationName'
-        Visible = False
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object colInfoMoneyName: TcxGridDBColumn
-        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -669,6 +554,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     object bbInsert: TdxBarButton
       Action = actInsert
       Category = 0
+      Enabled = False
       ImageIndex = 0
     end
     object bbEdit: TdxBarButton
@@ -752,8 +638,8 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       Category = 'DSDLib'
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TIncomeForm'
-      FormNameParam.Value = ''
+      FormName = 'TWeighingPartnerForm'
+      FormNameParam.Value = 'TWeighingPartnerForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -846,8 +732,8 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 24
-    Top = 176
+    Left = 48
+    Top = 184
   end
   object spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_WeighingPartner'
@@ -931,13 +817,14 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 248
     Top = 216
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
-    Left = 488
+    Left = 472
     Top = 24
   end
   object RefreshDispatcher: TRefreshDispatcher
@@ -946,7 +833,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
       item
         Component = PeriodChoice
       end>
-    Left = 576
+    Left = 552
     Top = 24
   end
   object spMovementReCompleteAll: TdsdStoredProc
@@ -968,7 +855,7 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 240
+    Left = 256
     Top = 288
   end
 end

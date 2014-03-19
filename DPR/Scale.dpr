@@ -29,7 +29,11 @@ uses
   Document in '..\SOURCE\COMPONENT\Document.pas',
   UnilWin in '..\SOURCE\UnilWin.pas',
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
-  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
+  DialogBillKind in '..\Scale\DialogBillKind.pas' {DialogBillKindForm},
+  AncestorDialog in '..\Scale\Ancestor\AncestorDialog.pas' {AncestorDialogForm},
+  Util in '..\Scale\Util\Util.pas',
+  DM in '..\Scale\Util\DM.pas' {DMMain: TDataModule};
 
 {$R *.res}
 
@@ -42,6 +46,8 @@ begin
     if ShowModal = mrOk then begin
 //       TUpdater.AutomaticUpdateProgram;
     Application.CreateForm(TMainForm, MainForm);
+  Application.CreateForm(TDialogBillKindForm, DialogBillKindForm);
+  Application.CreateForm(TDMMain, DMMain);
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);

@@ -320,6 +320,10 @@ type
     bbToolsWeighingTree: TdxBarButton;
     actGoodsPropertyValue: TdsdOpenForm;
     bbGoodsPropertyValue: TdxBarButton;
+    actWeighingPartner: TdsdOpenForm;
+    bbWeighingPartner: TdxBarButton;
+    actWeighingProduction: TdsdOpenForm;
+    bbWeighingProduction: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

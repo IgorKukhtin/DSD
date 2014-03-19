@@ -3,7 +3,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1079#1074#1077#1096#1080#1074#1072#1085#1080#1077' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')>'
   ClientHeight = 462
-  ClientWidth = 971
+  ClientWidth = 969
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 971
+    Width = 969
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -42,6 +42,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object edOperDate: TcxDateEdit
       Left = 112
       Top = 23
+      Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -53,148 +54,97 @@ object WeighingPartnerForm: TWeighingPartnerForm
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
     end
     object edFrom: TcxButtonEdit
-      Left = 227
-      Top = 23
+      Left = 228
+      Top = 22
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 140
+      Width = 189
     end
     object edTo: TcxButtonEdit
-      Left = 374
+      Left = 423
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 130
+      Width = 190
     end
     object cxLabel3: TcxLabel
-      Left = 227
+      Left = 228
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 374
+      Left = 423
       Top = 5
       Caption = #1050#1086#1084#1091
     end
-    object edPriceWithVAT: TcxCheckBox
-      Left = 374
+    object edInvNumberTransport: TcxCurrencyEdit
+      Left = 340
       Top = 63
-      Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 9
-      Width = 130
-    end
-    object edVATPercent: TcxCurrencyEdit
-      Left = 512
-      Top = 63
+      Enabled = False
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 10
-      Width = 77
+      TabOrder = 6
+      Width = 124
     end
     object cxLabel5: TcxLabel
-      Left = 225
+      Left = 473
       Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' '#1091' '#1082#1086#1085#1090#1088'.'
     end
     object cxLabel6: TcxLabel
       Left = 112
       Top = 45
-      Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
+      Caption = #1053#1072#1095'.'#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
     end
-    object edOperDatePartner: TcxDateEdit
+    object edStartWeighing: TcxDateEdit
       Left = 112
       Top = 63
+      Enabled = False
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 7
+      TabOrder = 5
       Width = 108
     end
-    object edInvNumberPartner: TcxTextEdit
-      Left = 227
-      Top = 63
-      TabOrder = 6
-      Width = 140
-    end
-    object edChangePercent: TcxCurrencyEdit
-      Left = 598
+    object edInvNumberOrder: TcxTextEdit
+      Left = 473
       Top = 63
       Enabled = False
-      Properties.Alignment.Horz = taRightJustify
-      Properties.Alignment.Vert = taVCenter
-      Properties.DecimalPlaces = 3
-      Properties.DisplayFormat = ',0.###'
-      TabOrder = 8
-      Width = 144
+      TabOrder = 4
+      Width = 138
     end
     object cxLabel7: TcxLabel
-      Left = 519
+      Left = 342
       Top = 45
-      Caption = '% '#1053#1044#1057
-    end
-    object cxLabel8: TcxLabel
-      Left = 598
-      Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
-    end
-    object cxLabel9: TcxLabel
-      Left = 598
-      Top = 5
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
-    end
-    object edContract: TcxButtonEdit
-      Left = 598
-      Top = 23
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 4
-      Width = 286
-    end
-    object cxLabel10: TcxLabel
-      Left = 512
-      Top = 5
-      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-    end
-    object edPaidKind: TcxButtonEdit
-      Left = 512
-      Top = 23
-      Enabled = False
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 5
-      Width = 77
+      Caption = #1053#1086#1084#1077#1088' '#1087#1091#1090#1077#1074#1086#1075#1086' '#1083#1080#1089#1090#1072
     end
     object cxLabel13: TcxLabel
-      Left = 754
-      Top = 45
-      Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
+      Left = 619
+      Top = 5
+      Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
     end
-    object edPacker: TcxButtonEdit
-      Left = 754
-      Top = 63
+    object edRouteSorting: TcxButtonEdit
+      Left = 619
+      Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 11
-      Width = 130
+      TabOrder = 7
+      Width = 170
     end
     object cxLabel11: TcxLabel
       Left = 8
@@ -203,7 +153,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
     end
     object ceStatus: TcxButtonEdit
       Left = 9
-      Top = 63
+      Top = 62
+      Enabled = False
       Properties.Buttons = <
         item
           Action = CompleteMovement
@@ -220,21 +171,52 @@ object WeighingPartnerForm: TWeighingPartnerForm
         end>
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
-      TabOrder = 24
+      TabOrder = 17
       Width = 95
+    end
+    object cxLabel9: TcxLabel
+      Left = 227
+      Top = 45
+      Caption = #1054#1082#1086#1085'. '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+    end
+    object edEndWeighing: TcxDateEdit
+      Left = 226
+      Top = 63
+      Enabled = False
+      Properties.SaveTime = False
+      Properties.ShowTime = False
+      TabOrder = 19
+      Width = 108
+    end
+    object cxLabel8: TcxLabel
+      Left = 796
+      Top = 5
+      Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1100
+    end
+    object edUser: TcxButtonEdit
+      Left = 796
+      Top = 23
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 21
+      Width = 170
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 971
+    Width = 969
     Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
-    ClientRectRight = 971
+    ClientRectRight = 969
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -242,7 +224,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
+        Width = 969
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -254,7 +236,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
             item
               Format = ',0.00;-,0.00;'
               Position = spFooter
-              Column = colAmountSumm
+              Column = colChangePercentAmount
             end
             item
               Format = ',0.####'
@@ -264,43 +246,43 @@ object WeighingPartnerForm: TWeighingPartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
+              Column = coInsertDate
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPacker
+              Column = colUpdateDate
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
+              Column = colWeightTare
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = colChangePercentAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colLiveWeight
+              Column = colCountTare
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
+              Column = colChangePercentAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colLiveWeight
+              Column = colCountTare
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
+              Column = colWeightTare
             end
             item
               Format = ',0.####'
@@ -310,12 +292,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPartner
+              Column = coInsertDate
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountPacker
+              Column = colUpdateDate
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -354,6 +336,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Options.Editing = False
             Width = 90
           end
+          object colPartionGoodsDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1072#1088#1090#1080#1080
+            DataBinding.FieldName = 'PartionGoodsDate'
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object colPartionGoods: TcxGridDBColumn
             Caption = #1055#1072#1088#1090#1080#1103
             DataBinding.FieldName = 'PartionGoods'
@@ -372,9 +360,9 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1089#1090'.'
-            DataBinding.FieldName = 'AmountPartner'
+          object coInsertDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1089#1086#1079#1076#1072#1085#1080#1103
+            DataBinding.FieldName = 'InsertDate'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -382,63 +370,48 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colAmountPacker: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1079#1072#1075#1086#1090#1086#1074'.'
-            DataBinding.FieldName = 'AmountPacker'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colUpdateDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072'/'#1074#1088#1077#1084#1103' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            DataBinding.FieldName = 'UpdateDate'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 75
           end
-          object colPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072
-            DataBinding.FieldName = 'Price'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object coPriceListName: TcxGridDBColumn
+            Caption = #1055#1088#1072#1081#1089
+            DataBinding.FieldName = 'PriceListName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colCountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
-            DataBinding.FieldName = 'CountForPrice'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colRealWeight: TcxGridDBColumn
+            Caption = #1056#1077#1072#1083#1100#1085#1099#1081' '#1074#1077#1089
+            DataBinding.FieldName = 'RealWeight'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
-          object colAmountSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072
-            DataBinding.FieldName = 'AmountSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Properties.ReadOnly = False
+          object colChangePercentAmount: TcxGridDBColumn
+            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1076#1083#1103' '#1082#1086#1083'-'#1074#1072
+            DataBinding.FieldName = 'ChangePercentAmount'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 91
           end
-          object colLiveWeight: TcxGridDBColumn
-            Caption = #1046#1080#1074#1086#1081' '#1074#1077#1089' '
-            DataBinding.FieldName = 'LiveWeight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+          object colCountTare: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'CountTare'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
+          object colWeightTare: TcxGridDBColumn
+            Caption = #1042#1077#1089' '#1090#1072#1088#1099
+            DataBinding.FieldName = 'WeightTare'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -447,9 +420,9 @@ object WeighingPartnerForm: TWeighingPartnerForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1076#1083#1103' '#1054#1089#1085#1086#1074#1085#1086#1075#1086' '#1089#1088#1077#1076#1089#1090#1074#1072
-            DataBinding.FieldName = 'AssetName'
+          object colCount: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1073#1072#1090#1086#1085#1086#1074'/'#1091#1087#1072#1082#1086#1074#1086#1082
+            DataBinding.FieldName = 'Count'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -464,32 +437,6 @@ object WeighingPartnerForm: TWeighingPartnerForm
             Options.Editing = False
             Width = 70
           end
-          object clInfoMoneyCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1059#1055
-            DataBinding.FieldName = 'InfoMoneyCode'
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
-          object clInfoMoneyGroupName: TcxGridDBColumn
-            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyGroupName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clInfoMoneyDestinationName: TcxGridDBColumn
-            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
-            DataBinding.FieldName = 'InfoMoneyDestinationName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
-          object clInfoMoneyName: TcxGridDBColumn
-            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
-            HeaderAlignmentVert = vaCenter
-            Width = 100
-          end
         end
         object cxGridLevel: TcxGridLevel
           GridView = cxGridDBTableView
@@ -502,7 +449,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
+        Width = 969
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -920,10 +867,12 @@ object WeighingPartnerForm: TWeighingPartnerForm
     object bbErased: TdxBarButton
       Action = SetErased
       Category = 0
+      Enabled = False
     end
     object bbUnErased: TdxBarButton
       Action = SetUnErased
       Category = 0
+      Enabled = False
     end
   end
   object cxPropertiesStore: TcxPropertiesStore
@@ -1191,8 +1140,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 272
-    Top = 8
+    Left = 304
   end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1218,7 +1166,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
+    Left = 504
     Top = 8
   end
   object PopupMenu: TPopupMenu
@@ -1278,6 +1226,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 347
     Top = 337
   end
@@ -1293,6 +1242,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 180
     Top = 360
   end
@@ -1308,10 +1258,10 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Control = edOperDate
       end
       item
-        Control = edOperDatePartner
+        Control = edStartWeighing
       end
       item
-        Control = edInvNumberPartner
+        Control = edInvNumberOrder
       end
       item
         Control = edFrom
@@ -1320,22 +1270,18 @@ object WeighingPartnerForm: TWeighingPartnerForm
         Control = edTo
       end
       item
-        Control = edPriceWithVAT
       end
       item
-        Control = edVATPercent
+        Control = edInvNumberTransport
       end
       item
-        Control = edChangePercent
       end
       item
-        Control = edContract
       end
       item
-        Control = edPaidKind
       end
       item
-        Control = edPacker
+        Control = edRouteSorting
       end>
     GetStoredProc = spGet
     Left = 296
@@ -1367,13 +1313,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
         Name = 'OperDatePartner'
         Value = 0d
-        Component = edOperDatePartner
+        Component = edStartWeighing
         DataType = ftDateTime
       end
       item
         Name = 'InvNumberPartner'
         Value = ''
-        Component = edInvNumberPartner
+        Component = edInvNumberOrder
       end
       item
         Name = 'FromId'
@@ -1409,57 +1355,47 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
         Name = 'PriceWithVAT'
         Value = 'False'
-        Component = edPriceWithVAT
         DataType = ftBoolean
       end
       item
         Name = 'VATPercent'
         Value = 0.000000000000000000
-        Component = edVATPercent
+        Component = edInvNumberTransport
         DataType = ftFloat
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
-        Component = edChangePercent
         DataType = ftFloat
       end
       item
         Name = 'ContractId'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'ContractName'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PaidKindId'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindName'
         Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'PersonalPackerId'
         Value = ''
-        Component = PackerGuides
+        Component = RouteSortingGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PersonalPackerName'
         Value = ''
-        Component = PackerGuides
+        Component = RouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1505,18 +1441,18 @@ object WeighingPartnerForm: TWeighingPartnerForm
     Left = 144
     Top = 200
   end
-  object ContractGuides: TdsdGuides
+  object RouteSortingGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
+    LookupControl = edRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractForm'
+    FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
+        Component = RouteSortingGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1524,67 +1460,13 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
+        Component = RouteSortingGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 88
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 584
-    Top = 88
-  end
-  object PackerGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPacker
-    FormNameParam.Value = 'TPersonal_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPersonal_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PackerGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PackerGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 784
-    Top = 88
+    Left = 696
+    Top = 24
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
@@ -1593,7 +1475,7 @@ object WeighingPartnerForm: TWeighingPartnerForm
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
     StoredProcName = 'gpUpdate_Status_WeighingPartner'
-    Left = 488
+    Left = 312
     Top = 88
   end
   object spErasedMIMaster: TdsdStoredProc
@@ -1667,5 +1549,32 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 76
     Top = 24
+  end
+  object UserGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUser
+    FormNameParam.Value = 'TUserForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUserForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UserGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UserGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 856
+    Top = 16
   end
 end

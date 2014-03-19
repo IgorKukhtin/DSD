@@ -8,11 +8,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_WeighingProduction(
     IN inSession     TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , Parent TVarChar--, ParentId Integer
+             , OperDateParent TDateTime, InvNumberParent TVarChar
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDesc TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar
+             
              , UserId Integer, UserName TVarChar
               )
 AS
@@ -35,8 +35,9 @@ BEGIN
              , Object_Status.ObjectCode          AS StatusCode
              , Object_Status.ValueData           AS StatusName
 
-             , Movement_Parent.InvNumber         AS Parent
-              
+             , Movement_Parent.OperDate          AS OperDateParent
+             , Movement_Parent.InvNumber         AS InvNumberParent             
+ 
              , MovementDate_StartWeighing.ValueData  AS StartWeighing  
              , MovementDate_EndWeighing.ValueData    AS EndWeighing
 

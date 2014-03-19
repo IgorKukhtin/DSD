@@ -46,6 +46,9 @@ type
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
+    colUnitName: TcxGridDBColumn;
+    colPartnerCode: TcxGridDBColumn;
+    colPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

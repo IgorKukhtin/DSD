@@ -15,18 +15,21 @@ uses
 
 type
   TMoneyPlace_ObjectForm = class(TAncestorEnumForm)
-    colItemName: TcxGridDBColumn;
-    colCode: TcxGridDBColumn;
-    colName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colContractNumber: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colisErased: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
+    clItemName: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clContractNumber: TcxGridDBColumn;
+    clStartDate: TcxGridDBColumn;
+    clIsErased: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clContractStateKindName: TcxGridDBColumn;
+    clEndDate: TcxGridDBColumn;
+    clContractKindName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -1,4 +1,4 @@
-п»ї DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ToolsWeighing_Branch (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
+ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ToolsWeighing_Branch (TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ToolsWeighing_Branch(
     IN inScaleName               TVarChar  ,
@@ -21,27 +21,27 @@ $BODY$
    DECLARE vbOldId Integer;
    DECLARE vbOldParentId integer;
 BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
 --   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ToolsWeighing());
    vbId := 0; vbScaleId:= 0; vbServiceId := 0; vbMovementId:= 0;
-   -- РЎРѕР·РґР°Р»Рё Scale_X
+   -- Создали Scale_X
    vbScaleId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, '', inScaleName, '', inScaleNameUser, 0, inSession);
 
-   -- РЎРѕР·РґР°Р»Рё Service
-   vbServiceId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, '', 'Service', '', 'РЎР»СѓР¶РµР±РЅС‹Рµ', vbScaleId, inSession);
-   -- РЎРѕР·РґР°Р»Рё Service -> ComPort
-   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inServiceComPort, 'ComPort', '', 'РљРѕРј РїРѕСЂС‚', vbServiceId, inSession);
-   -- РЎРѕР·РґР°Р»Рё Service -> isPreviewPrint
-   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inServiceisPreviewPrint, 'isPreviewPrint', '', 'РџСЂРѕСЃРјРѕС‚СЂ РїРµСЂРµРґ РїРµС‡Р°С‚СЊСЋ', vbServiceId, inSession);
+   -- Создали Service
+   vbServiceId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, '', 'Service', '', 'Служебные', vbScaleId, inSession);
+   -- Создали Service -> ComPort
+   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inServiceComPort, 'ComPort', '', 'Ком порт', vbServiceId, inSession);
+   -- Создали Service -> isPreviewPrint
+   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inServiceisPreviewPrint, 'isPreviewPrint', '', 'Просмотр перед печатью', vbServiceId, inSession);
 
-   -- РЎРѕР·РґР°Р»Рё Movement
-   vbMovementId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, '', 'Movement', '', 'Р”РѕРєСѓРјРµРЅС‚С‹', vbScaleId, inSession);
-   -- РЎРѕР·РґР°Р»Рё Movement -> DescCount
-   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inMovementDescCount, 'DescCount', '', 'РљРѕР»РёС‡РµСЃС‚РІРѕ РѕРїРµСЂР°С†РёР№', vbServiceId, inSession);
+   -- Создали Movement
+   vbMovementId:= gpInsertUpdate_Object_ToolsWeighing (0, 0, '', 'Movement', '', 'Документы', vbScaleId, inSession);
+   -- Создали Movement -> DescCount
+   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inMovementDescCount, 'DescCount', '', 'Количество операций', vbServiceId, inSession);
 
 
-   -- РЎРѕР·РґР°Р»Рё Movement -> MovementDesc_X
---   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inMovementDescCount, 'MovementDesc_1', '', 'РљРѕР»РёС‡РµСЃС‚РІРѕ РѕРїРµСЂР°С†РёР№', vbServiceId, inSession);
+   -- Создали Movement -> MovementDesc_X
+--   PERFORM gpInsertUpdate_Object_ToolsWeighing (0, 0, inMovementDescCount, 'MovementDesc_1', '', 'Количество операций', vbServiceId, inSession);
 
   RETURN vbScaleId;
 
@@ -49,9 +49,9 @@ BEGIN
 
 
 /*
-   -- Р•СЃР»Рё РґРѕР±Р°РІР»СЏР»Рё
+   -- Если добавляли
    IF vbOldId <> ioId THEN
-      -- РЈСЃС‚Р°РЅРѕРІРёС‚СЊ СЃРІРѕР№СЃС‚РІРѕ Р»РёСЃС‚\РїР°РїРєР° Сѓ СЃРµР±СЏ
+      -- Установить свойство лист\папка у себя
       PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_isLeaf(), ioId, TRUE);
    END IF;
 */
@@ -62,11 +62,10 @@ ALTER FUNCTION gpInsertUpdate_Object_ToolsWeighing_Branch (TVarChar, TVarChar, T
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  12.03.14                                                         *
 */
 
--- С‚РµСЃС‚
- SELECT * FROM gpInsertUpdate_Object_ToolsWeighing_Branch ('Scale_3', 'Р Р°Р±РѕС‡Р°СЏ РіСЂСѓРїРїР° - Р­РєСЃРїРµРґРёС†РёСЏ Р“Рџ3', '10', '1', 'false', '2');
-
+-- тест
+-- SELECT * FROM gpInsertUpdate_Object_ToolsWeighing_Branch ('Scale_3', 'Рабочая группа - Экспедиция ГП3', '10', '1', 'false', '2');

@@ -32,6 +32,9 @@ BEGIN
 
      -- Проверка установки значений
      IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
+
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40100() -- Кредиты банков
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40200() -- Прочие кредиты
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40300() -- Овердрафт
@@ -41,6 +44,11 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40700() -- Лиол
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40800() -- Внутренний оборот
                                                                                                                                  , zc_Enum_InfoMoneyDestination_40900() -- Финансовая помощь
+
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_50100() -- Налоговые платежи по ЗП
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_50200() -- Налоговые платежи
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
+                                                                                                                                 , zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
                                                                                                                                  ))
         -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
         AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)

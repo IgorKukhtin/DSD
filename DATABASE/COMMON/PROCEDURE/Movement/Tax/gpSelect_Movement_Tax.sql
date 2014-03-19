@@ -15,9 +15,11 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
 $BODY$
@@ -36,11 +38,11 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
      SELECT
-             Movement.Id								AS Id
-           , Movement.InvNumber							AS InvNumber
-           , Movement.OperDate							AS OperDate
-           , Object_Status.ObjectCode    				AS StatusCode
-           , Object_Status.ValueData     				AS StatusName
+             Movement.Id				AS Id
+           , Movement.InvNumber				AS InvNumber
+           , Movement.OperDate				AS OperDate
+           , Object_Status.ObjectCode    		AS StatusCode
+           , Object_Status.ValueData     		AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementBoolean_Document.ValueData         AS Document
            , MovementBoolean_Registered.ValueData       AS Registered
@@ -52,15 +54,25 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Object_From.Id                    			AS FromId
-           , Object_From.ValueData             			AS FromName
-           , Object_To.Id                      			AS ToId
-           , Object_To.ValueData               			AS ToName
-           , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
-           , Object_TaxKind.Id                			AS TaxKindId
-           , Object_TaxKind.ValueData         			AS TaxKindName
+           , Object_From.Id                    		AS FromId
+           , Object_From.ValueData             		AS FromName
+           , Object_To.Id                      		AS ToId
+           , Object_To.ValueData               		AS ToName
+           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_To
 
+           , Object_Unit.ObjectCode                  	AS UnitCode
+           , Object_Unit.ValueData               	AS UnitName
+           , Object_Partner.ObjectCode                  AS PartnerCode
+           , Object_Partner.ValueData               	AS PartnerName
+
+           , View_Contract_InvNumber.ContractId        	AS ContractId
+           , View_Contract_InvNumber.InvNumber         	AS ContractName
+           , Object_TaxKind.Id                		AS TaxKindId
+           , Object_TaxKind.ValueData         		AS TaxKindName
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Tax() AND Movement.StatusId = tmpStatus.StatusId
@@ -123,14 +135,18 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -141,11 +157,18 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-            LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
-            ;
-
-
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                          AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Child
+                                         ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Child.MovementId
+                                        AND MovementLinkObject_From_Child.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_From_Child.ObjectId
+           ;
 
 END;
 $BODY$
@@ -155,6 +178,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 16.03.14                                        * add all
  03.03.14                                                         *
  09.02.14                                                         *
 */

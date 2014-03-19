@@ -71,7 +71,7 @@ BEGIN
          , '' :: TVarChar AS CarName -- Object_Car.ValueData
 
          , Object_Direction.ObjectCode     AS ObjectCode_Direction
-         , Object_Direction.ValueData      AS ObjectName_Direction
+         , (Object_Direction.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination
          , ObjectDesc_Direction.ItemName   AS DescName_Direction
@@ -145,6 +145,7 @@ BEGIN
                   , tmpContainer.AccountId
                   , 0 AS ContainerId_inf
                   , 0 AS AccountId_inf
+                  , 0 AS ContainerId_ProfitLoss
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
                   , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
@@ -168,6 +169,7 @@ BEGIN
                   , tmpMIReport.AccountId
                   , tmpMIReport.ContainerId_inf
                   , tmpMIReport.AccountId_inf
+                  , tmpMIReport.ContainerId_ProfitLoss
                   , 0 AS SummStart
                   , 0 AS SummEnd
                   , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN tmpMIReport.SummIn - tmpMIReport.SummOut ELSE tmpMIReport.SummIn END)  AS SummIn
@@ -196,6 +198,14 @@ BEGIN
                                  WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
                                       THEN MIReport.ActiveAccountId
                             END AS AccountId_inf
+                          , CASE WHEN tmpContainer.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
+                                      THEN tmpContainer.ContainerId
+                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active()
+                                      THEN MIReport.PassiveContainerId
+                                 WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive()
+                                      THEN MIReport.ActiveContainerId
+                                 ELSE 0
+                            END AS ContainerId_ProfitLoss
                           , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND MIReport.ActiveAccountId <> zc_Enum_Account_100301() -- прибыль текущего периода
                                            THEN MIReport.Amount
                                       ELSE 0
@@ -258,6 +268,7 @@ BEGIN
                     , tmpMIReport.AccountId
                     , tmpMIReport.ContainerId_inf
                     , tmpMIReport.AccountId_inf
+                    , tmpMIReport.ContainerId_ProfitLoss
                     , tmpMIReport.MovementDescId
                     , tmpMIReport.OperDate
                     , tmpMIReport.InvNumber
@@ -301,7 +312,7 @@ BEGIN
                                                                  AND ContainerLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                                                  AND ContainerLO_Contract.ObjectId > 0
 
-            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_inf
+            LEFT JOIN ContainerLinkObject AS ContainerLO_ProfitLoss_inf ON ContainerLO_ProfitLoss_inf.ContainerId = tmpReport_All.ContainerId_ProfitLoss -- ContainerId_inf
                                                                        AND ContainerLO_ProfitLoss_inf.DescId = zc_ContainerLinkObject_ProfitLoss()
                                                                        AND ContainerLO_ProfitLoss_inf.ObjectId > 0
             LEFT JOIN ContainerLinkObject AS ContainerLO_Business_inf ON ContainerLO_Business_inf.ContainerId = tmpReport_All.ContainerId_inf
@@ -384,6 +395,12 @@ BEGIN
 
        LEFT JOIN ObjectDesc AS ObjectDesc_Direction ON ObjectDesc_Direction.Id = Object_Direction.DescId
        LEFT JOIN ObjectDesc AS ObjectDesc_Destination ON ObjectDesc_Destination.Id = Object_Destination.DescId
+
+       LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                            ON ObjectLink_BankAccount_Bank.ObjectId = tmpReport.ObjectId_Direction
+                           AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+       LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
     ;
 
 END;
@@ -396,6 +413,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER 
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
  17.03.14                          * add MovementId                          
+ 18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member
