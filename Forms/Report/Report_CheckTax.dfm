@@ -107,6 +107,12 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             HeaderAlignmentVert = vaCenter
             Width = 54
           end
+          object clContract_InvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+            DataBinding.FieldName = 'Contract_InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object clFromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromCode'
@@ -222,6 +228,22 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
     inherited deEnd: TcxDateEdit
       EditValue = 41639d
     end
+    object cxLabel4: TcxLabel
+      Left = 441
+      Top = 6
+      Caption = #1042#1080#1076' '#1085#1072#1083#1086#1075#1086#1074#1086#1075#1086' '#1076#1086#1082'.:'
+    end
+    object edDocumentTaxKind: TcxButtonEdit
+      Left = 561
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 5
+      Width = 200
+    end
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -246,6 +268,13 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
         Value = 41639d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -273,8 +302,36 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
         Component = PeriodChoice
       end
       item
+        Component = DocumentTaxKindGuides
       end>
     Left = 184
     Top = 136
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 640
+    Top = 65528
   end
 end

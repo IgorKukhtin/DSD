@@ -1,10 +1,11 @@
 -- Function: gpGetObject_byCode()
 -- for Scale only
 
-DROP FUNCTION IF EXISTS gpGetObject_byCode(integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGetObject_byCode(Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGetObject_byCode(
     IN inCode        Integer,
+    IN inDescId      Integer,
    OUT outId         Integer,
    OUT outName       TVarChar,
     IN inSession     TVarChar       -- сессия пользователя
@@ -24,22 +25,25 @@ BEGIN
            , CAST ('' as TVarChar)
        INTO outId, outName ;
    ELSE
-       SELECT Object.Id, Object.ValueData INTO outId, outName FROM Object WHERE Object.ObjectCode = inCode;
+       SELECT Object.Id, Object.ValueData INTO outId, outName
+       FROM Object
+       WHERE Object.ObjectCode = inCode AND (DescId = inDescId OR inDescId=0);
    END IF;
 
 END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGetObject_byCode(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGetObject_byCode(Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.03.14                                                         *    + inDescId
  18.03.14                                                         *
 
 */
 
 -- тест
--- SELECT * FROM gpGetObject_byCode (4765, '2')
+-- SELECT * FROM gpGetObject_byCode (4765, zc_Object_Goods(), '2')

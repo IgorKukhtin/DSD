@@ -100,7 +100,7 @@ type
     function InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
   JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-  isDefault: boolean ): integer;
+  isDefault, isStandart: boolean ): integer;
     constructor Create; override;
   end;
 
@@ -1005,7 +1005,7 @@ var Id,Code: integer;
     InvNumber,InvNumberArchive,Comment,BankAccount: string;
     SigningDate, StartDate, EndDate: TDateTime;
     JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-    isDefault: boolean;
+    isDefault, isStandart: boolean;
 begin
     Id:=0;
     Code:=0;
@@ -1025,18 +1025,20 @@ begin
     ContractStateKindId:=0;
     BankId:=0;
     isDefault:=True;
+    isStandart:=True;
 
   result := InsertUpdateContract(Id,Code,
     InvNumber,InvNumberArchive,Comment,BankAccount,
     SigningDate, StartDate, EndDate,
-    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault);
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId
+    ,AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault,isStandart);
   inherited;
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
   Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
   JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-  isDefault: boolean): integer;
+  isDefault, isStandart: boolean): integer;
 
 begin
   FParams.Clear;
@@ -1060,7 +1062,7 @@ begin
   FParams.AddParam('inContractStateKindId', ftInteger, ptInput, ContractStateKindId);
   FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
   FParams.AddParam('inDefault', ftboolean, ptInput, isDefault);
-
+  FParams.AddParam('inStandart', ftboolean, ptInput, isStandart);
   result := InsertUpdate(FParams);
 end;
 

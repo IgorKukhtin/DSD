@@ -110,6 +110,7 @@ type
     clBankName: TcxGridDBColumn;
     clBankAccount: TcxGridDBColumn;
     clisDefault: TcxGridDBColumn;
+    clisStandart: TcxGridDBColumn;
   private
     { Private declarations }
   public

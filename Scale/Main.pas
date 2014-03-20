@@ -9,7 +9,7 @@ uses
   Vcl.DBGrids, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxTextEdit, cxMaskEdit, cxDropDownEdit,
-  cxCalendar, dsdDB, Datasnap.DBClient;
+  cxCalendar, dsdDB, Datasnap.DBClient, Util, Inifiles;
 
 type
   TMainForm = class(TForm)
@@ -125,14 +125,11 @@ type
     PanelDiscountWeight: TPanel;
     PanelInfo: TPanel;
     PanelMessage: TPanel;
-    GBPassword: TGroupBox;
-    PanelPassword: TPanel;
     PanelBillKind: TPanel;
     infoPanel: TPanel;
     PanelPartner: TPanel;
     LabelPartner: TLabel;
     PanelPartnerCode: TPanel;
-    EditPartnerCode: TEdit;
     PanelPartnerName: TPanel;
     PanelPriceList: TPanel;
     PriceListNameLabel: TLabel;
@@ -207,6 +204,7 @@ type
     ClientDataSet: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
+    procedure FormCreate(Sender: TObject);
   private
     procedure GetParams;
   public
@@ -227,6 +225,16 @@ begin
  spTest.Execute;
 end;
 
+procedure TMainForm.FormCreate(Sender: TObject);
+var
+  Ini: TInifile;
+begin
+  Ini:=TIniFile.Create('INI\scale.ini');
+  CurSetting.ScaleNum:=Ini.ReadInteger('Main','ScaleNum',1);
+  CurSetting.ToolsCode:=Ini.ReadInteger('Main','DefaultToolsCode',1);
+  Ini.Free;
+end;
+
 procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
@@ -235,14 +243,29 @@ end;
 
 
 procedure TMainForm.GetParams;
-var
-myCodeBillKind:String;
-    tmpFormParams: TParams;
-begin
 
-     with DialogBillKindForm do begin
-       if Execute(tmpFormParams) then begin end;
+begin
+     if DialogBillKindForm.Execute
+     then begin
+      PanelPriceListName.Caption:= CurSetting.PriceListName;
+      PanelPartnerCode.Caption:= IntToStr(CurSetting.PartnerCode);
+      PanelPartnerName.Caption:= CurSetting.PartnerName;
+      PanelRouteUnitCode.Caption:= IntToStr(CurSetting.RouteSortingCode);
+      PanelRouteUnitName.Caption:= CurSetting.RouteSortingName;
+
+      PanelBillKind.Caption:= CurSetting.DescName+' ';
+      if CurSetting.FromId<>0 then
+         PanelBillKind.Caption:= PanelBillKind.Caption+ ' (От Кого) = ' + CurSetting.FromName + ' ';
+      if CurSetting.ToId<>0 then
+         PanelBillKind.Caption:= PanelBillKind.Caption+ ' (Кому) = ' + CurSetting.ToName + ' ';
+      if CurSetting.PaidKindId<>0 then
+         PanelBillKind.Caption:= PanelBillKind.Caption + ' (' + CurSetting.PaidKindName + ')' ;
+
+
+//      PanelBillKind.Caption:= 'Перемещение кому =' +
+
      end;
+
 end;
 
 
