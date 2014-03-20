@@ -1,12 +1,13 @@
 -- FunctiON: gpReport_CheckTax ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckTax (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckTax (
-    IN inStartDate    TDateTime ,  
-    IN inEndDate      TDateTime ,
-    
-    IN inSessiON      TVarChar    -- сессия пользователя
+    IN inStartDate           TDateTime ,  
+    IN inEndDate             TDateTime ,
+    IN inDocumentTaxKindID   Integer ,
+    IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale TDateTime, OperDate_Tax TDateTime
               , Contract_InvNumber TVarChar
@@ -96,6 +97,11 @@ BEGIN
                                               AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
                      LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
 
+                     JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID OR inDocumentTaxKindID =0)
+
                      LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
@@ -117,10 +123,6 @@ BEGIN
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      
-                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
-                                                  ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
-                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -180,6 +182,12 @@ BEGIN
                                       AND MovementItem.Amount<>0
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
+
+                     JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
+                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                 AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID OR inDocumentTaxKindID =0)
+
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -191,10 +199,7 @@ BEGIN
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     LEFT JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
-                                                  ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
-                                                 AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
+                     
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -240,7 +245,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
 
 
 

@@ -35,6 +35,9 @@ type
     clDifference: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
     clContract_InvNumber: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
