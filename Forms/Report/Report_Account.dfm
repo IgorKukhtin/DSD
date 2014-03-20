@@ -14,13 +14,14 @@ object Report_AccountForm: TReport_AccountForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 57
+    Top = 137
     Width = 1189
-    Height = 338
+    Height = 258
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -469,21 +470,21 @@ object Report_AccountForm: TReport_AccountForm
     Left = 0
     Top = 26
     Width = 1189
-    Height = 31
+    Height = 111
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 101
-      Top = 5
+      Left = 10
+      Top = 29
       EditValue = 41609d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 85
+      Width = 91
     end
     object deEnd: TcxDateEdit
-      Left = 310
-      Top = 5
+      Left = 132
+      Top = 29
       EditValue = 41639d
       Properties.SaveTime = False
       Properties.ShowTime = False
@@ -491,20 +492,20 @@ object Report_AccountForm: TReport_AccountForm
       Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 409
-      Top = 6
+      Left = 247
+      Top = 56
       Caption = #1057#1095#1077#1090':'
     end
     object edAccount: TcxButtonEdit
-      Left = 442
-      Top = 5
+      Left = 248
+      Top = 79
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 3
-      Width = 400
+      TabOrder = 5
+      Width = 229
     end
     object cxLabel1: TcxLabel
       Left = 10
@@ -512,15 +513,79 @@ object Report_AccountForm: TReport_AccountForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 200
+      Left = 132
       Top = 6
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel4: TcxLabel
+      Left = 247
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+    end
+    object ceAccountGroup: TcxButtonEdit
+      Left = 248
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 2
+      Width = 229
+    end
+    object ceAccountDirection: TcxButtonEdit
+      Left = 494
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 3
+      Width = 217
+    end
+    object cxLabel5: TcxLabel
+      Left = 494
+      Top = 6
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
+    end
+    object cxLabel6: TcxLabel
+      Left = 8
+      Top = 56
+      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 8
+      Top = 79
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 4
+      Width = 209
+    end
+    object cxLabel7: TcxLabel
+      Left = 494
+      Top = 58
+      Caption = #1041#1080#1079#1085#1077#1089
+    end
+    object ceBusiness: TcxButtonEdit
+      Left = 494
+      Top = 79
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 6
+      Width = 217
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 64
+    Left = 48
+    Top = 128
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -562,8 +627,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -597,6 +662,18 @@ object Report_AccountForm: TReport_AccountForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbOpenDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDialogForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -625,6 +702,16 @@ object Report_AccountForm: TReport_AccountForm
       Visible = ivAlways
       ImageIndex = 35
     end
+    object bbStatic: TdxBarButton
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
+    object bbOpenDocument: TdxBarButton
+      Action = actOpenDocument
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -651,6 +738,51 @@ object Report_AccountForm: TReport_AccountForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actOpenDocument: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = actMovementForm
+        end
+        item
+          Action = actOpenForm
+        end>
+      Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 28
+      ShortCut = 13
+    end
+    object actOpenForm: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'actOpenForm'
+      FormName = 'NULL'
+      FormNameParam.Value = Null
+      FormNameParam.Component = FormParams
+      FormNameParam.ComponentItem = 'FormName'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inOperDate'
+          Value = 41609d
+          Component = deStart
+          ComponentItem = 'OperDate'
+        end
+        item
+          Name = 'Id'
+          Component = ClientDataSet
+          ComponentItem = 'MovementId'
+        end>
+      isShowModal = False
+    end
+    object actMovementForm: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = getMovementForm
+      StoredProcList = <
+        item
+          StoredProc = getMovementForm
+        end>
+      Caption = 'actMovementForm'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_Account'
@@ -675,9 +807,38 @@ object Report_AccountForm: TReport_AccountForm
         ParamType = ptInput
       end
       item
+        Name = 'inAccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountDirectionId'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBusinessId'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 152
@@ -690,6 +851,8 @@ object Report_AccountForm: TReport_AccountForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 312
     Top = 264
   end
@@ -701,7 +864,7 @@ object Report_AccountForm: TReport_AccountForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 200
-    Top = 64
+    Top = 120
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -711,6 +874,18 @@ object Report_AccountForm: TReport_AccountForm
       end
       item
         Component = AccountGuides
+      end
+      item
+        Component = AccountGroupGuides
+      end
+      item
+        Component = AccountDirectionGuides
+      end
+      item
+        Component = InfoMoneyGuides
+      end
+      item
+        Component = BusinessGuides
       end>
     Left = 328
     Top = 64
@@ -738,7 +913,220 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 640
-    Top = 32
+    Left = 384
+    Top = 88
+  end
+  object getMovementForm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Form'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = ClientDataSet
+        ComponentItem = 'MovementId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'FormName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'FormName'
+        DataType = ftString
+      end>
+    Left = 344
+    Top = 128
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FormName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'StartDate'
+        Value = 41609d
+        Component = deStart
+        DataType = ftDateTime
+      end
+      item
+        Name = 'EndDate'
+        Value = 41639d
+        Component = deEnd
+        DataType = ftDateTime
+      end
+      item
+        Name = 'AccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountName'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BusinessName'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 192
+    Top = 160
+  end
+  object AccountGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountGroup
+    FormNameParam.Value = 'TAccountGroupForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 37
+  end
+  object AccountDirectionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceAccountDirection
+    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccountDirectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 536
+    Top = 37
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 88
+    Top = 85
+  end
+  object BusinessGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBusiness
+    FormNameParam.Value = 'TBusinessForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBusinessForm'
+    PositionDataSet = 'ClientDataSet'
+    ParentDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 568
+    Top = 96
   end
 end

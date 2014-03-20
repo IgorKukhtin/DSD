@@ -21,12 +21,13 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
-             , ContractStateKindCode Integer
+             , ContractStateKindId Integer, ContractStateKindCode Integer
              , OKPO TVarChar
              , BankId Integer, BankName TVarChar
              , InsertName TVarChar, UpdateName TVarChar
              , InsertDate TDateTime, UpdateDate TDateTime
              , isDefault Boolean
+             , isStandart Boolean
              , isErased Boolean 
               )
 AS
@@ -79,6 +80,7 @@ BEGIN
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
+       , Object_ContractStateKind.Id         AS ContractStateKindId
        , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
@@ -92,6 +94,7 @@ BEGIN
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
        , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
+       , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
        
        , Object_Contract_View.isErased
        
@@ -115,6 +118,10 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
+                                ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
@@ -180,6 +187,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.03.14         * add zc_ObjectBoolean_Contract_Standart
  13.03.14         * add zc_ObjectBoolean_Contract_Default
  25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...
  21.02.14         * add Bank, BankAccount
@@ -195,3 +203,5 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
+
+

@@ -1010,19 +1010,26 @@ end;
 
 function TdsdChangeMovementStatus.LocalExecute: boolean;
 var lDataSet: TDataSet;
+    B: TBookmark;
 begin
-  result := inherited LocalExecute;
-  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
-     lDataSet := DataSource.DataSet;
-     // Что бы не вызывались события после на Post
-     DataSource.DataSet := nil;
-     try
-       lDataSet.Edit;
-       lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
-       lDataSet.Post;
-     finally
-       DataSource.DataSet := lDataSet;
-     end;
+  B := DataSource.DataSet.GetBookmark;
+  try
+    result := inherited LocalExecute;
+    if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
+       lDataSet := DataSource.DataSet;
+       // Что бы не вызывались события после на Post
+       DataSource.DataSet := nil;
+       try
+         lDataSet.Edit;
+         lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
+         lDataSet.Post;
+       finally
+         DataSource.DataSet := lDataSet;
+       end;
+    end;
+  finally
+    DataSource.DataSet.GotoBookmark(B);
+    DataSource.DataSet.FreeBookmark(B);
   end;
 end;
 

@@ -347,6 +347,21 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 59
       end
+      object clisDefault: TcxGridDBColumn
+        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+        DataBinding.FieldName = 'isDefault'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 31
+      end
+      object clisStandart: TcxGridDBColumn
+        Caption = #1058#1080#1087#1086#1074#1086#1081
+        DataBinding.FieldName = 'isStandart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -355,14 +370,6 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
-      end
-      object clisDefault: TcxGridDBColumn
-        Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-        DataBinding.FieldName = 'isDefault'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 31
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -1260,6 +1267,13 @@ object ContractForm: TContractForm
         ComponentItem = 'isDefault'
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisStandart'
+        Component = ClientDataSet
+        ComponentItem = 'isStandart'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
       end>
     Left = 432
     Top = 176

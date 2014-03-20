@@ -3,82 +3,76 @@ object DialogBillKindForm: TDialogBillKindForm
   Top = 0
   Caption = #1042#1099#1073#1086#1088' '#1086#1087#1077#1088#1072#1094#1080#1080
   ClientHeight = 702
-  ClientWidth = 548
+  ClientWidth = 646
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
   Font.Height = -11
   Font.Name = 'Tahoma'
   Font.Style = []
+  KeyPreview = True
   OldCreateOrder = False
   OnCreate = FormCreate
+  OnKeyDown = FormKeyDown
+  OnShow = FormShow
   PixelsPerInch = 96
   TextHeight = 13
   object gbPartnerAll: TGroupBox
     Left = 0
     Top = 0
-    Width = 548
-    Height = 73
+    Width = 646
+    Height = 140
     Align = alTop
     Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
     TabOrder = 0
     object PanelPartner: TPanel
       Left = 2
       Top = 15
-      Width = 270
-      Height = 56
-      Align = alLeft
+      Width = 642
+      Height = 40
+      Align = alTop
       BevelOuter = bvNone
       TabOrder = 0
-      object LabelPartner: TLabel
-        Left = 0
-        Top = 0
-        Width = 270
-        Height = 13
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 71
-      end
+      ExplicitTop = 55
       object gbPartnerCode: TGroupBox
         Left = 0
-        Top = 13
+        Top = 0
         Width = 67
-        Height = 43
+        Height = 40
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
+        ExplicitTop = 13
+        ExplicitHeight = 43
         object EditPartnerCode: TEdit
           Left = 6
           Top = 15
           Width = 55
           Height = 21
           TabOrder = 0
-          Text = 'EditPartnerCode'
+          OnExit = EditPartnerCodeExit
         end
       end
       object gbPartnerName: TGroupBox
         Left = 67
-        Top = 13
-        Width = 203
-        Height = 43
+        Top = 0
+        Width = 575
+        Height = 40
         Align = alClient
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090')'
         TabOrder = 1
+        ExplicitTop = 13
+        ExplicitWidth = 469
+        ExplicitHeight = 43
         object PanelPartnerName: TPanel
           Left = 2
           Top = 15
-          Width = 199
-          Height = 26
+          Width = 571
+          Height = 23
           Align = alClient
+          Alignment = taLeftJustify
+          AutoSize = True
           BevelOuter = bvNone
-          Caption = 'PanelPartnerName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -12
@@ -86,66 +80,57 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 465
+          ExplicitHeight = 26
         end
       end
     end
     object PanelRouteUnit: TPanel
-      Left = 272
-      Top = 15
-      Width = 271
-      Height = 56
-      Align = alLeft
+      Left = 2
+      Top = 55
+      Width = 642
+      Height = 40
+      Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
-      object LabelRouteUnit: TLabel
-        Left = 0
-        Top = 0
-        Width = 271
-        Height = 13
-        Align = alTop
-        Alignment = taCenter
-        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1047#1072#1103#1074#1082#1072')'
-        Font.Charset = DEFAULT_CHARSET
-        Font.Color = clWindowText
-        Font.Height = -12
-        Font.Name = 'MS Sans Serif'
-        Font.Style = [fsBold]
-        ParentFont = False
-        ExplicitWidth = 108
-      end
+      ExplicitTop = 95
       object gbRouteUnitCode: TGroupBox
         Left = 0
-        Top = 13
+        Top = 0
         Width = 67
-        Height = 43
+        Height = 40
         Align = alLeft
         Caption = #1050#1086#1076
         TabOrder = 0
+        ExplicitTop = 13
+        ExplicitHeight = 43
         object EditRouteUnitCode: TEdit
           Left = 6
           Top = 15
           Width = 55
           Height = 21
           TabOrder = 0
-          Text = 'EditRouteUnitCode'
+          OnExit = EditRouteUnitCodeExit
         end
       end
       object gbRouteUnitName: TGroupBox
         Left = 67
-        Top = 13
-        Width = 204
-        Height = 43
+        Top = 0
+        Width = 575
+        Height = 40
         Align = alClient
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1052#1072#1088#1096#1088#1091#1090' ('#1079#1072#1103#1074#1082#1072')'
         TabOrder = 1
+        ExplicitTop = 13
+        ExplicitWidth = 471
+        ExplicitHeight = 43
         object PanelRouteUnitName: TPanel
           Left = 2
           Top = 15
-          Width = 200
-          Height = 26
+          Width = 571
+          Height = 23
           Align = alClient
           BevelOuter = bvNone
-          Caption = 'PanelRouteUnitName'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clNavy
           Font.Height = -12
@@ -153,63 +138,112 @@ object DialogBillKindForm: TDialogBillKindForm
           Font.Style = [fsBold]
           ParentFont = False
           TabOrder = 0
+          ExplicitWidth = 467
+          ExplicitHeight = 26
+        end
+      end
+    end
+    object PanelPriceList: TPanel
+      Left = 2
+      Top = 98
+      Width = 642
+      Height = 40
+      Align = alBottom
+      BevelOuter = bvNone
+      TabOrder = 2
+      ExplicitTop = 15
+      object gbPriceListCode: TGroupBox
+        Left = 0
+        Top = 0
+        Width = 67
+        Height = 40
+        Align = alLeft
+        Caption = #1050#1086#1076
+        TabOrder = 0
+        ExplicitTop = 13
+        ExplicitHeight = 42
+        object EditPriceListCode: TEdit
+          Left = 6
+          Top = 15
+          Width = 55
+          Height = 21
+          TabOrder = 0
+          OnExit = EditPriceListCodeExit
+        end
+      end
+      object gbPriceListName: TGroupBox
+        Left = 67
+        Top = 0
+        Width = 575
+        Height = 40
+        Align = alClient
+        Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+        TabOrder = 1
+        ExplicitLeft = 46
+        ExplicitTop = 13
+        ExplicitWidth = 596
+        ExplicitHeight = 35
+        object PanelPriceListName: TPanel
+          Left = 2
+          Top = 15
+          Width = 571
+          Height = 23
+          Align = alClient
+          BevelOuter = bvNone
+          Font.Charset = DEFAULT_CHARSET
+          Font.Color = clNavy
+          Font.Height = -12
+          Font.Name = 'MS Sans Serif'
+          Font.Style = [fsBold]
+          ParentFont = False
+          TabOrder = 0
+          ExplicitWidth = 592
+          ExplicitHeight = 18
         end
       end
     end
   end
   object gbGrid: TGroupBox
     Left = 0
-    Top = 73
-    Width = 548
-    Height = 629
+    Top = 140
+    Width = 646
+    Height = 562
     Align = alClient
     Caption = #1054#1087#1077#1088#1072#1094#1080#1080
     TabOrder = 1
-    ExplicitTop = 8
-    ExplicitHeight = 73
-    object cxGrid: TcxGrid
+    ExplicitTop = 152
+    ExplicitWidth = 548
+    ExplicitHeight = 550
+    object DBGrid: TDBGrid
       Left = 2
       Top = 15
-      Width = 544
-      Height = 612
+      Width = 642
+      Height = 545
       Align = alClient
+      DataSource = DataSource
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clBlue
+      Font.Height = -12
+      Font.Name = 'Tahoma'
+      Font.Style = [fsBold]
+      Options = [dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection]
+      ParentFont = False
       TabOrder = 0
-      LookAndFeel.Kind = lfStandard
-      LookAndFeel.NativeStyle = False
-      LookAndFeel.SkinName = ''
-      ExplicitLeft = 0
-      ExplicitTop = 28
-      ExplicitWidth = 853
-      ExplicitHeight = 339
-      object cxGridDBTableView: TcxGridDBTableView
-        Navigator.Buttons.CustomButtons = <>
-        DataController.DataSource = DataSource
-        DataController.Filter.Options = [fcoCaseInsensitive]
-        DataController.Filter.Active = True
-        DataController.Summary.DefaultGroupSummaryItems = <>
-        DataController.Summary.FooterSummaryItems = <>
-        DataController.Summary.SummaryGroups = <>
-        Images = dmMain.SortImageList
-        OptionsBehavior.IncSearch = True
-        OptionsCustomize.ColumnHiding = True
-        OptionsCustomize.ColumnsQuickCustomization = True
-        OptionsData.Deleting = False
-        OptionsData.DeletingConfirmation = False
-        OptionsData.Editing = False
-        OptionsData.Inserting = False
-        OptionsView.ColumnAutoWidth = True
-        OptionsView.HeaderHeight = 40
-        OptionsView.Indicator = True
-        Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-        object clCarModel: TcxGridDBColumn
-          DataBinding.FieldName = 'DisplayName'
-          HeaderAlignmentVert = vaCenter
-          Width = 120
-        end
-      end
-      object cxGridLevel: TcxGridLevel
-        GridView = cxGridDBTableView
-      end
+      TitleFont.Charset = DEFAULT_CHARSET
+      TitleFont.Color = clWindowText
+      TitleFont.Height = -11
+      TitleFont.Name = 'Tahoma'
+      TitleFont.Style = []
+      OnCellClick = DBGridCellClick
+      OnDrawColumnCell = DBGridDrawColumnCell
+      Columns = <
+        item
+          Expanded = False
+          FieldName = 'DisplayName'
+          Title.Caption = #1054#1087#1077#1088#1072#1094#1080#1103
+          Width = 600
+          Visible = True
+        end>
     end
   end
   object ClientDataSet: TClientDataSet
@@ -230,47 +264,8 @@ object DialogBillKindForm: TDialogBillKindForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <
-      item
-        Name = 'inRootId'
-        Value = 77
-        ParamType = ptInput
-      end>
+    Params = <>
     Left = 264
     Top = 296
-  end
-  object BindingsList1: TBindingsList
-    Methods = <>
-    OutputConverters = <>
-    UseAppManager = True
-    Left = 20
-    Top = 5
-    object BindGridListDBGrid1: TBindGridList
-      Category = 'Lists'
-      ColumnExpressions = <>
-      FormatControlExpressions = <>
-      ClearControlExpressions = <>
-    end
-  end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
-    OnDblClickActionList = <
-      item
-      end
-      item
-      end>
-    ActionItemList = <
-      item
-        ShortCut = 13
-      end
-      item
-        ShortCut = 13
-      end>
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    Left = 136
-    Top = 448
   end
 end

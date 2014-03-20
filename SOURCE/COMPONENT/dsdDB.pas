@@ -642,6 +642,8 @@ begin
      // В зависимости от типа компонента Value содержится в разных property
      if Component is TCrossDBViewAddOn then
         result := GetFromCrossDBViewAddOn;
+     if Component is TPivotAddOn then
+        result := (Component as TPivotAddOn).GetCurrentData;
      if Component is TcxTextEdit then
         Result := (Component as TcxTextEdit).Text;
      if (Component is TDataSet) then
