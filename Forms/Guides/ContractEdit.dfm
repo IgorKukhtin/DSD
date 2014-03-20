@@ -262,7 +262,6 @@ inherited ContractEditForm: TContractEditForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
-    ExplicitHeight = 439
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -393,7 +392,6 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitHeight = 215
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -447,13 +445,13 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 37
+    TabOrder = 36
     Width = 162
   end
   object edBankAccount: TcxTextEdit [37]
     Left = 184
     Top = 361
-    TabOrder = 41
+    TabOrder = 40
     Width = 161
   end
   object cxLabel17: TcxLabel [38]
@@ -462,11 +460,18 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
   object cbisDefault: TcxCheckBox [39]
-    Left = 143
+    Left = 129
     Top = 23
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     TabOrder = 43
     Width = 111
+  end
+  object ceisStandart: TcxCheckBox [40]
+    Left = 237
+    Top = 23
+    Caption = #1058#1080#1087#1086#1074#1086#1081
+    TabOrder = 44
+    Width = 67
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 331
@@ -884,6 +889,13 @@ inherited ContractEditForm: TContractEditForm
         Component = cbisDefault
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'inisStandart'
+        Value = 'False'
+        Component = ceisStandart
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
     Left = 368
     Top = 389
@@ -1066,6 +1078,12 @@ inherited ContractEditForm: TContractEditForm
         Name = 'isDefault'
         Value = 'False'
         Component = cbisDefault
+        DataType = ftBoolean
+      end
+      item
+        Name = 'isStandart'
+        Value = 'False'
+        Component = ceisStandart
         DataType = ftBoolean
       end>
     Left = 272

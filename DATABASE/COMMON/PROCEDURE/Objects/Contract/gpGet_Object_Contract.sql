@@ -24,6 +24,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractStateKindId Integer, ContractStateKindName TVarChar
              , BankId Integer, BankName TVarChar
              , isDefault Boolean
+             , isStandart Boolean
              , isErased Boolean
               )
 AS
@@ -73,6 +74,7 @@ BEGIN
            , '' :: TVarChar AS BankName
            
            , CAST (false as Boolean)  AS isDefault 
+           , CAST (false as Boolean)  AS isStandart
 
            , NULL :: Boolean  AS isErased
 
@@ -121,6 +123,7 @@ BEGIN
            , Object_Bank.ValueData   AS BankName
 
            , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
+           , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
 
            , Object_Contract_View.isErased
 
@@ -145,6 +148,10 @@ BEGIN
                                     ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
 
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
+                                    ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
+           
             LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                                  ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -194,6 +201,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 19.03.14         * add zc_ObjectBoolean_Contract_Standart
  13.03.14         * add zc_ObjectBoolean_Contract_Default
  21.02.14         * add Bank, BankAccount
  08.11.14                        * 

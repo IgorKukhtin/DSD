@@ -111,6 +111,7 @@ type
     clisDefault: TcxGridDBColumn;
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm1: TOpenChoiceForm;
+    clisStandart: TcxGridDBColumn;
   private
     { Private declarations }
   public

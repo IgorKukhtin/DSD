@@ -122,6 +122,7 @@ type
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     cbisDefault: TcxCheckBox;
+    ceisStandart: TcxCheckBox;
   private
     { Private declarations }
   public
