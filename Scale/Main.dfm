@@ -249,6 +249,7 @@ object MainForm: TMainForm
           8888888888884444888888888888488488888888888844448888}
         ParentShowHint = False
         ShowHint = True
+        OnClick = ButtonExitClick
       end
       object ButtonCancelItem: TSpeedButton
         Left = 31
@@ -323,6 +324,7 @@ object MainForm: TMainForm
         ParentShowHint = False
         ShowHint = True
         Visible = False
+        OnClick = ButtonNewGetParamsClick
       end
       object ButtonPrintBill_detail_byInvNumber: TSpeedButton
         Left = 541
@@ -905,9 +907,10 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 3
-      object cxDateEdit1: TcxDateEdit
+      object BillDateEdit: TcxDateEdit
         Left = 6
         Top = 16
+        EditValue = 41640d
         ParentFont = False
         TabOrder = 0
         Width = 109

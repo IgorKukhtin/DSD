@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, Vcl.StdCtrls, Vcl.ExtCtrls,
   AncestorDialog, dsdDB, Data.DB, Datasnap.DBClient, Vcl.Grids, Vcl.DBGrids,
   Data.Bind.EngExt, Vcl.Bind.DBEngExt, System.Rtti, System.Bindings.Outputs,
-  Vcl.Bind.Editors, Data.Bind.Components, dsdAddOn, Util;
+  Vcl.Bind.Editors, Data.Bind.Components, dsdAddOn, Util, Data.FMTBcd,
+  Data.SqlExpr;
 
 type
   TDialogBillKindForm = class(TAncestorDialogForm)
@@ -66,6 +67,8 @@ end;
 function TDialogBillKindForm.Checked: boolean; //Проверка корректного ввода в Edit
 begin
      Result:=True;
+//     spData.fi
+//     SQLQuery1.FieldByName()
 end;
 
 
