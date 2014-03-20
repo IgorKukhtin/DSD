@@ -22,12 +22,15 @@ BEGIN
      vbPartionMovementId:= lpInsertFind_Object_PartionMovement (0);
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate, COALESCE (MovementLinkObject_Account.ObjectId, 0) AS AccountId
+     WITH tmpMovement AS (SELECT Movement.Id AS MovementId, Movement.OperDate, COALESCE (MovementLinkObject_Account.ObjectId, 0) AS AccountId, COALESCE (MovementLinkObject_PaidKind.ObjectId, zc_Enum_PaidKind_FirstForm()) AS PaidKindId
                           FROM Movement
                                LEFT JOIN MovementLinkObject AS MovementLinkObject_Account
                                                             ON MovementLinkObject_Account.MovementId = Movement.Id
                                                            AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
-                                                           AND MovementLinkObject_Account.ObjectId = zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
+                                                           -- AND MovementLinkObject_Account.ObjectId = zc_Enum_Account_50401() -- Расходы будущих периодов - Маркетинг
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
                           WHERE Movement.Id = inMovementId
                             AND Movement.DescId = zc_Movement_LossDebt()
                             AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
@@ -43,7 +46,8 @@ BEGIN
                                    , CASE WHEN MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                                                THEN tmpMovement.AccountId
                                           ELSE 0
-                                     END AS AccountId 
+                                     END AS AccountId
+                                   , tmpMovement.AccountId AS AccountId_main
                                      -- Группы ОПиУ
                                    , 0 AS ProfitLossGroupId
                                      -- Аналитики ОПиУ - направления
@@ -121,6 +125,47 @@ BEGIN
                                                   AND (Container.ObjectId = tmpMovementItem.AccountId
                                                     OR (tmpMovementItem.AccountId = 0 AND Container.ObjectId <> zc_Enum_Account_50401()) -- Расходы будущих периодов - Маркетинг
                                                       )
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
+                                                                  ON ContainerLO_PartionMovement.ContainerId = Container.Id
+                                                                 AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+                                                                 AND ContainerLO_PartionMovement.ObjectId = 0
+                               WHERE ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
+                              UNION
+                               SELECT Container.Id AS ContainerId
+                                    , Container.Amount
+                                    , ContainerLO_Juridical.ObjectId AS JuridicalId
+                                    , ContainerLO_InfoMoney.ObjectId AS InfoMoneyId
+                                    , ContainerLO_PaidKind.ObjectId AS PaidKindId
+                                    , ContainerLO_JuridicalBasis.ObjectId AS JuridicalId_Basis
+                                    , ContainerLO_Business.ObjectId AS BusinessId
+                               FROM tmpMovement
+                                    JOIN Object_Account_View AS View_Account ON View_Account.AccountId = tmpMovement.AccountId
+                                    -- JOIN Object_Account_View AS View_Account_find ON View_Account_find.AccountDirectionId = View_Account.AccountDirectionId
+                                    JOIN Object_Account_View AS View_Account_find ON View_Account_find.AccountId = View_Account.AccountId
+                                    JOIN Container ON Container.ObjectId = View_Account_find.AccountId
+                                                  AND Container.DescId = zc_Container_Summ()
+                                    JOIN ContainerLinkObject AS ContainerLO_PaidKind
+                                                             ON ContainerLO_PaidKind.ContainerId = Container.Id
+                                                            AND ContainerLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+                                                            AND ContainerLO_PaidKind.ObjectId = tmpMovement.PaidKindId
+                                    JOIN ContainerLinkObject AS ContainerLO_Juridical
+                                                             ON ContainerLO_Juridical.ContainerId = Container.Id
+                                                            AND ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                                    JOIN ContainerLinkObject AS ContainerLO_InfoMoney
+                                                             ON ContainerLO_InfoMoney.ContainerId = Container.Id
+                                                            AND ContainerLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                                    JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
+                                                             ON ContainerLO_JuridicalBasis.ContainerId = Container.Id
+                                                            AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
+                                    JOIN ContainerLinkObject AS ContainerLO_Business
+                                                             ON ContainerLO_Business.ContainerId = Container.Id
+                                                            AND ContainerLO_Business.DescId = zc_ContainerLinkObject_Business()
+                                    LEFT JOIN ContainerLinkObject AS ContainerLO_PartionMovement
+                                                                  ON ContainerLO_PartionMovement.ContainerId = Container.Id
+                                                                 AND ContainerLO_PartionMovement.DescId = zc_ContainerLinkObject_PartionMovement()
+                                                                 AND ContainerLO_PartionMovement.ObjectId = 0
+                               WHERE tmpMovement.AccountId <> 0
+                                 AND ContainerLO_PartionMovement.ContainerId IS NULL -- !!!некрасивое решение!!!
                               )
         , tmpContainerSumm AS (SELECT tmpListContainer.ContainerId
                                     , tmpListContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummRemainsEnd
@@ -339,6 +384,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.03.14                                        * add !!!некрасивое решение!!!
+ 19.03.14                                        * add View_Account_find
  10.03.14                                        * add zc_Enum_Account_50401
  30.01.14                                        * all
  27.01.14         * 

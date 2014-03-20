@@ -1,30 +1,27 @@
 inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
-  ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ClientWidth = 1118
+  ExplicitWidth = 1134
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1110
-    Height = 476
+    Width = 1118
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1110
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1106
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1104
-      ExplicitHeight = 470
+      ExplicitWidth = 1110
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1104
-        Height = 470
-        ExplicitWidth = 1104
-        ExplicitHeight = 470
+        Width = 1118
+        Height = 478
+        ExplicitWidth = 1110
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -114,8 +111,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Width = 55
           end
           object colInvNumberPartner: TcxGridDBColumn [2]
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
+            Caption = #8470' '#1076#1086#1082'.'#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colInvNumber_Master: TcxGridDBColumn [3]
+            Caption = #8470' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'
+            DataBinding.FieldName = 'InvNumber_Master'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colInvNumber_Child: TcxGridDBColumn [4]
+            Caption = #8470' '#1076#1086#1082'.'#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -127,9 +138,32 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           object colDateRegistered: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
             DataBinding.FieldName = 'DateRegistered'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
+          end
+          object colPartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object colOKPO_From: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO_From'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -146,7 +180,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Width = 90
           end
           object colTotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1082#1091#1087'.)'
             DataBinding.FieldName = 'TotalCount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -168,6 +202,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -175,6 +210,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           object colVATPercent: TcxGridDBColumn
             Caption = '% '#1053#1044#1057
             DataBinding.FieldName = 'VATPercent'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
@@ -213,7 +249,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Width = 70
           end
           object colTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            Caption = #1058#1080#1087' '#1076#1086#1082'.'
             DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -230,23 +266,31 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colChecked: TcxGridDBColumn
@@ -261,7 +305,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1110
+    Width = 1118
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
       EditValue = 41609d
@@ -379,7 +423,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -387,7 +431,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Top = 224
   end
   inherited PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 640
     Top = 152
   end

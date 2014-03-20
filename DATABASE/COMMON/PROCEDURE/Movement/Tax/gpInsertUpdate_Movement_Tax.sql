@@ -27,6 +27,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
+     -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Tax(ioId, inInvNumber, inInvNumberPartner, inOperDate
                                        , inChecked, inDocument, inPriceWithVAT, inVATPercent
                                        , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId);

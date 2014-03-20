@@ -1,7 +1,8 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -14,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective(
     IN inVATPercent          TFloat    , -- % НДС
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inPartnerId           Integer   , -- Контрагент
     IN inContractId          Integer   , -- Договора
     IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inSession             TVarChar    -- сессия пользователя
@@ -23,24 +25,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
-     vbUserId:= 5;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
-     -- проверка - проведенный/удаленный документ не может корректироваться
-     IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Документ не может корректироваться т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = ioId));
-     END IF;
-
-     -- проверка
-     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
-     END IF;
-
-     ioId := lpInsertUpdate_Movement_TaxCorrective(ioId, inInvNumber, inInvNumberPartner, inOperDate,
-                                         inChecked, inDocument, inPriceWithVAT, inVATPercent,
-                                         inFromId, inToId, inContractId, inDocumentTaxKindId, vbUserId);
+     -- сохранили <Документ>
+     ioId := lpInsertUpdate_Movement_TaxCorrective(ioId, inInvNumber, inInvNumberPartner, inOperDate
+                                                 , inChecked, inDocument, inPriceWithVAT, inVATPercent
+                                                 , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId);
 
 END;
 $BODY$
@@ -49,8 +39,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.03.14                                        * add inPartnerId
  11.02.14                                                         *
-
 */
 
 -- тест
