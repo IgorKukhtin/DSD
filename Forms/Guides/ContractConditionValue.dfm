@@ -351,6 +351,12 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 20
       end
+      object clisStandart: TcxGridDBColumn
+        Caption = #1058#1080#1087#1086#1074#1086#1081
+        DataBinding.FieldName = 'isStandart'
+        Visible = False
+        Width = 30
+      end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
         DataBinding.FieldName = 'Comment'
@@ -408,8 +414,8 @@ object ContractConditionValueForm: TContractConditionValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')

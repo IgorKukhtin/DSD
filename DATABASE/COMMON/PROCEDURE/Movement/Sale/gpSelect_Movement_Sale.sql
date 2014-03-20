@@ -14,7 +14,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
-             , OperDatePartner TDateTime
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
-             , DocumentChildId Integer, DocumentChildName TVarChar
+             , DocumentChildId Integer, InvNumberPartner_Child TVarChar
               )
 AS
 $BODY$
@@ -54,7 +54,10 @@ BEGIN
            , Object_Status.ValueData                        AS StatusName
            , MovementBoolean_Checked.ValueData              AS Checked
            , MovementBoolean_PriceWithVAT.ValueData         AS PriceWithVAT
+
            , MovementDate_OperDatePartner.ValueData         AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData      AS InvNumberPartner
+
            , MovementFloat_VATPercent.ValueData             AS VATPercent
            , MovementFloat_ChangePercent.ValueData          AS ChangePercent
            , MovementFloat_TotalCount.ValueData             AS TotalCount
@@ -82,7 +85,7 @@ BEGIN
            , Object_TaxKind.Id                		    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
            , Movement_DocumentChild.Id                      AS DocumentChildId
-           , MS_DocumentChild_InvNumberPartner.ValueData    AS DocumentChildName
+           , MS_DocumentChild_InvNumberPartner.ValueData    AS InvNumberPartner_Child
 
 
        FROM (SELECT Movement.id
@@ -129,6 +132,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -201,6 +207,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.03.14                                        * add InvNumberPartner
  16.03.14                                        * add JuridicalName_To and OKPO_To
  13.02.14                                                        * add DocumentChild, DocumentTaxKind
  10.02.14                                        * add Object_RoleAccessKey_View

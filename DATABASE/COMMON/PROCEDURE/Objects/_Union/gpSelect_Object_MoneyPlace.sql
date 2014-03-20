@@ -67,7 +67,7 @@ BEGIN
           , ''::TVarChar    AS OKPO
      FROM Object_BankAccount_View, ObjectDesc 
      WHERE ObjectDesc.Id = zc_Object_BankAccount()
-    /*UNION ALL
+    UNION ALL
      SELECT Object_Member.Id       
           , Object_Member.ObjectCode     
           , Object_Member.ValueData
@@ -90,7 +90,7 @@ BEGIN
      FROM Object AS Object_Member
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Member.DescId
     WHERE Object_Member.DescId = zc_Object_Member()
-      AND Object_Member.isErased = FALSE*/
+      AND Object_Member.isErased = FALSE
     UNION ALL
      SELECT Object_Juridical.Id
           , Object_Juridical.ObjectCode     

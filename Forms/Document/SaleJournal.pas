@@ -56,10 +56,11 @@ type
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    colInvNumberOrderTax: TcxGridDBColumn;
+    colInvNumberPartner_Child: TcxGridDBColumn;
     colDocumentTaxKindName: TcxGridDBColumn;
     colOKPO_To: TcxGridDBColumn;
     colJuridicalName_To: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

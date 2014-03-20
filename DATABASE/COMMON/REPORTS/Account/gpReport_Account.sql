@@ -1,14 +1,19 @@
 -- Function: gpReport_Account ()
 
 DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Account (
-    IN inStartDate    TDateTime ,  
-    IN inEndDate      TDateTime ,
-    IN inAccountId    Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime ,  
+    IN inEndDate            TDateTime ,
+    IN inAccountGroupId     Integer , 
+    IN inAccountDirectionId Integer , 
+    IN inInfoMoneyId        Integer , 
+    IN inAccountId          Integer ,
+    IN inBusinessId         Integer ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
-RETURNS TABLE  (InvNumber Integer, OperDate TDateTime, MovementDescName TVarChar
+RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
               , PersonalCode Integer, PersonalName TVarChar
               , JuridicalCode Integer, JuridicalName TVarChar
@@ -42,13 +47,16 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                           FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0
+                           FROM (SELECT AccountId FROM Object_Account_View WHERE 
+                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0)
+                              AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
                                 ) AS tmpAccount -- счет
                                 JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                               AND Container.DescId = zc_Container_Summ()
                          )
     SELECT -- 0 :: Integer AS InvNumber
            zfConvert_StringToNumber (tmpReport.InvNumber) AS InvNumber
+         , tmpReport.MovementId
          , tmpReport.OperDate
          , MovementDesc.ItemName AS MovementDescName
          , View_InfoMoney.InfoMoneyCode
@@ -126,6 +134,7 @@ BEGIN
 
              , tmpReport_All.MovementDescId
              , tmpReport_All.InvNumber
+             , tmpReport_All.MovementId
              , tmpReport_All.OperDate
 
              , tmpReport_All.AccountId
@@ -150,6 +159,7 @@ BEGIN
                   , 0 AS SummOut
                   , 0 AS MovementDescId
                   , ''   :: TVarChar  AS InvNumber
+                  , 0 AS MovementId
                   , NULL :: TDateTime AS OperDate
                   , 0 AS RouteId_inf
                   , 0 AS UnitId_inf
@@ -173,6 +183,7 @@ BEGIN
                   , SUM (CASE WHEN tmpMIReport.MovementDescId = zc_Movement_Sale() THEN 0 ELSE tmpMIReport.SummOut END) AS SummOut
                   , tmpMIReport.MovementDescId
                   , tmpMIReport.InvNumber
+                  , tmpMIReport.MovementId
                   , tmpMIReport.OperDate
 
                   , tmpMIReport.RouteId_inf
@@ -213,6 +224,7 @@ BEGIN
                                       ELSE 0
                                  END) AS SummOut
                           , Movement.DescId   AS MovementDescId
+                          , Movement.Id       AS MovementId
                           , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
                           , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
 
@@ -248,6 +260,7 @@ BEGIN
                             , MIReport.PassiveAccountId
                             , MIReport.ActiveAccountId
                             , Movement.DescId
+                            , Movement.Id  
                             , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END
                             , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END
 
@@ -266,6 +279,7 @@ BEGIN
                     , tmpMIReport.MovementDescId
                     , tmpMIReport.OperDate
                     , tmpMIReport.InvNumber
+                    , tmpMIReport.MovementId
                     , tmpMIReport.RouteId_inf
                     , tmpMIReport.UnitId_inf
                     , tmpMIReport.BranchId_inf
@@ -348,6 +362,7 @@ BEGIN
 
                , tmpReport_All.MovementDescId
                , tmpReport_All.OperDate
+               , tmpReport_All.MovementId  
                , tmpReport_All.InvNumber
 
                , tmpReport_All.AccountId
@@ -398,12 +413,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.03.14                          * add Params                          
+ 17.03.14                          * add MovementId                          
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis
  21.01.14                                        * add CarId

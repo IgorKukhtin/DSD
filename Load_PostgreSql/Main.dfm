@@ -851,8 +851,8 @@ object MainForm: TMainForm
     end
     object cbTaxCorrective: TCheckBox
       Tag = 20
-      Left = 15
-      Top = 471
+      Left = 13
+      Top = 474
       Width = 213
       Height = 17
       Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
@@ -895,6 +895,28 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 20
+    end
+    object OKPOEdit: TEdit
+      Left = 15
+      Top = 637
+      Width = 121
+      Height = 21
+      TabOrder = 21
+    end
+    object cbOKPO: TCheckBox
+      Left = 15
+      Top = 618
+      Width = 213
+      Height = 17
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1054#1050#1055#1054
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 22
+      OnClick = cbReturnInFlClick
     end
   end
   object CompleteDocumentPanel: TPanel

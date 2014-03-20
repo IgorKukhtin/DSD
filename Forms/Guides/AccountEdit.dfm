@@ -329,7 +329,6 @@
     Top = 64
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 48
     Top = 136
   end
   object InfoMoneyDestinationGuides: TdsdGuides
