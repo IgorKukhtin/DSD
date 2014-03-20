@@ -89,6 +89,18 @@ type
     bbStatic: TdxBarButton;
     bbOpenDocument: TdxBarButton;
     FormParams: TdsdFormParams;
+    cxLabel4: TcxLabel;
+    ceAccountGroup: TcxButtonEdit;
+    AccountGroupGuides: TdsdGuides;
+    ceAccountDirection: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    AccountDirectionGuides: TdsdGuides;
+    InfoMoneyGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceBusiness: TcxButtonEdit;
+    BusinessGuides: TdsdGuides;
   private
   public
   end;

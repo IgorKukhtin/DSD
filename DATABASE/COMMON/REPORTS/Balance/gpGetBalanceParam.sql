@@ -6,8 +6,13 @@ CREATE OR REPLACE FUNCTION gpGetBalanceParam(
     IN inData             TBlob , 
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer, InfoMoneyId Integer
-             , ObjectDirectionId Integer, ObjectDestinationId Integer, JuridicalBasisId Integer, BusinessId Integer)
+RETURNS TABLE (RootType Integer, AccountGroupId Integer, AccountGroupName TVarChar
+             , AccountDirectionId Integer, AccountDirectionName TVarChar
+             , AccountId Integer, AccountName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , ObjectDirectionId Integer, ObjectDestinationId Integer
+             , JuridicalBasisId Integer
+             , BusinessId Integer, BusinessName TVarChar)
 AS
 $BODY$
 DECLARE
@@ -15,16 +20,23 @@ DECLARE
   vbIndex  Integer;
   vbRootType INTEGER;
   vbAccountGroupId INTEGER;
+  vbAccountGroupName TVarChar;
   vbAccountDirectionId INTEGER;
+  vbAccountDirectionName TVarChar;
   vbAccountId INTEGER;
+  vbAccountName TVarChar;
   vbInfoMoneyId INTEGER;
+  vbInfoMoneyName TVarChar;
   vbObjectDirectionId INTEGER;
   vbObjectDestinationId INTEGER;
   vbJuridicalBasisId INTEGER;
   vbBusinessId INTEGER;
+  vbBusinessName TVarChar;
+
   vbData TVarChar;
   vbKey   TVarChar;
   vbValue TVarChar;
+  vbCode  TVarChar;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -34,14 +46,47 @@ BEGIN
      vbIndex := 1;
      WHILE split_part(inData, ';', vbIndex) <> '' LOOP
 
-         EXECUTE 'SELECT '||split_part(inData, ';', vbIndex) INTO vbData;
+         EXECUTE 'SELECT '||chr(39)||split_part(inData, ';', vbIndex)||chr(39) INTO vbData;
          IF vbData <> '' THEN
-            EXECUTE 'SELECT '||split_part(vbData, '=', 1) INTO vbKey;
-            EXECUTE 'SELECT '||split_part(vbData, '=', 2) INTO vbValue;
+            EXECUTE 'SELECT '||chr(39)||split_part(vbData, '=', 1)||chr(39) INTO vbKey;
+            EXECUTE 'SELECT '||chr(39)||split_part(vbData, '=', 2)||chr(39) INTO vbValue;
 
- --           CASE vbKey
-   --             WHEN THEN ;
-     --       END CASE; 
+            CASE vbKey
+                WHEN 'accountgroupname' THEN
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbAccountGroupId, vbAccountGroupName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_AccountGroup() AND ObjectCode = vbCode::Integer;
+                   END;
+                WHEN 'accountdirectionname' THEN
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbAccountDirectionId, vbAccountDirectionName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_AccountDirection() AND ObjectCode = vbCode::Integer;
+                   END;
+                WHEN 'accountname' THEN 
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbAccountId, vbAccountName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_Account() AND ObjectCode = vbCode::Integer;
+                   END; 
+                WHEN 'businessname' THEN 
+                   BEGIN
+                      SELECT Id, ValueData INTO vbBusinessId, vbBusinessName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_Business() AND ValueData = vbValue;
+                   END; 
+                WHEN 'infomoneyname' THEN 
+                   BEGIN
+                      SELECT Id, ValueData INTO vbInfoMoneyId, vbInfoMoneyName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_InfoMoney() AND ValueData = vbValue;
+                   END; 
+               ELSE BEGIN END;    
+            END CASE; 
          END IF;
          vbIndex := vbIndex + 1;
 
@@ -51,15 +96,19 @@ BEGIN
      RETURN QUERY  
      SELECT  
        0 AS RootType
-      ,0 AS AccountGroupI
-      ,0 AS AccountDirectionId
-      ,0 AS AccountId
-      ,0 AS InfoMoneyId
-      ,0 AS ObjectDirectionId
-      ,0 AS ObjectDestinationId
-      ,0 AS JuridicalBasisId
-      ,0 AS BusinessId  ;
-                                  
+     , vbAccountGroupId AS AccountGroupId
+     , vbAccountGroupName AS AccountGroupName
+     , vbAccountDirectionId AS AccountDirectionId
+     , vbAccountDirectionName AS AccountDirectionName
+     , vbAccountId AS AccountId
+     , vbAccountName AS AccountName
+     , vbInfoMoneyId AS InfoMoneyId
+     , vbInfoMoneyName AS InfoMoneyName
+     , 0 AS ObjectDirectionId
+     , 0 AS ObjectDestinationId
+     , 0 AS JuridicalBasisId
+     , vbBusinessId AS BusinessId  
+     , vbBusinessName AS BusinessName;
  
 END;
 $BODY$

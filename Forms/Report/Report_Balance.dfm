@@ -14,11 +14,12 @@ object Report_BalanceForm: TReport_BalanceForm
   OldCreateOrder = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.isSingle = False
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1329
     Height = 31
     Align = alTop
@@ -305,6 +306,11 @@ object Report_BalanceForm: TReport_BalanceForm
       Action = actExportToExcel
       Category = 0
     end
+    object bbStaticText: TdxBarButton
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -330,6 +336,112 @@ object Report_BalanceForm: TReport_BalanceForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
       ShortCut = 16472
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'dsdOpenForm1'
+      FormName = 'TReport_AccountForm'
+      FormNameParam.Value = 'TReport_AccountForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41670d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountId'
+        end
+        item
+          Name = 'AccountName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+        end
+        item
+          Name = 'AccountDirectionName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'BusinessId'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+        end
+        item
+          Name = 'BusinessName'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object MultiAction1: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = dsdExecStoredProc1
+        end
+        item
+          Action = dsdOpenForm1
+        end>
+      Caption = 'MultiAction1'
+    end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetBalanceParam
+      StoredProcList = <
+        item
+          StoredProc = spGetBalanceParam
+        end>
+      Caption = 'dsdExecStoredProc1'
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -378,25 +490,168 @@ object Report_BalanceForm: TReport_BalanceForm
   object PivotAddOn: TPivotAddOn
     ErasedFieldName = 'isErased'
     PivotGrid = cxDBPivotGrid
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = MultiAction1
+      end>
+    ActionItemList = <
+      item
+        Action = MultiAction1
+        ShortCut = 13
+      end>
     Left = 392
     Top = 272
   end
   object spGetBalanceParam: TdsdStoredProc
+    StoredProcName = 'gpGetBalanceParam'
     DataSets = <>
+    OutputType = otResult
     Params = <
       item
-        Name = 'inPivotData'
+        Name = 'inData'
         Component = PivotAddOn
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'RootType'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'RootType'
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountGroupId'
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountGroupName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountDirectionId'
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountDirectionName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountId'
+      end
+      item
+        Name = 'AccountName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'AccountName'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InfoMoneyId'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'InfoMoneyName'
+        DataType = ftString
+      end
+      item
+        Name = 'ObjectDirectionId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectDirectionId'
+      end
+      item
+        Name = 'ObjectDestinationId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectDestinationId'
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'JuridicalBasisId'
+      end
+      item
+        Name = 'BusinessId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BusinessId'
+      end
+      item
+        Name = 'BusinessName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'BusinessName'
+        DataType = ftString
       end>
     Left = 288
     Top = 304
   end
   object FormParams: TdsdFormParams
-    Params = <>
+    Params = <
+      item
+        Name = 'AccountId'
+        Value = Null
+      end
+      item
+        Name = 'AccountName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = Null
+      end
+      item
+        Name = 'AccountGroupName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = Null
+      end
+      item
+        Name = 'AccountDirectionName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = Null
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Value = Null
+      end
+      item
+        Name = 'BusinessName'
+        Value = Null
+        DataType = ftString
+      end>
     Left = 360
     Top = 184
   end

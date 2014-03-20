@@ -1,12 +1,17 @@
 -- Function: gpReport_Account ()
 
 DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Account (
-    IN inStartDate    TDateTime ,  
-    IN inEndDate      TDateTime ,
-    IN inAccountId    Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inStartDate          TDateTime ,  
+    IN inEndDate            TDateTime ,
+    IN inAccountGroupId     Integer , 
+    IN inAccountDirectionId Integer , 
+    IN inInfoMoneyId        Integer , 
+    IN inAccountId          Integer ,
+    IN inBusinessId         Integer ,
+    IN inSession            TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
@@ -42,7 +47,9 @@ BEGIN
 
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
-                           FROM (SELECT AccountId FROM Object_Account_View WHERE Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0
+                           FROM (SELECT AccountId FROM Object_Account_View WHERE 
+                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0)
+                              AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
                                 ) AS tmpAccount -- счет
                                 JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                               AND Container.DescId = zc_Container_Summ()
@@ -406,12 +413,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.03.14                          * add Params                          
  17.03.14                          * add MovementId                          
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis

@@ -65,6 +65,10 @@ type
     PivotAddOn: TPivotAddOn;
     spGetBalanceParam: TdsdStoredProc;
     FormParams: TdsdFormParams;
+    dsdOpenForm1: TdsdOpenForm;
+    MultiAction1: TMultiAction;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    bbStaticText: TdxBarButton;
   private
   public
   end;

@@ -1629,6 +1629,9 @@ begin
   List := TStringList.Create;
   try
     with PivotGrid.ViewData do begin
+      if PivotGrid.ViewData.Selection.FocusedCell.X = -1 then
+         exit;
+
       PivotGridViewDataItem := Columns[Selection.FocusedCell.X].Parent;
       while Assigned(PivotGridViewDataItem) do begin
          if PivotGridViewDataItem.Value <> '' then
@@ -1673,6 +1676,11 @@ end;
 procedure TPivotAddOn.SetPivotGrid(const Value: TcxDBPivotGrid);
 begin
   FPivotGrid := Value;
+  if Assigned(FPivotGrid) then begin
+    FOnKeyDown := FPivotGrid.OnKeyDown;
+    FPivotGrid.OnKeyDown := OnKeyDown;
+    FPivotGrid.OnDblClick := OnDblClick;
+  end;
 end;
 
 end.
