@@ -22,16 +22,17 @@ type
     procedure WriteFormParams(execFormParams: TParams); virtual;//
     procedure SetFormParams(execFormParams: TParams); virtual;//
   public
-    function Execute(execFormParams: TParams): boolean; virtual;
+    function Execute: boolean; virtual;
   end;
 
 implementation
 {$R *.dfm}
 {------------------------------------------------------------------------------}
-function TAncestorDialogForm.Execute(execFormParams: TParams): boolean;
-begin WriteFormParams(execFormParams);
+function TAncestorDialogForm.Execute: boolean;
+begin
+      //WriteFormParams(execFormParams);
       result:=(ShowModal=mrOk);
-      if result then SetFormParams(execFormParams)
+      //if result then SetFormParams(execFormParams)
 end;
 {------------------------------------------------------------------------------}
 procedure TAncestorDialogForm.CreateFormParams;
