@@ -198,15 +198,19 @@ type
     miScaleRun_BI_R: TMenuItem;
     LockTimer: TTimer;
     PartionDateEdit: TcxDateEdit;
-    cxDateEdit1: TcxDateEdit;
+    BillDateEdit: TcxDateEdit;
     spTest: TdsdStoredProc;
     DataSource1: TDataSource;
     ClientDataSet: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
+    procedure ButtonNewGetParamsClick(Sender: TObject);
+    procedure ButtonExitClick(Sender: TObject);
   private
     procedure GetParams;
+    procedure newGetParamsGoods;
+    function myCheckPartionStr:boolean;
   public
     { Public declarations }
   end;
@@ -218,11 +222,47 @@ implementation
 
 {$R *.dfm}
 
-uses DialogBillKind;
+uses DialogBillKind, GuideGoods;
+
+function TMainForm.myCheckPartionStr:boolean;
+begin
+     Result:=false;
+
+     Result:=true;
+end;
+
+procedure TMainForm.newGetParamsGoods;
+var GoodsWeight_two,GoodsWeight_set:Double;
+    calcClientId:Integer;
+begin
+
+     calcClientId:=0;//ParamsBill_ScaleHistory.ParamByName('@inToId').AsInteger
+
+
+     if GuideGoodsForm.Execute(calcClientId,StrToDate(BillDateEdit.Text))
+//     if GuideGoodsForm.Execute
+     then begin
+
+     end;
+
+//
+end;
+
+
+procedure TMainForm.ButtonExitClick(Sender: TObject);
+begin
+ Close;
+end;
 
 procedure TMainForm.ButtonExportToEDIClick(Sender: TObject);
 begin
- spTest.Execute;
+// spTest.Execute;
+ ShowMessage(GetDefaultValue('Scale_77','PriceList','PriceListCount','','2'));
+end;
+
+procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);
+begin
+  newGetParamsGoods;
 end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
@@ -239,6 +279,7 @@ procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
   Shift: TShiftState);
 begin
      if Key = VK_F2 then GetParams;
+     if Key = VK_SPACE then begin Key:=0;ButtonNewGetParamsClick(self);end
 end;
 
 

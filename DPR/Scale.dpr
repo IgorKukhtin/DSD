@@ -33,7 +33,8 @@ uses
   DialogBillKind in '..\Scale\DialogBillKind.pas' {DialogBillKindForm},
   AncestorDialog in '..\Scale\Ancestor\AncestorDialog.pas' {AncestorDialogForm},
   Util in '..\Scale\Util\Util.pas',
-  DM in '..\Scale\Util\DM.pas' {DMMain: TDataModule};
+  DM in '..\Scale\Util\DM.pas' {DMMain: TDataModule},
+  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm};
 
 {$R *.res}
 
@@ -48,6 +49,7 @@ begin
     Application.CreateForm(TMainForm, MainForm);
   Application.CreateForm(TDialogBillKindForm, DialogBillKindForm);
   Application.CreateForm(TDMMain, DMMain);
+  Application.CreateForm(TGuideGoodsForm, GuideGoodsForm);
   end;
 
 //  Application.CreateForm(TMainForm, MainForm);

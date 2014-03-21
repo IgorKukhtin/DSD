@@ -137,6 +137,9 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\Scale\GuideGoods.pas">
+				<Form>GuideGoodsForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

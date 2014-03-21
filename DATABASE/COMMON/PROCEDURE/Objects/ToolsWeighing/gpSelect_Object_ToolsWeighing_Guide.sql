@@ -30,19 +30,19 @@ BEGIN
 --   vbUserId:= lpGetUserBySession (inSession);
    -- определяется - может ли пользовать видеть весь справочник
 --   vbAccessKeyAll:= zfCalc_AccessKey_GuideAll (vbUserId);
-    CREATE TEMP TABLE tmpDesc (Id integer, DescName TVarChar);
+--    CREATE TEMP TABLE tmpDesc (Id integer, DescName TVarChar);
 
 --    vbRootName    := (SELECT Object_ToolsWeighing_View.Name FROM Object_ToolsWeighing_View WHERE Object_ToolsWeighing_View.Id = inRootId);
     vbDescCount   := (SELECT gpGetToolsPropertyValue FROM gpGetToolsPropertyValue ('Scale_'||inRootId, 'Movement', 'DescCount', '', '10', inSession));
     vbCurrentDesc := 1;
-
+/*
     LOOP
      INSERT INTO tmpDesc (Id, DescName)
      VALUES (vbCurrentDesc, CAST('MovementDesc_'||CAST(vbCurrentDesc AS TVarChar)  AS TVarChar));
      vbCurrentDesc := vbCurrentDesc + 1;
      EXIT WHEN vbCurrentDesc > vbDescCount;
     END LOOP;
-
+*/
     CREATE TEMP TABLE tmpData(
                DescId     Integer, DescName     TVarChar,
                FromId     Integer, FromName     TVarChar,
@@ -119,7 +119,7 @@ BEGIN
 
 --            , Object_From.ValueData
 
-       FROM tmpDesc
+       FROM (SELECT generate_series(1, vbDescCount) AS Id) AS tmpDesc
        LEFT JOIN gpGetToolsPropertyValue ('Scale_'||inRootId, 'Movement', 'MovementDesc_'||tmpDesc.Id, 'ColorGrid', '0',  inSession)  AS ColorGridValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue ('Scale_'||inRootId, 'Movement', 'MovementDesc_'||tmpDesc.Id, 'DescId', '0', inSession)      AS DescIdValue ON 1 = 1
        LEFT JOIN gpGetToolsPropertyValue ('Scale_'||inRootId, 'Movement', 'MovementDesc_'||tmpDesc.Id, 'FromId', '0', inSession)      AS FromIdValue ON 1 = 1
@@ -178,7 +178,7 @@ BEGIN
        ORDER BY 11, 12;
 
 
-    DROP TABLE tmpDesc;
+--    DROP TABLE tmpDesc;
     DROP TABLE tmpData;
 
 
@@ -191,6 +191,7 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Guide (Integer, TVarChar) OWNER TO 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.03.14                                                         *
  14.03.14                                                         *
 */
 
