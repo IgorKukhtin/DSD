@@ -13,6 +13,14 @@ type
     Name: string;
   end;
 
+  TListItem = record
+    Num:  integer;
+    Id:   integer;
+    Name: string;
+  end;
+
+  TListArray =  array of TListItem;
+
   TSetting = record
     ScaleNum:         integer;
     ToolsCode:        integer;
@@ -64,23 +72,76 @@ function EqualParams_DataSet(pParams: TParams;DataSet: TDataSet): boolean;
 function FindTStringList(execList:TStringList;FindItem:String):boolean;
 {==================================}
 
+//procedure FillCustomList(List: array of TListItem; ProcName: String);
+function FillCustomList(ProcName: String): TListArray;
+procedure FillAllList;
 
 
 var
   CurSetting: TSetting;
   NewSetting: TSetting;
-  ParamsPriceList :TParams;
+
+  PriceList:     TListArray;
+  WeightTare:    TListArray;
+  ChangePercent: TListArray;
+
 //  ,ParamsKindPackage,ParamsDiscount,ParamsCountTare,ParamsCodeTareWeightEnter,ParamsBill_ScaleHistory:TParams;
 //  ParamsBillKind,ParamsBillKind_UnitFrom,ParamsBillKind_UnitTo,ParamsBillKind_MoneyKind,ParamsBillKind_isProduction:TParams;
 
 implementation
+
+uses Main;
+
+procedure FillAllList;
+var
+ i: integer;
+begin
+  PriceList:=     FillCustomList('gpSelect_Object_ToolsWeighing_PriceList');
+  WeightTare:=    FillCustomList('gpSelect_Object_ToolsWeighing_WeightTare');
+  ChangePercent:= FillCustomList('gpSelect_Object_ToolsWeighing_ChangePercent');
+
+end;
+
+function FillCustomList(ProcName: String): TListArray;
+var
+ spExec : TdsdStoredProc;
+ tmpDataSet: TClientDataSet;
+ i: integer;
+begin
+  spExec:= TdsdStoredProc.Create(Nil);
+  tmpDataSet:= TClientDataSet.Create(Nil);
+  try
+    with spExec do begin
+       OutputType:=otDataSet;
+       DataSet:=tmpDataSet;
+       StoredProcName:=ProcName;
+       Params.AddParam('inRootId', ftInteger, ptInput, CurSetting.ScaleNum);
+       try
+         Execute;
+         SetLength(result, tmpDataSet.RecordCount);
+         for I := 0 to tmpDataSet.RecordCount-1 do
+         begin
+          result[i].Num := tmpDataSet.FieldByName('Num').asInteger;
+          result[i].Id := tmpDataSet.FieldByName('Id').asInteger;
+          result[i].Name := tmpDataSet.FieldByName('Name').asString;
+          tmpDataSet.Next;
+         end
+       except
+//         ShowMessage('Ошибка получения значения');
+         SetLength(result, 0);
+       end;
+    end;
+  finally spExec.Free; tmpDataSet.Free; end;
+end;
+
+
 function GetDefaultValue(inLevel1,inLevel2,inLevel3,inLevel4,inValueData:String):String;
 var
  spExec : TdsdStoredProc;
  ClientDataSet: TClientDataSet;
 begin
-  spExec:= TdsdStoredProc.Create(spExec);
-  ClientDataSet:= TClientDataSet.Create(ClientDataSet);
+  spExec:= TdsdStoredProc.Create(Nil);
+  ClientDataSet:= TClientDataSet.Create(Nil);
   try
     with spExec do begin
        OutputType:=otDataSet;
@@ -91,7 +152,6 @@ begin
        Params.AddParam('inLevel3', ftString, ptInput, inLevel3);
        Params.AddParam('inLevel4', ftString, ptInput, inLevel4);
        Params.AddParam('inValueData', ftString, ptInput, inValueData);
-
        try
          Execute;
          result := ClientDataSet.FieldByName('Value').asString;
@@ -101,8 +161,6 @@ begin
        end;
     end;
   finally spExec.Free; ClientDataSet.Free; end;
-
-
 end;
 
 
@@ -110,7 +168,7 @@ function GetObject_byCode(Code, DescId: integer): TDBObject;
 var
  spExec : TdsdStoredProc;
 begin
-  spExec:=TdsdStoredProc.Create(spExec);
+  spExec:=TdsdStoredProc.Create(Nil);
   try
     with spExec do begin
        OutputType:=otResult;

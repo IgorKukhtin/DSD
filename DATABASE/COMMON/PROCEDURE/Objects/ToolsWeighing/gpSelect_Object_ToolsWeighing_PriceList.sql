@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ToolsWeighing_PriceList(
     IN inRootId      Integer   ,
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Name TVarChar, Value Integer) AS
+RETURNS TABLE (Num Integer, Id Integer, Name TVarChar) AS
 $BODY$
    DECLARE vbUserId         Integer;
    DECLARE vbAccessKeyAll   Boolean;
@@ -23,15 +23,15 @@ BEGIN
 
     RETURN QUERY
        SELECT
-             CAST('PriceList_'||tmpCount.Id AS TVarChar) AS Name
-           , CAST(PriceListValue.Value AS Integer)       AS Value
-           , Object_PaidKind.Id                     AS PriceListId
-           , Object_PaidKind.ValueData              AS PriceListName
+             tmpCount.Id                                    AS Num
+           , Object_PriceList.Id                            AS PriceListId
+           , Object_PriceList.ValueData                     AS PriceListName
 
 
        FROM (SELECT generate_series(1, vbTmpCount) AS Id) AS tmpCount
        LEFT JOIN gpGetToolsPropertyValue ('Scale_'||inRootId, 'PriceList', 'PriceList_'||tmpCount.Id, '', '0',  inSession)  AS PriceListValue ON 1 = 1
        LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (CAST(PriceListValue.Value AS Integer),0)
+       ORDER BY 1
        ;
 
 END;

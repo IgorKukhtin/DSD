@@ -1680,8 +1680,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 0
-      ExplicitLeft = 429
-      ExplicitWidth = 471
     end
     object PanelBillKind: TPanel
       Left = 0
@@ -2204,21 +2202,21 @@ object MainForm: TMainForm
   end
   object spTest: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
-    DataSet = ClientDataSet
+    DataSet = DataSetMI
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = DataSetMI
       end>
     Params = <>
     Left = 224
     Top = 384
   end
   object DataSource1: TDataSource
-    DataSet = ClientDataSet
+    DataSet = DataSetMI
     Left = 320
     Top = 400
   end
-  object ClientDataSet: TClientDataSet
+  object DataSetMI: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 304

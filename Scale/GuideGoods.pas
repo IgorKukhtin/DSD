@@ -122,6 +122,8 @@ var
 implementation
 
 {$R *.dfm}
+
+uses Util;
 {------------------------------------------------------------------------------}
 function TGuideGoodsForm.Execute(ClientId:Integer;BillDate:TDateTime): boolean;
 begin
@@ -162,6 +164,23 @@ end;
 procedure TGuideGoodsForm.FormCreate(Sender: TObject);
 var i:Integer;
 begin
+  FillAllList;
+  //прайс-лист
+  EditPriceListCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','PriceListCode','','1');
+  for I := 0 to Length(PriceList)-1 do
+    rgPriceList.Items.Add('('+IntToStr(PriceList[i].Num)+') '+ PriceList[i].Name);
+  rgPriceList.ItemIndex:=  StrToInt(EditPriceListCode.Text)-1;
+  //вес тары
+  EditTareCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','WeightTareCode','','1');
+  for I := 0 to Length(WeightTare)-1 do
+    rgTare.Items.Add('('+IntToStr(WeightTare[i].Num)+') '+ WeightTare[i].Name + ' кг');
+  rgTare.ItemIndex:=  StrToInt(EditTareCode.Text)-1;
+  //—кидка по весу
+  EditDiscountCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','ChangePercentCode','','1');
+  for I := 0 to Length(ChangePercent)-1 do
+    rgDiscount.Items.Add('('+IntToStr(ChangePercent[i].Num)+') '+ ChangePercent[i].Name+ ' %');
+  rgDiscount.ItemIndex:=  StrToInt(EditDiscountCode.Text)-1;
+
 {
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
@@ -495,16 +514,16 @@ begin
      if Key='+' then
      begin
           Key:=#0;
-          try PriceListCode:=StrToInt(trim(EditPriceListCode.Text))+_CodeStartPriceList-1;except PriceListCode:=0;end;
-          if (PriceListCode>=_CodeStartPriceList+_CountPriceList-1)or(PriceListCode<_CodeStartPriceList)
-          then PriceListCode:=_CodeStartPriceList
+          try PriceListCode:=StrToInt(trim(EditPriceListCode.Text));except PriceListCode:=0;end;
+          if (PriceListCode>=Length(PriceList)) or(PriceListCode<1)
+          then PriceListCode:=1
           else PriceListCode:=PriceListCode+1;
-          EditPriceListCode.Text:=IntToStr(PriceListCode-_CodeStartPriceList+1);
+          EditPriceListCode.Text:=IntToStr(PriceListCode);
           EditPriceListCodeExit(Self);
           //
           TEdit(Sender).SelectAll;
      end;
-}
+ }
 end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.EditPriceListCodeExit(Sender: TObject);
