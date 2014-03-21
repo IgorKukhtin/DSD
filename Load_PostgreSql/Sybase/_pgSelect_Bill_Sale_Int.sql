@@ -100,7 +100,7 @@ from (select Bill.Id
      ) as Bill_find
 
      left outer join dba.Bill on Bill.Id = Bill_find.Id
-     left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber
+     left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
                       from dba.Unit
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -110,8 +110,9 @@ from (select Bill.Id
                           on find2.ClientId = Unit.Id
                          and @inStartDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
-                      left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)
-                     ) as Contract on Contract.ClientId = Bill.ToId
+                      group by Unit.Id
+                     ) as Contract_find on Contract_find.ClientId = Bill.ToId
+     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id
 
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId

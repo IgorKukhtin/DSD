@@ -37,6 +37,15 @@ BEGIN
 
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_40900()) -- Финансовая помощь
+                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Алан
+                                                                                                                                                            , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                                                                                                            , zc_Enum_InfoMoney_21001() -- Чапли
+                                                                                                                                                            , zc_Enum_InfoMoney_21101() -- Дворкин
+                                                                                                                                                             )
+                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
+
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                            THEN zc_Enum_AccountDirection_30300() -- услуги предоставленные
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
@@ -64,13 +73,7 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_80200() -- Прочие кредиты
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40400() -- проценты по кредитам
                                                            THEN zc_Enum_AccountDirection_80400() -- проценты по кредитам
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20800() -- Алан
-                                                                                                                                               , zc_Enum_InfoMoneyDestination_20900() -- Ирна
-                                                                                                                                               , zc_Enum_InfoMoneyDestination_21000() -- Чапли
-                                                                                                                                               , zc_Enum_InfoMoneyDestination_21100() -- Дворкин
-                                                                                                                                               , zc_Enum_InfoMoneyDestination_40900() -- Финансовая помощь
-                                                                                                                                                )
-                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
+
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_40000() -- Финансовая деятельность
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
 
@@ -94,6 +97,10 @@ BEGIN
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                   ON ObjectBoolean_isCorporate.ObjectId = Object.Id
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                               ON ObjectLink_Juridical_InfoMoney.ObjectId = Object.Id
+                              AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
+          -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
      WHERE Object.Id = _tmpItem.ObjectId;
 
      -- 1.1.2. определяется AccountGroupId для проводок суммового учета
@@ -109,12 +116,25 @@ BEGIN
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
                                                THEN zc_Enum_Account_110101() -- Транзит
+
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
+                                           AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_40900()) -- Финансовая помощь
+                                               THEN CASE WHEN zc_Enum_InfoMoney_20801() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                              THEN zc_Enum_Account_30201() -- Алан
+                                                         WHEN zc_Enum_InfoMoney_20901() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                              THEN zc_Enum_Account_30202() -- Ирна
+                                                         WHEN zc_Enum_InfoMoney_21001() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                              THEN zc_Enum_Account_30203() -- Чапли
+                                                         WHEN zc_Enum_InfoMoney_21101() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                              THEN zc_Enum_Account_30204() -- Дворкин
+                                                    END
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов
                                                THEN zc_Enum_Account_40201() -- касса филиалов
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40100() -- касса
                                                THEN zc_Enum_Account_40101() -- касса
+
                                           ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem.AccountGroupId
                                                                           , inAccountDirectionId     := _tmpItem.AccountDirectionId
                                                                           , inInfoMoneyDestinationId := _tmpItem.InfoMoneyDestinationId
