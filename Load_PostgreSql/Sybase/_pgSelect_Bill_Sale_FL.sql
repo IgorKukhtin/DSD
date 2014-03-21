@@ -1,3 +1,9 @@
+delete from _pgPartner where Id = 2037;
+update _pgPartner set PartnerId_pg = 79431 where Id = 3239;
+update _pgPartner set OKPO = '30512339' where Id in (2035,2038);
+commit
+'38157537'
+
 -- Fl
 alter PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
@@ -133,7 +139,7 @@ select Bill.Id as ObjectId
 from _tmpBill_NotNalog
      left outer join dba.Bill on Bill.Id = _tmpBill_NotNalog.BillId
 
-     left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber
+     left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
                       from dba.Unit
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -143,8 +149,9 @@ from _tmpBill_NotNalog
                           on find2.ClientId = Unit.Id
                          and @inStartDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
-                      left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)
-                     ) as Contract on Contract.ClientId = Bill.ToId
+                      group by Unit.Id
+                     ) as Contract_find on Contract_find.ClientId = Bill.ToId
+     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id
 
      left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad
      left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId

@@ -10550,7 +10550,7 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -10560,8 +10560,9 @@ begin
            +'                               on find2.ClientId = Unit.Id'
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
-           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                          ) as _pgPartner on _pgPartner.UnitId = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
@@ -10826,7 +10827,7 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -10836,8 +10837,9 @@ begin
            +'                               on find2.ClientId = Unit.Id'
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
-           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
         Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -11121,13 +11123,50 @@ begin
         Add('     , 9399 as inFromId');
         Add('     , _pgPartner.PartnerId_pg as inPartnerId');
 
-        Add('     , case when Bill.ToId in (2535,2842) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS // ‘”ƒÃ¿– ≈“ ¬Ã π 05,¬ÂÎ. Ë¯.,ƒÌ-‚ÒÍ,«ÓˇÌËÈ,1-‡ + ‘”ƒÃ¿– ≈“ ¬  π 51,∆Ó‚Ú.¬Ó‰Ë ¬ÂÎ. ÍË¯
-           +'            when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
+        Add('     , case when Bill.BillNumber = '+FormatToVarCharServer_notNULL('58440')+' and Bill.BillDate='+FormatToDateServer_notNULL(StrToDate('31.12.2013'))+' then '+zc_Enum_DocumentTaxKind_Tax // !!!ÍÓ!!-¬—œ ¬ÓÍÁ‡Î ƒÌ≥ÔÓÔÂÚÓ‚Ò¸Í
+           +'          when Bill.ToId in (2535,2842) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS // ‘”ƒÃ¿– ≈“ ¬Ã π 05,¬ÂÎ. Ë¯.,ƒÌ-‚ÒÍ,«ÓˇÌËÈ,1-‡ + ‘”ƒÃ¿– ≈“ ¬  π 51,∆Ó‚Ú.¬Ó‰Ë ¬ÂÎ. ÍË¯
+           //+'            when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//≈ —œ¿Õ—≤ﬂ
+           +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ŒÃ≈√¿
+           +'                         ,'+FormatToVarCharServer_notNULL('32294897')//‘Œ–¿
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('32294926')+')'//‘Œ««» œ–»¬¿“
+           +'             and (ContractNumber='+FormatToVarCharServer_notNULL('3037')
+           +'               or ContractNumber='+FormatToVarCharServer_notNULL('3036')+')'
+           +'                 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('36439679')
+           +'                         ,'+FormatToVarCharServer_notNULL('35275230')
+           +'                         ,'+FormatToVarCharServer_notNULL('38381998')
+           +'                         ,'+FormatToVarCharServer_notNULL('36988353')
+           +'                         ,'+FormatToVarCharServer_notNULL('38316777')
+           +'                         ,'+FormatToVarCharServer_notNULL('33478778')
+           +'                         ,'+FormatToVarCharServer_notNULL('24541083')
+           +'                         ,'+FormatToVarCharServer_notNULL('37672913')
+           +'                         ,'+FormatToVarCharServer_notNULL('38722196')
+           +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('32967633')
+           +'                         ,'+FormatToVarCharServer_notNULL('37470510')
+           +'                         ,'+FormatToVarCharServer_notNULL('38157537')
+           +'                         ,'+FormatToVarCharServer_notNULL('33184262')
+           +'                         ,'+FormatToVarCharServer_notNULL('30344629')
+           +'                         ,'+FormatToVarCharServer_notNULL('31929492')
+           +'                         ,'+FormatToVarCharServer_notNULL('19202597')
+           +'                         ,'+FormatToVarCharServer_notNULL('32334104')
+           +'                         ,'+FormatToVarCharServer_notNULL('38685495')
+           +'                         ,'+FormatToVarCharServer_notNULL('34604386')
+           +'                         ,'+FormatToVarCharServer_notNULL('30512339')
+           +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('01073931')//œË‰ÌiÔÓ‚Ò¸Í‡ Á‡ÎiÁÌËˆˇ ƒœ (ıÎÂ·)
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
            +'            else '+zc_Enum_DocumentTaxKind_Tax
            +'       end as inDocumentTaxKindId');
+
         Add('     , Bill_find.CodeIM');
         Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
 
+        Add('     , trim(isnull (Information1.OKPO, isnull (Information2.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO');
         Add('     , zc_rvYes() as zc_rvYes');
 
         Add('     , isnull(Bill.isRegistration,zc_rvNo())as isRegistration');
@@ -11159,7 +11198,7 @@ begin
 
         Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
         Add('     left outer join dba.Bill_i AS Bill_find_i on Bill_find_i.Id = Bill.BillId_byLoad');
-        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11169,8 +11208,9 @@ begin
            +'                               on find2.ClientId = Unit.Id'
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
-           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-           +'                          ) as Contract on Contract.ClientId = Bill.ToId');
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.ToId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId'
            +'                                        and Bill_find_i.Id is null');
@@ -11196,11 +11236,15 @@ begin
            +'                                                                              ) then 5 else Bill.FromId end');
         Add('     left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id=UnitFrom.PersonalId_Postgres');
- //Add('where Bill.BillNumber in (136565)');
+
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitTo.Id');
+// Add('where Bill.BillNumber in (58445,58443)');
 
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(Bill.NalogId_PG,0)=0');
-        Add('order by inOperDate, ObjectId');
+        Add('order by inOperDate, inInvNumber, ObjectId');
         Open;
 
         Result:=RecordCount;
@@ -11448,7 +11492,7 @@ begin
         Close;
         Clear;
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as inInvNumber');
+        Add('     , case when inDocumentTaxKindId_calc<>'+zc_Enum_DocumentTaxKind_Corrective+' then '+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡-')+' else '+FormatToVarCharServer_notNULL('')+' end || Bill.BillNumber as inInvNumber');
         Add('     , Bill.BillDate as inOperDate');
 
         Add('     , Bill.BillNumberNalog as inInvNumberPartner');
@@ -11464,12 +11508,49 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , 9399 as inToId');
 
-        Add('     , case when 1=0 and Bill.FromId in (2535,2842) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR // ‘”ƒÃ¿– ≈“ ¬Ã π 05,¬ÂÎ. Ë¯.,ƒÌ-‚ÒÍ,«ÓˇÌËÈ,1-‡ + ‘”ƒÃ¿– ≈“ ¬  π 51,∆Ó‚Ú.¬Ó‰Ë ¬ÂÎ. ÍË¯
-           //+'            when 1=0 and isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
+        Add('     , case when Bill.FromId in (2535,2842) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR // ‘”ƒÃ¿– ≈“ ¬Ã π 05,¬ÂÎ. Ë¯.,ƒÌ-‚ÒÍ,«ÓˇÌËÈ,1-‡ + ‘”ƒÃ¿– ≈“ ¬  π 51,∆Ó‚Ú.¬Ó‰Ë ¬ÂÎ. ÍË¯
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//≈ —œ¿Õ—≤ﬂ
+           +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ŒÃ≈√¿
+           +'                         ,'+FormatToVarCharServer_notNULL('32294897')//‘Œ–¿
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('32294926')+')'//‘Œ««» œ–»¬¿“
+           +'             and (ContractNumber='+FormatToVarCharServer_notNULL('3037')
+           +'               or ContractNumber='+FormatToVarCharServer_notNULL('3036')+')'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('36439679')
+           +'                         ,'+FormatToVarCharServer_notNULL('35275230')
+           +'                         ,'+FormatToVarCharServer_notNULL('38381998')
+           +'                         ,'+FormatToVarCharServer_notNULL('36988353')
+           +'                         ,'+FormatToVarCharServer_notNULL('38316777')
+           +'                         ,'+FormatToVarCharServer_notNULL('33478778')
+           +'                         ,'+FormatToVarCharServer_notNULL('24541083')
+           +'                         ,'+FormatToVarCharServer_notNULL('37672913')
+           +'                         ,'+FormatToVarCharServer_notNULL('38722196')
+           +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('32967633')
+           +'                         ,'+FormatToVarCharServer_notNULL('37470510')
+           +'                         ,'+FormatToVarCharServer_notNULL('38157537')
+           +'                         ,'+FormatToVarCharServer_notNULL('33184262')
+           +'                         ,'+FormatToVarCharServer_notNULL('30344629')
+           +'                         ,'+FormatToVarCharServer_notNULL('31929492')
+           +'                         ,'+FormatToVarCharServer_notNULL('19202597')
+           +'                         ,'+FormatToVarCharServer_notNULL('32334104')
+           +'                         ,'+FormatToVarCharServer_notNULL('38685495')
+           +'                         ,'+FormatToVarCharServer_notNULL('34604386')
+           +'                         ,'+FormatToVarCharServer_notNULL('30512339')
+           +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('01073931')//œË‰ÌiÔÓ‚Ò¸Í‡ Á‡ÎiÁÌËˆˇ ƒœ (ıÎÂ·)
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective
-           +'       end as inDocumentTaxKindId');
+           +'       end as inDocumentTaxKindId_calc'
+           +'     , '+zc_Enum_DocumentTaxKind_Corrective+' as inDocumentTaxKindId');
+
         Add('     , Bill_find.CodeIM');
         Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
+
+        Add('     , trim(isnull (Information1.OKPO, isnull (Information2.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO');
 
         Add('     , isnull(Bill.isRegistration,zc_rvNo())as isRegistration');
         Add('     , Bill.RegistrationDate');
@@ -11495,7 +11576,7 @@ begin
            +'      group by Bill.Id'
            +'      ) as Bill_find');
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11505,8 +11586,9 @@ begin
            +'                               on find2.ClientId = Unit.Id'
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
-           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -11530,12 +11612,15 @@ begin
            +'                                                                              ) then 5 else Bill.ToId end');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
  //Add('where Bill.BillNumber in (136565)');
 
         Add('union all');
 
         Add('select Bill.Id as ObjectId');
-        Add('     , Bill.BillNumber as inInvNumber');
+        Add('     , case when Bill_find.OperCount1=0 and inDocumentTaxKindId_calc = '+zc_Enum_DocumentTaxKind_Corrective+' then '+FormatToVarCharServer_notNULL('-Ó¯Ë·Í‡-')+' else '+FormatToVarCharServer_notNULL('')+' end || Bill.BillNumber as inInvNumber');
         Add('     , Bill.BillDate as inOperDate');
 
         Add('     , Bill_find.inInvNumberPartner');
@@ -11552,11 +11637,50 @@ begin
         Add('     , 9399 as inToId');
 
         Add('     , case when Bill.FromId in (2535,2842) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR // ‘”ƒÃ¿– ≈“ ¬Ã π 05,¬ÂÎ. Ë¯.,ƒÌ-‚ÒÍ,«ÓˇÌËÈ,1-‡ + ‘”ƒÃ¿– ≈“ ¬  π 51,∆Ó‚Ú.¬Ó‰Ë ¬ÂÎ. ÍË¯
-           +'            when Bill_find.OperCount1=0 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
+           //+'            when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//≈ —œ¿Õ—≤ﬂ
+           +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ŒÃ≈√¿
+           +'                         ,'+FormatToVarCharServer_notNULL('32294897')//‘Œ–¿
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('32294926')+')'//‘Œ««» œ–»¬¿“
+           +'             and (ContractNumber='+FormatToVarCharServer_notNULL('3037')
+           +'               or ContractNumber='+FormatToVarCharServer_notNULL('3036')+')'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR
+           +'            when OKPO in ('+FormatToVarCharServer_notNULL('36439679')
+           +'                         ,'+FormatToVarCharServer_notNULL('35275230')
+           +'                         ,'+FormatToVarCharServer_notNULL('38381998')
+           +'                         ,'+FormatToVarCharServer_notNULL('36988353')
+           +'                         ,'+FormatToVarCharServer_notNULL('38316777')
+           +'                         ,'+FormatToVarCharServer_notNULL('33478778')
+           +'                         ,'+FormatToVarCharServer_notNULL('24541083')
+           +'                         ,'+FormatToVarCharServer_notNULL('37672913')
+           +'                         ,'+FormatToVarCharServer_notNULL('38722196')
+           +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('32967633')
+           +'                         ,'+FormatToVarCharServer_notNULL('37470510')
+           +'                         ,'+FormatToVarCharServer_notNULL('38157537')
+           +'                         ,'+FormatToVarCharServer_notNULL('33184262')
+           +'                         ,'+FormatToVarCharServer_notNULL('30344629')
+           +'                         ,'+FormatToVarCharServer_notNULL('31929492')
+           +'                         ,'+FormatToVarCharServer_notNULL('19202597')
+           +'                         ,'+FormatToVarCharServer_notNULL('32334104')
+           +'                         ,'+FormatToVarCharServer_notNULL('38685495')
+           +'                         ,'+FormatToVarCharServer_notNULL('34604386')
+           +'                         ,'+FormatToVarCharServer_notNULL('30512339')
+           +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('01073931')//œË‰ÌiÔÓ‚Ò¸Í‡ Á‡ÎiÁÌËˆˇ ƒœ (ıÎÂ·)
+           +'                         )'
+           +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective
-           +'       end as inDocumentTaxKindId');
+           +'       end as inDocumentTaxKindId_calc');
+
+        Add('     , inDocumentTaxKindId_calc as inDocumentTaxKindId');
+
         Add('     , Bill_find.CodeIM');
         Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
+
+        Add('     , trim(isnull (Information1.OKPO, isnull (Information2.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO');
 
         Add('     , isnull(Bill.isRegistration,zc_rvNo())as isRegistration');
         Add('     , Bill.RegistrationDate');
@@ -11592,7 +11716,7 @@ begin
            +'           , inInvNumberPartner'
            +'      ) as Bill_find');
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber'
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11602,8 +11726,9 @@ begin
            +'                               on find2.ClientId = Unit.Id'
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
-           +'                           left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)'
-           +'                          ) as Contract on Contract.ClientId = Bill.FromId');
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -11627,6 +11752,9 @@ begin
            +'                                                                              ) then 5 else Bill.ToId end');
         Add('     left outer join dba._pgUnit as pgUnitTo on pgUnitTo.Id=UnitTo.pgUnitId');
         Add('     left outer join dba._pgPersonal as pgPersonalTo on pgPersonalTo.Id=UnitTo.PersonalId_Postgres');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitFrom.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
 
         if cbOnlyInsertDocument.Checked
         then Add('where isnull(Bill.NalogId_PG,0)=0');

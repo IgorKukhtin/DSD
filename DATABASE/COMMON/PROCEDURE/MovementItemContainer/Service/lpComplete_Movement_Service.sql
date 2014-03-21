@@ -15,7 +15,7 @@ $BODY$
 BEGIN
      -- нужен тип документа, т.к. проведение для двух разных видов документов
      SELECT Movement.DescId
-          , CASE WHEN MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+          , CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
                  THEN TRUE
                  ELSE FALSE
             END
@@ -25,6 +25,7 @@ BEGIN
           LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                            ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                           AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
+          LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
      WHERE Movement.Id = inMovementId;
 
 
@@ -178,6 +179,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.03.14                                        * add zc_Enum_InfoMoneyDestination_21500
  10.03.14                                        * add zc_Movement_ProfitLossService
  22.01.14                                        * add IsMaster
  28.12.13                                        *
