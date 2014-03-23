@@ -25,7 +25,7 @@ BEGIN
 
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.ReportType = 'SaleTax'
+             AND PrintForms_View.ReportType = 'Tax'
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
