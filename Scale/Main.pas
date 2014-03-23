@@ -201,7 +201,7 @@ type
     BillDateEdit: TcxDateEdit;
     spTest: TdsdStoredProc;
     DataSource1: TDataSource;
-    ClientDataSet: TClientDataSet;
+    DataSetMI: TClientDataSet;
     procedure ButtonExportToEDIClick(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCreate(Sender: TObject);
@@ -257,7 +257,7 @@ end;
 procedure TMainForm.ButtonExportToEDIClick(Sender: TObject);
 begin
 // spTest.Execute;
- ShowMessage(GetDefaultValue('Scale_77','PriceList','PriceListCount','','2'));
+
 end;
 
 procedure TMainForm.ButtonNewGetParamsClick(Sender: TObject);

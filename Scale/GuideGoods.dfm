@@ -25,13 +25,11 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 656
-    ExplicitHeight = 257
     object DBGrid1: TDBGrid
       Left = 0
       Top = 33
-      Width = 656
-      Height = 224
+      Width = 664
+      Height = 225
       Align = alClient
       DataSource = DataSource
       Options = [dgTitles, dgIndicator, dgColumnResize, dgColLines, dgRowLines, dgTabs, dgRowSelect, dgAlwaysShowSelection, dgConfirmDelete, dgCancelOnExit]
@@ -46,7 +44,7 @@ object GuideGoodsForm: TGuideGoodsForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 656
+      Width = 664
       Height = 33
       Align = alTop
       BevelOuter = bvNone
@@ -118,7 +116,6 @@ object GuideGoodsForm: TGuideGoodsForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
-    ExplicitWidth = 656
     object TarePanel: TPanel
       Left = 244
       Top = 0
@@ -134,12 +131,14 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 62
         Align = alClient
         Caption = #1058#1072#1088#1072
+        Color = clBtnFace
         Columns = 2
         Font.Charset = DEFAULT_CHARSET
         Font.Color = clMaroon
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
+        ParentColor = False
         ParentFont = False
         TabOrder = 2
         OnClick = rgTareClick
@@ -227,12 +226,14 @@ object GuideGoodsForm: TGuideGoodsForm
           Height = 57
           Align = alClient
           Caption = #1057#1082#1080#1076#1082#1072' '#1087#1086' '#1074#1077#1089#1091
+          Color = clBtnFace
           Columns = 2
           Font.Charset = DEFAULT_CHARSET
           Font.Color = 8404992
           Font.Height = -11
           Font.Name = 'MS Sans Serif'
           Font.Style = []
+          ParentColor = False
           ParentFont = False
           TabOrder = 1
           OnClick = rgDiscountClick
@@ -318,12 +319,13 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 189
         Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1051#1080#1089#1090
-        Columns = 2
+        Color = clBtnFace
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 12615808
         Font.Height = -8
         Font.Name = 'MS Sans Serif'
         Font.Style = []
+        ParentColor = False
         ParentFont = False
         TabOrder = 1
         OnClick = rgPriceListClick
@@ -519,11 +521,13 @@ object GuideGoodsForm: TGuideGoodsForm
         Height = 189
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+        Color = clBtnFace
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 8404992
         Font.Height = -11
         Font.Name = 'MS Sans Serif'
         Font.Style = []
+        ParentColor = False
         ParentFont = False
         TabOrder = 1
         OnClick = rgKindPackageClick
@@ -572,8 +576,6 @@ object GuideGoodsForm: TGuideGoodsForm
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
-    ExplicitTop = 481
-    ExplicitWidth = 656
   end
   object DataSource: TDataSource
     DataSet = Query
