@@ -21,13 +21,13 @@ $BODY$BEGIN
        , Object_GoodsKind.ValueData AS GoodsKindName
 
    FROM Object
-   WHERE Object.DescId = zc_Object_GoodsKindWeighing();
    LEFT JOIN ObjectLink AS ObjectLink_GoodsKindWeighing_GoodsKind
                         ON ObjectLink_GoodsKindWeighing_GoodsKind.ObjectId = Object_Goods.Id
                        AND ObjectLink_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_Goods_Measure()
    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Goods_Measure.ChildObjectId
                                      AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
 
+   WHERE Object.DescId = zc_Object_GoodsKindWeighing();
 
 
 END;$BODY$
