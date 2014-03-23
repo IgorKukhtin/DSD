@@ -28,6 +28,7 @@ $BODY$BEGIN
                                      AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
    WHERE Object.DescId = zc_Object_GoodsKindWeighing();
 
+   WHERE Object.DescId = zc_Object_GoodsKindWeighing();
 
 
 END;$BODY$
