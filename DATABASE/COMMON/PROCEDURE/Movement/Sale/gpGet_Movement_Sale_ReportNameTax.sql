@@ -19,7 +19,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Sale());
 
        SELECT
-            COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_SaleTax')
+            COALESCE (PrintForms_View.PrintFormName, 'PrintMovement_Tax')
        INTO vbPrintFormName
        FROM Movement
 
