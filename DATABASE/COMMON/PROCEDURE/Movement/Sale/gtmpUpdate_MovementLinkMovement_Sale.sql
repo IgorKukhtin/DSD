@@ -57,7 +57,8 @@ BEGIN
                    JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-                                          AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                          AND (MovementLinkObject_Contract.ObjectId = vbContractId
+                                            OR (Movement.InvNumber = '137813' AND Movement.OperDate = '12.12.2013' :: TDateTime))
               WHERE Movement.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
                 AND Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                 AND Movement.DescId = zc_Movement_Sale()
