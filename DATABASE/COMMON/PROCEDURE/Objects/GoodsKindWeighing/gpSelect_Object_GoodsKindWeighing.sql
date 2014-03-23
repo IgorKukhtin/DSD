@@ -1,14 +1,14 @@
--- Function: gpSelect_Object_GoodsKindWeighing()
+п»ї-- Function: gpSelect_Object_GoodsKindWeighing()
 
 --DROP FUNCTION gpSelect_Object_GoodsKindWeighing();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsKindWeighing(
-    IN inSession     TVarChar            -- сессия пользователя
+    IN inSession     TVarChar            -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GoodsKindId Integer, GoodsKindName TVarChar) AS
 $BODY$BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
+   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKindWeighing());
 
    RETURN QUERY
@@ -26,6 +26,7 @@ $BODY$BEGIN
                        AND ObjectLink_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_Goods_Measure()
    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Goods_Measure.ChildObjectId
                                      AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
+   WHERE Object.DescId = zc_Object_GoodsKindWeighing();
 
    WHERE Object.DescId = zc_Object_GoodsKindWeighing();
 
@@ -39,11 +40,12 @@ ALTER FUNCTION gpSelect_Object_GoodsKindWeighing(TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ 23.03.14                                                         *
  21.03.14                                                         *
 
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpSelect_Object_GoodsKindWeighing('2')
