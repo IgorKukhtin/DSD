@@ -16,9 +16,10 @@ RETURNS TABLE ( ContractId Integer, Contract_InvNumber TVarChar
               , InfoMoneyName TVarChar
               , PaidKindName TVarChar
               , JuridicalName TVarChar
-              , Sum_Sale TFloat, Sum_SaleBonus TFloat
-              , Sum_SaleReturnIn TFloat, Sum_SaleReturnInBonus TFloat
-              , Sum_Account TFloat, Sum_AccountBonus TFloat
+              , Sum_Sale TFloat--, Sum_SaleBonus TFloat
+              , Sum_SaleReturnIn TFloat--, Sum_SaleReturnInBonus TFloat
+              , Sum_Account TFloat--, Sum_AccountBonus TFloat
+              , Sum_Bonus TFloat
               )  
 AS
 $BODY$
@@ -110,7 +111,7 @@ BEGIN
                                      , tmpContainer.PaidKindId
                                      , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN SUM(MIContainer.Amount) ELSE 0 END AS Sum_Sale
                                      , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN SUM(MIContainer.Amount) WHEN Movement.DescId = zc_Movement_ReturnIn() THEN SUM(MIContainer.Amount) ELSE 0 END AS Sum_SaleReturnIn
-                                     , CASE WHEN (Movement.DescId = zc_Movement_BankAccount() OR Movement.DescId = zc_Movement_Cash()) THEN SUM(MIContainer.Amount*(-1)) ELSE 0 END AS Sum_Account
+                                     , CASE WHEN ((Movement.DescId = zc_Movement_BankAccount() OR Movement.DescId = zc_Movement_Cash()) AND tmpContainer.InfoMoneyId = zc_Enum_InfoMoney_30101()) THEN SUM(MIContainer.Amount*(-1)) ELSE 0 END AS Sum_Account
                                      , Movement.DescId as MovementDescId
                                --      , Movement.invnumber
                                    FROM tmpContainer
@@ -142,12 +143,13 @@ BEGIN
               , Object_PaidKind.ValueData AS PaidKindName
               , Object_Juridical.ValueData AS JuridicalName
               , CAST (tmpMovement.Sum_Sale AS Tfloat) AS Sum_Sale
-              , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Sale/100 * tmpContract.Value ELSE 0 END  AS Tfloat) AS Sum_SaleBonus
               , CAST (tmpMovement.Sum_SaleReturnIn AS Tfloat) AS Sum_SaleReturnIn
-              , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) ELSE 0 END  AS Tfloat) AS Sum_SaleReturnInBonus
               , CAST (tmpMovement.Sum_Account AS Tfloat) AS Sum_Account
-              , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value) ELSE 0 END  AS Tfloat) AS Sum_AccountBonus
-              
+
+              , CAST (CASE WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN tmpMovement.Sum_Sale/100 * tmpContract.Value 
+                           WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentSaleReturn() THEN (tmpMovement.Sum_SaleReturnIn/100 * tmpContract.Value) 
+                           WHEN tmpContract.ContractConditionKindID = zc_Enum_ContractConditionKind_BonusPercentAccount() THEN (tmpMovement.Sum_Account/100 * tmpContract.Value)
+                      ELSE 0 END  AS Tfloat) AS Sum_Bonus
          FROM tmpContract
                JOIN tmpMovement ON tmpContract.JuridicalId = tmpMovement.JuridicalId
                                    AND tmpContract.ContractId = tmpMovement.ContractId
