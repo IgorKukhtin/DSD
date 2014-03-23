@@ -1010,27 +1010,34 @@ end;
 
 function TdsdChangeMovementStatus.LocalExecute: boolean;
 var lDataSet: TDataSet;
-    B: TBookmark;
+    ID: Integer;
+    IdField: TField;
 begin
-  B := DataSource.DataSet.GetBookmark;
-  try
-    result := inherited LocalExecute;
-    if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then begin
-       lDataSet := DataSource.DataSet;
-       // Что бы не вызывались события после на Post
-       DataSource.DataSet := nil;
-       try
-         lDataSet.Edit;
-         lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
-         lDataSet.Post;
-       finally
-         DataSource.DataSet := lDataSet;
-       end;
-    end;
-  finally
-    DataSource.DataSet.GotoBookmark(B);
-    DataSource.DataSet.FreeBookmark(B);
-  end;
+  if Assigned(DataSource.DataSet.FindField('Id')) then
+     IdField := DataSource.DataSet.FieldByName('Id');
+  if Assigned(DataSource.DataSet.FindField('MovementId')) then
+     IdField := DataSource.DataSet.FieldByName('MovementId');
+
+  if Assigned(IdField) then
+     Id := IdField.AsInteger
+  else
+     Id := 0;
+
+  result := inherited LocalExecute;
+
+  if result and Assigned(DataSource) and Assigned(DataSource.DataSet) then
+     if Assigned(IdField) AND DataSource.DataSet.Locate(IdField.FieldName, Id, []) then begin
+        lDataSet := DataSource.DataSet;
+         // Что бы не вызывались события после на Post
+         DataSource.DataSet := nil;
+         try
+           lDataSet.Edit;
+           lDataSet.FieldByName('StatusCode').AsInteger := Integer(Status) + 1;
+           lDataSet.Post;
+         finally
+           DataSource.DataSet := lDataSet;
+         end;
+     end;
 end;
 
 function TdsdChangeMovementStatus.GetDataSource: TDataSource;

@@ -472,7 +472,7 @@ object Report_AccountForm: TReport_AccountForm
     Width = 1189
     Height = 111
     Align = alTop
-    TabOrder = 5
+    TabOrder = 1
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
@@ -492,13 +492,13 @@ object Report_AccountForm: TReport_AccountForm
       Width = 85
     end
     object cxLabel2: TcxLabel
-      Left = 247
-      Top = 56
+      Left = 949
+      Top = 6
       Caption = #1057#1095#1077#1090':'
     end
     object edAccount: TcxButtonEdit
-      Left = 248
-      Top = 79
+      Left = 950
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
@@ -550,13 +550,13 @@ object Report_AccountForm: TReport_AccountForm
       Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
     end
     object cxLabel6: TcxLabel
-      Left = 8
-      Top = 56
+      Left = 728
+      Top = 6
       Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 8
-      Top = 79
+      Left = 728
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
@@ -566,12 +566,28 @@ object Report_AccountForm: TReport_AccountForm
       Width = 209
     end
     object cxLabel7: TcxLabel
-      Left = 494
-      Top = 58
+      Left = 728
+      Top = 56
       Caption = #1041#1080#1079#1085#1077#1089
     end
     object ceBusiness: TcxButtonEdit
-      Left = 494
+      Left = 728
+      Top = 79
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Width = 209
+    end
+    object cxLabel8: TcxLabel
+      Left = 10
+      Top = 56
+      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1080#1059
+    end
+    object ceProfitLossGroup: TcxButtonEdit
+      Left = 10
       Top = 79
       Properties.Buttons = <
         item
@@ -579,7 +595,55 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 217
+      Width = 207
+    end
+    object cxLabel9: TcxLabel
+      Left = 248
+      Top = 56
+      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1080#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+    end
+    object ceProfitLossDirection: TcxButtonEdit
+      Left = 248
+      Top = 79
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 229
+    end
+    object cxLabel11: TcxLabel
+      Left = 493
+      Top = 56
+      Caption = #1057#1090#1072#1090#1100#1103' '#1054#1055#1080#1059
+    end
+    object ceProfitLoss: TcxButtonEdit
+      Left = 493
+      Top = 78
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
+      Width = 218
+    end
+    object cxLabel10: TcxLabel
+      Left = 952
+      Top = 56
+      Caption = #1060#1080#1083#1080#1072#1083
+    end
+    object ceBranch: TcxButtonEdit
+      Left = 952
+      Top = 79
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 10
+      Width = 227
     end
   end
   object DataSource: TDataSource
@@ -840,6 +904,34 @@ object Report_AccountForm: TReport_AccountForm
         Component = BusinessGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossGroupId'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossId'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 152
     Top = 248
@@ -856,7 +948,7 @@ object Report_AccountForm: TReport_AccountForm
     Left = 312
     Top = 264
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 432
     Top = 232
   end
@@ -913,8 +1005,8 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 384
-    Top = 88
+    Left = 1016
+    Top = 40
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1099,8 +1191,8 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 85
+    Left = 840
+    Top = 37
   end
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
@@ -1126,7 +1218,110 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 568
+    Left = 776
+    Top = 104
+  end
+  object ProfitLossGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProfitLossGroup
+    FormNameParam.Value = 'TProfitLossGroupForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProfitLossGroupForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 136
+    Top = 85
+  end
+  object ProfitLossDirectionGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProfitLossDirection
+    FormNameParam.Value = 'TProfitLossDirectionForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProfitLossDirectionForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 392
+    Top = 101
+  end
+  object BranchGuides: TdsdGuides
+    KeyField = 'Id'
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBranchForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1056
     Top = 96
+  end
+  object ProfitLossGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceProfitLoss
+    FormNameParam.Value = 'TProfitLossForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TProfitLossForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 592
+    Top = 109
   end
 end
