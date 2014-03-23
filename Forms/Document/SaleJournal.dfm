@@ -112,9 +112,9 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberPartner_Child: TcxGridDBColumn [2]
+          object colInvNumberPartner_Master: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'InvNumberPartner_Child'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -616,9 +616,9 @@ inherited SaleJournalForm: TSaleJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'outDocumentChildName'
+        Name = 'outInvNumberPartner_Master'
         Component = MasterCDS
-        ComponentItem = 'DocumentChildName'
+        ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
       end
       item
