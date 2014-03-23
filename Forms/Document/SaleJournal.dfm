@@ -112,26 +112,35 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberOrder: TcxGridDBColumn [2]
-            Caption = #8470' '#1079#1072#1103#1074#1082#1080
-            DataBinding.FieldName = 'InvNumberOrder'
+          object colInvNumberPartner_Child: TcxGridDBColumn [2]
+            Caption = #8470' '#1076#1086#1082'.'#1085#1072#1083#1086#1075'.'
+            DataBinding.FieldName = 'InvNumberPartner_Child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object colInvNumberOrderTax: TcxGridDBColumn [3]
-            Caption = #8470' '#1085#1072#1083#1086#1075'.'
-            DataBinding.FieldName = 'DocumentChildName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
-          object colDocumentTaxKindName: TcxGridDBColumn [4]
-            Caption = #1058#1080#1087' '#1085#1072#1083'.'#1076#1086#1082'.'
+          object colDocumentTaxKindName: TcxGridDBColumn [3]
+            Caption = #1042#1080#1076' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
             DataBinding.FieldName = 'DocumentTaxKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object colInvNumberOrder: TcxGridDBColumn [4]
+            Caption = #8470' '#1076#1086#1082'.'#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumberOrder'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colInvNumberPartner: TcxGridDBColumn [5]
+            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
           end
           inherited colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
@@ -139,7 +148,7 @@ inherited SaleJournalForm: TSaleJournalForm
             Width = 50
           end
           object colOperDatePartner: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

@@ -1,5 +1,7 @@
+-- Int
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm, FromId_Postgres Integer, ToId_Postgres Integer
+result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
+     , FromId_Postgres Integer, ToId_Postgres Integer, ClientId Integer
      , PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
@@ -18,6 +20,7 @@ begin
 
      , FromId_Postgres Integer
      , ToId_Postgres Integer
+     , ClientId Integer
      , PaidKindId_Postgres Integer
      , CodeIM Integer
      , ContractNumber TVarCharMedium
@@ -31,7 +34,7 @@ begin
      , Id_Postgres integer
   ) on commit preserve rows;
 
-insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres
+insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
                     , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres)
 select Bill.Id as ObjectId
 
@@ -54,6 +57,8 @@ select Bill.Id as ObjectId
 
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
+     , Bill.ToId as ClientId
+
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
      , 30201 as CodeIM -- _pgInfoMoney.Id3_Postgres AS ContractId 
      , isnull (Contract.ContractNumber,'') as ContractNumber
@@ -95,7 +100,7 @@ from (select Bill.Id
      ) as Bill_find
 
      left outer join dba.Bill on Bill.Id = Bill_find.Id
-     left outer join (SELECT Unit.Id as ClientId, ContractKind_byHistory.ContractNumber
+     left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
                       from dba.Unit
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -105,8 +110,9 @@ from (select Bill.Id
                           on find2.ClientId = Unit.Id
                          and @inStartDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
-                      left outer join dba.ContractKind_byHistory on ContractKind_byHistory.Id = isnull (find1.Id, find2.Id)
-                     ) as Contract on Contract.ClientId = Bill.ToId
+                      group by Unit.Id
+                     ) as Contract_find on Contract_find.ClientId = Bill.ToId
+     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id
 
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId
@@ -160,6 +166,7 @@ from (select Bill.Id
         , isnull(_tmpList2.ChangePercent, _tmpList.ChangePercent)as ChangePercent
         , isnull(_tmpList2.FromId_Postgres, _tmpList.FromId_Postgres)as FromId_Postgres
         , isnull(_tmpList2.ToId_Postgres, _tmpList.ToId_Postgres)as ToId_Postgres
+        , _tmpList.ClientId as ClientId
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
         , isnull(_tmpList2.CodeIM, _tmpList.CodeIM)as CodeIM
         , isnull (_tmpList.ContractNumber, '') as ContractNumber
@@ -172,7 +179,7 @@ from (select Bill.Id
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, PaidKindId_Postgres
+   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres
    order by 3, 4, 1
    ;

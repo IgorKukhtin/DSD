@@ -675,6 +675,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckTaxCorrectiveForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckTaxCorrectiveForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

@@ -15,11 +15,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, OKPO_From TVarChar, ToId Integer, ToName TVarChar
+             , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , DocumentMasterId Integer, DocumentMasterName TVarChar
-             , DocumentChildId Integer, DocumentChildName TVarChar
+             , DocumentMasterId Integer, InvNumber_Master TVarChar
+             , DocumentChildId Integer, InvNumber_Child TVarChar
               )
 AS
 $BODY$
@@ -38,11 +39,11 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
      SELECT
-             Movement.Id								AS Id
-           , Movement.InvNumber							AS InvNumber
-           , Movement.OperDate							AS OperDate
-           , Object_Status.ObjectCode    				AS StatusCode
-           , Object_Status.ValueData     				AS StatusName
+             Movement.Id				AS Id
+           , Movement.InvNumber				AS InvNumber
+           , Movement.OperDate				AS OperDate
+           , Object_Status.ObjectCode    		AS StatusCode
+           , Object_Status.ValueData     		AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementBoolean_Document.ValueData         AS Document
            , MovementBoolean_Registered.ValueData       AS Registered
@@ -54,18 +55,21 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Object_From.Id                    			AS FromId
-           , Object_From.ValueData             			AS FromName
-           , Object_To.Id                      			AS ToId
-           , Object_To.ValueData               			AS ToName
-           , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
-           , Object_TaxKind.Id                			AS TaxKindId
-           , Object_TaxKind.ValueData         			AS TaxKindName
+           , Object_From.Id                    		AS FromId
+           , Object_From.ValueData             		AS FromName
+           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
+           , Object_To.Id                      		AS ToId
+           , Object_To.ValueData               		AS ToName
+           , Object_Partner.ObjectCode                  AS PartnerCode
+           , Object_Partner.ValueData               	AS PartnerName
+           , Object_Contract.ContractId        		AS ContractId
+           , Object_Contract.invnumber         		AS ContractName
+           , Object_TaxKind.Id                		AS TaxKindId
+           , Object_TaxKind.ValueData         		AS TaxKindName
            , Movement_DocumentMaster.Id                                    AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS DocumentMasterName
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS InvNumber_Master
            , Movement_DocumentChild.Id                                     AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS DocumentChildName
+           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS InvNumber_Child
 
 
 
@@ -127,16 +131,20 @@ BEGIN
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_From.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
@@ -154,7 +162,6 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
                                            ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
                                           AND MovementLinkMovement_DocumentMaster.DescId = zc_MovementLinkMovement_Master()
-
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_DocumentMaster.MovementChildId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
@@ -164,11 +171,7 @@ BEGIN
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
-
-            ;
-
-
+           ;
 
 END;
 $BODY$
@@ -178,6 +181,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.03.14                                        * add all
  03.03.14                                                        *
  10.02.14                                                        *
 */

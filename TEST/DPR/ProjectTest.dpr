@@ -365,7 +365,7 @@ uses
   ReturnOutMovementItemTest in '..\SOURCE\MovementItem\All\ReturnOutMovementItemTest.pas',
   ReturnOutJournal in '..\..\Forms\Document\ReturnOutJournal.pas' {ReturnOutJournalForm: TParentForm},
   ReturnOut in '..\..\Forms\Document\ReturnOut.pas' {ReturnOutForm: TParentForm},
-  Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm},
+  Report_CheckBonus in '..\..\Forms\Report\Report_CheckBonus.pas' {Report_CheckBonusForm: TParentForm},
   ServiceJournal in '..\..\Forms\Document\ServiceJournal.pas' {ServiceJournalForm: TParentForm},
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
@@ -387,7 +387,8 @@ uses
   WeighingProductionJournal in '..\..\Forms\Document\WeighingProductionJournal.pas' {WeighingProductionJournalForm: TParentForm},
   WeighingProduction in '..\..\Forms\Document\WeighingProduction.pas' {WeighingProductionForm: TParentForm},
   WeighingPartner in '..\..\Forms\Document\WeighingPartner.pas' {WeighingPartnerForm: TParentForm},
-  WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm};
+  WeighingPartnerJournal in '..\..\Forms\Document\WeighingPartnerJournal.pas' {WeighingPartnerJournalForm: TParentForm},
+  Report_CheckTax in '..\..\Forms\Report\Report_CheckTax.pas' {Report_CheckTaxForm: TParentForm};
 
 {$R *.RES}
 
