@@ -3,7 +3,7 @@ object AccountDirectionForm: TAccountDirectionForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077'>'
   ClientHeight = 450
-  ClientWidth = 354
+  ClientWidth = 451
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,13 +20,14 @@ object AccountDirectionForm: TAccountDirectionForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 354
+    Width = 451
     Height = 424
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 354
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -362,6 +363,8 @@ object AccountDirectionForm: TAccountDirectionForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 160
     Top = 208
   end

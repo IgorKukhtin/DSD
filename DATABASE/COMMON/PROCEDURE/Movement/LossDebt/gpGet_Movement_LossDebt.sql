@@ -59,8 +59,8 @@ BEGIN
            , Object_Business.Id              AS BusinesId
            , Object_Business.ValueData       AS BusinessName
 
-           , Object_Account.Id              AS AccountId
-           , Object_Account.ValueData       AS AccountName
+           , View_Account.AccountId
+           , View_Account.AccountName_all    AS AccountName
              
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -78,7 +78,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Account
                                          ON MovementLinkObject_Account.MovementId = Movement.Id
                                         AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
-            LEFT JOIN Object AS Object_Account ON Object_Account.Id = MovementLinkObject_Account.ObjectId
+            LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MovementLinkObject_Account.ObjectId
             
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_LossDebt();
@@ -93,6 +93,7 @@ ALTER FUNCTION gpGet_Movement_LossDebt (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.03.14                                        * add Object_Account_View
  06.03.14         * add Account
  25.01.14                                        * add inOperDate
  14.01.14                                        *

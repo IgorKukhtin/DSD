@@ -1,9 +1,9 @@
-object AccountGroupForm: TAccountGroupForm
+object ProfitLossGroupForm: TProfitLossGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074'>'
-  ClientHeight = 408
-  ClientWidth = 368
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1054#1055#1080#1059'>'
+  ClientHeight = 417
+  ClientWidth = 459
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,14 +20,18 @@ object AccountGroupForm: TAccountGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 368
-    Height = 382
+    Width = 459
+    Height = 391
     Align = alClient
     TabOrder = 0
+    LookAndFeel.Kind = lfStandard
+    LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
+    ExplicitWidth = 337
+    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -35,6 +39,7 @@ object AccountGroupForm: TAccountGroupForm
       Images = dmMain.SortImageList
       OptionsBehavior.IncSearch = True
       OptionsBehavior.IncSearchItem = clName
+      OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
@@ -50,20 +55,22 @@ object AccountGroupForm: TAccountGroupForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 75
+        Width = 52
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 458
+        Width = 286
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        Width = 70
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -72,14 +79,14 @@ object AccountGroupForm: TAccountGroupForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 32
-    Top = 112
+    Left = 48
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 136
-    Top = 88
+    Left = 40
+    Top = 152
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -93,8 +100,8 @@ object AccountGroupForm: TAccountGroupForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 288
-    Top = 72
+    Left = 280
+    Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -113,8 +120,8 @@ object AccountGroupForm: TAccountGroupForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 168
-    Top = 192
+    Left = 160
+    Top = 96
     DockControlHeights = (
       0
       0
@@ -166,9 +173,8 @@ object AccountGroupForm: TAccountGroupForm
           ItemName = 'dxBarStatic'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoiceGuide'
+          ItemName = 'bbChoiceGuides'
         end>
       OneOnRow = True
       Row = 0
@@ -196,25 +202,25 @@ object AccountGroupForm: TAccountGroupForm
       Action = dsdSetUnErased
       Category = 0
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '      '
-      Category = 0
-      Hint = '      '
-      Visible = ivAlways
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object bbChoiceGuide: TdxBarButton
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
+    end
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 264
-    Top = 120
+    Left = 280
+    Top = 152
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -233,7 +239,7 @@ object AccountGroupForm: TAccountGroupForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TAccountGroupEditForm'
+      FormName = 'TProfitLossGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
@@ -241,7 +247,7 @@ object AccountGroupForm: TAccountGroupForm
           Name = 'Id'
           Value = Null
         end>
-      isShowModal = False
+      isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
     end
@@ -250,7 +256,7 @@ object AccountGroupForm: TAccountGroupForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TAccountGroupEditForm'
+      FormName = 'TProfitLossGroupEditForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
       GuiParams = <
@@ -260,10 +266,24 @@ object AccountGroupForm: TAccountGroupForm
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
-      isShowModal = False
+      isShowModal = True
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+    end
+    object dsdSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -278,20 +298,6 @@ object AccountGroupForm: TAccountGroupForm
       ShortCut = 32776
       ErasedFieldName = 'isErased'
       isSetErased = False
-      DataSource = DataSource
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
@@ -322,27 +328,23 @@ object AccountGroupForm: TAccountGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_AccountGroup'
+    StoredProcName = 'gpSelect_Object_ProfitLossGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 112
-    Top = 152
+    Left = 40
+    Top = 208
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
-    Top = 160
+    Left = 160
+    Top = 152
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
+    DataSets = <>
     OutputType = otResult
     Params = <
       item
@@ -351,8 +353,8 @@ object AccountGroupForm: TAccountGroupForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 48
-    Top = 192
+    Left = 288
+    Top = 208
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -377,7 +379,7 @@ object AccountGroupForm: TAccountGroupForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
-    Left = 168
-    Top = 240
+    Left = 152
+    Top = 224
   end
 end

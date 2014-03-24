@@ -16,8 +16,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
-     vbUserId:= 5;
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_Params());
 
      -- проверка - проведенный/удаленный документ не может корректироваться
      IF ioId <> 0 AND NOT EXISTS (SELECT Id FROM Movement WHERE Id = ioId AND StatusId = zc_Enum_Status_UnComplete())
@@ -31,8 +30,8 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
+     -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement_Tax_Params(ioId, inInvNumber, inOperDate, inDateRegistered, inRegistered, inContractId, vbUserId);
-
 
 END;
 $BODY$
@@ -41,6 +40,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.03.14                                        * add zc_Enum_Process_InsertUpdate_Movement_Tax_Params
  09.02.14                                                        *
 */
 

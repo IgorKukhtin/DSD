@@ -1,4 +1,4 @@
-unit InfoMoney;
+unit AccountDirection_Object;
 
 interface
 
@@ -18,13 +18,12 @@ uses
   dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
   dxSkinXmas2008Blue, dxSkinscxPCPainter, cxCustomData, cxFilter, cxData,
   cxDataStorage, cxEdit, Data.DB, cxDBData, dxSkinsdxBarPainter, dsdAddOn,
-  dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
-  cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
-  cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  dsdDB, dsdAction, Vcl.ActnList, dxBar, cxClasses, cxPropertiesStore,
+  Datasnap.DBClient, cxGridLevel, cxGridCustomTableView, cxGridTableView,
+  cxGridDBTableView, cxGridCustomView, cxGrid, dxBarExtItems, cxCheckBox, DataModul;
 
 type
-  TInfoMoneyForm = class(TParentForm)
+  TAccountDirection_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -36,26 +35,15 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
-    bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clInfoMoneyGroup: TcxGridDBColumn;
-    clInfoMoneyDestination: TcxGridDBColumn;
+    dxBarStatic: TdxBarStatic;
+    bbChoiceGuides: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
   private
@@ -69,5 +57,6 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TInfoMoneyForm);
+  RegisterClass(TAccountDirection_ObjectForm);
+
 end.

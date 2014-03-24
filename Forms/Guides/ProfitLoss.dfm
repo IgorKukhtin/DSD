@@ -1,9 +1,9 @@
-object ProfitLossGroupForm: TProfitLossGroupForm
+object ProfitLossForm: TProfitLossForm
   Left = 0
   Top = 0
-  Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
-  ClientHeight = 361
-  ClientWidth = 337
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' >'
+  ClientHeight = 397
+  ClientWidth = 893
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,8 +20,8 @@ object ProfitLossGroupForm: TProfitLossGroupForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 337
-    Height = 335
+    Width = 893
+    Height = 371
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
@@ -30,6 +30,7 @@ object ProfitLossGroupForm: TProfitLossGroupForm
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
+      DataController.Filter.Options = [fcoCaseInsensitive]
       DataController.Filter.Active = True
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
@@ -45,29 +46,73 @@ object ProfitLossGroupForm: TProfitLossGroupForm
       OptionsData.Inserting = False
       OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 52
+        Width = 57
+      end
+      object clProfitLossGroup: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 155
+      end
+      object clProfitLossDirection: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 167
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 286
+        Width = 119
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyDestination: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 97
+      end
+      object clInfoMoney: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clOnComplete: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'onComplete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -77,13 +122,13 @@ object ProfitLossGroupForm: TProfitLossGroupForm
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 48
-    Top = 96
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 40
-    Top = 152
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -98,13 +143,13 @@ object ProfitLossGroupForm: TProfitLossGroupForm
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 280
-    Top = 96
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -118,7 +163,7 @@ object ProfitLossGroupForm: TProfitLossGroupForm
     ShowShortCutInHint = True
     UseSystemFont = True
     Left = 160
-    Top = 96
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -217,7 +262,7 @@ object ProfitLossGroupForm: TProfitLossGroupForm
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 280
-    Top = 152
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -236,7 +281,9 @@ object ProfitLossGroupForm: TProfitLossGroupForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TProfitLossGroupEditForm'
+      FormName = 'TProfitLossEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -251,7 +298,9 @@ object ProfitLossGroupForm: TProfitLossGroupForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TProfitLossGroupEditForm'
+      FormName = 'TProfitLossEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -321,7 +370,7 @@ object ProfitLossGroupForm: TProfitLossGroupForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ProfitLossGroup'
+    StoredProcName = 'gpSelect_Object_ProfitLoss'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -329,11 +378,11 @@ object ProfitLossGroupForm: TProfitLossGroupForm
       end>
     Params = <>
     Left = 40
-    Top = 208
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 160
-    Top = 152
+    Top = 160
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -370,7 +419,9 @@ object ProfitLossGroupForm: TProfitLossGroupForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 152
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    Left = 160
     Top = 224
   end
 end

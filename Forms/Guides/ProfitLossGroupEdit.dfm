@@ -1,9 +1,9 @@
-﻿object ProfitLossDirectionEditForm: TProfitLossDirectionEditForm
+﻿object ProfitLossGroupEditForm: TProfitLossGroupEditForm
   Left = 0
   Top = 0
-  Caption = #1053#1086#1074#1072#1103' '#1072#1085#1072#1083#1080#1090#1080#1082#1072
-  ClientHeight = 151
-  ClientWidth = 427
+  Caption = #1053#1086#1074#1072#1103' '#1075#1088#1091#1087#1087#1072
+  ClientHeight = 155
+  ClientWidth = 399
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -74,6 +74,7 @@
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
@@ -89,7 +90,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ProfitLossDirection'
+    StoredProcName = 'gpInsertUpdate_Object_ProfitLossGroup'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -113,7 +114,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 304
+    Left = 312
     Top = 56
   end
   object dsdFormParams: TdsdFormParams
@@ -127,7 +128,7 @@
     Top = 56
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_ProfitLossDirection'
+    StoredProcName = 'gpGet_Object_ProfitLossGroup'
     DataSets = <>
     OutputType = otResult
     Params = <

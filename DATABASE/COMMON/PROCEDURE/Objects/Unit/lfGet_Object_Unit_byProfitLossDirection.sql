@@ -44,7 +44,7 @@ BEGIN
 
             LEFT JOIN ObjectLink AS ObjectLink_Unit_ProfitLossDirection
                                  ON ObjectLink_Unit_ProfitLossDirection.ObjectId = CASE WHEN ObjectLink_Unit_Parent8.ChildObjectId IS NULL
-                                                                                            THEN NULL
+                                                                                            THEN Object_Unit.Id
                                                                                         WHEN ObjectLink_Unit_Parent7.ChildObjectId IS NULL
                                                                                             THEN ObjectLink_Unit_Parent8.ObjectId
                                                                                         WHEN ObjectLink_Unit_Parent6.ChildObjectId IS NULL
@@ -84,8 +84,9 @@ ALTER FUNCTION lfGet_Object_Unit_byProfitLossDirection (Integer) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.03.14                                        * add Level-0
  26.08.13                                        *
 */
 
 -- тест
--- SELECT * FROM lfGet_Object_Unit_byProfitLossDirection (19329)
+-- SELECT * FROM lfGet_Object_Unit_byProfitLossDirection (8432)

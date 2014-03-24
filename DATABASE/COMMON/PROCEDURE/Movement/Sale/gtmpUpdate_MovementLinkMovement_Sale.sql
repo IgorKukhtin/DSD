@@ -1,6 +1,5 @@
 -- Function: gtmpUpdate_MovementLinkMovement_Sale()
 
-DROP FUNCTION IF EXISTS gtmpUpdate_MovementLinkMovement_Child (Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gtmpUpdate_MovementLinkMovement_Sale (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gtmpUpdate_MovementLinkMovement_Sale(

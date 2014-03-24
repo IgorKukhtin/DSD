@@ -12,17 +12,16 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
 RETURNS TVarChar
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
-       SELECT Object_TaxKind.ValueData
-
-       INTO outDocumentTaxKindName
-
-       FROM Object AS Object_TaxKind
-       WHERE Object_TaxKind.Id = inDocumentTaxKindId;
+     -- чего-то там сделали
+     SELECT Object_TaxKind.ValueData
+            INTO outDocumentTaxKindName
+     FROM Object AS Object_TaxKind
+     WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
 END;
 $BODY$
