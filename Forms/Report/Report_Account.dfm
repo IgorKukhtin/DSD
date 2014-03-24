@@ -1112,6 +1112,58 @@ object Report_AccountForm: TReport_AccountForm
         Component = BusinessGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ProfitLossGroupId'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ProfitLossGroupName'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossId'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ProfitLossName'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BranchName'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 192
     Top = 160
@@ -1275,6 +1327,7 @@ object Report_AccountForm: TReport_AccountForm
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceBranch
     FormNameParam.Value = 'TBranchForm'
     FormNameParam.DataType = ftString
     FormName = 'TBranchForm'

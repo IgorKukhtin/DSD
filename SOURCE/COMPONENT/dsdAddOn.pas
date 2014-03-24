@@ -1632,9 +1632,9 @@ begin
       if PivotGrid.ViewData.Selection.FocusedCell.X = -1 then
          exit;
 
-      PivotGridViewDataItem := Columns[Selection.FocusedCell.X].Parent;
+      PivotGridViewDataItem := Columns[Selection.FocusedCell.X];
       while Assigned(PivotGridViewDataItem) do begin
-         if PivotGridViewDataItem.Value <> '' then
+         if (PivotGridViewDataItem.Value <> '') and (PivotGridViewDataItem.Field.Area <> faData) then
             List.Add(PivotGridViewDataItem.Value);
          PivotGridViewDataItem := PivotGridViewDataItem.Parent;
       end;
