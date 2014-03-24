@@ -405,7 +405,7 @@ uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
      cxGridDBBandedTableView, cxGridDBDataDefinitions,cxGridBandedTableView,
-     cxCustomPivotGrid;
+     cxCustomPivotGrid, Dialogs;
 
 type
 
@@ -813,10 +813,11 @@ procedure TdsdDBViewAddOn.lpSetFilter;
      result := nil;
      with FView.DataController.Filter.Root do
        for i := 0 to Count - 1 do
-           if TcxFilterCriteriaItem(Items[i]).ItemLink = ItemLink then begin
-              result := TcxFilterCriteriaItem(Items[i]);
-              exit;
-           end;
+           if Items[i] is TcxFilterCriteriaItem then
+              if TcxFilterCriteriaItem(Items[i]).ItemLink = ItemLink then begin
+                 result := TcxFilterCriteriaItem(Items[i]);
+                 exit;
+              end;
    end;
 var
   FilterCriteriaItem: TcxFilterCriteriaItem;
@@ -1634,7 +1635,7 @@ begin
 
       PivotGridViewDataItem := Columns[Selection.FocusedCell.X];
       while Assigned(PivotGridViewDataItem) do begin
-         if (PivotGridViewDataItem.Value <> '') and (PivotGridViewDataItem.Field.Area <> faData) then
+         if (PivotGridViewDataItem.Value <> '') and Assigned(PivotGridViewDataItem.Field) and (PivotGridViewDataItem.Field.Area <> faData) then
             List.Add(PivotGridViewDataItem.Value);
          PivotGridViewDataItem := PivotGridViewDataItem.Parent;
       end;

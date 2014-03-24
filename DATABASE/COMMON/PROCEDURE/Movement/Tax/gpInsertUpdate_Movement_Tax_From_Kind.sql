@@ -13,17 +13,59 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbDocumentName TVarChar;
+   DECLARE vbTaxId        Integer;
+   DECLARE vbUserId       Integer;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     
+       vbUserId := lpGetUserBySession(inSession);
 
-       SELECT '12345/789'
-            , Object_DocumentTaxKind.ValueData
-              INTO outInvNumberPartner_Master, outDocumentTaxKindName
-       FROM Object AS Object_DocumentTaxKind
-       WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
+       CASE inDocumentTaxKindId
+         WHEN zc_Enum_DocumentTaxKind_Tax() THEN BEGIN
+
+             SELECT MovementLinkMovement.ChildMovementId INTO vbTaxId 
+             FROM MovementLinkMovement 
+                  WHERE MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+                    AND MovementLinkMovement.MovementId = inMovementId;
+
+             IF COALESCE(vbTaxId, 0) = 0 THEN
+
+                SELECT NEXTVAL ('movement_tax_seq')::TVarChar INTO vbInvNumber;
+                vbInvNumberPartner := vbInvNumber;
+
+
+                SELECT lpInsertUpdate_Movement_Tax(
+                       ioId := 0
+                     , inInvNumber := vbInvNumber
+                     , inInvNumberPartner := vbInvNumberPartner
+                     , inOperDate := MovementSale.OperDate
+                     , inChecked := false
+                     , inDocument := false
+                     , inPriceWithVAT := MovementSale.PriceWithVAT
+                     , inVATPercent := MovementSale.VATPercent
+                     , inFromId := MovementSale.FromId
+                     , inToId := ObjectLink_Partner_Juridical.ChildObjectId
+                     , inPartnerId := MovementSale.ToId          Integer   , -- Контрагент
+                     , inContractId := MovementSale.ContractId
+                     , inDocumentTaxKindId := MovementSale.DocumentTaxKindId,
+                     , inUserId := vbUserId) INTO vbTaxId
+               FROM gpGet_Movement_Sale(inMovementId, Today(*), inSession) AS MovementSale
+               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementSale.ToId
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical();
+          END IF;
+       END;
+
+       ESLE
+
+          SELECT '12345/789'
+              , Object_DocumentTaxKind.ValueData
+                INTO outInvNumberPartner_Master, outDocumentTaxKindName
+         FROM Object AS Object_DocumentTaxKind
+         WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
+      END;
 
 END;
 $BODY$
