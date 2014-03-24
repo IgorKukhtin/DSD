@@ -13,17 +13,17 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbDocumentName TVarChar;
+   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
-       SELECT '12345/789'
-            , Object_DocumentTaxKind.ValueData
-              INTO outInvNumberPartner_Master, outDocumentTaxKindName
-       FROM Object AS Object_DocumentTaxKind
-       WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
+     -- чего-то там сделали
+     SELECT '12345/789'
+          , Object_DocumentTaxKind.ValueData
+            INTO outInvNumberPartner_Master, outDocumentTaxKindName
+     FROM Object AS Object_DocumentTaxKind
+     WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
 
 END;
 $BODY$

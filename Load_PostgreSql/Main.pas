@@ -11171,6 +11171,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('37672913')
            +'                         ,'+FormatToVarCharServer_notNULL('38722196')
            +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('37060369')// Œœ≈… ¿* “ƒ “Œ¬ ‰Ó„.385 01.06.2013 ÍÓ‚·.
            +'                         ,'+FormatToVarCharServer_notNULL('32967633')
            +'                         ,'+FormatToVarCharServer_notNULL('37470510')
            +'                         ,'+FormatToVarCharServer_notNULL('38157537')
@@ -11563,6 +11564,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('37672913')
            +'                         ,'+FormatToVarCharServer_notNULL('38722196')
            +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('37060369')// Œœ≈… ¿* “ƒ “Œ¬ ‰Ó„.385 01.06.2013 ÍÓ‚·.
            +'                         ,'+FormatToVarCharServer_notNULL('32967633')
            +'                         ,'+FormatToVarCharServer_notNULL('37470510')
            +'                         ,'+FormatToVarCharServer_notNULL('38157537')
@@ -11700,6 +11702,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('37672913')
            +'                         ,'+FormatToVarCharServer_notNULL('38722196')
            +'                         ,'+FormatToVarCharServer_notNULL('37678707')
+           +'                         ,'+FormatToVarCharServer_notNULL('37060369')// Œœ≈… ¿* “ƒ “Œ¬ ‰Ó„.385 01.06.2013 ÍÓ‚·.
            +'                         ,'+FormatToVarCharServer_notNULL('32967633')
            +'                         ,'+FormatToVarCharServer_notNULL('37470510')
            +'                         ,'+FormatToVarCharServer_notNULL('38157537')
