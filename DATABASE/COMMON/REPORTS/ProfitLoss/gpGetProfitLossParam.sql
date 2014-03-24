@@ -71,13 +71,34 @@ BEGIN
             EXECUTE 'SELECT '||chr(39)||split_part(vbData, '=', 2)||chr(39) INTO vbValue;
 
             CASE vbKey
+                WHEN 'profitlossgroupname' THEN
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbProfitLossGroupId, vbProfitLossGroupName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_ProfitLossGroup() AND ObjectCode = vbCode::Integer;
+                   END;
+                WHEN 'profitlossdirectionname' THEN
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbProfitLossDirectionId, vbProfitLossDirectionName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_ProfitLossDirection() AND ObjectCode = vbCode::Integer;
+                   END;
+                WHEN 'profitlossname' THEN 
+                   BEGIN
+                      vbCode := split_part(vbValue, ' ', 1);
+                      SELECT Id, ValueData INTO vbProfitLossId, vbProfitLossName 
+                        FROM Object 
+                       WHERE DescId = zc_Object_ProfitLoss() AND ObjectCode = vbCode::Integer;
+                   END; 
                 WHEN 'businessname' THEN 
                    BEGIN
                       SELECT Id, ValueData INTO vbBusinessId, vbBusinessName 
                         FROM Object 
                        WHERE DescId = zc_Object_Business() AND ValueData = vbValue;
                    END; 
-                WHEN 'branchname' THEN 
+                WHEN 'branchname_profitloss' THEN 
                    BEGIN
                       SELECT Id, ValueData INTO vbBranchId, vbBranchName 
                         FROM Object 

@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_Account (
     IN inAccountId              Integer ,
     IN inBusinessId             Integer ,
     IN inProfitLossGroupId      Integer ,
-    IN inProfitLossDeirectionId Integer , 
+    IN inProfitLossDirectionId  Integer , 
     IN inProfitLossId           Integer ,
     IN inBranchId               Integer ,
     IN inSession                TVarChar    -- сессия пользователя
@@ -257,6 +257,8 @@ BEGIN
                                                                               AND MIContainer_Count.DescId = zc_MIContainer_Count()
                                                                               AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
 
+
+                      WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                      GROUP BY tmpContainer.ContainerId
                             , tmpContainer.AccountId
                             , ReportContainerLink.AccountKindId
@@ -413,6 +415,9 @@ BEGIN
                            AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
        LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
+    WHERE (View_ProfitLoss_inf.ProfitLossGroupId = inProfitLossGroupId OR 0 = inProfitLossGroupId)
+      AND (View_ProfitLoss_inf.ProfitLossDirectionId = inProfitLossDirectionId OR 0 = inProfitLossDirectionId)
+      AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
     ;
 
 END;

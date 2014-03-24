@@ -18,7 +18,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1329
     Height = 31
     Align = alTop
@@ -313,7 +313,127 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41548d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41578d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountId'
+        end
+        item
+          Name = 'AccountName'
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+        end
+        item
+          Name = 'AccountDirectionName'
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'BusinessId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+        end
+        item
+          Name = 'BusinessName'
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupId'
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionId'
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossId'
+        end
+        item
+          Name = 'ProfitLossName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = FormParams
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end>
       isShowModal = False
     end
     object dsdExecStoredProc1: TdsdExecStoredProc
@@ -369,119 +489,132 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       item
         Name = 'RootType'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'RootType'
       end
       item
         Name = 'AccountGroupId'
-        Value = ''
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'AccountGroupId'
       end
       item
         Name = 'AccountGroupName'
-        Value = ''
+        Component = FormParams
         ComponentItem = 'AccountGroupName'
         DataType = ftString
       end
       item
         Name = 'AccountDirectionId'
-        Value = ''
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'AccountDirectionId'
       end
       item
         Name = 'AccountDirectionName'
-        Value = ''
+        Component = FormParams
         ComponentItem = 'AccountDirectionName'
         DataType = ftString
       end
       item
         Name = 'AccountId'
-        Value = ''
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'AccountId'
       end
       item
         Name = 'AccountName'
-        Value = ''
+        Component = FormParams
         ComponentItem = 'AccountName'
         DataType = ftString
       end
       item
         Name = 'InfoMoneyId'
-        Value = ''
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'InfoMoneyId'
       end
       item
         Name = 'InfoMoneyName'
-        Value = ''
+        Component = FormParams
         ComponentItem = 'InfoMoneyName'
         DataType = ftString
       end
       item
         Name = 'ObjectDirectionId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'ObjectDirectionId'
       end
       item
         Name = 'ObjectDestinationId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'ObjectDestinationId'
       end
       item
         Name = 'JuridicalBasisId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'JuridicalBasisId'
       end
       item
         Name = 'BusinessId'
-        Value = ''
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'BusinessId'
       end
       item
         Name = 'BusinessName'
-        Value = ''
+        Component = FormParams
         ComponentItem = 'BusinessName'
         DataType = ftString
       end
       item
         Name = 'ProfitLossGroupId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'ProfitLossGroupId'
       end
       item
         Name = 'ProfitLossGroupName'
-        Value = Null
+        Component = FormParams
         ComponentItem = 'ProfitLossGroupName'
         DataType = ftString
       end
       item
         Name = 'ProfitLossDirectionId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'ProfitLossDirectionId'
       end
       item
         Name = 'ProfitLossDirectionName'
-        Value = Null
+        Component = FormParams
         ComponentItem = 'ProfitLossDirectionName'
         DataType = ftString
       end
       item
         Name = 'ProfitLossId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'ProfitLossId'
       end
       item
         Name = 'ProfitLossName'
-        Value = Null
+        Component = FormParams
         ComponentItem = 'ProfitLossName'
         DataType = ftString
       end
       item
         Name = 'BranchId'
         Value = '0'
+        Component = FormParams
         ComponentItem = 'BranchId'
       end
       item
         Name = 'BranchName'
-        Value = Null
+        Component = FormParams
         ComponentItem = 'BranchName'
         DataType = ftString
       end>
@@ -507,47 +640,42 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Params = <
       item
         Name = 'AccountId'
-        Value = Null
+        Value = '0'
       end
       item
         Name = 'AccountName'
-        Value = Null
         DataType = ftString
       end
       item
         Name = 'AccountGroupId'
-        Value = Null
+        Value = '0'
       end
       item
         Name = 'AccountGroupName'
-        Value = Null
         DataType = ftString
       end
       item
         Name = 'AccountDirectionId'
-        Value = Null
+        Value = '0'
       end
       item
         Name = 'AccountDirectionName'
-        Value = Null
         DataType = ftString
       end
       item
         Name = 'InfoMoneyId'
-        Value = Null
+        Value = '0'
       end
       item
         Name = 'InfoMoneyName'
-        Value = Null
         DataType = ftString
       end
       item
         Name = 'BusinessId'
-        Value = Null
+        Value = '0'
       end
       item
         Name = 'BusinessName'
-        Value = Null
         DataType = ftString
       end>
     Left = 360
