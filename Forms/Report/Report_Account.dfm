@@ -480,24 +480,24 @@ object Report_AccountForm: TReport_AccountForm
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
-      Width = 91
+      Width = 100
     end
     object deEnd: TcxDateEdit
-      Left = 132
-      Top = 29
+      Left = 10
+      Top = 79
       EditValue = 41639d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 85
+      Width = 100
     end
     object cxLabel2: TcxLabel
-      Left = 949
+      Left = 497
       Top = 6
-      Caption = #1057#1095#1077#1090':'
+      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 950
+      Left = 497
       Top = 29
       Properties.Buttons = <
         item
@@ -505,7 +505,7 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 229
+      Width = 240
     end
     object cxLabel1: TcxLabel
       Left = 10
@@ -513,17 +513,17 @@ object Report_AccountForm: TReport_AccountForm
       Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel3: TcxLabel
-      Left = 132
-      Top = 6
+      Left = 10
+      Top = 56
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
     object cxLabel4: TcxLabel
-      Left = 247
+      Left = 129
       Top = 6
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1095#1077#1090#1086#1074
+      Caption = #1057#1095#1077#1090' '#1075#1088#1091#1087#1087#1072
     end
     object ceAccountGroup: TcxButtonEdit
-      Left = 248
+      Left = 129
       Top = 29
       Properties.Buttons = <
         item
@@ -531,10 +531,10 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 229
+      Width = 170
     end
     object ceAccountDirection: TcxButtonEdit
-      Left = 494
+      Left = 310
       Top = 29
       Properties.Buttons = <
         item
@@ -542,20 +542,20 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 217
+      Width = 180
     end
     object cxLabel5: TcxLabel
-      Left = 494
+      Left = 310
       Top = 6
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103' '
+      Caption = #1057#1095#1077#1090' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077':'
     end
     object cxLabel6: TcxLabel
-      Left = 728
+      Left = 746
       Top = 6
-      Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
     end
     object ceInfoMoney: TcxButtonEdit
-      Left = 728
+      Left = 746
       Top = 29
       Properties.Buttons = <
         item
@@ -563,15 +563,15 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 209
+      Width = 200
     end
     object cxLabel7: TcxLabel
-      Left = 728
+      Left = 954
       Top = 56
       Caption = #1041#1080#1079#1085#1077#1089
     end
     object ceBusiness: TcxButtonEdit
-      Left = 728
+      Left = 954
       Top = 79
       Properties.Buttons = <
         item
@@ -579,15 +579,15 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 209
+      Width = 132
     end
     object cxLabel8: TcxLabel
-      Left = 10
+      Left = 129
       Top = 56
-      Caption = #1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1080#1059
+      Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
     end
     object ceProfitLossGroup: TcxButtonEdit
-      Left = 10
+      Left = 129
       Top = 79
       Properties.Buttons = <
         item
@@ -595,15 +595,15 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 207
+      Width = 170
     end
     object cxLabel9: TcxLabel
-      Left = 248
+      Left = 310
       Top = 56
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1080#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1103
+      Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
     end
     object ceProfitLossDirection: TcxButtonEdit
-      Left = 248
+      Left = 310
       Top = 79
       Properties.Buttons = <
         item
@@ -611,31 +611,31 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 229
+      Width = 180
     end
     object cxLabel11: TcxLabel
-      Left = 493
+      Left = 497
       Top = 56
-      Caption = #1057#1090#1072#1090#1100#1103' '#1054#1055#1080#1059
+      Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
     end
     object ceProfitLoss: TcxButtonEdit
-      Left = 493
-      Top = 78
+      Left = 497
+      Top = 79
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 218
+      Width = 240
     end
     object cxLabel10: TcxLabel
-      Left = 952
+      Left = 746
       Top = 56
       Caption = #1060#1080#1083#1080#1072#1083
     end
     object ceBranch: TcxButtonEdit
-      Left = 952
+      Left = 746
       Top = 79
       Properties.Buttons = <
         item
@@ -643,7 +643,7 @@ object Report_AccountForm: TReport_AccountForm
           Kind = bkEllipsis
         end>
       TabOrder = 10
-      Width = 227
+      Width = 200
     end
   end
   object DataSource: TDataSource
@@ -691,8 +691,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -979,8 +979,8 @@ object Report_AccountForm: TReport_AccountForm
       item
         Component = BusinessGuides
       end>
-    Left = 328
-    Top = 64
+    Left = 432
+    Top = 136
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -1005,8 +1005,8 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1016
-    Top = 40
+    Left = 624
+    Top = 24
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -1171,9 +1171,9 @@ object Report_AccountForm: TReport_AccountForm
   object AccountGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountGroup
-    FormNameParam.Value = 'TAccountGroupForm'
+    FormNameParam.Value = 'TAccountGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountGroupForm'
+    FormName = 'TAccountGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1191,15 +1191,15 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 288
+    Left = 216
     Top = 37
   end
   object AccountDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountDirection
-    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.Value = 'TAccountDirection_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountDirectionForm'
+    FormName = 'TAccountDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1217,8 +1217,8 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 536
-    Top = 37
+    Left = 408
+    Top = 29
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -1249,9 +1249,9 @@ object Report_AccountForm: TReport_AccountForm
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
-    FormNameParam.Value = 'TBusinessForm'
+    FormNameParam.Value = 'TBusiness_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBusinessForm'
+    FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <
@@ -1270,15 +1270,15 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 104
+    Left = 984
+    Top = 96
   end
   object ProfitLossGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossGroup
-    FormNameParam.Value = 'TProfitLossGroupForm'
+    FormNameParam.Value = 'TProfitLossGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TProfitLossGroupForm'
+    FormName = 'TProfitLossGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1296,15 +1296,15 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 136
+    Left = 216
     Top = 85
   end
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossDirection
-    FormNameParam.Value = 'TProfitLossDirectionForm'
+    FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TProfitLossDirectionForm'
+    FormName = 'TProfitLossDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1322,15 +1322,15 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 392
-    Top = 101
+    Left = 408
+    Top = 85
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
+    FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1348,15 +1348,15 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 1056
-    Top = 96
+    Left = 816
+    Top = 88
   end
   object ProfitLossGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLoss
-    FormNameParam.Value = 'TProfitLossForm'
+    FormNameParam.Value = 'TProfitLoss_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TProfitLossForm'
+    FormName = 'TProfitLoss_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1374,7 +1374,7 @@ object Report_AccountForm: TReport_AccountForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 592
-    Top = 109
+    Left = 600
+    Top = 77
   end
 end

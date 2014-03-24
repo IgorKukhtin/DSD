@@ -3529,7 +3529,10 @@ begin
         Add('                                                                    WHEN _pgUnit.ObjectCode in (31070) THEN 20801'); // Запасы + на упаковке
         Add('                                                                    WHEN _pgUnit.ObjectCode in (31060) or _pgUnit_parent.ObjectCode in (31060) THEN 20401'); // Запасы + на производстве
         Add('                                                                END');
-        Add('     left outer join dba._pgProfitLoss on _pgProfitLoss.ObjectCode = CASE WHEN _pgUnit.ObjectCode in (11000) THEN 30101'); // Содержание админ
+        Add('     left outer join dba._pgProfitLoss on _pgProfitLoss.ObjectCode = CASE WHEN _pgUnit.ObjectCode in (10000) THEN 30401'); // Административные расходы + Коммунальные услуги
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (30000) THEN 20601'); // Общепроизводственные расходы + Коммунальные услуги
+
+        Add('                                                                          WHEN _pgUnit.ObjectCode in (11000) THEN 30101'); // Содержание админ
         Add('                                                                          WHEN _pgUnit.ObjectCode in (12000) THEN 30201'); // админ + Содержание транспорта
         Add('                                                                          WHEN _pgUnit.ObjectCode in (13000) THEN 30301'); // Содержание охраны
         Add('                                                                          WHEN _pgUnit.ObjectCode in (21000) THEN 40101'); // Сбыт  + Содержание транспорта

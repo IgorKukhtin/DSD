@@ -1,9 +1,9 @@
-object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
+object ProfitLoss_ObjectForm: TProfitLoss_ObjectForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103'>'
-  ClientHeight = 363
-  ClientWidth = 418
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' >'
+  ClientHeight = 397
+  ClientWidth = 893
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,13 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 418
-    Height = 337
+    Width = 893
+    Height = 371
     Align = alClient
     TabOrder = 0
+    LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
+    LookAndFeel.SkinName = ''
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,31 +44,75 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       OptionsData.DeletingConfirmation = False
       OptionsData.Editing = False
       OptionsData.Inserting = False
-      OptionsView.CellAutoHeight = True
+      OptionsSelection.InvertSelect = False
       OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 45
+        Width = 57
+      end
+      object clProfitLossGroup: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1075#1088#1091#1087#1087#1072
+        DataBinding.FieldName = 'ProfitLossGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 155
+      end
+      object clProfitLossDirection: TcxGridDBColumn
+        Caption = #1054#1055#1080#1059' '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ProfitLossDirectionName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 167
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
+        Caption = #1054#1055#1080#1059' '#1089#1090#1072#1090#1100#1103
         DataBinding.FieldName = 'Name'
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 241
+        Width = 119
+      end
+      object clInfoMoneyGroupName: TcxGridDBColumn
+        Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyGroupName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clInfoMoneyDestination: TcxGridDBColumn
+        Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+        DataBinding.FieldName = 'InfoMoneyDestinationName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 97
+      end
+      object clInfoMoney: TcxGridDBColumn
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clOnComplete: TcxGridDBColumn
+        Caption = '***'
+        DataBinding.FieldName = 'onComplete'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 25
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 50
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -75,22 +121,17 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 96
+    Left = 48
+    Top = 104
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 64
+    Left = 40
     Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
-      item
-        Component = clName
-        Properties.Strings = (
-          'Width')
-      end
       item
         Component = Owner
         Properties.Strings = (
@@ -101,14 +142,14 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 248
-    Top = 72
+    Left = 280
+    Top = 104
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -121,8 +162,8 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 152
-    Top = 88
+    Left = 160
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -142,27 +183,6 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic1'
-        end
-        item
-          BeginGroup = True
-          Visible = True
           ItemName = 'bbRefresh'
         end
         item
@@ -171,7 +191,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic1'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -187,30 +207,14 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       Action = actRefresh
       Category = 0
     end
-    object bbInsert: TdxBarButton
-      Action = actInsert
-      Category = 0
-    end
-    object bbEdit: TdxBarButton
-      Action = actUpdate
-      Category = 0
-    end
-    object bbSetErased: TdxBarButton
-      Action = dsdSetErased
-      Category = 0
-    end
-    object bbSetUnErased: TdxBarButton
-      Action = dsdSetUnErased
-      Category = 0
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
     end
-    object dxBarStatic1: TdxBarStatic
-      Caption = '    '
+    object dxBarStatic: TdxBarStatic
+      Caption = '     '
       Category = 0
-      Hint = '    '
+      Hint = '     '
       Visible = ivAlways
     end
     object bbChoiceGuides: TdxBarButton
@@ -220,8 +224,8 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 248
-    Top = 136
+    Left = 280
+    Top = 160
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -234,68 +238,6 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       ImageIndex = 4
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TInfoMoneyDestinationEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end>
-      isShowModal = False
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
-    object actUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TInfoMoneyDestinationEditForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = ClientDataSet
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = DataSource
-      DataSetRefresh = actRefresh
-    end
-    object dsdSetErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1059#1076#1072#1083#1080#1090#1100
-      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 2
-      ShortCut = 46
-      ErasedFieldName = 'isErased'
-      DataSource = DataSource
-    end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 8
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -310,12 +252,10 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
-          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-      DataSource = DataSource
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
@@ -327,31 +267,17 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_InfoMoneyDestination'
+    StoredProcName = 'gpSelect_Object_ProfitLoss'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 216
-    Top = 224
+    Left = 40
+    Top = 216
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 208
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 160
     Top = 160
   end
@@ -363,7 +289,6 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         Action = dsdChoiceGuides
       end
       item
-        Action = actUpdate
       end>
     ActionItemList = <
       item
@@ -371,12 +296,13 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         ShortCut = 13
       end
       item
-        Action = actUpdate
         ShortCut = 13
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 360
-    Top = 192
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    Left = 160
+    Top = 224
   end
 end
