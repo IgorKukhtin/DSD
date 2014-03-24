@@ -326,6 +326,35 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       Category = 0
     end
   end
+  inherited PopupMenu: TPopupMenu
+    inherited N3: TMenuItem
+      Visible = False
+    end
+    inherited N2: TMenuItem
+      Visible = False
+    end
+    inherited N4: TMenuItem
+      Visible = False
+    end
+    inherited N5: TMenuItem
+      Visible = False
+    end
+    inherited N7: TMenuItem
+      Visible = False
+    end
+    inherited N9: TMenuItem
+      Visible = False
+    end
+    inherited N10: TMenuItem
+      Visible = False
+    end
+    inherited N11: TMenuItem
+      Visible = False
+    end
+    inherited N12: TMenuItem
+      Visible = False
+    end
+  end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankStatement'
   end

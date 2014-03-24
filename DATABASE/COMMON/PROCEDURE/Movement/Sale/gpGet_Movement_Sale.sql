@@ -21,7 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteSortingId Integer, RouteSortingName TVarChar, InvNumberOrder TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
-             , DocumentChildId Integer, DocumentChildName TVarChar
+             , MovementId_Master Integer, InvNumberPartner_Master TVarChar
               )
 AS
 $BODY$
@@ -36,36 +36,36 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
-             , inOperDate						 	        AS OperDate
+             , inOperDate				        AS OperDate
              , Object_Status.Code               	        AS StatusCode
              , Object_Status.Name              		        AS StatusName
-             , CAST (False as Boolean)         		        AS Checked
-             , inOperDate				      		        AS OperDatePartner
-             , CAST ('' as TVarChar)                        AS InvNumberPartner
-             , CAST (False as Boolean)                      AS PriceWithVAT
-             , CAST (20 as TFloat)                          AS VATPercent
-             , CAST (0 as TFloat)                           AS ChangePercent
-             , CAST (0 as TFloat)                           AS TotalCount
-             , CAST (0 as TFloat)                           AS TotalSummMVAT
-             , CAST (0 as TFloat)                           AS TotalSummPVAT
-             , CAST (0 as TFloat)                           AS TotalSumm
+             , CAST (FALSE AS Boolean)         		        AS Checked
+             , inOperDate			     	        AS OperDatePartner
+             , CAST ('' AS TVarChar)                        AS InvNumberPartner
+             , CAST (False AS Boolean)                      AS PriceWithVAT
+             , CAST (20 AS TFloat)                          AS VATPercent
+             , CAST (0 AS TFloat)                           AS ChangePercent
+             , CAST (0 AS TFloat)                           AS TotalCount
+             , CAST (0 AS TFloat)                           AS TotalSummMVAT
+             , CAST (0 AS TFloat)                           AS TotalSummPVAT
+             , CAST (0 AS TFloat)                           AS TotalSumm
              , 0                     				        AS FromId
-             , CAST ('' as TVarChar) 				        AS FromName
+             , CAST ('' AS TVarChar) 				        AS FromName
              , 0                     				        AS ToId
-             , CAST ('' as TVarChar) 				        AS ToName
+             , CAST ('' AS TVarChar) 				        AS ToName
              , 0                     				        AS PaidKindId
-             , CAST ('' as TVarChar) 				        AS PaidKindName
+             , CAST ('' AS TVarChar) 				        AS PaidKindName
              , 0                     				        AS ContractId
-             , CAST ('' as TVarChar) 				        AS ContractName
+             , CAST ('' AS TVarChar) 				        AS ContractName
              , 0                     				        AS RouteSortingId
-             , CAST ('' as TVarChar) 				        AS RouteSortingName
-             , CAST ('' as TVarChar) 				        AS InvNumberOrder
-             , CAST (0  as INTEGER)                         AS PriceListId
-             , CAST ('' as TVarChar) 				        AS PriceListName
+             , CAST ('' AS TVarChar) 				        AS RouteSortingName
+             , CAST ('' AS TVarChar) 				        AS InvNumberOrder
+             , CAST (0  AS INTEGER)                                     AS PriceListId
+             , CAST ('' AS TVarChar) 				        AS PriceListName
              , 0                     				        AS DocumentTaxKindId
-             , CAST ('' as TVarChar) 				        AS DocumentTaxKindName
-             , 0                     				        AS DocumentChildId
-             , CAST ('' as TVarChar) 				        AS DocumentChildName
+             , CAST ('' AS TVarChar) 				        AS DocumentTaxKindName
+             , 0                     				        AS MovementId_Master
+             , CAST ('' AS TVarChar) 				        AS InvNumberPartner_Master
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -100,11 +100,10 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
-           , Object_TaxKind.Id                			    AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         			    AS DocumentTaxKindName
-           , Movement_DocumentChild.Id                      AS DocumentChildId
-           , MS_DocumentChild_InvNumberPartner.ValueData    AS DocumentChildName
-
+           , Object_TaxKind.Id                		    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+           , Movement_Master.Id                             AS MovementId_Master
+           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -193,14 +192,12 @@ BEGIN
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
-                                           ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
-                                          AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
-            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
-                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementLinkMovement_Master.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
 
 -- PriceList Partner
          LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
@@ -256,6 +253,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  13.02.14                                                        * add DocumentChild, DocumentTaxKind
  31.01.14                                                        * add PriceList
  30.01.14                                                        * add inInvNumberPartner

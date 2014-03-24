@@ -21,7 +21,7 @@ BEGIN
      IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
      THEN
          -- сформировали одну связь
-         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), inMovementId, inMovementChildId);
+         PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), inMovementId, inMovementChildId);
      ELSE
          -- определили параметры
          SELECT DATE_TRUNC ('Month', Movement.OperDate) -- '01.12.2013' :: TDateTime
@@ -45,8 +45,12 @@ BEGIN
          IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
          THEN 
               -- сформировали связь для всех по юр лицу
-              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), Movement.Id, inMovementChildId)
+              PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), Movement.Id, inMovementChildId)
               FROM Movement 
+                   JOIN MovementLinkObject AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                          AND MovementLinkObject_From.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                    JOIN MovementLinkObject AS MovementLinkObject_To
                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -69,8 +73,12 @@ BEGIN
              IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
              THEN 
                  -- сформировали связь для всех по контрагенту
-                 PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Child(), Movement.Id, inMovementChildId)
+                 PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), Movement.Id, inMovementChildId)
                  FROM Movement 
+                      JOIN MovementLinkObject AS MovementLinkObject_From
+                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                             AND MovementLinkObject_From.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                       JOIN MovementLinkObject AS MovementLinkObject_To
                                               ON MovementLinkObject_To.MovementId = Movement.Id
                                              AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -97,6 +105,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  19.03.14                                        * add vbContractId
  16.03.14                                        * эта процка только для Load_PostgreSql
 */

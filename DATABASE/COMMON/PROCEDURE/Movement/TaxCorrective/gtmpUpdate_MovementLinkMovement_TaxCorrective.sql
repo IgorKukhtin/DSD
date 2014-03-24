@@ -53,6 +53,10 @@ BEGIN
               -- сохранили связь с <Тип формирования налогового документа> у inMovementMasterId
               PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement.Id, inDocumentTaxKindId)
               FROM Movement 
+                   JOIN MovementLinkObject AS MovementLinkObject_To
+                                           ON MovementLinkObject_To.MovementId = Movement.Id
+                                          AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                          AND MovementLinkObject_To.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                    JOIN MovementLinkObject AS MovementLinkObject_From
                                            ON MovementLinkObject_From.MovementId = Movement.Id
                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -69,14 +73,16 @@ BEGIN
                 AND Movement.DescId = zc_Movement_ReturnIn()
              ;
 
-              -- сформировали связь для всех по юр лицу
-
          ELSE
              IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR())
              THEN 
                  -- сохранили связь с <Тип формирования налогового документа> у inMovementMasterId
                  PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement.Id, inDocumentTaxKindId)
                  FROM Movement 
+                      JOIN MovementLinkObject AS MovementLinkObject_To
+                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                             AND MovementLinkObject_To.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                       JOIN MovementLinkObject AS MovementLinkObject_From
                                               ON MovementLinkObject_From.MovementId = Movement.Id
                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()

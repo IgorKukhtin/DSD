@@ -94,7 +94,7 @@ BEGIN
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                      JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
-                                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
+                                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                      LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
 
                      JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
@@ -181,7 +181,7 @@ BEGIN
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                       AND MovementItem.Amount<>0
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
-                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Child()
+                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
 
                      JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
@@ -252,6 +252,7 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  18.03.14         *
  17.02.14         * change Amount =  MIFloat_AmountPartner, - summ
  14.02.14         *  
