@@ -52,7 +52,7 @@ BEGIN
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
-                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0)
+                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
                               AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
                               AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0) 
                                 ) AS tmpAccount -- счет
@@ -442,4 +442,4 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());
