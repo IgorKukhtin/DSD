@@ -34,15 +34,23 @@ $BODY$BEGIN
    UNION
 
    SELECT
-         Object_GoodsKindWeighing.Id                  AS Id
-       , Object_GoodsKindWeighing.ObjectCode          AS Code
-       , Object_GoodsKindWeighing.ValueData           AS Name
-       , Object_GoodsKindWeighing.isErased            AS isErased
-       , CAST(0 AS Integer)                           AS ParentId
+         GoodsKindWeighing.Id                             AS Id
+       , GoodsKindWeighing.ObjectCode                     AS Code
+       , Object_GoodsKindWeighingGroup.ValueData          AS Name
+       , GoodsKindWeighing.isErased                       AS isErased
+       , CAST(0 AS Integer)                               AS ParentId
 
-   FROM Object AS Object_GoodsKindWeighing
-   WHERE Object_GoodsKindWeighing.DescId = zc_Object_GoodsKindWeighing()
-   ORDER BY 2
+   FROM Object AS GoodsKindWeighing
+
+   LEFT JOIN ObjectLink AS ObjectLink_GoodsKindWeighingGroup
+                        ON ObjectLink_GoodsKindWeighingGroup.ObjectId = GoodsKindWeighing.Id
+                       AND ObjectLink_GoodsKindWeighingGroup.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKindWeighingGroup()
+
+   LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = ObjectLink_GoodsKindWeighingGroup.ChildObjectId
+
+
+   WHERE GoodsKindWeighing.DescId = zc_Object_GoodsKindWeighing()
+--   ORDER BY 2
    ;
 
 

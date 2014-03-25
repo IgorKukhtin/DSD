@@ -1,11 +1,11 @@
--- Function: gpInsertUpdate_GoodsKindWeighing_GoodsKind()
+п»ї-- Function: gpInsertUpdate_GoodsKindWeighing_GoodsKind()
 
 -- DROP FUNCTION gpInsertUpdate_GoodsKindWeighing_GoodsKind();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_GoodsKindWeighing_GoodsKind(
     IN inIdKindWeighing Integer,
     IN inIdGoodsKind    Integer,
-    IN inSession        TVarChar       -- сессия пользователя
+    IN inSession        TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
 )
   RETURNS integer AS
 $BODY$
@@ -14,12 +14,15 @@ $BODY$
 
 BEGIN
 
-   -- проверка прав пользователя на вызов процедуры
+   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKindWeighing());
    UserId := inSession;
 
-   -- сохранили связь
-   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsKindWeighing_GoodsKind(), inIdGoodsKind, inIdKindWeighing);
+   -- СЃРѕС…СЂР°РЅРёР»Рё СЃРІСЏР·СЊ
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_GoodsKindWeighing_GoodsKind(), inIdKindWeighing, inIdGoodsKind);--Obj,ChildObj
+
+
+
    RETURN 0;
 END;$BODY$
 
@@ -29,13 +32,13 @@ ALTER FUNCTION gpInsertUpdate_GoodsKindWeighing_GoodsKind (Integer, Integer, TVa
 
 /*-------------------------------------------------------------------------------*/
 /*
- ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
+               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
  25.03.14                                                         *
 
 */
 
--- тест
+-- С‚РµСЃС‚
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89168, 8335, '5')
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89168, 8336, '5')
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89168, 8328, '5')
@@ -44,7 +47,3 @@ ALTER FUNCTION gpInsertUpdate_GoodsKindWeighing_GoodsKind (Integer, Integer, TVa
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89169 , 8335, '5')
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89169 , 8333, '5')
 -- SELECT * FROM gpInsertUpdate_GoodsKindWeighing_GoodsKind(89169 , 8347, '5')
-
-
-
-                            

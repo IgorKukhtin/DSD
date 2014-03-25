@@ -10,18 +10,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dsdDB, cxPropertiesStore, dxBar,
   Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dxSkinsCore,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
+  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm,
   dsdAddOn, dxBarExtItems, cxCheckBox, cxSplitter;
 
 type
@@ -55,11 +44,6 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clWeight: TcxGridDBColumn;
-    clGoodsGroup: TcxGridDBColumn;
-    clMeasure: TcxGridDBColumn;
-    clTradeMark: TcxGridDBColumn;
-    clInfoMoney: TcxGridDBColumn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     cxDBTreeList: TcxDBTreeList;
@@ -68,7 +52,6 @@ type
     spTree: TdsdStoredProc;
     TreeDataSet: TClientDataSet;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
-    clFuelName: TcxGridDBColumn;
     cxSplitter: TcxSplitter;
   private
     { Private declarations }

@@ -266,6 +266,9 @@ procedure TLoadFormTest.LoadGoodsKindWeighingFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingTreeForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindWeighingTreeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindWeighingEditForm');
+
 end;
 
 

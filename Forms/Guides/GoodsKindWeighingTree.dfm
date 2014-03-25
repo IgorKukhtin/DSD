@@ -54,45 +54,9 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
         HeaderAlignmentVert = vaCenter
         Width = 58
       end
-      object clGoodsGroup: TcxGridDBColumn
-        Caption = #1043#1088#1091#1087#1087#1072
-        DataBinding.FieldName = 'GoodsGroupName'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 100
-      end
-      object clWeight: TcxGridDBColumn
-        Caption = #1042#1077#1089
-        DataBinding.FieldName = 'Weight'
-        HeaderAlignmentVert = vaCenter
-        Width = 55
-      end
-      object clMeasure: TcxGridDBColumn
-        Caption = #1045#1076'. '#1080#1079#1084'.'
-        DataBinding.FieldName = 'MeasureName'
-        HeaderAlignmentVert = vaCenter
-        Width = 50
-      end
-      object clFuelName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
-        DataBinding.FieldName = 'FuelName'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
-      end
-      object clTradeMark: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
-        DataBinding.FieldName = 'TradeMarkName'
-        HeaderAlignmentVert = vaCenter
-        Width = 82
-      end
-      object clInfoMoney: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
         Width = 100
       end
@@ -161,7 +125,7 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'GoodsGroupId'
+    IndexFieldNames = 'ParentId'
     MasterFields = 'Id'
     MasterSource = TreeDS
     PacketRecords = 0
@@ -310,8 +274,8 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
-    Top = 144
+    Left = 296
+    Top = 128
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       StoredProc = dsdStoredProc
@@ -333,8 +297,8 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoodsKindWeighingEditForm'
+      FormNameParam.Value = 'TGoodsKindWeighingEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -350,8 +314,8 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TGoodsEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TGoodsKindWeighingEditForm'
+      FormNameParam.Value = 'TGoodsKindWeighingEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -423,7 +387,7 @@ object GoodsKindWeighingTreeForm: TGoodsKindWeighingTreeForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Goods'
+    StoredProcName = 'gpSelect_Object_GoodsKindWeighing'
     DataSet = ClientDataSet
     DataSets = <
       item
