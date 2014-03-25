@@ -18,14 +18,14 @@ type
     function InsertUpdateTaxCorrective(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
-             FromId, ToId, ContractId, DocumentTaxKindId: Integer
+             FromId, ToId, PartnerId, ContractId, DocumentTaxKindId: Integer
              ): integer;
     constructor Create; override;
   end;
 
 implementation
 
-uses UtilConst, UnitsTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, JuridicalTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TTaxCorrective }
 
@@ -43,7 +43,7 @@ var Id: Integer;
     OperDate: TDateTime;
     Checked, Document, PriceWithVAT: Boolean;
     VATPercent: double;
-    FromId, ToId, ContractId, DocumentTaxKindId : Integer;
+    FromId, ToId, PartnerId, ContractId, DocumentTaxKindId : Integer;
 begin
   Id:=0;
   InvNumber:='1';
@@ -54,21 +54,22 @@ begin
   PriceWithVAT:=true;
   VATPercent:=20;
 
-  FromId := TPartnerTest.Create.GetDefault;
-  ToId := TUnit.Create.GetDefault;
+  FromId := TJuridical.Create.GetDefault;
+  ToId :=TJuridical.Create.GetDefault;
+  PartnerId:=TPartnerTest.Create.GetDefault;
   DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
 
   result := InsertUpdateTaxCorrective(Id, InvNumber, InvNumberPartner, OperDate,
              Checked, Document, PriceWithVAT,
              VATPercent,
-             FromId, ToId,  ContractId, DocumentTaxKindId);
+             FromId, ToId,  PartnerId,  ContractId, DocumentTaxKindId);
 end;
 
 function TTaxCorrective.InsertUpdateTaxCorrective(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
-             FromId, ToId, ContractId, DocumentTaxKindId: Integer
+             FromId, ToId, PartnerId, ContractId, DocumentTaxKindId: Integer
              ): integer;
 begin
   FParams.Clear;
@@ -82,6 +83,7 @@ begin
   FParams.AddParam('inVATPercent', ftFloat, ptInput, VATPercent);
   FParams.AddParam('inFromId', ftInteger, ptInput, FromId);
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
+  FParams.AddParam('inPartnerId', ftInteger, ptInput, PartnerId);
   FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inDocumentTaxKindId', ftInteger, ptInput, DocumentTaxKindId);
 

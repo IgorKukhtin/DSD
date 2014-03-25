@@ -403,6 +403,8 @@
   object dsdMeasureGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMeasure
+    FormNameParam.Value = 'TMeasureForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMeasureForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -425,6 +427,8 @@
   object TradeMarkGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = сеTradeMark
+    FormNameParam.Value = 'TTradeMarkForm'
+    FormNameParam.DataType = ftString
     FormName = 'TTradeMarkForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -447,7 +451,9 @@
   object dsdInfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceInfoMoney
-    FormName = 'TInfoMoneyForm'
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -487,7 +493,9 @@
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
-    FormName = 'TBusinessForm'
+    FormNameParam.Value = 'TBusiness_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -509,6 +517,8 @@
   object FuelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFuel
+    FormNameParam.Value = 'TFuelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TFuelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -531,6 +541,8 @@
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParentGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

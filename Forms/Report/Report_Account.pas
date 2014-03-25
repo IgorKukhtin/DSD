@@ -42,7 +42,7 @@ type
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     SummStart: TcxGridDBColumn;
     SummIn: TcxGridDBColumn;
@@ -101,6 +101,18 @@ type
     cxLabel7: TcxLabel;
     ceBusiness: TcxButtonEdit;
     BusinessGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceProfitLossGroup: TcxButtonEdit;
+    ProfitLossGroupGuides: TdsdGuides;
+    cxLabel9: TcxLabel;
+    ceProfitLossDirection: TcxButtonEdit;
+    ProfitLossDirectionGuides: TdsdGuides;
+    BranchGuides: TdsdGuides;
+    cxLabel11: TcxLabel;
+    ceProfitLoss: TcxButtonEdit;
+    ProfitLossGuides: TdsdGuides;
+    cxLabel10: TcxLabel;
+    ceBranch: TcxButtonEdit;
   private
   public
   end;

@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar
              , DocumentChildId Integer, InvNumber_Child TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
 $BODY$
@@ -62,16 +63,18 @@ BEGIN
            , Object_To.ValueData               		AS ToName
            , Object_Partner.ObjectCode                  AS PartnerCode
            , Object_Partner.ValueData               	AS PartnerName
-           , Object_Contract.ContractId        		AS ContractId
-           , Object_Contract.invnumber         		AS ContractName
+           , View_Contract_InvNumber.ContractId        		AS ContractId
+           , View_Contract_InvNumber.invnumber         		AS ContractName
            , Object_TaxKind.Id                		AS TaxKindId
            , Object_TaxKind.ValueData         		AS TaxKindName
            , Movement_DocumentMaster.Id                                    AS DocumentMasterId
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS InvNumber_Master
            , Movement_DocumentChild.Id                                     AS DocumentChildId
            , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS InvNumber_Child
-
-
+           , View_InfoMoney.InfoMoneyGroupName
+           , View_InfoMoney.InfoMoneyDestinationName
+           , View_InfoMoney.InfoMoneyCode
+           , View_InfoMoney.InfoMoneyName
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -156,8 +159,8 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
                                            ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
@@ -181,10 +184,11 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 23.03.14                                        * add Object_InfoMoney_View
  20.03.14                                        * add all
  03.03.14                                                        *
  10.02.14                                                        *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2013', inEndDate:= '12.12.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2014', inEndDate:= '12.12.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

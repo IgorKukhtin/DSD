@@ -1,4 +1,4 @@
-unit InfoMoneyGroup;
+unit ProfitLossGroup_Object;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TInfoMoneyGroupForm = class(TParentForm)
+  TProfitLossGroup_ObjectForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -35,23 +35,14 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
-    bbInsert: TdxBarButton;
-    bbEdit: TdxBarButton;
-    bbSetErased: TdxBarButton;
-    bbSetUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
-    dxBarStatic1: TdxBarStatic;
+    dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
-    actInsert: TdsdInsertUpdateAction;
-    actUpdate: TdsdInsertUpdateAction;
-    dsdSetErased: TdsdUpdateErased;
-    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
@@ -67,5 +58,5 @@ implementation
 
 {$R *.dfm}
  initialization
-  RegisterClass(TInfoMoneyGroupForm);
+  RegisterClass(TProfitLossGroup_ObjectForm);
 end.

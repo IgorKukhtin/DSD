@@ -43,7 +43,8 @@ BEGIN
                                    , tmpMovement.MovementId
                                    , 0 AS ContainerId                             -- сформируем позже
                                    , 0 AS AccountGroupId, 0 AS AccountDirectionId -- сформируем позже, или ...
-                                   , CASE WHEN MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                                   , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
+                                               -- MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                                                THEN tmpMovement.AccountId
                                           ELSE 0
                                      END AS AccountId
@@ -239,7 +240,8 @@ BEGIN
                                                                     ) AS MovementItemId
                              , tmpContainerSumm.ContainerId
                              , 0 AS AccountGroupId, 0 AS AccountDirectionId -- сформируем позже, или ...
-                             , CASE WHEN tmpContainerSumm.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
+                             , CASE WHEN View_InfoMoney.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
+                                         -- tmpContainerSumm.InfoMoneyId IN (zc_Enum_InfoMoney_21501(), zc_Enum_InfoMoney_21502()) -- Бонусы за продукцию + Бонусы за мясное сырье
                                          THEN tmpMovement.AccountId
                                     ELSE 0
                                END AS AccountId 

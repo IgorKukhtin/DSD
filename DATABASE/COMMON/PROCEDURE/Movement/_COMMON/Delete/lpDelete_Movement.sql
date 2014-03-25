@@ -18,7 +18,7 @@ $BODY$BEGIN
   DELETE FROM MovementString WHERE MovementId = inId;
   DELETE FROM MovementDate WHERE MovementId = inId;
   DELETE FROM MovementFloat WHERE MovementId = inId;
---  DELETE FROM MovementProtocol WHERE MovementId = inId;
+  DELETE FROM MovementProtocol WHERE MovementId = inId;
   DELETE FROM MovementBoolean WHERE MovementId = inId;
   DELETE FROM Movement WHERE Id = inId;
 

@@ -33,6 +33,7 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyId Integer;
    DECLARE vbChild_byMaster Boolean;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Transport());
@@ -53,34 +54,68 @@ BEGIN
      END IF;
 
 
-     -- !!!В этом случае сохраняем одно свойство и выходим!!!
+     -- !!!В этом случае сохраняем много свойств и выходим!!!
      IF ioId <> 0 AND EXISTS (SELECT Id
                               FROM gpGet_Movement_Transport (inMovementId:= ioId, inSession:= inSession)
                               WHERE InvNumber = inInvNumber
-                                AND OperDate = inOperDate
-                                AND StartRunPlan = inStartRunPlan
-                                AND EndRunPlan = inEndRunPlan
-                                AND StartRun = inStartRun
-                                AND EndRun = inEndRun
-                                AND COALESCE (HoursAdd, 0) = inHoursAdd
-                                AND COALESCE (Comment, '') = inComment
+                                -- AND OperDate = inOperDate
+                                -- AND StartRunPlan = inStartRunPlan
+                                -- AND EndRunPlan = inEndRunPlan
+                                -- AND StartRun = inStartRun
+                                -- AND EndRun = inEndRun
+                                -- AND COALESCE (HoursAdd, 0) = inHoursAdd
+                                -- AND COALESCE (Comment, '') = inComment
                                 AND COALESCE (CarId, 0) = inCarId
-                                AND COALESCE (CarTrailerId, 0) = inCarTrailerId
+                                -- AND COALESCE (CarTrailerId, 0) = inCarTrailerId
                                 AND COALESCE (PersonalDriverId, 0) = inPersonalDriverId
-                                AND COALESCE (PersonalDriverMoreId, 0) = inPersonalDriverMoreId
+                                -- AND COALESCE (PersonalDriverMoreId, 0) = inPersonalDriverMoreId
                                 -- AND COALESCE (PersonalId, 0) = inPersonalId
                                 AND COALESCE (UnitForwardingId, 0) = inUnitForwardingId
                              )
      THEN
+         -- сохранили <Документ>
+         ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
+         -- сохранили связь с <Дата/Время выезда план>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
+         -- сохранили связь с <Дата/Время возвращения план>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRunPlan(), ioId, inEndRunPlan);
+         -- сохранили связь с <Дата/Время выезда факт>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRun(), ioId, inStartRun);
+         -- сохранили связь с <Дата/Время возвращения факт>
+         PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_EndRun(), ioId, inEndRun);
+         -- расчитали свойство <Кол-во рабочих часов>
+         outHoursWork := EXTRACT (DAY FROM (inEndRun - inStartRun)) * 24 + EXTRACT (HOUR FROM (inEndRun - inStartRun)) + CAST (EXTRACT (MIN FROM (inEndRun - inStartRun)) / 60 AS NUMERIC (16, 2));
+         -- сохранили свойство <Кол-во рабочих часов>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
+
+         -- досчитали что б правильно вернул в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
+         outHoursWork := outHoursWork + COALESCE (inHoursAdd, 0);
+         -- сохранили свойство <Кол-во добавленных рабочих часов>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursAdd(), ioId, inHoursAdd);
+
+         -- сохранили свойство <Примечание>
+         PERFORM lpInsertUpdate_MovementString (zc_MovementString_Comment(), ioId, inComment);
+
+         -- сохранили связь с <Автомобиль (прицеп)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarTrailer(), ioId, inCarTrailerId);
+
+         -- сохранили связь с <Сотрудник (водитель)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
+         -- сохранили связь с <Сотрудник (водитель, дополнительный)>
+         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriverMore(), ioId, inPersonalDriverMoreId);
+
          -- сохранили связь с <Сотрудник (экспедитор)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Personal(), ioId, inPersonalId);
          -- сохранили протокол
-         -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
          --
          -- !!!ВЫХОД!!!
          RETURN;
      END IF;
 
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -99,7 +134,7 @@ BEGIN
      -- сохранили свойство <Кол-во рабочих часов>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_HoursWork(), ioId, outHoursWork);
 
-     -- досчитали что б правильно вернут в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
+     -- досчитали что б правильно вернул в контрол свойство <Кол-во рабочих часов> !!!с учетом добавленных!!!
      outHoursWork := outHoursWork + COALESCE (inHoursAdd, 0);
 
      -- сохранили свойство <Кол-во добавленных рабочих часов>
@@ -125,7 +160,7 @@ BEGIN
 
 
      -- Изменили свойства у подчиненных Документов
-     PERFORM lpInsertUpdate_Movement (ioId:= Movement.Id, inDescId:=zc_Movement_Income(), inInvNumber:= Movement.InvNumber, inOperDate:= inOperDate, inParentId:= Movement.ParentId)
+     PERFORM lpInsertUpdate_Movement (ioId:= Movement.Id, inDescId:=zc_Movement_Income(), inInvNumber:= Movement.InvNumber, inOperDate:= Movement.OperDate, inParentId:= Movement.ParentId)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), Movement.Id, inCarId)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), Movement.Id, inPersonalDriverId)
      FROM Movement
@@ -138,7 +173,7 @@ BEGIN
      THEN PERFORM lpInsertUpdate_MI_Transport_Child_byMaster (inMovementId := ioId, inParentId := MovementItem.Id, inRouteKindId:= MILinkObject_RouteKind.ObjectId, inUserId := vbUserId)
           FROM MovementItem
                LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
-                                                ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id 
+                                                ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
                                                AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
           WHERE MovementItem.MovementId = ioId
             AND MovementItem.DescId = zc_MI_Master();
@@ -146,7 +181,7 @@ BEGIN
 
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -156,6 +191,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 23.03.14                                        * add vbIsInsert
+ 23.03.14                                        * add В этом случае сохраняем много свойств и выходим
  04.03.14                                        * add В этом случае сохраняем одно свойство и выходим
  07.12.13                                        * add lpGetAccessKey
  02.12.13         * add Personal (changes in wiki)

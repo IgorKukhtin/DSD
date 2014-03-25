@@ -34,8 +34,8 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData AS TotalSumm
                       
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
-           , Object_Business.ValueData AS BusinessName
-           , Object_Account.ValueData       AS AccountName
+           , Object_Business.ValueData       AS BusinessName
+           , View_Account.AccountName_all    AS AccountName
 
        FROM Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
@@ -58,7 +58,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Account
                                          ON MovementLinkObject_Account.MovementId = Movement.Id
                                         AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
-            LEFT JOIN Object AS Object_Account ON Object_Account.Id = MovementLinkObject_Account.ObjectId
+            LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MovementLinkObject_Account.ObjectId
 
       WHERE Movement.DescId = zc_Movement_LossDebt()
         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
@@ -71,6 +71,7 @@ ALTER FUNCTION gpSelect_Movement_LossDebt (TDateTime, TDateTime, TVarChar) OWNER
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.03.14                                        * add Object_Account_View
  06.03.14         * add Account
  14.01.14                                        *
 */

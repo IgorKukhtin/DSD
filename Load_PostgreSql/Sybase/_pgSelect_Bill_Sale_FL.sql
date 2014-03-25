@@ -1,9 +1,3 @@
-delete from _pgPartner where Id = 2037;
-update _pgPartner set PartnerId_pg = 79431 where Id = 3239;
-update _pgPartner set OKPO = '30512339' where Id in (2035,2038);
-commit
-'38157537'
-
 -- Fl
 alter PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
@@ -196,6 +190,7 @@ from _tmpBill_NotNalog
                                                                                      4792, -- 'рперэъйнб н.м.'
                                                                                      980, -- 'рскемйн я.'
                                                                                      2436  -- 'ьебжнб х.'
+                                                                                   , 1374 -- астюмнб д.
 
                                                                                     ,1022 -- бхгюпд 1
                                                                                     ,1037 -- бхгюпд 1037

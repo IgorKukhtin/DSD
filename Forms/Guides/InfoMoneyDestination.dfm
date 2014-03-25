@@ -64,6 +64,7 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -241,6 +242,8 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TInfoMoneyDestinationEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -256,6 +259,8 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TInfoMoneyDestinationEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -376,6 +381,8 @@ object InfoMoneyDestinationForm: TInfoMoneyDestinationForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 360
     Top = 192
   end

@@ -160,12 +160,12 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                           ON MovementLinkMovement_Child.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Child
-                                         ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Child.MovementId
+                                         ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Master.MovementId
                                         AND MovementLinkObject_From_Child.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_From_Child.ObjectId
            ;
@@ -178,10 +178,11 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  16.03.14                                        * add all
  03.03.14                                                         *
  09.02.14                                                         *
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '30.01.2014', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')

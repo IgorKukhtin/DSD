@@ -52,7 +52,7 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 195
+        Width = 70
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
@@ -64,6 +64,7 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
+        Visible = False
         Width = 60
       end
     end
@@ -239,6 +240,8 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TInfoMoneyGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -254,6 +257,8 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TInfoMoneyGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -373,6 +378,8 @@ object InfoMoneyGroupForm: TInfoMoneyGroupForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 360
     Top = 192
   end

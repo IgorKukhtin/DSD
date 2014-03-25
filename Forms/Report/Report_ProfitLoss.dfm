@@ -18,7 +18,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   TextHeight = 13
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 0
     Width = 1329
     Height = 31
     Align = alTop
@@ -296,6 +296,155 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object MultiAction1: TMultiAction
+      Category = 'DSDLib'
+      ActionList = <
+        item
+          Action = dsdExecStoredProc1
+        end
+        item
+          Action = dsdOpenForm1
+        end>
+      Caption = 'MultiAction1'
+    end
+    object dsdOpenForm1: TdsdOpenForm
+      Category = 'DSDLib'
+      Caption = 'dsdOpenForm1'
+      FormName = 'TReport_AccountForm'
+      FormNameParam.Value = 'TReport_AccountForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'StartDate'
+          Value = 41548d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41578d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'AccountId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountId'
+        end
+        item
+          Name = 'AccountName'
+          Component = FormParams
+          ComponentItem = 'AccountName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountGroupId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountGroupId'
+        end
+        item
+          Name = 'AccountGroupName'
+          Component = FormParams
+          ComponentItem = 'AccountGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountDirectionId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'AccountDirectionId'
+        end
+        item
+          Name = 'AccountDirectionName'
+          Component = FormParams
+          ComponentItem = 'AccountDirectionName'
+          DataType = ftString
+        end
+        item
+          Name = 'InfoMoneyId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'InfoMoneyId'
+        end
+        item
+          Name = 'InfoMoneyName'
+          Component = FormParams
+          ComponentItem = 'InfoMoneyName'
+          DataType = ftString
+        end
+        item
+          Name = 'BusinessId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BusinessId'
+        end
+        item
+          Name = 'BusinessName'
+          Component = FormParams
+          ComponentItem = 'BusinessName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossGroupId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupId'
+        end
+        item
+          Name = 'ProfitLossGroupName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossGroupName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossDirectionId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionId'
+        end
+        item
+          Name = 'ProfitLossDirectionName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossDirectionName'
+          DataType = ftString
+        end
+        item
+          Name = 'ProfitLossId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'ProfitLossId'
+        end
+        item
+          Name = 'ProfitLossName'
+          Component = FormParams
+          ComponentItem = 'ProfitLossName'
+          DataType = ftString
+        end
+        item
+          Name = 'BranchId'
+          Value = '0'
+          Component = FormParams
+          ComponentItem = 'BranchId'
+        end
+        item
+          Name = 'BranchName'
+          Component = FormParams
+          ComponentItem = 'BranchName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object dsdExecStoredProc1: TdsdExecStoredProc
+      Category = 'DSDLib'
+      StoredProc = spGetProfitLostParam
+      StoredProcList = <
+        item
+          StoredProc = spGetProfitLostParam
+        end>
+      Caption = 'dsdExecStoredProc1'
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpReport_ProfitLoss'
@@ -322,8 +471,214 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Left = 120
     Top = 192
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+  object UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 232
     Top = 232
+  end
+  object spGetProfitLostParam: TdsdStoredProc
+    StoredProcName = 'gpGetProfitLossParam'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inData'
+        Component = PivotAddOn
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'RootType'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'RootType'
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'AccountGroupId'
+      end
+      item
+        Name = 'AccountGroupName'
+        Component = FormParams
+        ComponentItem = 'AccountGroupName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'AccountDirectionId'
+      end
+      item
+        Name = 'AccountDirectionName'
+        Component = FormParams
+        ComponentItem = 'AccountDirectionName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'AccountId'
+      end
+      item
+        Name = 'AccountName'
+        Component = FormParams
+        ComponentItem = 'AccountName'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'InfoMoneyId'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Component = FormParams
+        ComponentItem = 'InfoMoneyName'
+        DataType = ftString
+      end
+      item
+        Name = 'ObjectDirectionId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectDirectionId'
+      end
+      item
+        Name = 'ObjectDestinationId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ObjectDestinationId'
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'JuridicalBasisId'
+      end
+      item
+        Name = 'BusinessId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'BusinessId'
+      end
+      item
+        Name = 'BusinessName'
+        Component = FormParams
+        ComponentItem = 'BusinessName'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossGroupId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ProfitLossGroupId'
+      end
+      item
+        Name = 'ProfitLossGroupName'
+        Component = FormParams
+        ComponentItem = 'ProfitLossGroupName'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ProfitLossDirectionId'
+      end
+      item
+        Name = 'ProfitLossDirectionName'
+        Component = FormParams
+        ComponentItem = 'ProfitLossDirectionName'
+        DataType = ftString
+      end
+      item
+        Name = 'ProfitLossId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'ProfitLossId'
+      end
+      item
+        Name = 'ProfitLossName'
+        Component = FormParams
+        ComponentItem = 'ProfitLossName'
+        DataType = ftString
+      end
+      item
+        Name = 'BranchId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'BranchId'
+      end
+      item
+        Name = 'BranchName'
+        Component = FormParams
+        ComponentItem = 'BranchName'
+        DataType = ftString
+      end>
+    Left = 288
+    Top = 304
+  end
+  object PivotAddOn: TPivotAddOn
+    ErasedFieldName = 'isErased'
+    PivotGrid = cxDBPivotGrid
+    OnDblClickActionList = <
+      item
+        Action = MultiAction1
+      end>
+    ActionItemList = <
+      item
+        Action = MultiAction1
+        ShortCut = 13
+      end>
+    Left = 392
+    Top = 272
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'AccountId'
+        Value = '0'
+      end
+      item
+        Name = 'AccountName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountGroupId'
+        Value = '0'
+      end
+      item
+        Name = 'AccountGroupName'
+        DataType = ftString
+      end
+      item
+        Name = 'AccountDirectionId'
+        Value = '0'
+      end
+      item
+        Name = 'AccountDirectionName'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = '0'
+      end
+      item
+        Name = 'InfoMoneyName'
+        DataType = ftString
+      end
+      item
+        Name = 'BusinessId'
+        Value = '0'
+      end
+      item
+        Name = 'BusinessName'
+        DataType = ftString
+      end>
+    Left = 360
+    Top = 184
   end
 end

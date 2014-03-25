@@ -38,7 +38,7 @@ type
     dsdStoredProc: TdsdStoredProc;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -60,6 +60,11 @@ type
     clInfoMoneyCode: TcxDBPivotGridField;
     clInfoMoneyGroupName: TcxDBPivotGridField;
     clInfoMoneyDestinationName: TcxDBPivotGridField;
+    MultiAction1: TMultiAction;
+    dsdOpenForm1: TdsdOpenForm;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    spGetProfitLostParam: TdsdStoredProc;
+    PivotAddOn: TPivotAddOn;
   private
   public
   end;

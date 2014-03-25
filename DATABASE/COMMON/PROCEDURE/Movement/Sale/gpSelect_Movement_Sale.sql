@@ -26,7 +26,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
-             , DocumentChildId Integer, InvNumberPartner_Child TVarChar
+             , MovementId_Master Integer, InvNumberPartner_Master TVarChar
               )
 AS
 $BODY$
@@ -84,9 +84,8 @@ BEGIN
            , Object_RouteSorting.ValueData                  AS RouteSortingName
            , Object_TaxKind.Id                		    AS DocumentTaxKindId
            , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
-           , Movement_DocumentChild.Id                      AS DocumentChildId
-           , MS_DocumentChild_InvNumberPartner.ValueData    AS InvNumberPartner_Child
-
+           , Movement_Master.Id                             AS MovementId_Master
+           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
        FROM (SELECT Movement.id
              FROM tmpStatus
@@ -111,14 +110,14 @@ BEGIN
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
-                                           ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
-                                          AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
-            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
-                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementLinkMovement_Master.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                         ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
@@ -207,6 +206,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  20.03.14                                        * add InvNumberPartner
  16.03.14                                        * add JuridicalName_To and OKPO_To
  13.02.14                                                        * add DocumentChild, DocumentTaxKind
@@ -220,4 +220,4 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2013', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_Sale (inStartDate:= '30.01.2014', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())

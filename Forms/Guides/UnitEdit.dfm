@@ -413,9 +413,9 @@
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBranch
-    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.Value = 'TBranch_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBranchForm'
+    FormName = 'TBranch_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -439,9 +439,9 @@
   object BusinessGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceBusiness
-    FormNameParam.Value = 'TBusinessForm'
+    FormNameParam.Value = 'TBusiness_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TBusinessForm'
+    FormName = 'TBusiness_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <
@@ -492,9 +492,9 @@
   object AccountDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountDirection
-    FormNameParam.Value = 'TAccountDirectionForm'
+    FormNameParam.Value = 'TAccountDirection_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TAccountDirectionForm'
+    FormName = 'TAccountDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <>
@@ -504,9 +504,9 @@
   object ProfitLossDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceProfitLossDirection
-    FormNameParam.Value = 'TProfitLossDirectionForm'
+    FormNameParam.Value = 'TProfitLossDirection_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TProfitLossDirectionForm'
+    FormName = 'TProfitLossDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
     Params = <

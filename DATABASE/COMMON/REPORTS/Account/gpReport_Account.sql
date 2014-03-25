@@ -1,17 +1,21 @@
 -- Function: gpReport_Account ()
 
 DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Account (
-    IN inStartDate          TDateTime ,  
-    IN inEndDate            TDateTime ,
-    IN inAccountGroupId     Integer , 
-    IN inAccountDirectionId Integer , 
-    IN inInfoMoneyId        Integer , 
-    IN inAccountId          Integer ,
-    IN inBusinessId         Integer ,
-    IN inSession            TVarChar    -- сессия пользователя
+    IN inStartDate              TDateTime ,  
+    IN inEndDate                TDateTime ,
+    IN inAccountGroupId         Integer , 
+    IN inAccountDirectionId     Integer , 
+    IN inInfoMoneyId            Integer , 
+    IN inAccountId              Integer ,
+    IN inBusinessId             Integer ,
+    IN inProfitLossGroupId      Integer ,
+    IN inProfitLossDirectionId  Integer , 
+    IN inProfitLossId           Integer ,
+    IN inBranchId               Integer ,
+    IN inSession                TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, MovementDescName TVarChar
               , InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
@@ -48,8 +52,9 @@ BEGIN
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
-                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountId, 0) = 0)
+                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
                               AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
+                              AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0) 
                                 ) AS tmpAccount -- счет
                                 JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                               AND Container.DescId = zc_Container_Summ()
@@ -252,6 +257,8 @@ BEGIN
                                                                               AND MIContainer_Count.DescId = zc_MIContainer_Count()
                                                                               AND Movement.DescId IN (zc_Movement_Transport(), zc_Movement_Income())
 
+
+                      WHERE (MILinkObject_Branch.ObjectId = inBranchId OR inBranchId = 0)
                      GROUP BY tmpContainer.ContainerId
                             , tmpContainer.AccountId
                             , ReportContainerLink.AccountKindId
@@ -408,12 +415,15 @@ BEGIN
                            AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
        LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
+    WHERE (View_ProfitLoss_inf.ProfitLossGroupId = inProfitLossGroupId OR 0 = inProfitLossGroupId)
+      AND (View_ProfitLoss_inf.ProfitLossDirectionId = inProfitLossDirectionId OR 0 = inProfitLossDirectionId)
+      AND (View_ProfitLoss_inf.ProfitLossId = inProfitLossId OR 0 = inProfitLossId)
     ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -432,4 +442,4 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountId:= null, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Account (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inAccountGroupId:= 0, inAccountDirectionId:= 0, inInfoMoneyId:= 0, inAccountId:= 0, inBusinessId:= 0, inProfitLossGroupId:= 0,  inProfitLossDirectionId:= 0,  inProfitLossId:= 0,  inBranchId:= 0, inSession:= zfCalc_UserAdmin());

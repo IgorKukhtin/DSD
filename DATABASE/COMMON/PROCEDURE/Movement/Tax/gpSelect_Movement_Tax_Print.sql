@@ -19,13 +19,13 @@ BEGIN
      vbUserId:= inSession;
      SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
             THEN inMovementId
-            ELSE MovementLinkMovement_DocumentChild.MovementChildId
+            ELSE MovementLinkMovement_Master.MovementChildId
             END
      INTO vbMovementId
      FROM Movement
-     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
-                                    ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
-                                   AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
+     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                    ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
 
      WHERE Movement.Id =  inMovementId;
 
@@ -397,6 +397,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer,TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  06.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
  19.02.14                                                       *  add by juridical

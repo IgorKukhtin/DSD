@@ -56,7 +56,7 @@ type
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
-    colInvNumberPartner_Child: TcxGridDBColumn;
+    colInvNumberPartner_Master: TcxGridDBColumn;
     colDocumentTaxKindName: TcxGridDBColumn;
     colOKPO_To: TcxGridDBColumn;
     colJuridicalName_To: TcxGridDBColumn;

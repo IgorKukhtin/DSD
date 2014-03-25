@@ -170,6 +170,8 @@ procedure TLoadFormTest.LoadBusinessFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBusinessForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBusinessForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TBusiness_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TBusiness_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBusinessEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBusinessEditForm');
 end;
@@ -735,6 +737,8 @@ procedure TLoadFormTest.LoadInfoMoneyGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyGroupEditForm');
 end;
@@ -744,6 +748,8 @@ procedure TLoadFormTest.LoadInfoMoneyDestinationFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestination_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestination_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TInfoMoneyDestinationEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TInfoMoneyDestinationEditForm');
 end;
@@ -774,11 +780,15 @@ procedure TLoadFormTest.LoadAccountFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountGroupEditForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirection_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAccountDirection_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TAccountDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TAccountDirectionEditForm');
 
@@ -794,6 +804,8 @@ procedure TLoadFormTest.LoadProfitLossGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossGroupEditForm');
 end;
@@ -802,6 +814,8 @@ procedure TLoadFormTest.LoadProfitLossDirectionFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirection_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirection_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossDirectionEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossDirectionEditForm');
 end;
@@ -810,6 +824,8 @@ procedure TLoadFormTest.LoadProfitLossFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLoss_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProfitLoss_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TProfitLossEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TProfitLossEditForm');
 end;
