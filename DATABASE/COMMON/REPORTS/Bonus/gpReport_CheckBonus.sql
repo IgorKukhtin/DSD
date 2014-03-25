@@ -143,7 +143,7 @@ BEGIN
             , Object_Juridical.ValueData                     AS JuridicalName
             , CAST (sum (tmpAll.Sum_CheckBonus) AS Tfloat) AS Sum_CheckBonus
             , CAST (sum (tmpAll.Sum_Bonus) AS Tfloat) AS Sum_Bonus
-            , CAST (sum (tmpAll.Sum_BonusFact) AS Tfloat) AS Sum_BonusFact
+            , CAST (sum (tmpAll.Sum_BonusFact)*(-1) AS Tfloat) AS Sum_BonusFact
       FROM  
           (SELECT tmpContract.ContractId
                 , tmpContract.JuridicalId AS JuridicalId

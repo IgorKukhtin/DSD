@@ -2,6 +2,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
   ClientWidth = 1102
+  ExplicitLeft = -230
   ExplicitWidth = 1110
   ExplicitHeight = 358
   PixelsPerInch = 96
@@ -39,6 +40,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             item
               Format = ',0.##'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_CheckBonus
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_Bonus
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_BonusFact
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,6 +72,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             item
               Format = ',0.##'
               Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_CheckBonus
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_Bonus
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = clSum_BonusFact
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -121,10 +152,13 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           object clSum_CheckBonus: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072' '#1073#1086#1085#1091#1089#1072
             DataBinding.FieldName = 'Sum_CheckBonus'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.ReadOnly = True
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Options.Editing = False
             Width = 122
           end
           object clSum_Bonus: TcxGridDBColumn
