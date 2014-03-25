@@ -58,7 +58,7 @@ uses
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
-  GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
+  GoodsKindWeighingTree in '..\..\Forms\Guides\GoodsKindWeighingTree.pas' {GoodsKindWeighingTreeForm},
   ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
@@ -396,7 +396,8 @@ uses
   ProfitLossGroup in '..\..\Forms\Guides\ProfitLossGroup.pas' {ProfitLossGroupForm: TParentForm},
   InfoMoneyDestination in '..\..\Forms\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
-  Business in '..\..\Forms\Guides\Business.pas' {BusinessForm: TParentForm};
+  Business in '..\..\Forms\Guides\Business.pas' {BusinessForm: TParentForm},
+  GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm};
 
 {$R *.RES}
 

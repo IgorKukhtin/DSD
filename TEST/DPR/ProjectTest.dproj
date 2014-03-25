@@ -146,8 +146,8 @@
 			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
-				<Form>GoodsTreeForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingTree.pas">
+				<Form>GoodsKindWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ToolsWeighingEdit.pas">
 				<Form>ToolsWeighingEditForm</Form>
@@ -1192,6 +1192,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Business.pas">
 				<Form>BusinessForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
+				<Form>GoodsTreeForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
