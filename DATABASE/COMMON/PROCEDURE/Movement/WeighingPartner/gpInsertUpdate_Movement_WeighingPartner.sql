@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_WeighingPartner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TVarChar, TDateTime, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_WeighingPartner (Integer, TVarChar, TDateTime, Integer, Integer, TDateTime, TDateTime, TFloat, TFloat, TVarChar, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -17,6 +18,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_WeighingPartner(
 
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inPaidKindId          Integer   , -- Форма оплаты
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
     IN inUserId              Integer   , -- Пользователь
 
@@ -52,6 +54,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), ioId, inToId);
+
+     -- сохранили связь с <ФО>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
 
      -- сохранили связь с <Сортировки маршрутов>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);

@@ -93,22 +93,11 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colInvNumberOrder
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colRouteSorting
         end>
       DataController.Summary.FooterSummaryItems = <
         item
           Format = ',0.####'
           Kind = skSum
-          Column = colInvNumberOrder
         end
         item
           Format = ',0.####'
@@ -129,15 +118,6 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         item
           Format = ',0.####'
           Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-        end
-        item
-          Format = ',0.####'
-          Kind = skSum
-          Column = colRouteSorting
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -234,12 +214,16 @@ object WeighingPartnerJournalForm: TWeighingPartnerJournalForm
         Options.Editing = False
         Width = 90
       end
+      object clPaidKindName: TcxGridDBColumn
+        Caption = #1060#1054
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
       object colInvNumberOrder: TcxGridDBColumn
         Caption = #1053#1086#1084#1077#1088' '#1079#1072#1103#1074#1082#1080' '#1091' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumberOrder'
-        PropertiesClassName = 'TcxCurrencyEditProperties'
-        Properties.DecimalPlaces = 4
-        Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 55

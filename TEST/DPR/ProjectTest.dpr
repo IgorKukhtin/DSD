@@ -58,7 +58,7 @@ uses
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
   GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
-  GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm},
+  GoodsKindWeighingTree in '..\..\Forms\Guides\GoodsKindWeighingTree.pas' {GoodsKindWeighingTreeForm},
   ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   Status in '..\..\Forms\Status.pas' {StatusForm},
@@ -299,7 +299,7 @@ uses
   PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
-  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  GoodsKindWeighingEdit in '..\..\Forms\Guides\GoodsKindWeighingEdit.pas' {GoodsKindWeighingEditForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
   GoodsPropertyValue in '..\..\Forms\Guides\GoodsPropertyValue.pas' {GoodsPropertyValueForm: TParentForm},
   ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
@@ -396,7 +396,9 @@ uses
   ProfitLossGroup in '..\..\Forms\Guides\ProfitLossGroup.pas' {ProfitLossGroupForm: TParentForm},
   InfoMoneyDestination in '..\..\Forms\Guides\InfoMoneyDestination.pas' {InfoMoneyDestinationForm: TParentForm},
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
-  Business in '..\..\Forms\Guides\Business.pas' {BusinessForm: TParentForm};
+  Business in '..\..\Forms\Guides\Business.pas' {BusinessForm: TParentForm},
+  GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
+  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm};
 
 {$R *.RES}
 

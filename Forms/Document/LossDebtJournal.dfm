@@ -171,37 +171,44 @@ object LossDebtJournalForm: TLossDebtJournalForm
             Value = 3
           end>
         HeaderAlignmentVert = vaCenter
-        Width = 68
+        Width = 94
       end
       object colInvNumber: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 68
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentVert = vaCenter
-        Width = 59
+        Width = 82
       end
       object colJuridicalBasisName: TcxGridDBColumn
         Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
         DataBinding.FieldName = 'JuridicalBasisName'
         HeaderAlignmentVert = vaCenter
-        Width = 100
+        Width = 138
+      end
+      object clPaidKindName: TcxGridDBColumn
+        Caption = #1060#1054
+        DataBinding.FieldName = 'PaidKindName'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 44
       end
       object colBusinessName: TcxGridDBColumn
         Caption = #1041#1080#1079#1085#1077#1089
         DataBinding.FieldName = 'BusinessName'
         HeaderAlignmentVert = vaCenter
-        Width = 70
+        Width = 96
       end
       object colAccountName: TcxGridDBColumn
         Caption = #1057#1095#1077#1090
         DataBinding.FieldName = 'AccountName'
         HeaderAlignmentVert = vaCenter
-        Width = 60
+        Width = 82
       end
       object colTotalSumm: TcxGridDBColumn
         Caption = #1057#1091#1084#1084#1072
@@ -211,7 +218,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 93
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -611,6 +618,7 @@ object LossDebtJournalForm: TLossDebtJournalForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 248
     Top = 216
   end

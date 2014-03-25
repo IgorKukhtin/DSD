@@ -144,6 +144,9 @@ type
     cxLabel6: TcxLabel;
     edAccount: TcxButtonEdit;
     GuidesAccount: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
   public
   end;

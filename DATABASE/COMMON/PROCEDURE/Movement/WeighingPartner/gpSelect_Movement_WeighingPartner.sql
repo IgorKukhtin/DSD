@@ -12,6 +12,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , StartWeighing TDateTime, EndWeighing TDateTime 
              , MovementDesc TFloat, InvNumberTransport TFloat, InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
              , UserId Integer, UserName TVarChar
               )
@@ -49,7 +50,10 @@ BEGIN
              , Object_From.ValueData           AS FromName
              , Object_To.Id                    AS ToId
              , Object_To.ValueData             AS ToName
-             
+
+             , Object_PaidKind.Id              AS PaidKindId
+             , Object_PaidKind.ValueData       AS PaidKindName
+
              , Object_RouteSorting.Id          AS RouteSortingId
              , Object_RouteSorting.ValueData   AS RouteSortingName
              , Object_User.Id                  AS UserId
@@ -88,6 +92,11 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
