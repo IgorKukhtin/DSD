@@ -2,8 +2,8 @@ object LossDebtForm: TLossDebtForm
   Left = 0
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1079#1072#1076#1086#1083#1078#1077#1085#1085#1086#1089#1090#1080' ('#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072')>'
-  ClientHeight = 396
-  ClientWidth = 1002
+  ClientHeight = 405
+  ClientWidth = 1049
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,12 +21,12 @@ object LossDebtForm: TLossDebtForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 1002
-    Height = 60
+    Width = 1049
+    Height = 57
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitLeft = -8
+    ExplicitWidth = 1058
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -134,29 +134,52 @@ object LossDebtForm: TLossDebtForm
       TabOrder = 11
       Width = 191
     end
+    object cxLabel7: TcxLabel
+      Left = 928
+      Top = 5
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 928
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 13
+      Width = 113
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
-    Top = 86
-    Width = 1002
-    Height = 310
+    Top = 83
+    Width = 1049
+    Height = 322
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ClientRectBottom = 310
-    ClientRectRight = 1002
+    ExplicitTop = 86
+    ExplicitWidth = 1002
+    ExplicitHeight = 310
+    ClientRectBottom = 322
+    ClientRectRight = 1049
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 1002
+      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 1002
-        Height = 286
+        Width = 1049
+        Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1002
+        ExplicitHeight = 286
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -423,13 +446,17 @@ object LossDebtForm: TLossDebtForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitWidth = 1002
+      ExplicitHeight = 286
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 1002
-        Height = 286
+        Width = 1049
+        Height = 298
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 1002
+        ExplicitHeight = 286
         object cxGridEntryDBTableView: TcxGridDBTableView
           PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
@@ -1347,6 +1374,7 @@ object LossDebtForm: TLossDebtForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 328
     Top = 312
   end
@@ -1362,6 +1390,7 @@ object LossDebtForm: TLossDebtForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 368
     Top = 272
   end
@@ -1411,9 +1440,16 @@ object LossDebtForm: TLossDebtForm
         Component = GuidesAccount
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
-    Left = 387
-    Top = 177
+    Left = 451
+    Top = 161
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1525,6 +1561,19 @@ object LossDebtForm: TLossDebtForm
         Value = ''
         Component = GuidesAccount
         ComponentItem = 'TextValue'
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 552
     Top = 48
@@ -1676,6 +1725,32 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end>
     Left = 792
+    Top = 16
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 952
     Top = 16
   end
 end

@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , BusinessId Integer, BusinessName TVarChar
              , AccountId Integer, AccountName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
               )
 AS
 $BODY$
@@ -40,7 +41,10 @@ BEGIN
 
            , 0             AS AccountId
            , ''::TVarChar  AS AccountName
-
+          
+           , 0             AS PaidKindId
+           , ''::TVarChar  AS PaidKindName
+           
           FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS lfObject_Status
                LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 9399
                LEFT JOIN Object AS Object_Business ON Object_Business.Id = 0
@@ -61,6 +65,9 @@ BEGIN
 
            , View_Account.AccountId
            , View_Account.AccountName_all    AS AccountName
+
+           , Object_PaidKind.Id              AS PaidKindId
+           , Object_PaidKind.ValueData       AS PaidKindName
              
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -79,6 +86,11 @@ BEGIN
                                          ON MovementLinkObject_Account.MovementId = Movement.Id
                                         AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
             LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MovementLinkObject_Account.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId            
             
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_LossDebt();
@@ -93,6 +105,7 @@ ALTER FUNCTION gpGet_Movement_LossDebt (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 25.03.14         * add PaidKind  
  24.03.14                                        * add Object_Account_View
  06.03.14         * add Account
  25.01.14                                        * add inOperDate
