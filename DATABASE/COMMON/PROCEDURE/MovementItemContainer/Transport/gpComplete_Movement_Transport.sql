@@ -16,6 +16,8 @@ BEGIN
      -- Проверка закрытия периодов
      -- PERFORM lpCheckPeriodClose(vbUserId, inMovementId);
 
+     -- таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
      -- таблица - Проводки 
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- таблица свойств (остатки) документа/элементов
@@ -73,6 +75,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  25.02.13                        * lpCheckPeriodClose                
  03.11.13                                        * add RouteId_ProfitLoss
  02.11.13                                        * add BranchId_ProfitLoss, UnitId_Route, BranchId_Route

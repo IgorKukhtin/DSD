@@ -193,6 +193,8 @@ BEGIN
      END IF;
 
 
+     -- таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
      -- таблица - Аналитики остатка
      CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <элемент с/с>
@@ -1031,6 +1033,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
  01.02.14                                        *
 */

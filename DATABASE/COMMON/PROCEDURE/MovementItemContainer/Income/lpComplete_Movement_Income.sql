@@ -48,7 +48,7 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
   DECLARE vbBusinessId_Route Integer;
 BEGIN
-
+ -- RAISE EXCEPTION '_lpComplete_Movement_Income_';
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      -- !!!обязательно!!! очистили таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
@@ -454,6 +454,14 @@ BEGIN
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
              ) AS _tmp
         ;
+
+
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- !!! пока работает долго надо это делать вначале!!!
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
      -- проверка

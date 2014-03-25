@@ -52,6 +52,7 @@ BEGIN
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
+                                   -- !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
                                   (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
                               AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
                               AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0) 
@@ -429,6 +430,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.03.14                                        * !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
  20.03.14                          * add Params                          
  17.03.14                          * add MovementId                          
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
