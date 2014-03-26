@@ -1,15 +1,15 @@
-п»ї-- Function: gpGet_Object_GoodsKindWeighing()
+-- Function: gpGet_Object_GoodsKindWeighing()
 
 DROP FUNCTION IF EXISTS gpGet_Object_GoodsKindWeighing(Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsKindWeighing(
-    IN inId          Integer,       -- Р•РґРёРЅРёС†Р° РёР·РјРµСЂРµРЅРёСЏ
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- Единица измерения
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, GoodsKindId Integer, GoodsKindName TVarChar, GoodsKindGroupId Integer, GoodsKindGroupName TVarChar ) AS
 $BODY$BEGIN
 
-  -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+  -- проверка прав пользователя на вызов процедуры
   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsKindWeighing());
 
   IF COALESCE (inId, 0) = 0
@@ -45,13 +45,13 @@ $BODY$BEGIN
                            AND ObjectLink_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKind()
 
        LEFT JOIN ObjectLink AS ObjectLink_GoodsKindWeighingGroup
-                            ON ObjectLink_GoodsKindWeighingGroup.ObjectId = GoodsKindWeighing.Id
+                            ON ObjectLink_GoodsKindWeighingGroup.ObjectId = Object.Id
                            AND ObjectLink_GoodsKindWeighingGroup.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKindWeighingGroup()
 
-       LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_Goods_Measure.ChildObjectId
+       LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsKindWeighing_GoodsKind.ChildObjectId
                                            AND Object_GoodsKind.DescId = zc_Object_GoodsKind()
 
-       LEFT JOIN Object AS Object_GoodsKindGroup ON Object_GoodsKindGroup.Id = ObjectLink_Goods_Measure.ChildObjectId
+       LEFT JOIN Object AS Object_GoodsKindGroup ON Object_GoodsKindGroup.Id = ObjectLink_GoodsKindWeighingGroup.ChildObjectId
                                                 AND Object_GoodsKindGroup.DescId = zc_Object_GoodsKindWeighingGroup()
 
 
@@ -67,12 +67,13 @@ ALTER FUNCTION gpGet_Object_GoodsKindWeighing(integer, TVarChar)
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.03.14                                                         *
  25.03.14                                                         *
 
 
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_GoodsKindWeighing('2')
