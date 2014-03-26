@@ -78,6 +78,7 @@ type
     actReCompleteAll: TdsdExecStoredProc;
     colBusinessName: TcxGridDBColumn;
     colAccountName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
   private
   public
   end;

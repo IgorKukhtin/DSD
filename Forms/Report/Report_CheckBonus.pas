@@ -19,18 +19,17 @@ type
   TReport_CheckBonusForm = class(TAncestorReportForm)
     cContract_InvNumber: TcxGridDBColumn;
     clValue: TcxGridDBColumn;
-    clSum_Account: TcxGridDBColumn;
+    clSum_CheckBonus: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
-    clSum_SaleReturnIn: TcxGridDBColumn;
     clContractConditionKindName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clSum_Sale: TcxGridDBColumn;
     clSum_Bonus: TcxGridDBColumn;
     clBonusKindName: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edBonusKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
+    clSum_BonusFact: TcxGridDBColumn;
   private
     { Private declarations }
   public

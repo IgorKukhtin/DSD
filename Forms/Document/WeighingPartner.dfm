@@ -205,6 +205,23 @@ object WeighingPartnerForm: TWeighingPartnerForm
       TabOrder = 21
       Width = 170
     end
+    object cxLabel10: TcxLabel
+      Left = 619
+      Top = 45
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 619
+      Top = 62
+      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 23
+      Width = 142
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
@@ -1380,10 +1397,14 @@ object WeighingPartnerForm: TWeighingPartnerForm
       item
         Name = 'PaidKindId'
         Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindName'
         Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -1465,8 +1486,8 @@ object WeighingPartnerForm: TWeighingPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 696
-    Top = 24
+    Left = 728
+    Top = 8
   end
   object ChangeStatus: TChangeStatus
     KeyField = 'Code'
@@ -1576,5 +1597,32 @@ object WeighingPartnerForm: TWeighingPartnerForm
       end>
     Left = 856
     Top = 16
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 648
+    Top = 64
   end
 end

@@ -84,6 +84,7 @@ type
     colUserName: TcxGridDBColumn;
     colRouteSorting: TcxGridDBColumn;
     colStartWeighing: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
   private
   public
   end;

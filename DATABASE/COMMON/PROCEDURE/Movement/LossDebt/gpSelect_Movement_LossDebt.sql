@@ -13,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime
              , JuridicalBasisName TVarChar
              , BusinessName TVarChar
              , AccountName TVarChar
+             , PaidKindName TVarChar
               )
 AS
 $BODY$
@@ -36,7 +37,7 @@ BEGIN
            , Object_JuridicalBasis.ValueData AS JuridicalBasisName
            , Object_Business.ValueData       AS BusinessName
            , View_Account.AccountName_all    AS AccountName
-
+           , Object_PaidKind.ValueData       AS PaidKindName
        FROM Movement
             -- JOIN (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId GROUP BY AccessKeyId) AS tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -59,7 +60,12 @@ BEGIN
                                          ON MovementLinkObject_Account.MovementId = Movement.Id
                                         AND MovementLinkObject_Account.DescId = zc_MovementLinkObject_Account()
             LEFT JOIN Object_Account_View AS View_Account ON View_Account.AccountId = MovementLinkObject_Account.ObjectId
-
+            
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+            
       WHERE Movement.DescId = zc_Movement_LossDebt()
         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   

@@ -326,6 +326,8 @@ type
     bbWeighingProduction: TdxBarButton;
     actReport_CheckBonus: TdsdOpenForm;
     bbReport_CheckBonus: TdxBarButton;
+    actGoodsKindWeighing: TdsdOpenForm;
+    bbGoodsKindWeighing: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
