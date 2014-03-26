@@ -49,6 +49,7 @@ type
 
 function GetObject_byCode(Code, DescId: integer): TDBObject;
 function GetDefaultValue(inLevel1,inLevel2,inLevel3,inLevel4,inValueData:String):String;
+function GetListOrder_ByCode(Num:integer; List:TListArray):integer;
 
 function isEqualFloatValues(Value1,Value2:Double):boolean;
 {==================================}
@@ -163,6 +164,15 @@ begin
        end;
     end;
   finally spExec.Free; ClientDataSet.Free; end;
+end;
+
+
+function GetListOrder_ByCode(Num:integer; List:TListArray):integer;
+var
+ i: integer;
+begin
+  for I := 0 to Length(List) do
+    if List[i].Num = Num then Result:=I;
 end;
 
 

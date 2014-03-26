@@ -185,7 +185,8 @@ begin
   EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
   for I := 0 to Length(GoodsKindWeighing)-1 do
     rgKindPackage.Items.Add('('+IntToStr(GoodsKindWeighing[i].Num)+') '+ GoodsKindWeighing[i].Name);
-//  rgKindPackage.ItemIndex:=  StrToInt(EditKindPackageCode.Text);
+  rgKindPackage.ItemIndex:=   GetListOrder_ByCode(StrToInt(EditKindPackageCode.Text), GoodsKindWeighing);
+
 {
   for I := 0 to Length(GoodsKindWeighing)-1 do
    if IntToStr(GoodsKindWeighing[i].Num) = EditKindPackageCode.Text then

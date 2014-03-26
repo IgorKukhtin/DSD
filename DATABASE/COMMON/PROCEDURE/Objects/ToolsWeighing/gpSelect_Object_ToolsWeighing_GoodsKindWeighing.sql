@@ -62,4 +62,4 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_GoodsKindWeighing (Integer, TVarCha
 
 -- тест
 
- SELECT * FROM gpSelect_Object_ToolsWeighing_GoodsKindWeighing (77 , zfCalc_UserAdmin()) --Scale_77
+-- SELECT * FROM gpSelect_Object_ToolsWeighing_GoodsKindWeighing (77 , zfCalc_UserAdmin()) --Scale_77
