@@ -33,6 +33,8 @@ BEGIN
      FROM _tmpMovement;
 
 
+     -- òàáëèöà - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
+     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
      -- òàáëèöà - Ïğîâîäêè
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- òàáëèöà - ıëåìåíòû äîêóìåíòà, ñî âñåìè ñâîéñòâàìè äëÿ ôîğìèğîâàíèÿ Àíàëèòèê â ïğîâîäêàõ
@@ -59,6 +61,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 25.03.14                                        * òàáëèöà - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
  26.12.13                                        * Personal -> Member
 */
 

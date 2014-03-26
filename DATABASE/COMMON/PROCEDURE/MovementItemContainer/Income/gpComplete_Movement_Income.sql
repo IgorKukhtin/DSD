@@ -26,6 +26,8 @@ BEGIN
      -- таблица - Аналитики <Проводки для отчета>
      -- CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
 
+     -- таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
      -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- таблица - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
@@ -56,6 +58,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  01.11.13                                        * add ...Id_Transit
  29.10.13         * rename process zc_Enum_Process_Complete_Income()
  21.10.13                                        * add TicketFuel

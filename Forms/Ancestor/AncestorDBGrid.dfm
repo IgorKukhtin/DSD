@@ -17,8 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -58,6 +56,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
   inherited ActionList: TActionList
     object actGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -99,6 +98,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 520
     Top = 264
   end
