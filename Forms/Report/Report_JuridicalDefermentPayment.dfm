@@ -2,6 +2,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1090#1089#1088#1086#1095#1082#1077
   ClientHeight = 394
   ClientWidth = 869
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 877
   ExplicitHeight = 421
   PixelsPerInch = 96
@@ -299,52 +300,209 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   inherited ActionList: TActionList
     object actPrintOneWeek: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProc = spWeek
+      MoveParams = <
+        item
+          FromParam.Value = '1'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+        end>
+      StoredProc = spReport
       StoredProcList = <
         item
-          StoredProc = spWeek
+          StoredProc = spReport
         end>
       Caption = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
       Hint = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
       ImageIndex = 21
       DataSets = <>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm1'
+          DataType = ftFloat
+        end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
     end
-    object dsdPrintAction2: TdsdPrintAction
+    object actPrintTwoWeek: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = 'dsdPrintAction1'
+      MoveParams = <
+        item
+          FromParam.Value = '2'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+        end>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
+      Hint = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
+      ImageIndex = 17
       DataSets = <>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm2'
+          DataType = ftFloat
+        end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
     end
-    object dsdPrintAction3: TdsdPrintAction
+    object actPrintThreeWeek: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = 'dsdPrintAction1'
+      MoveParams = <
+        item
+          FromParam.Value = '3'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+        end>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
+      Hint = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
+      ImageIndex = 19
       DataSets = <>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm3'
+          DataType = ftFloat
+        end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
     end
-    object dsdPrintAction4: TdsdPrintAction
+    object actPrintFourWeek: TdsdPrintAction
       Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = 'dsdPrintAction1'
+      MoveParams = <
+        item
+          FromParam.Value = '4'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+        end>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
+      Hint = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
+      ImageIndex = 22
       DataSets = <>
-      Params = <>
-      ReportNameParam.Value = ''
-      ReportNameParam.DataType = ftString
-    end
-    object dsdPrintAction5: TdsdPrintAction
-      Category = 'DSDLib'
-      StoredProcList = <>
-      Caption = 'dsdPrintAction1'
-      DataSets = <>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm4'
+          DataType = ftFloat
+        end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
     end
@@ -396,6 +554,18 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Visible = True
+          ItemName = 'bbTwoWeek'
+        end
+        item
+          Visible = True
+          ItemName = 'bbThreeWeek'
+        end
+        item
+          Visible = True
+          ItemName = 'bbFourWeek'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -413,6 +583,18 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     object bbReportOneWeek: TdxBarButton
       Action = actPrintOneWeek
+      Category = 0
+    end
+    object bbTwoWeek: TdxBarButton
+      Action = actPrintTwoWeek
+      Category = 0
+    end
+    object bbThreeWeek: TdxBarButton
+      Action = actPrintThreeWeek
+      Category = 0
+    end
+    object bbFourWeek: TdxBarButton
+      Action = actPrintFourWeek
       Category = 0
     end
   end
@@ -454,12 +636,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Left = 456
     Top = 8
   end
-  object spWeek: TdsdStoredProc
+  object spReport: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalDefermentPaymentByDocument'
-    DataSet = cdsReport1
+    DataSet = cdsReport
     DataSets = <
       item
-        DataSet = cdsReport1
+        DataSet = cdsReport
       end>
     Params = <
       item
@@ -484,24 +666,35 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inPeriodCount'
-        Value = '1'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PeriodNumber'
         ParamType = ptInput
       end>
     Left = 192
     Top = 192
   end
-  object frxDBDataset1: TfrxDBDataset
-    UserName = 'frxDBDataset1'
+  object frxDBDataset: TfrxDBDataset
+    UserName = 'frxDBDataset'
     CloseDataSource = False
-    DataSet = cdsReport1
+    DataSet = cdsReport
     BCDToCurrency = False
     Left = 248
     Top = 216
   end
-  object cdsReport1: TClientDataSet
+  object cdsReport: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 224
     Top = 200
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'PeriodNumber'
+        Value = Null
+      end>
+    Left = 344
+    Top = 112
   end
 end

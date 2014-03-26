@@ -37,7 +37,7 @@ ALTER FUNCTION gpSelect_Object_ToolsWeighing_Tree(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.03.14                                                         *
+ 25.03.14                                                         *
 */
 
 -- тест

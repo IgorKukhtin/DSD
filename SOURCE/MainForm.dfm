@@ -35,11 +35,11 @@ object MainForm: TMainForm
     PopupMenuLinks = <>
     UseSystemFont = True
     Left = 128
-    Top = 48
+    Top = 40
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -1018,6 +1018,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbGoodsKindWeighing'
+        end
+        item
+          Visible = True
           ItemName = 'bbMeasure'
         end
         item
@@ -1437,6 +1441,10 @@ object MainForm: TMainForm
     end
     object bbReport_CheckBonus: TdxBarButton
       Action = actReport_CheckBonus
+      Category = 0
+    end
+    object bbGoodsKindWeighing: TdxBarButton
+      Action = actGoodsKindWeighing
       Category = 0
     end
   end
@@ -2773,6 +2781,16 @@ object MainForm: TMainForm
       Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1081' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084
       FormName = 'TReport_CheckBonusForm'
       FormNameParam.Value = 'TReport_CheckBonusForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actGoodsKindWeighing: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      Caption = #1042#1080#1076#1099' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      Hint = #1042#1080#1076#1099' '#1091#1087#1072#1082#1086#1074#1082#1080' '#1076#1083#1103' '#1074#1079#1074#1077#1096#1080#1074#1072#1085#1080#1103
+      FormName = 'TGoodsKindWeighingTreeForm'
+      FormNameParam.Value = 'TGoodsKindWeighingTreeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

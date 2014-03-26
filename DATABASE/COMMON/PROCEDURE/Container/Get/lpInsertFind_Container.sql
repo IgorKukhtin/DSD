@@ -36,7 +36,10 @@ $BODY$
    DECLARE vbContainerId Integer;
    DECLARE vbRecordCount Integer;
 BEGIN
+     -- удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     DELETE FROM _tmp___;
 
+     --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
      inObjectId          := COALESCE (inObjectId, 0);
      inJuridicalId_basis := COALESCE (inJuridicalId_basis, 0);
@@ -196,6 +199,41 @@ BEGIN
               ELSE
               IF inDescId_7 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_6 ON ContainerLinkObject_6.ObjectId    = inObjectId_6
+                                                                                           AND ContainerLinkObject_6.DescId      = inDescId_6
+                                                                                           AND ContainerLinkObject_6.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_7 ON ContainerLinkObject_7.ObjectId    = inObjectId_7
+                                                                                           AND ContainerLinkObject_7.DescId      = inDescId_7
+                                                                                           AND ContainerLinkObject_7.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -227,10 +265,42 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
               ELSE
               IF inDescId_6 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_6 ON ContainerLinkObject_6.ObjectId    = inObjectId_6
+                                                                                           AND ContainerLinkObject_6.DescId      = inDescId_6
+                                                                                           AND ContainerLinkObject_6.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -259,11 +329,40 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
                   -- RAISE EXCEPTION 'Счет не уникален : inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
               ELSE
               IF inDescId_5 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -289,10 +388,36 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
               ELSE
               IF inDescId_4 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -315,10 +440,33 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
               ELSE
               IF inDescId_3 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -338,10 +486,30 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
               ELSE
               IF inDescId_2 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
+                                     FROM (SELECT Container.Id
+                                           FROM Container
+                                     WHERE Container.ParentId = inParentId
+                                       AND Container.ObjectId = inObjectId
+                                       AND Container.DescId   = inContainerDescId) AS Container
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
+                                                                                           AND ContainerLinkObject_1.DescId      = inDescId_1
+                                                                                           AND ContainerLinkObject_1.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = Container.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = Container.Id
+                                    );
+                                    /* !!!правильно но меделенно!!!
+                                    (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -358,7 +526,7 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );
+                                    );*/
               ELSE
               IF inDescId_1 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
@@ -1051,6 +1219,7 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.03.14                                        * удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  27.01.14                                        * !!!пока не понятно с проводками по Бизнесу, кроме счета Прибыль, поэтому учитывать по этой аналитике не будем, т.е. обнуляем значение!!!
  19.09.13                                        * optimize
  18.09.13                        *  Чуть ускорил

@@ -6,6 +6,18 @@ uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
      {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridDBTableView;
 
 type
+
+  TParamMoveItem = class(TCollectionItem)
+  private
+    FToParam: TdsdParam;
+    FFromParam: TdsdParam;
+  public
+    constructor Create(Collection: TCollection); override;
+  published
+    property FromParam: TdsdParam read FFromParam write FFromParam;
+    property ToParam: TdsdParam read FToParam write FToParam;
+  end;
+
   TDataSetAcionType = (acInsert, acUpdate);
 
   TdsdStoredProcItem = class(TCollectionItem)
@@ -63,6 +75,7 @@ type
     FPostDataSetBeforeExecute: boolean;
     FInfoAfterExecute: string;
     FQuestionBeforeExecute: string;
+    FMoveParams: TCollection;
     procedure SetTabSheet(const Value: TcxTabSheet); virtual;
   protected
     property QuestionBeforeExecute: string read FQuestionBeforeExecute write FQuestionBeforeExecute;
@@ -79,6 +92,7 @@ type
   published
     // При установке данного свойства Action будет активирован только если TabSheet активен
     property TabSheet: TcxTabSheet read FTabSheet write SetTabSheet;
+    property MoveParams: TCollection read FMoveParams write FMoveParams;
   end;
 
   TDataSetDataLink = class(TDataLink)
@@ -496,7 +510,7 @@ implementation
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
      frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid;
+     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils;
 
 procedure Register;
 begin
@@ -1202,10 +1216,12 @@ begin
       else begin
          LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
          for i := 0 to Params.Count - 1 do begin
-             if Params[i].DataType in [ftString, ftDate, ftDateTime] then
-                Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39)
-             else
-                Variables[Params[i].Name] := Params[i].Value
+             case Params[i].DataType of
+                ftString, ftDate, ftDateTime: Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
+                ftFloat, ftCurrency: Variables[Params[i].Name] := ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
+                else
+                   Variables[Params[i].Name] := Params[i].Value
+             end;
          end;
 
          if Assigned(Self.Owner) then
@@ -1357,9 +1373,11 @@ constructor TdsdCustomAction.Create(AOwner: TComponent);
 begin
   inherited;
   FPostDataSetBeforeExecute := true;
+  FMoveParams := TCollection.Create(TParamMoveItem);
 end;
 
 function TdsdCustomAction.Execute: boolean;
+var i: integer;
 begin
   result := false;
   if QuestionBeforeExecute <> '' then
@@ -1367,6 +1385,8 @@ begin
         exit;
   if PostDataSetBeforeExecute then
      PostDataSet;
+  for I := 0 to MoveParams.Count - 1 do
+      TParamMoveItem(MoveParams.Items[i]).ToParam.Value := TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
   if InfoAfterExecute <> '' then
      ShowMessage(InfoAfterExecute);
@@ -1779,6 +1799,15 @@ begin
   if csDesigning in ComponentState then
     if (Operation = opRemove) and (MasterProcedure = AComponent) then
        MasterProcedure := nil
+end;
+
+{ TParamMoveItem }
+
+constructor TParamMoveItem.Create(Collection: TCollection);
+begin
+  inherited;
+  FFromParam := TdsdParam.Create(nil);
+  FToParam := TdsdParam.Create(nil);
 end;
 
 end.

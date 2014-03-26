@@ -146,8 +146,8 @@
 			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
 				<Form>GoodsGroupForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
-				<Form>GoodsTreeForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingTree.pas">
+				<Form>GoodsKindWeighingTreeForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ToolsWeighingEdit.pas">
 				<Form>ToolsWeighingEditForm</Form>
@@ -854,16 +854,16 @@
 				<Form>PersonalAccountJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\City.pas">
-				<Form>CityForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingGroup.pas">
+				<Form>GoodsKindWeighingGroupForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
-				<Form>GoodsEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingEdit.pas">
+				<Form>GoodsKindWeighingEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
-				<Form>CityEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingGroupEdit.pas">
+				<Form>GoodsKindWeighingGroupEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsPropertyValue.pas">
@@ -1192,6 +1192,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Business.pas">
 				<Form>BusinessForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsTree.pas">
+				<Form>GoodsTreeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsEdit.pas">
+				<Form>GoodsEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\City.pas">
+				<Form>CityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
+				<Form>CityEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

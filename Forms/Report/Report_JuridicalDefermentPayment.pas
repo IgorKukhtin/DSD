@@ -34,14 +34,17 @@ type
     cxLabel3: TcxLabel;
     AccountGuides: TdsdGuides;
     actPrintOneWeek: TdsdPrintAction;
-    dsdPrintAction2: TdsdPrintAction;
-    dsdPrintAction3: TdsdPrintAction;
-    dsdPrintAction4: TdsdPrintAction;
-    dsdPrintAction5: TdsdPrintAction;
-    spWeek: TdsdStoredProc;
-    frxDBDataset1: TfrxDBDataset;
-    cdsReport1: TClientDataSet;
+    actPrintTwoWeek: TdsdPrintAction;
+    actPrintThreeWeek: TdsdPrintAction;
+    actPrintFourWeek: TdsdPrintAction;
+    spReport: TdsdStoredProc;
+    frxDBDataset: TfrxDBDataset;
+    cdsReport: TClientDataSet;
     bbReportOneWeek: TdxBarButton;
+    FormParams: TdsdFormParams;
+    bbTwoWeek: TdxBarButton;
+    bbThreeWeek: TdxBarButton;
+    bbFourWeek: TdxBarButton;
   private
     { Private declarations }
   public
