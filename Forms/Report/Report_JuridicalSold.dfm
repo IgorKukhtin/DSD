@@ -1336,7 +1336,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Value = Null
         DataType = ftString
       end>
-    Left = 272
+    Left = 248
     Top = 144
   end
 end

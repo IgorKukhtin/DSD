@@ -35,7 +35,7 @@ $BODY$BEGIN
        , GoodsKindWeighing.ObjectCode          AS Code
        , Object_GoodsKind.ValueData            AS Name
        , GoodsKindWeighing.isErased            AS isErased
-       , COALESCE(OL_GoodsKindWeighing_GoodsKind.ChildObjectId, 0) AS ParentId
+       , COALESCE(OL_GoodsKindWeighing_GoodsKindWeighingGroup.ChildObjectId, 0) AS ParentId
 
 
    FROM Object AS GoodsKindWeighing
@@ -43,6 +43,11 @@ $BODY$BEGIN
    LEFT JOIN ObjectLink AS OL_GoodsKindWeighing_GoodsKind
                         ON OL_GoodsKindWeighing_GoodsKind.ObjectId = GoodsKindWeighing.Id
                        AND OL_GoodsKindWeighing_GoodsKind.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKind()
+
+   LEFT JOIN ObjectLink AS OL_GoodsKindWeighing_GoodsKindWeighingGroup
+                        ON OL_GoodsKindWeighing_GoodsKindWeighingGroup.ObjectId = GoodsKindWeighing.Id
+                       AND OL_GoodsKindWeighing_GoodsKindWeighingGroup.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKindWeighingGroup()
+
    LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = OL_GoodsKindWeighing_GoodsKind.ChildObjectId
 
    WHERE GoodsKindWeighing.DescId = zc_Object_GoodsKindWeighing()
