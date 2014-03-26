@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
-             , OperDatePartner TDateTime
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -52,6 +52,7 @@ BEGIN
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -108,6 +109,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -224,6 +228,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 26.03.14                                        * add InvNumberPartner
  16.03.14                                        * add JuridicalName_From and OKPO_From
  13.02.14                                                            * add PriceList
  10.02.14                                        * add Object_RoleAccessKey_View

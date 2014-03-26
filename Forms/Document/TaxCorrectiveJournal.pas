@@ -51,6 +51,7 @@ type
     colOKPO_From: TcxGridDBColumn;
     colInvNumber_Master: TcxGridDBColumn;
     colInvNumber_Child: TcxGridDBColumn;
+    colDocument: TcxGridDBColumn;
   private
     { Private declarations }
   public

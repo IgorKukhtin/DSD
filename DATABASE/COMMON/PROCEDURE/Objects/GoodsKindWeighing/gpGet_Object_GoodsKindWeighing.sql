@@ -1,6 +1,6 @@
 ﻿-- Function: gpGet_Object_GoodsKindWeighing()
 
---DROP FUNCTION gpGet_Object_GoodsKindWeighing();
+DROP FUNCTION IF EXISTS gpGet_Object_GoodsKindWeighing (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_GoodsKindWeighing(
     IN inId          Integer,       -- Единица измерения

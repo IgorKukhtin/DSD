@@ -15,7 +15,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
+    function InsertUpdateReturnIn(Id: Integer; InvNumber,InvNumberPartner: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId: Integer):Integer;
@@ -38,7 +38,7 @@ end;
 
 function TReturnIn.InsertDefault: integer;
 var Id: Integer;
-    InvNumber: String;
+    InvNumber,InvNumberPartner: String;
     OperDate: TDateTime;
     OperDatePartner: TDateTime;
     Checked, PriceWithVAT: Boolean;
@@ -47,6 +47,7 @@ var Id: Integer;
 begin
   Id:=0;
   InvNumber:='1';
+  InvNumberPartner:='1';
   OperDate:= Date;
 
   OperDatePartner:= Date;
@@ -60,13 +61,13 @@ begin
   PaidKindId:=TPaidKindTest.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
   //
-  result := InsertUpdateReturnIn(Id, InvNumber, OperDate,
+  result := InsertUpdateReturnIn(Id, InvNumber, InvNumberPartner, OperDate,
              OperDatePartner, Checked, PriceWithVAT,
              VATPercent, ChangePercent,
              FromId, ToId, PaidKindId, ContractId);
 end;
 
-function TReturnIn.InsertUpdateReturnIn(Id: Integer; InvNumber: String; OperDate: TDateTime;
+function TReturnIn.InsertUpdateReturnIn(Id: Integer; InvNumber,InvNumberPartner: String; OperDate: TDateTime;
              OperDatePartner: TDateTime; Checked,PriceWithVAT: Boolean;
              VATPercent, ChangePercent: double;
              FromId, ToId, PaidKindId, ContractId: Integer):Integer;
@@ -74,6 +75,7 @@ begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
+  FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumberPartner);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
 
   FParams.AddParam('inOperDatePartner', ftDateTime, ptInput, OperDatePartner);
