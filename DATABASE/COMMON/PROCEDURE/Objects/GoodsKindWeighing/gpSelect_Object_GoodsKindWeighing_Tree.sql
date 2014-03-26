@@ -64,4 +64,4 @@ ALTER FUNCTION gpSelect_Object_GoodsKindWeighing_Tree(TVarChar)
 */
 
 -- тест
- SELECT * FROM gpSelect_Object_GoodsKindWeighing_Tree('2')
+-- SELECT * FROM gpSelect_Object_GoodsKindWeighing_Tree('2')
