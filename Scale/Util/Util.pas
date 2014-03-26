@@ -78,12 +78,13 @@ procedure FillAllList;
 
 
 var
-  CurSetting: TSetting;
-  NewSetting: TSetting;
+  CurSetting:         TSetting;
+  NewSetting:         TSetting;
 
-  PriceList:     TListArray;
-  WeightTare:    TListArray;
-  ChangePercent: TListArray;
+  PriceList:          TListArray;
+  WeightTare:         TListArray;
+  ChangePercent:      TListArray;
+  GoodsKindWeighing:  TListArray;
 
 //  ,ParamsKindPackage,ParamsDiscount,ParamsCountTare,ParamsCodeTareWeightEnter,ParamsBill_ScaleHistory:TParams;
 //  ParamsBillKind,ParamsBillKind_UnitFrom,ParamsBillKind_UnitTo,ParamsBillKind_MoneyKind,ParamsBillKind_isProduction:TParams;
@@ -96,9 +97,10 @@ procedure FillAllList;
 var
  i: integer;
 begin
-  PriceList:=     FillCustomList('gpSelect_Object_ToolsWeighing_PriceList');
-  WeightTare:=    FillCustomList('gpSelect_Object_ToolsWeighing_WeightTare');
-  ChangePercent:= FillCustomList('gpSelect_Object_ToolsWeighing_ChangePercent');
+  PriceList:=         FillCustomList('gpSelect_Object_ToolsWeighing_PriceList');
+  WeightTare:=        FillCustomList('gpSelect_Object_ToolsWeighing_WeightTare');
+  ChangePercent:=     FillCustomList('gpSelect_Object_ToolsWeighing_ChangePercent');
+  GoodsKindWeighing:= FillCustomList('gpSelect_Object_ToolsWeighing_GoodsKindWeighing');
 
 end;
 
