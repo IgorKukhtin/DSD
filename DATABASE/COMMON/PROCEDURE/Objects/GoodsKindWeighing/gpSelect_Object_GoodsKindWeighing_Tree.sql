@@ -34,23 +34,15 @@ $BODY$BEGIN
    UNION
 
    SELECT
-         GoodsKindWeighing.Id                             AS Id
-       , GoodsKindWeighing.ObjectCode                     AS Code
+         Object_GoodsKindWeighingGroup.Id                 AS Id
+       , Object_GoodsKindWeighingGroup.ObjectCode         AS Code
        , Object_GoodsKindWeighingGroup.ValueData          AS Name
-       , GoodsKindWeighing.isErased                       AS isErased
+       , Object_GoodsKindWeighingGroup.isErased           AS isErased
        , CAST(0 AS Integer)                               AS ParentId
 
-   FROM Object AS GoodsKindWeighing
+   FROM Object AS Object_GoodsKindWeighingGroup
+   WHERE Object_GoodsKindWeighingGroup.DescId = zc_Object_GoodsKindWeighingGroup()
 
-   LEFT JOIN ObjectLink AS ObjectLink_GoodsKindWeighingGroup
-                        ON ObjectLink_GoodsKindWeighingGroup.ObjectId = GoodsKindWeighing.Id
-                       AND ObjectLink_GoodsKindWeighingGroup.DescId = zc_ObjectLink_GoodsKindWeighing_GoodsKindWeighingGroup()
-
-   LEFT JOIN Object AS Object_GoodsKindWeighingGroup ON Object_GoodsKindWeighingGroup.Id = ObjectLink_GoodsKindWeighingGroup.ChildObjectId
-
-
-   WHERE GoodsKindWeighing.DescId = zc_Object_GoodsKindWeighing()
---   ORDER BY 2
    ;
 
 
@@ -66,9 +58,10 @@ ALTER FUNCTION gpSelect_Object_GoodsKindWeighing_Tree(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.03.14                                                         *
  25.03.14                                                         *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_GoodsKindWeighing_Tree('2')
+ SELECT * FROM gpSelect_Object_GoodsKindWeighing_Tree('2')

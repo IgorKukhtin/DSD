@@ -298,9 +298,9 @@ uses
   PersonalAccountTest in '..\SOURCE\Movement\All\PersonalAccountTest.pas',
   PersonalAccount in '..\..\Forms\Document\PersonalAccount.pas' {PersonalAccountForm: TParentForm},
   PersonalAccountJournal in '..\..\Forms\Document\PersonalAccountJournal.pas' {PersonalAccountJournalForm: TParentForm},
-  City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
+  GoodsKindWeighingGroup in '..\..\Forms\Guides\GoodsKindWeighingGroup.pas' {GoodsKindWeighingGroupForm: TParentForm},
   GoodsKindWeighingEdit in '..\..\Forms\Guides\GoodsKindWeighingEdit.pas' {GoodsKindWeighingEditForm: TParentForm},
-  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+  GoodsKindWeighingGroupEdit in '..\..\Forms\Guides\GoodsKindWeighingGroupEdit.pas' {GoodsKindWeighingGroupEditForm: TParentForm},
   GoodsPropertyValue in '..\..\Forms\Guides\GoodsPropertyValue.pas' {GoodsPropertyValueForm: TParentForm},
   ContractChoice in '..\..\Forms\Guides\ContractChoice.pas' {ContractChoiceForm: TParentForm},
   ReturnInJournal in '..\..\Forms\Document\ReturnInJournal.pas' {ReturnInJournalForm: TParentForm},
@@ -398,7 +398,9 @@ uses
   InfoMoneyGroup in '..\..\Forms\Guides\InfoMoneyGroup.pas' {InfoMoneyGroupForm: TParentForm},
   Business in '..\..\Forms\Guides\Business.pas' {BusinessForm: TParentForm},
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
-  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm};
+  GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
+  City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
+  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm};
 
 {$R *.RES}
 

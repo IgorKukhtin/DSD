@@ -14,8 +14,6 @@ uses
 
 type
   TGoodsKindWeighingEditForm = class(TParentForm)
-    edName: TcxTextEdit;
-    cxLabel1: TcxLabel;
     cxButton1: TcxButton;
     cxButton2: TcxButton;
     ActionList: TActionList;
@@ -27,28 +25,14 @@ type
      Ó‰: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    cxLabel4: TcxLabel;
-    dsdMeasureGuides: TdsdGuides;
-    cxLabel2: TcxLabel;
-    ceWeight: TcxCurrencyEdit;
     dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
-    ceParentGroup: TcxButtonEdit;
-    ceMeasure: TcxButtonEdit;
-    ÒÂTradeMark: TcxButtonEdit;
+    ceGoodsKindGroup: TcxButtonEdit;
+    ÒÂGoodsKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
-    TradeMarkGuides: TdsdGuides;
-    ceInfoMoney: TcxButtonEdit;
-    cxLabel6: TcxLabel;
-    dsdInfoMoneyGuides: TdsdGuides;
+    GoodsKindGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
-    cxLabel7: TcxLabel;
-    ceBusiness: TcxButtonEdit;
-    BusinessGuides: TdsdGuides;
-    cxLabel8: TcxLabel;
-    edFuel: TcxButtonEdit;
-    FuelGuides: TdsdGuides;
-    GoodsGroupGuides: TdsdGuides;
+    GoodsKindWeighingGroupGuides: TdsdGuides;
   private
     { Private declarations }
   public
