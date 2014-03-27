@@ -47,8 +47,17 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               )  
 AS
 $BODY$
+  DECLARE vbIsMovement Boolean;
 BEGIN
 
+    -- !!!определяется - будет ли разворачиваться по документам для Прибыль текущего периода
+    -- 
+    vbIsMovement:= (zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountId = COALESCE (inAccountId, 0) OR AccountGroupId = COALESCE (inAccountGroupId, 0) OR AccountDirectionId = COALESCE (inAccountDirectionId, 0))
+               AND  inAccountId <> 0)
+                OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE AccountId = COALESCE (inAccountId, 0) OR AccountGroupId = COALESCE (inAccountGroupId, 0) OR AccountDirectionId = COALESCE (inAccountDirectionId, 0))
+               AND  inProfitLossId <> 0);
+
+    --
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
@@ -231,8 +240,8 @@ BEGIN
                                  END) AS SummOut
                           , Movement.DescId   AS MovementDescId
                           , Movement.Id       AS MovementId
-                          , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
-                          , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
+                          , CASE WHEN vbIsMovement THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
+                          , CASE WHEN vbIsMovement THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
 
                           , MILinkObject_Route.ObjectId  AS RouteId_inf
                           , MILinkObject_Unit.ObjectId   AS UnitId_inf
@@ -269,8 +278,8 @@ BEGIN
                             , MIReport.ActiveAccountId
                             , Movement.DescId
                             , Movement.Id  
-                            , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN Movement.InvNumber ELSE ''   END
-                            , CASE WHEN tmpContainer.AccountId IN (zc_Enum_Account_110101()) THEN MIReport.OperDate  ELSE NULL END
+                            , CASE WHEN vbIsMovement THEN Movement.InvNumber ELSE ''   END
+                            , CASE WHEN vbIsMovement THEN MIReport.OperDate  ELSE NULL END
 
                             , MILinkObject_Route.ObjectId
                             , MILinkObject_Unit.ObjectId
