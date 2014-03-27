@@ -181,6 +181,28 @@ begin
     rgDiscount.Items.Add('('+IntToStr(ChangePercent[i].Num)+') '+ ChangePercent[i].Name+ ' %');
   rgDiscount.ItemIndex:=  StrToInt(EditDiscountCode.Text)-1;
 
+  //код вида товара(упаковки)
+  EditKindPackageCode.Text:= GetDefaultValue('Scale_'+IntToStr(CurSetting.ScaleNum),'Default','GoodsKindCode','','1');
+  for I := 0 to Length(GoodsKindWeighing)-1 do
+    rgKindPackage.Items.Add('('+IntToStr(GoodsKindWeighing[i].Num)+') '+ GoodsKindWeighing[i].Name);
+  rgKindPackage.ItemIndex:=   GetListOrder_ByCode(StrToInt(EditKindPackageCode.Text), GoodsKindWeighing);
+
+{
+  for I := 0 to Length(GoodsKindWeighing)-1 do
+   if IntToStr(GoodsKindWeighing[i].Num) = EditKindPackageCode.Text then
+       rgKindPackage.ItemIndex:=  StrToInt(EditKindPackageCode.Text)-1;
+}
+
+     if Length(PriceList) >0
+     then begin
+            rgKindPackage.Columns:=2;
+            rgPriceList.Columns:=1;
+            PriceListPanel.Width:=PriceListPanel.Width-100;
+            EditPriceListCode.Width:=EditPriceListCode.Width-100;
+            KindPackagePanel.Width:=KindPackagePanel.Width+100;
+     end;
+
+
 {
      fEnterGoodsCode:=false;
      fEnterGoodsName:=false;
@@ -592,7 +614,7 @@ end;
 {------------------------------------------------------------------------------}
 procedure TGuideGoodsForm.rgKindPackageClick(Sender: TObject);
 begin
-    EditKindPackageCode.Text:=IntToStr(rgKindPackage.ItemIndex+1);
+    EditKindPackageCode.Text:=IntToStr(GoodsKindWeighing[rgKindPackage.ItemIndex].Num );
     ActiveControl:=EditKindPackageCode;
 end;
 {------------------------------------------------------------------------------}

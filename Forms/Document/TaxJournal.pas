@@ -49,6 +49,7 @@ type
     colUnitName: TcxGridDBColumn;
     colPartnerCode: TcxGridDBColumn;
     colPartnerName: TcxGridDBColumn;
+    colDocument: TcxGridDBColumn;
   private
     { Private declarations }
   public

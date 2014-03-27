@@ -15,11 +15,12 @@ AS
 $BODY$
    DECLARE vbTaxId        Integer;
    DECLARE vbUserId       Integer;
+   DECLARE vbInvNumberPartner Integer;
+   DECLARE vbInvNumber Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
-     
-       vbUserId := lpGetUserBySession(inSession);
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+/*
 
        CASE inDocumentTaxKindId
          WHEN zc_Enum_DocumentTaxKind_Tax() THEN BEGIN
@@ -58,13 +59,13 @@ BEGIN
        END;
 
        ESLE
-
+*/
           SELECT '12345/789'
               , Object_DocumentTaxKind.ValueData
                 INTO outInvNumberPartner_Master, outDocumentTaxKindName
          FROM Object AS Object_DocumentTaxKind
          WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
-      END;
+--      END;
 
 END;
 $BODY$

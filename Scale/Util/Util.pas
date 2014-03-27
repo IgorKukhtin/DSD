@@ -49,6 +49,7 @@ type
 
 function GetObject_byCode(Code, DescId: integer): TDBObject;
 function GetDefaultValue(inLevel1,inLevel2,inLevel3,inLevel4,inValueData:String):String;
+function GetListOrder_ByCode(Num:integer; List:TListArray):integer;
 
 function isEqualFloatValues(Value1,Value2:Double):boolean;
 {==================================}
@@ -78,12 +79,13 @@ procedure FillAllList;
 
 
 var
-  CurSetting: TSetting;
-  NewSetting: TSetting;
+  CurSetting:         TSetting;
+  NewSetting:         TSetting;
 
-  PriceList:     TListArray;
-  WeightTare:    TListArray;
-  ChangePercent: TListArray;
+  PriceList:          TListArray;
+  WeightTare:         TListArray;
+  ChangePercent:      TListArray;
+  GoodsKindWeighing:  TListArray;
 
 //  ,ParamsKindPackage,ParamsDiscount,ParamsCountTare,ParamsCodeTareWeightEnter,ParamsBill_ScaleHistory:TParams;
 //  ParamsBillKind,ParamsBillKind_UnitFrom,ParamsBillKind_UnitTo,ParamsBillKind_MoneyKind,ParamsBillKind_isProduction:TParams;
@@ -96,9 +98,10 @@ procedure FillAllList;
 var
  i: integer;
 begin
-  PriceList:=     FillCustomList('gpSelect_Object_ToolsWeighing_PriceList');
-  WeightTare:=    FillCustomList('gpSelect_Object_ToolsWeighing_WeightTare');
-  ChangePercent:= FillCustomList('gpSelect_Object_ToolsWeighing_ChangePercent');
+  PriceList:=         FillCustomList('gpSelect_Object_ToolsWeighing_PriceList');
+  WeightTare:=        FillCustomList('gpSelect_Object_ToolsWeighing_WeightTare');
+  ChangePercent:=     FillCustomList('gpSelect_Object_ToolsWeighing_ChangePercent');
+  GoodsKindWeighing:= FillCustomList('gpSelect_Object_ToolsWeighing_GoodsKindWeighing');
 
 end;
 
@@ -161,6 +164,15 @@ begin
        end;
     end;
   finally spExec.Free; ClientDataSet.Free; end;
+end;
+
+
+function GetListOrder_ByCode(Num:integer; List:TListArray):integer;
+var
+ i: integer;
+begin
+  for I := 0 to Length(List) do
+    if List[i].Num = Num then Result:=I;
 end;
 
 

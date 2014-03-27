@@ -2,6 +2,7 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
+  ExplicitLeft = -128
   ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -105,21 +106,29 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colInvNumber: TcxGridDBColumn
+          inherited colOperDate: TcxGridDBColumn [1]
+            HeaderAlignmentHorz = taCenter
+            Width = 50
+          end
+          inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colInvNumberPartner: TcxGridDBColumn [2]
-            Caption = #8470' '#1076#1086#1082'.'#1085#1072#1083#1086#1075'.'
+          object colInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1085#1072#1083#1086#1075'.'
             DataBinding.FieldName = 'InvNumberPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          inherited colOperDate: TcxGridDBColumn
+          object colTaxKindName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+            DataBinding.FieldName = 'TaxKindName'
             HeaderAlignmentHorz = taCenter
-            Width = 50
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colDateRegistered: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088'.'
@@ -146,7 +155,6 @@ inherited TaxJournalForm: TTaxJournalForm
           object colOKPO_To: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO_To'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
@@ -162,6 +170,7 @@ inherited TaxJournalForm: TTaxJournalForm
           object colUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'UnitName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -189,7 +198,7 @@ inherited TaxJournalForm: TTaxJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 55
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -199,7 +208,7 @@ inherited TaxJournalForm: TTaxJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
           end
           object colPriceWithVAT: TcxGridDBColumn
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
@@ -250,19 +259,12 @@ inherited TaxJournalForm: TTaxJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colTaxKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082'.'
-            DataBinding.FieldName = 'TaxKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object colContractName: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 55
+            Width = 45
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -300,7 +302,14 @@ inherited TaxJournalForm: TTaxJournalForm
             DataBinding.FieldName = 'Checked'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 50
+          end
+          object colDocument: TcxGridDBColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+            DataBinding.FieldName = 'Document'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
         end
       end

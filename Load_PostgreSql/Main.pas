@@ -5468,7 +5468,7 @@ begin
         Close;
         Clear;
         Add('select GoodsProperty_Postgres.Id as ObjectId');
-        Add('     , 0 as ObjectCode');
+        Add('     , GoodsProperty_Postgres.Id as ObjectCode');
         Add('     , GoodsProperty_Postgres.Name_PG as ObjectName');
         Add('     , GoodsProperty_Postgres.Id_Postgres as Id_Postgres');
         Add('from dba.GoodsProperty_Postgres');
@@ -9221,7 +9221,7 @@ begin
              if ContractId_pg=0
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber').AsString;
-             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:='';
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('BillNumberClient2').AsString;;
              toStoredProc.Params.ParamByName('inInvNumberOrder').Value:=FieldByName('BillNumberClient1').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
@@ -10617,6 +10617,7 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -10808,6 +10809,8 @@ begin
            +'            else '+FormatToVarCharServer_notNULL('')
            +'       end as InvNumber_all');
 
+        Add('     , Bill.BillNumberClient1 as inInvNumberPartner');
+
         Add('     , Bill.BillDate as OperDate');
         Add('     , OperDate as OperDatePartner');
 
@@ -10924,6 +10927,7 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -10952,6 +10956,7 @@ begin
              if ContractId_pg=0
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
 
@@ -11527,6 +11532,7 @@ begin
         Add('     , 0 as BillId_nalog');
 
         Add('     , isnull(Bill.StatusId, zc_rvNo()) as StatusId');
+        Add('     , case when isnull(Bill.BillNumberClient2, '+FormatToVarCharServer_notNULL('')+') = '+FormatToVarCharServer_notNULL('1')+' then zc_rvYes() else zc_rvNo() end as DocId');
 
         Add('     , Bill.isNds as inPriceWithVAT');
         Add('     , Bill.Nds as inVATPercent');
@@ -11665,6 +11671,7 @@ begin
         Add('     , Bill_find.BillId_nalog');
 
         Add('     , isnull(Bill.StatusId, zc_rvNo()) as StatusId');
+        Add('     , case when isnull(Bill.BillNumberClient2, '+FormatToVarCharServer_notNULL('')+') = '+FormatToVarCharServer_notNULL('1')+' then zc_rvYes() else zc_rvNo() end as DocId');
 
         Add('     , Bill.isNds as inPriceWithVAT');
         Add('     , Bill.Nds as inVATPercent');
@@ -11868,6 +11875,8 @@ begin
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
+             if FieldByName('DocId').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inDocument').Value:=true else toStoredProc.Params.ParamByName('inDocument').Value:=false;
+
              if FieldByName('inPriceWithVAT').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=true else toStoredProc.Params.ParamByName('inPriceWithVAT').Value:=false;
              toStoredProc.Params.ParamByName('inVATPercent').Value:=FieldByName('inVATPercent').AsFloat;
 
@@ -12528,3 +12537,189 @@ ok
 
 }
 
+
+{
+select 1 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_ATB(Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 2 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_OK(Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 3 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where (fIsClient_Metro(Unit .Id) = zc_rvYes() or fIsClient_MetroTwo(Unit .Id) = zc_rvYes()) and OKPO <> ''
+group by OKPO
+
+union all
+select 4 as myId -- Алан
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where (fIsClient_Furshet(Unit .Id) = zc_rvYes() or fIsClient_Obgora(Unit .Id) = zc_rvYes()or fIsClient_Tavriya(Unit .Id) = zc_rvYes()) and OKPO <> ''
+group by OKPO
+
+union all
+select 5 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where (fIsClient_Fozzi(Unit .Id) = zc_rvYes() or fIsClient_FozziM(Unit .Id) = zc_rvYes()) and OKPO <> ''
+group by OKPO
+
+union all
+
+select 6 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Kisheni(Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 7 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Vivat (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+
+union all
+select 8 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Billa (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+
+union all
+select 10 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Amstor (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+
+union all
+select 11 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Omega (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+
+union all
+select 12 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Vostorg (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 13 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Ashan (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 14 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Real (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 15 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_GD (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+-- union all select 16 as myId fIsClient_Tavriya
+
+union all
+select 17 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Adventis (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+union all
+select 18 as myId
+     , isnull (Information1.OKPO, isnull (Information2.OKPO, '')) as OKPO
+     , (select Id_Postgres from GoodsProperty_Postgres where Id = myId) as Id_pg
+from Unit
+     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Unit.InformationFromUnitID
+                                                          and Information1.OKPO <> ''
+     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Unit.Id
+where fIsClient_Kray (Unit .Id) = zc_rvYes() and OKPO <> ''
+group by OKPO
+
+order by 1
+}
