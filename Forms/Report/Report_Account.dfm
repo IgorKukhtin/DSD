@@ -473,6 +473,7 @@ object Report_AccountForm: TReport_AccountForm
     Height = 111
     Align = alTop
     TabOrder = 1
+    ExplicitTop = 20
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
@@ -691,8 +692,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -705,7 +706,7 @@ object Report_AccountForm: TReport_AccountForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 160
+    Left = 192
     Top = 8
     DockControlHeights = (
       0
@@ -783,6 +784,7 @@ object Report_AccountForm: TReport_AccountForm
     Top = 240
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -796,6 +798,7 @@ object Report_AccountForm: TReport_AccountForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -804,6 +807,7 @@ object Report_AccountForm: TReport_AccountForm
     end
     object actOpenDocument: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actMovementForm
@@ -818,6 +822,7 @@ object Report_AccountForm: TReport_AccountForm
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actOpenForm'
       FormName = 'NULL'
       FormNameParam.Value = Null
@@ -840,6 +845,7 @@ object Report_AccountForm: TReport_AccountForm
     end
     object actMovementForm: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = getMovementForm
       StoredProcList = <
         item

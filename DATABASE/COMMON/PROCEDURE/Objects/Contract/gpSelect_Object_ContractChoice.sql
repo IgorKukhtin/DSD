@@ -2,11 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_ContractChoice(
     IN inPaidKindId     Integer,       -- Форма оплаты
     IN inShowAll        Boolean,       --
+    IN inJuridicalId    Integer,       -- Юр лицо
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer
@@ -111,7 +112,8 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
    WHERE Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-     AND Object_Contract_View.isErased = FALSE;
+     AND Object_Contract_View.isErased = FALSE
+     AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0);
 
    ELSE
    
@@ -183,7 +185,9 @@ BEGIN
       
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
         
-   WHERE Object_Contract_View.isErased = FALSE;
+   WHERE Object_Contract_View.isErased = FALSE     
+     AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0);
+
      
 END IF;
    
@@ -191,12 +195,13 @@ END IF;
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 27.03.14                         * add inJuridicalId
  27.02.14         * add inPaidKindId,inShowAll
  13.02.14                                         * add zc_Enum_ContractStateKind_Close
  13.02.14                                         * change Object_Contract_View.ContractStateKindCode

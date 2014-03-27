@@ -51,6 +51,12 @@ type
     gpGetJuridical: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrintReport: TdxBarButton;
+    cxLabel4: TcxLabel;
+    edAccount: TcxButtonEdit;
+    AccountGuides: TdsdGuides;
+    cxLabel8: TcxLabel;
+    ceContract: TcxButtonEdit;
+    ContractGuides: TdsdGuides;
   private
     { Private declarations }
   public
