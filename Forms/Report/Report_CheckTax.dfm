@@ -170,18 +170,11 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Width = 57
           end
           object clPrice_Sale: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1087#1088#1086#1076#1072#1078#1072')'
+            Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'Price_Sale'
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 57
-          end
-          object clPrice_Tax: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1053#1053')'
-            DataBinding.FieldName = 'Price_Tax'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 52
           end
           object clAmount_Sale: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1087#1088#1086#1076#1072#1078#1072')'

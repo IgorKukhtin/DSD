@@ -14,9 +14,9 @@ RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale T
               , FromCode Integer, FromName TVarChar
               , ToCode Integer, TOName TVarChar              
               , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar
-              , Price_Sale TFloat, Price_Tax TFloat
+              , Price_Sale TFloat--, Price_Tax TFloat
               , Amount_Sale TFloat
-             -- , Amount_Tax TFloat
+              , Amount_Tax TFloat
               , Difference Boolean
               , DocumentTaxKindName TVarChar
               )  
