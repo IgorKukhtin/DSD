@@ -57,6 +57,7 @@ type
     colDocumentTaxKindName: TcxGridDBColumn;
     colOKPO_From: TcxGridDBColumn;
     colJuridicalName_From: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

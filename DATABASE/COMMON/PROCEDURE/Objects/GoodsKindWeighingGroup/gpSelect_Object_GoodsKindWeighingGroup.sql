@@ -1,14 +1,14 @@
-п»ї-- Function: gpSelect_Object_GoodsKindWeighingGroup()
+-- Function: gpSelect_Object_GoodsKindWeighingGroup()
 
 --DROP FUNCTION gpSelect_Object_GoodsKindWeighingGroup();
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsKindWeighingGroup(
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, ParentId Integer) AS
 $BODY$BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY
@@ -27,19 +27,17 @@ LEFT JOIN ObjectLink
     WHERE Object.DescId = zc_Object_GoodsKindWeighingGroup();
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_GoodsKindWeighingGroup(TVarChar)
   OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.   РњР°РЅСЊРєРѕ Р”.Рђ.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  25.03.14                                                         *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpSelect_Object_GoodsKindWeighingGroup('2')

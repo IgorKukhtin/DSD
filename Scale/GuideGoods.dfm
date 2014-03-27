@@ -1,10 +1,9 @@
 object GuideGoodsForm: TGuideGoodsForm
   Left = 578
   Top = 242
-  Align = alClient
   Caption = #1055#1072#1088#1072#1084#1077#1090#1088#1099' '#1087#1088#1086#1076#1091#1082#1094#1080#1080
   ClientHeight = 527
-  ClientWidth = 664
+  ClientWidth = 711
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,15 +19,16 @@ object GuideGoodsForm: TGuideGoodsForm
   object GridPanel: TPanel
     Left = 0
     Top = 224
-    Width = 664
+    Width = 711
     Height = 258
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 664
     object DBGrid1: TDBGrid
       Left = 0
       Top = 33
-      Width = 664
+      Width = 711
       Height = 225
       Align = alClient
       DataSource = DataSource
@@ -44,11 +44,12 @@ object GuideGoodsForm: TGuideGoodsForm
     object ButtonPanel: TPanel
       Left = 0
       Top = 0
-      Width = 664
+      Width = 711
       Height = 33
       Align = alTop
       BevelOuter = bvNone
       TabOrder = 1
+      ExplicitWidth = 664
       object ButtonExit: TSpeedButton
         Left = 511
         Top = 3
@@ -111,11 +112,12 @@ object GuideGoodsForm: TGuideGoodsForm
   object ParamsPanel: TPanel
     Left = 0
     Top = 0
-    Width = 664
+    Width = 711
     Height = 224
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitWidth = 664
     object TarePanel: TPanel
       Left = 244
       Top = 0
@@ -317,7 +319,6 @@ object GuideGoodsForm: TGuideGoodsForm
         Top = 35
         Width = 277
         Height = 189
-        Align = alClient
         Caption = #1055#1088#1072#1081#1089'-'#1051#1080#1089#1090
         Color = clBtnFace
         Font.Charset = DEFAULT_CHARSET
@@ -522,6 +523,7 @@ object GuideGoodsForm: TGuideGoodsForm
         Align = alClient
         Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         Color = clBtnFace
+        Columns = 2
         Font.Charset = DEFAULT_CHARSET
         Font.Color = 8404992
         Font.Height = -11
@@ -570,12 +572,13 @@ object GuideGoodsForm: TGuideGoodsForm
   object SummPanel: TPanel
     Left = 0
     Top = 482
-    Width = 664
+    Width = 711
     Height = 45
     Align = alBottom
     BevelOuter = bvNone
     TabOrder = 2
     Visible = False
+    ExplicitWidth = 664
   end
   object DataSource: TDataSource
     DataSet = Query

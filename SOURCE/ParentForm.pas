@@ -169,6 +169,11 @@ begin
       else
         ShowMessage('Установки пользователя загружаются');
   end;
+
+  // Ctrl + Alt + N
+  if ShortCut(Key, Shift) = 49230 then ShowMessage(name)
+
+
 end;
 
 procedure TParentForm.FormShow(Sender: TObject);

@@ -269,6 +269,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindWeighingEditForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingGroupForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindWeighingGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindWeighingGroupEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKindWeighingGroupEditForm');
+
+
 end;
 
 

@@ -1,6 +1,6 @@
 -- Fl
 alter PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
-result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
+result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, BillNumberClient2 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, ClientId Integer
      , PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, StatusId smallint, zc_rvYes smallint, Id_Postgres integer)
@@ -14,6 +14,7 @@ begin
        ObjectId Integer
      , BillId_calc Integer null
      , BillNumberClient1 TVarCharLongLong
+     , BillNumberClient2 TVarCharLongLong
      , InvNumber_all TVarCharLongLong
      , InvNumber integer
      , OperDate Date
@@ -93,7 +94,7 @@ and StatusId = zc_Enum_Status_UnComplete()
    and Bill_find.BillId is null
    and Bill.Id_Postgres is not null;
 */
-insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
+insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, BillNumberClient2, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
                     , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
 select Bill.Id as ObjectId
      , cast (Bill.BillNumber as TVarCharMedium) ||
@@ -104,7 +105,8 @@ select Bill.Id as ObjectId
             else ''
        end as InvNumber_all
      , Bill.BillNumber as InvNumber
-     , Bill.BillNumberClient1 as BillNumberClient1
+     , case when trim(isnull(Bill_find.BillNumberClient1,''))<>'' then Bill_find.BillNumberClient1 else Bill.BillNumberClient1 end as BillNumberClient1
+     , Bill.BillNumberClient2 as BillNumberClient2
      , isnull (Bill_find.BillDate, Bill.BillDate) as OperDate
      , Bill.BillDate as OperDatePartner
 
@@ -225,6 +227,7 @@ from _tmpBill_NotNalog
         , ifnull(_tmpList2.ObjectId, _tmpList.ObjectId, 0) as BillId
         , isnull(_tmpList2.InvNumber_all, _tmpList.InvNumber_all) as InvNumber
         , _tmpList.BillNumberClient1 as BillNumberClient1
+        , _tmpList.BillNumberClient2 as BillNumberClient2
         , isnull(_tmpList2.OperDate, _tmpList.OperDate)as OperDate
         , isnull(_tmpList2.OperDatePartner, _tmpList.OperDatePartner)as OperDatePartner
         , isnull(_tmpList2.PriceWithVAT, _tmpList.PriceWithVAT)as PriceWithVAT
@@ -246,7 +249,7 @@ from _tmpBill_NotNalog
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0 -- _tmpList2.ObjectId = _tmpList.BillId_calc
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, PaidKindId_Postgres
+   group by ObjectId, BillId, InvNumber, BillNumberClient1, BillNumberClient2, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres
    order by 5, 3, 1
    ;
