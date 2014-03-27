@@ -2,11 +2,12 @@
 
 DROP FUNCTION IF EXISTS gpReport_Goods_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
+    --IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inJuridicalId  Integer   , 
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
@@ -260,7 +261,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -271,5 +272,5 @@ ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Int
 */
 
 -- тест
---SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',  inDescId:= 5, inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());-- юр лицо 15616
+--SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',   inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());-- юр лицо 15616
 

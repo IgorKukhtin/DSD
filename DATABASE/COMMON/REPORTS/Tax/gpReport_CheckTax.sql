@@ -35,7 +35,7 @@ BEGIN
                                 , MovementLinkMovement.MovementChildId AS MovementId_Tax
                                 , Movement_Tax.OperDate as OperDate_Tax
                                 , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS() THEN MovementLinkObject_Partner.ObjectId ELSE 0 END AS PartnerId_Tax
-                               -- , MovementString_.ValueData :: Integer as InvNumber_Tax
+                               
                           FROM Movement 
                           JOIN MovementDate AS MovementDate_OperDatePartner
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -57,22 +57,19 @@ BEGIN
                                    
                           WHERE Movement.DescId = zc_Movement_Sale()  
                             AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
-                                   
+   
                       UNION ALL 
                           SELECT  Movement.Id AS MovementId
                                 , Movement.InvNumber as InvNumber
                                 , MovementDate_OperDatePartner.ValueData AS OperDate_Sale
                                 , Movement.DescId AS Movement_DescId
                                 , zc_MovementLinkObject_From() AS MovementLODescId 
-                               -- , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
-                           
                                 , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR() THEN zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR() 
                                        WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR() THEN zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
                                        ELSE 0
                                   END AS DocumentTaxKindId
                                 , 0 AS MovementId_Tax     
                                 , inEndDate as OperDate_Tax
-                              --  , 0 as InvNumber_Tax
                                 , 0 AS PartnerId_Tax
                           FROM Movement 
                           JOIN MovementDate AS MovementDate_OperDatePartner
@@ -92,7 +89,7 @@ BEGIN
                             AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
                             AND (inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                                  OR inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                 OR inDocumentTaxKindID = 0)  
+                                 OR inDocumentTaxKindID = 0)
                           )
        
   
@@ -112,13 +109,11 @@ BEGIN
          , Object_GoodsKind.ValueData AS GoodsKindName
      
          , CAST (tmpGroupMovement.Price_Sale AS TFloat)
-         --  , CAST (tmpGroupMovement.Price_Tax AS TFloat)
      
          , CAST (tmpGroupMovement.Amount_Sale AS TFloat)
          , CAST (tmpGroupMovement.Amount_Tax AS TFloat)
 
-         , CAST (CASE WHEN /*(tmpGroupMovement.Price_Sale<>tmpGroupMovement.Price_Tax) 
-                  OR */(tmpGroupMovement.Amount_Sale<>tmpGroupMovement.Amount_Tax) 
+         , CAST (CASE WHEN (tmpGroupMovement.Amount_Sale<>tmpGroupMovement.Amount_Tax) 
                       THEN TRUE ELSE FALSE END AS Boolean) AS Difference
                  
          , Object_DocumentTaxKind.ValueData AS DocumentTaxKindName       
@@ -128,32 +123,26 @@ BEGIN
                , MAX (tmpMovement.OperDate_Sale)  AS OperDate_Sale
                , MAX (tmpMovement.OperDate_Tax)   AS OperDate_Tax
                , MAX (tmpMovement.InvNumber_Sale) AS InvNumber_Sale
-               --, (tmpMovement.InvNumber_Tax)  AS InvNumber_Tax
                , tmpMovement.MovementId_Tax AS MovementId_Tax
                , tmpMovement.GoodsId
                , tmpMovement.GoodsKindId
                , tmpMovement.Price_Sale     AS Price_Sale
-               --, tmpMovement.Price_Sale     AS Price_Sale
                , SUM (tmpMovement.Amount_Sale)    AS Amount_Sale
-               --, MAX (tmpMovement.Price_Tax)      AS Price_Tax
                , SUM (tmpMovement.Amount_Tax)     AS Amount_Tax
                , tmpMovement.DocumentTaxKindId
                , tmpMovement.ContractId_Tax
                , tmpMovement.PartnerId_Tax
           FROM (SELECT  ObjectLink_Contract_JuridicalBasis.ChildObjectId AS JuridicalBasisId
                       , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
-                     
                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.MovementId ELSE 0 END AS MovementId_Sale
                       , MAX (tmpMovWith.MovementId_Tax) AS MovementId_Tax
                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.OperDate_Sale ELSE inEndDate END AS OperDate_Sale
                       , tmpMovWith.OperDate_Tax  
                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.InvNumber ELSE '' END AS InvNumber_Sale
-                      -- , MovementString_InvNumberPartner.ValueData AS InvNumber_Tax
                       , MovementItem.ObjectId AS GoodsId
                       , MILinkObject_GoodsKind.ObjectId AS GoodsKindId 
                       , MIFloat_Price.ValueData AS Price_Sale
                       , SUM (CASE WHEN tmpMovWith.Movement_DescId=zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE ((-1) * COALESCE (MIFloat_AmountPartner.ValueData, 0)) END)  AS Amount_Sale
-                  --    , 0 AS Price_Tax
                       , 0 AS Amount_Tax
                       , tmpMovWith.DocumentTaxKindId
                       , MovementLinkObject_Contract.ObjectId AS ContractId_Tax
@@ -169,6 +158,7 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                AND MIFloat_Price.ValueData <> 0
                                                 
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -185,15 +175,10 @@ BEGIN
                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                                         
-                           
-                    -- LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Partner_Juridical.ChildObjectId
 
                      LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                           ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-                     --LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = 
-                   --  Where ObjectLink_Partner_Juridical.ChildObjectId = 15624                                                                                             
                
                 GROUP BY ObjectLink_Contract_JuridicalBasis.ChildObjectId 
                        , ObjectLink_Partner_Juridical.ChildObjectId 
@@ -218,12 +203,10 @@ BEGIN
                      , inEndDate AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
                      , '' AS InvNumber_Sale
-                    -- , MovementString_InvNumberPartner.ValueData AS InvNumber_Tax
                      , MovementItem.ObjectId AS GoodsId
                      , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                      , MIFloat_Price.ValueData  AS Price_Sale
                      , 0 AS Amount_Sale
-                     --, MIFloat_Price.ValueData AS Price_Tax
                      , MovementItem.Amount AS Amount_Tax
                      , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                      , MovementLinkObject_Contract.ObjectId AS ContractId_Tax 
@@ -242,6 +225,7 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                AND MIFloat_Price.ValueData <> 0
                                                 
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -255,13 +239,10 @@ BEGIN
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
 
-                                                 
-                    -- LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id =  MovementLinkObject_From.ObjectId
-
-                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                    LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                    -- LEFT JOIN Object AS Object_Contract_Juridical ON Object_Contract_Juridical.Id =  MovementLinkObject_To.ObjectId
+                    
                     /*   берем партнера для  - Сводная налоговая по т.т.(реализация)  */
                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                  ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -270,16 +251,13 @@ BEGIN
                 WHERE Movement.DescId = zc_Movement_Tax()
                   AND Movement.OperDate between inStartDate AND inEndDate
                   AND ((Movement.StatusId = zc_Enum_Status_Complete()) OR (Movement.StatusId = zc_Enum_Status_UnComplete()))
-                  --and Movement.Id =129833
-                 -- And MovementLinkObject_To.ObjectId = 15624
-
+                  
                 ) AS tmpMovement
                GROUP BY tmpMovement.JuridicalBasisId
                       , tmpMovement.JuridicalId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
                       , tmpMovement.DocumentTaxKindId 
-                      --, tmpMovement.InvNumber_Tax
                       , tmpMovement.MovementId_Tax
                       , tmpMovement.ContractId_Tax
                       , tmpMovement.Price_Sale
