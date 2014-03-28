@@ -21,8 +21,6 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       inherited cxGrid: TcxGrid
         Width = 869
         Height = 337
-        ExplicitLeft = 200
-        ExplicitTop = 64
         ExplicitWidth = 869
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -166,7 +164,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Width = 65
           end
           object colSaleSumm: TcxGridDBColumn
-            Caption = #1055#1088#1086#1076#1072#1078#1072' - '#1042#1086#1079#1074#1088#1072#1090
+            Caption = #1055#1088#1086#1076#1072#1078#1072
             DataBinding.FieldName = 'SaleSumm'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 2
@@ -578,6 +576,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Top = 112
   end
   inherited MasterCDS: TClientDataSet
+    IndexFieldNames = 'Remains'
+    StoreDefs = True
     Top = 112
   end
   inherited spSelect: TdsdStoredProc
@@ -615,6 +615,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPribt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbReportOneWeek'
@@ -670,6 +678,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     object bbOther: TdxBarButton
       Action = actPrintOther
+      Category = 0
+    end
+    object bbPribt: TdxBarButton
+      Action = actPrint
       Category = 0
     end
   end
@@ -778,5 +790,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end>
     Left = 344
     Top = 112
+  end
+  object frDataSet: TfrxDBDataset
+    UserName = 'frDataSet'
+    CloseDataSource = False
+    DataSource = MasterDS
+    BCDToCurrency = False
+    Left = 288
+    Top = 136
   end
 end
