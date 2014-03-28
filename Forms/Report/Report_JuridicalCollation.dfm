@@ -1,29 +1,29 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
   ClientHeight = 389
-  ClientWidth = 893
-  ExplicitWidth = 901
+  ClientWidth = 927
+  ExplicitWidth = 935
   ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 893
-    Height = 306
+    Top = 80
+    Width = 927
+    Height = 309
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 893
-    ExplicitHeight = 306
-    ClientRectBottom = 306
-    ClientRectRight = 893
+    ExplicitTop = 80
+    ExplicitWidth = 927
+    ExplicitHeight = 309
+    ClientRectBottom = 309
+    ClientRectRight = 927
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 893
-      ExplicitHeight = 306
+      ExplicitWidth = 927
+      ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 893
-        Height = 306
-        ExplicitWidth = 893
-        ExplicitHeight = 306
+        Width = 927
+        Height = 309
+        ExplicitWidth = 927
+        ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -189,19 +189,21 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 893
-    Height = 57
-    ExplicitWidth = 893
-    ExplicitHeight = 57
+    Width = 927
+    Height = 54
+    ExplicitWidth = 927
+    ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
+      Top = 4
       ExplicitLeft = 118
+      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
       Left = 118
-      Top = 30
+      Top = 29
       ExplicitLeft = 118
-      ExplicitTop = 30
+      ExplicitTop = 29
     end
     inherited cxLabel1: TcxLabel
       Left = 27
@@ -214,36 +216,68 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ExplicitTop = 31
     end
     object cxLabel6: TcxLabel
-      Left = 209
+      Left = 236
       Top = 6
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 209
-      Top = 30
+      Left = 343
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 280
+      Width = 245
     end
     object cxLabel3: TcxLabel
-      Left = 505
-      Top = 8
+      Left = 207
+      Top = 29
       Caption = #1053#1072#1096#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edMainJuridical: TcxButtonEdit
-      Left = 505
-      Top = 30
+      Left = 343
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 280
+      Width = 245
+    end
+    object cxLabel4: TcxLabel
+      Left = 596
+      Top = 31
+      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
+    end
+    object edAccount: TcxButtonEdit
+      Left = 683
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 9
+      Width = 240
+    end
+    object cxLabel8: TcxLabel
+      Left = 628
+      Top = 6
+      Caption = #1044#1086#1075#1086#1074#1086#1088':'
+    end
+    object ceContract: TcxButtonEdit
+      Left = 683
+      Top = 4
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 11
+      Width = 240
     end
   end
   inherited ActionList: TActionList
@@ -259,6 +293,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spJuridicalBalance
       StoredProcList = <
         item
@@ -309,6 +344,20 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
       ReportNameParam.Value = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081') '#1040#1051#1040#1053
@@ -316,6 +365,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       FormName = 'NULL'
       FormNameParam.Value = Null
@@ -340,6 +390,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object actGetForm: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = getMovementForm
       StoredProcList = <
         item
@@ -349,6 +400,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object actOpenDocument: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actGetForm
@@ -363,6 +415,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spJuridicalBalance
       StoredProcList = <
         item
@@ -416,6 +469,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           ComponentItem = 'AccounterName'
           DataType = ftString
           ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
@@ -447,6 +507,20 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -511,8 +585,15 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = JuridicalGuides
+      end
+      item
+        Component = ContractGuides
+      end
+      item
+        Component = AccountGuides
       end>
-    Top = 80
+    Left = 408
+    Top = 72
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'
@@ -595,6 +676,20 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inJuridicalId'
         Value = ''
         Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = AccountGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -694,5 +789,85 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 296
     Top = 192
+  end
+  object AccountGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edAccount
+    FormNameParam.Value = 'TAccount_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TAccount_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValueAll'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 768
+    Top = 48
+  end
+  object ContractGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceContract
+    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoiceForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'InfoMoneyId'
+        Value = ''
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'InfoMoneyName'
+        Value = ''
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+      end>
+    Left = 728
+    Top = 65534
   end
 end

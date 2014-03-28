@@ -510,7 +510,7 @@ implementation
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
      frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils;
+     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants;
 
 procedure Register;
 begin
@@ -1218,7 +1218,12 @@ begin
          for i := 0 to Params.Count - 1 do begin
              case Params[i].DataType of
                 ftString, ftDate, ftDateTime: Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39);
-                ftFloat, ftCurrency: Variables[Params[i].Name] := ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
+                ftFloat, ftCurrency:
+                   case VarType(Params[i].Value) of
+                      varDouble: Variables[Params[i].Name] := ReplaceStr(FloatToStr(Params[i].Value), ',', '.');
+                      else
+                        Variables[Params[i].Name] := Params[i].Value;
+                   end;
                 else
                    Variables[Params[i].Name] := Params[i].Value
              end;

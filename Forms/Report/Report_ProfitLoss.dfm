@@ -176,6 +176,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object clAmount: TcxDBPivotGridField
       Area = faData
       AreaIndex = 0
+      AllowedAreas = [faData]
       IsCaptionAssigned = True
       Caption = #1057#1091#1084#1084#1072
       DataBinding.FieldName = 'Amount'
@@ -277,6 +278,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Top = 192
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -290,6 +292,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxDBPivotGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -298,6 +301,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object MultiAction1: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = dsdExecStoredProc1
@@ -309,6 +313,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object dsdOpenForm1: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'dsdOpenForm1'
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
@@ -334,6 +339,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'AccountName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccountName'
           DataType = ftString
@@ -346,6 +352,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'AccountGroupName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccountGroupName'
           DataType = ftString
@@ -358,6 +365,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'AccountDirectionName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'AccountDirectionName'
           DataType = ftString
@@ -370,6 +378,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'InfoMoneyName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'InfoMoneyName'
           DataType = ftString
@@ -382,6 +391,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
         end
         item
           Name = 'BusinessName'
+          Value = Null
           Component = FormParams
           ComponentItem = 'BusinessName'
           DataType = ftString
@@ -438,6 +448,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     end
     object dsdExecStoredProc1: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetProfitLostParam
       StoredProcList = <
         item
@@ -482,6 +493,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Params = <
       item
         Name = 'inData'
+        Value = ''
         Component = PivotAddOn
         DataType = ftString
         ParamType = ptInput
@@ -500,6 +512,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountGroupName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AccountGroupName'
         DataType = ftString
@@ -512,6 +525,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountDirectionName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AccountDirectionName'
         DataType = ftString
@@ -524,6 +538,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'AccountName'
         DataType = ftString
@@ -536,6 +551,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'InfoMoneyName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'InfoMoneyName'
         DataType = ftString
@@ -566,6 +582,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'BusinessName'
+        Value = Null
         Component = FormParams
         ComponentItem = 'BusinessName'
         DataType = ftString
@@ -644,6 +661,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountName'
+        Value = Null
         DataType = ftString
       end
       item
@@ -652,6 +670,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountGroupName'
+        Value = Null
         DataType = ftString
       end
       item
@@ -660,6 +679,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'AccountDirectionName'
+        Value = Null
         DataType = ftString
       end
       item
@@ -668,6 +688,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'InfoMoneyName'
+        Value = Null
         DataType = ftString
       end
       item
@@ -676,6 +697,7 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       end
       item
         Name = 'BusinessName'
+        Value = Null
         DataType = ftString
       end>
     Left = 360

@@ -47,8 +47,12 @@ RETURNS TABLE  (InvNumber Integer, MovementId Integer, OperDate TDateTime, Movem
               )  
 AS
 $BODY$
-  DECLARE vbIsMovement Boolean;
+   DECLARE vbUserId Integer;
+   DECLARE vbIsMovement Boolean;
 BEGIN
+     -- проверка прав пользовател€ на вызов процедуры
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Account());
+     vbUserId:= lpGetUserBySession (inSession);
 
     -- !!!определ€етс€ - будет ли разворачиватьс€ по документам дл€ ѕрибыль текущего периода
     -- 
@@ -62,9 +66,11 @@ BEGIN
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
                                    -- !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
-                                  (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
-                              AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
-                              AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0) 
+                                  ((Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
+                               AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
+                               AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0))
+                               OR (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+                               AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
                                 ) AS tmpAccount -- счет
                                 JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                               AND Container.DescId = zc_Container_Summ()
