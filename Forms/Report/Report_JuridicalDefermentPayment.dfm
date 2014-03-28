@@ -21,6 +21,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       inherited cxGrid: TcxGrid
         Width = 869
         Height = 337
+        ExplicitLeft = 200
+        ExplicitTop = 64
         ExplicitWidth = 869
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -506,6 +508,71 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
     end
+    object actPrintOther: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Value = '5'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'PeriodNumber'
+        end>
+      StoredProc = spReport
+      StoredProcList = <
+        item
+          StoredProc = spReport
+        end>
+      Caption = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
+      Hint = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
+      ImageIndex = 23
+      DataSets = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm4'
+          DataType = ftFloat
+        end>
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
+      Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
+      ImageIndex = 16
+      DataSets = <>
+      Params = <>
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Top = 112
@@ -566,6 +633,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Visible = True
+          ItemName = 'bbOther'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -595,6 +666,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     object bbFourWeek: TdxBarButton
       Action = actPrintFourWeek
+      Category = 0
+    end
+    object bbOther: TdxBarButton
+      Action = actPrintOther
       Category = 0
     end
   end
@@ -669,6 +744,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Value = Null
         Component = FormParams
         ComponentItem = 'PeriodNumber'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSaleSumm'
+        Component = MasterCDS
+        ComponentItem = 'SaleSumm5'
+        DataType = ftFloat
         ParamType = ptInput
       end>
     Left = 192

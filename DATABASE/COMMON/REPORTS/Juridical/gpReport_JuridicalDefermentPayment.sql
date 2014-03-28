@@ -54,12 +54,12 @@ BEGIN
              , Container.ObjectId     AS AccountId
              , CLO_Contract.ObjectId  AS ContractId
              , CLO_Juridical.ObjectId AS JuridicalId 
-             , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
-             , SUM (CASE WHEN (MIContainer.OperDate <= inOperDate) AND (MIContainer.OperDate >= ContractDate) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm
-             , SUM (CASE WHEN (MIContainer.OperDate <= ContractDate AND MIContainer.OperDate > ContractDate - vbLenght) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm1
-             , SUM (CASE WHEN (MIContainer.OperDate <= ContractDate - vbLenght AND MIContainer.OperDate > ContractDate - 2 * vbLenght) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm2
-             , SUM (CASE WHEN (MIContainer.OperDate <= ContractDate - 2 * vbLenght AND MIContainer.OperDate > ContractDate - 3 * vbLenght) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm3
-             , SUM (CASE WHEN (MIContainer.OperDate <= ContractDate - 3 * vbLenght AND MIContainer.OperDate > ContractDate - 4 * vbLenght) AND (Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
+             , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate >= inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
+             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate) AND (MIContainer.OperDate >= ContractDate) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate AND MIContainer.OperDate >= ContractDate - vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm1
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm2
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm3
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
              , ContractKind.ContractConditionKindId
              , ContractKind.DayCount
              , ContractDate
