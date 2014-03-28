@@ -182,12 +182,6 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
 --add Tax
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
-            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PriceList
                                          ON MovementLinkObject_PriceList.MovementId = Movement.Id
                                         AND MovementLinkObject_PriceList.DescId = zc_MovementLinkObject_PriceList()
@@ -198,6 +192,10 @@ BEGIN
             LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementLinkMovement_Master.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
 -- PriceList Partner
          LEFT JOIN ObjectDate AS ObjectDate_PartnerStartPromo
