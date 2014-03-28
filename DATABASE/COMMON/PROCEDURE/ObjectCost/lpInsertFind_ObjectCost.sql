@@ -30,7 +30,7 @@ $BODY$
   DECLARE vbObjectCostId Integer;
 BEGIN
      -- Û‰‡ÎÂÌËÂ ËÁ Ú‡·ÎËˆ˚ - !!!ƒÀﬂ Œœ“»Ã»«¿÷»»!!!
-     DELETE FROM _tmp___;
+     DELETE FROM _tmp___ ;
 
      --
      inObjectCostDescId := COALESCE (inObjectCostDescId, 0);
@@ -112,48 +112,7 @@ BEGIN
      ELSE
      IF inDescId_9  IS NOT NULL
      THEN
-         vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
-                          FROM (SELECT ObjectCostLink_1.ObjectCostId
-                               FROM ObjectCostLink AS ObjectCostLink_1
-                               JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
-                                                                      AND ObjectCostLink_2.DescId             = inDescId_2
-                                                                      AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
-                                                                      AND ObjectCostLink_3.DescId             = inDescId_3
-                                                                      AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_4 ON ObjectCostLink_4.ObjectId           = inObjectId_4
-                                                                      AND ObjectCostLink_4.DescId             = inDescId_4
-                                                                      AND ObjectCostLink_4.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_4.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                           WHERE ObjectCostLink_1.ObjectId = inObjectId_1
-                             AND ObjectCostLink_1.DescId = inDescId_1
-                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
-                               ) AS ObjectCostLink_1
-                               JOIN ObjectCostLink AS ObjectCostLink_5 ON ObjectCostLink_5.ObjectId           = inObjectId_5
-                                                                      AND ObjectCostLink_5.DescId             = inDescId_5
-                                                                      AND ObjectCostLink_5.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_5.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_6 ON ObjectCostLink_6.ObjectId           = inObjectId_6
-                                                                      AND ObjectCostLink_6.DescId             = inDescId_6
-                                                                      AND ObjectCostLink_6.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_6.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_7 ON ObjectCostLink_7.ObjectId           = inObjectId_7
-                                                                      AND ObjectCostLink_7.DescId             = inDescId_7
-                                                                      AND ObjectCostLink_7.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_7.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_8 ON ObjectCostLink_8.ObjectId           = inObjectId_8
-                                                                      AND ObjectCostLink_8.DescId             = inDescId_8
-                                                                      AND ObjectCostLink_8.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_8.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_9 ON ObjectCostLink_9.ObjectId           = inObjectId_9
-                                                                      AND ObjectCostLink_9.DescId             = inDescId_9
-                                                                      AND ObjectCostLink_9.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_9.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                          );
-         /* !!!Ô‡‚ËÎ¸ÌÓ ÌÓ ÏÂ‰ÂÎÂÌÌÓ!!!
-         vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
+/*       vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
                           FROM ObjectCostLink AS ObjectCostLink_1
                                JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
                                                                       AND ObjectCostLink_2.DescId             = inDescId_2
@@ -187,51 +146,75 @@ BEGIN
                                                                       AND ObjectCostLink_9.DescId             = inDescId_9
                                                                       AND ObjectCostLink_9.ObjectCostDescId   = inObjectCostDescId
                                                                       AND ObjectCostLink_9.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                          WHERE ObjectCostLink_1.ObjectId = inObjectId_1
+                            AND ObjectCostLink_1.DescId = inDescId_1
+                            AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
+                         );*/
+
+                       -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                       INSERT INTO _tmp___ (Id)
+                          SELECT ObjectCostLink_1.ObjectCostId
+                          FROM ObjectCostLink AS ObjectCostLink_1
+                               JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
+                                                                      AND ObjectCostLink_2.DescId             = inDescId_2
+                                                                      AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                               JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
+                                                                      AND ObjectCostLink_3.DescId             = inDescId_3
+                                                                      AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                               JOIN ObjectCostLink AS ObjectCostLink_4 ON ObjectCostLink_4.ObjectId           = inObjectId_4
+                                                                      AND ObjectCostLink_4.DescId             = inDescId_4
+                                                                      AND ObjectCostLink_4.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_4.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                               JOIN ObjectCostLink AS ObjectCostLink_5 ON ObjectCostLink_5.ObjectId           = inObjectId_5
+                                                                      AND ObjectCostLink_5.DescId             = inDescId_5
+                                                                      AND ObjectCostLink_5.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_5.ObjectCostId       = ObjectCostLink_1.ObjectCostId
                            WHERE ObjectCostLink_1.ObjectId = inObjectId_1
                              AND ObjectCostLink_1.DescId = inDescId_1
-                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
-                          );*/
+                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId;
+         -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+         vbObjectCostId:=(SELECT ObjectCostLink_1.Id AS ObjectCostId
+                          FROM _tmp___ AS ObjectCostLink_1
+                               -- JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
+                               --                                        AND ObjectCostLink_2.DescId             = inDescId_2
+                               --                                        AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
+                               --                                        AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.Id
+                               -- JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
+                               --                                       AND ObjectCostLink_3.DescId             = inDescId_3
+                               --                                       AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
+                               --                                       AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.Id
+                               -- JOIN ObjectCostLink AS ObjectCostLink_4 ON ObjectCostLink_4.ObjectId           = inObjectId_4
+                               --                                        AND ObjectCostLink_4.DescId             = inDescId_4
+                               --                                        AND ObjectCostLink_4.ObjectCostDescId   = inObjectCostDescId
+                               --                                        AND ObjectCostLink_4.ObjectCostId       = ObjectCostLink_1.Id
+                               -- JOIN ObjectCostLink AS ObjectCostLink_5 ON ObjectCostLink_5.ObjectId           = inObjectId_5
+                               --                                        AND ObjectCostLink_5.DescId             = inDescId_5
+                               --                                        AND ObjectCostLink_5.ObjectCostDescId   = inObjectCostDescId
+                               --                                        AND ObjectCostLink_5.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_6 ON ObjectCostLink_6.ObjectId           = inObjectId_6
+                                                                      AND ObjectCostLink_6.DescId             = inDescId_6
+                                                                      AND ObjectCostLink_6.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_6.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_7 ON ObjectCostLink_7.ObjectId           = inObjectId_7
+                                                                      AND ObjectCostLink_7.DescId             = inDescId_7
+                                                                      AND ObjectCostLink_7.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_7.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_8 ON ObjectCostLink_8.ObjectId           = inObjectId_8
+                                                                      AND ObjectCostLink_8.DescId             = inDescId_8
+                                                                      AND ObjectCostLink_8.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_8.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_9 ON ObjectCostLink_9.ObjectId           = inObjectId_9
+                                                                      AND ObjectCostLink_9.DescId             = inDescId_9
+                                                                      AND ObjectCostLink_9.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_9.ObjectCostId       = ObjectCostLink_1.Id
+                         );
+
      ELSE
      IF inDescId_8  IS NOT NULL
      THEN
-         vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
-                          FROM (SELECT ObjectCostLink_1.ObjectCostId
-                               FROM ObjectCostLink AS ObjectCostLink_1
-                               JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
-                                                                      AND ObjectCostLink_2.DescId             = inDescId_2
-                                                                      AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
-                                                                      AND ObjectCostLink_3.DescId             = inDescId_3
-                                                                      AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                           WHERE ObjectCostLink_1.ObjectId = inObjectId_1
-                             AND ObjectCostLink_1.DescId = inDescId_1
-                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
-                               ) AS ObjectCostLink_1
-                               JOIN ObjectCostLink AS ObjectCostLink_4 ON ObjectCostLink_4.ObjectId           = inObjectId_4
-                                                                      AND ObjectCostLink_4.DescId             = inDescId_4
-                                                                      AND ObjectCostLink_4.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_4.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_5 ON ObjectCostLink_5.ObjectId           = inObjectId_5
-                                                                      AND ObjectCostLink_5.DescId             = inDescId_5
-                                                                      AND ObjectCostLink_5.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_5.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_6 ON ObjectCostLink_6.ObjectId           = inObjectId_6
-                                                                      AND ObjectCostLink_6.DescId             = inDescId_6
-                                                                      AND ObjectCostLink_6.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_6.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_7 ON ObjectCostLink_7.ObjectId           = inObjectId_7
-                                                                      AND ObjectCostLink_7.DescId             = inDescId_7
-                                                                      AND ObjectCostLink_7.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_7.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                               JOIN ObjectCostLink AS ObjectCostLink_8 ON ObjectCostLink_8.ObjectId           = inObjectId_8
-                                                                      AND ObjectCostLink_8.DescId             = inDescId_8
-                                                                      AND ObjectCostLink_8.ObjectCostDescId   = inObjectCostDescId
-                                                                      AND ObjectCostLink_8.ObjectCostId       = ObjectCostLink_1.ObjectCostId
-                          );
-         /* !!!Ô‡‚ËÎ¸ÌÓ ÌÓ ÏÂ‰ÂÎÂÌÌÓ!!!
-         vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
+/*       vbObjectCostId:=(SELECT ObjectCostLink_1.ObjectCostId
                           FROM ObjectCostLink AS ObjectCostLink_1
                                JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
                                                                       AND ObjectCostLink_2.DescId             = inDescId_2
@@ -261,10 +244,67 @@ BEGIN
                                                                       AND ObjectCostLink_8.DescId             = inDescId_8
                                                                       AND ObjectCostLink_8.ObjectCostDescId   = inObjectCostDescId
                                                                       AND ObjectCostLink_8.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                               JOIN ObjectCostLink AS ObjectCostLink_9 ON ObjectCostLink_9.ObjectId           = inObjectId_9
+                                                                      AND ObjectCostLink_9.DescId             = inDescId_9
+                                                                      AND ObjectCostLink_9.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_9.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                          WHERE ObjectCostLink_1.ObjectId = inObjectId_1
+                            AND ObjectCostLink_1.DescId = inDescId_1
+                            AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
+                         );*/
+
+                       -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                       INSERT INTO _tmp___ (Id)
+                          SELECT ObjectCostLink_1.ObjectCostId
+                          FROM ObjectCostLink AS ObjectCostLink_1
+                               JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
+                                                                      AND ObjectCostLink_2.DescId             = inDescId_2
+                                                                      AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.ObjectCostId
+                               JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
+                                                                      AND ObjectCostLink_3.DescId             = inDescId_3
+                                                                      AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.ObjectCostId
                            WHERE ObjectCostLink_1.ObjectId = inObjectId_1
                              AND ObjectCostLink_1.DescId = inDescId_1
-                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId
-                          );*/
+                             AND ObjectCostLink_1.ObjectCostDescId = inObjectCostDescId;
+         -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+         vbObjectCostId:=(SELECT ObjectCostLink_1.Id AS ObjectCostId
+                          FROM _tmp___ AS ObjectCostLink_1
+                               -- JOIN ObjectCostLink AS ObjectCostLink_2 ON ObjectCostLink_2.ObjectId           = inObjectId_2
+                               --                                        AND ObjectCostLink_2.DescId             = inDescId_2
+                               --                                        AND ObjectCostLink_2.ObjectCostDescId   = inObjectCostDescId
+                               --                                        AND ObjectCostLink_2.ObjectCostId       = ObjectCostLink_1.Id
+                               -- JOIN ObjectCostLink AS ObjectCostLink_3 ON ObjectCostLink_3.ObjectId           = inObjectId_3
+                               --                                       AND ObjectCostLink_3.DescId             = inDescId_3
+                               --                                       AND ObjectCostLink_3.ObjectCostDescId   = inObjectCostDescId
+                               --                                       AND ObjectCostLink_3.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_4 ON ObjectCostLink_4.ObjectId           = inObjectId_4
+                                                                      AND ObjectCostLink_4.DescId             = inDescId_4
+                                                                      AND ObjectCostLink_4.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_4.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_5 ON ObjectCostLink_5.ObjectId           = inObjectId_5
+                                                                      AND ObjectCostLink_5.DescId             = inDescId_5
+                                                                      AND ObjectCostLink_5.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_5.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_6 ON ObjectCostLink_6.ObjectId           = inObjectId_6
+                                                                      AND ObjectCostLink_6.DescId             = inDescId_6
+                                                                      AND ObjectCostLink_6.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_6.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_7 ON ObjectCostLink_7.ObjectId           = inObjectId_7
+                                                                      AND ObjectCostLink_7.DescId             = inDescId_7
+                                                                      AND ObjectCostLink_7.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_7.ObjectCostId       = ObjectCostLink_1.Id
+                               JOIN ObjectCostLink AS ObjectCostLink_8 ON ObjectCostLink_8.ObjectId           = inObjectId_8
+                                                                      AND ObjectCostLink_8.DescId             = inDescId_8
+                                                                      AND ObjectCostLink_8.ObjectCostDescId   = inObjectCostDescId
+                                                                      AND ObjectCostLink_8.ObjectCostId       = ObjectCostLink_1.Id
+                         );
+-- vbObjectCostId  := 796;
+/*if vbObjectCostId  <> 796
+then
+               RAISE EXCEPTION 'vbObjectCostId % : inObjectCostDescId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', vbObjectCostId, inObjectCostDescId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
+end if;*/
      ELSE
      IF inDescId_7  IS NOT NULL
      THEN
@@ -458,6 +498,10 @@ BEGIN
 
      END IF;  
 
+-- if vbObjectCostId <> 796 then
+-- RAISE EXCEPTION 'lpInsertFind_ObjectCost';
+-- end if;
+
      -- ¬ÓÁ‚‡˘‡ÂÏ ÁÌ‡˜ÂÌËÂ
      RETURN (vbObjectCostId);
 
@@ -472,7 +516,7 @@ ALTER FUNCTION lpInsertFind_ObjectCost (Integer, Integer, Integer, Integer, Inte
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 25.03.14                                        * Û‰‡ÎÂÌËÂ ËÁ Ú‡·ÎËˆ˚ - !!!ƒÀﬂ Œœ“»Ã»«¿÷»»!!!
+ 28.03.14                                        * Û‰‡ÎÂÌËÂ ËÁ Ú‡·ÎËˆ˚ - !!!ƒÀﬂ Œœ“»Ã»«¿÷»»!!!
  19.09.13                                        * optimize
  10.07.13                                        *
 */

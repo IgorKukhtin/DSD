@@ -1,11 +1,14 @@
 -- Function: gpReport_JuridicalCollation()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , --
     IN inJuridicalId      Integer,    -- Юридическое лицо  
+    IN inContractId       Integer,    -- Договор
+    IN inAccountId        Integer,    -- Счет 
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementSumm TFloat, 
@@ -70,7 +73,9 @@ BEGIN
        AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()  
        AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
     WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
-  -- WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+      AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+      AND (Container.ObjectId = inAccountId OR inAccountId = 0)
+      AND (CLO_Contract.ObjectId = inContractId OR inContractId = 0)
   GROUP BY ContractId, AccountId, MIContainer.MovementId, InfoMoneyId
     HAVING SUM(MIContainer.Amount) <> 0) AS Operation
       LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.AccountId
@@ -85,11 +90,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.03.14                        * 
  18.02.14                        * add WITH для ускорения запроса. 
  25.01.14                        * 
  15.01.14                        * 

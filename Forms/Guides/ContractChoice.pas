@@ -11,7 +11,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  Vcl.Menus, cxImageComboBox;
+  Vcl.Menus, cxImageComboBox, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
+  cxLabel, dsdGuides;
 
 type
   TContractChoiceForm = class(TAncestorEnumForm)
@@ -31,6 +32,12 @@ type
     FormParams: TdsdFormParams;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    bbJuridicalLabel: TdxBarControlContainerItem;
+    bbJuridical: TdxBarControlContainerItem;
+    JuridicalGuides: TdsdGuides;
+    RefreshDispatcher: TRefreshDispatcher;
   private
     { Private declarations }
   public

@@ -6993,8 +6993,10 @@ begin
 
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind=zc_bkIncomeToUnit()'
-//           +'  and Bill.FromId<>4928'//тнггх-оепеоюй опндсйжхх
            +'  and Bill.ToId<>4927'//яйкюд оепеоюй
+           +'  and Bill.FromId not in (3830, 3304)' //йпнрнм ннн (УПЮМЕМХЕ) + йпнрнм ннн
+           +'  and Bill.ToId not in (3830, 3304)'  // йпнрнм ннн (УПЮМЕМХЕ) + йпнрнм ннн
+//           +'  and Bill.FromId<>4928'//тнггх-оепеоюй опндсйжхх
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
 //+'  and Bill.Id=1383229'
@@ -10119,7 +10121,7 @@ begin
            +'                     ) as Bill_findInfoMoney on Bill_findInfoMoney.BillId=Bill.Id');
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
-             Add('     left outer join dba.Unit as UnitTo on UnitTo.ID = Bill.FromID');
+             Add('     left outer join dba.Unit as UnitTo on UnitTo.ID = Bill.ToID');
              Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID'
                 +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
              Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitTo.Id');
@@ -10250,6 +10252,8 @@ begin
            +'  and Bill.BillKind=zc_bkReturnToClient()'
 //           +'  and Bill.ToId<>4928'//тнггх-оепеоюй опндсйжхх
            +'  and Bill.FromId<>4927'//яйкюд оепеоюй
+           +'  and Bill.FromId not in (3830, 3304)' //йпнрнм ннн (УПЮМЕМХЕ) + йпнрнм ннн
+           +'  and Bill.ToId not in (3830, 3304)'  // йпнрнм ннн (УПЮМЕМХЕ) + йпнрнм ннн
 //           +'  and UnitFrom.PersonalId_Postgres is null'
            +'  and Bill.MoneyKindId = zc_mkBN()'
            );
@@ -10830,7 +10834,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                             and BillItems.GoodsPropertyId<>1041' // йнбаюямI бхпнах
@@ -11206,7 +11210,7 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres_two');
         Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
            +'           , max(isnull(BillItems.OperCount,0)) as OperCount1'
            +'           , max(isnull(BillItems_byParent.OperCount,0)) as OperCount2'
            +'           , max(isnull(BillItems_byParent.Id,0)) as findId1'
@@ -11603,7 +11607,7 @@ begin
         Add('     , Bill.NalogId_PG as Id_Postgres');
 
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
 //           +'                             and BillItems.GoodsPropertyId<>1041' // йнбаюямI бхпнах
@@ -11747,7 +11751,7 @@ begin
            +'           , Bill_nalog.NalogId_PG as Id_Postgres_Child'
            +'           , max(isnull(BillItems_byParent.NalogId_PG,0)) as NalogId_PG'
            +'           , BillItems_byParent.addBillNumber as inInvNumberPartner'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
            +'           , max(BillItems.OperCount) as OperCount1'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'

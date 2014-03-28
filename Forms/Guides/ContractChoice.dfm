@@ -4,8 +4,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientWidth = 853
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  ExplicitWidth = 861
+  ExplicitHeight = 523
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,6 +164,22 @@ inherited ContractChoiceForm: TContractChoiceForm
       end
     end
   end
+  object cxLabel6: TcxLabel [1]
+    Left = 172
+    Top = 78
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit [2]
+    Left = 279
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 245
+  end
   inherited ActionList: TActionList
     inherited ChoiceGuides: TdsdChoiceGuides
       Params = <
@@ -218,6 +234,7 @@ inherited ContractChoiceForm: TContractChoiceForm
     end
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -257,6 +274,13 @@ inherited ContractChoiceForm: TContractChoiceForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Top = 82
   end
@@ -292,11 +316,35 @@ inherited ContractChoiceForm: TContractChoiceForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbShowAll: TdxBarButton
       Action = actShowAll
       Category = 0
+    end
+    object bbJuridicalLabel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbJuridical: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Visible = ivAlways
+      Control = edJuridical
     end
   end
   object FormParams: TdsdFormParams
@@ -305,8 +353,56 @@ inherited ContractChoiceForm: TContractChoiceForm
         Name = 'inPaidKindId'
         Value = '0'
         ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 424
     Top = 152
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 312
+    Top = 48
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 304
+    Top = 88
   end
 end
