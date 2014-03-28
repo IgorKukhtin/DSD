@@ -31,7 +31,6 @@ type
     clToCode: TcxGridDBColumn;
     clToName: TcxGridDBColumn;
     clPrice_Sale: TcxGridDBColumn;
-    clPrice_Tax: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
     clContract_InvNumber: TcxGridDBColumn;
