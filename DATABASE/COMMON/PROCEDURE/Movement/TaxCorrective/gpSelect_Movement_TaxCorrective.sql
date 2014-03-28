@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , Checked Boolean, Document Boolean, Registered Boolean, DateRegistered TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
@@ -52,6 +52,7 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
@@ -184,6 +185,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.03.14                                        * add TotalSummVAT
  23.03.14                                        * add Object_InfoMoney_View
  20.03.14                                        * add all
  03.03.14                                                        *

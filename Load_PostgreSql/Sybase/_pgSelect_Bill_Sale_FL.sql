@@ -42,7 +42,7 @@ begin
   ) on commit preserve rows;
 
   insert into _tmpBill_NotNalog (BillId, CodeIM)
-           select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 then 30201 else 30101 end) as CodeIM
+           select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM
            from dba.Bill
                 join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
                                   and BillItems.GoodsPropertyId<>1041 -- йнбаюямI бхпнах

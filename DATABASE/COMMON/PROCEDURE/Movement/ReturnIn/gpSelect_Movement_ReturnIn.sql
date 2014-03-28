@@ -16,7 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
@@ -57,6 +57,7 @@ BEGIN
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
            , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
@@ -228,6 +229,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.03.14                                        * add TotalSummVAT
  26.03.14                                        * add InvNumberPartner
  16.03.14                                        * add JuridicalName_From and OKPO_From
  13.02.14                                                            * add PriceList
