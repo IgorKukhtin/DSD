@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
 RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ContractNumber TVarChar, KreditRemains TFloat, DebetRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
-             , Condition TVarChar, StartContractDate TDateTime)
+             , Condition TVarChar, StartContractDate TDateTime, Remains TFloat)
 AS
 $BODY$
    DECLARE vbLenght Integer;
@@ -49,6 +49,7 @@ BEGIN
    , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat
    , (RESULT.DayCount||' '||Object_ContractConditionKind.ValueData)::TVarChar AS Condition
    , RESULT.ContractDate::TDateTime AS ContractDate
+   , (-RESULT.Remains)::TFloat
 
   FROM (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -80,7 +81,10 @@ BEGIN
                  JOIN ObjectFloat AS ObjectFloat_Value 
                    ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                 JOIN Object AS ContractCondition ON 
+                      ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.objectid 
                 WHERE ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                  AND ContractCondition.iserased = false
                        ) AS ContractKind
             ON ContractKind.contractid = CLO_Contract.objectid
                               

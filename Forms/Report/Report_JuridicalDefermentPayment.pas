@@ -47,6 +47,8 @@ type
     bbFourWeek: TdxBarButton;
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
+    bbPribt: TdxBarButton;
+    frDataSet: TfrxDBDataset;
   private
     { Private declarations }
   public
