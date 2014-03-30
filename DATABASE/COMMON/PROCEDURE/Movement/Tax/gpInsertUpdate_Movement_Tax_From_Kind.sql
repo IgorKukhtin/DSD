@@ -297,7 +297,7 @@ BEGIN
                      , inVATPercent := vbVATPercent
                      , inFromId := vbFromId                                  -- от кого
                      , inToId := vbToId                                      -- кому
-                     , inPartnerId := vbPartnerId           	             -- контрагент 
+                     , inPartnerId := 0              	                     -- контрагент 
                      , inContractId := vbContractId
                      , inDocumentTaxKindId := inDocumentTaxKindId
                      , inUserId := vbUserId ) as tmp
@@ -452,7 +452,6 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 30.03.14         * add for zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
  29.03.14         *
  23.03.14                                        * all
  13.02.14                                                        *
@@ -463,5 +462,14 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar
 -- SELECT gpInsertUpdate_Movement_Tax_From_Kind FROM gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5'); -- все
 
 
--- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 123778 , inDocumentTaxKindId := 80788 ,  inSession := '5');     
+ select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 123778 , inDocumentTaxKindId := 80788 ,  inSession := '5');     
 --select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 16759 , inDocumentTaxKindId := zc_Enum_DocumentTaxKind_Tax() ,  inSession := '5');
+         
+/*select * from Movement
+join  where id = 176021
+*/
+/*select * from Movement
+LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
+                              AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+ where  InvNumber = '140574'
+and Movement.descid = zc_Movement_Sale()*/
