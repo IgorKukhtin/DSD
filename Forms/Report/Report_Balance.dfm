@@ -122,8 +122,16 @@ object Report_BalanceForm: TReport_BalanceForm
       Visible = True
       UniqueName = #1054#1073#1098#1077#1082#1090' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
     end
-    object pvJuridicalBasisName: TcxDBPivotGridField
+    object pvPaidKindName: TcxDBPivotGridField
       AreaIndex = 3
+      IsCaptionAssigned = True
+      Caption = #1053#1072#1083'/'#1041#1085
+      DataBinding.FieldName = 'PaidKindName'
+      Visible = True
+      UniqueName = #1053#1072#1083'/'#1041#1085
+    end
+    object pvJuridicalBasisName: TcxDBPivotGridField
+      AreaIndex = 4
       IsCaptionAssigned = True
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
       DataBinding.FieldName = 'JuridicalBasisName'
@@ -131,7 +139,7 @@ object Report_BalanceForm: TReport_BalanceForm
       UniqueName = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086' ('#1075#1083#1072#1074#1085#1086#1077')'
     end
     object pvBusinessName: TcxDBPivotGridField
-      AreaIndex = 4
+      AreaIndex = 5
       IsCaptionAssigned = True
       Caption = #1041#1080#1079#1085#1077#1089
       DataBinding.FieldName = 'BusinessName'
@@ -250,8 +258,8 @@ object Report_BalanceForm: TReport_BalanceForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -318,6 +326,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Top = 200
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -331,6 +340,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxDBPivotGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -339,6 +349,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object dsdOpenForm1: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'dsdOpenForm1'
       FormName = 'TReport_AccountForm'
       FormNameParam.Value = 'TReport_AccountForm'
@@ -425,6 +436,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object MultiAction1: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = dsdExecStoredProc1
@@ -436,6 +448,7 @@ object Report_BalanceForm: TReport_BalanceForm
     end
     object dsdExecStoredProc1: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetBalanceParam
       StoredProcList = <
         item
@@ -509,6 +522,7 @@ object Report_BalanceForm: TReport_BalanceForm
     Params = <
       item
         Name = 'inData'
+        Value = ''
         Component = PivotAddOn
         DataType = ftString
         ParamType = ptInput

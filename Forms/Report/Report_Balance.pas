@@ -69,6 +69,7 @@ type
     MultiAction1: TMultiAction;
     dsdExecStoredProc1: TdsdExecStoredProc;
     bbStaticText: TdxBarButton;
+    pvPaidKindName: TcxDBPivotGridField;
   private
   public
   end;

@@ -10,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_Balance(
 RETURNS TABLE (RootName TVarChar, AccountCode Integer, AccountGroupName TVarChar, AccountDirectionName TVarChar, AccountName  TVarChar 
              , AccountOnComplete Boolean, InfoMoneyName TVarChar, InfoMoneyName_Detail TVarChar
              , ByObjectName TVarChar, GoodsName TVarChar
+             , PaidKindName TVarChar
              , JuridicalBasisCode Integer, JuridicalBasisName TVarChar
              , BusinessCode Integer, BusinessName TVarChar
              , AmountDebetStart TFloat, AmountKreditStart TFloat, AmountDebet TFloat, AmountKredit TFloat, AmountDebetEnd TFloat, AmountKreditEnd TFloat
@@ -22,6 +23,59 @@ $BODY$BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Balance());
 
      RETURN QUERY 
+
+       -- некоторые счета делим на Нал/Бн
+       WITH tmpAccount AS (SELECT Object_Account_View.* FROM Object_Account_View)
+
+          , tmpAccountDirection AS (SELECT 30100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + покупатели 
+                                   UNION
+                                    SELECT 30200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + наши компании
+                                   UNION
+                                    SELECT 30300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + Дебиторы по услугам
+                                   UNION
+                                    SELECT 30400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Дебиторы + Прочие дебиторы
+                                   UNION
+                                    SELECT 30500 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (подотчетные лица)
+                                   UNION
+                                    SELECT 30600 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (недостачи, порча)
+                                   UNION
+                                    SELECT 30700 AS AccountDirectionCode, TRUE AS isFirstForm, FALSE AS isSecondForm -- +- векселя полученные
+
+                                   UNION
+                                    SELECT 70100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + поставщики
+                                   UNION
+                                    SELECT 70200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по услугам
+                                   UNION
+                                    SELECT 70300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Кредиторы + Кредиторы по маркетингу
+                                   UNION
+                                    SELECT 70400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Коммунальные услуги
+                                   UNION
+                                    SELECT 70500 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ Сотрудники
+                                   UNION
+                                    SELECT 70600 AS AccountDirectionCode, FALSE AS isFirstForm, TRUE AS isSecondForm -- -+ сотрудники (заготовители)
+                                   UNION
+                                    SELECT 70700 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Административные ОС
+                                   UNION
+                                    SELECT 70800 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ Производственные ОС
+                                   UNION
+                                    SELECT 70900 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ НМА
+                                   UNION
+                                    SELECT 71000 AS AccountDirectionCode, TRUE AS isFirstForm, FALSE AS isSecondForm -- +- векселя выданные
+                                   )
+          , tmpAccount_two AS (SELECT tmpAccount.*, COALESCE (tmpAccountDirection.AccountDirectionCode, 0) AS AccountDirectionCode_find, isFirstForm, isSecondForm
+                               FROM tmpAccount
+                                    LEFT JOIN tmpAccountDirection ON tmpAccountDirection.AccountDirectionCode = tmpAccount.AccountDirectionCode
+                              )
+          , tmpAccountFind AS (SELECT * FROM tmpAccount_two WHERE AccountDirectionCode_find <> 0)
+
+          , tmpAccountAll AS (SELECT tmpAccount_two.*, COALESCE (tmpPaidKind.PaidKindId, 0) AS PaidKindId
+                              FROM tmpAccount_two
+                                   LEFT JOIN (SELECT zc_Enum_PaidKind_FirstForm() AS PaidKindId UNION ALL SELECT zc_Enum_PaidKind_SecondForm() AS PaidKindId
+                                             ) AS tmpPaidKind ON tmpAccount_two.AccountDirectionCode_find <> 0 AND ((isFirstForm  = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_FirstForm())
+                                                                                                                 OR (isSecondForm = TRUE AND tmpPaidKind.PaidKindId = zc_Enum_PaidKind_SecondForm())
+                                                                                                                   )
+                             )
+       -- результат
        SELECT
              CAST (CASE WHEN Object_Account_View.AccountCode >= 70000 THEN 'ПАССИВЫ' ELSE 'АКТИВЫ' END AS TVarChar) AS RootName
 
@@ -41,6 +95,8 @@ $BODY$BEGIN
            --, Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
 
+           , Object_PaidKind.ValueData   AS PaidKindName
+
            , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
            , Object_Business.ObjectCode       AS BusinessCode
@@ -58,8 +114,31 @@ $BODY$BEGIN
            , CAST (tmpReportOperation.CountKredit AS TFloat) AS CountKredit
            , CAST (tmpReportOperation.CountRemainsEnd AS TFloat) AS CountEnd
        FROM 
-           Object_Account_View
+           tmpAccountAll AS Object_Account_View
            LEFT JOIN
+           (SELECT tmpReportOperation_two.AccountId
+                 , tmpReportOperation_two.InfoMoneyId
+                 , tmpReportOperation_two.InfoMoneyId_Detail
+                 , tmpReportOperation_two.MemberId
+                 , tmpReportOperation_two.JuridicalId
+                 , tmpReportOperation_two.UnitId
+                 , tmpReportOperation_two.CarId
+                 , tmpReportOperation_two.GoodsId
+                 , CASE WHEN tmpAccountFind.AccountId IS NOT NULL THEN COALESCE (tmpReportOperation_two.PaidKindId, zc_Enum_PaidKind_SecondForm()) ELSE 0 END AS PaidKindId
+
+                 , tmpReportOperation_two.JuridicalBasisId
+                 , tmpReportOperation_two.BusinessId
+
+                 , tmpReportOperation_two.AmountRemainsStart
+                 , tmpReportOperation_two.AmountDebet
+                 , tmpReportOperation_two.AmountKredit
+                 , tmpReportOperation_two.AmountRemainsEnd
+
+                 , tmpReportOperation_two.CountRemainsStart
+                 , tmpReportOperation_two.CountDebet
+                 , tmpReportOperation_two.CountKredit
+                 , tmpReportOperation_two.CountRemainsEnd
+            FROM
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                  , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
@@ -68,6 +147,7 @@ $BODY$BEGIN
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
                  , ContainerLinkObject_Car.ObjectId  AS CarId
                  , ContainerLinkObject_Goods.ObjectId AS GoodsId
+                 , ContainerLinkObject_PaidKind.ObjectId AS PaidKindId
 
                  , ContainerLO_JuridicalBasis.ObjectId AS JuridicalBasisId
                  , ContainerLO_Business.ObjectId AS BusinessId
@@ -139,6 +219,9 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Goods
                                               ON ContainerLinkObject_Goods.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Goods.DescId = zc_ContainerLinkObject_Goods()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_PaidKind
+                                              ON ContainerLinkObject_PaidKind.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                 LEFT JOIN ContainerLinkObject AS ContainerLO_JuridicalBasis
                                               ON ContainerLO_JuridicalBasis.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLO_JuridicalBasis.DescId = zc_ContainerLinkObject_JuridicalBasis()
@@ -153,16 +236,23 @@ $BODY$BEGIN
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Car.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
+                   , ContainerLinkObject_PaidKind.ObjectId
                    , ContainerLO_JuridicalBasis.ObjectId
                    , ContainerLO_Business.ObjectId
 
+           ) AS tmpReportOperation_two
+           LEFT JOIN tmpAccountFind ON tmpAccountFind.AccountId = tmpReportOperation_two.AccountId
+
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
+                                  AND tmpReportOperation.PaidKindId = Object_Account_View.PaidKindId
+
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
            LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = JuridicalBasisId
            LEFT JOIN Object AS Object_Business ON Object_Business.Id = BusinessId
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Account_View.PaidKindId
           ;
   
 END;
@@ -173,6 +263,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.03.14                                        * add PaidKindName
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis and zc_ContainerLinkObject_Business
  21.01.14                                        * add CarId
  21.12.13                                        * Personal -> Member

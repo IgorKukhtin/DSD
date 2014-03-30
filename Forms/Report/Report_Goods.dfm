@@ -2,8 +2,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
   ClientWidth = 754
-  ExplicitWidth = 762
-  ExplicitHeight = 375
+  ExplicitWidth = 770
+  ExplicitHeight = 376
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,6 +67,10 @@ inherited Report_GoodsForm: TReport_GoodsForm
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object clUnit_infName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
             DataBinding.FieldName = 'Unit_infName'
@@ -83,15 +87,8 @@ inherited Report_GoodsForm: TReport_GoodsForm
             Options.Editing = False
             Width = 70
           end
-          object clGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
-            DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 48
-          end
           object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -105,6 +102,13 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 48
           end
           object clMovementDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1076#1086#1082'.'
