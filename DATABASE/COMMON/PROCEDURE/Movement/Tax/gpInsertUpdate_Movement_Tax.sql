@@ -28,9 +28,13 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
 
      -- сохранили <Документ>
-     ioId := lpInsertUpdate_Movement_Tax(ioId, inInvNumber, inInvNumberPartner, inOperDate
-                                       , inChecked, inDocument, inPriceWithVAT, inVATPercent
-                                       , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId);
+     SELECT tmp.ioId
+          , tmp.ioInvNumberPartner
+            INTO ioId, inInvNumberPartner
+     FROM lpInsertUpdate_Movement_Tax (ioId, inInvNumber, inInvNumberPartner, inOperDate
+                                     , inChecked, inDocument, inPriceWithVAT, inVATPercent
+                                     , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId
+                                      ) AS tmp;
 
 END;
 $BODY$
@@ -39,6 +43,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.03.14                                        * add ioInvNumberPartner
  16.03.14                                        * add inPartnerId
  11.02.14                                                         *  - registred
  09.02.14                                                         *
