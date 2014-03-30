@@ -3,8 +3,8 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 986
-  ExplicitHeight = 379
+  ExplicitWidth = 994
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -113,11 +113,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             Width = 152
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 26
+            Width = 30
           end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
