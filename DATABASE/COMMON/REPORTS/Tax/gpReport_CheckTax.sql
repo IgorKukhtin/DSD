@@ -150,20 +150,21 @@ BEGIN
                 FROM tmpMovWith
 
                      JOIN MovementItem ON MovementItem.MovementId = tmpMovWith.MovementId
-                  
+                                      AND MovementItem.isErased = false 
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = tmpMovWith.MovementId
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                        
-                     LEFT JOIN MovementItemFloat AS MIFloat_Price
+                     JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
                                                 AND MIFloat_Price.ValueData <> 0
                                                 
-                     LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                     JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                                 
+                                                AND MIFloat_AmountPartner.ValueData <> 0
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -214,6 +215,7 @@ BEGIN
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                       AND MovementItem.Amount<>0
+                                      AND MovementItem.isErased = false 
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
 
