@@ -223,7 +223,7 @@ function TFunctions.CallMethod(Instance: TObject; ClassType: TClass;
 const MethodName: String; var Params: Variant): Variant;
 begin
   if MethodName = 'SUMMATOTEXT' then
-    Result := SummaToText(Params[0])
+    Result := SummaToText(Params[0]);
   if MethodName = 'SUMMATOTEXTRU' then
     Result := SummaToTextRu(Params[0])
 
