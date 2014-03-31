@@ -42,10 +42,7 @@ type
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
-    clInfoMoneyCode: TcxGridDBColumn;
-    clInfoMoneyGroupName: TcxGridDBColumn;
-    clInfoMoneyDestinationName: TcxGridDBColumn;
-    clInfoMoneyName: TcxGridDBColumn;
+    clReturnPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
