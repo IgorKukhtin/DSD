@@ -442,9 +442,9 @@ BEGIN
                SELECT DATE_TRUNC ('Month', MovementSale.OperDate) -- '01.12.2013' :: TDateTime
                     , DATE_TRUNC ('Month', MovementSale.OperDate) + interval '1 month' - interval '1 day'  -- '31.12.2013' :: TDateTime
              
-                    , MovementLinkMovement.MovementChildId 
+                    , CASE WHEN Movement_Tax.StatusId = zc_Enum_Status_Erased() THEN 0 ELSE MovementLinkMovement.MovementChildId END
                     , MovementSale.InvNumber
-                    , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId THEN MovementSale.InvNumberPartner_Master ELSE '' END                                   
+                    , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId AND Movement_Tax.StatusId <> zc_Enum_Status_Erased()) THEN MovementSale.InvNumberPartner_Master ELSE '' END                                   
                     , MovementSale.OperDate
                     , MovementSale.PriceWithVAT
                     , MovementSale.VATPercent
@@ -484,7 +484,7 @@ BEGIN
                        ioId := COALESCE (vbTaxId,0)
                      , inInvNumber := vbInvNumber
                      , ioInvNumberPartner := vbInvNumberPartner                    
-                     , inOperDate := '31.12.2013'--vbEndDate
+                     , inOperDate := vbEndDate
                      , inChecked := false
                      , inDocument := false
                      , inPriceWithVAT := vbPriceWithVAT
@@ -506,6 +506,10 @@ BEGIN
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
                                            AND MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                   JOIN MovementLinkObject AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                          AND MovementLinkObject_From.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                    JOIN MovementLinkObject AS MovementLinkObject_To
                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -521,7 +525,7 @@ BEGIN
           IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()   ---zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR
              THEN 
                  -- сохранили связь с <Тип формирования налогового документа> у inMovementMasterId
-                 PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement.Id, inDocumentTaxKindId)
+                 PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement.Id, zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR())
                  FROM Movement 
                       JOIN MovementDate AS MovementDate_OperDatePartner
                                         ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -723,7 +727,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar
 -- SELECT * FROM gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5'); -- все
 -- SELECT gpInsertUpdate_Movement_Tax_From_Kind FROM gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5'); -- все
 
-
+--select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 156101 , inDocumentTaxKindId := 80790 ,  inSession := '5');
 --select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 26025 , inDocumentTaxKindId := 80790 ,  inSession := '5');
 --select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 24702 , inDocumentTaxKindId := 80790 ,  inSession := '5');
 -- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 123778 , inDocumentTaxKindId := 80788 ,  inSession := '5');     
