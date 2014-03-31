@@ -42,6 +42,7 @@ type
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    clReturnPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

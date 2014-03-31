@@ -576,7 +576,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Top = 112
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'Remains'
+    IndexFieldNames = 'JuridicalName'
     StoreDefs = True
     Top = 112
   end
@@ -694,6 +694,9 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     ComponentList = <
       item
         Component = deStart
+      end
+      item
+        Component = AccountGuides
       end>
     Top = 136
   end

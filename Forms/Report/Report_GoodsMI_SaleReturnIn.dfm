@@ -3,9 +3,9 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 339
   ClientWidth = 1137
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -289
+  ExplicitLeft = -321
   ExplicitWidth = 1145
-  ExplicitHeight = 373
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -248,6 +248,8 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             Caption = #1042#1086#1079#1074#1088#1072#1090', '#1075#1088#1085
             DataBinding.FieldName = 'Return_Summ'
             Width = 55
+          end
+          object clReturnPercent: TcxGridDBColumn
           end
         end
       end
