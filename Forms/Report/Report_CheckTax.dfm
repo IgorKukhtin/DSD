@@ -2,8 +2,8 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093'>'
   ClientHeight = 319
   ClientWidth = 990
-  ExplicitWidth = 998
-  ExplicitHeight = 353
+  ExplicitWidth = 1006
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -216,7 +216,9 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
     Width = 990
     ExplicitWidth = 990
     inherited deStart: TcxDateEdit
+      Left = 107
       EditValue = 41609d
+      ExplicitLeft = 107
     end
     inherited deEnd: TcxDateEdit
       EditValue = 41639d
