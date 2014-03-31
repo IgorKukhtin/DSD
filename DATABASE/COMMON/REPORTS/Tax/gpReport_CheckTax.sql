@@ -1,6 +1,6 @@
 -- FunctiON: gpReport_CheckTax ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckTax (TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckTax (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_CheckTax (
@@ -34,8 +34,10 @@ BEGIN
                                 , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                                 , MovementLinkMovement.MovementChildId AS MovementId_Tax
                                 , Movement_Tax.OperDate as OperDate_Tax
-                                , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS() THEN MovementLinkObject_Partner.ObjectId ELSE 0 END AS PartnerId_Tax
-                               
+                                , CASE WHEN MovementLO_DocumentTaxKind.ObjectId in (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(),zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) 
+                                            THEN MovementLinkObject_Partner.ObjectId
+                                            ELSE 0 
+                                  END AS PartnerId_Tax
                           FROM Movement 
                           JOIN MovementDate AS MovementDate_OperDatePartner
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -70,7 +72,10 @@ BEGIN
                                   END AS DocumentTaxKindId
                                 , 0 AS MovementId_Tax     
                                 , inEndDate as OperDate_Tax
-                                , 0 AS PartnerId_Tax
+                                , CASE WHEN MovementLO_DocumentTaxKind.ObjectId in (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()) 
+                                            THEN MovementLinkObject_From.ObjectId
+                                            ELSE 0 
+                                  END AS PartnerId_Tax
                           FROM Movement 
                           JOIN MovementDate AS MovementDate_OperDatePartner
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
@@ -82,14 +87,14 @@ BEGIN
                                                   AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                   AND (MovementLO_DocumentTaxKind.ObjectId = CASE WHEN inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR() THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
                                                                                                   WHEN inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR() THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR() END
-                                                       OR inDocumentTaxKindID =0
-                                                       )
-
-                          WHERE Movement.DescId = zc_Movement_ReturnIn()  
+                                                       OR inDocumentTaxKindID =0)
+                                                       
+                          JOIN MovementLinkObject AS MovementLinkObject_From
+                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                           WHERE Movement.DescId = zc_Movement_ReturnIn()  
                             AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
-                            AND (inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                 OR inDocumentTaxKindID = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                 OR inDocumentTaxKindID = 0)
+                            AND (inDocumentTaxKindID in (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR(),  0))
                           )
        
   
@@ -193,9 +198,9 @@ BEGIN
                        , tmpMovWith.DocumentTaxKindId
                        , MovementLinkObject_Contract.ObjectId 
                        , tmpMovWith.PartnerId_Tax
-               HAVING SUM (CASE WHEN tmpMovWith.Movement_DescId=zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE -1 * COALESCE (MIFloat_AmountPartner.ValueData, 0) END ) >0 
+              HAVING SUM (CASE WHEN tmpMovWith.Movement_DescId=zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE -1 * COALESCE (MIFloat_AmountPartner.ValueData, 0) END ) >0 
                        
-             UNION
+             UNION all
                 SELECT MovementLinkObject_From.ObjectId AS JuridicalBasisId
                      , MovementLinkObject_To.ObjectId    AS JuridicalId
                     
@@ -211,7 +216,7 @@ BEGIN
                      , MovementItem.Amount AS Amount_Tax
                      , MovementLO_DocumentTaxKind.ObjectId AS DocumentTaxKindId
                      , MovementLinkObject_Contract.ObjectId AS ContractId_Tax 
-                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS() THEN MovementLinkObject_Partner.ObjectId ELSE 0 END AS PartnerId_Tax
+                     , CASE WHEN MovementLO_DocumentTaxKind.ObjectId in(zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR() ) THEN MovementLinkObject_Partner.ObjectId ELSE 0 END AS PartnerId_Tax
                 FROM Movement 
                      JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                       AND MovementItem.Amount<>0
@@ -305,8 +310,10 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 --SELECT * FROM gpReport_CheckTax (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inSessiON:= zfCalc_UserAdmin());
 --select * from gpReport_CheckTax(inStartDate := ('01.12.2013')::TDateTime , inEndDate := ('05.12.2013')::TDateTime , inDocumentTaxKindId := 0 ,  inSession := zfCalc_UserAdmin());
 
+--select * from gpReport_CheckTax(inStartDate := ('01.02.2014')::TDateTime , inEndDate := ('28.02.2014')::TDateTime , inDocumentTaxKindId := 80791 ,  inSession := '5');
+
 /*
-select * from Object where descId =91
+select * from Object where Id =80791
 
 INSERT INTO MovementLinkObject( DescId, MovementId ,  ObjectId )
 select zc_MovementLinkObject_DocumentTaxKind(), 19736,  80770*/
