@@ -22,6 +22,7 @@ RETURNS TABLE ( InvNumber_Sale TVarChar, InvNumber_Tax TVarChar, OperDate_Sale T
               )  
 AS
 $BODY$
+
 BEGIN
 
     RETURN QUERY
@@ -223,7 +224,7 @@ BEGIN
                                       AND MovementItem.isErased = false 
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId  = Movement.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-
+                                                   AND inDocumentTaxKindID = zc_Enum_DocumentTaxKind_Tax()
                      JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id
                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
