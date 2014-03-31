@@ -83,8 +83,8 @@ type
     PrintHeaderCDS: TClientDataSet;
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
-    mactPrint_SaleTax: TMultiAction;
-    actPrintSaleTax: TdsdPrintAction;
+    mactPrint_Tax_Us: TMultiAction;
+    actPrintTax_Us: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
@@ -98,6 +98,11 @@ type
     actTax: TdsdExecStoredProc;
     spTax: TdsdStoredProc;
     bbTax: TdxBarButton;
+    mactPrint_Tax_Client: TMultiAction;
+    actPrintTax_Client: TdsdPrintAction;
+    spSelectTax_Client: TdsdStoredProc;
+    bbPrintTax_Client: TdxBarButton;
+    spSelectTax_Us: TdsdStoredProc;
   private
     { Private declarations }
   public

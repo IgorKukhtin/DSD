@@ -1,9 +1,11 @@
 -- Function: gpSelect_Movement_Tax_Print()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Print(
     IN inMovementId        Integer  , -- ключ Документа
+    IN inisClientCopy      Boolean  , -- копия для клиента
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
@@ -37,7 +39,8 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+--           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -90,6 +93,14 @@ BEGIN
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
+           , CASE WHEN inisClientCopy=TRUE
+                  THEN 'X' ELSE '' END                  AS CopyForClient
+           , CASE WHEN inisClientCopy=TRUE
+                  THEN '' ELSE 'X' END                  AS CopyForUs
+           , CASE WHEN ((MovementFloat_TotalSummPVAT.ValueData
+                        -MovementFloat_TotalSummMVAT.ValueData)>10000)
+                  THEN 'X' ELSE '' END                  AS ERPN
+
 
        FROM Movement
 
@@ -100,10 +111,15 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-
+/*
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                   AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+*/
+            LEFT JOIN MovementDate AS MovementDate_DateRegistered
+                                   ON MovementDate_DateRegistered.MovementId =  Movement.Id
+                                  AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
+
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -202,6 +218,70 @@ BEGIN
 
     RETURN NEXT Cursor1;
     OPEN Cursor2 FOR
+     WITH tmpObject_GoodsPropertyValue AS
+      ( SELECT
+         Object_GoodsPropertyValue.Id         AS Id
+       , Object_GoodsPropertyValue.ObjectCode AS Code
+       , Object_GoodsPropertyValue.ValueData  AS Name
+
+       , ObjectFloat_Amount.ValueData         AS Amount
+       , ObjectString_BarCode.ValueData       AS BarCode
+       , ObjectString_Article.ValueData       AS Article
+       , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+       , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
+
+       , Object_GoodsProperty.Id              AS GoodsPropertyId
+       , Object_GoodsProperty.ValueData       AS GoodsPropertyName
+
+       , Object_GoodsKind.Id                  AS GoodsKindId
+       , Object_GoodsKind.ValueData           AS GoodsKindName
+
+       , Object_Goods.Id                      AS GoodsId
+       , Object_Goods.ValueData               AS GoodsName
+
+       , Object_GoodsPropertyValue.isErased   AS isErased
+
+        FROM Object AS Object_GoodsPropertyValue
+        LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                               ON ObjectFloat_Amount.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+        LEFT JOIN ObjectString AS ObjectString_BarCode
+                               ON ObjectString_BarCode.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+
+        LEFT JOIN ObjectString AS ObjectString_Article
+                               ON ObjectString_Article.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+
+        LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                               ON ObjectString_BarCodeGLN.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+
+        LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                               ON ObjectString_ArticleGLN.ObjectId = Object_GoodsPropertyValue.Id
+                              AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                             ON ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+        LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                             ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+        LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                             ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = Object_GoodsPropertyValue.Id
+                            AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+        LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
+
+
+
+        WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+      )
+
        SELECT
              MovementItem.Id                        AS Id
            , Object_Goods.Id                        AS GoodsId
@@ -222,22 +302,22 @@ BEGIN
            , Object_Asset.Id                        AS AssetId
            , Object_Asset.ValueData                 AS AssetName
 
-           , COALESCE (Object_GoodsByJuridical.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.Name,
                        CAST ('' AS TVarChar))
                                                    AS GoodsName_Juridical
-           , COALESCE (OF_GoodsPropertyValueAmount.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.Amount,
                        CAST (0 AS TFloat))
                                                    AS AmountInPack_Juridical
-           , COALESCE (OS_GoodsPropertyValueArticle.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.Article,
                        CAST ('' AS TVarChar))
                                                    AS Article_Juridical
-           , COALESCE (OS_GoodsPropertyValueBarCode.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCode,
                        CAST ('' AS TVarChar))
                                                    AS BarCode_Juridical
-           , COALESCE (OS_GoodsPropertyValueArticleGLN.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN,
                        CAST ('' AS TVarChar))
                                                    AS ArticleGLN_Juridical
-           , COALESCE (OS_GoodsPropertyValueBarCodeGLN.ValueData,
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN,
                        CAST ('' AS TVarChar))
                                                    AS BarCodeGLN_Juridical
 
@@ -314,28 +394,7 @@ BEGIN
                                  ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
 
-            LEFT JOIN Object AS Object_GoodsByJuridical ON Object_GoodsByJuridical.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-
-            LEFT JOIN ObjectFloat  AS OF_GoodsPropertyValueAmount
-                                   ON OF_GoodsPropertyValueAmount.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND OF_GoodsPropertyValueAmount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
-
-            LEFT JOIN ObjectString AS OS_GoodsPropertyValueArticle
-                                   ON OS_GoodsPropertyValueArticle.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND OS_GoodsPropertyValueArticle.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-
-            LEFT JOIN ObjectString AS OS_GoodsPropertyValueBarCode
-                                   ON OS_GoodsPropertyValueBarCode.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND OS_GoodsPropertyValueBarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
-
-            LEFT JOIN ObjectString AS OS_GoodsPropertyValueArticleGLN
-                                   ON OS_GoodsPropertyValueArticleGLN.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND OS_GoodsPropertyValueArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
-
-            LEFT JOIN ObjectString AS OS_GoodsPropertyValueBarCodeGLN
-                                   ON OS_GoodsPropertyValueBarCodeGLN.ObjectId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
-                                  AND OS_GoodsPropertyValueBarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-
+--            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId -- Классификаторы свойств товаров
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -378,6 +437,11 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsPropertyId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+
        WHERE MovementItem.MovementId = vbMovementId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
@@ -392,11 +456,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer,TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.03.14                                                       *  + inisClientCopy
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  06.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
@@ -406,4 +471,10 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer,TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 21138, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 135428, inisClientCopy:=FALSE ,inSession:= '2')
+
+/*
+BEGIN;
+ SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 23784, inisClientCopy:=FALSE ,inSession:= '2');
+COMMIT;
+*/
