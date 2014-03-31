@@ -56,4 +56,3 @@ ALTER FUNCTION gpReport_JuridicalBalance (TDateTime, Integer, Integer, Integer, 
 
 -- тест
 -- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2'); 
-                                                                
