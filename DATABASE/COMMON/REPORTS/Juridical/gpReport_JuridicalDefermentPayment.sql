@@ -8,10 +8,13 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inAccountId        Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, ContractNumber TVarChar, KreditRemains TFloat, DebetRemains TFloat
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar, ContractCode Integer, ContractNumber TVarChar
+             , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
-             , Condition TVarChar, StartContractDate TDateTime, Remains TFloat)
+             , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+              )
 AS
 $BODY$
    DECLARE vbLenght Integer;
@@ -26,12 +29,15 @@ BEGIN
 
   RETURN QUERY  
   SELECT 
-     Object_Account.Valuedata AS AccountName
+     Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
-   , Object_Contract_View.InvNumber
-   , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS KreditRemains
-   , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE - RESULT.Remains END)::TFloat AS DebetRemains
+   , ObjectHistory_JuridicalDetails_View.OKPO
+   , Object_PaidKind.ValueData  AS PaidKindName
+   , View_Contract_InvNumber.ContractCode
+   , View_Contract_InvNumber.InvNumber AS ContractNumber
+   , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
+   , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
    , RESULT.SaleSumm::TFloat
    , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > 0 THEN RESULT.Remains - RESULT.SaleSumm ELSE 0 END)::TFloat AS DefermentPaymentRemains
    , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0) THEN 
@@ -50,6 +56,11 @@ BEGIN
    , (RESULT.DayCount||' '||Object_ContractConditionKind.ValueData)::TVarChar AS Condition
    , RESULT.ContractDate::TDateTime AS ContractDate
    , (-RESULT.Remains)::TFloat
+
+      , Object_InfoMoney_View.InfoMoneyGroupName
+      , Object_InfoMoney_View.InfoMoneyDestinationName
+      , Object_InfoMoney_View.InfoMoneyCode
+      , Object_InfoMoney_View.InfoMoneyName
 
   FROM (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -102,10 +113,24 @@ BEGIN
              , ContractConditionKindId
              , DayCount
              , ContractDate) AS RESULT
-  JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
-  JOIN Object AS Object_Account ON Object_Account.Id = RESULT.AccountId
-  JOIN Object_Contract_View ON Object_Contract_View.ContractId = RESULT.ContractId
-  LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId;
+  LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
+  LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
+  LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = RESULT.ContractId
+  LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId
+
+           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
+
+           LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                  ON CLO_InfoMoney.ContainerId = RESULT.Id
+                 AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
+
+           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                  ON CLO_PaidKind.ContainerId = RESULT.Id
+                 AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId
+
+    ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
 
@@ -117,6 +142,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
  30.03.14                          * 
  06.02.14                          * 
 */
