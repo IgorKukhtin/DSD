@@ -2,8 +2,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1127
-  ExplicitWidth = 1135
-  ExplicitHeight = 582
+  ExplicitLeft = -145
+  ExplicitWidth = 1143
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -220,6 +221,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colJuridicalName: TcxGridDBColumn
@@ -233,12 +235,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colContractNumber: TcxGridDBColumn
@@ -299,6 +303,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -310,9 +315,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colStartAmountD: TcxGridDBColumn
@@ -321,9 +328,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colStartAmountK: TcxGridDBColumn
@@ -332,9 +341,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colIncomeSumm: TcxGridDBColumn
@@ -343,6 +354,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -354,6 +366,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -377,6 +390,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -388,6 +402,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -399,6 +414,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -410,6 +426,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -421,6 +438,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
@@ -432,9 +450,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colKreditSumm: TcxGridDBColumn
@@ -443,9 +463,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colEndAmount_A: TcxGridDBColumn
@@ -454,6 +476,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -465,9 +488,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colEndAmount_D: TcxGridDBColumn
@@ -476,9 +501,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
           object colEndAmount_K: TcxGridDBColumn
@@ -487,9 +514,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
+            Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 55
           end
         end
@@ -648,6 +677,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
@@ -673,6 +703,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object IncomeJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'IncomeJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -711,6 +742,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object ReturnOutJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ReturnOutJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -749,6 +781,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object SaleJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
       FormNameParam.DataType = ftString
@@ -786,6 +819,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object ReturnInJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ReturnInJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -824,6 +858,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object MoneyJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'MoneyJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -862,6 +897,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object ServiceJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ServiceJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -900,6 +936,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object SendDebtJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'SendDebtJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
@@ -938,6 +975,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object OtherJournal: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'OtherJournal'
       FormName = 'TMovementJournalForm'
       FormNameParam.Value = 'TMovementJournalForm'
