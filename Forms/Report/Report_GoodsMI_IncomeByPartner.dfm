@@ -3,8 +3,8 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 986
-  ExplicitHeight = 379
+  ExplicitWidth = 994
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -88,6 +88,10 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -103,7 +107,7 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
             Width = 152
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

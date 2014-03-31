@@ -72,6 +72,24 @@ BEGIN
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
                                                                                                  )
+                                                                             AND ((RoleCode BETWEEN 40 and 49
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                                  )
+                                                                               OR (NOT RoleCode BETWEEN 40 and 49
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                                  )
+                                                                                 )
+                                                                             AND ((RoleCode between 50 and 59
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
+                                                                                                 , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                               OR (NOT RoleCode BETWEEN 50 and 59
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
+                                                                                                         , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                                 )
              HAVING Count(*) = 1)
   THEN
       vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
@@ -85,6 +103,24 @@ BEGIN
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
                                                                                                  )
+                                                                             AND ((RoleCode BETWEEN 40 and 49
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                 , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                                  )
+                                                                               OR (NOT RoleCode BETWEEN 40 and 49
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Service()
+                                                                                                         , zc_Enum_Process_InsertUpdate_Movement_ProfitLossService())
+                                                                                  )
+                                                                                 )
+                                                                             AND ((RoleCode between 50 and 59
+                                                                               AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
+                                                                                                 , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                               OR (NOT RoleCode BETWEEN 50 and 59
+                                                                                   AND inProcessId NOT IN (zc_Enum_Process_InsertUpdate_Movement_Cash()
+                                                                                                         , zc_Enum_Process_Get_Movement_Cash())
+                                                                                  )
+                                                                                 )
                    );
   ELSE
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);

@@ -83,6 +83,8 @@ from (select Bill.Id
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
         and Bill.BillKind in (zc_bkSaleToClient())
         and Bill.MoneyKindId = zc_mkBN()
+        and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
+        and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
        group by Bill.Id

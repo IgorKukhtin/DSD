@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
     IN inInvNumber           TVarChar  , -- Номер документа
-    IN inInvNumberPartner    TVarChar  , -- Номер налогового документа
+ INOUT ioInvNumberPartner    TVarChar  , -- Номер налогового документа
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inDocument            Boolean   , -- Есть ли подписанный документ
@@ -20,7 +20,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
     IN inDocumentTaxKindId   Integer   , -- Тип формирования налогового документа
     IN inUserId              Integer     -- пользователь
 )
-RETURNS Integer AS
+RETURNS RECORD AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
@@ -33,12 +33,19 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
+     IF COALESCE (ioInvNumberPartner, '') = '' 
+     THEN
+        SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) 
+        INTO ioInvNumberPartner;
+    
+     END IF;
 
+     
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Tax(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
      -- сохранили свойство <Номер налогового документа>
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, ioInvNumberPartner);
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
@@ -74,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.03.14         * add  INOUT ioInvNumberPartner 
  16.03.14                                        * add inPartnerId
  12.02.14                                                       * change to inDocumentTaxKindId
  11.02.14                                                       *  - registred
@@ -82,3 +90,6 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_Movement_Tax (ioId:= 0, inInvNumber:= '-1',inInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKind:= 0, inUserId:=24)
+
+
+

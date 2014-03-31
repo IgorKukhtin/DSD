@@ -56,21 +56,33 @@ BEGIN
 
     -- !!!определяется - будет ли разворачиваться по документам для Прибыль текущего периода
     -- 
-    vbIsMovement:= (zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE AccountId = COALESCE (inAccountId, 0) OR AccountGroupId = COALESCE (inAccountGroupId, 0) OR AccountDirectionId = COALESCE (inAccountDirectionId, 0))
-               AND  inAccountId <> 0)
-                OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE AccountId = COALESCE (inAccountId, 0) OR AccountGroupId = COALESCE (inAccountGroupId, 0) OR AccountDirectionId = COALESCE (inAccountDirectionId, 0))
-               AND  inProfitLossId <> 0);
+    vbIsMovement:= (zc_Enum_Account_100301() NOT IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
+                                                                                                  OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
+                                                                                                  OR AccountId = COALESCE (inAccountId, 0)
+                                                    )
+                AND (COALESCE (inAccountId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0))
+                OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
+                                                                                              OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
+                                                                                              OR AccountId = COALESCE (inAccountId, 0)
+                                                )
+               AND  COALESCE (inProfitLossId, 0) <> 0);
 
     --
     RETURN QUERY
     WITH tmpContainer AS (SELECT Container.Id AS ContainerId, Container.ObjectId AS AccountId, Container.Amount
                            FROM (SELECT AccountId FROM Object_Account_View WHERE 
                                    -- !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
-                                  ((Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
-                               AND (Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
-                               AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0))
+                                  /*((Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) OR COALESCE (inAccountGroupId, 0) = 0) 
+                               AND (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) OR COALESCE (inAccountDirectionId, 0) = 0)
+                               AND (Object_Account_View.AccountId = COALESCE (inAccountId, 0) OR COALESCE (inAccountGroupId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0) -- OR COALESCE (inAccountId, 0) = 0
+                                  )*/
+                                  ((Object_Account_View.AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
+                                OR (Object_Account_View.AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
+                                OR Object_Account_View.AccountId = COALESCE (inAccountId, 0)
+                                  )
                                OR (EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-                               AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
+                               AND COALESCE (inAccountGroupId, 0) = 0 AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0
+                                  )
                                 ) AS tmpAccount -- счет
                                 JOIN Container ON Container.ObjectId = tmpAccount.AccountId
                                               AND Container.DescId = zc_Container_Summ()
