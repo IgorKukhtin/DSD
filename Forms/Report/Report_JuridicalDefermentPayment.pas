@@ -49,6 +49,13 @@ type
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
     frDataSet: TfrxDBDataset;
+    colOKPO: TcxGridDBColumn;
+    colContractCode: TcxGridDBColumn;
+    colInfoMoneyCode: TcxGridDBColumn;
+    colInfoMoneyGroupName: TcxGridDBColumn;
+    colInfoMoneyDestinationName: TcxGridDBColumn;
+    colInfoMoneyName: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
