@@ -61,6 +61,9 @@ type
     colOKPO_To: TcxGridDBColumn;
     colJuridicalName_To: TcxGridDBColumn;
     colInvNumberPartner: TcxGridDBColumn;
+    colTotalCountTare: TcxGridDBColumn;
+    colTotalCountSh: TcxGridDBColumn;
+    colTotalCountKg: TcxGridDBColumn;
   private
     { Private declarations }
   public

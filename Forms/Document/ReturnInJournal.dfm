@@ -57,6 +57,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountKg
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -88,6 +103,21 @@ inherited ReturnInJournalForm: TReturnInJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalSummPVAT
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountTare
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountSh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colTotalCountKg
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
@@ -188,6 +218,39 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object colTotalCountTare: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1090#1072#1088#1099' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountTare'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colTotalCountSh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090'. ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object colTotalCountKg: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1074#1077#1089' ('#1091' '#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colTotalSumm: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
@@ -396,6 +459,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object actTaxCorrectiv: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spTaxCorrectiv
       StoredProcList = <
         item

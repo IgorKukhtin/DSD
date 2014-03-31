@@ -13,9 +13,12 @@ $BODY$
   DECLARE vbOperCount_Master TFloat;
   DECLARE vbOperCount_Child TFloat;
   DECLARE vbOperCount_Partner TFloat;
+  DECLARE vbOperCount_Tare TFloat;
+  DECLARE vbOperCount_Sh   TFloat;
+  DECLARE vbOperCount_Kg   TFloat;
   DECLARE vbOperSumm_Partner TFloat;
-  DECLARE vbOperCount_Packer TFloat;
   DECLARE vbOperSumm_Packer TFloat;
+  DECLARE vbOperCount_Packer TFloat;
   DECLARE vbOperSumm_MVAT TFloat;
   DECLARE vbOperSumm_PVAT TFloat;
   DECLARE vbOperSumm_Inventory TFloat;
@@ -55,10 +58,16 @@ BEGIN
      SELECT 
             -- Количество по факту (главные элементы)
             tmpOperCount_Master
-          , -- Количество по факту (подчиненные элементы)
-            tmpOperCount_Child
-          , -- Количество по Контрагенту
-            tmpOperCount_Partner
+            -- Количество по факту (подчиненные элементы)
+          , tmpOperCount_Child
+            -- Количество по Контрагенту
+          , tmpOperCount_Partner
+            -- Количество тары !!!по Контрагенту!!!
+          , tmpOperCount_Tare
+            -- Количество шт !!!по Контрагенту!!!
+          , tmpOperCount_Sh
+            -- Количество кг-!!не шт!!! + !!!по Контрагенту!!!
+          , tmpOperCount_Kg
             -- Сумма без НДС
           , CASE WHEN NOT vbPriceWithVAT OR vbVATPercent = 0
                     -- если цены без НДС или %НДС=0
@@ -123,12 +132,31 @@ BEGIN
             END
             -- сумма ввода остатка
           , tmpOperSumm_Inventory
-            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
+            INTO vbOperCount_Master, vbOperCount_Child, vbOperCount_Partner, vbOperCount_Tare, vbOperCount_Sh, vbOperCount_Kg, vbOperSumm_MVAT, vbOperSumm_PVAT, vbOperSumm_Partner, vbOperCount_Packer, vbOperSumm_Packer, vbOperSumm_Inventory
      FROM 
           (SELECT 
                  SUM (CASE WHEN MovementItem.DescId = zc_MI_Master() THEN MovementItem.Amount ELSE 0 END) AS tmpOperCount_Master
                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS tmpOperCount_Child
                , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS tmpOperCount_Partner
+               , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                           ELSE 0
+                      END
+                     ) AS tmpOperCount_Tare
+               , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                THEN 0
+                           WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                           ELSE 0
+                      END
+                     ) AS tmpOperCount_Sh
+               , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
+                                THEN 0
+                           WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                                THEN 0 -- COALESCE (MIFloat_AmountPartner.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData, 0)
+                           ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                      END
+                     ) AS tmpOperCount_Kg
                  -- сумма по Контрагенту - с округлением до 2-х знаков
                , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
                                                                                    ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
@@ -167,6 +195,20 @@ BEGIN
                                              ON MIFloat_Summ.MovementItemId = MovementItem.Id
                                             AND MIFloat_Summ.DescId = zc_MIFloat_Summ()
 
+                 LEFT JOIN ObjectFloat AS ObjectFloat_Weight
+                                       ON ObjectFloat_Weight.ObjectId = MovementItem.ObjectId
+                                      AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+                                      AND MovementItem.DescId = zc_MI_Master()
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                      ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                     AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+                                     AND MovementItem.DescId = zc_MI_Master()
+                 LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                      ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
+                                     AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                                     AND MovementItem.DescId = zc_MI_Master() 
+                 LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+
             WHERE Movement.Id = inMovementId
           ) AS _tmp;
 
@@ -186,6 +228,12 @@ BEGIN
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountChild(), inMovementId, vbOperCount_Child);
          -- Сохранили свойство <Итого количество у контрагента>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountPartner(), inMovementId, vbOperCount_Partner + vbOperCount_Packer);
+         -- Сохранили свойство <Итого количество, тары>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountTare(), inMovementId, vbOperCount_Tare);
+         -- Сохранили свойство <Итого количество, шт>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountSh(), inMovementId, vbOperCount_Sh);
+         -- Сохранили свойство <Итого количество, кг>
+         PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalCountKg(), inMovementId, vbOperCount_Kg);
          -- Сохранили свойство <Итого сумма по накладной (без НДС)>
          PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_TotalSummMVAT(), inMovementId, vbOperSumm_MVAT);
          -- Сохранили свойство <Итого сумма по накладной (с НДС)>
@@ -207,6 +255,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.03.14                                        * add TotalCount...
  20.10.13                                        * add vbChangePrice
  03.10.13                                        * add zc_Movement_PersonalSendCash
  22.08.13                                        * add vbOperSumm_Inventory
