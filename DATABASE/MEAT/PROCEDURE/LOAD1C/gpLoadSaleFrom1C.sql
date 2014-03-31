@@ -69,7 +69,7 @@ BEGIN
 
      -- !!!Продажи!!!
 
-     -- Удаление Документов
+     -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер
      PERFORM gpSetErased_Movement (Movement.Id, inSession) 
      FROM Movement  
           JOIN MovementLinkObject AS MLO_From
@@ -85,12 +85,16 @@ BEGIN
                               AND MovementBoolean_isLoad.ValueData = TRUE
      WHERE Movement.DescId = zc_Movement_Sale()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased();
+       AND Movement.StatusId <> zc_Enum_Status_Erased()
+       AND NOT ((Movement.InvNumber, Movement.Date) IN (SELECT DISTINCT Sale1C.InvNumber
+                        , Sale1C.OperDate
+          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+            AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
-     -- Создание Документов
+     -- Создание Документов                                   
 
-     -- открыли курсор
+     -- открыли курсор c учетом существующих документов
      OPEN curMovement FOR 
           SELECT DISTINCT Sale1C.InvNumber
                         , Sale1C.OperDate
@@ -190,7 +194,7 @@ BEGIN
 
      -- !!!Возвраты!!!
 
-     -- Удаление Документов
+     -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер.
      PERFORM gpSetErased_Movement(Movement.Id, inSession) 
      FROM Movement  
           JOIN MovementLinkObject AS MLO_To
@@ -241,7 +245,7 @@ BEGIN
                                              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '4 AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)';
+            AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
      LOOP

@@ -90,7 +90,7 @@ BEGIN
                               
      LEFT JOIN MovementItemContainer AS MIContainer 
             ON MIContainer.Containerid = Container.Id
-           AND MIContainer.OperDate >= ContractKind.ContractDate::Date - 4 * vbLenght
+           AND MIContainer.OperDate >= COALESCE(ContractKind.ContractDate::Date - 4 * vbLenght, inOperDate)
      LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
          WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
@@ -105,7 +105,7 @@ BEGIN
   JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
   JOIN Object AS Object_Account ON Object_Account.Id = RESULT.AccountId
   JOIN Object_Contract_View ON Object_Contract_View.ContractId = RESULT.ContractId
-  JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId;
+  LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
 
@@ -117,6 +117,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 30.03.14                          * 
  06.02.14                          * 
 */
 
