@@ -8915,7 +8915,9 @@ begin
              if not myExecToStoredProc then ;//exit;
              //
              if ((1=0)or(FieldByName('Id_Postgres').AsInteger=0))
-             then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             then begin fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+                        fExecSqFromQuery('update dba.Bill join dba._pgBillLoad_union on _pgBillLoad_union.BillId_union = '+FieldByName('ObjectId').AsString +' and _pgBillLoad_union.BillId = Bill.Id set Bill.Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+                  end;
              {}
              //
              //!!!”ƒ¿À≈Õ»≈!!!
@@ -8974,6 +8976,7 @@ begin
 
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
+
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
 
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId');

@@ -33,10 +33,36 @@ begin
      , isFl smallint
      , Id_Postgres integer
   ) on commit preserve rows;
+   //
+   //
+   --
+   delete from dba._pgBillLoad_union;
+   --
+   if @inStartDate>=zc_def_StartDate_PG() then
+     delete from dba._pgBillLoad_union;
+     --
+     insert into dba._pgBillLoad_union (BillId, BillId_union)
+      select Bill.Id, min (Bill_find.Id)
+      from dba.Bill
+           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId <> 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillNumber
+                                                and Bill_find.BillKind = Bill.BillKind
+                                                and Bill_find.BillNumber = Bill.BillNumber
+                                                and Bill_find.MoneyKindId = Bill.MoneyKindId
+                                                and Bill_find.FromId = Bill.FromId
+                                                and Bill_find.ToId = Bill.ToId
+      where Bill.BillDate between @inStartDate and @inEndDate
+        and Bill.FromId in (zc_UnitId_StoreSale())
+        and Bill.BillKind in (zc_bkSaleToClient())
+        and Bill.MoneyKindId = zc_mkBN()
+       group by Bill.Id;
+   end if;
 
-insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
-                    , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres)
-select Bill.Id as ObjectId
+   //
+   --
+   insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
+                       , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres)
+   select Bill.Id as ObjectId
 
      , cast (Bill.BillNumber as TVarCharMedium) ||
        case when FromId_Postgres is null or ToId_Postgres is null or CodeIM = 0
@@ -74,22 +100,22 @@ select Bill.Id as ObjectId
 --     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
 
      , zc_rvNo() as isFl
-     , (Bill.Id_Postgres) as Id_Postgres
+     , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
-from (select Bill.Id
+from (select Bill.Id, 0 as Id_Postgres
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
         and Bill.BillKind in (zc_bkSaleToClient())
         and Bill.MoneyKindId = zc_mkBN()
-        and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
+        and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
         and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
        group by Bill.Id
      union
-      select Bill.Id
+      select Bill.Id, 0 as Id_Postgres
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
       where Bill.BillDate between @inStartDate and @inEndDate
@@ -98,7 +124,12 @@ from (select Bill.Id
         and Bill.MoneyKindId = zc_mkBN()
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
-       group by Bill.Id
+      group by Bill.Id
+     union
+      select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres
+      from dba._pgBillLoad_union
+            join dba.Bill on Bill.Id = _pgBillLoad_union.BillId
+      group by BillId_union
      ) as Bill_find
 
      left outer join dba.Bill on Bill.Id = Bill_find.Id
@@ -188,4 +219,7 @@ from (select Bill.Id
 
 end
 //
--- call dba._pgSelect_Bill_Sale ('2013-07-01', '2013-07-07')
+-- call dba._pgSelect_Bill_Sale ('2014-03-01', '2014-03-01')
+/*
+create table dba._pgBillLoad_union (BillId Integer, BillId_union Integer);
+*/

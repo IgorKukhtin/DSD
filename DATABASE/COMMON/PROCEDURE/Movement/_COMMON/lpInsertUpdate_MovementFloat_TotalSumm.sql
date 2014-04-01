@@ -146,6 +146,7 @@ BEGIN
                , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                 THEN 0
                            WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                            AND COALESCE (MIFloat_Price.ValueData, 0) <> 0
                                 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                            ELSE 0
                       END
@@ -153,6 +154,7 @@ BEGIN
                , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
                                 THEN 0
                            WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
+                            -- AND COALESCE (MIFloat_Price.ValueData, 0) <> 0
                                 THEN 0 -- COALESCE (MIFloat_AmountPartner.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData, 0)
                            ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
                       END
