@@ -322,6 +322,10 @@ BEGIN
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
                                            AND MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                   JOIN MovementLinkObject AS MovementLinkObject_From
+                                           ON MovementLinkObject_From.MovementId = Movement.Id
+                                          AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                          AND MovementLinkObject_From.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
                    JOIN MovementLinkObject AS MovementLinkObject_To
                                            ON MovementLinkObject_To.MovementId = Movement.Id
                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -336,7 +340,37 @@ BEGIN
                                           
               WHERE Movement.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
                 AND Movement.DescId = zc_Movement_Sale();
-               
+
+
+          IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()   ---zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR
+             THEN 
+                 -- сохранили связь с <Тип формирования налогового документа> у документов Возврат
+                 PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), Movement.Id, zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR())
+                 FROM Movement 
+                      JOIN MovementDate AS MovementDate_OperDatePartner
+                                        ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                       AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
+                                       AND MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
+                      JOIN MovementLinkObject AS MovementLinkObject_To
+                                              ON MovementLinkObject_To.MovementId = Movement.Id
+                                             AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                             AND MovementLinkObject_To.ObjectId NOT IN (8445, 8444) -- Склад МИНУСОВКА + Склад ОХЛАЖДЕНКА
+                      JOIN MovementLinkObject AS MovementLinkObject_From
+                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                             AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                      JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                      ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                     AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                                     AND ObjectLink_Partner_Juridical.ChildObjectId = vbToId
+                      JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                              ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                             AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                             AND MovementLinkObject_Contract.ObjectId = vbContractId
+                 WHERE Movement.StatusId <> zc_Enum_Status_Erased() -- zc_Enum_Status_Complete()
+                   AND Movement.DescId = zc_Movement_ReturnIn();
+          END IF;
+
+              -- выбираем товары из документов продаж и возвратов, если (продажа-возврат)<0 отбрасываем из НН  
               INSERT INTO _tmpGoodsSale (GoodsId, GoodsKindId, CountForPrice, Price, Amount)
                  select tmpGoods.GoodsId
                      , tmpGoods.GoodsKindId 
