@@ -72,7 +72,7 @@ BEGIN
                                        ELSE 0
                                   END AS DocumentTaxKindId
                                 , 0 AS MovementId_Tax     
-                                , inEndDate as OperDate_Tax
+                                , DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  as OperDate_Tax
                                 , CASE WHEN MovementLO_DocumentTaxKind.ObjectId in (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()) 
                                             THEN MovementLinkObject_From.ObjectId
                                             ELSE 0 
@@ -142,7 +142,7 @@ BEGIN
                       , ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.MovementId ELSE 0 END AS MovementId_Sale
                       , MAX (tmpMovWith.MovementId_Tax) AS MovementId_Tax
-                      , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.OperDate_Sale ELSE inEndDate END AS OperDate_Sale
+                      , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.OperDate_Sale ELSE DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  END AS OperDate_Sale
                       , tmpMovWith.OperDate_Tax  
                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.InvNumber ELSE '' END AS InvNumber_Sale
                       , MovementItem.ObjectId AS GoodsId
@@ -190,7 +190,7 @@ BEGIN
                 GROUP BY ObjectLink_Contract_JuridicalBasis.ChildObjectId 
                        , ObjectLink_Partner_Juridical.ChildObjectId 
                        , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.MovementId ELSE 0 END 
-                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.OperDate_Sale ELSE inEndDate END 
+                       , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.OperDate_Sale ELSE DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  END 
                        , tmpMovWith.OperDate_Tax  
                        , CASE WHEN (tmpMovWith.DocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()) THEN tmpMovWith.InvNumber ELSE '' END 
                        , MovementItem.ObjectId 
@@ -207,7 +207,7 @@ BEGIN
                     
                      , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()) THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_Sale
                      , Movement.Id  AS MovementId_Tax
-                     , inEndDate AS OperDate_Sale
+                     , DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
                      , '' AS InvNumber_Sale
                      , MovementItem.ObjectId AS GoodsId
