@@ -371,6 +371,10 @@ BEGIN
                    END AS NUMERIC (16, 3))                   AS AmountSummWVAT
 
        FROM MovementItem
+            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                       AND MIFloat_Price.ValueData <> 0
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  MovementItem.MovementId
@@ -412,9 +416,6 @@ BEGIN
                                         ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                        AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
 
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -461,6 +462,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 01.04.14                                                       *  MIFloat_Price.ValueData <> 0
  31.03.14                                                       *  + inisClientCopy
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  06.03.14                                                       *

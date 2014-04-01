@@ -353,6 +353,12 @@ BEGIN
 
        FROM MovementItem
 
+            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                       AND MIFloat_Price.ValueData <> 0
+
+
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  MovementItem.MovementId
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -392,10 +398,6 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_ChangePercentAmount
                                         ON MIFloat_ChangePercentAmount.MovementItemId = MovementItem.Id
                                        AND MIFloat_ChangePercentAmount.DescId = zc_MIFloat_ChangePercentAmount()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
             LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                         ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
@@ -443,6 +445,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.04.14                                                       *  MIFloat_Price.ValueData <> 0
  27.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
  19.02.14                                                       *  add by juridical
