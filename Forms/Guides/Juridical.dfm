@@ -77,6 +77,7 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object clJuridicalGroupName: TcxGridDBColumn
@@ -94,6 +95,7 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object clInfoMoneyCode: TcxGridDBColumn
@@ -118,6 +120,7 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 50
       end
       object clInfoMoneyDestinationName: TcxGridDBColumn
@@ -142,6 +145,7 @@ object JuridicalForm: TJuridicalForm
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 40
       end
       object clPriceListName: TcxGridDBColumn
@@ -155,6 +159,7 @@ object JuridicalForm: TJuridicalForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = False
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
@@ -170,6 +175,7 @@ object JuridicalForm: TJuridicalForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = False
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -177,6 +183,7 @@ object JuridicalForm: TJuridicalForm
       object clStartPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 55
@@ -184,6 +191,7 @@ object JuridicalForm: TJuridicalForm
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 65
@@ -191,9 +199,9 @@ object JuridicalForm: TJuridicalForm
       object clGoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
-        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 80
       end
       object ceIsErased: TcxGridDBColumn
