@@ -8,7 +8,8 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inAccountId        Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar, ContractCode Integer, ContractNumber TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
@@ -34,6 +35,7 @@ BEGIN
    , Object_Juridical.Valuedata AS JuridicalName
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.ValueData  AS PaidKindName
+   , View_Contract_InvNumber.ContractId
    , View_Contract_InvNumber.ContractCode
    , View_Contract_InvNumber.InvNumber AS ContractNumber
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
