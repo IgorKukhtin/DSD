@@ -2,8 +2,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1127
-  ExplicitWidth = 1135
-  ExplicitHeight = 582
+  ExplicitWidth = 1143
+  ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -602,7 +602,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel6: TcxLabel
       Left = 209
       Top = 6
-      Caption = #1057#1095#1077#1090':'
+      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
       Left = 209

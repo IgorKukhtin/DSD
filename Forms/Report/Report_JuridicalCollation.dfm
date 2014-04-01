@@ -1,9 +1,9 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
-  Caption = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' '
+  Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 927
-  ExplicitWidth = 935
-  ExplicitHeight = 416
+  ExplicitWidth = 943
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -89,14 +89,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Styles.Footer = nil
           Styles.Header = nil
           object colItemName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #1042#1080#1076' '#1076#1086#1082'.'
             DataBinding.FieldName = 'ItemName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 95
           end
           object coInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -155,6 +155,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           object colInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
@@ -216,45 +217,47 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ExplicitTop = 31
     end
     object cxLabel6: TcxLabel
-      Left = 236
-      Top = 6
+      Left = 251
+      Top = 31
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 343
-      Top = 4
+      Left = 358
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 245
+      Width = 237
     end
     object cxLabel3: TcxLabel
       Left = 207
-      Top = 29
-      Caption = #1053#1072#1096#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Top = 6
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edMainJuridical: TcxButtonEdit
-      Left = 343
-      Top = 29
+      Left = 358
+      Top = 4
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 245
+      Text = #1054#1054#1054' '#1040#1051#1040#1053
+      Width = 237
     end
     object cxLabel4: TcxLabel
-      Left = 596
-      Top = 31
+      Left = 599
+      Top = 6
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
       Left = 683
-      Top = 29
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
@@ -264,13 +267,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 240
     end
     object cxLabel8: TcxLabel
-      Left = 628
-      Top = 6
+      Left = 631
+      Top = 31
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object ceContract: TcxButtonEdit
       Left = 683
-      Top = 4
+      Top = 29
       Properties.Buttons = <
         item
           Default = True
