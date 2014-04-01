@@ -608,6 +608,8 @@ end;
 function TdsdParam.GetFromDataSet(const DataSet: TDataSet; const FieldName: string): Variant;
 begin
   if DataSet.Active then begin
+    if FieldName = '' then
+       raise Exception.Create('Параметр ' + Name + '. не установлено ComponentItem');
     Result := DataSet.FieldByName(FieldName).Value;
     if VarIsNull(Result) then
     case DataType of

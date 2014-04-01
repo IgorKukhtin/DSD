@@ -2,11 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inOperDate         TDateTime , -- 
     IN inContractDate     TDateTime , -- 
     IN inJuridicalId      INTEGER   ,
+    IN inAccountId        Integer   , --
+    IN inContractId       Integer   , --
     IN inPeriodCount      Integer   , --
     IN inSumm             TFloat    , 
     IN inSession          TVarChar    -- сессия пользователя
@@ -50,12 +53,16 @@ BEGIN
          LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                  ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                 AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
              LEFT JOIN Object AS Object_From 
                    ON Object_From.Id = MovementLinkObject_From.ObjectId
              LEFT JOIN Object AS Object_To
                     ON Object_To.Id = MovementLinkObject_To.ObjectId
         WHERE Movement.DescId = zc_Movement_Sale()
           AND Movement.StatusId = zc_enum_status_complete()
+          AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
           AND Movement.OperDate >= (inContractDate::date - vbLenght * inPeriodCount) 
           AND Movement.OperDate < (inContractDate::date - vbLenght * (inPeriodCount - 1))
           AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId 
@@ -77,7 +84,11 @@ BEGIN
               JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
       	 WHERE movement.OperDate < vbOperDate  AND movement.DescId = zc_movement_sale() AND StatusId = zc_enum_status_complete()
+           AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
       	   AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId;
       	 
      -- 	raise EXCEPTION 'vbNextOperDate %, % ', vbNextOperDate, vbOperDate   	 ;
@@ -96,7 +107,11 @@ BEGIN
                 JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
       	      WHERE Movement.OperDate < vbOperDate AND Movement.OperDate >= vbNextOperDate AND Movement.DescId = zc_movement_sale() 
+                AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
       	        AND Movement.StatusId = zc_enum_status_complete() AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId;
 
 
@@ -145,11 +160,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.04.14                          * 
  27.03.14                          * 
  21.02.14                          * 
 */

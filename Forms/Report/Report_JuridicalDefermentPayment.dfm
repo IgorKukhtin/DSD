@@ -3,25 +3,25 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 998
-  ExplicitHeight = 429
+  ExplicitWidth = 990
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 982
     Height = 337
     TabOrder = 3
-    ExplicitWidth = 869
+    ExplicitWidth = 982
     ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 869
+      ExplicitWidth = 982
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 982
         Height = 337
-        ExplicitWidth = 869
+        ExplicitWidth = 982
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -311,7 +311,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   end
   inherited Panel: TPanel
     Width = 982
-    ExplicitWidth = 869
+    ExplicitWidth = 982
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 41640d
@@ -322,7 +322,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Visible = False
@@ -412,6 +412,19 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = MasterCDS
           ComponentItem = 'SaleSumm1'
           DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
@@ -464,6 +477,19 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = MasterCDS
           ComponentItem = 'SaleSumm2'
           DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
@@ -516,6 +542,19 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = MasterCDS
           ComponentItem = 'SaleSumm3'
           DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
@@ -568,6 +607,19 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = MasterCDS
           ComponentItem = 'SaleSumm4'
           DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
@@ -618,8 +670,21 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         item
           Name = 'Summ'
           Component = MasterCDS
-          ComponentItem = 'SaleSumm4'
+          ComponentItem = 'SaleSumm5'
           DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportNameParam.Value = ''
       ReportNameParam.DataType = ftString
@@ -818,6 +883,19 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Name = 'inJuridicalId'
         Component = MasterCDS
         ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
