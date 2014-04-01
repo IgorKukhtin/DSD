@@ -102,6 +102,7 @@ BEGIN
                         , Sale1C.UnitId AS UnitId_1C
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , View_Contract.ContractId
+                        , Sale.Id AS MovementId
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -123,27 +124,47 @@ BEGIN
                                               ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
+               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate FROM Movement  
+          JOIN MovementLinkObject AS MLO_From
+                                  ON MLO_From.MovementId = Movement.Id
+                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
+          JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          JOIN MovementBoolean AS MovementBoolean_isLoad 
+                               ON MovementBoolean_isLoad.MovementId = Movement.Id
+                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+                              AND MovementBoolean_isLoad.ValueData = TRUE
+     WHERE Movement.DescId = zc_Movement_Sale()
+       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.StatusId <> zc_Enum_Status_Erased()) AS Sale
+                          ON Sale.InvNumber = Sale1C.InvNumber AND Sale.OperDate = Sale1C.OperDate
+            
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
             AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
      LOOP
           -- данные для Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
           END IF;
           -- сохранили Документ
           SELECT tmp.ioId INTO vbMovementId
-          FROM lpInsertUpdate_Movement_Sale (ioId := 0, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
+          FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
                                            , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
                                            , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= zc_Enum_PaidKind_FirstForm()
                                            , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0, inUserId:= vbUserId
                                             ) AS tmp;
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
-
+          -- пометим записи на удаление ПОКА
+          PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
+         
+         
           -- открыли курсор
           OPEN curMovementItem FOR 
                SELECT OperCount, OperPrice, ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId AS GoodsId, ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId AS GoodsKindId
@@ -197,11 +218,11 @@ BEGIN
      -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер.
      PERFORM gpSetErased_Movement(Movement.Id, inSession) 
      FROM Movement  
-          JOIN MovementLinkObject AS MLO_To
-                                  ON MLO_To.MovementId = Movement.Id
-                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
+          JOIN MovementLinkObject AS MLO_From
+                                  ON MLO_From.MovementId = Movement.Id
+                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
           JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_To.ObjectId 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
                          AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           JOIN MovementBoolean AS MovementBoolean_isLoad 
@@ -210,7 +231,11 @@ BEGIN
                               AND MovementBoolean_isLoad.valuedata = TRUE 
      WHERE Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased();
+       AND Movement.StatusId <> zc_Enum_Status_Erased()
+       AND NOT ((Movement.InvNumber, Movement.Date) IN (SELECT DISTINCT Sale1C.InvNumber
+                        , Sale1C.OperDate
+          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+            AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
 
      -- Создание Документов
@@ -223,6 +248,7 @@ BEGIN
                         , Sale1C.UnitId AS vbUnitId
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
                         , View_Contract.ContractId
+                        , MovementReturn.Id
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
@@ -244,25 +270,48 @@ BEGIN
                                               ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
                                              AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                              AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
+
+               LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate 
+                                FROM Movement  
+          JOIN MovementLinkObject AS MLO_From
+                                  ON MLO_From.MovementId = Movement.Id
+                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
+          JOIN ObjectLink AS ObjectLink_Unit_Branch 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
+                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
+          JOIN MovementBoolean AS MovementBoolean_isLoad 
+                               ON MovementBoolean_isLoad.MovementId = Movement.Id
+                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
+                              AND MovementBoolean_isLoad.valuedata = TRUE 
+     WHERE Movement.DescId = zc_Movement_ReturnIn()
+       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+       AND Movement.StatusId <> zc_Enum_Status_Erased()) AS MovementReturn
+                          ON MovementReturn.InvNumber = Sale1C.InvNumber AND MovementReturn.OperDate = Sale1C.OperDate
+
+
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
             AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
      LOOP
           -- данные для создания Документа
-          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId;
+          FETCH curMovement INTO vbInvNumber, vbOperDate, vbUnitId, vbUnitId_1C, vbPartnerId, vbContractId, vbMovementId;
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
           END IF;
 
           -- сохранили Документ
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := 0, inInvNumber := vbInvNumber
+          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
                                                           , inContractId := vbContractId, inUserId := vbUserId);
           -- сохранили свойство <Загружен из 1С>
           PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), vbMovementId, TRUE);
+
+          -- пометим записи на удаление ПОКА
+          PERFORM gpSetErased_MovementItem(MovementItem.Id, inSession) FROM MovementItem WHERE MovementItem.MovementId = vbMovementId;
 
           -- открыли курсор
           OPEN curMovementItem FOR 
@@ -322,6 +371,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 31.03.14                        * 
  18.02.14                        * add inBranchId
  15.02.14                                        * исправил на "<>" там где Не все записи засинхронизированы
  15.02.14                                        * zfGetUnitFromUnitId
