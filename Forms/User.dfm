@@ -251,8 +251,8 @@ object UserForm: TUserForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -369,6 +369,7 @@ object UserForm: TUserForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -388,11 +389,14 @@ object UserForm: TUserForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TUserEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -404,11 +408,14 @@ object UserForm: TUserForm
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TUserEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -423,6 +430,7 @@ object UserForm: TUserForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -437,6 +445,7 @@ object UserForm: TUserForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -452,6 +461,7 @@ object UserForm: TUserForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -460,6 +470,7 @@ object UserForm: TUserForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -479,6 +490,7 @@ object UserForm: TUserForm
     end
     object UpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateUserRole
       StoredProcList = <
         item
@@ -489,12 +501,15 @@ object UserForm: TUserForm
     end
     object OpenChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TRoleForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
           Component = RoleCDS
-          ComponentItem = 'UserRoleId'
+          ComponentItem = 'Id'
         end
         item
           Name = 'TextValue'
@@ -506,7 +521,10 @@ object UserForm: TUserForm
     end
     object ChoiceRole: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TRoleForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -523,7 +541,10 @@ object UserForm: TUserForm
     end
     object ChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TObject_UnitForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -540,6 +561,7 @@ object UserForm: TUserForm
     end
     object UpdatePeriodClose: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdatePeriodClose
       StoredProcList = <
         item
@@ -580,6 +602,8 @@ object UserForm: TUserForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 248
     Top = 232
   end
@@ -607,6 +631,8 @@ object UserForm: TUserForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 448
     Top = 32
   end
@@ -629,7 +655,7 @@ object UserForm: TUserForm
       item
         Name = 'ioid'
         Component = RoleCDS
-        ComponentItem = 'Id'
+        ComponentItem = 'UserRoleId'
         ParamType = ptInputOutput
       end
       item
@@ -641,7 +667,7 @@ object UserForm: TUserForm
       item
         Name = 'inroleid'
         Component = RoleCDS
-        ComponentItem = 'UserRoleId'
+        ComponentItem = 'Id'
         ParamType = ptInput
       end>
     Left = 520
@@ -682,6 +708,8 @@ object UserForm: TUserForm
     OnDblClickActionList = <>
     ActionItemList = <>
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 472
     Top = 216
   end

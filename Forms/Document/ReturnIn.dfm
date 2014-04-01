@@ -2,27 +2,29 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 703
   ClientWidth = 925
-  ExplicitWidth = 933
-  ExplicitHeight = 737
+  ExplicitWidth = 941
+  ExplicitHeight = 738
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 925
-    Height = 575
-    ExplicitTop = 128
+    Height = 577
+    ExplicitTop = 126
     ExplicitWidth = 925
-    ExplicitHeight = 575
-    ClientRectBottom = 571
-    ClientRectRight = 921
+    ExplicitHeight = 577
+    ClientRectBottom = 577
+    ClientRectRight = 925
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 919
-      ExplicitHeight = 549
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 925
+      ExplicitHeight = 553
       inherited cxGrid: TcxGrid
-        Width = 919
-        Height = 549
-        ExplicitWidth = 919
-        ExplicitHeight = 549
+        Width = 925
+        Height = 553
+        ExplicitWidth = 925
+        ExplicitHeight = 553
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -133,6 +135,7 @@ inherited ReturnInForm: TReturnInForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
@@ -192,15 +195,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 919
-      ExplicitHeight = 549
+      ExplicitTop = 24
+      ExplicitWidth = 925
+      ExplicitHeight = 553
       inherited cxGridEntry: TcxGrid
-        Width = 919
-        Height = 549
-        ExplicitWidth = 919
-        ExplicitHeight = 549
+        Width = 925
+        Height = 553
+        ExplicitWidth = 925
+        ExplicitHeight = 553
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -239,6 +241,8 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 136
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       ExplicitLeft = 136
     end
     inherited cxLabel2: TcxLabel
@@ -255,7 +259,7 @@ inherited ReturnInForm: TReturnInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 120
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 120
     end
     object cxLabel3: TcxLabel
@@ -448,6 +452,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object mactPrint: TMultiAction [10]
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintProcName
@@ -478,6 +483,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -498,6 +504,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -507,6 +514,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object actTaxCorrective: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spTaxCorrectiv
       StoredProcList = <
         item
@@ -518,6 +526,7 @@ inherited ReturnInForm: TReturnInForm
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -577,7 +586,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -644,7 +653,6 @@ inherited ReturnInForm: TReturnInForm
     Top = 337
   end
   inherited PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem

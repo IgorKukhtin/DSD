@@ -38,20 +38,22 @@ begin
    --
    delete from dba._pgBillLoad_union;
    --
-   if @inStartDate>=zc_def_StartDate_PG() then
+   if @inStartDate>=zc_def_StartDate_PG() or @inEndDate>=zc_def_StartDate_PG() 
+   then
      delete from dba._pgBillLoad_union;
      --
      insert into dba._pgBillLoad_union (BillId, BillId_union)
       select Bill.Id, min (Bill_find.Id)
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId <> 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
-           left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillNumber
+           left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber
                                                 and Bill_find.MoneyKindId = Bill.MoneyKindId
                                                 and Bill_find.FromId = Bill.FromId
                                                 and Bill_find.ToId = Bill.ToId
       where Bill.BillDate between @inStartDate and @inEndDate
+        and Bill.BillDate >= zc_def_StartDate_PG()
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
         and Bill.MoneyKindId = zc_mkBN()
@@ -86,7 +88,7 @@ begin
      , Bill.ToId as ClientId
 
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
-     , 30201 as CodeIM -- _pgInfoMoney.Id3_Postgres AS ContractId 
+     , Bill_find.CodeIM -- _pgInfoMoney.Id3_Postgres AS ContractId 
      , isnull (Contract.ContractNumber,'') as ContractNumber
      , null as CarId
      , null as PersonalDriverId
@@ -102,7 +104,7 @@ begin
      , zc_rvNo() as isFl
      , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
-from (select Bill.Id, 0 as Id_Postgres
+from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
       where Bill.BillDate between @inStartDate and @inEndDate
@@ -115,7 +117,7 @@ from (select Bill.Id, 0 as Id_Postgres
 --       and Bill.Id = 1260716
        group by Bill.Id
      union
-      select Bill.Id, 0 as Id_Postgres
+      select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
       where Bill.BillDate between @inStartDate and @inEndDate
@@ -126,7 +128,7 @@ from (select Bill.Id, 0 as Id_Postgres
 --       and Bill.Id = 1260716
       group by Bill.Id
      union
-      select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres
+      select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres, 30101 as CodeIM -- Готовая продукция
       from dba._pgBillLoad_union
             join dba.Bill on Bill.Id = _pgBillLoad_union.BillId
       group by BillId_union

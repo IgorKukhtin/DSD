@@ -10564,12 +10564,22 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , 30201 as CodeIM'
+           +'           , 30201 as CodeIM' // Мясное сырье
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
+           +'        and Bill.MoneyKindId = zc_mkBN()'
+           +'      group by Bill.Id'
+           +'     union all'
+           +'      select Bill.Id as BillId'
+           +'           , 30101 as CodeIM' // Готовая продукция
+           +'      from dba.Bill'
+           +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'        and Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'      group by Bill.Id'
            +'      ) as Bill_find');

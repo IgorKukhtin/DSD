@@ -2,27 +2,29 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitWidth = 1023
-  ExplicitHeight = 702
+  ExplicitWidth = 1031
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 164
+    Top = 162
     Width = 1015
-    Height = 504
-    ExplicitTop = 164
+    Height = 506
+    ExplicitTop = 162
     ExplicitWidth = 1015
-    ExplicitHeight = 504
-    ClientRectBottom = 500
-    ClientRectRight = 1011
+    ExplicitHeight = 506
+    ClientRectBottom = 506
+    ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1009
-      ExplicitHeight = 478
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1015
+      ExplicitHeight = 482
       inherited cxGrid: TcxGrid
-        Width = 1009
-        Height = 478
-        ExplicitWidth = 1009
-        ExplicitHeight = 478
+        Width = 1015
+        Height = 482
+        ExplicitWidth = 1015
+        ExplicitHeight = 482
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -130,8 +132,10 @@ inherited SaleForm: TSaleForm
           object colChangePercentAmount: TcxGridDBColumn
             Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
             DataBinding.FieldName = 'ChangePercentAmount'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn
@@ -140,8 +144,10 @@ inherited SaleForm: TSaleForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colAmountChangePercent: TcxGridDBColumn
@@ -152,6 +158,7 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
@@ -211,15 +218,14 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1009
-      ExplicitHeight = 478
+      ExplicitTop = 24
+      ExplicitWidth = 1015
+      ExplicitHeight = 482
       inherited cxGridEntry: TcxGrid
-        Width = 1009
-        Height = 478
-        ExplicitWidth = 1009
-        ExplicitHeight = 478
+        Width = 1015
+        Height = 482
+        ExplicitWidth = 1015
+        ExplicitHeight = 482
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -256,6 +262,8 @@ inherited SaleForm: TSaleForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 104
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       ExplicitLeft = 104
     end
     inherited cxLabel2: TcxLabel
@@ -272,7 +280,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -394,6 +402,7 @@ inherited SaleForm: TSaleForm
     object edRouteSorting: TcxButtonEdit
       Left = 749
       Top = 63
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -754,7 +763,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
