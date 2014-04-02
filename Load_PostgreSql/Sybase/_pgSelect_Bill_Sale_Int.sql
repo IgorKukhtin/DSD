@@ -38,13 +38,17 @@ begin
    --
    delete from dba._pgBillLoad_union;
    --
-   if @inStartDate>=zc_def_StartDate_PG() or @inEndDate>=zc_def_StartDate_PG() 
+   if @inStartDate>=zc_def_StartDate_PG() or @inEndDate>=zc_def_StartDate_PG()-2
    then
      delete from dba._pgBillLoad_union;
      --
      insert into dba._pgBillLoad_union (BillId, BillId_union)
-      select Bill.Id, min (Bill_find.Id)
+      select BillId, BillId_union
+      from
+      (select Bill.Id as BillId, min (Bill_find.Id) as BillId_union
+            , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
       from dba.Bill
+           left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId <> 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
@@ -53,11 +57,13 @@ begin
                                                 and Bill_find.FromId = Bill.FromId
                                                 and Bill_find.ToId = Bill.ToId
       where Bill.BillDate between @inStartDate and @inEndDate
-        and Bill.BillDate >= zc_def_StartDate_PG()
+        and Bill.BillDate >= zc_def_StartDate_PG() - 2
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
         and Bill.MoneyKindId = zc_mkBN()
-       group by Bill.Id;
+      group by Bill.Id, Bill.BillDate, isnull (_toolsView_Client_isChangeDate.addDay, 0)
+      ) as tmp
+      where isBillDate = zc_rvYes();
    end if;
 
    //
@@ -171,7 +177,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
      -- left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId
      -- left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres
      left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID
-                                                          and 1=0
+                                                          -- and 1=0
      -- left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 30201
 
 /*
