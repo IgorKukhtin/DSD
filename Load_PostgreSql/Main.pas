@@ -137,6 +137,8 @@ type
     cbCompleteReturnInInt: TCheckBox;
     OKPOEdit: TEdit;
     cbOKPO: TCheckBox;
+    cbDeleteFl: TCheckBox;
+    cbDeleteInt: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -233,6 +235,11 @@ type
     procedure pLoadDocumentItem_Tax_Fl(SaveCount:Integer);
     function pLoadDocument_TaxCorrective_Fl:Integer;
     procedure pLoadDocumentItem_TaxCorrective_Fl(SaveCount:Integer);
+
+    function pLoadDocument_Delete_Int:Integer;
+    procedure pLoadDocumentItem_Delete_Int(SaveCount:Integer);
+    function pLoadDocument_Delete_Fl:Integer;
+    procedure pLoadDocumentItem_Delete_Fl(SaveCount:Integer);
 
     // Guides :
     procedure pLoadGuide_Measure;
@@ -769,6 +776,9 @@ begin
      //!!!FLOAT!!!
      DataSource.DataSet:=fromFlQuery;
 
+     if not fStop then myRecordCount1:=pLoadDocument_Delete_Fl;
+     if not fStop then pLoadDocumentItem_Delete_Fl(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Sale_Fl;
      if not fStop then pLoadDocumentItem_Sale_Fl_Int(myRecordCount1);
 
@@ -789,6 +799,10 @@ begin
      //Fl if not fStop then pLoadGuide_Juridical(true);
      //Fl if not fStop then pLoadGuide_Partner(true);
      //
+
+     if not fStop then myRecordCount1:=pLoadDocument_Delete_Int;
+     if not fStop then pLoadDocumentItem_Delete_Int(myRecordCount1);
+
      if not fStop then myRecordCount1:=pLoadDocument_Income;
      if not fStop then pLoadDocumentItem_Income(myRecordCount1);
 
@@ -8988,7 +9002,7 @@ begin
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
            +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
            +'                                                                           and 1=1');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-2)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.Id_Postgres>0'
            );
@@ -12097,6 +12111,214 @@ begin
      end;
      //
      myDisabledCB(cbTaxCorrective);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pLoadDocument_Delete_Int:Integer;
+begin
+     Result:=0;
+     if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
+     //
+     myEnabledCB(cbDeleteInt);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Id as ObjectId');
+        Add('     , Id_PG as Id_Postgres');
+        Add('from dba._pgBill_delete');
+        Add('order by Id_PG desc');
+        Open;
+
+        Result:=RecordCount;
+        cbDeleteInt.Caption:='3.0.2.('+IntToStr(RecordCount)+')Удаление Int';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpSetErased_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
+             //
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             // if (FieldByName('Id_Postgres').AsInteger=0)
+             // then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbDeleteInt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_Delete_Int(SaveCount:Integer);
+begin
+     if (not cbDeleteInt.Checked)or(not cbDeleteInt.Enabled) then exit;
+     //
+     myEnabledCB(cbDeleteInt);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Id as ObjectId');
+        Add('     , Id_PG as Id_Postgres');
+        Add('from dba._pgBillItems_delete');
+        Add('order by Id_PG desc');
+        Open;
+
+        cbDeleteInt.Caption:='3.0.2.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Удаление Int';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpSetErased_MovementItem';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementItemId',ftInteger,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
+             //
+             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             // if (FieldByName('Id_Postgres').AsInteger=0)
+             // then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbDeleteInt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.pLoadDocument_Delete_Fl:Integer;
+begin
+     Result:=0;
+     if (not cbDeleteFl.Checked)or(not cbDeleteFl.Enabled) then exit;
+     //
+     myEnabledCB(cbDeleteFl);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Id as ObjectId');
+        Add('     , Id_PG as Id_Postgres');
+        Add('from dba._pgBill_delete');
+        Add('order by Id_PG desc');
+        Open;
+
+        Result:=RecordCount;
+        cbDeleteFl.Caption:='3.0.1.('+IntToStr(RecordCount)+')Удаление Fl';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpSetErased_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
+             //
+             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             // if (FieldByName('Id_Postgres').AsInteger=0)
+             // then fExecFlSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbDeleteFl);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadDocumentItem_Delete_Fl(SaveCount:Integer);
+begin
+     if (not cbDeleteFl.Checked)or(not cbDeleteFl.Enabled) then exit;
+     //
+     myEnabledCB(cbDeleteFl);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Id as ObjectId');
+        Add('     , Id_PG as Id_Postgres');
+        Add('from dba._pgBillItems_delete');
+        Add('order by Id_PG desc');
+        Open;
+
+        cbDeleteFl.Caption:='3.0.1.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Удаление Fl';
+        //
+        fStop:=(cbOnlyOpen.Checked)and(not cbOnlyOpenMI.Checked);
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpSetErased_MovementItem';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementItemId',ftInteger,ptInput, '');
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             // gc_isDebugMode:=true;
+             //
+             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
+
+             if not myExecToStoredProc then ;//exit;
+             //
+             // if (FieldByName('Id_Postgres').AsInteger=0)
+             // then fExecFlSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbDeleteFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.pLoadDocument_Loss:Integer;

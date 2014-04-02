@@ -18,7 +18,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 462
+    Width = 469
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -118,13 +118,14 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 462
+    Left = 469
     Top = 0
     Width = 321
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
+    ExplicitLeft = 462
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -572,13 +573,14 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 783
+    Left = 790
     Top = 0
-    Width = 232
+    Width = 238
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
+    ExplicitLeft = 778
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -918,15 +920,46 @@ object MainForm: TMainForm
       TabOrder = 22
       OnClick = cbReturnInFlClick
     end
+    object cbDeleteFl: TCheckBox
+      Tag = 20
+      Left = 124
+      Top = 208
+      Width = 117
+      Height = 17
+      Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 23
+    end
+    object cbDeleteInt: TCheckBox
+      Tag = 20
+      Left = 124
+      Top = 243
+      Width = 117
+      Height = 17
+      Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 24
+    end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 1015
+    Left = 1028
     Top = 0
-    Width = 225
+    Width = 212
     Height = 664
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
+    ExplicitLeft = 1027
     object Label3: TLabel
       Left = 6
       Top = 22
