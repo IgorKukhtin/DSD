@@ -125,7 +125,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 2
-    ExplicitLeft = 462
     object cbGoodsGroup: TCheckBox
       Tag = 10
       Left = 15
@@ -580,7 +579,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 3
-    ExplicitLeft = 778
     object Label1: TLabel
       Left = 6
       Top = 22
@@ -838,11 +836,11 @@ object MainForm: TMainForm
     end
     object cbTaxFl: TCheckBox
       Tag = 20
-      Left = 15
+      Left = 16
       Top = 451
-      Width = 213
+      Width = 216
       Height = 17
-      Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077
+      Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -853,11 +851,11 @@ object MainForm: TMainForm
     end
     object cbTaxCorrective: TCheckBox
       Tag = 20
-      Left = 13
+      Left = 15
       Top = 474
       Width = 213
       Height = 17
-      Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+      Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -950,6 +948,21 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 24
     end
+    object cbTaxInt: TCheckBox
+      Tag = 20
+      Left = 16
+      Top = 497
+      Width = 216
+      Height = 17
+      Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 25
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1028
@@ -959,7 +972,6 @@ object MainForm: TMainForm
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitLeft = 1027
     object Label3: TLabel
       Left = 6
       Top = 22

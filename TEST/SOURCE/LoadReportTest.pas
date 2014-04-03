@@ -67,8 +67,8 @@ begin
   LoadReportFromFile('Отчет Итог по покупателю (Акт сверки)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (Акт сверки).fr3');
 
   // Печатные формы накладных
-  LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\Расходная накладная бн.fr3');
-  LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\Расходная накладная нал.fr3');
+  LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');
+  LoadReportFromFile('PrintMovement_Sale2', ReportPath + '\Товарный Учет\PrintMovement_Sale2.fr3');
   LoadReportFromFile('PrintMovement_Tax', ReportPath + '\Товарный Учет\Налоговая накладная.fr3');
   LoadReportFromFile('PrintMovement_Bill', ReportPath + '\Товарный Учет\PrintMovement_Bill.fr3');
   LoadReportFromFile('PrintMovement_Bill01074874', ReportPath + '\Товарный Учет\PrintMovement_Bill01074874.fr3');
