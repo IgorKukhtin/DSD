@@ -326,17 +326,17 @@ BEGIN
                         ELSE CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
-           , CAST (CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
-                        THEN MIFloat_Price.ValueData +
-                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
-                    ELSE MIFloat_Price.ValueData  END
-                   AS NUMERIC (16, 3))             AS PriceWVAT
+           , CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
+                  THEN CAST (MIFloat_Price.ValueData +
+                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)AS NUMERIC (16, 2))
+                  ELSE MIFloat_Price.ValueData  END
+                                                    AS PriceWVAT
 
-           , CAST (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
-                        THEN MIFloat_Price.ValueData -
-                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
-                    ELSE MIFloat_Price.ValueData  END
-                   AS NUMERIC (16, 3))             AS PriceNoVAT
+           , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
+                  THEN CAST (MIFloat_Price.ValueData -
+                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 2))
+                   ELSE MIFloat_Price.ValueData  END
+                                                    AS PriceNoVAT
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                         THEN CAST ( (COALESCE (MIFloat_AmountPartner.ValueData, 0)) *
@@ -462,6 +462,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
  01.04.14                                                       *  MIFloat_Price.ValueData <> 0
  31.03.14                                                       *  + inisClientCopy
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master

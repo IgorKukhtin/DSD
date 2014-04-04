@@ -18,7 +18,7 @@ object MainForm: TMainForm
   object DBGrid: TDBGrid
     Left = 0
     Top = 0
-    Width = 462
+    Width = 469
     Height = 664
     Align = alClient
     DataSource = DataSource
@@ -118,7 +118,7 @@ object MainForm: TMainForm
     end
   end
   object GuidePanel: TPanel
-    Left = 462
+    Left = 469
     Top = 0
     Width = 321
     Height = 664
@@ -572,9 +572,9 @@ object MainForm: TMainForm
     end
   end
   object DocumentPanel: TPanel
-    Left = 783
+    Left = 790
     Top = 0
-    Width = 232
+    Width = 238
     Height = 664
     Align = alRight
     BevelOuter = bvNone
@@ -836,11 +836,11 @@ object MainForm: TMainForm
     end
     object cbTaxFl: TCheckBox
       Tag = 20
-      Left = 15
+      Left = 16
       Top = 451
-      Width = 213
+      Width = 216
       Height = 17
-      Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077
+      Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -851,11 +851,11 @@ object MainForm: TMainForm
     end
     object cbTaxCorrective: TCheckBox
       Tag = 20
-      Left = 13
+      Left = 15
       Top = 474
       Width = 213
       Height = 17
-      Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+      Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
       Font.Charset = DEFAULT_CHARSET
       Font.Color = clWindowText
       Font.Height = -11
@@ -918,11 +918,56 @@ object MainForm: TMainForm
       TabOrder = 22
       OnClick = cbReturnInFlClick
     end
+    object cbDeleteFl: TCheckBox
+      Tag = 20
+      Left = 124
+      Top = 208
+      Width = 117
+      Height = 17
+      Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 23
+    end
+    object cbDeleteInt: TCheckBox
+      Tag = 20
+      Left = 124
+      Top = 243
+      Width = 117
+      Height = 17
+      Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 24
+    end
+    object cbTaxInt: TCheckBox
+      Tag = 20
+      Left = 16
+      Top = 497
+      Width = 216
+      Height = 17
+      Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 25
+    end
   end
   object CompleteDocumentPanel: TPanel
-    Left = 1015
+    Left = 1028
     Top = 0
-    Width = 225
+    Width = 212
     Height = 664
     Align = alRight
     BevelOuter = bvNone

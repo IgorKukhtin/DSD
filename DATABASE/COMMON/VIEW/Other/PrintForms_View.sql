@@ -37,10 +37,23 @@ AS
            , CAST ('PrintMovement_Sale'||OH_JuridicalDetails.OKPO AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('25288083','35275230','35231874','30487219','32294926','32516492','35442481','32049199')
+       AND OH_JuridicalDetails.OKPO IN ('30487219','32294926','32516492','35442481','32049199')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
-
+-- Adventis + Billa + Kray
+      SELECT
+             zc_movement_sale()
+           , CAST ('Sale' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Sale35275230' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('35275230','25288083','35231874')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 -- Omega_Tavr
       SELECT
              zc_movement_sale()
@@ -178,6 +191,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.04.14                                                        * + Adventis + Billa + Kray
  27.02.14                                                        * + Tax
  26.02.14                                                        * + FM, Metro
  25.02.14                                                        * + OKPO

@@ -56,7 +56,6 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postgres;
 
-
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
@@ -66,4 +65,4 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportName (Integer, TVarChar) OWNER TO postg
 */
 
 -- тест
---SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 40874,  inSession := '5'); -- все
+-- SELECT gpGet_Movement_Sale_ReportName FROM gpGet_Movement_Sale_ReportName(inMovementId := 40874,  inSession := zfCalc_UserAdmin()); -- все
