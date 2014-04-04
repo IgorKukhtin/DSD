@@ -7,7 +7,8 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar, Checked Boolean
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar, Checked Boolean
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -29,6 +30,7 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) AS InvNumber
+             , ''::TVarChar AS InvNumberPartner
              , inOperDate						        AS OperDate
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
@@ -63,6 +65,7 @@ BEGIN
        SELECT
              Movement.Id
            , Movement.InvNumber
+           , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , Movement.OperDate
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
@@ -90,7 +93,11 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
+           
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
@@ -214,6 +221,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 02.04.14                         * add InvNumberPartner
  13.02.14                                                            * add PriceList
  10.02.14                                                            * add TaxKind
  09.02.14                                        * add Object_Contract_InvNumber_View

@@ -2,8 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 703
   ClientWidth = 925
-  ExplicitWidth = 941
-  ExplicitHeight = 738
+  ExplicitWidth = 933
+  ExplicitHeight = 730
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -231,6 +231,7 @@ inherited ReturnInForm: TReturnInForm
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
+      Enabled = True
       ExplicitLeft = 8
       ExplicitWidth = 120
       Width = 120
@@ -257,6 +258,7 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited ceStatus: TcxButtonEdit
       Top = 63
+      TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 120
       ExplicitHeight = 22
@@ -275,7 +277,7 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 7
+      TabOrder = 6
       Width = 140
     end
     object edFrom: TcxButtonEdit
@@ -286,7 +288,7 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 8
+      TabOrder = 7
       Width = 130
     end
     object cxLabel4: TcxLabel
@@ -325,48 +327,48 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 13
+      TabOrder = 15
       Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 245
+      Left = 363
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 14
-      Width = 130
+      TabOrder = 16
+      Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 385
+      Left = 497
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
-      TabOrder = 15
-      Width = 80
+      TabOrder = 17
+      Width = 48
     end
     object cxLabel7: TcxLabel
-      Left = 385
+      Left = 497
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 472
+      Left = 549
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
-      TabOrder = 17
-      Width = 144
+      TabOrder = 19
+      Width = 108
     end
     object cxLabel8: TcxLabel
-      Left = 472
+      Left = 549
       Top = 45
-      Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
+      Caption = '(-)% '#1057#1082#1080#1076' (+)% '#1053#1072#1094
     end
     object edOperDatePartner: TcxDateEdit
       Left = 136
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
-      TabOrder = 19
+      TabOrder = 13
       Width = 100
     end
     object cxLabel10: TcxLabel
@@ -375,11 +377,11 @@ inherited ReturnInForm: TReturnInForm
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
     object edIsChecked: TcxCheckBox
-      Left = 625
+      Left = 659
       Top = 63
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 21
-      Width = 137
+      TabOrder = 22
+      Width = 120
     end
     object edPriceList: TcxButtonEdit
       Left = 781
@@ -389,13 +391,24 @@ inherited ReturnInForm: TReturnInForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 22
+      TabOrder = 23
       Width = 124
     end
     object cxLabel11: TcxLabel
       Left = 781
       Top = 45
       Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+    end
+    object cxLabel12: TcxLabel
+      Left = 237
+      Top = 45
+      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 239
+      Top = 63
+      TabOrder = 14
+      Width = 126
     end
   end
   object edDocumentTaxKind: TcxButtonEdit [2]
@@ -743,6 +756,12 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
         Name = 'OperDate'
         Value = 0d
         Component = edOperDate
@@ -889,6 +908,13 @@ inherited ReturnInForm: TReturnInForm
         ParamType = ptInput
       end
       item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -961,10 +987,6 @@ inherited ReturnInForm: TReturnInForm
       item
         Value = ''
         ParamType = ptUnknown
-      end
-      item
-        Value = ''
-        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -1008,6 +1030,12 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edIsChecked
+      end
+      item
+        Control = edInvNumber
+      end
+      item
+        Control = edInvNumberPartner
       end>
     Left = 232
     Top = 193

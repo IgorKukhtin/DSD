@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridDBTableView;
+     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridDBTableView, frxClass;
 
 type
 
@@ -509,8 +509,8 @@ implementation
 
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
-     frxClass, frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants;
+     frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
+     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet;
 
 procedure Register;
 begin
@@ -1186,16 +1186,28 @@ end;
 function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
+    frxDataSet: TfrxDataSet;
+    FReport: TfrxReport;
 begin
   inherited;
   result := true;
+
+  for I := 0 to Self.DataSets.Count - 1 do
+      if Assigned(Self.DataSets[i].DataSet) then
+         if Self.DataSets[i].DataSet is TClientDataSet then
+            TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
   Stream := TStringStream.Create;
-  for I := 0 to DataSets.Count - 1 do
-      if Assigned(DataSets[i].DataSet) then
-         if DataSets[i].DataSet is TClientDataSet then
-            TClientDataSet(DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(DataSets[i]).IndexFieldNames;
   try
-    with TfrxReport.Create(nil) do begin
+    FReport := TfrxReport.Create(nil);
+    with FReport do
+    try
+      if Assigned(Self.Owner) then
+         for I := 0 to Self.Owner.ComponentCount - 1 do
+             if Self.Owner.Components[i] is TfrxDataset then begin
+                frxDataSet := frxFindDataSet(nil, TfrxDataset(Self.Owner.Components[i]).UserName, FReport);
+                if Assigned(frxDataSet) then
+                   frxDataSet.Assign(Self.Owner.Components[i]);
+             end;
       if ShiftDown then begin
          try
            LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
@@ -1234,15 +1246,21 @@ begin
                 if Self.Owner.Components[i] is TDataSet then
                    TDataSet(Self.Owner.Components[i]).DisableControls;
          try
-           PrepareReport;
+     // Вдруг что!
+//    FReport.PreviewOptions.modal := false;
+           ShowReport;
+//           FReport.PreviewForm.OnClose := nil;
          finally
            if Assigned(Self.Owner) then
               for I := 0 to Self.Owner.ComponentCount - 1 do
                   if Self.Owner.Components[i] is TDataSet then
                      TDataSet(Self.Owner.Components[i]).EnableControls;
          end;
-         ShowReport;
       end;
+    finally
+//      for I := 0 to EnabledDataSets.Count -1  do
+  //        EnabledDataSets[i].DataSet.Free;
+     // Free;
     end;
   finally
     Stream.Free
@@ -1814,6 +1832,8 @@ begin
   FFromParam := TdsdParam.Create(nil);
   FToParam := TdsdParam.Create(nil);
 end;
+
+{ TfrxAccessComponent }
 
 end.
 

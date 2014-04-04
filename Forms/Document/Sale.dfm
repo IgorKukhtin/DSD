@@ -2,8 +2,8 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitWidth = 1031
-  ExplicitHeight = 703
+  ExplicitWidth = 1023
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -1580,8 +1580,9 @@ inherited SaleForm: TSaleForm
     Left = 916
   end
   object frxDBDMaster: TfrxDBDataset
+    Enabled = False
     UserName = 'frxDBDMaster'
-    CloseDataSource = False
+    CloseDataSource = True
     DataSet = PrintItemsCDS
     BCDToCurrency = False
     Left = 398
@@ -1647,8 +1648,9 @@ inherited SaleForm: TSaleForm
     Top = 193
   end
   object frxDBDHeader: TfrxDBDataset
+    Enabled = False
     UserName = 'frxDBDHeader'
-    CloseDataSource = False
+    CloseDataSource = True
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
     Left = 398
