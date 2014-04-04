@@ -1,25 +1,25 @@
 inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1120
-  ExplicitWidth = 1128
+  ClientWidth = 1115
+  ExplicitWidth = 1123
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 128
-    Width = 1120
+    Width = 1115
     Height = 540
     ExplicitTop = 128
     ExplicitWidth = 1120
     ExplicitHeight = 540
     ClientRectBottom = 536
-    ClientRectRight = 1116
+    ClientRectRight = 1111
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1114
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1114
+        Width = 1109
         Height = 514
         ExplicitWidth = 1114
         ExplicitHeight = 514
@@ -219,7 +219,7 @@ inherited SaleForm: TSaleForm
       ExplicitWidth = 1114
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1114
+        Width = 1109
         Height = 514
         ExplicitWidth = 1114
         ExplicitHeight = 514
@@ -244,7 +244,7 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1120
+    Width = 1115
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1120
@@ -895,9 +895,8 @@ inherited SaleForm: TSaleForm
       Category = 0
     end
     object bbPrintTax_Client: TdxBarButton [7]
-      Action = actPrintTax_Client
+      Action = mactPrint_Tax_Client
       Category = 0
-      ImageIndex = 18
     end
     object bbTax: TdxBarButton
       Action = actTax
