@@ -828,6 +828,7 @@ inherited SaleForm: TSaleForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
     object bbPrintTax: TdxBarButton [5]
       Action = mactPrint_Tax_Us
