@@ -223,6 +223,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
+      Enabled = False
       TabOrder = 8
     end
     object cbJuridicalFl: TCheckBox
@@ -550,6 +551,7 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
+      Enabled = False
       TabOrder = 40
     end
     object cbJuridicalInt: TCheckBox
@@ -625,7 +627,7 @@ object MainForm: TMainForm
       TabOrder = 1
     end
     object StartDateEdit: TcxDateEdit
-      Left = 14
+      Left = 15
       Top = 18
       TabOrder = 2
       Width = 90
@@ -698,8 +700,8 @@ object MainForm: TMainForm
     end
     object cbSaleFl: TCheckBox
       Tag = 20
-      Left = 15
-      Top = 201
+      Left = 8
+      Top = 198
       Width = 200
       Height = 17
       Caption = '3.1.'#1055#1088#1086#1076'.'#1087#1086#1082'.Fl'
@@ -836,7 +838,7 @@ object MainForm: TMainForm
     end
     object cbTaxFl: TCheckBox
       Tag = 20
-      Left = 16
+      Left = 15
       Top = 451
       Width = 216
       Height = 17
@@ -898,14 +900,14 @@ object MainForm: TMainForm
     end
     object OKPOEdit: TEdit
       Left = 15
-      Top = 637
+      Top = 638
       Width = 121
       Height = 21
       TabOrder = 21
     end
     object cbOKPO: TCheckBox
       Left = 15
-      Top = 618
+      Top = 621
       Width = 213
       Height = 17
       Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1054#1050#1055#1054
@@ -920,9 +922,9 @@ object MainForm: TMainForm
     end
     object cbDeleteFl: TCheckBox
       Tag = 20
-      Left = 124
-      Top = 208
-      Width = 117
+      Left = 15
+      Top = 551
+      Width = 142
       Height = 17
       Caption = '3.0.1.'#1059#1076#1072#1083#1077#1085#1080#1077' Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -935,9 +937,9 @@ object MainForm: TMainForm
     end
     object cbDeleteInt: TCheckBox
       Tag = 20
-      Left = 124
-      Top = 243
-      Width = 117
+      Left = 15
+      Top = 571
+      Width = 142
       Height = 17
       Caption = '3.0.2.'#1059#1076#1072#1083#1077#1085#1080#1077' Int'
       Font.Charset = DEFAULT_CHARSET
@@ -950,7 +952,7 @@ object MainForm: TMainForm
     end
     object cbTaxInt: TCheckBox
       Tag = 20
-      Left = 16
+      Left = 15
       Top = 497
       Width = 216
       Height = 17
@@ -962,6 +964,21 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 25
+    end
+    object cbClearDelete: TCheckBox
+      Left = 15
+      Top = 531
+      Width = 213
+      Height = 17
+      Caption = #1054#1095#1080#1089#1090#1080#1090#1100' '#1087#1088#1086#1090#1086#1082#1086#1083' '#1091#1076#1072#1083#1077#1085#1080#1103
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 26
+      OnClick = cbReturnInFlClick
     end
   end
   object CompleteDocumentPanel: TPanel

@@ -1,27 +1,27 @@
 inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
-  ClientWidth = 1054
-  ExplicitWidth = 1070
+  ClientWidth = 924
+  ExplicitWidth = 940
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1054
+    Width = 924
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1054
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1054
+    ClientRectRight = 924
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
       ExplicitWidth = 1054
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1054
+        Width = 924
         Height = 518
         ExplicitWidth = 1054
         ExplicitHeight = 518
@@ -160,7 +160,7 @@ inherited TaxForm: TTaxForm
       ExplicitWidth = 1054
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1054
+        Width = 924
         Height = 518
         ExplicitWidth = 1054
         ExplicitHeight = 518
@@ -185,7 +185,7 @@ inherited TaxForm: TTaxForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1054
+    Width = 924
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1054
@@ -193,18 +193,22 @@ inherited TaxForm: TTaxForm
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
+      ExplicitWidth = 74
+      Width = 74
     end
     inherited cxLabel1: TcxLabel
       Left = 8
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 104
-      ExplicitLeft = 104
+      Left = 164
+      ExplicitLeft = 164
+      ExplicitWidth = 97
+      Width = 97
     end
     inherited cxLabel2: TcxLabel
-      Left = 104
-      ExplicitLeft = 104
+      Left = 164
+      ExplicitLeft = 164
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -213,17 +217,17 @@ inherited TaxForm: TTaxForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 90
+      ExplicitWidth = 151
       ExplicitHeight = 22
-      Width = 90
+      Width = 151
     end
     object cxLabel3: TcxLabel
-      Left = 214
+      Left = 269
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 210
+      Left = 265
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -232,10 +236,10 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 158
+      Width = 157
     end
     object edTo: TcxButtonEdit
-      Left = 374
+      Left = 427
       Top = 23
       Properties.Buttons = <
         item
@@ -243,15 +247,15 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 130
+      Width = 177
     end
     object cxLabel4: TcxLabel
-      Left = 374
+      Left = 427
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edContract: TcxButtonEdit
-      Left = 512
+      Left = 617
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -260,20 +264,20 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 10
-      Width = 272
+      Width = 118
     end
     object cxLabel9: TcxLabel
-      Left = 512
+      Left = 617
       Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 793
+      Left = 746
       Top = 5
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 793
+      Left = 746
       Top = 23
       Properties.Buttons = <
         item
@@ -281,72 +285,72 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 91
+      Width = 133
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 374
-      Top = 63
+      Left = 427
+      Top = 62
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 512
+      Left = 564
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 15
-      Width = 77
+      Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 512
+      Left = 564
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edDateRegistered: TcxDateEdit
-      Left = 104
+      Left = 164
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 17
-      Width = 100
+      Width = 97
     end
     object cxLabel10: TcxLabel
-      Left = 104
+      Left = 164
       Top = 45
       Caption = #1044#1072#1090#1072' '#1088#1077#1075#1080#1089#1090#1088#1072#1094#1080#1080
     end
     object edIsChecked: TcxCheckBox
-      Left = 595
-      Top = 63
+      Left = 617
+      Top = 62
       Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 19
-      Width = 124
+      Width = 118
     end
     object cxLabel12: TcxLabel
-      Left = 210
-      Top = 45
-      Caption = #8470' '#1053#1086#1084#1077#1088' '#1085#1072#1083#1086#1075'. '#1076#1086#1082
+      Left = 86
+      Top = 5
+      Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 210
-      Top = 63
+      Left = 86
+      Top = 23
       TabOrder = 21
-      Width = 127
+      Width = 73
     end
     object edIsDocument: TcxCheckBox
-      Left = 717
+      Left = 746
       Top = 63
       Caption = #1055#1086#1076#1087#1080#1089#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 22
       Width = 124
     end
     object edIsRegistered: TcxCheckBox
-      Left = 837
-      Top = 63
+      Left = 265
+      Top = 64
       Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 23
-      Width = 165
+      Width = 157
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -674,6 +678,7 @@ inherited TaxForm: TTaxForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1246,8 +1251,8 @@ inherited TaxForm: TTaxForm
         Component = FormParams
         ComponentItem = 'inPaidKindId'
       end>
-    Left = 408
-    Top = 8
+    Left = 512
+    Top = 16
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1273,8 +1278,8 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 816
-    Top = 8
+    Left = 872
+    Top = 128
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1300,7 +1305,7 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 616
+    Left = 696
   end
   object frxDBDMaster: TfrxDBDataset
     UserName = 'frxDBDMaster'
