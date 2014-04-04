@@ -82,6 +82,8 @@ type
     bbTaxCorrective: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
+    cxLabel12: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
   private
     { Private declarations }
   public
