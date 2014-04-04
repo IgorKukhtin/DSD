@@ -54,8 +54,10 @@ type
     cxLabel1: TcxLabel;
     cxLabel3: TcxLabel;
     dsdExecStoredProcIns: TdsdExecStoredProc;
-    dsdStoredProcInsCalendar: TdsdStoredProc;
+    dsdStoredProcUpdCalendar: TdsdStoredProc;
     bbOk: TcxButton;
+    dsdUpdateDataSet1: TdsdUpdateDataSet;
+    dsdStoredProcInsCalendar: TdsdStoredProc;
   private
   public
   end;

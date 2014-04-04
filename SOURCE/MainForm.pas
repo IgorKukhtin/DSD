@@ -330,6 +330,10 @@ type
     bbGoodsKindWeighing: TdxBarButton;
     bbTaxDocuments: TdxBarSubItem;
     bbTaxDocuments_Separator: TdxBarSeparator;
+    actReport_GoodsMI_byMovementDifSale: TdsdOpenForm;
+    actReport_GoodsMI_byMovementDifReturn: TdsdOpenForm;
+    bbReport_GoodsMI_byMovementDifReturn: TdxBarButton;
+    bbReport_GoodsMI_byMovementDifSale: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

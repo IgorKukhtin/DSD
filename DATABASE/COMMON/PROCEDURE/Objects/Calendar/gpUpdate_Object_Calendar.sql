@@ -21,6 +21,7 @@ BEGIN
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inId, vbUserId); 
+   return 0;
    
 END;
 $BODY$
