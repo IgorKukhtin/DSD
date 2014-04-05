@@ -140,6 +140,7 @@ type
     cbDeleteFl: TCheckBox;
     cbDeleteInt: TCheckBox;
     cbTaxInt: TCheckBox;
+    cbClearDelete: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -12461,7 +12462,8 @@ begin
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
 
              if myExecToStoredProc
-             then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             then if cbClearDelete.Checked
+                  then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -12509,8 +12511,9 @@ begin
              //
              toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
 
-             if not myExecToStoredProc
-             then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             if myExecToStoredProc
+             then if cbClearDelete.Checked
+                  then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
              //
              // if (FieldByName('Id_Postgres').AsInteger=0)
              // then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
@@ -12563,8 +12566,9 @@ begin
              //
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
 
-             if not myExecToStoredProc
-             then fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             if myExecToStoredProc
+             then if cbClearDelete.Checked
+                  then fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
              //
              // if (FieldByName('Id_Postgres').AsInteger=0)
              // then fExecFlSqFromQuery('update dba._pgBill_delete set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
@@ -12615,8 +12619,9 @@ begin
              //
              toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
 
-             if not myExecToStoredProc
-             then fExecFlSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             if myExecToStoredProc
+             then if cbClearDelete.Checked
+                  then fExecFlSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
              //
              // if (FieldByName('Id_Postgres').AsInteger=0)
              // then fExecFlSqFromQuery('update dba._pgBillItems_delete set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));

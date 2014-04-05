@@ -11,7 +11,8 @@ uses
   cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles, cxCustomData, cxFilter,
   cxData, cxDataStorage, cxEdit, cxDBData, Vcl.Menus, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
+  dxSkinscxPCPainter;
 
 type
   TAncestorDBGridForm = class(TAncestorDataForm)

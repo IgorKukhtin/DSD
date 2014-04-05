@@ -22,6 +22,29 @@ AS
            ,  zc_Enum_PaidKind_SecondForm()             AS PaidKindId --нал
            , CAST ('PrintMovement_Sale2' AS TVarChar)
       UNION
+-- Счет
+      SELECT
+             zc_movement_sale()                         AS DescId
+           , CAST ('Bill' AS TVarChar)                  AS ReportType
+           , CAST ('01.01.2000' AS TDateTime)           AS StartDate
+           , CAST ('01.01.2200' AS TDateTime)           AS EndDate
+           , CAST (0 AS INTEGER)                        AS JuridicalId
+           , zc_Enum_PaidKind_FirstForm()               AS PaidKindId --б/н
+           , CAST ('PrintMovement_Bill' AS TVarChar)   AS PrintFormName
+      UNION
+      SELECT
+             zc_movement_sale()
+           , CAST ('Bill' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)                         -- ж/д
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_Bill'||OH_JuridicalDetails.OKPO AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('01074874')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+      UNION
 
 --если с определенной даты появится новая форма добавляем запись, а у предидущей уменьшаем EndDate до StartDate этой записи
 
@@ -191,6 +214,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.04.14                                                        * + Bill
  02.04.14                                                        * + Adventis + Billa + Kray
  27.02.14                                                        * + Tax
  26.02.14                                                        * + FM, Metro

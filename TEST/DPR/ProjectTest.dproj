@@ -956,8 +956,8 @@
 				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovement.pas">
-				<Form>Report_GoodsMI_byMovementForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas">
+				<Form>Report_GoodsMI_byMovementDifForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment.pas">
@@ -1208,6 +1208,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
 				<Form>CityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovement.pas">
+				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

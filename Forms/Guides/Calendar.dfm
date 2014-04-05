@@ -23,9 +23,6 @@ object CalendarForm: TCalendarForm
     Height = 456
     Align = alClient
     TabOrder = 0
-    ExplicitTop = 65
-    ExplicitWidth = 1189
-    ExplicitHeight = 330
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -229,11 +226,10 @@ object CalendarForm: TCalendarForm
     Height = 63
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 412
     object deStart: TcxDateEdit
       Left = 126
       Top = 9
-      EditValue = 41579d
+      EditValue = 41640d
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -241,7 +237,7 @@ object CalendarForm: TCalendarForm
     object deEnd: TcxDateEdit
       Left = 126
       Top = 36
-      EditValue = 41608d
+      EditValue = 41670d
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -468,6 +464,7 @@ object CalendarForm: TCalendarForm
     Top = 240
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -481,6 +478,7 @@ object CalendarForm: TCalendarForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -489,6 +487,7 @@ object CalendarForm: TCalendarForm
     end
     object dsdExecStoredProcIns: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProcInsCalendar
       StoredProcList = <
         item
@@ -498,6 +497,20 @@ object CalendarForm: TCalendarForm
           StoredProc = dsdStoredProc
         end>
       Caption = #1056#1072#1089#1096#1080#1088#1080#1090#1100' '#1082#1072#1083#1077#1085#1076#1072#1088#1100
+    end
+    object dsdUpdateDataSet1: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = dsdStoredProcUpdCalendar
+      StoredProcList = <
+        item
+          StoredProc = dsdStoredProcUpdCalendar
+        end
+        item
+          StoredProc = dsdStoredProc
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -510,14 +523,14 @@ object CalendarForm: TCalendarForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -532,12 +545,14 @@ object CalendarForm: TCalendarForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 184
     Top = 160
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 320
-    Top = 200
+    Top = 216
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
@@ -560,8 +575,8 @@ object CalendarForm: TCalendarForm
     Left = 56
     Top = 344
   end
-  object dsdStoredProcInsCalendar: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Calendar'
+  object dsdStoredProcUpdCalendar: TdsdStoredProc
+    StoredProcName = 'gpUpdate_Object_Calendar'
     DataSet = ClientDataSet
     DataSets = <
       item
@@ -569,20 +584,44 @@ object CalendarForm: TCalendarForm
       end>
     Params = <
       item
-        Name = 'inStartDate'
-        Value = 41579d
+        Name = 'inId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inWorking'
+        Component = ClientDataSet
+        ComponentItem = 'Working'
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 248
+    Top = 328
+  end
+  object dsdStoredProcInsCalendar: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Calendar '
+    DataSet = ClientDataSet
+    DataSets = <
+      item
+        DataSet = ClientDataSet
+      end>
+    Params = <
+      item
+        Name = 'inStartDate         '
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
-        Name = 'inEndDate'
-        Value = 41608d
+        Name = 'inEndDate           '
+        Value = 41670d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 216
-    Top = 344
+    Left = 160
+    Top = 400
   end
 end

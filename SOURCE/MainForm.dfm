@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -791,11 +791,19 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementDifSale'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMIReturn'
         end
         item
           Visible = True
           ItemName = 'bbReport_GoodsMI_byMovementReturn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_byMovementDifReturn'
         end
         item
           Visible = True
@@ -833,6 +841,10 @@ object MainForm: TMainForm
       Action = actReport_GoodsMI_byMovementSale
       Category = 0
     end
+    object bbReport_GoodsMI_byMovementDifSale: TdxBarButton
+      Action = actReport_GoodsMI_byMovementDifSale
+      Category = 0
+    end
     object bbReport_GoodsMI_Income: TdxBarButton
       Action = actReport_GoodsMI_Income
       Category = 0
@@ -847,6 +859,10 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMI_byMovementReturn: TdxBarButton
       Action = actReport_GoodsMI_byMovementReturn
+      Category = 0
+    end
+    object bbReport_GoodsMI_byMovementDifReturn: TdxBarButton
+      Action = actReport_GoodsMI_byMovementDifReturn
       Category = 0
     end
     object bbReportHistoryCost: TdxBarButton
@@ -2944,6 +2960,46 @@ object MainForm: TMainForm
       FormNameParam.Value = 'TGoodsKindWeighingTreeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_byMovementDifSale: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093')'
+      FormName = 'TReport_GoodsMI_byMovementDifForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementDifForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1088#1072#1079#1085#1080#1094#1072')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_byMovementDifReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093')'
+      FormName = 'TReport_GoodsMI_byMovementDifForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byMovementDifForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1088#1072#1079#1085#1080#1094#1072')'
+          DataType = ftString
+        end>
       isShowModal = False
     end
   end

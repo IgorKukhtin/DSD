@@ -1205,8 +1205,11 @@ begin
          for I := 0 to Self.Owner.ComponentCount - 1 do
              if Self.Owner.Components[i] is TfrxDataset then begin
                 frxDataSet := frxFindDataSet(nil, TfrxDataset(Self.Owner.Components[i]).UserName, FReport);
-                if Assigned(frxDataSet) then
+                if Assigned(frxDataSet) then begin
                    frxDataSet.Assign(Self.Owner.Components[i]);
+                   TfrxDBDataSet(frxDataSet).DataSet := TfrxDBDataSet(Self.Owner.Components[i]).DataSet;
+                   TfrxDBDataSet(frxDataSet).DataSource := TfrxDBDataSet(Self.Owner.Components[i]).DataSource;
+                end;
              end;
       if ShiftDown then begin
          try

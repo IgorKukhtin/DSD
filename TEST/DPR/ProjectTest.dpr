@@ -329,7 +329,7 @@ uses
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
-  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
+  Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   UnitCarMember_Object in '..\..\Forms\Guides\UnitCarMember_Object.pas' {UnitCarMember_ObjectForm: TParentForm},
@@ -400,7 +400,8 @@ uses
   GoodsTree in '..\..\Forms\Guides\GoodsTree.pas' {GoodsTreeForm: TParentForm},
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
-  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm};
+  CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
+  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm};
 
 {$R *.RES}
 
