@@ -26,7 +26,6 @@ object LossDebtForm: TLossDebtForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 1058
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23
@@ -160,17 +159,12 @@ object LossDebtForm: TLossDebtForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitTop = 86
-    ExplicitWidth = 1002
-    ExplicitHeight = 310
     ClientRectBottom = 322
     ClientRectRight = 1049
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 1002
-      ExplicitHeight = 286
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -178,8 +172,6 @@ object LossDebtForm: TLossDebtForm
         Height = 298
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1002
-        ExplicitHeight = 286
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -446,8 +438,6 @@ object LossDebtForm: TLossDebtForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 1002
-      ExplicitHeight = 286
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -455,14 +445,22 @@ object LossDebtForm: TLossDebtForm
         Height = 298
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 1002
-        ExplicitHeight = 286
         object cxGridEntryDBTableView: TcxGridDBTableView
           PopupMenu = PopupMenu
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.DefaultGroupSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colDebetAmount
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colKreditAmount
+            end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.00'
@@ -484,6 +482,7 @@ object LossDebtForm: TLossDebtForm
           OptionsData.Inserting = False
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
@@ -733,8 +732,8 @@ object LossDebtForm: TLossDebtForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -889,6 +888,7 @@ object LossDebtForm: TLossDebtForm
     Top = 168
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -902,6 +902,7 @@ object LossDebtForm: TLossDebtForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -921,6 +922,7 @@ object LossDebtForm: TLossDebtForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -939,6 +941,7 @@ object LossDebtForm: TLossDebtForm
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -949,6 +952,7 @@ object LossDebtForm: TLossDebtForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -968,6 +972,7 @@ object LossDebtForm: TLossDebtForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
@@ -1004,6 +1009,7 @@ object LossDebtForm: TLossDebtForm
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1013,6 +1019,7 @@ object LossDebtForm: TLossDebtForm
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
+      MoveParams = <>
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1022,6 +1029,7 @@ object LossDebtForm: TLossDebtForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       View = cxGridDBTableView
       Action = ContractChoiceForm
       Params = <>
@@ -1033,6 +1041,7 @@ object LossDebtForm: TLossDebtForm
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1048,6 +1057,7 @@ object LossDebtForm: TLossDebtForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1063,6 +1073,7 @@ object LossDebtForm: TLossDebtForm
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1082,6 +1093,7 @@ object LossDebtForm: TLossDebtForm
     end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1129,6 +1141,7 @@ object LossDebtForm: TLossDebtForm
     end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TPaidKindForm'
       FormNameParam.Value = 'TPaidKindForm'
       FormNameParam.DataType = ftString
@@ -1148,6 +1161,7 @@ object LossDebtForm: TLossDebtForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1164,6 +1178,7 @@ object LossDebtForm: TLossDebtForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1180,6 +1195,7 @@ object LossDebtForm: TLossDebtForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item

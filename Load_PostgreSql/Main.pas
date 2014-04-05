@@ -141,6 +141,7 @@ type
     cbDeleteInt: TCheckBox;
     cbTaxInt: TCheckBox;
     cbClearDelete: TCheckBox;
+    CheckBox1: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -1848,7 +1849,8 @@ procedure TMainForm.pLoadGuide_Juridical_Int (isBill:Boolean);
 var ParentId_PG_in,ParentId_PG_out,ParentId_PG_service:String;
     JuridicalId_pg, JuridicalDetailsId_pg :Integer;
 begin
-     fExecSqFromQuery('update dba._pgPartner set CodeIM = 30201 where Id>10000');
+     fExecSqFromQuery('call dba.pRecalc_Unit_isFindBill('+FormatToDateServer_notNULL(StrToDate('01.01.2014'))+')');
+     //fExecSqFromQuery('update dba._pgPartner set CodeIM = 30201 where Id>10000');
      //
      fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=2');//02-Поставщики
      ParentId_PG_in:=toSqlQuery.FieldByName('Id').AsString;
@@ -2036,6 +2038,8 @@ procedure TMainForm.pLoadGuide_Juridical_Fl (isBill:Boolean);
 var ParentId_PG_in,ParentId_PG_out,ParentId_PG_service:String;
     JuridicalId_pg, JuridicalDetailsId_pg :Integer;
 begin
+     fExecFlSqFromQuery('call dba.pRecalc_Unit_isFindBill('+FormatToDateServer_notNULL(StrToDate('01.01.2014'))+')');
+     //
      fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=2');//02-Поставщики
      ParentId_PG_in:=toSqlQuery.FieldByName('Id').AsString;
      fOpenSqToQuery ('select Id from Object where DescId=zc_Object_JuridicalGroup() and ObjectCode=3');//03-ПОКУПАТЕЛИ
