@@ -65,6 +65,7 @@ type
     bbMovementItemContainer: TdxBarButton;
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
+    FormParams: TdsdFormParams;
   private
     { Private declarations }
   public

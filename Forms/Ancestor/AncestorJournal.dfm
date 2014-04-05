@@ -3,28 +3,33 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 356
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 59
     Width = 717
-    Height = 272
-    ExplicitTop = 57
+    Height = 270
+    ExplicitTop = 59
     ExplicitWidth = 717
-    ExplicitHeight = 272
-    ClientRectBottom = 272
-    ClientRectRight = 717
+    ExplicitHeight = 270
+    ClientRectBottom = 266
+    ClientRectRight = 713
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 717
-      ExplicitHeight = 272
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 711
+      ExplicitHeight = 264
       inherited cxGrid: TcxGrid
-        Width = 717
-        Height = 272
-        ExplicitWidth = 717
-        ExplicitHeight = 272
+        Width = 711
+        Height = 264
+        ExplicitWidth = 711
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colStatus: TcxGridDBColumn
             Caption = #1057#1090#1072#1090#1091#1089
             DataBinding.FieldName = 'StatusCode'
@@ -116,11 +121,11 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 183
     Top = 210
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -148,6 +153,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -178,6 +184,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -191,6 +198,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -204,6 +212,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -217,6 +226,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actCompleteList: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actComplete
@@ -230,6 +240,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actUnCompleteList: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actUnComplete
@@ -243,6 +254,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actSetErasedList: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actSetErased
@@ -256,6 +268,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actMovementItemContainer: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
       ImageIndex = 57
@@ -273,6 +286,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -322,12 +336,11 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 99
   end
   inherited BarManager: TdxBarManager
-    ImageOptions.Images = dmMain.ImageList
     Top = 99
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -417,7 +430,6 @@ inherited AncestorJournalForm: TAncestorJournalForm
         Action = actUpdate
         ShortCut = 13
       end>
-    SortImages = dmMain.SortImageList
     Left = 224
     Top = 200
   end
@@ -512,5 +524,27 @@ inherited AncestorJournalForm: TAncestorJournalForm
       end>
     Left = 136
     Top = 168
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 232
   end
 end

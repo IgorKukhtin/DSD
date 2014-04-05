@@ -478,6 +478,6 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 23784, inisClientCopy:=FALSE ,inSession:= '2');
+ SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171051, inisClientCopy:=FALSE ,inSession:= '2');
 COMMIT;
 */
