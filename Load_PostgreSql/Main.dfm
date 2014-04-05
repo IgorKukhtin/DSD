@@ -980,7 +980,7 @@ object MainForm: TMainForm
       TabOrder = 26
       OnClick = cbReturnInFlClick
     end
-    object CheckBox1: TCheckBox
+    object cbOnlyUpdateInt: TCheckBox
       Left = 3
       Top = 242
       Width = 235
