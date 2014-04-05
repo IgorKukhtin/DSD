@@ -43,6 +43,7 @@ BEGIN
                                                                                                                                                             , zc_Enum_InfoMoney_20901() -- Ирна
                                                                                                                                                             , zc_Enum_InfoMoney_21001() -- Чапли
                                                                                                                                                             , zc_Enum_InfoMoney_21101() -- Дворкин
+                                                                                                                                                            , zc_Enum_InfoMoney_21151() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                                                                                                                              )
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
 
@@ -118,7 +119,6 @@ BEGIN
                                                THEN zc_Enum_Account_110101() -- Транзит
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
-                                           AND _tmpItem.InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_40900()) -- Финансовая помощь
                                                THEN CASE WHEN zc_Enum_InfoMoney_20801() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
                                                               THEN zc_Enum_Account_30201() -- Алан
                                                          WHEN zc_Enum_InfoMoney_20901() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
@@ -127,6 +127,8 @@ BEGIN
                                                               THEN zc_Enum_Account_30203() -- Чапли
                                                          WHEN zc_Enum_InfoMoney_21101() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
                                                               THEN zc_Enum_Account_30204() -- Дворкин
+                                                         WHEN zc_Enum_InfoMoney_21151() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
+                                                              THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
@@ -370,6 +372,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.04.14                                        * add ЕКСПЕРТ-АГРОТРЕЙД
  10.03.14                                        * add no calc AccountId
  28.01.14                                        * add zc_Movement_SendDebt
  24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900

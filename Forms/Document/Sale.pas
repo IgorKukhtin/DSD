@@ -103,6 +103,11 @@ type
     spSelectTax_Client: TdsdStoredProc;
     bbPrintTax_Client: TdxBarButton;
     spSelectTax_Us: TdsdStoredProc;
+    spGetReporNameBill: TdsdStoredProc;
+    mactPrint_Bill: TMultiAction;
+    actSPPrintSaleBillProcName: TdsdExecStoredProc;
+    actPrint_Bill: TdsdPrintAction;
+    bbPrint_Bill: TdxBarButton;
   private
     { Private declarations }
   public

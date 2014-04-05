@@ -815,7 +815,8 @@ BEGIN
                                     );
               ELSE
               IF inDescId_8 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -849,10 +850,50 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                    );
-              ELSE
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_6 ON ContainerLinkObject_6.ObjectId    = inObjectId_6
+                                                                                           AND ContainerLinkObject_6.DescId      = inDescId_6
+                                                                                           AND ContainerLinkObject_6.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_7 ON ContainerLinkObject_7.ObjectId    = inObjectId_7
+                                                                                           AND ContainerLinkObject_7.DescId      = inDescId_7
+                                                                                           AND ContainerLinkObject_7.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_8 ON ContainerLinkObject_8.ObjectId    = inObjectId_8
+                                                                                           AND ContainerLinkObject_8.DescId      = inDescId_8
+                                                                                           AND ContainerLinkObject_8.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
+                                    );              ELSE
               IF inDescId_7 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -883,10 +924,48 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_6 ON ContainerLinkObject_6.ObjectId    = inObjectId_6
+                                                                                           AND ContainerLinkObject_6.DescId      = inDescId_6
+                                                                                           AND ContainerLinkObject_6.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_7 ON ContainerLinkObject_7.ObjectId    = inObjectId_7
+                                                                                           AND ContainerLinkObject_7.DescId      = inDescId_7
+                                                                                           AND ContainerLinkObject_7.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_6 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -914,10 +993,45 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_6 ON ContainerLinkObject_6.ObjectId    = inObjectId_6
+                                                                                           AND ContainerLinkObject_6.DescId      = inDescId_6
+                                                                                           AND ContainerLinkObject_6.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_5 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -942,10 +1056,42 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_5 ON ContainerLinkObject_5.ObjectId    = inObjectId_5
+                                                                                           AND ContainerLinkObject_5.DescId      = inDescId_5
+                                                                                           AND ContainerLinkObject_5.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_4 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -967,10 +1113,39 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_4 ON ContainerLinkObject_4.ObjectId    = inObjectId_4
+                                                                                           AND ContainerLinkObject_4.DescId      = inDescId_4
+                                                                                           AND ContainerLinkObject_4.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_3 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -989,10 +1164,36 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_3 ON ContainerLinkObject_3.ObjectId    = inObjectId_3
+                                                                                           AND ContainerLinkObject_3.DescId      = inDescId_3
+                                                                                           AND ContainerLinkObject_3.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_2 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1008,10 +1209,33 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
+                                                                                           AND ContainerLinkObject_2.DescId      = inDescId_2
+                                                                                           AND ContainerLinkObject_2.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
               ELSE
               IF inDescId_1 IS NOT NULL -- ›ÚÓ —ÛÏÏÓ‚ÓÈ Û˜ÂÚ ‰Îˇ !!!Õ≈!!! ‰Îˇ “Ó‚‡Ó‚
-              THEN vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+              THEN 
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
                                                         AND Container.ObjectId = inObjectId
@@ -1024,6 +1248,25 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
+                                    );*/
+                                  -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                                  INSERT INTO _tmp___ (Id)
+                                     SELECT ContainerLinkObject_1.ContainerId
+                                     FROM ContainerLinkObject AS ContainerLinkObject_1
+                                          JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
+                                                        AND Container.ObjectId = inObjectId
+                                                        AND Container.DescId   = inContainerDescId
+                                     WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
+                                       AND ContainerLinkObject_1.DescId = inDescId_1;
+                   -- !!!Œœ“»Ã»«¿÷»ﬂ!!!
+                   vbContainerId := (SELECT ContainerLinkObject_1.Id
+                                     FROM _tmp___ AS ContainerLinkObject_1
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_11 ON ContainerLinkObject_11.ObjectId  = inBusinessId
+                                                                                            AND ContainerLinkObject_11.DescId    = zc_ContainerLinkObject_Business()
+                                                                                            AND ContainerLinkObject_11.ContainerId = ContainerLinkObject_1.Id
+                                          JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
+                                                                                            AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
+                                                                                            AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
                                     );
 
               END IF; -- 1
