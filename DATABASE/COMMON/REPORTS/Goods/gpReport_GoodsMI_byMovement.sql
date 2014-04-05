@@ -23,7 +23,9 @@ RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime
             
              , Amount_Weight TFloat, Amount_Sh TFloat
              , AmountPartner_Weight TFloat, AmountPartner_Sh TFloat
-             , Summ TFloat
+             , AmountChangePercent_Weight TFloat, AmountChangePercent_Sh TFloat
+             , SummPartner TFloat
+             , SummChangePercent TFloat
              , Price TFloat
 
               )   
@@ -85,11 +87,18 @@ BEGIN
          , Object_TradeMark.ValueData  AS TradeMarkName
 
          , (tmpOperationGroup.Amount * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS Amount_Weight
-         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END) :: TFloat AS Amount_Sh
+         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.Amount ELSE 0 END) :: TFloat                                AS Amount_Sh
          , (tmpOperationGroup.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
-         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END) :: TFloat AS AmountPartner_Sh
-         , tmpOperationGroup.Summ :: TFloat AS Summ
+         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END) :: TFloat                                AS AmountPartner_Sh
 
+         , (tmpOperationGroup.AmountChangePercent * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountChangePercent_Weight
+         , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountChangePercent ELSE 0 END) :: TFloat                                AS AmountChangePercent_Sh
+
+         , tmpOperationGroup.SummPartner :: TFloat AS SummPartner
+         , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = True 
+                THEN MIFloat_Price.ValueData * COALESCE (tmpOperationGroup.AmountChangePercent, 0)
+                ELSE CAST ((1+ MovementFloat_VATPercent.ValueData/100) * MIFloat_Price.ValueData * COALESCE (tmpOperationGroup.AmountChangePercent, 0) AS NUMERIC (16, 2))
+           END :: TFloat AS SummChangePercent
          , MIFloat_Price.ValueData AS Price
 
      FROM (SELECT tmpOperation.MovementId
@@ -101,7 +110,9 @@ BEGIN
                 , tmpOperation.GoodsKindId
                 , ABS (SUM (tmpOperation.Amount))  AS Amount
                 , SUM (tmpOperation.AmountPartner) AS AmountPartner
-                , ABS (SUM (tmpOperation.Summ))    AS Summ
+                , SUM (tmpOperation.AmountChangePercent) AS AmountChangePercent
+                , ABS (SUM (tmpOperation.SummPartner))    AS SummPartner
+
            FROM (SELECT tmpMovement.MovementId AS MovementId
                       , tmpMovement.InvNumber
                       , tmpMovement.OperDate
@@ -111,7 +122,9 @@ BEGIN
                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                       , 0 AS  Amount
                       , 0 AS  AmountPartner
-                      , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN MIReport.Amount ELSE -1 * MIReport.Amount END) AS Summ
+                      , 0 AS  AmountChangePercent
+                      , SUM (CASE WHEN ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() THEN MIReport.Amount ELSE -1 * MIReport.Amount END) AS SummPartner
+
                  FROM tmpMovement
                       JOIN MovementItemReport AS MIReport ON MIReport.MovementId = tmpMovement.MovementId
 
@@ -148,16 +161,18 @@ BEGIN
                         , MILinkObject_GoodsKind.ObjectId
                         , CASE WHEN MIReport.ActiveContainerId = ReportContainerLink.ContainerId THEN MIReport.PassiveContainerId ELSE MIReport.ActiveContainerId END
                 UNION ALL    
-                 SELECT tmpMovement.MovementId AS MovementId
+                 SELECT tmpMovement.MovementId
                       , tmpMovement.InvNumber
                       , tmpMovement.OperDate
-                      , MIContainer.MovementItemId AS MovementItemId
+                      , MIContainer.MovementItemId                     AS MovementItemId
                       , 0 AS ContainerId 
-                      , Container.ObjectId AS GoodsId       
-                      , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , SUM (MIContainer.Amount)                            AS Amount
-                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
-                      , 0 AS Summ
+                      , Container.ObjectId                             AS GoodsId       
+                      , COALESCE (ContainerLO_GoodsKind.ObjectId, 0)   AS GoodsKindId
+                      , SUM (MIContainer.Amount)                                  AS Amount
+                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))       AS AmountPartner
+                      , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) AS AmountChangePercent
+                      , 0 AS SummPartner
+
                  FROM tmpMovement
                       Join MovementItemContainer AS MIContainer 
                                                  ON MIContainer.MovementId = tmpMovement.MovementId
@@ -168,9 +183,12 @@ BEGIN
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId = Container.Id
                                                    AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                     LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                   ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                  ON MIFloat_AmountChangePercent.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
                  WHERE MIContainer.DescId = zc_MIContainer_Count()
                  GROUP BY tmpMovement.MovementId
                         , tmpMovement.InvNumber
@@ -226,6 +244,13 @@ BEGIN
           LEFT JOIN MovementItemFloat AS MIFloat_Price
                                       ON MIFloat_Price.MovementItemId = tmpOperationGroup.MovementItemId
                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+
+          LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                    ON MovementBoolean_PriceWithVAT.MovementId =  tmpOperationGroup.MovementId
+                                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                  ON MovementFloat_VATPercent.MovementId =  tmpOperationGroup.MovementId
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
    ;
          
 END;
@@ -237,10 +262,11 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 05.04.14         * add SummChangePercent , AmountChangePercent
  05.02.14         * add inJuridicalId
  22.01.14         *
 */
 
 -- ÚÂÒÚ
---SELECT * FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013',  inDescId:= 5, inJuridicalId:= 15616, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_GoodsMI_byMovement (inStartDate:= '01.12.2013', inEndDate:= '05.12.2013',  inDescId:= 5, inJuridicalId:= 15616, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
 
