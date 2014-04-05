@@ -393,6 +393,32 @@ BEGIN
               -- Это Суммовой учет для Товаров
               --   и Суммовой учет для !!!НЕ!!! для Товаров
 
+              -- еще по одной аналитике если Суммовой учет для !!!НЕ!!! для Товаров
+              IF inParentId IS NULL OR inContainerDescId <> zc_Container_Summ()
+              THEN
+                   IF vbIs_tmp1 = TRUE
+                   THEN
+                        DELETE FROM _tmp2___;
+                        INSERT INTO _tmp2___ (Id)
+                           SELECT Container.Id
+                           FROM _tmp1___ AS ContainerLinkObject_1
+                                JOIN Container ON Container.Id       = ContainerLinkObject_1.Id
+                                              AND Container.ObjectId = inObjectId
+                                              AND Container.DescId   = inContainerDescId;
+                   ELSE
+                        DELETE FROM _tmp1___;
+                        INSERT INTO _tmp1___ (Id)
+                           SELECT Container.Id
+                           FROM _tmp2___ AS ContainerLinkObject_1
+                                JOIN Container ON Container.Id       = ContainerLinkObject_1.Id
+                                              AND Container.ObjectId = inObjectId
+                                              AND Container.DescId   = inContainerDescId;
+                   END IF;
+                   -- устанавливаем обратно
+                   vbIs_tmp1:= NOT vbIs_tmp1;
+              END IF;
+
+
               -- !!!Предпоследний!!! - есть всегда
               IF vbIs_tmp1 = TRUE
               THEN
