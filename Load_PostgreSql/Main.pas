@@ -2022,7 +2022,7 @@ begin
              then fExecSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(JuridicalId_pg)
                                   +'                         , JuridicalDetailsId_pg='+IntToStr(JuridicalDetailsId_pg)
                                   +' where trim(OKPO) = '+FormatToVarCharServer_notNULL(FieldByName('inOKPO').AsString)
-                                  +'   and CodeIM = 30201');
+                                  +'   and Id>10000');
              //
              Next;
              Application.ProcessMessages;
@@ -2894,7 +2894,7 @@ begin
                                   +'                                          end'
                                   +' where JuridicalId_pg = '+FieldByName('inJuridicalId').AsString
                                   +'   and Main = '+FieldByName('Main').AsString
-                                  +'   and (CodeIM = 30201'
+                                  +'   and (Id>10000'
                                   //+'     or Id=1310'
                                   //+'     or Id=2859'
                                   +'       )'
@@ -12463,11 +12463,16 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-
-             if myExecToStoredProc
-             then if cbClearDelete.Checked
-                  then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             fOpenSqToQuery ('select OperDate from Movement where Id='+FieldByName('Id_Postgres').AsString);
+             if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
+              and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
+             then begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  //
+                  if myExecToStoredProc
+                  then if cbClearDelete.Checked
+                       then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             end;
              //
              Next;
              Application.ProcessMessages;
@@ -12513,14 +12518,16 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
-
-             if myExecToStoredProc
-             then if cbClearDelete.Checked
-                  then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
-             //
-             // if (FieldByName('Id_Postgres').AsInteger=0)
-             // then fExecSqFromQuery('update dba.Bill set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             fOpenSqToQuery ('select Movement.OperDate from MovementItem join Movement on Movement.Id = MovementId where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
+             if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
+              and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
+             then begin
+                  toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  //
+                  if myExecToStoredProc
+                  then if cbClearDelete.Checked
+                       then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             end;
              //
              Next;
              Application.ProcessMessages;
@@ -12568,14 +12575,16 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-
-             if myExecToStoredProc
-             then if cbClearDelete.Checked
-                  then fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
-             //
-             // if (FieldByName('Id_Postgres').AsInteger=0)
-             // then fExecFlSqFromQuery('update dba._pgBill_delete set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             fOpenSqToQuery ('select OperDate from Movement where Id='+FieldByName('Id_Postgres').AsString);
+             if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
+              and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
+             then begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  //
+                  if myExecToStoredProc
+                  then if cbClearDelete.Checked
+                       then fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             end;
              //
              Next;
              Application.ProcessMessages;
@@ -12621,14 +12630,16 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
-
-             if myExecToStoredProc
-             then if cbClearDelete.Checked
-                  then fExecFlSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
-             //
-             // if (FieldByName('Id_Postgres').AsInteger=0)
-             // then fExecFlSqFromQuery('update dba._pgBillItems_delete set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toStoredProc.Params.ParamByName('ioId').Value)+') where Id = '+FieldByName('ObjectId').AsString + ' and 0<>'+IntToStr(toStoredProc.Params.ParamByName('ioId').Value));
+             fOpenSqToQuery ('select Movement.OperDate from MovementItem join Movement on Movement.Id = MovementId where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
+             if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
+              and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
+             then begin
+                  toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  //
+                  if myExecToStoredProc
+                  then if cbClearDelete.Checked
+                       then fExecFlSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+             end;
              //
              Next;
              Application.ProcessMessages;
