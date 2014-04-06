@@ -37,7 +37,7 @@ $BODY$
    DECLARE vbRecordCount Integer;
 BEGIN
      -- удаление из таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     -- DELETE FROM _tmp___ ;
+     DELETE FROM _tmp___ ;
 
      --
      inContainerDescId   := COALESCE (inContainerDescId, 0);
@@ -115,7 +115,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_9 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -157,7 +156,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_8 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -196,7 +194,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_7 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -232,7 +229,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_6 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -265,13 +261,12 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
                   -- RAISE EXCEPTION 'Счет не уникален : inContainerDescId = "%", inParentId = "%", inObjectId = "%", inJuridicalId_basis = "%", inBusinessId = "%", inObjectCostDescId = "%", inObjectCostId = "%", inDescId_1 = "%", inObjectId_1 = "%", inDescId_2 = "%", inObjectId_2 = "%", inDescId_3 = "%", inObjectId_3 = "%", inDescId_4 = "%", inObjectId_4 = "%", inDescId_5 = "%", inObjectId_5 = "%", inDescId_6 = "%", inObjectId_6 = "%", inDescId_7 = "%", inObjectId_7 = "%", inDescId_8 = "%", inObjectId_8 = "%", inDescId_9 = "%", inObjectId_9 = "%", inDescId_10 = "%", inObjectId_10 = "%"', inContainerDescId, inParentId, inObjectId, inJuridicalId_basis, inBusinessId, inObjectCostDescId, inObjectCostId, inDescId_1, inObjectId_1, inDescId_2, inObjectId_2, inDescId_3, inObjectId_3, inDescId_4, inObjectId_4, inDescId_5, inObjectId_5, inDescId_6, inObjectId_6, inDescId_7, inObjectId_7, inDescId_8, inObjectId_8, inDescId_9, inObjectId_9, inDescId_10, inObjectId_10;
               ELSE
               IF inDescId_5 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN 
-                 vbContainerId := (SELECT Container.Id
+/*                 vbContainerId := (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -297,9 +292,8 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
-                                    );
-/*
+                                    );*/
+
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT Container.Id
@@ -331,7 +325,7 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = Container.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_4 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN 
@@ -358,10 +352,9 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
-/*
-                                  -- !!!ОПТИМИЗАЦИЯ!!!
+
+/*                                  -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT Container.Id
                                      FROM Container
@@ -389,8 +382,8 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = Container.Id
-                                    );*/
-
+                                    );
+  */
               ELSE
               IF inDescId_3 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
@@ -413,7 +406,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_2 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -434,7 +426,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_1 IS NOT NULL -- Это Суммовой учет для Товаров
@@ -452,7 +443,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE -- Это Суммовой учет для Товаров
                    vbContainerId := (SELECT Container.Id
@@ -466,7 +456,6 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               END IF; -- 1
               END IF; -- 2
@@ -521,7 +510,6 @@ BEGIN
                                                                                             AND ContainerLinkObject_10.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_9 IS NOT NULL -- Это Количественный учет для Товаров
@@ -556,7 +544,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_9.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_8 IS NOT NULL -- Это Количественный учет для Товаров
@@ -588,7 +575,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_8.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_7 IS NOT NULL -- Это Количественный учет для Товаров
@@ -617,7 +603,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_7.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_6 IS NOT NULL -- Это Количественный учет для Товаров
@@ -643,7 +628,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_6.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_5 IS NOT NULL -- Это Количественный учет для Товаров
@@ -666,7 +650,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_5.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_4 IS NOT NULL -- Это Количественный учет для Товаров
@@ -686,7 +669,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_4.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_3 IS NOT NULL -- Это Количественный учет для Товаров
@@ -703,7 +685,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_3.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_2 IS NOT NULL -- Это Количественный учет для Товаров
@@ -717,7 +698,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_2.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE
               IF inDescId_1 IS NOT NULL -- Это Количественный учет для Товаров
@@ -728,7 +708,6 @@ BEGIN
                                                                                            AND ContainerLinkObject_1.ContainerId = Container.Id
                                      WHERE Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                     limit 1
                                     );
               ELSE -- Это Количественный учет для Товаров
                    vbContainerId := (SELECT Container.Id
@@ -793,7 +772,6 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
                                     );
               ELSE
               IF inDescId_9 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
@@ -834,12 +812,11 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
                                     );
               ELSE
               IF inDescId_8 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -873,9 +850,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -915,11 +890,10 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
-              ELSE
+                                    );              ELSE
               IF inDescId_7 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -950,9 +924,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -989,11 +961,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_6 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1021,9 +993,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1057,11 +1027,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_5 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1086,9 +1056,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1119,11 +1087,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_4 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1145,9 +1113,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1175,11 +1141,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_3 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1198,9 +1164,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1225,11 +1189,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_2 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN ContainerLinkObject AS ContainerLinkObject_2 ON ContainerLinkObject_2.ObjectId    = inObjectId_2
                                                                                            AND ContainerLinkObject_2.DescId      = inDescId_2
@@ -1245,9 +1209,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1269,11 +1231,11 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
               ELSE
               IF inDescId_1 IS NOT NULL -- Это Суммовой учет для !!!НЕ!!! для Товаров
               THEN 
-                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
+/*                 vbContainerId := (SELECT ContainerLinkObject_1.ContainerId
                                      FROM ContainerLinkObject AS ContainerLinkObject_1
                                           JOIN Container ON Container.Id       = ContainerLinkObject_1.ContainerId
                                                         AND Container.ObjectId = inObjectId
@@ -1286,9 +1248,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.ContainerId
                                      WHERE ContainerLinkObject_1.ObjectId = inObjectId_1
                                        AND ContainerLinkObject_1.DescId = inDescId_1
-                                     limit 1
-                                    );
-/*
+                                    );*/
                                   -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT ContainerLinkObject_1.ContainerId
@@ -1307,7 +1267,7 @@ BEGIN
                                           JOIN ContainerLinkObject AS ContainerLinkObject_12 ON ContainerLinkObject_12.ObjectId  = inJuridicalId_basis
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = ContainerLinkObject_1.Id
-                                    );*/
+                                    );
 
               END IF; -- 1
               END IF; -- 2

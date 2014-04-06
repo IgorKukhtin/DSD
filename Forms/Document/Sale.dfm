@@ -16,7 +16,9 @@ inherited SaleForm: TSaleForm
     ClientRectBottom = 542
     ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1115
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1120
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1115
@@ -216,13 +218,14 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 1114
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1120
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1109
-        Height = 514
-        ExplicitWidth = 1114
-        ExplicitHeight = 514
+        Width = 1120
+        Height = 518
+        ExplicitWidth = 1120
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -279,6 +282,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -1646,7 +1650,6 @@ inherited SaleForm: TSaleForm
     Top = 64
   end
   object frxDBDMaster: TfrxDBDataset
-    Enabled = False
     UserName = 'frxDBDMaster'
     CloseDataSource = True
     DataSet = PrintItemsCDS
@@ -1714,7 +1717,6 @@ inherited SaleForm: TSaleForm
     Top = 193
   end
   object frxDBDHeader: TfrxDBDataset
-    Enabled = False
     UserName = 'frxDBDHeader'
     CloseDataSource = True
     DataSet = PrintHeaderCDS
