@@ -62,8 +62,9 @@ BEGIN
      PERFORM lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount, 
              inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId, (SELECT ParentId FROM Movement WHERE Id = ioId), vbUserId);
 
-     -- таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
-     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
      -- 5.1. таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -90,6 +91,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  04.04.14                                        * add lpComplete_Movement_BankAccount
  13.03.14                                        * add vbUserId
  13.03.14                                        * err inParentId NOT NULL

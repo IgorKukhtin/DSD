@@ -49,7 +49,6 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
   DECLARE vbBusinessId_Route Integer;
 BEGIN
- -- RAISE EXCEPTION '_lpComplete_Movement_Income_';
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      -- !!!обязательно!!! очистили таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках

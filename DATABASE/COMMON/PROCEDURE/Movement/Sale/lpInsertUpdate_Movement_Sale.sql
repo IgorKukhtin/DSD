@@ -28,6 +28,12 @@ AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
 BEGIN
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+     END IF;
+
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
@@ -130,6 +136,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.04.14                                        * add проверка
  10.02.14                                        * в lp-должно быть все
  04.02.14                         * 
 */
