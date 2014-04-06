@@ -441,6 +441,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSaleForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaleJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSaleJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;

@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -141,6 +141,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSale_Partner'
+        end
+        item
+          Visible = True
           ItemName = 'bbReturnIn'
         end
         item
@@ -217,6 +221,10 @@ object MainForm: TMainForm
     end
     object bbSale: TdxBarButton
       Action = actSale
+      Category = 0
+    end
+    object bbSale_Partner: TdxBarButton
+      Action = actSale_Partner
       Category = 0
     end
     object bbReturnIn: TdxBarButton
@@ -1820,9 +1828,19 @@ object MainForm: TMainForm
     object actSale: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
-      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')'
       FormName = 'TSaleJournalForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actSale_Partner: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+      FormName = 'TSale_PartnerJournalForm'
+      FormNameParam.Value = 'TSale_PartnerJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

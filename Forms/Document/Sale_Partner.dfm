@@ -1,5 +1,5 @@
-inherited SaleForm: TSaleForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
+inherited Sale_PartnerForm: TSale_PartnerForm
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1115
   ExplicitWidth = 1131
@@ -216,13 +216,14 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 1114
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1115
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1109
-        Height = 514
-        ExplicitWidth = 1114
-        ExplicitHeight = 514
+        Width = 1115
+        Height = 518
+        ExplicitWidth = 1115
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -1172,7 +1173,7 @@ inherited SaleForm: TSaleForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Sale'
+    StoredProcName = 'gpInsertUpdate_Movement_Sale_Partner'
     Params = <
       item
         Name = 'ioId'
@@ -1361,7 +1362,7 @@ inherited SaleForm: TSaleForm
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
+    StoredProcName = 'gpInsertUpdate_MovementItem_Sale_Partner'
     Params = <
       item
         Name = 'ioId'
@@ -1383,30 +1384,9 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmount'
-        Component = MasterCDS
-        ComponentItem = 'Amount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
         Name = 'inAmountPartner'
         Component = MasterCDS
         ComponentItem = 'AmountPartner'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmountChangePercent'
-        Component = MasterCDS
-        ComponentItem = 'AmountChangePercent'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inChangePercentAmount'
-        Component = MasterCDS
-        ComponentItem = 'ChangePercentAmount'
         DataType = ftFloat
         ParamType = ptInput
       end

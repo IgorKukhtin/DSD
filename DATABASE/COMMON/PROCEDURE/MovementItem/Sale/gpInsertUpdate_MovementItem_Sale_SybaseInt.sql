@@ -29,7 +29,7 @@ BEGIN
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
@@ -48,7 +48,7 @@ BEGIN
           -- сохранили <Ёлемент документа>
           SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
                  INTO ioId, ioCountForPrice, outAmountSumm
-          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+          FROM gpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount

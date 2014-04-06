@@ -1,24 +1,30 @@
 inherited ServiceJournalForm: TServiceJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1091#1089#1083#1091#1075'>'
-  ClientHeight = 294
+  ClientHeight = 649
   ClientWidth = 1151
-  ExplicitWidth = 1159
-  ExplicitHeight = 328
+  ExplicitWidth = 1167
+  ExplicitHeight = 684
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1151
-    Height = 237
+    Height = 592
     TabOrder = 3
-    ExplicitWidth = 982
-    ClientRectBottom = 237
+    ExplicitTop = 57
+    ExplicitWidth = 1151
+    ExplicitHeight = 237
+    ClientRectBottom = 592
     ClientRectRight = 1151
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1151
+      ExplicitHeight = 237
       inherited cxGrid: TcxGrid
         Width = 1151
-        Height = 237
-        ExplicitWidth = 982
+        Height = 592
+        ExplicitWidth = 1151
+        ExplicitHeight = 237
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -170,7 +176,7 @@ inherited ServiceJournalForm: TServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 1151
-    ExplicitWidth = 982
+    ExplicitWidth = 1151
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -199,6 +205,7 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
     object actInsertMask: TdsdInsertUpdateAction [3]
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
@@ -260,6 +267,7 @@ inherited ServiceJournalForm: TServiceJournalForm
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
