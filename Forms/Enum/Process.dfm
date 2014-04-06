@@ -2,9 +2,8 @@ inherited ProcessForm: TProcessForm
   Caption = #1055#1088#1086#1094#1077#1089#1089#1099
   ClientHeight = 457
   ClientWidth = 859
-  ExplicitTop = -65
-  ExplicitWidth = 867
-  ExplicitHeight = 484
+  ExplicitWidth = 875
+  ExplicitHeight = 492
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -67,6 +66,7 @@ inherited ProcessForm: TProcessForm
     end
   end
   inherited MasterCDS: TClientDataSet
+    FilterOptions = [foCaseInsensitive]
     AfterInsert = nil
   end
   inherited spSelect: TdsdStoredProc

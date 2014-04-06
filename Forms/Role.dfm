@@ -233,7 +233,7 @@ object RoleForm: TRoleForm
     end
     object cxSplitterTop: TcxSplitter
       Left = 0
-      Top = 242
+      Top = 105
       Width = 372
       Height = 6
       AlignSplitter = salTop
@@ -241,7 +241,7 @@ object RoleForm: TRoleForm
     end
     object cxSplitterClient: TcxSplitter
       Left = 0
-      Top = 105
+      Top = 242
       Width = 372
       Height = 6
       AlignSplitter = salTop
@@ -304,6 +304,7 @@ object RoleForm: TRoleForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 88
@@ -331,8 +332,8 @@ object RoleForm: TRoleForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -449,6 +450,7 @@ object RoleForm: TRoleForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -474,11 +476,14 @@ object RoleForm: TRoleForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TRoleEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -490,11 +495,14 @@ object RoleForm: TRoleForm
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TRoleEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -509,6 +517,7 @@ object RoleForm: TRoleForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -523,6 +532,7 @@ object RoleForm: TRoleForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -538,6 +548,7 @@ object RoleForm: TRoleForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -546,6 +557,7 @@ object RoleForm: TRoleForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -565,8 +577,11 @@ object RoleForm: TRoleForm
     end
     object UserChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1073#1086#1088' '#1087#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1103
       FormName = 'TUserForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -583,6 +598,7 @@ object RoleForm: TRoleForm
     end
     object UserUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateUserRole
       StoredProcList = <
         item
@@ -592,8 +608,11 @@ object RoleForm: TRoleForm
     end
     object ProcessAccessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -610,8 +629,11 @@ object RoleForm: TRoleForm
     end
     object ProcessChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ProcessChoiceForm'
       FormName = 'TProcessForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -628,8 +650,11 @@ object RoleForm: TRoleForm
     end
     object ActionChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ActionChoiceForm'
       FormName = 'TActionForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -646,6 +671,7 @@ object RoleForm: TRoleForm
     end
     object ProcessAccessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateProcessAccess
       StoredProcList = <
         item
@@ -656,6 +682,7 @@ object RoleForm: TRoleForm
     end
     object ProcessUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateRoleProcess
       StoredProcList = <
         item
@@ -666,6 +693,7 @@ object RoleForm: TRoleForm
     end
     object ActionUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateRoleAction
       StoredProcList = <
         item
@@ -707,6 +735,8 @@ object RoleForm: TRoleForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 248
     Top = 272
   end
@@ -735,6 +765,7 @@ object RoleForm: TRoleForm
   end
   object ProcessCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -750,6 +781,8 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 432
     Top = 208
   end
@@ -771,6 +804,7 @@ object RoleForm: TRoleForm
   end
   object ActionCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -786,6 +820,8 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 448
     Top = 32
   end
@@ -802,6 +838,7 @@ object RoleForm: TRoleForm
   end
   object UserCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -833,6 +870,8 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 416
     Top = 320
   end
@@ -921,11 +960,14 @@ object RoleForm: TRoleForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 600
     Top = 464
   end
   object ProcessAccessCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'RoleId'
     MasterFields = 'Id'
     MasterSource = DataSource

@@ -43,22 +43,25 @@ BEGIN
              , CAST (0 as TFloat)                       AS TotalSummMVAT
              , CAST (0 as TFloat)                       AS TotalSummPVAT
              , CAST (0 as TFloat)                       AS TotalSumm
-             , 0                     				    AS FromId
-             , CAST ('' as TVarChar) 			        AS FromName
-             , 0                     				    AS ToId
-             , CAST ('' as TVarChar) 				    AS ToName
-             , 0                     				    AS PaidKindId
-             , CAST ('' as TVarChar) 				    AS PaidKindName
-             , 0                     				    AS ContractId
-             , CAST ('' as TVarChar) 				    AS ContractName
-             , CAST (0  as INTEGER)                     AS PriceListId
-             , CAST ('' as TVarChar) 				    AS PriceListName
+             , 0                     	                AS FromId
+             , CAST ('' as TVarChar) 	                AS FromName
+             , Object_To.Id                             AS ToId
+             , Object_To.ValueData                      AS ToName
+             , 0                     		        AS PaidKindId
+             , CAST ('' as TVarChar)		        AS PaidKindName
+             , 0                     		        AS ContractId
+             , CAST ('' as TVarChar) 	                AS ContractName
+             , Object_PriceList.Id                                  AS PriceListId
+             , Object_PriceList.ValueData                           AS PriceListName
              , 0                     				    AS DocumentTaxKindId
              , CAST ('' as TVarChar) 				    AS DocumentTaxKindName
 
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
-          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate;
+               LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+               LEFT JOIN Object AS Object_To ON Object_To.Id = 8461
+         ;
      ELSE
 
      RETURN QUERY

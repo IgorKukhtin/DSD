@@ -8,7 +8,8 @@ uses
   cxEdit, Data.DB, cxDBData, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, System.Classes, Vcl.ActnList, cxPropertiesStore,
   cxGridLevel, cxGridCustomView, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGrid, cxPC, Vcl.Controls, DataModul;
+  cxGridDBTableView, cxGrid, cxPC, Vcl.Controls, DataModul, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.Menus;
 
 type
   TProcessForm = class(TAncestorEnumForm)
