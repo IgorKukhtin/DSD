@@ -15,8 +15,9 @@ BEGIN
      -- ïğîâåğêà ïğàâ ïîëüçîâàòåëÿ íà âûçîâ ïğîöåäóğû
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_PersonalSendCash());
 
-     -- òàáëèöà - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
-     CREATE TEMP TABLE _tmp___ (Id Integer) ON COMMIT DROP;
+     -- òàáëèöû - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
      -- òàáëèöà - Ïğîâîäêè
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
      -- òàáëèöà - ıëåìåíòû äîêóìåíòà, ñî âñåìè ñâîéñòâàìè äëÿ ôîğìèğîâàíèÿ Àíàëèòèê â ïğîâîäêàõ
@@ -40,6 +41,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 05.04.14                                        * add !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * òàáëèöà - !!!ÄËß ÎÏÒÈÌÈÇÀÖÈÈ!!!
  21.12.13                                        * Personal -> Member
  04.11.13                                        * add OperDate

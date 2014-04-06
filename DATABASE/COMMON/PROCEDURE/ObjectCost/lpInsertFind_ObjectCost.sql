@@ -62,7 +62,6 @@ BEGIN
 
      -- находим
      BEGIN
-
               IF inDescId_1 IS NOT NULL
               THEN
                    -- первый

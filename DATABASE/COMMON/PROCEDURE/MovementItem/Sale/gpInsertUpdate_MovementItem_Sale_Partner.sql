@@ -6,10 +6,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
-    IN inAmount              TFloat    , -- Количество
     IN inAmountPartner       TFloat    , -- Количество у контрагента
-    IN inAmountChangePercent TFloat    , -- Количество c учетом % скидки
-    IN inChangePercentAmount TFloat    , -- % скидки для кол-ва
     IN inPrice               TFloat    , -- Цена
  INOUT ioCountForPrice       TFloat    , -- Цена за количество
    OUT outAmountSumm         TFloat    , -- Сумма расчетная
@@ -25,23 +22,39 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale_Partner());
 
-     -- проверка - удаленный элемент документа не может корректироваться
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
+     -- Проверка, т.к. эти параметры менять нельзя
+     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND Amount <> 0 AND isErased = FALSE)
      THEN
-         RAISE EXCEPTION 'Ошибка.Элемент не может корректироваться т.к. он <Удален>.';
+         IF NOT EXISTS (SELECT MovementItem.Id
+                        FROM MovementItem
+                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                             LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                        WHERE MovementItem.Id = ioId
+                          AND MovementItem.ObjectId = inGoodsId
+                          AND COALESCE (MILinkObject_GoodsKind.ObjectId, 0) = COALESCE (inGoodsKindId, 0)
+                          AND COALESCE (MIFloat_Price.ValueData, 0) = COALESCE (inPrice, 0)
+                       )
+         THEN
+             RAISE EXCEPTION 'Ошибка.Нет прав корректировать <Элемент>.';
+         END IF;
      END IF;
 
+     -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
+                                          , inAmount             := (SELECT Amount FROM MovementItem WHERE Id = ioId AND DescId = zc_MI_Master())
                                           , inAmountPartner      := inAmountPartner
-                                          , inAmountChangePercent:= inAmountChangePercent
-                                          , inChangePercentAmount:= inChangePercentAmount
+                                          , inAmountChangePercent:= (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent())
+                                          , inChangePercentAmount:= (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount())
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount

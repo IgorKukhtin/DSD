@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Sale_SybaseInt()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_SybaseInt (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_SybaseInt (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_SybaseInt (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseInt(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -18,39 +17,53 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_SybaseInt(
     IN inPartionGoods        TVarChar  , -- ѕарти€ товара
     IN inGoodsKindId         Integer   , -- ¬иды товаров
     IN inAssetId             Integer   , -- ќсновные средства (дл€ которых закупаетс€ “ћ÷)
+    IN inIsOnlyUpdateInt     Boolean   , -- !!!!!!
     IN inSession             TVarChar    -- сесси€ пользовател€
 )
 RETURNS RECORD
 AS
 $BODY$
-   DECLARE vbUserId Integer;
 BEGIN
-     -- проверка прав пользовател€ на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
-
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
+     IF inIsOnlyUpdateInt = TRUE
      THEN
-         RAISE EXCEPTION 'ќшибка.Ёлемент не может корректироватьс€ т.к. он <”дален>.';
+          -- сохранили <Ёлемент документа>
+          SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+                 INTO ioId, ioCountForPrice, outAmountSumm
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+                                               , inMovementId         := inMovementId
+                                               , inGoodsId            := inGoodsId
+                                               , inAmount             := inAmount
+                                               , inAmountPartner      := (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner())
+                                               , inAmountChangePercent:= inAmountChangePercent
+                                               , inChangePercentAmount:= inChangePercentAmount
+                                               , inPrice              := inPrice
+                                               , ioCountForPrice      := ioCountForPrice
+                                               , inHeadCount          := inHeadCount
+                                               , inPartionGoods       := inPartionGoods
+                                               , inGoodsKindId        := inGoodsKindId
+                                               , inAssetId            := inAssetId
+                                               , inSession            := inSession
+                                                ) AS tmp;
+     ELSE
+          -- сохранили <Ёлемент документа>
+          SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
+                 INTO ioId, ioCountForPrice, outAmountSumm
+          FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
+                                               , inMovementId         := inMovementId
+                                               , inGoodsId            := inGoodsId
+                                               , inAmount             := inAmount
+                                               , inAmountPartner      := inAmountPartner
+                                               , inAmountChangePercent:= inAmountChangePercent
+                                               , inChangePercentAmount:= inChangePercentAmount
+                                               , inPrice              := inPrice
+                                               , ioCountForPrice      := ioCountForPrice
+                                               , inHeadCount          := inHeadCount
+                                               , inPartionGoods       := inPartionGoods
+                                               , inGoodsKindId        := inGoodsKindId
+                                               , inAssetId            := inAssetId
+                                               , inSession            := inSession
+                                                ) AS tmp;
      END IF;
-
-     SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
-            INTO ioId, ioCountForPrice, outAmountSumm
-     FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inAmountPartner      := inAmountPartner
-                                          , inAmountChangePercent:= inAmountChangePercent
-                                          , inChangePercentAmount:= inChangePercentAmount
-                                          , inPrice              := inPrice
-                                          , ioCountForPrice      := ioCountForPrice
-                                          , inHeadCount          := inHeadCount
-                                          , inPartionGoods       := inPartionGoods
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inAssetId            := inAssetId
-                                          , inUserId             := vbUserId
-                                           ) AS tmp;
 
 END;
 $BODY$
