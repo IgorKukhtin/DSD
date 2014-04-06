@@ -48,7 +48,9 @@ type
   TAddOnDataSet = class (TdsdDataSetLink)
   private
     FIndexFieldNames: String;
+    FUserName: String;
   published
+    property UserName: String read FUserName write FUserName;
     property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
   end;
 
@@ -1186,12 +1188,12 @@ end;
 function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
-    frxDataSet: TfrxDataSet;
+    DataSetList: TList;
     FReport: TfrxReport;
 begin
   inherited;
   result := true;
-
+  DataSetList := TList.Create;
   for I := 0 to Self.DataSets.Count - 1 do
       if Assigned(Self.DataSets[i].DataSet) then
          if Self.DataSets[i].DataSet is TClientDataSet then
@@ -1199,18 +1201,15 @@ begin
   Stream := TStringStream.Create;
   try
     FReport := TfrxReport.Create(nil);
+    for I := 0 to DataSets.Count - 1 do begin
+        DataSetList.Add(TfrxDBDataset.Create(nil));
+        with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do begin
+          DataSet := DataSets[i].DataSet;
+          UserName := TAddOnDataSet(DataSets[i]).UserName;
+        end;
+    end;
     with FReport do
     try
-      if Assigned(Self.Owner) then
-         for I := 0 to Self.Owner.ComponentCount - 1 do
-             if Self.Owner.Components[i] is TfrxDataset then begin
-                frxDataSet := frxFindDataSet(nil, TfrxDataset(Self.Owner.Components[i]).UserName, FReport);
-                if Assigned(frxDataSet) then begin
-                   frxDataSet.Assign(Self.Owner.Components[i]);
-                   TfrxDBDataSet(frxDataSet).DataSet := TfrxDBDataSet(Self.Owner.Components[i]).DataSet;
-                   TfrxDBDataSet(frxDataSet).DataSource := TfrxDBDataSet(Self.Owner.Components[i]).DataSource;
-                end;
-             end;
       if ShiftDown then begin
          try
            LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
@@ -1263,7 +1262,8 @@ begin
     finally
 //      for I := 0 to EnabledDataSets.Count -1  do
   //        EnabledDataSets[i].DataSet.Free;
-     // Free;
+      Free;
+      DataSetList.Free;
     end;
   finally
     Stream.Free

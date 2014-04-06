@@ -329,7 +329,7 @@ BEGIN
               ELSE
               IF inDescId_4 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN 
-/*                 vbContainerId := (SELECT Container.Id
+                 vbContainerId := (SELECT Container.Id
                                      FROM Container
                                           JOIN ContainerLinkObject AS ContainerLinkObject_1 ON ContainerLinkObject_1.ObjectId    = inObjectId_1
                                                                                            AND ContainerLinkObject_1.DescId      = inDescId_1
@@ -352,9 +352,9 @@ BEGIN
                                      WHERE Container.ParentId = inParentId
                                        AND Container.ObjectId = inObjectId
                                        AND Container.DescId   = inContainerDescId
-                                    );*/
+                                    );
 
-                                  -- !!!ОПТИМИЗАЦИЯ!!!
+/*                                  -- !!!ОПТИМИЗАЦИЯ!!!
                                   INSERT INTO _tmp___ (Id)
                                      SELECT Container.Id
                                      FROM Container
@@ -383,7 +383,7 @@ BEGIN
                                                                                             AND ContainerLinkObject_12.DescId    = zc_ContainerLinkObject_JuridicalBasis()
                                                                                             AND ContainerLinkObject_12.ContainerId = Container.Id
                                     );
-
+  */
               ELSE
               IF inDescId_3 IS NOT NULL -- Это Суммовой учет для Товаров
               THEN vbContainerId := (SELECT Container.Id
