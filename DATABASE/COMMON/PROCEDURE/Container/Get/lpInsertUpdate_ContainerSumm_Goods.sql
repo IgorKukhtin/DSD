@@ -51,24 +51,24 @@ BEGIN
                                                                                                  , inObjectId_5 := inInfoMoneyId
                                                                                                  , inDescId_6   := zc_ObjectCostLink_Account()
                                                                                                  , inObjectId_6 := inAccountId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_7 := inBranchId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_7 := inJuridicalId_basis
                                                                                                  , inDescId_8   := zc_ObjectCostLink_Business()
                                                                                                  , inObjectId_8 := inBusinessId
-                                                                                                 , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_9 := inJuridicalId_basis
+                                                                                                 , inDescId_9   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_9 := inBranchId
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
-                                                 , inDescId_2   := zc_ContainerLinkObject_PartionGoods()
-                                                 , inObjectId_2 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
-                                                 , inDescId_3   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
-                                                 , inObjectId_3 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
-                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                 , inObjectId_4 := inInfoMoneyId_Detail
-                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
-                                                 , inObjectId_5 := inInfoMoneyId
-                                                                   );
+                                                 , inDescId_2   := CASE WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_2 := CASE WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
+                                                 , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_3 := inInfoMoneyId_Detail
+                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_4 := inInfoMoneyId
+                                                 , inDescId_5   := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_5 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
+                                                  );
      ELSE
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Çàï÷àñòè è Ðåìîíòû -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
                                    , zc_Enum_InfoMoneyDestination_20400()) -- ÃÑÌ
@@ -87,31 +87,31 @@ BEGIN
                                                                                                  , inObjectId_1 := inGoodsId
                                                                                                  , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ObjectCostLink_Member() ELSE zc_ObjectCostLink_Unit() END
                                                                                                  , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inMemberId <> 0 AND inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inMemberId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
-                                                                                                 , inDescId_3   := zc_ObjectCostLink_AssetTo()
-                                                                                                 , inObjectId_3 := inAssetId
-                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
-                                                                                                 , inObjectId_4 := inInfoMoneyId_Detail
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_InfoMoney()
-                                                                                                 , inObjectId_5 := inInfoMoneyId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Account()
-                                                                                                 , inObjectId_6 := inAccountId
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_7 := inBranchId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_8 := inBusinessId
-                                                                                                 , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_9 := inJuridicalId_basis
+                                                                                                 , inDescId_3   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_3 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_4 := inInfoMoneyId
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_5 := inAccountId
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_6 := inJuridicalId_basis
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_7 := inBusinessId
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_8 := inBranchId
+                                                                                                 , inDescId_9   := zc_ObjectCostLink_AssetTo()
+                                                                                                 , inObjectId_9 := inAssetId
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
                                                  , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() WHEN inMemberId <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inMemberId <> 0 THEN inMemberId ELSE inUnitId END
-                                                 , inDescId_3   := zc_ContainerLinkObject_AssetTo()
-                                                 , inObjectId_3 := inAssetId
-                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
-                                                 , inObjectId_4 := inInfoMoneyId_Detail
-                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
-                                                 , inObjectId_5 := inInfoMoneyId
+                                                 , inDescId_3   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_3 := inInfoMoneyId_Detail
+                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_4 := inInfoMoneyId
+                                                 , inDescId_5   := zc_ContainerLinkObject_AssetTo()
+                                                 , inObjectId_5 := inAssetId
                                                   );
      ELSE
      IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Òîâàðû       -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
@@ -144,12 +144,12 @@ BEGIN
                                                                                                                 , inObjectId_6 := inInfoMoneyId
                                                                                                                 , inDescId_7   := zc_ObjectCostLink_Account()
                                                                                                                 , inObjectId_7 := inAccountId
-                                                                                                                , inDescId_8   := zc_ObjectCostLink_Branch()
-                                                                                                                , inObjectId_8 := inBranchId
+                                                                                                                , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                                , inObjectId_8 := inJuridicalId_basis
                                                                                                                 , inDescId_9   := zc_ObjectCostLink_Business()
                                                                                                                 , inObjectId_9 := inBusinessId
-                                                                                                                , inDescId_10  := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                                , inObjectId_10:= inJuridicalId_basis
+                                                                                                                , inDescId_10  := zc_ObjectCostLink_Branch()
+                                                                                                                , inObjectId_10:= inBranchId
                                                                                                             )
                                                                 , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                                 , inObjectId_1 := inGoodsId
@@ -185,12 +185,12 @@ BEGIN
                                                                                                            , inObjectId_5 := inInfoMoneyId
                                                                                                            , inDescId_6   := zc_ObjectCostLink_Account()
                                                                                                            , inObjectId_6 := inAccountId
-                                                                                                           , inDescId_7   := zc_ObjectCostLink_Branch()
-                                                                                                           , inObjectId_7 := inBranchId
+                                                                                                           , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                           , inObjectId_7 := inJuridicalId_basis
                                                                                                            , inDescId_8   := zc_ObjectCostLink_Business()
                                                                                                            , inObjectId_8 := inBusinessId
-                                                                                                           , inDescId_9   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                           , inObjectId_9 := inJuridicalId_basis
+                                                                                                           , inDescId_9   := zc_ObjectCostLink_Branch()
+                                                                                                           , inObjectId_9 := inBranchId
                                                                                                             )
                                                            , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                            , inObjectId_1 := inGoodsId
@@ -223,14 +223,14 @@ BEGIN
                                                                                                  , inObjectId_3 := inInfoMoneyId
                                                                                                  , inDescId_4   := zc_ObjectCostLink_Account()
                                                                                                  , inObjectId_4 := inAccountId
-                                                                                                 , inDescId_5   := zc_ObjectCostLink_Unit()
-                                                                                                 , inObjectId_5 := 0
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_6 := 0
-                                                                                                 , inDescId_7   := zc_ObjectCostLink_Business()
-                                                                                                 , inObjectId_7 := inBusinessId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_8 := inJuridicalId_basis
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_5 := inJuridicalId_basis
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_6 := inBusinessId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_Unit()
+                                                                                                 , inObjectId_7 := 0
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_8 := 0
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -262,12 +262,12 @@ BEGIN
                                                                                                  , inObjectId_4 := inInfoMoneyId
                                                                                                  , inDescId_5   := zc_ObjectCostLink_Account()
                                                                                                  , inObjectId_5 := inAccountId
-                                                                                                 , inDescId_6   := zc_ObjectCostLink_Branch()
-                                                                                                 , inObjectId_6 := inBranchId
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_6 := inJuridicalId_basis
                                                                                                  , inDescId_7   := zc_ObjectCostLink_Business()
                                                                                                  , inObjectId_7 := inBusinessId
-                                                                                                 , inDescId_8   := zc_ObjectCostLink_JuridicalBasis()
-                                                                                                 , inObjectId_8 := inJuridicalId_basis
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_8 := inBranchId
                                                                                                   )
                                                  , inDescId_1   := zc_ContainerLinkObject_Goods()
                                                  , inObjectId_1 := inGoodsId
@@ -295,6 +295,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.04.14                                        * ïîðÿäîê àíàëèòèê ÄËß ÎÏÒÈÌÈÇÀÖÈÈ
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
  21.12.13                                        * Personal -> Member
  11.10.13                                        * add zc_Enum_InfoMoneyDestination_20400

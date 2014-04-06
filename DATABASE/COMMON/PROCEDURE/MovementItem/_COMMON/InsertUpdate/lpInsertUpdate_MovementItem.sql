@@ -12,8 +12,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem(
 )
   RETURNS Integer AS
 $BODY$
-  DECLARE vbStatusId Integer;
+  DECLARE vbStatusId  Integer;
   DECLARE vbInvNumber TVarChar;
+  DECLARE vbIsErased  Boolean;
 BEGIN
      -- меняем параметр
      IF inParentId = 0
@@ -44,11 +45,18 @@ BEGIN
                            VALUES (inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
      ELSE
          --
-         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId WHERE Id = ioId;
+         UPDATE MovementItem SET ObjectId = inObjectId, Amount = inAmount, ParentId = inParentId WHERE Id = ioId
+         RETURNING isErased INTO vbIsErased;
          --
          IF NOT FOUND THEN
+            RAISE EXCEPTION 'Ошибка.Элемент <%> в документе № <%> не найдена.', ioId, vbInvNumber;
             INSERT INTO MovementItem (Id, DescId, ObjectId, MovementId, Amount, ParentId)
                               VALUES (ioId, inDescId, inObjectId, inMovementId, inAmount, inParentId) RETURNING Id INTO ioId;
+         END IF;
+         --
+         IF vbIsErased = TRUE
+         THEN
+             RAISE EXCEPTION 'Ошибка.Элемент не может корректироваться т.к. он <Удален>.';
          END IF;
      END IF;
 END;
@@ -56,11 +64,11 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, TFloat, Integer) OWNER TO postgres; 
 
-
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.04.14                                        * add vbIsErased
  31.10.13                                        * add vbInvNumber
  06.10.13                                        * add vbStatusId
  09.08.13                                        * add inObjectId := NULL

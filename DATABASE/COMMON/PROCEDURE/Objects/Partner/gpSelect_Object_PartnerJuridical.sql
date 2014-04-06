@@ -20,7 +20,7 @@ BEGIN
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
          , Object_Partner.ValueData        AS Name
-         , ObjectString_Address.ValueData  AS Address
+         , COALESCE (ObjectString_Address.ValueData, Object_Partner.ValueData) :: TVarChar AS Address
          , Object_Partner.isErased         AS isErased
          
      FROM Object AS Object_Partner
@@ -31,6 +31,7 @@ BEGIN
           LEFT JOIN ObjectString AS ObjectString_Address
                                  ON ObjectString_Address.ObjectId = Object_Partner.Id
                                 AND ObjectString_Address.DescId = zc_ObjectString_Partner_Address()
+                                AND ObjectString_Address.ValueData <> ''
     WHERE Object_Partner.DescId = zc_Object_Partner();
   
 END;
@@ -42,6 +43,7 @@ ALTER FUNCTION gpSelect_Object_PartnerJuridical (Integer, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.04.14                                        * add COALESCE (ObjectString_Address.ValueData, Object_Partner.ValueData)
  06.01.14                                        * add zc_ObjectString_Partner_Address
  27.11.13                          *  
 */
