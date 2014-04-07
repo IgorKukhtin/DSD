@@ -64,12 +64,8 @@ type
     colTotalCountTare: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
     colTotalCountKg: TcxGridDBColumn;
-    frxDBDHeader: TfrxDBDataset;
     PrintHeaderCDS: TClientDataSet;
-    PrintHeaderDS: TDataSource;
-    frxDBDMaster: TfrxDBDataset;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     spSelectPrint: TdsdStoredProc;
     spSelectTax_Client: TdsdStoredProc;
     spSelectTax_Us: TdsdStoredProc;
