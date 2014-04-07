@@ -39,10 +39,11 @@ AS
            , CAST ('01.01.2200' AS TDateTime)
            , CAST (Object_Juridical.Id AS INTEGER)                         -- ж/д
            , zc_Enum_PaidKind_FirstForm()
-           , CAST ('PrintMovement_Bill'||OH_JuridicalDetails.OKPO AS TVarChar)
+           , CAST ('PrintMovement_Bill01074874' AS TVarChar)
       FROM Object AS Object_Juridical
       JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
-       AND OH_JuridicalDetails.OKPO IN ('01074874')
+       AND OH_JuridicalDetails.OKPO IN ('01074874','23193668','01074791','25774961','01074302','01074064',
+                                        '01073981','26139824','01074874','24755803','04791599','01073946','01074741','25927436')
       WHERE Object_Juridical.DescId = zc_Object_Juridical()
       UNION
 
@@ -214,6 +215,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.14                                                        * + Bill
  03.04.14                                                        * + Bill
  02.04.14                                                        * + Adventis + Billa + Kray
  27.02.14                                                        * + Tax

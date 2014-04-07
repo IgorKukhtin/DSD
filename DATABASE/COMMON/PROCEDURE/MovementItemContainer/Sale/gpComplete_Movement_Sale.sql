@@ -1125,7 +1125,8 @@ BEGIN
                                                THEN NULL -- ЕКСПЕРТ-АГРОТРЕЙД
                                      END AS ProfitLossId
                              FROM _tmpItem
-                             WHERE _tmpItem.OperSumm_PriceList <> 0 OR _tmpItem.OperSumm_Partner <> 0 OR _tmpItem.OperSumm_Partner_ChangePercent <> 0
+                             -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                             -- WHERE _tmpItem.OperSumm_PriceList <> 0 OR _tmpItem.OperSumm_Partner <> 0 OR _tmpItem.OperSumm_Partner_ChangePercent <> 0
                              GROUP BY _tmpItem.InfoMoneyDestinationId
                                     , _tmpItem.BusinessId_From
                                     , _tmpItem.GoodsKindId
@@ -1317,10 +1318,10 @@ BEGIN
                                               , inOperDate := _tmpItem_byProfitLoss.OperDate
                                                )
      FROM (SELECT ABS (_tmpCalc.OperSumm) AS OperSumm
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
                 , _tmpCalc.MovementItemId
                 , _tmpCalc.ContainerId_Goods
                 , _tmpCalc.OperDate
@@ -1346,7 +1347,8 @@ BEGIN
                       LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
-                 WHERE _tmpCalc_all.OperSumm <> 0
+                 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1384,10 +1386,10 @@ BEGIN
                                               , inOperDate := _tmpItem_byProfitLoss.OperDate
                                                )
      FROM (SELECT ABS (_tmpCalc.OperSumm) AS OperSumm
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
                 , _tmpCalc.MovementItemId
                 , _tmpCalc.ContainerId_Goods
                 , _tmpCalc.OperDate
@@ -1413,7 +1415,8 @@ BEGIN
                       LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
-                 WHERE _tmpCalc_all.OperSumm <> 0
+                 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1451,10 +1454,10 @@ BEGIN
                                               , inOperDate := _tmpItem_byProfitLoss.OperDate
                                                )
      FROM (SELECT ABS (_tmpCalc.OperSumm) AS OperSumm
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
-                , CASE WHEN _tmpCalc.OperSumm > 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId_ProfitLoss ELSE _tmpCalc.ContainerId            END AS ActiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.ContainerId            ELSE _tmpCalc.ContainerId_ProfitLoss END AS PassiveContainerId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId_ProfitLoss   ELSE _tmpCalc.AccountId              END AS ActiveAccountId
+                , CASE WHEN _tmpCalc.OperSumm >= 0 THEN _tmpCalc.AccountId              ELSE _tmpCalc.AccountId_ProfitLoss   END AS PassiveAccountId -- 100301; "прибыль текущего периода"
                 , _tmpCalc.MovementItemId
                 , _tmpCalc.ContainerId_Goods
                 , _tmpCalc.OperDate
@@ -1480,7 +1483,8 @@ BEGIN
                       LEFT JOIN (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate ON tmpOperDate.OperDate = vbOperDate
                                                                                                                          OR  (tmpOperDate.OperDate = vbOperDatePartner
                                                                                                                           AND COALESCE (_tmpCalc_all.AccountId_Transit, 0) <> 0)
-                 WHERE _tmpCalc_all.OperSumm <> 0
+                 -- !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
+                 -- WHERE _tmpCalc_all.OperSumm <> 0
                 ) AS _tmpCalc
           ) AS _tmpItem_byProfitLoss
           LEFT JOIN (SELECT _tmpItemSumm.MovementItemId
@@ -1516,6 +1520,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.04.14                                        * add !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  04.04.14                                        * add zc_Enum_InfoMoney_20801, ...
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
