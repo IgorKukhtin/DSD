@@ -51,7 +51,7 @@ BEGIN
     RETURN QUERY
     
     -- ограничиваем по ёр.лицу
-    WITH tmpMovement AS (SELECT Movement.Id AS MovementId
+   WITH tmpMovement AS (SELECT Movement.Id AS MovementId
                               , Movement.InvNumber
                               , Movement.OperDate 
                          FROM ContainerLinkObject AS ContainerLO_Juridical
@@ -173,7 +173,8 @@ BEGIN
                       , 0 AS ContainerId 
                       , Container.ObjectId AS GoodsId       
                       , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , SUM (MIContainer.Amount)                            AS Amount
+                      -- , SUM (MIContainer.Amount)                            AS Amount
+                      , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) AS Amount
                       , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                       , 0 AS Summ
                  FROM tmpMovement
@@ -189,6 +190,9 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                   ON MIFloat_AmountPartner.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                      LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
+                                                  ON MIFloat_AmountChangePercent.MovementItemId = MIContainer.MovementItemId
+                                                 AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
                  WHERE MIContainer.DescId = zc_MIContainer_Count()
                  GROUP BY tmpMovement.MovementId
                         , tmpMovement.InvNumber

@@ -28,7 +28,7 @@ $BODY$
    DECLARE vbContractId       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
    
      -- 
      IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax()
