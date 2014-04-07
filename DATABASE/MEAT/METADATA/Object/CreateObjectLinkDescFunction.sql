@@ -10,6 +10,10 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner1CLink_Branch() RETURNS Integer 
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
 SELECT 'zc_ObjectLink_Partner1CLink_Branch', 'Ссылка на филиал в объекте связь точек доставки и кодов в 1С', zc_Object_Partner1CLink(), zc_Object_Branch() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner1CLink_Branch');
 
+CREATE OR REPLACE FUNCTION zc_ObjectLink_Partner1CLink_Contract() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner1CLink_Contract'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+SELECT 'zc_ObjectLink_Partner1CLink_Contract', 'Ссылка на договор в объекте связь точек доставки и кодов в 1С', zc_Object_Partner1CLink(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Partner1CLink_Contract');
+
 
 CREATE OR REPLACE FUNCTION zc_ObjectLink_GoodsByGoodsKind1CLink_Branch() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_GoodsByGoodsKind1CLink_Branch'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)

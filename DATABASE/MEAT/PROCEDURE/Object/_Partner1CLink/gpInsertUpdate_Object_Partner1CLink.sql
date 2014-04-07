@@ -2,6 +2,7 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner1CLink(
     IN inId                     Integer,    -- ключ объекта <Счет>
@@ -10,6 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner1CLink(
     IN inPartnerId              Integer,    -- 
     IN inBranchId               Integer,    -- 
     IN inBranchTopId            Integer,    -- 
+    IN inContractId             Integer,    -- 
     IN inIsSybase               Boolean  DEFAULT NULL,    -- 
     IN inSession                TVarChar DEFAULT ''       -- сессия пользователя
 )
@@ -57,6 +59,7 @@ BEGIN
 
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Partner(), inId, inPartnerId);
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Branch(), inId, vbBranchId);
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Partner1CLink_Contract(), inId, inContractId);
    IF inIsSybase IS NOT NULL
    THEN PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Partner1CLink_Sybase(), inId, inIsSybase);
    END IF;
@@ -70,12 +73,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Boolean, TVarChar)  OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner1CLink (Integer, Integer, TVarChar, Integer, Integer, Integer, Integer, Boolean, TVarChar)  OWNER TO postgres;
 
   
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.04.14                        * add zc_ObjectBoolean_Partner1CLink_Contract
  15.02.14                                        * add zc_ObjectBoolean_Partner1CLink_Sybase
  11.02.14                        *
 */

@@ -12,7 +12,7 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, DataModul,
-  ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit;
+  ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit, cxCurrencyEdit;
 
 type
   TLoadSaleFrom1CForm = class(TAncestorReportForm)
