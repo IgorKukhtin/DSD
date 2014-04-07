@@ -209,6 +209,7 @@ object UserForm: TUserForm
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     Params = <>
     Left = 40
     Top = 88
@@ -680,6 +681,7 @@ object UserForm: TUserForm
   end
   object RoleCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UserId'
     MasterFields = 'Id'
     MasterSource = DataSource
@@ -695,6 +697,7 @@ object UserForm: TUserForm
   end
   object PeriodCloseCDS: TClientDataSet
     Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
     IndexFieldNames = 'UserId'
     MasterFields = 'Id'
     MasterSource = DataSource

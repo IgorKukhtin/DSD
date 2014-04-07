@@ -28,149 +28,100 @@ $BODY$
    DECLARE vbContractId       Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
    
+     -- 
+     IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Нет прав.';
+     END IF;
+
+
             IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
-               THEN
-               /* выбираем реквизиты для обновления/создания шапки НН */
-               SELECT MovementLinkMovement.MovementChildId 
-                    , MovementSale.InvNumber
-                    , MovementSale.InvNumberPartner_Master                     
-                    , MovementSale.OperDate
-                    , MovementSale.PriceWithVAT
-                    , MovementSale.VATPercent
-                    , ObjectLink_Contract_JuridicalBasis.ChildObjectId  -- от кого
-                    , ObjectLink_Partner_Juridical.ChildObjectId          -- кому
-                    , MovementSale.ToId           	             -- контрагент 
-                    , MovementSale.ContractId 
-                    
-               INTO  vbTaxId, vbInvNumber, vbInvNumberPartner, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+            THEN
+                -- выбираем реквизиты для обновления/создания шапки НН
+                SELECT MovementLinkMovement.MovementChildId 
+                     , MovementSale.InvNumber
+                     , MovementSale.InvNumberPartner_Master                     
+                     , MovementSale.OperDate
+                     , MovementSale.PriceWithVAT
+                     , MovementSale.VATPercent
+                     , ObjectLink_Contract_JuridicalBasis.ChildObjectId  -- от кого
+                     , ObjectLink_Partner_Juridical.ChildObjectId          -- кому
+                     , MovementSale.ToId           	             -- контрагент 
+                     , MovementSale.ContractId 
+                       INTO vbTaxId, vbInvNumber, vbInvNumberPartner, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+                FROM gpGet_Movement_Sale (inMovementId, CURRENT_DATE , inSession) AS MovementSale
+                     LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementSale.ToId
+                                         AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                     LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
+                                          ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementSale.ContractId
+                                         AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+                     LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MovementSale.Id
+                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
 
-               FROM gpGet_Movement_Sale(inMovementId, CURRENT_DATE , inSession) AS MovementSale
-               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementSale.ToId
-                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               
-               LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                                    ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementSale.ContractId
-                                   AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-               
-               LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MovementSale.Id
-                                             AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+                -- выбираем реквизиты для обновления/создания шапки НН
+                SELECT tmp.ioInvNumberPartner
+                     , Object_DocumentTaxKind.ValueData
+                     , tmp.ioId                   
+                       INTO outInvNumberPartner_Master, outDocumentTaxKindName, vbTaxId
+                FROM lpInsertUpdate_Movement_Tax (ioId := COALESCE (vbTaxId,0)
+                                                , inInvNumber := vbInvNumber
+                                                , ioInvNumberPartner := vbInvNumberPartner                    
+                                                , inOperDate := vbOperDate
+                                                , inChecked := FALSE
+                                                , inDocument := FALSE
+                                                , inPriceWithVAT := vbPriceWithVAT
+                                                , inVATPercent := vbVATPercent
+                                                , inFromId := vbFromId                                  -- от кого
+                                                , inToId := vbToId                                      -- кому
+                                                , inPartnerId := vbPartnerId           	             -- контрагент 
+                                                , inContractId := vbContractId
+                                                , inDocumentTaxKindId := inDocumentTaxKindId
+                                                , inUserId := vbUserId
+                                                 ) AS tmp
+                     LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = inDocumentTaxKindID;
 
-
-               SELECT tmp.ioInvNumberPartner
-                    , Object_DocumentTaxKind.ValueData
-                    , tmp.ioId                   
-               INTO outInvNumberPartner_Master, outDocumentTaxKindName, vbTaxId
-     
-               FROM lpInsertUpdate_Movement_Tax(
-                       ioId := COALESCE (vbTaxId,0)
-                     , inInvNumber := vbInvNumber
-                     , ioInvNumberPartner := vbInvNumberPartner                    
-                     , inOperDate := vbOperDate
-                     , inChecked := false
-                     , inDocument := false
-                     , inPriceWithVAT := vbPriceWithVAT
-                     , inVATPercent := vbVATPercent
-                     , inFromId := vbFromId                                  -- от кого
-                     , inToId := vbToId                                      -- кому
-                     , inPartnerId := vbPartnerId           	             -- контрагент 
-                     , inContractId := vbContractId
-                     , inDocumentTaxKindId := inDocumentTaxKindId
-                     , inUserId := vbUserId ) as tmp
-
-               LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = inDocumentTaxKindID;
-
-               -- сохранили Продажи с Нологовой
-               PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), inMovementId, vbTaxId);
+                -- сохранили Продажи с Нологовой
+                PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), inMovementId, vbTaxId);
            
-               /*выбрать товары из продажы для обновления/создания НН*/
-       /*WITH tmpGoodsSale AS (SELECT MovementItem.ObjectId AS GoodsId
-                                  , MILinkObject_GoodsKind.ObjectId AS GoodsKindId 
-                                  , MIFloat_CountForPrice.ValueData AS CountForPrice_Sale
-                                  , MIFloat_Price.ValueData::TFloat AS Price_Sale
-                                  , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) ::TFloat   AS Amount_Sale
-                             FROM MovementItem 
-                                  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                               --AND MIFloat_Price.ValueData <> 0   -- спросить у Кости нужны ли нулевые цены
-                                  LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                              ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                              AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()                             
-                                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                                 
-                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                             WHERE MovementItem.MovementId = inMovementId--130344--  --130344 --  
-                             GROUP BY MovementItem.ObjectId
-                                    , MILinkObject_GoodsKind.ObjectId
-                                    , MIFloat_Price.ValueData 
-                                    , MIFloat_CountForPrice.ValueData 
-                            )
-             
-,
-    tmpGoodsTax AS (SELECT MovementItem.ObjectId AS GoodsId
-                                 , MILinkObject_GoodsKind.ObjectId  AS GoodsKindId
-                                 , MIFloat_Price.ValueData::TFloat  AS Price_Tax
-                                 , MovementItem.Amount::TFloat      AS Amount_Tax
-                                 , MovementItem.Id AS MovementItemId_Tax 
-                            FROM Movement 
-                                 JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                  AND MovementItem.Amount<>0
-                    
-                                 LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                           AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                               --AND MIFloat_Price.ValueData <> 0
-                                                
-                                 LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                                  ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                                 AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                 WHERE Movement.Id =  vbTaxId--173702 --  --
-                                   AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
-                            )*/
-
-               PERFORM lpInsertUpdate_MovementItem_Tax(
-                       ioId := COALESCE ( tmpGoodsTax.MovementItemId_Tax,0)    
-                     , inMovementId := vbTaxId       
-                     , inGoodsId := tmpGoodsSale.GoodsId
-                     , inAmount := tmpGoodsSale.Amount_Sale
-                     , inPrice := tmpGoodsSale.Price_Sale
-                     , ioCountForPrice := tmpGoodsSale.CountForPrice_Sale
-                     , inGoodsKindId := tmpGoodsSale.GoodsKindId
-                     , inUserId := vbUserId)        
-               FROM (SELECT MovementItem.ObjectId AS GoodsId
-                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                          , MIFloat_CountForPrice.ValueData AS CountForPrice_Sale
-                          , MIFloat_Price.ValueData::TFloat AS Price_Sale
-                          , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) ::TFloat   AS Amount_Sale
-                     FROM MovementItem 
-                          JOIN MovementItemFloat AS MIFloat_Price
-                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                AND MIFloat_Price.ValueData <> 0  
-                          LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
-                                                      ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
-                                                     AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()                             
-                          JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                                 ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                                AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                                AND MIFloat_AmountPartner.ValueData <> 0    
-                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     WHERE MovementItem.MovementId = inMovementId--130344--  --130344 --  
-                       AND MovementItem.isErased = false 
-                     GROUP BY MovementItem.ObjectId
-                            , MILinkObject_GoodsKind.ObjectId
-                            , MIFloat_Price.ValueData 
-                            , MIFloat_CountForPrice.ValueData 
-                      ) as tmpGoodsSale
+                -- сохранили 
+                PERFORM lpInsertUpdate_MovementItem_Tax (ioId := COALESCE ( tmpGoodsTax.MovementItemId_Tax,0)    
+                                                       , inMovementId := vbTaxId       
+                                                       , inGoodsId := tmpGoodsSale.GoodsId
+                                                       , inAmount := tmpGoodsSale.Amount_Sale
+                                                       , inPrice := tmpGoodsSale.Price_Sale
+                                                       , ioCountForPrice := tmpGoodsSale.CountForPrice_Sale
+                                                       , inGoodsKindId := tmpGoodsSale.GoodsKindId
+                                                       , inUserId := vbUserId)        
+                FROM (SELECT MovementItem.ObjectId AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
+                           , MIFloat_CountForPrice.ValueData AS CountForPrice_Sale
+                           , MIFloat_Price.ValueData::TFloat AS Price_Sale
+                           , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) ::TFloat   AS Amount_Sale
+                      FROM MovementItem 
+                           JOIN MovementItemFloat AS MIFloat_Price
+                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                 AND MIFloat_Price.ValueData <> 0  
+                           LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                       ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()                             
+                           JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                                 AND MIFloat_AmountPartner.ValueData <> 0    
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      WHERE MovementItem.MovementId = inMovementId--130344--  --130344 --  
+                        AND MovementItem.isErased = FALSE 
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                             , MIFloat_Price.ValueData 
+                             , MIFloat_CountForPrice.ValueData 
+                     ) AS tmpGoodsSale
                       LEFT JOIN (SELECT MovementItem.ObjectId AS GoodsId
                                       , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                                       , MIFloat_Price.ValueData::TFloat  AS Price_Tax
@@ -178,25 +129,24 @@ BEGIN
                                       , MovementItem.Id AS MovementItemId_Tax 
                                  FROM Movement 
                                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                                       AND MovementItem.Amount<>0
-                                                       AND MovementItem.isErased = false 
+                                                       AND MovementItem.Amount <> 0
+                                                       AND MovementItem.isErased = FALSE 
                                       JOIN MovementItemFloat AS MIFloat_Price
-                                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                                AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                              --AND MIFloat_Price.ValueData <> 0
+                                                             ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                                                            -- AND MIFloat_Price.ValueData <> 0
                                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                 WHERE Movement.Id =  vbTaxId--173702 --  --
+                                 WHERE Movement.Id = vbTaxId
                                    AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
-                                 ) AS tmpGoodsTax ON tmpGoodsTax.GoodsId = tmpGoodsSale.GoodsId
-                                                 AND tmpGoodsTax.GoodsKindId = tmpGoodsSale.GoodsKindId
-                                                 AND tmpGoodsTax.Price_Tax = tmpGoodsSale.Price_Sale;
+                                ) AS tmpGoodsTax ON tmpGoodsTax.GoodsId = tmpGoodsSale.GoodsId
+                                                AND tmpGoodsTax.GoodsKindId = tmpGoodsSale.GoodsKindId
+                                                AND tmpGoodsTax.Price_Tax = tmpGoodsSale.Price_Sale;
 
-              --удаляем лишние строки из Налоговой                                   
-               PERFORM gpMovementItem_Tax_SetErased(
-                       inMovementItemId := tmpGoodsTax.MovementItemId_Tax
-                     , inSession := inSession)
+              -- удаляем лишние строки из Налоговой                                   
+               PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpGoodsTax.MovementItemId_Tax
+                                                   , inSession := inSession)
                FROM (SELECT MovementItem.ObjectId AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)  AS GoodsKindId
                           , MIFloat_Price.ValueData::TFloat  AS Price_Tax
@@ -206,14 +156,14 @@ BEGIN
                           JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                                                     --AND MIFloat_Price.ValueData <> 0
+                                                -- AND MIFloat_Price.ValueData <> 0
                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                     WHERE MovementItem.MovementId =  vbTaxId--173702 --  --
+                     WHERE MovementItem.MovementId =  vbTaxId
                        AND MovementItem.Amount<>0
-                       AND MovementItem.isErased = false 
-                     ) AS tmpGoodsTax 
+                       AND MovementItem.isErased = FALSE 
+                    ) AS tmpGoodsTax 
                      LEFT JOIN (SELECT MovementItem.ObjectId AS GoodsId
                                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
                                      , MIFloat_CountForPrice.ValueData AS CountForPrice_Sale
@@ -235,7 +185,7 @@ BEGIN
                                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                 WHERE MovementItem.MovementId = inMovementId       --130344--  --130344 --  
-                                  AND MovementItem.isErased = false       
+                                  AND MovementItem.isErased = FALSE       
                                 GROUP BY MovementItem.ObjectId
                                        , MILinkObject_GoodsKind.ObjectId
                                        , MIFloat_Price.ValueData 
@@ -299,8 +249,8 @@ BEGIN
                      , inInvNumber := vbInvNumber
                      , ioInvNumberPartner := vbInvNumberPartner                    
                      , inOperDate := vbEndDate
-                     , inChecked := false
-                     , inDocument := false
+                     , inChecked := FALSE
+                     , inDocument := FALSE
                      , inPriceWithVAT := vbPriceWithVAT
                      , inVATPercent := vbVATPercent
                      , inFromId := vbFromId                                  -- от кого
@@ -397,7 +347,7 @@ BEGIN
                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                   AND MovementLinkObject_Contract.ObjectId = vbContractId
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                             AND MovementItem.isErased = false 
+                                             AND MovementItem.isErased = FALSE 
                             JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -439,7 +389,7 @@ BEGIN
                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                   AND MovementLinkObject_Contract.ObjectId = vbContractId
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                             AND MovementItem.isErased = false 
+                                             AND MovementItem.isErased = FALSE 
                             JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -485,7 +435,7 @@ BEGIN
                                 FROM Movement 
                                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.Amount<>0
-                                                       AND MovementItem.isErased = false 
+                                                       AND MovementItem.isErased = FALSE 
                                       JOIN MovementItemFloat AS MIFloat_Price
                                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -517,7 +467,7 @@ BEGIN
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      WHERE MovementItem.MovementId =  vbTaxId--173702 --  --
                       -- AND MovementItem.Amount<>0
-                       AND MovementItem.isErased = false 
+                       AND MovementItem.isErased = FALSE 
                      ) AS tmpGoodsTax 
                      LEFT JOIN _tmpGoodsSale ON _tmpGoodsSale.GoodsId = tmpGoodsTax.GoodsId
                                             AND _tmpGoodsSale.GoodsKindId = tmpGoodsTax.GoodsKindId
@@ -578,8 +528,8 @@ BEGIN
                      , inInvNumber := vbInvNumber
                      , ioInvNumberPartner := vbInvNumberPartner                    
                      , inOperDate := vbEndDate
-                     , inChecked := false
-                     , inDocument := false
+                     , inChecked := FALSE
+                     , inDocument := FALSE
                      , inPriceWithVAT := vbPriceWithVAT
                      , inVATPercent := vbVATPercent
                      , inFromId := vbFromId                                  -- от кого
@@ -666,7 +616,7 @@ BEGIN
                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                   AND MovementLinkObject_Contract.ObjectId = vbContractId
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                             AND MovementItem.isErased = false 
+                                             AND MovementItem.isErased = FALSE 
                             JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -705,7 +655,7 @@ BEGIN
                                                   AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                   AND MovementLinkObject_Contract.ObjectId = vbContractId
                             JOIN MovementItem ON MovementItem.MovementId = Movement.Id
-                                             AND MovementItem.isErased = false 
+                                             AND MovementItem.isErased = FALSE 
                             JOIN MovementItemFloat AS MIFloat_Price
                                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                   AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -751,7 +701,7 @@ BEGIN
                                 FROM Movement 
                                       JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                        AND MovementItem.Amount<>0
-                                                       AND MovementItem.isErased = false 
+                                                       AND MovementItem.isErased = FALSE 
                                       JOIN MovementItemFloat AS MIFloat_Price
                                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                             AND MIFloat_Price.DescId = zc_MIFloat_Price() 
@@ -783,7 +733,7 @@ BEGIN
                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                      WHERE MovementItem.MovementId =  vbTaxId--173702 --  --
                       -- AND MovementItem.Amount<>0
-                       AND MovementItem.isErased = false 
+                       AND MovementItem.isErased = FALSE 
                      ) AS tmpGoodsTax 
                      LEFT JOIN _tmpGoodsSale ON _tmpGoodsSale.GoodsId = tmpGoodsTax.GoodsId
                                             AND _tmpGoodsSale.GoodsKindId = tmpGoodsTax.GoodsKindId
