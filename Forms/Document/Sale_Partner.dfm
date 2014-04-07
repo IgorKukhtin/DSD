@@ -2,8 +2,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -280,6 +280,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -579,7 +580,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -606,7 +615,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -630,6 +647,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -656,7 +682,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -1720,15 +1754,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Left = 804
     Top = 64
   end
-  object frxDBDMaster: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDMaster'
-    CloseDataSource = True
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 245
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
@@ -1788,20 +1813,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Left = 476
     Top = 193
   end
-  object frxDBDHeader: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDHeader'
-    CloseDataSource = True
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 194
-  end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 552
-    Top = 192
-  end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
     DataSets = <>
@@ -1829,11 +1840,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Params = <>
     Left = 476
     Top = 246
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 552
-    Top = 245
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
