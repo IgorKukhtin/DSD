@@ -48,7 +48,9 @@ type
   TAddOnDataSet = class (TdsdDataSetLink)
   private
     FIndexFieldNames: String;
+    FUserName: String;
   published
+    property UserName: String read FUserName write FUserName;
     property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
   end;
 
@@ -454,8 +456,10 @@ type
     FParams: TdsdParams;
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
+    FDataSetList: TList;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
+    procedure OnEndDoc(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -1186,12 +1190,11 @@ end;
 function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
-    frxDataSet: TfrxDataSet;
     FReport: TfrxReport;
 begin
   inherited;
   result := true;
-
+  FDataSetList := TList.Create;
   for I := 0 to Self.DataSets.Count - 1 do
       if Assigned(Self.DataSets[i].DataSet) then
          if Self.DataSets[i].DataSet is TClientDataSet then
@@ -1199,15 +1202,15 @@ begin
   Stream := TStringStream.Create;
   try
     FReport := TfrxReport.Create(nil);
+    for I := 0 to DataSets.Count - 1 do begin
+        FDataSetList.Add(TfrxDBDataset.Create(nil));
+        with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do begin
+          DataSet := DataSets[i].DataSet;
+          UserName := TAddOnDataSet(DataSets[i]).UserName;
+        end;
+    end;
     with FReport do
     try
-      if Assigned(Self.Owner) then
-         for I := 0 to Self.Owner.ComponentCount - 1 do
-             if Self.Owner.Components[i] is TfrxDataset then begin
-                frxDataSet := frxFindDataSet(nil, TfrxDataset(Self.Owner.Components[i]).UserName, FReport);
-                if Assigned(frxDataSet) then
-                   frxDataSet.Assign(Self.Owner.Components[i]);
-             end;
       if ShiftDown then begin
          try
            LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
@@ -1246,10 +1249,10 @@ begin
                 if Self.Owner.Components[i] is TDataSet then
                    TDataSet(Self.Owner.Components[i]).DisableControls;
          try
-     // Вдруг что!
-//    FReport.PreviewOptions.modal := false;
+           // Вдруг что!
+           FReport.PreviewOptions.modal := false;
+           FReport.OnEndDoc := Self.OnEndDoc;
            ShowReport;
-//           FReport.PreviewForm.OnClose := nil;
          finally
            if Assigned(Self.Owner) then
               for I := 0 to Self.Owner.ComponentCount - 1 do
@@ -1258,9 +1261,7 @@ begin
          end;
       end;
     finally
-//      for I := 0 to EnabledDataSets.Count -1  do
-  //        EnabledDataSets[i].DataSet.Free;
-     // Free;
+//      Free;
     end;
   finally
     Stream.Free
@@ -1277,6 +1278,14 @@ begin
        for i := 0 to Params.Count - 1 do
            if Params[i].Component = AComponent then
               Params[i].Component := nil;
+end;
+
+procedure TdsdPrintAction.OnEndDoc(Sender: TObject);
+var i: integer;
+begin
+  for I := 0 to FDataSetList.Count - 1 do
+      TfrxDBDataset(FDataSetList.Items[i]).Free;
+  FDataSetList.Free;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);

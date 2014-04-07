@@ -11,20 +11,18 @@ inherited ReturnInForm: TReturnInForm
     Width = 970
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 925
-    ExplicitHeight = 577
+    ExplicitWidth = 970
+    ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 970
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 925
-      ExplicitHeight = 553
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 970
         Height = 518
-        ExplicitWidth = 925
-        ExplicitHeight = 553
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -196,13 +194,13 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 925
-      ExplicitHeight = 553
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
         Width = 970
         Height = 518
-        ExplicitWidth = 925
-        ExplicitHeight = 553
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -227,7 +225,7 @@ inherited ReturnInForm: TReturnInForm
     Width = 970
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 925
+    ExplicitWidth = 970
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -261,7 +259,6 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
-      ExplicitHeight = 22
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -628,6 +625,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -644,7 +649,15 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -653,6 +666,10 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -1142,15 +1159,6 @@ inherited ReturnInForm: TReturnInForm
         Component = MasterCDS
         ComponentItem = 'AssetId'
         ParamType = ptInput
-      end
-      item
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptUnknown
-      end
-      item
-        Value = Null
-        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
@@ -1158,6 +1166,87 @@ inherited ReturnInForm: TReturnInForm
   inherited EntryViewAddOn: TdsdDBViewAddOn
     Left = 640
     Top = 382
+  end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_ReturnIn'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inHeadCount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end>
+    Left = 72
+    Top = 368
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1233,8 +1322,8 @@ inherited ReturnInForm: TReturnInForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 320
-    Top = 105
+    Left = 360
+    Top = 1
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1295,8 +1384,8 @@ inherited ReturnInForm: TReturnInForm
     CloseDataSource = False
     DataSet = PrintItemsCDS
     BCDToCurrency = False
-    Left = 390
-    Top = 293
+    Left = 406
+    Top = 341
   end
   object frxDBDHeader: TfrxDBDataset
     UserName = 'frxDBDHeader'

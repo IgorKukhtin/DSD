@@ -4,8 +4,8 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
-  ExplicitHeight = 379
+  ExplicitWidth = 981
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,9 +27,9 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
-              Column = clSumm
+              Column = clSummChangePercent
             end
             item
               Format = ',0.####'
@@ -46,7 +46,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Column = clAmount_Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = clAmountPartner_Weight
             end
@@ -54,12 +54,27 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
-              Column = clSumm
+              Column = clSummChangePercent
             end
             item
               Format = ',0.####'
@@ -76,7 +91,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Column = clAmount_Sh
             end
             item
-              Format = ',0.####'
+              Format = ',0.##'
               Kind = skSum
               Column = clAmountPartner_Weight
             end
@@ -84,6 +99,21 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountPartner_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummPartner
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -171,9 +201,27 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'Summ'
+          object clSummPartner: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075#1086')'
+            DataBinding.FieldName = 'SummPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            HeaderGlyphAlignmentHorz = taCenter
+            Width = 60
+          end
+          object clAmountChangePercent_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081')'
+            DataBinding.FieldName = 'AmountChangePercent_Weight'
+            Width = 60
+          end
+          object clAmountChangePercent_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081')'
+            DataBinding.FieldName = 'AmountChangePercent_Sh'
+            Width = 60
+          end
+          object clSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081')'
+            DataBinding.FieldName = 'SummChangePercent'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##; ;'

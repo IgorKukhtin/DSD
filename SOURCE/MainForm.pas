@@ -334,6 +334,8 @@ type
     actReport_GoodsMI_byMovementDifReturn: TdsdOpenForm;
     bbReport_GoodsMI_byMovementDifReturn: TdxBarButton;
     bbReport_GoodsMI_byMovementDifSale: TdxBarButton;
+    actSale_Partner: TdsdOpenForm;
+    bbSale_Partner: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

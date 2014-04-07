@@ -27,6 +27,7 @@ $BODY$
   DECLARE vbOperDatePartner TDateTime;
   DECLARE vbJuridicalId_From Integer;
   DECLARE vbIsCorporate_From Boolean;
+  DECLARE vbInfoMoneyId_CorporateFrom Integer;
   DECLARE vbPartnerId_From Integer;
   DECLARE vbMemberId_From Integer;
   DECLARE vbCardFuelId_From Integer;
@@ -48,7 +49,6 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
   DECLARE vbBusinessId_Route Integer;
 BEGIN
- -- RAISE EXCEPTION '_lpComplete_Movement_Income_';
      -- !!!обязательно!!! очистили таблицу проводок
      DELETE FROM _tmpMIContainer_insert;
      -- !!!обязательно!!! очистили таблицу - элементы по контрагенту, со всеми свойствами для формирования Аналитик в проводках
@@ -86,12 +86,12 @@ BEGIN
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Сотруднику (заготовитель) и для формирования Аналитик в проводках
      SELECT _tmp.PriceWithVAT, _tmp.VATPercent, _tmp.DiscountPercent, _tmp.ExtraChargesPercent, _tmp.ChangePrice
-          , _tmp.OperDate, _tmp.OperDatePartner, _tmp.JuridicalId_From, _tmp.isCorporate_From, _tmp.PartnerId_From, _tmp.MemberId_From, _tmp.CardFuelId_From, _tmp.TicketFuelId_From
+          , _tmp.OperDate, _tmp.OperDatePartner, _tmp.JuridicalId_From, _tmp.isCorporate_From, _tmp.InfoMoneyId_CorporateFrom, _tmp.PartnerId_From, _tmp.MemberId_From, _tmp.CardFuelId_From, _tmp.TicketFuelId_From
           , _tmp.InfoMoneyId_From
           , _tmp.UnitId, _tmp.CarId, _tmp.MemberDriverId, _tmp.BranchId_To, _tmp.AccountDirectionId_To, _tmp.isPartionDate_Unit
           , _tmp.MemberId_Packer, _tmp.PaidKindId, _tmp.ContractId, _tmp.JuridicalId_Basis_To, _tmp.BusinessId_To, _tmp.BusinessId_Route
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent, vbChangePrice
-               , vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
+               , vbOperDate, vbOperDatePartner, vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From, vbMemberId_From, vbCardFuelId_From, vbTicketFuelId_From
                , vbInfoMoneyId_From
                , vbUnitId, vbCarId, vbMemberId_Driver, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
                , vbMemberId_Packer, vbPaidKindId, vbContractId, vbJuridicalId_Basis_To, vbBusinessId_To, vbBusinessId_Route
@@ -105,7 +105,25 @@ BEGIN
                 , Movement.OperDate
                 , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                 , COALESCE (COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId), 0) AS JuridicalId_From
-                , COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) AS isCorporate_From
+                , CASE WHEN ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Алан
+                                                                           , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                           , zc_Enum_InfoMoney_21001() -- Чапли
+                                                                           , zc_Enum_InfoMoney_21101() -- Дворкин
+                                                                           , zc_Enum_InfoMoney_21151() -- ЕКСПЕРТ-АГРОТРЕЙД
+                                                                            )
+                            THEN TRUE
+                       ELSE COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE)
+                  END AS isCorporate_From
+                , CASE WHEN ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Алан
+                                                                           , zc_Enum_InfoMoney_20901() -- Ирна
+                                                                           , zc_Enum_InfoMoney_21001() -- Чапли
+                                                                           , zc_Enum_InfoMoney_21101() -- Дворкин
+                                                                           , zc_Enum_InfoMoney_21151() -- ЕКСПЕРТ-АГРОТРЕЙД
+                                                                            )
+                            THEN ObjectLink_Juridical_InfoMoney.ChildObjectId
+                       ELSE 0
+                  END AS InfoMoneyId_CorporateFrom
+
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner()    THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member()     THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_Personal_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
                 , COALESCE (CASE WHEN Object_From.DescId = zc_Object_CardFuel()   THEN Object_From.Id ELSE 0 END, 0) AS CardFuelId_From
@@ -163,10 +181,9 @@ BEGIN
                 LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
                                         ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                        AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
-                -- LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                --                      ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId)
-                --                     AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
-                --                     AND ObjectBoolean_isCorporate.ValueData = TRUE
+                LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
+                                     ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId)
+                                    AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
@@ -745,26 +762,40 @@ BEGIN
      -- 2.1. определяется Счет(справочника) для проводок по долг Поставщику или Физ.лицу (подотчетные лица)
      UPDATE _tmpItem_SummPartner SET AccountId         = _tmpItem_byAccount.AccountId
                                    , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
-     FROM (SELECT lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
-                                             , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
-                                             , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
-                                             , inInfoMoneyId            := NULL
-                                             , inUserId                 := inUserId
-                                              ) AS AccountId
+     FROM (SELECT CASE WHEN vbIsCorporate_From = TRUE
+                            THEN _tmpItem_group.AccountId
+                       ELSE lpInsertFind_Object_Account (inAccountGroupId         := _tmpItem_group.AccountGroupId
+                                                       , inAccountDirectionId     := _tmpItem_group.AccountDirectionId
+                                                       , inInfoMoneyDestinationId := _tmpItem_group.InfoMoneyDestinationId
+                                                       , inInfoMoneyId            := NULL
+                                                       , inUserId                 := inUserId
+                                                        )
+                  END AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT CASE WHEN vbMemberId_From <> 0
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы  -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
-                             WHEN vbIsCorporate_From
+                             WHEN vbIsCorporate_From = TRUE
                                   THEN zc_Enum_AccountGroup_30000() -- Дебиторы -- select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_30000())
                              ELSE zc_Enum_AccountGroup_70000()  -- Кредиторы select * from gpSelect_Object_AccountGroup ('2') where Id in (zc_Enum_AccountGroup_70000())
                         END AS AccountGroupId
                       , CASE WHEN vbMemberId_From <> 0
                                   THEN zc_Enum_AccountDirection_30500() -- сотрудники (подотчетные лица)  -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30500())
-                             WHEN vbIsCorporate_From
+                             WHEN vbIsCorporate_From = TRUE
                                   THEN zc_Enum_AccountDirection_30200() -- наши компании -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30200())
                              ELSE zc_Enum_AccountDirection_70100() -- поставщики select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_70100())
                         END AS AccountDirectionId
                       , _tmpItem_SummPartner.InfoMoneyDestinationId
+                      , CASE WHEN zc_Enum_InfoMoney_20801() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30201() -- Алан
+                             WHEN zc_Enum_InfoMoney_20901() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30202() -- Ирна
+                             WHEN zc_Enum_InfoMoney_21001() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30203() -- Чапли
+                             WHEN zc_Enum_InfoMoney_21101() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30204() -- Дворкин
+                             WHEN zc_Enum_InfoMoney_21151() = vbInfoMoneyId_CorporateFrom
+                                  THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
+                        END AS AccountId
                  FROM _tmpItem_SummPartner
                  GROUP BY _tmpItem_SummPartner.InfoMoneyDestinationId
                 ) AS _tmpItem_group
@@ -818,7 +849,7 @@ BEGIN
                                                                 ELSE
                                                                    CASE WHEN _tmpItem_SummPartner.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                                                                          AND vbMemberId_From = 0
-                                                                         AND NOT vbIsCorporate_From
+                                                                         AND vbIsCorporate_From = FALSE
                                                                                 -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения 5)Партии накладной
                                                                            THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                                                       , inParentId          := NULL
@@ -1123,6 +1154,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.04.14                                        * add zc_Enum_InfoMoney_21151
  21.12.13                                        * Personal -> Member
  01.11.13                                        * add vbOperDatePartner
  30.10.13                                        * add 

@@ -1,28 +1,28 @@
 inherited SaleForm: TSaleForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
   ExplicitWidth = 1123
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1115
-    Height = 540
-    ExplicitTop = 128
-    ExplicitWidth = 1120
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1111
+    Height = 542
+    ExplicitTop = 126
+    ExplicitWidth = 1115
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1115
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1114
-      ExplicitHeight = 514
+      ExplicitWidth = 1115
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1109
-        Height = 514
-        ExplicitWidth = 1114
-        ExplicitHeight = 514
+        Width = 1115
+        Height = 518
+        ExplicitWidth = 1115
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -216,13 +216,14 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 1114
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1115
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1109
-        Height = 514
-        ExplicitWidth = 1114
-        ExplicitHeight = 514
+        Width = 1115
+        Height = 518
+        ExplicitWidth = 1115
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -247,7 +248,7 @@ inherited SaleForm: TSaleForm
     Width = 1115
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1120
+    ExplicitWidth = 1115
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -578,7 +579,15 @@ inherited SaleForm: TSaleForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -605,7 +614,15 @@ inherited SaleForm: TSaleForm
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -629,6 +646,15 @@ inherited SaleForm: TSaleForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -655,7 +681,15 @@ inherited SaleForm: TSaleForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -816,7 +850,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1645,15 +1679,6 @@ inherited SaleForm: TSaleForm
     Left = 804
     Top = 64
   end
-  object frxDBDMaster: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDMaster'
-    CloseDataSource = True
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 245
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
@@ -1713,20 +1738,6 @@ inherited SaleForm: TSaleForm
     Left = 476
     Top = 193
   end
-  object frxDBDHeader: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDHeader'
-    CloseDataSource = True
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 194
-  end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 552
-    Top = 192
-  end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
     DataSets = <>
@@ -1754,11 +1765,6 @@ inherited SaleForm: TSaleForm
     Params = <>
     Left = 476
     Top = 246
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 552
-    Top = 245
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'

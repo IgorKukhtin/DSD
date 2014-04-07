@@ -1,27 +1,30 @@
 inherited SaleJournalForm: TSaleJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
-    Height = 476
+    Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1110
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1106
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1104
-      ExplicitHeight = 470
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1110
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1104
-        Height = 470
-        ExplicitWidth = 1104
-        ExplicitHeight = 470
+        Width = 1110
+        Height = 478
+        ExplicitWidth = 1110
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -400,10 +403,10 @@ inherited SaleJournalForm: TSaleJournalForm
     Width = 1110
     ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
-      EditValue = 41609d
+      EditValue = 41640d
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41639d
+      EditValue = 41640d
     end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
@@ -453,7 +456,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -474,7 +477,7 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -594,7 +597,15 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -621,7 +632,15 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -649,7 +668,15 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -677,7 +704,15 @@ inherited SaleJournalForm: TSaleJournalForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -735,14 +770,14 @@ inherited SaleJournalForm: TSaleJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -770,7 +805,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -874,65 +909,6 @@ inherited SaleJournalForm: TSaleJournalForm
     Left = 288
     Top = 144
   end
-  object spTax: TdsdStoredProc [12]
-    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'outInvNumberPartner_Master'
-        Component = MasterCDS
-        ComponentItem = 'InvNumberPartner_Master'
-        DataType = ftString
-      end
-      item
-        Name = 'outDocumentTaxKindName'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindName'
-        DataType = ftString
-      end>
-    Left = 296
-    Top = 312
-  end
-  object DocumentTaxKindGuides: TdsdGuides [13]
-    KeyField = 'Id'
-    LookupControl = edDocumentTaxKind
-    FormNameParam.Value = 'TDocumentTaxKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TDocumentTaxKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 912
-  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -1020,14 +996,64 @@ inherited SaleJournalForm: TSaleJournalForm
     Left = 400
     Top = 200
   end
-  object frxDBDHeader: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDHeader'
-    CloseDataSource = True
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 630
-    Top = 218
+  object spTax: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outInvNumberPartner_Master'
+        Component = MasterCDS
+        ComponentItem = 'InvNumberPartner_Master'
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindName'
+        DataType = ftString
+      end>
+    Left = 296
+    Top = 312
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1035,30 +1061,11 @@ inherited SaleJournalForm: TSaleJournalForm
     Left = 708
     Top = 217
   end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 784
-    Top = 216
-  end
-  object frxDBDMaster: TfrxDBDataset
-    Enabled = False
-    UserName = 'frxDBDMaster'
-    CloseDataSource = True
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 630
-    Top = 269
-  end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 708
     Top = 270
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 784
-    Top = 269
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Sale_Print'

@@ -2,7 +2,7 @@
 alter PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, BillNumberClient2 TVarCharLongLong, OperDate Date, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, ClientId Integer
-     , PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
+     , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isFl smallint, StatusId smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpBill_NotNalog(
@@ -27,6 +27,7 @@ begin
      , FromId_Postgres Integer
      , ToId_Postgres Integer
      , ClientId Integer
+     , MoneyKindId Integer
      , PaidKindId_Postgres Integer
      , CodeIM Integer
      , ContractNumber TVarCharMedium
@@ -55,7 +56,7 @@ begin
             and Bill.FromId<>1037 -- ÂÈÇÀÐÄ 1037
             and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037
             and Bill.ToId<>1037 -- ÂÈÇÀÐÄ 1037*/
-            and Bill.MoneyKindId = zc_mkBN()
+            and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
             and Bill.Id <> 1634846
          -- and 1=0
            group by BillId;
@@ -95,7 +96,7 @@ and StatusId = zc_Enum_Status_UnComplete()
    and Bill.Id_Postgres is not null;
 */
 insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, BillNumberClient2, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
-                    , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
+                    , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres)
 select Bill.Id as ObjectId
      , cast (Bill.BillNumber as TVarCharMedium) ||
        case when FromId_Postgres is null or ToId_Postgres is null or CodeIM = 0
@@ -117,6 +118,7 @@ select Bill.Id as ObjectId
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
      , Bill.ToId as ClientId
+     , Bill.MoneyKindId
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
      , _tmpBill_NotNalog.CodeIM as CodeIM -- _pgInfoMoney.Id3_Postgres as ContractId -- isnull (_pgContract_30103.ContractId_pg, isnull (_pgContract_30101.ContractId_pg, 0)) as ContractId
      , isnull(Contract.ContractNumber,'') as ContractNumber
@@ -236,6 +238,7 @@ from _tmpBill_NotNalog
         , isnull(_tmpList2.FromId_Postgres, _tmpList.FromId_Postgres)as FromId_Postgres
         , isnull(_tmpList2.ToId_Postgres, _tmpList.ToId_Postgres)as ToId_Postgres
         , _tmpList.ClientId as ClientId
+        , _tmpList.MoneyKindId as MoneyKindId
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
         , isnull(_tmpList2.CodeIM, _tmpList.CodeIM)as CodeIM
         , isnull (_tmpList.ContractNumber, '') as ContractNumber
@@ -249,7 +252,7 @@ from _tmpBill_NotNalog
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0 -- _tmpList2.ObjectId = _tmpList.BillId_calc
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, BillNumberClient2, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, PaidKindId_Postgres
+   group by ObjectId, BillId, InvNumber, BillNumberClient1, BillNumberClient2, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, MoneyKindId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, StatusId, Id_Postgres
    order by 5, 3, 1
    ;

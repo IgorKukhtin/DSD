@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale(
  INOUT ioId                  Integer   , --  люч объекта <Ёлемент документа>
@@ -28,12 +27,7 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_Sale());
 
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
-     THEN
-         RAISE EXCEPTION 'ќшибка.Ёлемент не может корректироватьс€ т.к. он <”дален>.';
-     END IF;
-
+     -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId

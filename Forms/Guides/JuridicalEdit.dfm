@@ -3,7 +3,7 @@
   ClientHeight = 446
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 478
+  ExplicitHeight = 471
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -134,10 +134,9 @@
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 442
-      ClientRectLeft = 2
-      ClientRectRight = 837
-      ClientRectTop = 22
+      ClientRectBottom = 446
+      ClientRectRight = 841
+      ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
@@ -166,15 +165,16 @@
           Width = 193
         end
         object JuridicalDetailsGrid: TcxGrid
-          Left = 450
+          Left = 456
           Top = 0
           Width = 385
-          Height = 420
+          Height = 422
           Align = alRight
           TabOrder = 8
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
@@ -306,21 +306,22 @@
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 835
-          Height = 28
+          Width = 841
+          Height = 26
           Align = dalTop
           BarManager = dxBarManager
         end
         object PartnerGrid: TcxGrid
           Left = 0
-          Top = 28
-          Width = 835
-          Height = 392
+          Top = 26
+          Width = 841
+          Height = 396
           Align = alClient
           TabOrder = 0
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
@@ -360,21 +361,22 @@
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 835
-          Height = 28
+          Width = 841
+          Height = 26
           Align = dalTop
           BarManager = dxBarManager
         end
         object ContractGrid: TcxGrid
           Left = 0
-          Top = 28
-          Width = 835
-          Height = 392
+          Top = 26
+          Width = 841
+          Height = 396
           Align = alClient
           TabOrder = 0
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
             DataController.Summary.DefaultGroupSummaryItems = <>
             DataController.Summary.FooterSummaryItems = <>
             DataController.Summary.SummaryGroups = <>
@@ -638,6 +640,7 @@
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -650,9 +653,11 @@
     end
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
     object actContractInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -682,6 +687,7 @@
     end
     object actContractUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -714,6 +720,7 @@
     end
     object actPartnerInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -743,6 +750,7 @@
     end
     object actPartnerUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -776,6 +784,7 @@
     object actPartnerRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = PartnerTS
+      MoveParams = <>
       StoredProc = spPartner
       StoredProcList = <
         item
@@ -790,6 +799,7 @@
     object actContractRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = ContractTS
+      MoveParams = <>
       StoredProc = spContract
       StoredProcList = <
         item
@@ -803,6 +813,7 @@
     end
     object JuridicalDetailsUDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spJuridicalDetailsIU
       StoredProcList = <
         item
@@ -812,6 +823,7 @@
     end
     object actSave: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -824,6 +836,7 @@
     end
     object actChoiceBank: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceBank'
       FormName = 'TBankForm'
       FormNameParam.Value = ''
@@ -845,6 +858,7 @@
     object actMultiContractInsert: TMultiAction
       Category = 'DSDLib'
       TabSheet = ContractTS
+      MoveParams = <>
       ActionList = <
         item
           Action = actSave
@@ -859,6 +873,7 @@
     object actMultiPartnerInsert: TMultiAction
       Category = 'DSDLib'
       TabSheet = PartnerTS
+      MoveParams = <>
       ActionList = <
         item
           Action = actSave
@@ -1199,8 +1214,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1428,6 +1443,7 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 184
     Top = 48
   end
@@ -1446,6 +1462,7 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 392
     Top = 248
   end
@@ -1457,6 +1474,7 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 480
     Top = 296
   end

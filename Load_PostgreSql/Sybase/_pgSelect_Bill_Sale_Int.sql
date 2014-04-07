@@ -2,8 +2,8 @@
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
      , FromId_Postgres Integer, ToId_Postgres Integer, ClientId Integer
-     , PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
-     , isFl smallint, zc_rvYes smallint, Id_Postgres integer)
+     , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
+     , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
   declare local temporary table _tmpList(
        ObjectId Integer
@@ -21,6 +21,7 @@ begin
      , FromId_Postgres Integer
      , ToId_Postgres Integer
      , ClientId Integer
+     , MoneyKindId Integer
      , PaidKindId_Postgres Integer
      , CodeIM Integer
      , ContractNumber TVarCharMedium
@@ -30,7 +31,7 @@ begin
      , RouteId  Integer
      , RouteSortingId_Postgres  Integer
      , PersonalId_Postgres  Integer
-     , isFl smallint
+     , isOnlyUpdateInt smallint
      , Id_Postgres integer
   ) on commit preserve rows;
    //
@@ -60,7 +61,7 @@ begin
         and Bill.BillDate >= zc_def_StartDate_PG() - 2
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and Bill.MoneyKindId = zc_mkBN()
+        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
       group by Bill.Id, Bill.BillDate, isnull (_toolsView_Client_isChangeDate.addDay, 0)
       ) as tmp
       where isBillDate = zc_rvYes();
@@ -69,7 +70,7 @@ begin
    //
    --
    insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
-                       , PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres)
+                       , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isOnlyUpdateInt, Id_Postgres)
    select Bill.Id as ObjectId
 
      , cast (Bill.BillNumber as TVarCharMedium) ||
@@ -93,6 +94,7 @@ begin
      , _pgPartner.PartnerId_pg as ToId_Postgres
      , Bill.ToId as ClientId
 
+     , Bill.MoneyKindId
      , case when Bill.MoneyKindId=zc_mkBN() then 3 else 4 end as PaidKindId_Postgres
      , Bill_find.CodeIM -- _pgInfoMoney.Id3_Postgres AS ContractId 
      , isnull (Contract.ContractNumber,'') as ContractNumber
@@ -107,16 +109,17 @@ begin
 --     , case when isnull(Bill.RouteUnitId,0) = Bill.ToId then ToId_Postgres else Unit_RouteSorting.Id_Postgres_RouteSorting end as RouteSortingId_Postgres
 --     , _pgPersonal.Id2_Postgres as PersonalId_Postgres
 
-     , zc_rvNo() as isFl
+     , Bill_find.isOnlyUpdateInt
      , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
 from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
+           , zc_rvNo() as isOnlyUpdateInt
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and Bill.MoneyKindId = zc_mkBN()
+        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
         and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
         and Bill.ToId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО 
 --       and Bill.BillNumber = 1635
@@ -124,17 +127,19 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
        group by Bill.Id
      union
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
+           , zc_rvNo() as isOnlyUpdateInt
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
-        and Bill.MoneyKindId = zc_mkBN()
+        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
 --       and Bill.BillNumber = 1635
 --       and Bill.Id = 1260716
       group by Bill.Id
      union
       select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres, 30101 as CodeIM -- Готовая продукция
+           , zc_rvYes() as isOnlyUpdateInt
       from dba._pgBillLoad_union
             join dba.Bill on Bill.Id = _pgBillLoad_union.BillId
       group by BillId_union
@@ -208,6 +213,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
         , isnull(_tmpList2.FromId_Postgres, _tmpList.FromId_Postgres)as FromId_Postgres
         , isnull(_tmpList2.ToId_Postgres, _tmpList.ToId_Postgres)as ToId_Postgres
         , _tmpList.ClientId as ClientId
+        , _tmpList.MoneyKindId as MoneyKindId
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
         , isnull(_tmpList2.CodeIM, _tmpList.CodeIM)as CodeIM
         , isnull (_tmpList.ContractNumber, '') as ContractNumber
@@ -216,12 +222,12 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
         , isnull(_tmpList2.RouteId, _tmpList.RouteId) as RouteId
         , isnull(_tmpList2.RouteSortingId_Postgres, _tmpList.RouteSortingId_Postgres) as RouteSortingId_Postgres
         , isnull(_tmpList2.PersonalId_Postgres, _tmpList.PersonalId_Postgres) as PersonalId_Postgres
-        , isnull(_tmpList2.isFl, _tmpList.isFl) as isFl
+        , _tmpList.isOnlyUpdateInt
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, PaidKindId_Postgres
-          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isFl, Id_Postgres
+   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, MoneyKindId, PaidKindId_Postgres
+          , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
    order by 3, 4, 1
    ;
 
