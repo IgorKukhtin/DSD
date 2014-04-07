@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inStartDate           TDateTime  , -- Ќачальна€ дата переноса
@@ -33,7 +34,10 @@ BEGIN
 
 
      -- ќпредел€ем итого записей (дл€ проверка что все дл€ переноса установлено)
-     SELECT COUNT(*) INTO vbSaleCount FROM Sale1C WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate;
+     SELECT COUNT(*) INTO vbSaleCount 
+       FROM Sale1C 
+      WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+        AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- ќпредел€ем итого св€занных записей (дл€ проверка что все дл€ переноса установлено)
      SELECT COUNT(*) INTO vbCount
@@ -86,8 +90,9 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_Sale()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.Date) IN (SELECT DISTINCT Sale1C.InvNumber
+       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
                         , Sale1C.OperDate
+           FROM Sale1C             
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
             AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
@@ -232,8 +237,9 @@ BEGIN
      WHERE Movement.DescId = zc_Movement_ReturnIn()
        AND Movement.OperDate BETWEEN inStartDate AND inEndDate
        AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.Date) IN (SELECT DISTINCT Sale1C.InvNumber
+       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
                         , Sale1C.OperDate
+           FROM Sale1C             
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
             AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
 
@@ -303,7 +309,7 @@ BEGIN
           END IF;
 
           -- сохранили ƒокумент
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber
+          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := ''
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
                                                           , inContractId := vbContractId, inUserId := vbUserId);

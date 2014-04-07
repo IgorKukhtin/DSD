@@ -1,5 +1,5 @@
-inherited Partner1CLinkForm: TPartner1CLinkForm
-  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
+inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
+  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
   ExplicitWidth = 843
@@ -22,24 +22,27 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ExplicitWidth = 835
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colCode: TcxGridDBColumn
+          object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'PartnerCode'
+            DataBinding.FieldName = 'GoodsCode'
             Options.Editing = False
-            Options.IncSearch = False
-            Width = 107
+            Width = 37
           end
-          object colName: TcxGridDBColumn
-            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
-            DataBinding.FieldName = 'PartnerName'
+          object colGoodsName: TcxGridDBColumn
+            Caption = #1058#1086#1074#1072#1088
+            DataBinding.FieldName = 'GoodsName'
             Options.Editing = False
-            Options.IncSearch = False
-            Width = 296
+            Width = 232
+          end
+          object colGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            Options.Editing = False
+            Width = 134
           end
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
@@ -79,7 +82,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     end
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -88,8 +90,45 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
         end>
     end
+    object actInsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Params = <
+        item
+          Name = 'GoodsId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'GoodsName'
+          Component = MasterCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end
+        item
+          Name = 'GoodsCode'
+          Component = MasterCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'GoodsKindId'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'GoodsKindName'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 45
+      ImageIndex = 0
+    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -100,6 +139,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     end
     object actChoiceBranchForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceBranchForm'
       FormName = 'TBranchForm'
       FormNameParam.Value = 'TBranchForm'
@@ -118,30 +158,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end>
       isShowModal = False
     end
-    object actInsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      View = cxGridDBTableView
-      Params = <
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerCode'
-          Component = MasterCDS
-          ComponentItem = 'PartnerCode'
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 45
-      ImageIndex = 0
-    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -150,7 +166,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Partner1CLink'
+    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -164,7 +180,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbAddRecord'
+          ItemName = 'bbInsertRecord'
         end
         item
           Visible = True
@@ -194,14 +210,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Visible = ivAlways
       Control = edBranch
     end
-    object bbAddRecord: TdxBarButton
+    object bbInsertRecord: TdxBarButton
       Action = actInsertRecord
       Category = 0
     end
-  end
-  inherited DBViewAddOn: TdsdDBViewAddOn
-    Left = 224
-    Top = 208
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -230,7 +242,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     Top = 120
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Partner1CLink'
+    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind1CLink'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -254,9 +266,15 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ParamType = ptInput
       end
       item
-        Name = 'inPartnerId'
+        Name = 'inGoodsId'
         Component = MasterCDS
-        ComponentItem = 'PartnerId'
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
         ParamType = ptInput
       end
       item

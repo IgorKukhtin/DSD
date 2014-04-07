@@ -2,6 +2,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1080#1079' 1'#1057
   ClientHeight = 408
   ClientWidth = 901
+  ExplicitLeft = -64
   ExplicitWidth = 909
   ExplicitHeight = 435
   PixelsPerInch = 96
@@ -23,6 +24,16 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         ExplicitWidth = 901
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSuma
+            end>
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088
             DataBinding.FieldName = 'InvNumber'
@@ -103,6 +114,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           object colOperPrice: TcxGridDBColumn
             Caption = #1062#1077#1085#1072
             DataBinding.FieldName = 'OperPrice'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 39
@@ -124,6 +137,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           object colSuma: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072
             DataBinding.FieldName = 'Suma'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 41
@@ -161,6 +176,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   inherited ActionList: TActionList
     object actMoveToDoc: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMoveSale
       StoredProcList = <
         item
@@ -174,6 +190,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
     object actTrancateTable: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spDelete1CLoad
       StoredProcList = <
         item
@@ -183,6 +200,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
     object actSale1CLoadAction: TSale1CLoadAction
       Category = 'DSDLib'
+      MoveParams = <>
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
@@ -196,6 +214,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
     object actLoad1C: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actTrancateTable
@@ -292,6 +311,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 176
