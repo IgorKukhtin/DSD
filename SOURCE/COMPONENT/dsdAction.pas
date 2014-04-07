@@ -456,8 +456,10 @@ type
     FParams: TdsdParams;
     FReportNameParam: TdsdParam;
     FDataSets: TdsdDataSets;
+    FDataSetList: TList;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
+    procedure OnEndDoc(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -1188,12 +1190,11 @@ end;
 function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
-    DataSetList: TList;
     FReport: TfrxReport;
 begin
   inherited;
   result := true;
-  DataSetList := TList.Create;
+  FDataSetList := TList.Create;
   for I := 0 to Self.DataSets.Count - 1 do
       if Assigned(Self.DataSets[i].DataSet) then
          if Self.DataSets[i].DataSet is TClientDataSet then
@@ -1202,8 +1203,8 @@ begin
   try
     FReport := TfrxReport.Create(nil);
     for I := 0 to DataSets.Count - 1 do begin
-        DataSetList.Add(TfrxDBDataset.Create(nil));
-        with TfrxDBDataset(DataSetList[DataSetList.Count - 1]) do begin
+        FDataSetList.Add(TfrxDBDataset.Create(nil));
+        with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do begin
           DataSet := DataSets[i].DataSet;
           UserName := TAddOnDataSet(DataSets[i]).UserName;
         end;
@@ -1248,10 +1249,10 @@ begin
                 if Self.Owner.Components[i] is TDataSet then
                    TDataSet(Self.Owner.Components[i]).DisableControls;
          try
-     // Вдруг что!
-//    FReport.PreviewOptions.modal := false;
+           // Вдруг что!
+           FReport.PreviewOptions.modal := false;
+           FReport.OnEndDoc := Self.OnEndDoc;
            ShowReport;
-//           FReport.PreviewForm.OnClose := nil;
          finally
            if Assigned(Self.Owner) then
               for I := 0 to Self.Owner.ComponentCount - 1 do
@@ -1260,10 +1261,7 @@ begin
          end;
       end;
     finally
-//      for I := 0 to EnabledDataSets.Count -1  do
-  //        EnabledDataSets[i].DataSet.Free;
-      Free;
-      DataSetList.Free;
+//      Free;
     end;
   finally
     Stream.Free
@@ -1280,6 +1278,14 @@ begin
        for i := 0 to Params.Count - 1 do
            if Params[i].Component = AComponent then
               Params[i].Component := nil;
+end;
+
+procedure TdsdPrintAction.OnEndDoc(Sender: TObject);
+var i: integer;
+begin
+  for I := 0 to FDataSetList.Count - 1 do
+      TfrxDBDataset(FDataSetList.Items[i]).Free;
+  FDataSetList.Free;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);

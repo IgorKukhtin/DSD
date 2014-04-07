@@ -799,8 +799,8 @@ object IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -947,6 +947,7 @@ object IncomeForm: TIncomeForm
     Top = 231
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -960,6 +961,7 @@ object IncomeForm: TIncomeForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -979,6 +981,7 @@ object IncomeForm: TIncomeForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -997,6 +1000,7 @@ object IncomeForm: TIncomeForm
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -1007,6 +1011,7 @@ object IncomeForm: TIncomeForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -1026,11 +1031,13 @@ object IncomeForm: TIncomeForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <>
       Params = <
         item
           Name = 'InvNumber'
@@ -1061,6 +1068,7 @@ object IncomeForm: TIncomeForm
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1070,6 +1078,7 @@ object IncomeForm: TIncomeForm
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
+      MoveParams = <>
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1079,6 +1088,7 @@ object IncomeForm: TIncomeForm
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1094,6 +1104,7 @@ object IncomeForm: TIncomeForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1109,6 +1120,7 @@ object IncomeForm: TIncomeForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1126,6 +1138,7 @@ object IncomeForm: TIncomeForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1143,6 +1156,7 @@ object IncomeForm: TIncomeForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1355,14 +1369,6 @@ object IncomeForm: TIncomeForm
     Left = 150
     Top = 287
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 477
-    Top = 336
-  end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -1375,6 +1381,7 @@ object IncomeForm: TIncomeForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 347
     Top = 337
   end
@@ -1390,6 +1397,7 @@ object IncomeForm: TIncomeForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
     Left = 180
     Top = 360
   end

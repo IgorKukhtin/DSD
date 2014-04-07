@@ -75,7 +75,6 @@ type
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    frxDBDataset: TfrxDBDataset;
     colDebetAccountGroupName: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
     colAccountCode: TcxGridDBColumn;
