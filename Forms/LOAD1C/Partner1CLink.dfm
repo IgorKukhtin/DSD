@@ -1,5 +1,5 @@
-inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
-  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
+inherited Partner1CLinkForm: TPartner1CLinkForm
+  Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
   ExplicitWidth = 843
@@ -22,36 +22,34 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         ExplicitWidth = 835
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsBehavior.IncSearch = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colGoodsCode: TcxGridDBColumn
+          object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
-            DataBinding.FieldName = 'GoodsCode'
+            DataBinding.FieldName = 'PartnerCode'
             Options.Editing = False
-            Width = 37
+            Options.IncSearch = False
+            Width = 115
           end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1058#1086#1074#1072#1088
-            DataBinding.FieldName = 'GoodsName'
+          object colName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
             Options.Editing = False
-            Width = 232
-          end
-          object colGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            Width = 134
+            Options.IncSearch = False
+            Width = 319
           end
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
-            Width = 56
+            Width = 60
           end
           object colDetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057
             DataBinding.FieldName = 'Name'
-            Width = 119
+            Width = 128
           end
           object colDetailBranch: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
@@ -63,7 +61,19 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 121
+            Width = 112
+          end
+          object colDetailContract: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractNumber'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceContractForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Width = 87
           end
         end
       end
@@ -81,7 +91,6 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     end
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -90,43 +99,9 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         item
         end>
     end
-    object actInsertRecord: TInsertRecord
-      Category = 'DSDLib'
-      View = cxGridDBTableView
-      Params = <
-        item
-          Name = 'GoodsId'
-          Component = MasterCDS
-          ComponentItem = 'GoodsId'
-        end
-        item
-          Name = 'GoodsName'
-          Component = MasterCDS
-          ComponentItem = 'GoodsName'
-          DataType = ftString
-        end
-        item
-          Name = 'GoodsCode'
-          Component = MasterCDS
-          ComponentItem = 'GoodsCode'
-        end
-        item
-          Name = 'GoodsKindId'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindId'
-        end
-        item
-          Name = 'GoodsKindName'
-          Component = MasterCDS
-          ComponentItem = 'GoodsKindName'
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 45
-      ImageIndex = 0
-    end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -137,6 +112,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     end
     object actChoiceBranchForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceBranchForm'
       FormName = 'TBranchForm'
       FormNameParam.Value = 'TBranchForm'
@@ -155,6 +131,63 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         end>
       isShowModal = False
     end
+    object actInsertRecord: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Params = <
+        item
+          Name = 'PartnerId'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'PartnerName'
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end
+        item
+          Name = 'PartnerCode'
+          Component = MasterCDS
+          ComponentItem = 'PartnerCode'
+        end>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object actChoiceContractForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoiceContractForm'
+      FormName = 'TContractChoiceForm'
+      FormNameParam.Value = 'TContractChoiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -163,7 +196,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     Top = 48
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsByGoodsKind1CLink'
+    StoredProcName = 'gpSelect_Object_Partner1CLink'
     Top = 48
   end
   inherited BarManager: TdxBarManager
@@ -177,7 +210,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbInsertRecord'
+          ItemName = 'bbAddRecord'
         end
         item
           Visible = True
@@ -207,10 +240,14 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
       Visible = ivAlways
       Control = edBranch
     end
-    object bbInsertRecord: TdxBarButton
+    object bbAddRecord: TdxBarButton
       Action = actInsertRecord
       Category = 0
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 224
+    Top = 208
   end
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
@@ -239,7 +276,7 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     Top = 120
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_GoodsByGoodsKind1CLink'
+    StoredProcName = 'gpInsertUpdate_Object_Partner1CLink'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -263,15 +300,9 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsId'
+        Name = 'inPartnerId'
         Component = MasterCDS
-        ComponentItem = 'GoodsId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsKindId'
-        Component = MasterCDS
-        ComponentItem = 'GoodsKindId'
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
       end
       item
@@ -285,6 +316,12 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         Value = ''
         Component = BranchGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item

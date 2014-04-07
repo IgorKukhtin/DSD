@@ -45,13 +45,16 @@ BEGIN
      IF inBranchId <> zfGetBranchFromUnitId(inUnitId) THEN
         RAISE EXCEPTION 'Филиал в файле не соответсвует выбранному филиалу';
      END IF;
+    
+     IF inVidDoc = '1' or inVidDoc = '4' THEN
 
-     INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
-                         GoodsName, OperCount, OperPrice, Tax, Doc1Date, Doc1Number, Doc2Date, Doc2Number,
-                         Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog, BillId, EkspCode, ExpName)
-       VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
-              inGoodsName, inOperCount, inOperPrice, inTax, inDoc1Date, inDoc1Number, inDoc2Date, inDoc2Number,
-              inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog, inBillId, inEkspCode, inExpName);
+        INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
+                            GoodsName, OperCount, OperPrice, Tax, Doc1Date, Doc1Number, Doc2Date, Doc2Number,
+                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog, BillId, EkspCode, ExpName)
+             VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
+                    inGoodsName, inOperCount, inOperPrice, inTax, inDoc1Date, inDoc1Number, inDoc2Date, inDoc2Number,
+                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog, inBillId, inEkspCode, inExpName);
+    END IF;
 
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);

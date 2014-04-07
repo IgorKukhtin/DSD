@@ -56,21 +56,14 @@ type
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     frxDBDMaster: TfrxDBDataset;
-    spSelectPrint: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
-    mactPrint_Sale: TMultiAction;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
-    spGetReportName: TdsdStoredProc;
+    actSPPrintProcName: TdsdExecStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
     frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
-    mactPrint_SaleTax: TMultiAction;
-    actPrintSaleTax: TdsdPrintAction;
-    spGetReporNameTax: TdsdStoredProc;
-    bbPrintTax: TdxBarButton;
-    actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
     edIsDocument: TcxCheckBox;
@@ -81,6 +74,10 @@ type
     edReturnIn: TcxTextEdit;
     cxLabel8: TcxLabel;
     edTax: TcxTextEdit;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    bbPrint_TaxCorrective_Client: TdxBarButton;
   private
     { Private declarations }
   public

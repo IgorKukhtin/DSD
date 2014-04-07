@@ -918,12 +918,11 @@
 				<Form>TaxCorrectiveForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner1CLink.pas">
+			<DCCReference Include="..\..\Forms\LOAD1C\Partner1CLink.pas">
 				<Form>Partner1CLinkForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\GoodsByGoodsKind1CLink.pas">
+			<DCCReference Include="..\..\Forms\LOAD1C\GoodsByGoodsKind1CLink.pas">
 				<Form>GoodsByGoodsKind1CLinkForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>

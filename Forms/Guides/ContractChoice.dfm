@@ -367,7 +367,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 424
+    Left = 416
     Top = 152
   end
   object JuridicalGuides: TdsdGuides
