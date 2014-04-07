@@ -17,28 +17,28 @@ uses
 
 type
   TReport_GoodsMI_byMovementDifForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
-    clAmountPartner_Sh: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmountPartner_Weight: TcxGridDBColumn;
+    clAmountPartner: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
-    clAmount_Weight: TcxGridDBColumn;
-    clAmount_Sh: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    clOperDatePartner: TcxGridDBColumn;
+    clOperDate: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    clAmountChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public
