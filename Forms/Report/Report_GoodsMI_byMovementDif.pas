@@ -39,6 +39,7 @@ type
     clOperDate: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     clAmountChangePercent: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public
