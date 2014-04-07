@@ -71,7 +71,6 @@ type
     GuidesPricelist: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    frxDBDMaster: TfrxDBDataset;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
@@ -81,15 +80,12 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    frxDBDHeader: TfrxDBDataset;
-    PrintHeaderDS: TDataSource;
     mactPrint_Tax_Us: TMultiAction;
     actPrintTax_Us: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel14: TcxLabel;
     DocumentTaxKindGuides: TdsdGuides;
