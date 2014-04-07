@@ -72,16 +72,10 @@ BEGIN
                             , ContainerLO_Juridical.ObjectId         AS JuridicalId
                             , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                             , ContainerLinkObject_PaidKind.ObjectId  AS PaidKindId
-                            , CASE WHEN tmpProfitLoss.Id IN (zc_Enum_ProfitLoss_10701(), zc_Enum_ProfitLoss_10702()) THEN zc_Movement_ReturnIn() ELSE zc_Movement_Sale() END AS MovementDescId
-                            , CASE WHEN tmpProfitLoss.Id IN (zc_Enum_ProfitLoss_10701(), zc_Enum_ProfitLoss_10702()) THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END AS MLO_DescId
-                       FROM (SELECT zc_Enum_ProfitLoss_10101() AS Id UNION ALL SELECT zc_Enum_ProfitLoss_10102() AS Id -- Сумма реализации: Продукция + Ирна
-                                 UNION ALL 
-                                  SELECT zc_Enum_ProfitLoss_10201() AS Id UNION ALL SELECT zc_Enum_ProfitLoss_10202() AS Id -- Скидка по акциям: Продукция + Ирна
-                                 UNION ALL 
-                                  SELECT zc_Enum_ProfitLoss_10301() AS Id UNION ALL SELECT zc_Enum_ProfitLoss_10302() AS Id -- Скидка дополнительная: Продукция + Ирна
-                                 UNION ALL 
-                                  SELECT zc_Enum_ProfitLoss_10701() AS Id UNION ALL SELECT zc_Enum_ProfitLoss_10702() AS Id -- Сумма возвратов: Продукция + Ирна
-                                 ) AS tmpProfitLoss
+                            , CASE WHEN isSale = TRUE THEN zc_Movement_Sale() ELSE zc_Movement_ReturnIn() END AS MovementDescId
+                            , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
+                       FROM (SELECT ProfitLossId AS Id, isSale FROM Constant_ProfitLoss_Sale_ReturnIn_View
+                            ) AS tmpProfitLoss
                                  JOIN ContainerLinkObject AS ContainerLO_ProfitLoss
                                                           ON ContainerLO_ProfitLoss.ObjectId = tmpProfitLoss.Id
                                                          AND ContainerLO_ProfitLoss.DescId = zc_ContainerLinkObject_ProfitLoss()
