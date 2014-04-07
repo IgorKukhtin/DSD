@@ -1279,6 +1279,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1404,6 +1405,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       item
         DataSet = PrintItemsCDS
       end>
+    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
