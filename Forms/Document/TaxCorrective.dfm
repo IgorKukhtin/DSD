@@ -1269,20 +1269,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     CloseDataSource = False
     DataSet = PrintItemsCDS
     BCDToCurrency = False
-    Left = 398
-    Top = 245
+    Left = 414
+    Top = 237
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
@@ -1317,7 +1313,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DataSet = PrintHeaderCDS
     BCDToCurrency = False
     Left = 398
-    Top = 194
+    Top = 186
   end
   object PrintHeaderDS: TDataSource
     DataSet = PrintHeaderCDS
@@ -1403,15 +1399,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   end
   object spSelectPrintTaxCorrective_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
-    OutputType = otMultiDataSet
     Params = <
       item
         Name = 'inMovementId'
