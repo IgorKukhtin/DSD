@@ -105,21 +105,11 @@ BEGIN
                 , Movement.OperDate
                 , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
                 , COALESCE (COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId), 0) AS JuridicalId_From
-                , CASE WHEN ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Àëàí
-                                                                           , zc_Enum_InfoMoney_20901() -- Èðíà
-                                                                           , zc_Enum_InfoMoney_21001() -- ×àïëè
-                                                                           , zc_Enum_InfoMoney_21101() -- Äâîðêèí
-                                                                           , zc_Enum_InfoMoney_21151() -- ÅÊÑÏÅÐÒ-ÀÃÐÎÒÐÅÉÄ
-                                                                            )
+                , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                             THEN TRUE
                        ELSE COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE)
                   END AS isCorporate_From
-                , CASE WHEN ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Àëàí
-                                                                           , zc_Enum_InfoMoney_20901() -- Èðíà
-                                                                           , zc_Enum_InfoMoney_21001() -- ×àïëè
-                                                                           , zc_Enum_InfoMoney_21101() -- Äâîðêèí
-                                                                           , zc_Enum_InfoMoney_21151() -- ÅÊÑÏÅÐÒ-ÀÃÐÎÒÐÅÉÄ
-                                                                            )
+                , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                             THEN ObjectLink_Juridical_InfoMoney.ChildObjectId
                        ELSE 0
                   END AS InfoMoneyId_CorporateFrom
@@ -184,6 +174,7 @@ BEGIN
                 LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                      ON ObjectLink_Juridical_InfoMoney.ObjectId = COALESCE (ObjectLink_CardFuel_Juridical.ChildObjectId, ObjectLink_Partner_Juridical.ChildObjectId)
                                     AND ObjectLink_Juridical_InfoMoney.DescId   = zc_ObjectLink_Juridical_InfoMoney()
+                LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
                 LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                              ON MovementLinkObject_To.MovementId = Movement.Id
@@ -1154,6 +1145,7 @@ $BODY$
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 08.04.14                                        * add Constant_InfoMoney_isCorporate_View
  04.04.14                                        * add zc_Enum_InfoMoney_21151
  21.12.13                                        * Personal -> Member
  01.11.13                                        * add vbOperDatePartner

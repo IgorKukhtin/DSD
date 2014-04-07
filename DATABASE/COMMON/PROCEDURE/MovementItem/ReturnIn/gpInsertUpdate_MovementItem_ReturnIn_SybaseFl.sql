@@ -22,25 +22,15 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
      vbUserId:= inSession;
 
-     -- проверка - проведенный/удаленный документ не может корректироватьс€
-     IF NOT EXISTS (SELECT Id FROM Movement WHERE Id = inMovementId AND StatusId = zc_Enum_Status_UnComplete())
-     THEN
-         RAISE EXCEPTION 'ƒокумент не может корректироватьс€ т.к. он <%>.', lfGet_Object_ValueData ((SELECT StatusId FROM Movement WHERE Id = inMovementId));
-     END IF;
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
-     THEN
-         RAISE EXCEPTION 'Ёлемент не может корректироватьс€ т.к. он <”дален>.';
-     END IF;
-
+/*
      IF inChangeAmount = FALSE
      THEN
          inAmount:= COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId), 0);
+     ELSE
+         -- !!!!!!!!!!!!!!!
+         inAmount:= inAmountPartner;
      END IF;
-
-     -- !!!!!!!!!!!!!!!
-     inAmount:= inAmountPartner;
-
+*/
      -- сохранили <Ёлемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    

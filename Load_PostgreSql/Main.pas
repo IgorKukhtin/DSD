@@ -10806,9 +10806,13 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
-        Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , zc_rvYes() as IsChangeAmount');
+        Add('     , case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak())'
+           +'             and Bill.BillDate >=zc_def_StartDate_PG()'
+           +'                 then 0'
+           +'            else BillItems.OperCount'
+           +'       end as AmountPartner');
+        Add('     , BillItems.OperCount as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -11118,9 +11122,12 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
+        //Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
+        //Add('     , BillItems.OperCount as AmountPartner');
+        //Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , zc_rvYes() as IsChangeAmount');
         Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , BillItems.OperCount as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');

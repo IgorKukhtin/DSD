@@ -2,28 +2,27 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitTop = -43
-  ExplicitWidth = 1023
-  ExplicitHeight = 702
+  ExplicitWidth = 1031
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 141
+    Top = 139
     Width = 1015
-    Height = 527
-    ExplicitTop = 141
+    Height = 529
+    ExplicitTop = 139
     ExplicitWidth = 1015
-    ExplicitHeight = 527
-    ClientRectBottom = 523
-    ClientRectRight = 1011
+    ExplicitHeight = 529
+    ClientRectBottom = 529
+    ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1009
-      ExplicitHeight = 501
+      ExplicitWidth = 1015
+      ExplicitHeight = 505
       inherited cxGrid: TcxGrid
-        Width = 1009
-        Height = 501
-        ExplicitWidth = 1009
-        ExplicitHeight = 501
+        Width = 1015
+        Height = 505
+        ExplicitWidth = 1015
+        ExplicitHeight = 505
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -125,6 +124,13 @@ inherited ReturnOutForm: TReturnOutForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
+          end
+          object colMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 35
           end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -254,7 +260,7 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -399,6 +405,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object mactPrint_ReturnOut: TMultiAction [9]
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintReturnOutProcName
@@ -411,6 +418,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object mactPrint_ReturnOutTax: TMultiAction [10]
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actSPPrintReturnOutTaxProcName
@@ -423,6 +431,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object actPrintReturnOutTax: TdsdPrintAction [11]
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
         item
@@ -431,6 +440,7 @@ inherited ReturnOutForm: TReturnOutForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      DataSets = <>
       Params = <
         item
           Name = 'Id'
@@ -488,6 +498,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object actGoodsKindChoice: TOpenChoiceForm [16]
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsKindForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = ''
@@ -508,6 +519,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object actSPPrintReturnOutTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetReporNameTax
       StoredProcList = <
         item
@@ -517,6 +529,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object actSPPrintReturnOutProcName: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetReportName
       StoredProcList = <
         item
@@ -526,6 +539,7 @@ inherited ReturnOutForm: TReturnOutForm
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelect
       StoredProcList = <
         item
@@ -582,7 +596,7 @@ inherited ReturnOutForm: TReturnOutForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -649,7 +663,6 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 265
   end
   inherited PopupMenu: TPopupMenu
-    Images = dmMain.ImageList
     Left = 800
     Top = 464
     object N2: TMenuItem

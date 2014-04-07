@@ -84,6 +84,7 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    colMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public
