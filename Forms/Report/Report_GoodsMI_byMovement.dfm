@@ -3,8 +3,8 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 994
-  ExplicitHeight = 380
+  ExplicitWidth = 986
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl

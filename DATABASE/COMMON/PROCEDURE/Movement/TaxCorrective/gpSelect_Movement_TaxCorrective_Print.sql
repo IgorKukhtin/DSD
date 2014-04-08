@@ -60,12 +60,17 @@ BEGIN
            , Object_Partner.ValueData               	                    AS PartnerName
            , View_Contract_InvNumber.ContractId        		                AS ContractId
            , View_Contract_InvNumber.invnumber         		                AS ContractName
+           , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
+           , Object_ContractKind.ValueData                                  AS ContractKind
+           , CAST('Бабенко В.П.' AS TVarChar)                               AS StoreKeeper -- кладовщик
+           , CAST('' AS TVarChar)                                           AS Through     -- через кого
            , Object_TaxKind.Id                		                        AS TaxKindId
            , Object_TaxKind.ValueData         		                        AS TaxKindName
            , Movement_DocumentMaster.Id                                     AS DocumentMasterId
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS InvNumber_Master
            , Movement_DocumentChild.Id                                      AS DocumentChildId
            , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
+           , movement_documentchild.OperDate                                AS OperDate_Child
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
            , CASE WHEN inisClientCopy=TRUE
@@ -73,6 +78,31 @@ BEGIN
            , CASE WHEN ((MovementFloat_TotalSummPVAT.ValueData
                         -MovementFloat_TotalSummMVAT.ValueData)>10000)
                   THEN 'X' ELSE '' END                                      AS ERPN
+
+           , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
+           , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
+           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
+           , OH_JuridicalDetails_To.OKPO                AS OKPO_To
+           , OH_JuridicalDetails_To.INN                 AS INN_To
+           , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
+           , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
+           , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
+           , OH_JuridicalDetails_To.BankName            AS BankName_To
+           , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
+           , OH_JuridicalDetails_To.Phone               AS Phone_To
+
+           , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
+           , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
+           , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
+           , OH_JuridicalDetails_From.OKPO              AS OKPO_From
+           , OH_JuridicalDetails_From.INN               AS INN_From
+           , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
+           , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
+           , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
+           , OH_JuridicalDetails_From.BankName          AS BankName_From
+           , OH_JuridicalDetails_From.MFO               AS BankMFO_From
+           , OH_JuridicalDetails_From.Phone             AS Phone_From
+
 -- END MOVEMENT
            , MovementItem.Id                                                AS Id
            , Object_Goods.Id                                                AS GoodsId
@@ -194,8 +224,40 @@ BEGIN
                                           AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
 
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+--+++++++++++++++++++++++++++++++++++++
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                         ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+-- Contract
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                 ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+
+            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
+                                                                ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
+
+            LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
+                                                                ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
+                                                               AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+
+
+
+
+
+
+
            ;
 -- END MOVEMENT
 
@@ -208,6 +270,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.04.14                                                       *
  07.04.14                                                       *
 */
 
