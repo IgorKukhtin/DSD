@@ -70,6 +70,7 @@ BEGIN
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS InvNumber_Master
            , Movement_DocumentChild.Id                                      AS DocumentChildId
            , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
+           , movement_documentchild.OperDate                                AS OperDate_Child
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
            , CASE WHEN inisClientCopy=TRUE
@@ -223,6 +224,7 @@ BEGIN
                                           AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
 
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 --+++++++++++++++++++++++++++++++++++++
