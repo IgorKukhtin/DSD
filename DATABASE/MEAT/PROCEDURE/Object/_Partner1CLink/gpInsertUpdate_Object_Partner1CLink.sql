@@ -45,7 +45,8 @@ BEGIN
    
 
    -- проверка уникальность inCode для !!!одного!! Филиала
-   IF EXISTS (SELECT ObjectLink.ChildObjectId
+   IF inCode <> 0 
+    AND EXISTS (SELECT ObjectLink.ChildObjectId
               FROM ObjectLink
                    JOIN Object ON Object.Id = ObjectLink.ObjectId
                               AND Object.ObjectCode = inCode
