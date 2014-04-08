@@ -12570,10 +12570,15 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             fOpenSqToQuery ('select OperDate from Movement where Id='+FieldByName('Id_Postgres').AsString);
+             fOpenSqToQuery (' select OperDate, DescId, StatusId, MLO.ObjectId as FromId'
+                            +' from Movement left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
+                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+             //
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
              then begin
+                  if toSqlQuery.FieldByName('OperDate').AsDateTime>=StrToDate('01.04.2014') then
+
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                   //
                   if myExecToStoredProc
