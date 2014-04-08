@@ -1,28 +1,30 @@
 inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
-  ClientWidth = 982
-  ExplicitWidth = 998
-  ExplicitHeight = 703
+  ClientWidth = 986
+  ExplicitWidth = 994
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
-    Width = 982
-    Height = 542
-    ExplicitTop = 126
+    Top = 128
+    Width = 986
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 982
-    ExplicitHeight = 542
-    ClientRectBottom = 542
+    ExplicitHeight = 540
+    ClientRectBottom = 536
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 976
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 982
-        Height = 518
-        ExplicitWidth = 982
-        ExplicitHeight = 518
+        Width = 980
+        Height = 514
+        ExplicitWidth = 976
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,14 +156,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 982
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 980
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 982
-        Height = 518
-        ExplicitWidth = 982
-        ExplicitHeight = 518
+        Width = 980
+        Height = 514
+        ExplicitWidth = 980
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -183,7 +186,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 982
+    Width = 986
     Height = 100
     TabOrder = 3
     ExplicitWidth = 982
@@ -218,7 +221,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -369,10 +372,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 45
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
-    object edTax: TcxTextEdit
+    object edDocumentTax: TcxButtonEdit
       Left = 895
       Top = 63
-      Enabled = False
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
       TabOrder = 27
       Width = 83
     end
@@ -483,7 +490,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -567,7 +578,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -856,13 +867,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
       end
       item
-        Name = 'DocumentChildName'
+        Name = 'DocumentChildId'
         Value = ''
-        Component = edTax
-        DataType = ftString
+        Component = DocumentTaxGuides
+        ComponentItem = 'Key'
       end
       item
+        Name = 'DocumentChildName'
         Value = ''
+        Component = DocumentTaxGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
@@ -1236,8 +1250,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 816
-    Top = 8
+    Left = 800
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1265,14 +1278,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 648
     Top = 72
-  end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 414
-    Top = 237
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
@@ -1310,29 +1315,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 476
     Top = 193
   end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 186
-  end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 552
-    Top = 192
-  end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 476
     Top = 246
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 552
-    Top = 245
   end
   object HeaderSaver2: THeaderSaver
     IdParam.Value = Null
@@ -1424,5 +1411,32 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 306
     Top = 322
+  end
+  object DocumentTaxGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTax
+    FormNameParam.Value = 'TTaxJournalSelectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TTaxJournalSelectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+    Top = 56
   end
 end
