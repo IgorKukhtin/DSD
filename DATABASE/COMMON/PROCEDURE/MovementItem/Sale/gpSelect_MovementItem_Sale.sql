@@ -48,28 +48,32 @@ BEGIN
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
            , Object_Measure.ValueData   AS MeasureName
-           , tmpMI.AssetId              AS AssetId
-           , tmpMI.AssetName            AS AssetName
+           , 0 ::Integer                AS AssetId
+           , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isErased
 
        FROM (SELECT Object_Goods.Id                                                   AS GoodsId
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
-                  , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-             FROM Object AS Object_Goods
-                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+                  , zc_Enum_GoodsKind_Main()  AS GoodsKindId
+                  -- , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             FROM Object_InfoMoney_View
+                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                             AND Object_Goods.isErased = FALSE
+                  /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                        ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = Object_Goods.Id
                                       AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                        ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-             WHERE Object_Goods.DescId = zc_Object_Goods()
+                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()*/
+             WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                            , Object_Asset.Id                               AS AssetId
-                            , Object_Asset.ValueData                        AS AssetName
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -77,11 +81,6 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
@@ -263,6 +262,7 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  08.04.14                                        * add MeasureName
  30.01.14                                                        * inisErased
  21.01.14                                                        * PriceList
@@ -274,5 +274,5 @@ ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, T
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inShowAll:= TRUE, inSession:= '2')
---SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inPriceListId:=0, inShowAll:= True, inisErased:= True, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inPriceListId:=0, inShowAll:= TRUE, inisErased:= True, inSession:= '2')
+-- SELECT * FROM gpSelect_MovementItem_Sale (inMovementId:= 4229, inPriceListId:=0, inShowAll:= True, inisErased:= True, inSession:= '2')

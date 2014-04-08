@@ -46,18 +46,19 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
      -- создали объект <Связи Товары и Виды товаров>
-     PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
-
---     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
-
-     -- пересчитали Итоговые суммы по накладной
-     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+     -- PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
                                 THEN CAST (inAmountPartner * inPrice / ioCountForPrice AS NUMERIC (16, 2))
                            ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
+
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
+
+     --
+     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
 
 END;
 $BODY$
@@ -66,9 +67,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 08.04.14                                        * rem создали объект <Связи Товары и Виды товаров>
  14.02.14                                                         * add ioCountForPrice
  13.02.14                         *
-
 */
 
 -- тест

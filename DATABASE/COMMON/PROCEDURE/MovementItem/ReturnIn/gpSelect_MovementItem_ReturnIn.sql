@@ -6,8 +6,6 @@
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_ReturnIn (Integer, Integer, Boolean, Boolean, TVarChar);
 
 
-
-
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
     IN inMovementId  Integer      , -- ключ Документа
     IN inPriceListId Integer      , -- ключ Прайс листа
@@ -25,16 +23,16 @@ AS
 $BODY$
   DECLARE vbOperDate TDateTime;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ReturnIn());
 
-     -- inShowAll:= TRUE;
-
+     --
      IF inShowAll THEN
 
+     --
      vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
+     -- Результат
      RETURN QUERY
        SELECT
              0                          AS Id
@@ -49,28 +47,32 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
-           , tmpMI.AssetId              AS AssetId
-           , tmpMI.AssetName            AS AssetName
+           , 0 ::Integer                AS AssetId
+           , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
            , FALSE                      AS isErased
 
-       FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
-                  , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-             FROM Object AS Object_Goods
-                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+       FROM (SELECT Object_Goods.Id           AS GoodsId
+                  , Object_Goods.ObjectCode   AS GoodsCode
+                  , Object_Goods.ValueData    AS GoodsName
+                  , zc_Enum_GoodsKind_Main()  AS GoodsKindId
+                  -- , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             FROM Object_InfoMoney_View
+                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                             AND Object_Goods.isErased = FALSE
+                  /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                        ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = Object_Goods.Id
                                       AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                        ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-             WHERE Object_Goods.DescId = zc_Object_Goods()
+                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()*/
+             WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                            , Object_Asset.Id                               AS AssetId
-                            , Object_Asset.ValueData                        AS AssetName
                        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
                             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                                              AND MovementItem.DescId     = zc_MI_Master()
@@ -78,11 +80,6 @@ BEGIN
                             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                              ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                             AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                            LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                             ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                            AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
-                            LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
@@ -209,9 +206,7 @@ BEGIN
                                              ON MILinkObject_Asset.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
             LEFT JOIN Object AS Object_Asset ON Object_Asset.Id = MILinkObject_Asset.ObjectId
-
             ;
-
      END IF;
 
 END;
@@ -222,12 +217,12 @@ ALTER FUNCTION gpSelect_MovementItem_ReturnIn (Integer, Integer, Boolean, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 12.02.14                                                        * inPriceListId
+ 08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
+ 12.02.14                                                       * inPriceListId
  30.01.14							* add inisErased
  18.07.13         * add Object_Asset
  17.07.13         *
 */
 
 -- тест
-
 -- SELECT * FROM gpSelect_MovementItem_ReturnIn (inMovementId:= 25173, inShowAll:= TRUE, inisErased:= TRUE, inPriceListId:=18840, inSession:= '2')
