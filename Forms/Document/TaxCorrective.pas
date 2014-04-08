@@ -55,17 +55,13 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    frxDBDMaster: TfrxDBDataset;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     actSPPrintProcName: TdsdExecStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
-    frxDBDHeader: TfrxDBDataset;
-    PrintHeaderDS: TDataSource;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     edIsDocument: TcxCheckBox;
     edIsRegistered: TcxCheckBox;
     HeaderSaver2: THeaderSaver;
@@ -73,11 +69,12 @@ type
     cxLabel5: TcxLabel;
     edReturnIn: TcxTextEdit;
     cxLabel8: TcxLabel;
-    edTax: TcxTextEdit;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     actPrint_TaxCorrective_Us: TdsdPrintAction;
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     bbPrint_TaxCorrective_Client: TdxBarButton;
+    edDocumentTax: TcxButtonEdit;
+    DocumentTaxGuides: TdsdGuides;
   private
     { Private declarations }
   public
