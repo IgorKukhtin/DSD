@@ -25,7 +25,7 @@ BEGIN
      -- определяется - есть ли ограничения
      vbAccessKeyRight:= NOT zfCalc_AccessKey_GuideAll (vbUserId) AND EXISTS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId);
 
-
+     -- Результат
      RETURN QUERY 
        SELECT Object_Goods.Id             AS Id
             , Object_Goods.ObjectCode     AS Code
