@@ -344,8 +344,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
-      FormNameParam.Name = 'TTaxForm'
-      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.Value = nil
       GuiParams = <
         item
           Name = 'Id'
@@ -365,8 +364,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
-      FormNameParam.Name = 'TTaxForm'
-      FormNameParam.Value = 'TTaxForm'
+      FormNameParam.Value = nil
       GuiParams = <
         item
           Name = 'Id'
@@ -399,7 +397,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         item
           Name = 'TextValue'
           Component = MasterCDS
-          ComponentItem = 'InvNumber'
+          ComponentItem = 'InvNumberPartner'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -501,6 +499,15 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
           ItemName = 'bbGridToExcel'
         end>
     end
+    inherited bbComplete: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbUnComplete: TdxBarButton
+      Visible = ivNever
+    end
+    inherited bbDelete: TdxBarButton
+      Visible = ivNever
+    end
     object bbSelect: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
@@ -519,6 +526,9 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     inherited N2: TMenuItem
       Visible = False
     end
+    inherited N4: TMenuItem
+      Visible = False
+    end
     inherited N5: TMenuItem
       Visible = False
     end
@@ -526,6 +536,9 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
       Visible = False
     end
     inherited N8: TMenuItem
+      Visible = False
+    end
+    inherited N9: TMenuItem
       Visible = False
     end
     inherited N10: TMenuItem
