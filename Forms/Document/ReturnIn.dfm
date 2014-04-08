@@ -1632,11 +1632,8 @@ inherited ReturnInForm: TReturnInForm
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
@@ -1660,11 +1657,8 @@ inherited ReturnInForm: TReturnInForm
   end
   object spSelectPrintTaxCorrective_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
-    DataSet = PrintHeaderCDS
+    DataSet = PrintItemsCDS
     DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
       item
         DataSet = PrintItemsCDS
       end>
