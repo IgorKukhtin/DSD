@@ -75,7 +75,6 @@ inherited ReturnOutForm: TReturnOutForm
               Column = colHeadCount
             end>
           Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -260,7 +259,6 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
-      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel

@@ -319,6 +319,7 @@ object IncomeForm: TIncomeForm
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
           OptionsCustomize.ColumnHiding = True
           OptionsCustomize.ColumnsQuickCustomization = True
           OptionsData.Deleting = False

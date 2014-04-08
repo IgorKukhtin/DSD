@@ -3,8 +3,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 804
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 812
-  ExplicitHeight = 418
+  ExplicitWidth = 820
+  ExplicitHeight = 426
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,8 +13,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Height = 305
     TabOrder = 5
     ExplicitTop = 86
-    ExplicitWidth = 782
-    ExplicitHeight = 235
+    ExplicitWidth = 804
+    ExplicitHeight = 305
     ClientRectBottom = 305
     ClientRectRight = 804
     ClientRectTop = 24
@@ -22,13 +22,13 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 782
-      ExplicitHeight = 211
+      ExplicitWidth = 804
+      ExplicitHeight = 281
       inherited cxGrid: TcxGrid
         Width = 804
         Height = 281
-        ExplicitWidth = 782
-        ExplicitHeight = 211
+        ExplicitWidth = 804
+        ExplicitHeight = 281
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -47,6 +47,9 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
+      ExplicitTop = 0
+      ExplicitWidth = 0
+      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -225,7 +228,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 4
-    ExplicitWidth = 782
     object edInvNumber: TcxTextEdit
       Left = 170
       Top = 23

@@ -77,7 +77,6 @@ inherited SaleForm: TSaleForm
               Column = colHeadCount
             end>
           Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
@@ -287,7 +286,6 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
