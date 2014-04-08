@@ -39,6 +39,8 @@ type
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    clAmountChangePercent_Weight: TcxGridDBColumn;
+    clAmountChangePercent_Sh: TcxGridDBColumn;
     clSummChangePercent: TcxGridDBColumn;
   private
     { Private declarations }

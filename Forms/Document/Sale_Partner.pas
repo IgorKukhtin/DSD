@@ -104,6 +104,7 @@ type
     actSPPrintSaleBillProcName: TdsdExecStoredProc;
     actPrint_Bill: TdsdPrintAction;
     bbPrint_Bill: TdxBarButton;
+    colMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public
