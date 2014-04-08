@@ -2,27 +2,27 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 982
-  ExplicitWidth = 990
-  ExplicitHeight = 702
+  ExplicitWidth = 998
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 982
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 982
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 978
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 982
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 976
-      ExplicitHeight = 514
+      ExplicitWidth = 982
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 976
-        Height = 514
-        ExplicitWidth = 976
-        ExplicitHeight = 514
+        Width = 982
+        Height = 518
+        ExplicitWidth = 982
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,14 +154,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 22
-      ExplicitWidth = 976
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 982
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 976
-        Height = 514
-        ExplicitWidth = 976
-        ExplicitHeight = 514
+        Width = 982
+        Height = 518
+        ExplicitWidth = 982
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -200,6 +200,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 189
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       ExplicitLeft = 189
       ExplicitWidth = 97
       Width = 97
@@ -216,7 +218,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -565,7 +567,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

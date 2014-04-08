@@ -147,6 +147,11 @@ BEGIN
                                                                            )
                                      END;
 
+     IF EXISTS (SELECT AccountId FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Счет не определен.Документ № <%> (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), inMovementId;
+     END IF;
+
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.ProfitLossDirectionId <> 0
                                                            THEN _tmpItem.ProfitLossDirectionId -- если уже был определен
