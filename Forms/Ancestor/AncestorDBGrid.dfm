@@ -17,8 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -101,6 +99,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
     Left = 520
     Top = 264
   end

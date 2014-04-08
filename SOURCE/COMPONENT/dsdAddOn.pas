@@ -63,6 +63,8 @@ type
 
   end;
 
+
+
   // Управление цветами
 
   // Значение цвета
@@ -97,16 +99,20 @@ type
     property ColorValueList: TCollection read FColorValueList write FColorValueList;
   end;
 
-  TColumnAddOn = class(TCollectionItem)
-  private
-    FAction: TCustomAction;
+  TColumnCollectionItem = class(TCollectionItem)
     FColumn: TcxGridColumn;
   protected
     function GetDisplayName: string; override;
+  published
+    property Column: TcxGridColumn read FColumn write FColumn;
+  end;
+
+  TColumnAddOn = class(TColumnCollectionItem)
+  private
+    FAction: TCustomAction;
   public
     procedure Init;
   published
-    property Column: TcxGridColumn read FColumn write FColumn;
     property Action: TCustomAction read FAction write FAction;
   end;
 
@@ -130,8 +136,10 @@ type
     FAfterOpen: TDataSetNotifyEvent;
     FColorRuleList: TCollection;
     FColumnAddOnList: TCollection;
+    FColumnEnterList: TCollection;
     procedure OnBeforeOpen(ADataSet: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
+    function inColumnEnterList(Column: TcxGridColumn): boolean;
     procedure ActionOnlyEditingCellOnEnter;
     procedure GridEditKeyEvent(Sender: TcxCustomGridTableView; AItem: TcxCustomGridTableItem;
                                 AEdit: TcxCustomEdit; var Key: Word; Shift: TShiftState);
@@ -184,6 +192,8 @@ type
     property ColorRuleList: TCollection read FColorRuleList write FColorRuleList;
     // Дополнительные установки для колонок
     property ColumnAddOnList: TCollection read FColumnAddOnList write FColumnAddOnList;
+    // Переход по данным колонка по Enter
+    property ColumnEnterList: TCollection read FColumnEnterList write FColumnEnterList;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -526,8 +536,23 @@ procedure TdsdDBViewAddOn.ActionOnlyEditingCellOnEnter;
 var i: integer;
     NextFocusIndex: integer;
 begin
+  if ColumnEnterList.Count = 0 then exit;
+  
+  // 1. Идем от текущей колонки вправо
+  for i := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
+      if inColumnEnterList(View.VisibleColumns[i]) then begin
+         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index;
+         exit;
+      end;
+
+  for i := 0 to View.Controller.FocusedColumnIndex do
+      if inColumnEnterList(View.VisibleColumns[i]) then begin
+         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index;
+         exit;
+      end;
+
   // 1. Смотрим куда может идти
-  NextFocusIndex := -1;
+(*  NextFocusIndex := -1;
   for I := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
       if View.VisibleColumns[i].Editable then begin
          NextFocusIndex := i;
@@ -540,7 +565,7 @@ begin
   end;
   // 3. Если на этой строчке некуда и находимся в состоянии редактирования, то Post
   if (NextFocusIndex = -1) and (TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert]) then
-     TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+     TcxDBDataController(FView.DataController).DataSource.DataSet.Post;*)
   // 4. Если есть куда на следующей, то идем на следующую
 end;
 
@@ -559,7 +584,7 @@ begin
 
   FColorRuleList := TCollection.Create(TColorRule);
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
-
+  FColumnEnterList := TCollection.Create(TColumnCollectionItem);
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -744,6 +769,7 @@ begin
   end;
   FErasedStyle.Free;
   FreeAndNil(FColumnAddOnList);
+  FreeAndNil(FColumnEnterList);
   inherited;
 end;
 
@@ -774,6 +800,17 @@ begin
      ActionOnlyEditingCellOnEnter;
      Key := 0;
   end;
+end;
+
+function TdsdDBViewAddOn.inColumnEnterList(Column: TcxGridColumn): boolean;
+var i: integer;
+begin
+  result := false;
+  for i := 0 to ColumnEnterList.Count - 1  do
+      if Column = TColumnCollectionItem(ColumnEnterList.Items[i]).Column then begin
+         result := true;
+         break;
+      end;
 end;
 
 procedure TdsdDBViewAddOn.Loaded;
@@ -821,16 +858,21 @@ procedure TdsdDBViewAddOn.lpSetFilter;
    end;
 var
   FilterCriteriaItem: TcxFilterCriteriaItem;
+  vbValue: string;
 begin
+  if length(edFilter.Text) > 2 then
+     vbValue := '%' + edFilter.Text + '%'
+  else
+     vbValue := edFilter.Text + '%';
   edFilter.Visible := false;
   with TcxGridDBDataController(FView.DataController), Filter.Root do begin
     FilterCriteriaItem := GetFilterItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index));
     if Assigned(FilterCriteriaItem) then begin
-       FilterCriteriaItem.Value := '%' + edFilter.Text + '%';
+       FilterCriteriaItem.Value := vbValue;
        FilterCriteriaItem.DisplayValue := '"' + edFilter.Text + '"';
     end
     else
-       AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, '%' + edFilter.Text + '%', '"' + edFilter.Text + '"');
+       AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, vbValue, '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
   FView.DataController.Filter.Active := True;
@@ -1599,13 +1641,6 @@ end;
 
 { TColumnAddOn }
 
-function TColumnAddOn.GetDisplayName: string;
-begin
-  result := inherited;
-  if Assigned(Column) then
-     result := Column.Name
-end;
-
 procedure TColumnAddOn.Init;
 begin
   if Assigned(Column) and Assigned(Action) then
@@ -1682,6 +1717,15 @@ begin
     FPivotGrid.OnKeyDown := OnKeyDown;
     FPivotGrid.OnDblClick := OnDblClick;
   end;
+end;
+
+{ TColumnCollectionItem }
+
+function TColumnCollectionItem.GetDisplayName: string;
+begin
+  result := inherited;
+  if Assigned(Column) then
+     result := Column.Name
 end;
 
 end.

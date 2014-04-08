@@ -3,28 +3,26 @@ inherited ReturnInForm: TReturnInForm
   ClientHeight = 668
   ClientWidth = 970
   ExplicitWidth = 978
-  ExplicitHeight = 702
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 970
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 970
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 966
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 970
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -84,10 +82,6 @@ inherited ReturnInForm: TReturnInForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -262,7 +256,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -656,7 +650,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
