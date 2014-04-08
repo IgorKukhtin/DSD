@@ -2,27 +2,29 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 970
-  ExplicitWidth = 986
-  ExplicitHeight = 703
+  ExplicitWidth = 978
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 970
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 970
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 970
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 966
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 970
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 964
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 970
-        Height = 518
-        ExplicitWidth = 970
-        ExplicitHeight = 518
+        Width = 964
+        Height = 514
+        ExplicitWidth = 964
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -266,6 +268,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
+      ExplicitHeight = 24
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -457,7 +460,15 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -482,7 +493,15 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ImageIndex = 18
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -503,6 +522,15 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -659,7 +687,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1453,22 +1481,6 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 712
     Top = 99
-  end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 406
-    Top = 341
-  end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 390
-    Top = 242
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

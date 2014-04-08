@@ -61,8 +61,6 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
-    frxDBDMaster: TfrxDBDataset;
-    frxDBDHeader: TfrxDBDataset;
     PrintHeaderCDS: TClientDataSet;
     PrintHeaderDS: TDataSource;
     spSelectPrint: TdsdStoredProc;
