@@ -129,7 +129,7 @@ BEGIN
                                   AND MovementItem.isErased   = FALSE
 
             JOIN Movement ON Movement.Id = MovementItem.MovementId
-                         AND Movement.StatusId = zc_Enum_Status_Complete()
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()
 
             LEFT JOIN MovementItemFloat AS MIFloat_Price
                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
