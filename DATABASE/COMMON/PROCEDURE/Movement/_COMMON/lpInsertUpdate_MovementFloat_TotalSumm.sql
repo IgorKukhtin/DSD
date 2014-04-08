@@ -29,6 +29,10 @@ $BODY$
   DECLARE vbExtraChargesPercent TFloat;
   DECLARE vbChangePrice TFloat;
 BEGIN
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Элемент документа не сохранен.';
+     END IF;
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Заготовителю
      SELECT Movement.DescId

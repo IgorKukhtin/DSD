@@ -81,6 +81,8 @@ type
     mactPrint_Tax_Us: TMultiAction;
     mactPrint_Tax_Client: TMultiAction;
     bbPrint_Us: TdxBarButton;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public

@@ -11,19 +11,17 @@ inherited TaxForm: TTaxForm
     Width = 924
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1054
+    ExplicitWidth = 924
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 924
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 24
-      ExplicitWidth = 1054
+      ExplicitWidth = 924
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 924
         Height = 518
-        ExplicitWidth = 1054
+        ExplicitWidth = 924
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -157,12 +155,12 @@ inherited TaxForm: TTaxForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1054
+      ExplicitWidth = 924
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
         Width = 924
         Height = 518
-        ExplicitWidth = 1054
+        ExplicitWidth = 924
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -188,7 +186,7 @@ inherited TaxForm: TTaxForm
     Width = 924
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1054
+    ExplicitWidth = 924
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -202,6 +200,8 @@ inherited TaxForm: TTaxForm
     end
     inherited edOperDate: TcxDateEdit
       Left = 164
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       ExplicitLeft = 164
       ExplicitWidth = 97
       Width = 97
@@ -351,6 +351,18 @@ inherited TaxForm: TTaxForm
       Caption = #1047#1072#1088#1077#1075#1077#1089#1090#1088#1080#1088#1086#1074#1072#1085' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 23
       Width = 157
+    end
+    object edPartner: TcxButtonEdit
+      Left = 435
+      Top = 36
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 24
+      Visible = False
+      Width = 177
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -900,19 +912,17 @@ inherited TaxForm: TTaxForm
         DataType = ftString
       end
       item
+        Name = 'PartnerId'
         Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Value = ''
-      end
-      item
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Value = 0.000000000000000000
-        DataType = ftFloat
       end>
     Left = 216
     Top = 248
@@ -991,6 +1001,13 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
+        Name = 'inPartnerId'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inContractId'
         Value = ''
         Component = ContractGuides
@@ -1005,28 +1022,9 @@ inherited TaxForm: TTaxForm
         ParamType = ptInput
       end
       item
-        Name = '55'
-        Value = 'False'
-        DataType = ftBoolean
-      end
-      item
         Name = '44'
         Value = 0d
         DataType = ftDateTime
-      end
-      item
-        Name = '11'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = '22'
-        Value = ''
-      end
-      item
-        Name = '33'
-        Value = ''
-        DataType = ftString
       end>
     Left = 162
     Top = 312
@@ -1187,9 +1185,9 @@ inherited TaxForm: TTaxForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TJuridicalForm'
+    FormName = 'TJuridical_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1537,5 +1535,32 @@ inherited TaxForm: TTaxForm
       end>
     Left = 311
     Top = 280
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 608
+    Top = 96
   end
 end

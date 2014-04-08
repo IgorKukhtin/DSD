@@ -995,6 +995,21 @@ object MainForm: TMainForm
       TabOrder = 27
       OnClick = cbReturnInFlClick
     end
+    object cbCheck: TCheckBox
+      Left = 132
+      Top = 514
+      Width = 100
+      Height = 17
+      Caption = 'Check'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 28
+      OnClick = cbReturnInFlClick
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1028

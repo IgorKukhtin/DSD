@@ -39,12 +39,7 @@ BEGIN
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_40900()) -- Финансовая помощь
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND ObjectLink_Juridical_InfoMoney.ChildObjectId IN (zc_Enum_InfoMoney_20801() -- Алан
-                                                                                                                                                            , zc_Enum_InfoMoney_20901() -- Ирна
-                                                                                                                                                            , zc_Enum_InfoMoney_21001() -- Чапли
-                                                                                                                                                            , zc_Enum_InfoMoney_21101() -- Дворкин
-                                                                                                                                                            , zc_Enum_InfoMoney_21151() -- ЕКСПЕРТ-АГРОТРЕЙД
-                                                                                                                                                             )
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
@@ -101,6 +96,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                                ON ObjectLink_Juridical_InfoMoney.ObjectId = Object.Id
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
+          LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
           -- LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
      WHERE Object.Id = _tmpItem.ObjectId;
 
@@ -150,6 +146,11 @@ BEGIN
                                                                           , inUserId                 := inUserId
                                                                            )
                                      END;
+
+     IF EXISTS (SELECT AccountId FROM _tmpItem WHERE COALESCE (AccountId, 0) = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Счет не определен.Документ № <%> (%)', (SELECT InvNumber FROM Movement WHERE Id = inMovementId), inMovementId;
+     END IF;
 
      -- 1.2.1. определяется ProfitLossDirectionId для проводок суммового учета по счету Прибыль
      UPDATE _tmpItem SET ProfitLossDirectionId = CASE WHEN _tmpItem.ProfitLossDirectionId <> 0

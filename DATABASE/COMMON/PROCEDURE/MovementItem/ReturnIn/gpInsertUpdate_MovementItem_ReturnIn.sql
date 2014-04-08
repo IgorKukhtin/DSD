@@ -25,32 +25,22 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_ReturnIn());
 
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
-     THEN
-         RAISE EXCEPTION 'Ёлемент не может корректироватьс€ т.к. он <”дален>.';
-     END IF;
-
-/*
-     PERFORM lpInsertUpdate_MovementItem_ReturnIn(ioId, inMovementId, inGoodsId, inAmount, inAmountPartner,
-                 inPrice, ioCountForPrice, inHeadCount, inPartionGoods, inGoodsKindId, inAssetId, vbUserId);
-*/
-
+     -- сохранили <Ёлемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_ReturnIn (ioId                 := ioId
-                                          , inMovementId         := inMovementId
-                                          , inGoodsId            := inGoodsId
-                                          , inAmount             := inAmount
-                                          , inAmountPartner      := inAmountPartner
-                                          , inPrice              := inPrice
-                                          , ioCountForPrice      := ioCountForPrice
-                                          , inHeadCount          := inHeadCount
-                                          , inPartionGoods       := inPartionGoods
-                                          , inGoodsKindId        := inGoodsKindId
-                                          , inAssetId            := inAssetId
-                                          , inUserId             := vbUserId
-                                           ) AS tmp;
+                                              , inMovementId         := inMovementId
+                                              , inGoodsId            := inGoodsId
+                                              , inAmount             := inAmount
+                                              , inAmountPartner      := inAmountPartner
+                                              , inPrice              := inPrice
+                                              , ioCountForPrice      := ioCountForPrice
+                                              , inHeadCount          := inHeadCount
+                                              , inPartionGoods       := inPartionGoods
+                                              , inGoodsKindId        := inGoodsKindId
+                                              , inAssetId            := inAssetId
+                                              , inUserId             := vbUserId
+                                               ) AS tmp;
 
 
 

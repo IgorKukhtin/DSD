@@ -50,8 +50,6 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     N2: TMenuItem;
     N3: TMenuItem;
-    frxDBDMaster: TfrxDBDataset;
-    frxDBDHeader: TfrxDBDataset;
     PrintHeaderCDS: TClientDataSet;
     PrintHeaderDS: TDataSource;
     spSelectPrint: TdsdStoredProc;
@@ -73,6 +71,7 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    colMeasureName: TcxGridDBColumn;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     actPrint_TaxCorrective_Client: TdsdPrintAction;

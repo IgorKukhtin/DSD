@@ -17,18 +17,14 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TaxCorrective());
 
-     -- inShowAll:= TRUE;
-
+     --
      IF inShowAll THEN
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
-
+     -- Результат
      RETURN QUERY
        SELECT
              0                                      AS Id
@@ -44,18 +40,24 @@ BEGIN
            , CAST (NULL AS TFloat)                  AS AmountSumm
            , FALSE                                  AS isErased
 
-       FROM (SELECT Object_Goods.Id                                                   AS GoodsId
-                  , Object_Goods.ObjectCode                                           AS GoodsCode
-                  , Object_Goods.ValueData                                            AS GoodsName
-                  , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
-             FROM Object AS Object_Goods
-                  LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
+       FROM (SELECT Object_Goods.Id           AS GoodsId
+                  , Object_Goods.ObjectCode   AS GoodsCode
+                  , Object_Goods.ValueData    AS GoodsName
+                  , zc_Enum_GoodsKind_Main()  AS GoodsKindId
+                  -- , COALESCE (ObjectLink_GoodsByGoodsKind_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             FROM Object_InfoMoney_View
+                  JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                  ON ObjectLink_Goods_InfoMoney.ChildObjectId = Object_InfoMoney_View.InfoMoneyId
+                                 AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                             AND Object_Goods.isErased = FALSE
+                  /*LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_Goods
                                        ON ObjectLink_GoodsByGoodsKind_Goods.ChildObjectId = Object_Goods.Id
                                       AND ObjectLink_GoodsByGoodsKind_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind_Goods()
                   LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind_GoodsKind
                                        ON ObjectLink_GoodsByGoodsKind_GoodsKind.ObjectId = ObjectLink_GoodsByGoodsKind_Goods.ObjectId
-                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()
-             WHERE Object_Goods.DescId = zc_Object_Goods()
+                                      AND ObjectLink_GoodsByGoodsKind_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind_GoodsKind()*/
+             WHERE Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -157,17 +159,15 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_MovementItem_TaxCorrective (Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  10.02.14                                                        *
 */
 
 -- тест
-
---SELECT * FROM gpSelect_MovementItem_TaxCorrective (inMovementId:= 4229, inPriceListId:=0, inShowAll:= True, inisErased:= True, inSession:= '2')
 --SELECT * FROM gpSelect_MovementItem_TaxCorrective (inMovementId:= 4229, inShowAll:= True, inisErased:= True, inSession:= '2')

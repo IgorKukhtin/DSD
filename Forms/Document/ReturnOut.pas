@@ -71,6 +71,7 @@ type
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     PrintItemsDS: TDataSource;
+    colMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

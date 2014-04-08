@@ -1250,7 +1250,7 @@ begin
                    TDataSet(Self.Owner.Components[i]).DisableControls;
          try
            // Вдруг что!
-           FReport.PreviewOptions.modal := false;
+          // FReport.PreviewOptions.modal := false;
            FReport.OnEndDoc := Self.OnEndDoc;
            ShowReport;
          finally
@@ -1261,7 +1261,7 @@ begin
          end;
       end;
     finally
-//      Free;
+      Free;
     end;
   finally
     Stream.Free

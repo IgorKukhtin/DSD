@@ -155,6 +155,7 @@ type
     clInfoMoneyGroupName: TcxGridDBColumn;
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
+    colMeasureName: TcxGridDBColumn;
   private
   public
   end;

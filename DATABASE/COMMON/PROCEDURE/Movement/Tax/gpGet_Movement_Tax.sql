@@ -1,6 +1,5 @@
 -- Function: gpGet_Movement_Tax()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_Tax (Integer, TDateTime, TVarChar);
 
 
@@ -15,7 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
               )
@@ -49,6 +48,8 @@ BEGIN
              , Object_Juridical_Basis.ValueData		AS FromName
              , 0                     				AS ToId
              , CAST ('' as TVarChar) 				AS ToName
+             , 0                                 		AS PartnerId
+             , CAST ('' as TVarChar)               		AS PartnerName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
              , 0                     				AS TaxKindId
@@ -82,6 +83,8 @@ BEGIN
            , Object_From.ValueData             			AS FromName
            , Object_To.Id                      			AS ToId
            , Object_To.ValueData               			AS ToName
+           , Object_Partner.Id                      		AS PartnerId
+           , Object_Partner.ValueData               		AS PartnerName
            , Object_Contract.ContractId        			AS ContractId
            , Object_Contract.invnumber         			AS ContractName
            , Object_TaxKind.Id                			AS TaxKindId
@@ -134,14 +137,17 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -169,6 +175,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.04.14                                        * add PartnerId
  27.02.14                                                        *
  09.02.14                                                        *
 */

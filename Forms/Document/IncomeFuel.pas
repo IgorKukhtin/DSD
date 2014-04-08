@@ -148,6 +148,7 @@ type
     CompleteMovement: TChangeGuidesStatus;
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
+    colMeasureName: TcxGridDBColumn;
   private
   public
   end;

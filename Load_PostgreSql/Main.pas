@@ -142,6 +142,7 @@ type
     cbTaxInt: TCheckBox;
     cbClearDelete: TCheckBox;
     cbOnlyUpdateInt: TCheckBox;
+    cbCheck: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -498,7 +499,7 @@ begin
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-           exit;
+           //exit;
      //end;
      result:=true;
 end;
@@ -512,7 +513,7 @@ begin
      //except
            //on E:EDBEngineError do begin EDB_EngineErrorMsg(E);exit;end;
            //on E:EADOError do begin EADO_EngineErrorMsg(E);exit;end;
-           exit;
+           //exit;
      //end;
      result:=true;
 end;
@@ -2912,8 +2913,8 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
-        function InsertData_pg(UnitId,PartnerId:Integer;inCode:Integer;inName:String):Boolean;
-        var findId:Integer;
+        function InsertData_pg(UnitId,PartnerId:Integer;inCode:Integer;inName,ContractNumber:String):Boolean;
+        var findId,ContractId:Integer;
         begin
              //нашли
              fOpenSqToQuery(' select ObjectLink.ObjectId'
@@ -2931,6 +2932,7 @@ procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
                            +'   and ObjectLink.DescId = zc_ObjectLink_Partner1CLink_Partner()'
                            );
              findId:=toSqlQuery.FieldByName('ObjectId').AsInteger;
+             ContractId:=fFind_ContractId_pg(PartnerId,30101,0,ContractNumber);
              //
              if (findId = 0)
              then if (inCode = 0)and (trim(inName)='') then exit;
@@ -2940,6 +2942,7 @@ procedure TMainForm.pLoadGuide_Partner1CLink_Fl;
              toStoredProc.Params.ParamByName('inName').Value:=inName;
              toStoredProc.Params.ParamByName('inPartnerId').Value:=PartnerId;
              toStoredProc.Params.ParamByName('inBranchId').Value:=UnitId;
+             toStoredProc.Params.ParamByName('inContractId').Value:=ContractId;
              toStoredProc.Params.ParamByName('inIsSybase').Value:=true;
              Result:=myExecToStoredProc;
          end;
@@ -2970,12 +2973,27 @@ begin
            +'     , _pgUnitOdessa.Id_Postgres_Branch as Is_pg_Odessa'
            +'     , _pgUnitXarkov.Id_Postgres_Branch as Is_pg_Xarkov'
            +'     , _pgUnitNikopol.Id_Postgres_Branch as Is_pg_Nikopol');
+        Add('     , isnull(Contract.ContractNumber,'+FormatToVarCharServer_notNULL('')+') as ContractNumber');
         Add('     , _pgPartner.PartnerId_pg as ClientId_Postgres');
         Add('from dba.Client_by1CExternal');
         Add('          join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'               ) as Unit_byLoad_Client on Unit_byLoad_Client.UnitId = Client_by1CExternal.ClientId');
         Add('          join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'               ) as _pgPartner on _pgPartner.UnitId = Unit_byLoad_Client.Id_byLoad');
+
+        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+           +'                           from dba.Unit'
+           +'                                left outer join dba.ContractKind_byHistory as find1'
+           +'                                            on find1.ClientId = Unit.DolgByUnitID'
+           +'                                           and find1.EndDate=zc_DateEnd()'
+           +'                                           and trim(find1.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
+           +'                                left outer join dba.ContractKind_byHistory as find2'
+           +'                                            on find2.ClientId = Unit.Id'
+           +'                                           and find2.EndDate=zc_DateEnd()'
+           +'                                           and trim(find2.ContractNumber) <> ' + FormatToVarCharServer_notNULL('')
+           +'                           group by Unit.Id'
+           +'                          ) as Contract_find on Contract_find.ClientId = Client_by1CExternal.ClientId'
+           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
 
         Add('     left outer join dba._pgUnit as _pgUnitKiev       on _pgUnitKiev.ObjectCode      = 22020');
         Add('     left outer join dba._pgUnit as _pgUnitKrRog      on _pgUnitKrRog.ObjectCode     = 22030');
@@ -3004,6 +3022,7 @@ begin
         toStoredProc.Params.AddParam ('inPartnerId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inBranchTopId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inContractId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inIsSybase',ftBoolean,ptInput, true);
         //
         //!!!Обнуляем признак!!!
@@ -3015,23 +3034,32 @@ begin
              if fStop then begin exit;end;
              //
              InsertData_pg(FieldByName('Is_pg_Kiev').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byKiev').AsInteger,FieldByName('ClientName_byKiev').AsString);
+                          ,FieldByName('ClientCode_byKiev').AsInteger,FieldByName('ClientName_byKiev').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Doneck').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byDoneck').AsInteger,FieldByName('ClientName_byDoneck').AsString);
+                          ,FieldByName('ClientCode_byDoneck').AsInteger,FieldByName('ClientName_byDoneck').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Nikopol').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byNikopol').AsInteger,FieldByName('ClientName_byNikopol').AsString);
+                          ,FieldByName('ClientCode_byNikopol').AsInteger,FieldByName('ClientName_byNikopol').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Odessa').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byOdessa').AsInteger,FieldByName('ClientName_byOdessa').AsString);
+                          ,FieldByName('ClientCode_byOdessa').AsInteger,FieldByName('ClientName_byOdessa').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Xerson').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byXerson').AsInteger,FieldByName('ClientName_byXerson').AsString);
+                          ,FieldByName('ClientCode_byXerson').AsInteger,FieldByName('ClientName_byXerson').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Cherkassi').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byCherkassi').AsInteger,FieldByName('ClientName_byCherkassi').AsString);
+                          ,FieldByName('ClientCode_byCherkassi').AsInteger,FieldByName('ClientName_byCherkassi').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Simf').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_bySimf').AsInteger,FieldByName('ClientName_bySimf').AsString);
+                          ,FieldByName('ClientCode_bySimf').AsInteger,FieldByName('ClientName_bySimf').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_KrRog').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byKrRog').AsInteger,FieldByName('ClientName_byKrRog').AsString);
+                          ,FieldByName('ClientCode_byKrRog').AsInteger,FieldByName('ClientName_byKrRog').AsString
+                          ,FieldByName('ContractNumber').AsString);
              InsertData_pg(FieldByName('Is_pg_Xarkov').AsInteger,FieldByName('ClientId_Postgres').AsInteger
-                          ,FieldByName('ClientCode_byXarkov').AsInteger,FieldByName('ClientName_byXarkov').AsString);
+                          ,FieldByName('ClientCode_byXarkov').AsInteger,FieldByName('ClientName_byXarkov').AsString
+                          ,FieldByName('ContractNumber').AsString);
              //
              Next;
              Application.ProcessMessages;
@@ -10806,9 +10834,13 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
-        Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , zc_rvYes() as IsChangeAmount');
+        Add('     , case when Bill.ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak())'
+           +'             and Bill.BillDate >=zc_def_StartDate_PG()'
+           +'                 then 0'
+           +'            else BillItems.OperCount'
+           +'       end as AmountPartner');
+        Add('     , BillItems.OperCount as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -11118,9 +11150,12 @@ begin
         Add('     , Bill.Id_Postgres as MovementId_Postgres');
         Add('     , GoodsProperty.Id_Postgres as GoodsId_Postgres');
 
-        Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
+        //Add('     , case when Bill.ToId=5 then zc_rvNo() else zc_rvYes() end as IsChangeAmount');
+        //Add('     , BillItems.OperCount as AmountPartner');
+        //Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , zc_rvYes() as IsChangeAmount');
         Add('     , BillItems.OperCount as AmountPartner');
-        Add('     , case when IsChangeAmount=zc_rvYes() then AmountPartner end as Amount');
+        Add('     , BillItems.OperCount as Amount');
 
         Add('     , BillItems.OperPrice as Price');
         Add('     , 1 as CountForPrice');
@@ -12535,10 +12570,15 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             fOpenSqToQuery ('select OperDate from Movement where Id='+FieldByName('Id_Postgres').AsString);
+             fOpenSqToQuery (' select OperDate, DescId, StatusId, MLO.ObjectId as FromId'
+                            +' from Movement left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
+                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
+             //
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
              then begin
+                  if toSqlQuery.FieldByName('OperDate').AsDateTime>=StrToDate('01.04.2014') then
+
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
                   //
                   if myExecToStoredProc
@@ -12650,12 +12690,17 @@ begin
              fOpenSqToQuery ('select OperDate from Movement where Id='+FieldByName('Id_Postgres').AsString);
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
-             then begin
+             then
+             begin
                   toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  //
+                  // if cbCheck.Checked then ShowMessage ('pg - del : '+FieldByName('Id_Postgres').AsString);
                   //
                   if myExecToStoredProc
                   then if cbClearDelete.Checked
-                       then fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                       then begin //if cbCheck.Checked then ShowMessage ('Fl - del : '+'delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                                  fExecFlSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                             end;
              end;
              //
              Next;
