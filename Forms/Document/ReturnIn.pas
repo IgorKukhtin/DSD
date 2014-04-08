@@ -84,6 +84,12 @@ type
     actRefreshPrice: TdsdDataSetRefresh;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    bbPrintTaxCorrective_Us: TdxBarButton;
+    bbPrintTaxCorrective_Client: TdxBarButton;
   private
     { Private declarations }
   public

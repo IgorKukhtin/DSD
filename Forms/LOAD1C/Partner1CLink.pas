@@ -29,6 +29,8 @@ type
     actChoiceBranchForm: TOpenChoiceForm;
     actInsertRecord: TInsertRecord;
     bbAddRecord: TdxBarButton;
+    colDetailContract: TcxGridDBColumn;
+    actChoiceContractForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
