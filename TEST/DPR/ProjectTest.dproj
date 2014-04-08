@@ -1201,8 +1201,8 @@
 				<Form>GoodsEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\City.pas">
-				<Form>CityForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\MovementTaxChoice.pas">
+				<Form>MovementTaxChoiceForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CityEdit.pas">
@@ -1219,6 +1219,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale.pas">
 				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\City.pas">
+				<Form>CityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
