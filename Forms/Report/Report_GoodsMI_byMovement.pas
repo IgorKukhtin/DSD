@@ -21,7 +21,7 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSumm: TcxGridDBColumn;
+    clSummPartner: TcxGridDBColumn;
     clAmountPartner_Sh: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
@@ -39,6 +39,7 @@ type
     cxLabel3: TcxLabel;
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
+    clSummChangePercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

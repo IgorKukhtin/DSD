@@ -3,8 +3,8 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 994
-  ExplicitHeight = 380
+  ExplicitWidth = 986
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,7 +30,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = clSummPartner
             end
             item
               Format = ',0.####'
@@ -55,12 +55,17 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm
+              Column = clSummPartner
             end
             item
               Format = ',0.####'
@@ -85,6 +90,11 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSummChangePercent
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -178,12 +188,18 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 87
           end
-          object clSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'Summ'
+          object clSummPartner: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1087#1086#1082#1091#1087'.)'
+            DataBinding.FieldName = 'SummPartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
+          end
+          object clSummChangePercent: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081')'
+            DataBinding.FieldName = 'SummChangePercent'
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end
