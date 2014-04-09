@@ -15,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementItem_ReturnIn(
 )
 RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, Amount TFloat, AmountPartner TFloat
              , Price TFloat, CountForPrice TFloat, HeadCount TFloat
-             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar
+             , PartionGoods TVarChar, GoodsKindId Integer, GoodsKindName  TVarChar, MeasureName TVarChar
              , AssetId Integer, AssetName TVarChar
              , AmountSumm TFloat, isErased Boolean
              )
@@ -47,6 +47,7 @@ BEGIN
            , CAST (NULL AS TVarChar)    AS PartionGoods
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
            , 0 ::Integer                AS AssetId
            , '' ::TVarChar              AS AssetName
            , CAST (NULL AS TFloat)      AS AmountSumm
@@ -86,6 +87,11 @@ BEGIN
             LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
@@ -102,6 +108,7 @@ BEGIN
            , MIString_PartionGoods.ValueData 	AS PartionGoods
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
 
            , Object_Asset.Id         			AS AssetId
            , Object_Asset.ValueData  			AS AssetName
@@ -116,6 +123,10 @@ BEGIN
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
@@ -163,6 +174,7 @@ BEGIN
            , MIString_PartionGoods.ValueData 	AS PartionGoods
            , Object_GoodsKind.Id        		AS GoodsKindId
            , Object_GoodsKind.ValueData 		AS GoodsKindName
+           , Object_Measure.ValueData   AS MeasureName
            , Object_Asset.Id         			AS AssetId
            , Object_Asset.ValueData  			AS AssetName
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
@@ -176,6 +188,10 @@ BEGIN
                              AND MovementItem.DescId     = zc_MI_Master()
                              AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                                 ON ObjectLink_Goods_Measure.ObjectId = MovementItem.ObjectId
+                                AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+            LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id

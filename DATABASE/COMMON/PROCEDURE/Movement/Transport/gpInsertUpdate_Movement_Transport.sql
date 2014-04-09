@@ -58,7 +58,7 @@ BEGIN
      IF ioId <> 0 AND EXISTS (SELECT Id
                               FROM gpGet_Movement_Transport (inMovementId:= ioId, inSession:= inSession)
                               WHERE InvNumber = inInvNumber
-                                -- AND OperDate = inOperDate
+                                AND OperDate = inOperDate
                                 -- AND StartRunPlan = inStartRunPlan
                                 -- AND EndRunPlan = inEndRunPlan
                                 -- AND StartRun = inStartRun
@@ -73,8 +73,6 @@ BEGIN
                                 AND COALESCE (UnitForwardingId, 0) = inUnitForwardingId
                              )
      THEN
-         -- сохранили <Документ>
-         ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Transport(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
          -- сохранили связь с <Дата/Время выезда план>
          PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_StartRunPlan(), ioId, inStartRunPlan);
          -- сохранили связь с <Дата/Время возвращения план>
@@ -99,8 +97,6 @@ BEGIN
          -- сохранили связь с <Автомобиль (прицеп)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CarTrailer(), ioId, inCarTrailerId);
 
-         -- сохранили связь с <Сотрудник (водитель)>
-         PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), ioId, inPersonalDriverId);
          -- сохранили связь с <Сотрудник (водитель, дополнительный)>
          PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriverMore(), ioId, inPersonalDriverMoreId);
 
@@ -160,7 +156,7 @@ BEGIN
 
 
      -- Изменили свойства у подчиненных Документов
-     PERFORM lpInsertUpdate_Movement (ioId:= Movement.Id, inDescId:=zc_Movement_Income(), inInvNumber:= Movement.InvNumber, inOperDate:= Movement.OperDate, inParentId:= Movement.ParentId)
+     PERFORM lpInsertUpdate_Movement (ioId:= Movement.Id, inDescId:=zc_Movement_Income(), inInvNumber:= Movement.InvNumber, inOperDate:= inOperDate, inParentId:= Movement.ParentId)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_To(), Movement.Id, inCarId)
            , lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalDriver(), Movement.Id, inPersonalDriverId)
      FROM Movement
