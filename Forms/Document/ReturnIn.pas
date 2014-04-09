@@ -51,13 +51,11 @@ type
     N2: TMenuItem;
     N3: TMenuItem;
     PrintHeaderCDS: TClientDataSet;
-    PrintHeaderDS: TDataSource;
     spSelectPrint: TdsdStoredProc;
     spGetReportName: TdsdStoredProc;
     actSPPrintProcName: TdsdExecStoredProc;
     mactPrint: TMultiAction;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel5: TcxLabel;
     DocumentTaxKindGuides: TdsdGuides;

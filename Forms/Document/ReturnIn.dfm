@@ -2,6 +2,8 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 970
+  ExplicitLeft = -133
+  ExplicitTop = -276
   ExplicitWidth = 978
   ExplicitHeight = 695
   PixelsPerInch = 96
@@ -75,12 +77,17 @@ inherited ReturnInForm: TReturnInForm
               Column = colHeadCount
             end>
           Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -195,15 +202,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -782,6 +788,14 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = colName
+      end
+      item
+        Column = colAmount
+      end>
     Left = 654
     Top = 337
   end
@@ -1482,11 +1496,6 @@ inherited ReturnInForm: TReturnInForm
     Left = 468
     Top = 242
   end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 504
-    Top = 242
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
     DataSet = PrintHeaderCDS
@@ -1535,11 +1544,6 @@ inherited ReturnInForm: TReturnInForm
     Aggregates = <>
     Params = <>
     Left = 469
-    Top = 294
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 506
     Top = 294
   end
   object DocumentTaxKindGuides: TdsdGuides

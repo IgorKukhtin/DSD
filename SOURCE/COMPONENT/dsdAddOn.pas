@@ -541,13 +541,13 @@ begin
   // 1. Идем от текущей колонки вправо
   for i := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
       if inColumnEnterList(View.VisibleColumns[i]) then begin
-         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index;
+         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
          exit;
       end;
 
   for i := 0 to View.Controller.FocusedColumnIndex do
       if inColumnEnterList(View.VisibleColumns[i]) then begin
-         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index;
+         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
          exit;
       end;
 
@@ -892,6 +892,10 @@ procedure TdsdDBViewAddOn.OnKeyDown(Sender: TObject; var Key: Word;
 begin
   if (Key = VK_ESCAPE) and (View.DataController.Filter.Active) then
      View.DataController.Filter.Clear;
+  if (Key = VK_RETURN) and (Shift = []) and OnlyEditingCellOnEnter then begin
+     ActionOnlyEditingCellOnEnter;
+     Key := 0;
+  end;
   inherited;
 end;
 
