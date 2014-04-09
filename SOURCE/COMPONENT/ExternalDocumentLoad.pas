@@ -176,7 +176,6 @@ end;
 
 procedure TSale1CLoad.Next;
 begin
-  inherited;
   repeat
     FDataSet.Next;
   until ((FStartDate <= OperDate) and (OperDate <= FEndDate)) or FDataSet.EOF;

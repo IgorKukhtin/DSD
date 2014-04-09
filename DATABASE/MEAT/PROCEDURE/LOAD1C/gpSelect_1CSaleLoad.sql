@@ -15,7 +15,8 @@ RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                InvNalog TVarChar, BillId Integer, EkspCode Integer, ExpName TVarChar,
                BranchName TVarChar, DocType TVarChar, 
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
-               GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar
+               GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar,
+               ContractId Integer, ContractNumber TVarChar
 )
 AS
 $BODY$
@@ -60,7 +61,9 @@ BEGIN
       Object_Partner.ObjectCode,
       Object_Partner.ValueData,
       Object_Goods.ObjectCode AS GoodsGoodsKindCode,
-      (COALESCE (Object_Goods.ValueData, '') || ' ' || COALESCE (Object_GoodsKind.ValueData, '')) :: TVarChar AS GoodsGoodsKindName
+      (COALESCE (Object_Goods.ValueData, '') || ' ' || COALESCE (Object_GoodsKind.ValueData, '')) :: TVarChar AS GoodsGoodsKindName,
+      Object_Contract_View.ContractId, 
+      Object_Contract_View.InvNumber AS ContactNumber
       
 
       FROM Sale1C
@@ -68,13 +71,20 @@ BEGIN
            LEFT JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                            , Object_Partner1CLink.ObjectCode
                            , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
-                      FROM Object AS Object_Partner1CLink
+                           , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
+                       FROM Object AS Object_Partner1CLink
                            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                                AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                                ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                               AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                      ) AS tmpPartner1CLink ON tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
                                           AND tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
+
+           LEFT JOIN Object_Contract_View ON tmpPartner1CLink.ContractId = Object_Contract_View.ContractId
 
            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = tmpPartner1CLink.ObjectId
@@ -112,6 +122,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 09.04.14                         * 
  17.02.14                         * 
  15.02.14                                        * all
  03.02.14                         * 
