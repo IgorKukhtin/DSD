@@ -887,8 +887,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = 0.000000000000000000
         DataType = ftFloat
       end>
-    Left = 216
-    Top = 248
+    Left = 208
+    Top = 240
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective'
