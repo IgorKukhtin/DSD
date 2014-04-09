@@ -11,7 +11,7 @@ RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE Cursor1 refcursor;
---    DECLARE Cursor2 refcursor;
+    DECLARE Cursor2 refcursor;
     DECLARE vbUserId Integer;
     DECLARE vbMovementId Integer;
 BEGIN
@@ -250,17 +250,109 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
-
-
-
-
-
-
-
            ;
 -- END MOVEMENT
-
     RETURN NEXT Cursor1;
+
+--*****************************************************************
+
+    OPEN Cursor2 FOR
+     WITH tmpMovement AS
+         (
+           SELECT Movement.Id AS Id
+           FROM Movement
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId = zc_Movement_TaxCorrective()
+           UNION
+           SELECT  MovementLinkMovement_Master.MovementId
+           FROM MovementLinkMovement AS MovementLinkMovement_Master
+           JOIN Movement ON Movement.Id = inMovementId
+                        AND Movement.Id = MovementLinkMovement_Master.MovementChildId
+                        AND Movement.DescId = zc_Movement_ReturnIn()
+           WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+         )
+     , tmpReturnIn AS
+      (
+        SELECT
+             MovementItem.ObjectId     			        AS GoodsId
+           , MIFloat_Price.ValueData 			        AS Price
+           , SUM(MIFloat_AmountPartner.ValueData)   	AS Amount
+       FROM  MovementItem
+            JOIN Movement ON Movement.Id = MovementItem.MovementId
+                         AND Movement.DescId = zc_Movement_ReturnIn()-- отсекаем корректировки если был передан inMovementId из корректировки
+            JOIN MovementItemFloat AS MIFloat_Price
+                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  AND MIFloat_Price.ValueData <> 0
+
+            JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  AND MIFloat_AmountPartner.ValueData <> 0
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE--tmpIsErased.isErased)
+       GROUP BY
+             MovementItem.ObjectId
+           , MIFloat_Price.ValueData
+       )
+
+       , tmpTaxCorrective AS --строчные корректировок
+       (
+       SELECT
+             MovementItem.ObjectId                                          AS GoodsId
+           , MIFloat_Price.ValueData                                        AS Price
+           , SUM(MovementItem.Amount)                                       AS Amount
+       FROM tmpMovement
+           INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
+                                  AND MovementItem.DescId     = zc_MI_Master()
+                                  AND MovementItem.isErased   = FALSE
+                                  AND MovementItem.Amount <> 0
+            JOIN MovementItemFloat AS MIFloat_Price
+                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  AND MIFloat_Price.ValueData <> 0
+
+            JOIN Movement ON Movement.Id = MovementItem.MovementId
+                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+       GROUP BY
+             MovementItem.ObjectId
+           , MIFloat_Price.ValueData
+
+       )
+       -- сам запрос
+
+
+       SELECT GoodsId
+           , Object_Goods.ObjectCode         AS GoodsCode
+           , Object_Goods.ValueData          AS GoodsName
+           , Price                           AS Price
+           , SUM (ReturnInAmount)            AS ReturnInAmount
+           , SUM (TaxCorrectiveAmount)       AS TaxCorrectiveAmount
+       FROM (SELECT tmpReturnIn.GoodsId      AS GoodsId
+                  , tmpReturnIn.Price        AS Price
+                  , tmpReturnIn.Amount       AS ReturnInAmount
+                  , 0                        AS TaxCorrectiveAmount
+             FROM tmpReturnIn
+           UNION ALL
+             SELECT tmpTaxCorrective.GoodsId AS GoodsId
+                  , tmpTaxCorrective.Price   AS Price
+                  , 0                        AS ReturnInAmount
+                  , tmpTaxCorrective.Amount  AS TaxCorrectiveAmount
+             FROM tmpTaxCorrective
+          )as tmp
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  tmp.GoodsId
+
+      GROUP BY tmp.GoodsId
+             , Object_Goods.ObjectCode
+             , Object_Goods.ValueData
+             , tmp.Price
+      HAVING
+           SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
+      ;
+
+    RETURN NEXT Cursor2;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -269,6 +361,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.04.14                                                       *
  08.04.14                                                       *
  07.04.14                                                       *
 */

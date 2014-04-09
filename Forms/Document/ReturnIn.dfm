@@ -463,12 +463,12 @@ inherited ReturnInForm: TReturnInForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end>
       Params = <
         item
@@ -496,12 +496,12 @@ inherited ReturnInForm: TReturnInForm
       ShortCut = 16464
       DataSets = <
         item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end>
       Params = <
         item
@@ -1668,6 +1668,9 @@ inherited ReturnInForm: TReturnInForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
