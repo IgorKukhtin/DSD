@@ -2,29 +2,27 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 970
-  ExplicitWidth = 978
-  ExplicitHeight = 702
+  ExplicitWidth = 986
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 970
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 970
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 966
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 970
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -202,15 +200,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -269,7 +266,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -688,7 +685,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -706,6 +703,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -760,14 +765,6 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -1609,7 +1606,8 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = MasterCDS
+        Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
