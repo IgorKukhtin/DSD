@@ -63,7 +63,7 @@ BEGIN
     ;
 
      -- таблица - Данные
-     CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpMovement_find (MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
 
@@ -116,7 +116,7 @@ BEGIN
                           INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                  AND MovementItem.ObjectId = vbGoodsId
                                                  AND MovementItem.DescId = zc_MI_Master()
-                                                 AND Movement.isErased   = FALSE
+                                                 AND MovementItem.isErased   = FALSE
                                                  AND MovementItem.Amount <> 0
                           INNER JOIN MovementItemFloat AS MIFloat_Price
                                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -137,7 +137,7 @@ BEGIN
                                     INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                            AND MovementItem.ObjectId = vbGoodsId
                                                            AND MovementItem.DescId = zc_MI_Master()
-                                                           AND Movement.isErased   = FALSE
+                                                           AND MovementItem.isErased   = FALSE
                                     INNER JOIN MovementItemFloat AS MIFloat_Price
                                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                                 AND MIFloat_Price.ValueData = vbOperPrice
@@ -218,7 +218,7 @@ BEGIN
           ) AS tmpResult_update
           INNER JOIN MovementItem ON MovementItem.MovementId = tmpResult_update.MovementId_Corrective
                                  AND MovementItem.DescId = zc_MI_Master()
-                                AND Movement.isErased = FALSE;
+                                 AND MovementItem.isErased = FALSE;
 
      -- удаляем ненужные документы
      PERFORM lpSetErased_Movement (inMovementId       := tmpResult_delete.MovementId_Corrective
@@ -318,13 +318,34 @@ BEGIN
           ) AS tmpResult_update;
 
 
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId:= tmpResult_update.MovementId_Corrective)
+     FROM (SELECT MovementId_Corrective
+           FROM _tmpResult
+           GROUP BY MovementId_Corrective
+          ) AS tmpResult_update;
+
+
+     -- ФИНИШ - Обязательно меняем статус документа
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete()
+     FROM (SELECT MovementId_Corrective
+           FROM _tmpResult
+           GROUP BY MovementId_Corrective
+          ) AS tmpResult_complete
+     WHERE Movement.Id = tmpResult_complete.MovementId_Corrective;
+
+
      -- результат
      SELECT Object_TaxKind.ValueData
             INTO outDocumentTaxKindName
      FROM Object AS Object_TaxKind
      WHERE Object_TaxKind.Id = inDocumentTaxKindId;
 
-
+/*
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete()
+     WHERE Movement.DescId IN (zc_Movement_TaxCorrective(), zc_Movement_Tax())
+       AND StatusId = zc_Enum_Status_UnComplete()
+*/
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

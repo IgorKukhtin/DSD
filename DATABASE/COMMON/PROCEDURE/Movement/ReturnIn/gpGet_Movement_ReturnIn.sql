@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
-             , StatusCode Integer, StatusName TVarChar, Checked Boolean
+             , StatusId Integer, StatusCode Integer, StatusName TVarChar, Checked Boolean
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -32,6 +32,7 @@ BEGIN
              , CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) AS InvNumber
              , ''::TVarChar AS InvNumberPartner
              , inOperDate						        AS OperDate
+             , zc_Enum_Status_UnComplete()              AS StatusId
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
              , CAST (False as Boolean)                  AS Checked
@@ -57,7 +58,7 @@ BEGIN
              , CAST ('' as TVarChar) 				    AS DocumentTaxKindName
 
 
-          FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status
+          FROM lfGet_Object_Status (zc_Enum_Status_UnComplete()) AS Object_Status
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
                LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
                LEFT JOIN Object AS Object_To ON Object_To.Id = 8461
@@ -70,6 +71,7 @@ BEGIN
            , Movement.InvNumber
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
            , Movement.OperDate
+           , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
            , Object_Status.ValueData         	    AS StatusName
            , MovementBoolean_Checked.ValueData      AS Checked
