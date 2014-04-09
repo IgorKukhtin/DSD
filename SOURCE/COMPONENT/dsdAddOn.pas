@@ -536,37 +536,42 @@ procedure TdsdDBViewAddOn.ActionOnlyEditingCellOnEnter;
 var i: integer;
     NextFocusIndex: integer;
 begin
-  if ColumnEnterList.Count = 0 then exit;
-  
-  // 1. »дем от текущей колонки вправо
-  for i := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
-      if inColumnEnterList(View.VisibleColumns[i]) then begin
-         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
-         exit;
-      end;
+  if ColumnEnterList.Count <> 0 then begin
+    // 1. »дем от текущей колонки вправо
+    for i := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
+        if inColumnEnterList(View.VisibleColumns[i]) then begin
+           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
+           if (not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes) then
+               TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+           exit;
+        end;
 
-  for i := 0 to View.Controller.FocusedColumnIndex do
-      if inColumnEnterList(View.VisibleColumns[i]) then begin
-         View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
-         exit;
-      end;
-
-  // 1. —мотрим куда может идти
-(*  NextFocusIndex := -1;
-  for I := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
-      if View.VisibleColumns[i].Editable then begin
-         NextFocusIndex := i;
-         break;
-      end;
-  // 2. ≈сли есть куда на этой строчке, то идем на этой строчке
-  if NextFocusIndex > -1 then begin
-     View.Controller.FocusedColumnIndex := NextFocusIndex;
-     View.Controller.FocusedItem.Editing := true;
-  end;
-  // 3. ≈сли на этой строчке некуда и находимс€ в состо€нии редактировани€, то Post
-  if (NextFocusIndex = -1) and (TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert]) then
-     TcxDBDataController(FView.DataController).DataSource.DataSet.Post;*)
-  // 4. ≈сли есть куда на следующей, то идем на следующую
+    for i := 0 to View.Controller.FocusedColumnIndex do
+        if inColumnEnterList(View.VisibleColumns[i]) then begin
+           View.Controller.FocusedColumnIndex := View.VisibleColumns[i].Index - 1;
+           if (not View.VisibleColumns[i].Editing) and (TcxDBDataController(FView.DataController).DataSource.State in dsEditModes) then
+               TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+           exit;
+        end;
+  end
+  else begin
+    // 1. —мотрим куда может идти
+    NextFocusIndex := -1;
+    for I := View.Controller.FocusedColumnIndex + 1 to View.VisibleColumnCount - 1 do
+        if View.VisibleColumns[i].Editable then begin
+           NextFocusIndex := i;
+           break;
+        end;
+    // 2. ≈сли есть куда на этой строчке, то идем на этой строчке
+    if NextFocusIndex > -1 then begin
+       View.Controller.FocusedColumnIndex := NextFocusIndex;
+       View.Controller.FocusedItem.Editing := true;
+    end;
+    // 3. ≈сли на этой строчке некуда и находимс€ в состо€нии редактировани€, то Post
+    if (NextFocusIndex = -1) and (TcxDBDataController(FView.DataController).DataSource.State in [dsEdit, dsInsert]) then
+       TcxDBDataController(FView.DataController).DataSource.DataSet.Post;
+    // 4. ≈сли есть куда на следующей, то идем на следующую
+  end
 end;
 
 constructor TdsdDBViewAddOn.Create(AOwner: TComponent);
@@ -860,10 +865,10 @@ var
   FilterCriteriaItem: TcxFilterCriteriaItem;
   vbValue: string;
 begin
-  if length(edFilter.Text) > 2 then
-     vbValue := '%' + edFilter.Text + '%'
+  if (length(edFilter.Text) = 1) and (not (edFilter.Text[1] in ['0'..'9'])) then
+     vbValue := edFilter.Text + '%'
   else
-     vbValue := edFilter.Text + '%';
+     vbValue := '%' + edFilter.Text + '%';
   edFilter.Visible := false;
   with TcxGridDBDataController(FView.DataController), Filter.Root do begin
     FilterCriteriaItem := GetFilterItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index));

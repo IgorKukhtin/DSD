@@ -31,6 +31,9 @@ type
     bbAddRecord: TdxBarButton;
     colDetailContract: TcxGridDBColumn;
     actChoiceContractForm: TOpenChoiceForm;
+    actInsertPartner: TdsdInsertUpdateAction;
+    bbInsertPartner: TdxBarButton;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public
