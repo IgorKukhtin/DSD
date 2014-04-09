@@ -123,18 +123,17 @@ BEGIN
 
 
        FROM tmpMovement
-
-           INNER JOIN MovementItem ON   MovementItem.MovementId =  tmpMovement.Id
+           INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                   AND MovementItem.DescId     = zc_MI_Master()
                                   AND MovementItem.isErased   = FALSE
+                                  AND MovementItem.Amount <> 0
+            JOIN MovementItemFloat AS MIFloat_Price
+                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  AND MIFloat_Price.ValueData <> 0
 
             JOIN Movement ON Movement.Id = MovementItem.MovementId
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-
-            LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                        ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                       AND MIFloat_Price.ValueData <> 0
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
