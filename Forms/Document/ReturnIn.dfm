@@ -865,8 +865,8 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
-    Left = 64
-    Top = 120
+    Left = 72
+    Top = 112
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -1384,8 +1384,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 475
-    Top = 100
+    Left = 515
+    Top = 12
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1488,8 +1488,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 99
+    Left = 736
+    Top = 65531
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
@@ -1571,8 +1571,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 664
-    Top = 8
+    Left = 864
+    Top = 48
   end
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
@@ -1599,8 +1599,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 788
-    Top = 64
+    Left = 756
+    Top = 48
   end
   object spTaxCorrectiv: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -1643,6 +1643,9 @@ inherited ReturnInForm: TReturnInForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <

@@ -11,19 +11,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 986
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 982
+    ExplicitWidth = 986
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 976
+      ExplicitWidth = 980
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 980
         Height = 514
-        ExplicitWidth = 976
+        ExplicitWidth = 980
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -189,7 +189,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 986
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 986
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1429,7 +1429,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -1438,6 +1437,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 912

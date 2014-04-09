@@ -3,6 +3,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
   ClientHeight = 535
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   ExplicitWidth = 1118
   ExplicitHeight = 569
   PixelsPerInch = 96
@@ -414,7 +415,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax'
+    StoredProcName = 'gpSelect_Movement_Tax_ByPartner'
     Params = <
       item
         Name = 'instartdate'
@@ -442,6 +443,13 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         Value = False
         Component = actShowErased
         DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerId'
         ParamType = ptInput
       end>
     Left = 104
@@ -613,6 +621,29 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Top = 376
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'PartnerId'
+        Value = Null
+        ParamType = ptInput
+      end>
     Left = 304
     Top = 288
   end
