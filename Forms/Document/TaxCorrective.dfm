@@ -11,19 +11,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 986
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 982
+    ExplicitWidth = 986
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 982
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 976
+      ExplicitWidth = 980
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 980
         Height = 514
-        ExplicitWidth = 976
+        ExplicitWidth = 980
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -189,7 +189,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 986
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 986
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -887,8 +887,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = 0.000000000000000000
         DataType = ftFloat
       end>
-    Left = 216
-    Top = 248
+    Left = 208
+    Top = 240
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective'
@@ -1429,7 +1429,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -1439,8 +1438,64 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 912
     Top = 56
+  end
+  object HeaderSaverDocChild: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_DocChild
+    ControlList = <
+      item
+        Control = edDocumentTax
+      end>
+    GetStoredProc = spGet
+    Left = 344
+    Top = 193
+  end
+  object spInsertUpdateMovement_DocChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_DocChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovement_ChildId'
+        Value = ''
+        Component = DocumentTaxGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 274
+    Top = 400
   end
 end

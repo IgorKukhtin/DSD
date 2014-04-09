@@ -75,6 +75,8 @@ type
     bbPrint_TaxCorrective_Client: TdxBarButton;
     edDocumentTax: TcxButtonEdit;
     DocumentTaxGuides: TdsdGuides;
+    HeaderSaverDocChild: THeaderSaver;
+    spInsertUpdateMovement_DocChild: TdsdStoredProc;
   private
     { Private declarations }
   public

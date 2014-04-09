@@ -70,6 +70,7 @@ type
     FOnChange: TNotifyEvent;
     FChoiceAction: TObject;
     FFormNameParam: TdsdParam;
+    FisShowModal: boolean;
     function GetKey: String;
     function GetTextValue: String;
     procedure SetKey(const Value: String);
@@ -101,6 +102,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   protected
+    property isShowModal: boolean read FisShowModal write FisShowModal default false;
     // Вызыввем процедуру после выбора элемента из справочника
     procedure AfterChoice(Params: TdsdParams; Form: TForm); virtual; abstract;
     // данные, получаемые после выбора из справочника. Например для передачи в другие контролы
@@ -128,6 +130,7 @@ type
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
   published
+    property isShowModal;
     property Key;
     // Текстовое значение
     property TextValue;
@@ -529,10 +532,13 @@ begin
   DataSet := Form.FindComponent(PositionDataSet) as TDataSet;
   if not Assigned(DataSet) then
      raise Exception.Create('Не правильно установлено свойство PositionDataSet для формы ' + FormName);
-  // Показали форму
-  Form.Show;
   if Key <> '' then
      DataSet.Locate(KeyField, Key, []);
+  // Показали форму
+  if isShowModal then
+     Form.ShowModal
+  else
+     Form.Show;
 end;
 
 constructor TCustomGuides.Create(AOwner: TComponent);
@@ -540,6 +546,7 @@ begin
   inherited;
   PositionDataSet := 'ClientDataSet';
   KeyField := 'Id';
+  isShowModal := false;
 end;
 
 destructor TCustomGuides.Destroy;

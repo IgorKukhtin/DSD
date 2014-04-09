@@ -374,8 +374,11 @@ type
     FActionDataLink: TDataSetDataLink;
     FdsdDataSetRefresh: TdsdDataSetRefresh;
     FActionType: TDataSetAcionType;
+    FFieldName: string;
     function GetDataSource: TDataSource;
     procedure SetDataSource(const Value: TDataSource);
+    function GetFieldName: string;
+    procedure SetFieldName(const Value: string);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure DataSetChanged;
@@ -388,6 +391,7 @@ type
     property ActionType: TDataSetAcionType read FActionType write FActionType default acInsert;
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
+    property IdFieldName: string read GetFieldName write SetFieldName;
   end;
 
 
@@ -459,7 +463,6 @@ type
     FDataSetList: TList;
     function GetReportName: String;
     procedure SetReportName(const Value: String);
-    procedure OnEndDoc(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -767,6 +770,14 @@ begin
   result := FActionDataLink.DataSource
 end;
 
+function TdsdInsertUpdateAction.GetFieldName: string;
+begin
+  if FFieldName = '' then
+     result := 'Id'
+  else
+     result := FFieldName
+end;
+
 procedure TdsdInsertUpdateAction.Notification(AComponent: TComponent;
   Operation: TOperation);
 begin
@@ -787,12 +798,17 @@ begin
   if Assigned(DataSource) then
      if Assigned(DataSource.DataSet) then
         if Assigned(Params) then
-           DataSource.DataSet.Locate('Id', Params.ParamByName('Id').Value, []);
+           DataSource.DataSet.Locate(IdFieldName, Params.ParamByName('Id').Value, []);
 end;
 
 procedure TdsdInsertUpdateAction.SetDataSource(const Value: TDataSource);
 begin
   FActionDataLink.DataSource := Value;
+end;
+
+procedure TdsdInsertUpdateAction.SetFieldName(const Value: string);
+begin
+  FFieldName := Value
 end;
 
 procedure TdsdInsertUpdateAction.UpdateData;
@@ -1251,7 +1267,6 @@ begin
          try
            // Вдруг что!
           // FReport.PreviewOptions.modal := false;
-           FReport.OnEndDoc := Self.OnEndDoc;
            ShowReport;
          finally
            if Assigned(Self.Owner) then
@@ -1261,6 +1276,9 @@ begin
          end;
       end;
     finally
+      for I := 0 to FDataSetList.Count - 1 do
+          TfrxDBDataset(FDataSetList.Items[i]).Free;
+      FDataSetList.Free;
       Free;
     end;
   finally
@@ -1278,14 +1296,6 @@ begin
        for i := 0 to Params.Count - 1 do
            if Params[i].Component = AComponent then
               Params[i].Component := nil;
-end;
-
-procedure TdsdPrintAction.OnEndDoc(Sender: TObject);
-var i: integer;
-begin
-  for I := 0 to FDataSetList.Count - 1 do
-      TfrxDBDataset(FDataSetList.Items[i]).Free;
-  FDataSetList.Free;
 end;
 
 procedure TdsdPrintAction.SetReportName(const Value: String);

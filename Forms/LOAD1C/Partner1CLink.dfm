@@ -23,6 +23,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
@@ -210,6 +214,9 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           DataType = ftString
         end>
       isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'PartnerId'
     end
   end
   inherited MasterDS: TDataSource
