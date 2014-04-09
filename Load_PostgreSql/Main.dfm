@@ -223,7 +223,6 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
-      Enabled = False
       TabOrder = 8
     end
     object cbJuridicalFl: TCheckBox
@@ -551,7 +550,6 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
-      Enabled = False
       TabOrder = 40
     end
     object cbJuridicalInt: TCheckBox
@@ -993,21 +991,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 27
-      OnClick = cbReturnInFlClick
-    end
-    object cbCheck: TCheckBox
-      Left = 132
-      Top = 514
-      Width = 100
-      Height = 17
-      Caption = 'Check'
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = [fsBold]
-      ParentFont = False
-      TabOrder = 28
       OnClick = cbReturnInFlClick
     end
   end

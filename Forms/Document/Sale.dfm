@@ -2,6 +2,7 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
+  ExplicitLeft = -252
   ExplicitWidth = 1131
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -139,7 +140,6 @@ inherited SaleForm: TSaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 45
           end
           object colAmount: TcxGridDBColumn
@@ -151,7 +151,6 @@ inherited SaleForm: TSaleForm
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colAmountChangePercent: TcxGridDBColumn
@@ -162,7 +161,6 @@ inherited SaleForm: TSaleForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Options.Editing = False
             Width = 60
           end
           object colAmountPartner: TcxGridDBColumn
@@ -286,6 +284,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
