@@ -1449,4 +1449,53 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 912
     Top = 56
   end
+  object HeaderSaverDocChild: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_DocChild
+    ControlList = <
+      item
+        Control = edDocumentTax
+      end>
+    GetStoredProc = spGet
+    Left = 344
+    Top = 193
+  end
+  object spInsertUpdateMovement_DocChild: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_DocChild'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inInvNumber'
+        Value = ''
+        Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovement_ChildId'
+        Value = ''
+        Component = DocumentTaxGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 274
+    Top = 400
+  end
 end
