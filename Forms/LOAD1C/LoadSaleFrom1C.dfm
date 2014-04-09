@@ -1,27 +1,26 @@
 inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
   Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1087#1088#1086#1076#1072#1078' '#1080#1079' 1'#1057
   ClientHeight = 408
-  ClientWidth = 901
-  ExplicitLeft = -64
-  ExplicitWidth = 909
+  ClientWidth = 1063
+  ExplicitWidth = 1071
   ExplicitHeight = 435
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 901
+    Width = 1063
     Height = 351
     TabOrder = 3
-    ExplicitWidth = 901
+    ExplicitWidth = 1063
     ExplicitHeight = 351
     ClientRectBottom = 351
-    ClientRectRight = 901
+    ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 901
+      ExplicitWidth = 1063
       ExplicitHeight = 351
       inherited cxGrid: TcxGrid
-        Width = 901
+        Width = 1063
         Height = 351
-        ExplicitWidth = 901
+        ExplicitWidth = 1063
         ExplicitHeight = 351
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.FooterSummaryItems = <
@@ -82,6 +81,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 63
+          end
+          object colContract: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
           object colGoodsCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
@@ -148,8 +154,8 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
   end
   inherited Panel: TPanel
-    Width = 901
-    ExplicitWidth = 901
+    Width = 1063
+    ExplicitWidth = 1063
     inherited deStart: TcxDateEdit
       EditValue = 41640d
     end
