@@ -259,12 +259,14 @@ BEGIN
     OPEN Cursor2 FOR
      WITH tmpMovement AS
          (
+         /*
            SELECT Movement.Id AS Id
            FROM Movement
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
            UNION
-           SELECT  MovementLinkMovement_Master.MovementId
+*/
+           SELECT  MovementLinkMovement_Master.MovementId AS Id
            FROM MovementLinkMovement AS MovementLinkMovement_Master
            JOIN Movement ON Movement.Id = inMovementId
                         AND Movement.Id = MovementLinkMovement_Master.MovementChildId

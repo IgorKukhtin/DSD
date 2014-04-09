@@ -494,6 +494,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end>
       Params = <
         item
@@ -523,6 +527,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
         end>
       Params = <
         item
@@ -1289,6 +1297,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1397,6 +1408,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
