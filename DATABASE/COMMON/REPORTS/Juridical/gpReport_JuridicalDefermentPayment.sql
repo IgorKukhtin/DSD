@@ -29,6 +29,15 @@ BEGIN
   vbLenght := 7;
 
   RETURN QUERY  
+
+ select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindName
+             , a.ContractId, a.ContractCode, a.ContractNumber
+             , a.DebetRemains , a.KreditRemains
+             , a.SaleSumm, a.DefermentPaymentRemains
+             , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
+             , a.Condition, a.StartContractDate, a.Remains
+             , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
+from (
   SELECT 
      Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
@@ -41,7 +50,7 @@ BEGIN
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
    , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
    , RESULT.SaleSumm::TFloat
-   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > 0 THEN RESULT.Remains - RESULT.SaleSumm ELSE 0 END)::TFloat AS DefermentPaymentRemains
+   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > 0 THEN RESULT.Remains - RESULT.SaleSumm ELSE RESULT.Remains - RESULT.SaleSumm END)::TFloat AS DefermentPaymentRemains
    , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0) THEN 
    	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > RESULT.SaleSumm1 THEN RESULT.SaleSumm1 ELSE (RESULT.Remains - RESULT.SaleSumm) END
       ELSE 0 END)::TFloat AS SaleSumm1
@@ -54,10 +63,10 @@ BEGIN
    , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0) THEN 
    	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4 THEN RESULT.SaleSumm4 ELSE (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) END
       ELSE 0 END)::TFloat AS SaleSumm4
-   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat
+   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat AS SaleSumm5
    , (RESULT.DayCount||' '||Object_ContractConditionKind.ValueData)::TVarChar AS Condition
-   , RESULT.ContractDate::TDateTime AS ContractDate
-   , (-RESULT.Remains)::TFloat
+   , RESULT.ContractDate::TDateTime AS StartContractDate
+   , (-RESULT.Remains)::TFloat AS Remains
 
       , Object_InfoMoney_View.InfoMoneyGroupName
       , Object_InfoMoney_View.InfoMoneyDestinationName
@@ -131,7 +140,11 @@ BEGIN
                   ON CLO_PaidKind.ContainerId = RESULT.Id
                  AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId
-
+) as a
+where a.DebetRemains <> 0 or a.KreditRemains <> 0
+             or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
+             or  a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
+             or  a.Remains <> 0 
     ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА
@@ -144,6 +157,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 09.04.14                                        * add !!!
  31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
  30.03.14                          * 
  06.02.14                          * 
