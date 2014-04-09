@@ -514,6 +514,10 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = dsdChoiceGuides
+      end>
     Left = 320
     Top = 224
   end
