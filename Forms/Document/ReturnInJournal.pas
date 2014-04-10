@@ -51,8 +51,8 @@ type
     edDocumentTaxKind: TcxButtonEdit;
     cxLabel14: TcxLabel;
     DocumentTaxKindGuides: TdsdGuides;
-    spTaxCorrectiv: TdsdStoredProc;
-    actTaxCorrectiv: TdsdExecStoredProc;
+    spTaxCorrective: TdsdStoredProc;
+    actTaxCorrective: TdsdExecStoredProc;
     bbTaxCorrective: TdxBarButton;
     colDocumentTaxKindName: TcxGridDBColumn;
     colOKPO_From: TcxGridDBColumn;
@@ -72,6 +72,9 @@ type
     bbPrintReturnIn: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
+    actCorrective: TdsdExecStoredProc;
+    bbCorrective: TdxBarButton;
+    spCorrective: TdsdStoredProc;
   private
     { Private declarations }
   public
