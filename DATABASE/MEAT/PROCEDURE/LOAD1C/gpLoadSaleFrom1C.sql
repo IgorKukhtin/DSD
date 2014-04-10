@@ -48,7 +48,10 @@ BEGIN
                       LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                            ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                 WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                 WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink() AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
 
@@ -106,16 +109,20 @@ BEGIN
                         , zfGetUnitFromUnitId (Sale1C.UnitId) AS UnitId
                         , Sale1C.UnitId AS UnitId_1C
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
-                        , View_Contract.ContractId
+                        , tmpPartner1CLink.ContractId
                         , Sale.Id AS MovementId
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
                           , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
+                          , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
                      FROM Object AS Object_Partner1CLink
-                          LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                               ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                              AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                           ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
                      WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                     ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                          AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -125,10 +132,6 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN Object_Contract_View AS View_Contract
-                                              ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                             AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
                LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate FROM Movement  
           JOIN MovementLinkObject AS MLO_From
                                   ON MLO_From.MovementId = Movement.Id
@@ -253,16 +256,20 @@ BEGIN
                         , zfGetUnitFromUnitId (Sale1C.UnitId) AS vbUnitId
                         , Sale1C.UnitId AS vbUnitId
                         , ObjectLink_Partner1CLink_Partner.ChildObjectId AS PartnerId
-                        , View_Contract.ContractId
+                        , tmpPartner1CLink.ContractId
                         , MovementReturn.Id
           FROM Sale1C
                JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
                           , Object_Partner1CLink.ObjectCode
                           , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
+                          , ObjectLink_Partner1CLink_Contract.ChildObjectId AS ContractId
                      FROM Object AS Object_Partner1CLink
                           LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
                                                ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
                                               AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
                      WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
                     ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                          AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -272,11 +279,6 @@ BEGIN
                LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = ObjectLink_Partner1CLink_Partner.ChildObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN Object_Contract_View AS View_Contract
-                                              ON View_Contract.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
-                                             AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
-                                             AND View_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101()
-
                LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate 
                                 FROM Movement  
           JOIN MovementLinkObject AS MLO_From
@@ -377,6 +379,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.04.14                        * 
  31.03.14                        * 
  18.02.14                        * add inBranchId
  15.02.14                                        * исправил на "<>" там где Не все записи засинхронизированы

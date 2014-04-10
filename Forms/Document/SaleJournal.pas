@@ -13,7 +13,8 @@ uses
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
   cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
-  cxButtonEdit, dsdGuides, frxClass, frxDBSet;
+  cxButtonEdit, dsdGuides, frxClass, frxDBSet, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
   TSaleJournalForm = class(TAncestorJournalForm)

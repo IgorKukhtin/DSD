@@ -1,25 +1,25 @@
 inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
   ClientHeight = 401
-  ClientWidth = 835
-  ExplicitWidth = 843
+  ClientWidth = 877
+  ExplicitWidth = 885
   ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 835
+    Width = 877
     Height = 375
-    ExplicitWidth = 835
+    ExplicitWidth = 877
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 835
+    ClientRectRight = 877
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 835
+      ExplicitWidth = 877
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 835
+        Width = 877
         Height = 375
-        ExplicitWidth = 835
+        ExplicitWidth = 877
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.IncSearch = True
@@ -27,29 +27,34 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            Width = 189
+          end
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'PartnerCode'
             Options.Editing = False
             Options.IncSearch = False
-            Width = 115
+            Width = 65
           end
           object colName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             Options.Editing = False
             Options.IncSearch = False
-            Width = 319
+            Width = 239
           end
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
             DataBinding.FieldName = 'Code'
-            Width = 60
+            Width = 58
           end
           object colDetailName: TcxGridDBColumn
             Caption = #1053#1072#1079#1074#1072#1085#1080#1077' 1'#1057
             DataBinding.FieldName = 'Name'
-            Width = 128
+            Width = 121
           end
           object colDetailBranch: TcxGridDBColumn
             Caption = #1060#1080#1083#1080#1072#1083
@@ -61,7 +66,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 112
+            Width = 107
           end
           object colDetailContract: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -73,7 +78,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 87
+            Width = 84
           end
         end
       end
@@ -188,6 +193,31 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end>
       isShowModal = False
     end
+    object actInsertPartner: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 27
+      FormName = 'TPartnerJuridicalEditForm'
+      FormNameParam.Value = 'TPartnerJuridicalEditForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = True
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'PartnerId'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -211,6 +241,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
           Visible = True
           ItemName = 'bbAddRecord'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertPartner'
         end
         item
           Visible = True
@@ -242,6 +280,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     end
     object bbAddRecord: TdxBarButton
       Action = actInsertRecord
+      Category = 0
+    end
+    object bbInsertPartner: TdxBarButton
+      Action = actInsertPartner
       Category = 0
     end
   end

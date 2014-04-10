@@ -454,6 +454,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTaxForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTaxJournalForm');
+   //08.04.14 Dima
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTaxJournalSelectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTaxJournalSelectForm');
 end;
 
 procedure TLoadFormTest.LoadTaxCorrectiveTest;

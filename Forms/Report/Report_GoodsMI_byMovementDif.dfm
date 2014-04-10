@@ -169,7 +169,7 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
             Width = 60
           end
           object clMeasureName: TcxGridDBColumn
-            Caption = #1045#1076'.'#1080#1079#1084'.'
+            Caption = #1045#1076'. '#1080#1079#1084'.'
             DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -191,6 +191,7 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -206,7 +207,7 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
             Width = 60
           end
           object clAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1087#1086#1082#1091#1087'.)'
+            Caption = #1050#1086#1083'-'#1074#1086' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -226,13 +227,13 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 41609d
+      EditValue = 41640d
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
-      EditValue = 41609d
+      EditValue = 41640d
       ExplicitLeft = 114
       ExplicitTop = 32
     end
@@ -309,14 +310,14 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41609d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

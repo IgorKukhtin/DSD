@@ -215,6 +215,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colAreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'

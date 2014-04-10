@@ -35,6 +35,7 @@ type
     clSummPartner: TcxGridDBColumn;
     clAmountChangePercent_Sh: TcxGridDBColumn;
     clAmountChangePercent_Weight: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

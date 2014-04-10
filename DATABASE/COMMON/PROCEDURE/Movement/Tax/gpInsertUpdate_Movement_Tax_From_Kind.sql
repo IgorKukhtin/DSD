@@ -33,7 +33,7 @@ BEGIN
      -- 
      IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax()
      THEN
-         RAISE EXCEPTION 'Ошибка.Нет прав.';
+         RAISE EXCEPTION 'Ошибка.Неверно указан тип налоговой.';
      END IF;
 
 
@@ -60,6 +60,13 @@ BEGIN
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
                      LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MovementSale.Id
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+
+     -- 
+     IF  COALESCE (vbFromId, 0) = 0 OR COALESCE (vbToId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ не определен.';
+     END IF;
+
 
                 -- выбираем реквизиты для обновления/создания шапки НН
                 SELECT tmp.ioInvNumberPartner

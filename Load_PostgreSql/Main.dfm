@@ -223,7 +223,6 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.3. '#1044#1086#1075#1086#1074#1086#1088#1072' Fl'
-      Enabled = False
       TabOrder = 8
     end
     object cbJuridicalFl: TCheckBox
@@ -551,7 +550,6 @@ object MainForm: TMainForm
       Width = 138
       Height = 17
       Caption = '2.5. '#1044#1086#1075#1086#1074#1086#1088#1072' Int'
-      Enabled = False
       TabOrder = 40
     end
     object cbJuridicalInt: TCheckBox

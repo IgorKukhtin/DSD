@@ -2,29 +2,27 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 970
-  ExplicitWidth = 978
-  ExplicitHeight = 702
+  ExplicitWidth = 986
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 970
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 970
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 966
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 970
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -127,6 +125,13 @@ inherited ReturnInForm: TReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
+          object colMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object colAmount: TcxGridDBColumn
             Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Amount'
@@ -195,15 +200,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -262,7 +266,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -454,7 +458,15 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -479,7 +491,15 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
       ImageIndex = 18
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -500,6 +520,15 @@ inherited ReturnInForm: TReturnInForm
         end>
       Caption = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -656,7 +685,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -674,6 +703,14 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
           Visible = True
           ItemName = 'bbStatic'
         end
@@ -728,14 +765,6 @@ inherited ReturnInForm: TReturnInForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTaxCorrective'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -757,6 +786,14 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    OnlyEditingCellOnEnter = True
+    ColumnEnterList = <
+      item
+        Column = colName
+      end
+      item
+        Column = colAmount
+      end>
     Left = 654
     Top = 337
   end
@@ -825,8 +862,8 @@ inherited ReturnInForm: TReturnInForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnIn'
-    Left = 64
-    Top = 120
+    Left = 72
+    Top = 112
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnIn'
@@ -1344,8 +1381,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 475
-    Top = 100
+    Left = 515
+    Top = 12
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1448,34 +1485,13 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 99
-  end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 406
-    Top = 341
-  end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 390
-    Top = 242
+    Left = 736
+    Top = 65531
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 468
-    Top = 242
-  end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 504
     Top = 242
   end
   object spSelectPrint: TdsdStoredProc
@@ -1528,11 +1544,6 @@ inherited ReturnInForm: TReturnInForm
     Left = 469
     Top = 294
   end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 506
-    Top = 294
-  end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
@@ -1557,8 +1568,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 888
-    Top = 64
+    Left = 864
+    Top = 48
   end
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
@@ -1585,8 +1596,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 788
-    Top = 64
+    Left = 756
+    Top = 48
   end
   object spTaxCorrectiv: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
@@ -1595,7 +1606,8 @@ inherited ReturnInForm: TReturnInForm
     Params = <
       item
         Name = 'inMovementId'
-        Component = MasterCDS
+        Value = Null
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -1629,6 +1641,9 @@ inherited ReturnInForm: TReturnInForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1654,6 +1669,9 @@ inherited ReturnInForm: TReturnInForm
     DataSets = <
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
       end>
     OutputType = otMultiDataSet
     Params = <

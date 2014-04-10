@@ -59,6 +59,16 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = clAmountChangePercent_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = clSummChangePercent
             end>
           DataController.Summary.FooterSummaryItems = <
@@ -94,6 +104,16 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
+              Column = clAmountChangePercent_Weight
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clAmountChangePercent_Sh
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
               Column = clSummChangePercent
             end>
           OptionsData.Editing = False
@@ -103,24 +123,25 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
           Styles.Footer = nil
           Styles.Header = nil
           object clInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 73
           end
-          object clJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'.'#1083#1080#1094#1086
-            DataBinding.FieldName = 'JuridicalName'
+          object clOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'OperDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 104
+            Width = 70
           end
-          object clPartnerName: TcxGridDBColumn
-            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
-            DataBinding.FieldName = 'PartnerName'
+          object clOperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 152
+            Width = 70
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1053#1072#1083'/'#1041#1085
@@ -129,75 +150,156 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             HeaderAlignmentVert = vaCenter
             Width = 30
           end
+          object clJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1055#1086#1082#1091#1087#1072#1090#1077#1083#1100
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 76
+            Width = 60
           end
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 78
+            Width = 70
           end
           object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 51
+            Width = 45
           end
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 108
+            Width = 100
           end
-          object clAmount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount_Weight'
-            Visible = False
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
-          object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount_Sh'
-            Visible = False
-          end
-          object clPrice: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1073#1077#1079' '#1053#1044#1057')'
-            DataBinding.FieldName = 'Price'
+          object clMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
-          object clAmountPartner_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1042#1077#1089' ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'AmountPartner_Weight'
+          object clPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 91
+            Width = 45
+          end
+          object clAmount_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmountChangePercent_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'AmountChangePercent_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmountPartner_Weight: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'AmountPartner_Weight'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmount_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1096#1090'. ('#1089#1082#1083#1072#1076')'
+            DataBinding.FieldName = 'Amount_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clAmountChangePercent_Sh: TcxGridDBColumn
+            Caption = #1050#1086#1083'.'#1096#1090'.  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
+            DataBinding.FieldName = 'AmountChangePercent_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clAmountPartner_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1064#1090'. ('#1087#1086#1082#1091#1087'.)'
+            Caption = #1050#1086#1083'.'#1096#1090'.  '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'AmountPartner_Sh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 87
-          end
-          object clSummPartner: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1087#1086#1082#1091#1087'.)'
-            DataBinding.FieldName = 'SummPartner'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 73
+            Width = 60
           end
           object clSummChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1089#1086' '#1089#1082#1080#1076#1082#1086#1081')'
+            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090#1085#1072#1103
             DataBinding.FieldName = 'SummChangePercent'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clSummPartner: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'SummPartner'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -212,13 +314,13 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 41609d
+      EditValue = 41640d
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
-      EditValue = 41609d
+      EditValue = 41640d
       ExplicitLeft = 114
       ExplicitTop = 32
     end
@@ -295,14 +397,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41609d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -346,7 +448,7 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 112
-    Top = 128
+    Top = 176
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
