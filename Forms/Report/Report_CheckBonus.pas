@@ -30,6 +30,7 @@ type
     edBonusKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
     clSum_BonusFact: TcxGridDBColumn;
+    clContract_InvNumberChild: TcxGridDBColumn;
   private
     { Private declarations }
   public
