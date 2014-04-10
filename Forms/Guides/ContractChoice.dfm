@@ -5,24 +5,27 @@ inherited ContractChoiceForm: TContractChoiceForm
   AddOnFormData.isAlwaysRefresh = True
   AddOnFormData.Params = FormParams
   ExplicitWidth = 861
-  ExplicitHeight = 523
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 853
-    Height = 470
+    Height = 468
+    ExplicitTop = 28
     ExplicitWidth = 853
-    ExplicitHeight = 470
-    ClientRectBottom = 470
-    ClientRectRight = 853
+    ExplicitHeight = 468
+    ClientRectBottom = 464
+    ClientRectRight = 849
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 853
-      ExplicitHeight = 470
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 847
+      ExplicitHeight = 462
       inherited cxGrid: TcxGrid
-        Width = 853
-        Height = 470
-        ExplicitWidth = 853
-        ExplicitHeight = 470
+        Width = 847
+        Height = 462
+        ExplicitWidth = 847
+        ExplicitHeight = 462
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -289,7 +292,7 @@ inherited ContractChoiceForm: TContractChoiceForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -365,6 +368,15 @@ inherited ContractChoiceForm: TContractChoiceForm
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
         DataType = ftString
       end>
     Left = 416
