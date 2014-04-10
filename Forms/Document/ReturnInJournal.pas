@@ -61,6 +61,17 @@ type
     colTotalCountTare: TcxGridDBColumn;
     colTotalCountSh: TcxGridDBColumn;
     colTotalCountKg: TcxGridDBColumn;
+    spSelectPrint: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    actPrint: TdsdPrintAction;
+    bbPrintReturnIn: TdxBarButton;
+    bbPrintTaxCorrective_Client: TdxBarButton;
+    bbPrintTaxCorrective_Us: TdxBarButton;
   private
     { Private declarations }
   public
