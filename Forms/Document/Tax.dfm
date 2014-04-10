@@ -1,25 +1,27 @@
 inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
-  ClientWidth = 924
-  ExplicitWidth = 932
+  ClientWidth = 1067
+  ExplicitWidth = 1075
   ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 128
-    Width = 924
+    Width = 1067
     Height = 540
     ExplicitTop = 128
     ExplicitWidth = 924
     ExplicitHeight = 540
     ClientRectBottom = 536
-    ClientRectRight = 920
+    ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 2
+      ExplicitTop = 22
       ExplicitWidth = 918
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 918
+        Width = 1061
         Height = 514
         ExplicitWidth = 918
         ExplicitHeight = 514
@@ -154,11 +156,12 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 918
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 918
+        Width = 1061
         Height = 514
         ExplicitWidth = 918
         ExplicitHeight = 514
@@ -183,7 +186,7 @@ inherited TaxForm: TTaxForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 924
+    Width = 1067
     Height = 100
     TabOrder = 3
     ExplicitWidth = 924
@@ -353,16 +356,21 @@ inherited TaxForm: TTaxForm
       Width = 157
     end
     object edPartner: TcxButtonEdit
-      Left = 435
-      Top = 36
+      Left = 885
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 24
-      Visible = False
-      Width = 177
+      Text = ' '
+      Width = 152
+    end
+    object cxLabel5: TcxLabel
+      Left = 885
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -929,13 +937,13 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'PartnerId'
-        Value = ''
+        Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
       end
       item
         Name = 'PartnerName'
-        Value = ''
+        Value = ' '
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1018,7 +1026,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'inPartnerId'
-        Value = ''
+        Value = '0'
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -1264,8 +1272,20 @@ inherited TaxForm: TTaxForm
         Value = '0'
         Component = FormParams
         ComponentItem = 'inPaidKindId'
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
       end>
-    Left = 512
+    Left = 504
     Top = 16
   end
   object DocumentTaxKindGuides: TdsdGuides
@@ -1319,7 +1339,8 @@ inherited TaxForm: TTaxForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 696
+    Left = 672
+    Top = 8
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1539,28 +1560,59 @@ inherited TaxForm: TTaxForm
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'inPaidKindId'
+      end
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPartner
+        Component = ContractGuides
         ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPartner
+        Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 608
-    Top = 96
+    Left = 928
+    Top = 16
   end
 end
