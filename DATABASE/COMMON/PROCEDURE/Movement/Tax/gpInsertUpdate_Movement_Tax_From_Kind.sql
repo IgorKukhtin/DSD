@@ -2,11 +2,14 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar, TVarChar, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
     IN inMovementId                 Integer  , -- ключ Документа
     IN inDocumentTaxKindId          Integer  , -- Тип формирования налогового документа
+    IN inDocumentTaxKindId_inf      Integer  , -- Тип формирования налогового документа
    OUT outInvNumberPartner_Master   TVarChar , --
+   OUT outDocumentTaxKindId         Integer  , --
    OUT outDocumentTaxKindName       TVarChar , --
     IN inSession                    TVarChar   -- сессия пользователя
 )
@@ -30,6 +33,16 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
    
+
+     -- это значит пользователь установил в журнале "другой" тип формирования
+     IF inDocumentTaxKindId_inf <> 0 THEN inDocumentTaxKindId:= inDocumentTaxKindId_inf; END IF;
+
+     -- это тип формирования по дефолту
+     IF COALESCE (inDocumentTaxKindId, 0) = 0
+     THEN inDocumentTaxKindId:= zc_Enum_DocumentTaxKind_Tax();
+     END IF;
+
+
      -- 
      IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax()
      THEN
@@ -62,13 +75,21 @@ BEGIN
                                                    AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
 
      -- 
-     IF  COALESCE (vbFromId, 0) = 0 OR COALESCE (vbToId, 0) = 0
+     IF  COALESCE (vbFromId, 0) = 0 OR COALESCE (vbToId, 0) = 0 OR COALESCE (vbPartnerId, 0) = 0 
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не определен.';
      END IF;
 
+                -- распроводим налоговую
+                IF vbTaxId <> 0
+                THEN
+                    PERFORM lpUnComplete_Movement (inMovementId       := vbTaxId
+                                                 , inUserId           := vbUserId
+                                                  );
+                END IF;
 
-                -- выбираем реквизиты для обновления/создания шапки НН
+
+                -- сохранили Налоговую
                 SELECT tmp.ioInvNumberPartner
                      , Object_DocumentTaxKind.ValueData
                      , tmp.ioId                   
@@ -90,10 +111,11 @@ BEGIN
                                                  ) AS tmp
                      LEFT JOIN Object AS Object_DocumentTaxKind ON Object_DocumentTaxKind.Id = inDocumentTaxKindID;
 
-                -- сохранили Продажи с Нологовой
+
+                -- сохранили связь Продажи с Налоговой
                 PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), inMovementId, vbTaxId);
            
-                -- сохранили 
+                -- сохранили строчную часть заново
                 PERFORM lpInsertUpdate_MovementItem_Tax (ioId := COALESCE ( tmpGoodsTax.MovementItemId_Tax,0)    
                                                        , inMovementId := vbTaxId       
                                                        , inGoodsId := tmpGoodsSale.GoodsId
@@ -151,7 +173,7 @@ BEGIN
                                                 AND tmpGoodsTax.GoodsKindId = tmpGoodsSale.GoodsKindId
                                                 AND tmpGoodsTax.Price_Tax = tmpGoodsSale.Price_Sale;
 
-              -- удаляем лишние строки из Налоговой                                   
+               -- удаляем лишние строки из Налоговой                                   
                PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpGoodsTax.MovementItemId_Tax
                                                    , inSession := inSession)
                FROM (SELECT MovementItem.ObjectId AS GoodsId
@@ -749,25 +771,41 @@ BEGIN
                
             ELSE 
                            
-                  SELECT '12345/789'
-                       , Object_DocumentTaxKind.ValueData
-                  INTO outInvNumberPartner_Master, outDocumentTaxKindName
-
-                  FROM Object AS Object_DocumentTaxKind
-                  WHERE Object_DocumentTaxKind.Id = inDocumentTaxKindId;
             END IF; --zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
             END IF; --zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
             END IF; -- zc_Enum_DocumentTaxKind_Tax()  
+
+
+     -- ФИНИШ - Обязательно меняем статус у Налоговой
+     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = vbTaxId;
+
+     -- результат
+     SELECT MS_InvNumberPartner_Master.ValueData
+          , MovementLinkObject_DocumentTaxKind.ObjectId
+          , Object_TaxKind.ValueData
+            INTO outInvNumberPartner_Master, outDocumentTaxKindId, outDocumentTaxKindName
+     FROM MovementLinkMovement AS MovementLinkMovement_Master
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                       ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_Master.MovementChildId
+                                      AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+          LEFT JOIN MovementString AS MS_InvNumberPartner_Master
+                                   ON MS_InvNumberPartner_Master.MovementId = MovementLinkObject_DocumentTaxKind.MovementId
+                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+          LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+     WHERE MovementLinkMovement_Master.MovementChildId = vbTaxId
+       AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master();
+
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.04.14                                        * all
  29.03.14         *
  23.03.14                                        * all
  13.02.14                                                        *

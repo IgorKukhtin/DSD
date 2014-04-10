@@ -144,6 +144,8 @@ type
     cbOnlyUpdateInt: TCheckBox;
     cbErr: TCheckBox;
     cbTotalTaxCorr: TCheckBox;
+    cbCompleteTaxFl: TCheckBox;
+    cbCompleteTaxCorrective: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -9166,6 +9168,8 @@ begin
            +'  and BillItems.Id is not null'
            +'  and Bill_find_check.Id is null'
            );}
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
         Open;
         cbSaleInt.Caption:='3.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Ïğîä.ïîê.Int';
@@ -12137,7 +12141,7 @@ begin
         then Add('where isnull(Bill.NalogId_PG,0)=0')
         else
             if cbErr.Checked then Add(' where isErr = zc_rvYes()')
-            else if cbTotalTaxCorr.Checked then Add(' where inDocumentTaxKindId = '+zc_Enum_DocumentTaxKind_Corrective);
+            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
 
         Add('union all');
 
@@ -12163,8 +12167,6 @@ begin
         Add('     , 9399 as inToId');
 
         Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à
-                                                                                                                       // + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
-                                                                                                                       // + ÂÊ ¹51 ÆÎÂÒ² ÂÎÄÈ,ÊĞÀÏÎÒÊ²ÍÀ,35À 37830
 
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ÅÊÑÏÀÍÑ²ß
            +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ÎÌÅÃÀ
@@ -12296,7 +12298,7 @@ begin
         then Add('where isnull(Bill_find.NalogId_PG,0)=0')
         else
             if cbErr.Checked then Add(' where isErr = zc_rvYes()')
-            else if cbTotalTaxCorr.Checked then Add(' where inDocumentTaxKindId = '+zc_Enum_DocumentTaxKind_Corrective);
+            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
         Add('order by inOperDate, ObjectId');
         Open;
 
