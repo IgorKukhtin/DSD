@@ -67,25 +67,33 @@ BEGIN
      CREATE TEMP TABLE _tmpMovement_find (MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
 
-
+IF 1=1
+THEN 
+     -- получилось в налоговой больше чем искали, !!!сохраняем в табл-результата!!!
+     INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
+         select 0, 0, GoodsId, GoodsKindId, Amount, OperPrice from _tmpMI_Return
+ELSE
      -- выбрали возвраты
      INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, Amount, OperPrice)
         SELECT MovementItem.ObjectId
              , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-             , MovementItem.Amount
+             , MIFloat_AmountPartner.ValueData
              , MIFloat_Price.ValueData
         FROM MovementItem
              INNER JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id
                                          AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                          AND MIFloat_Price.ValueData <> 0
+             INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                         AND MIFloat_AmountPartner.ValueData <> 0
              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                              AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
         WHERE MovementItem.MovementId = inMovementId
           AND MovementItem.DescId     = zc_MI_Master()
-          AND MovementItem.isErased   = FALSE
-          AND MovementItem.Amount <> 0;
+          AND MovementItem.isErased   = FALSE;
 
 
      -- курсор1 - возвраты
@@ -109,7 +117,10 @@ BEGIN
                           , COALESCE (MB_Registered.ValueData, FALSE) AS isRegistered
                           , SUM (MovementItem.Amount) AS Amount
                      FROM MovementLinkObject AS MLO_Partner
-                          INNER JOIN Movement ON Movement.Id = MLO_Partner.ObjectId
+                          INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = MLO_Partner.MovementId
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                          INNER JOIN Movement ON Movement.Id = MovementLinkMovement_Master.MovementChildId
                                              AND Movement.DescId = zc_Movement_Tax()
                                              AND Movement.StatusId = zc_Enum_Status_Complete()
                                              AND Movement.OperDate BETWEEN '01.08.2013' :: TDateTime AND vbOperDate - interval '1 day'
@@ -126,7 +137,7 @@ BEGIN
                                                     ON MB_Registered.MovementId = Movement.Id
                                                    AND MB_Registered.DescId = zc_MovementBoolean_Registered()
                      WHERE MLO_Partner.ObjectId = vbPartnerId
-                       AND MLO_Partner.DescId = zc_MovementLinkObject_Partner()
+                       AND MLO_Partner.DescId = zc_MovementLinkObject_To()
                      GROUP BY Movement.Id
                             , Movement.OperDate
                             , MB_Registered.ValueData
@@ -187,6 +198,7 @@ BEGIN
      END LOOP; -- финиш цикла по курсору1 - возвраты
      CLOSE curMI_ReturnIn; -- закрыли курсор1 - возвраты
 
+END IF;
 
      -- !!!осталось сохранить данные!!!!
 
@@ -207,6 +219,16 @@ BEGIN
      FROM _tmpMovement_find
      WHERE _tmpResult.MovementId_Tax = _tmpMovement_find.MovementId_Tax;
 
+
+     -- распроводим/восстанавливаем найденные документы
+     PERFORM lpUnComplete_Movement (inMovementId       := tmpResult_update.MovementId_Corrective
+                                  , inUserId           := vbUserId
+                                   )
+     FROM (SELECT MovementId_Corrective
+           FROM _tmpResult
+           WHERE MovementId_Corrective <> 0
+           GROUP BY MovementId_Corrective
+          ) AS tmpResult_update;
 
      -- удаляем строчную часть что была
      PERFORM gpMovementItem_TaxCorrective_SetErased (inMovementItemId:= MovementItem.Id
@@ -232,16 +254,6 @@ BEGIN
            GROUP BY _tmpMovement_find.MovementId_Corrective
           ) AS tmpResult_delete;
 
-
-     -- распроводим/восстанавливаем найденные документы
-     PERFORM lpUnComplete_Movement (inMovementId       := tmpResult_update.MovementId_Corrective
-                                  , inUserId           := vbUserId
-                                   )
-     FROM (SELECT MovementId_Corrective
-           FROM _tmpResult
-           WHERE MovementId_Corrective <> 0
-           GROUP BY MovementId_Corrective
-          ) AS tmpResult_update;
 
 
      -- меняем заголовок для существующих корректировок 

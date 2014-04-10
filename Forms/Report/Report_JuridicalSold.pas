@@ -71,6 +71,7 @@ type
     OtherJournal: TdsdOpenForm;
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
+    colAreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

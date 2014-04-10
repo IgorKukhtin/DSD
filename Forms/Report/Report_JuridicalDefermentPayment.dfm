@@ -3,8 +3,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 982
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 990
-  ExplicitHeight = 421
+  ExplicitWidth = 998
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -124,8 +124,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
+            Width = 70
+          end
+          object colAreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object colJuridicalName: TcxGridDBColumn
@@ -322,7 +329,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 48
+      ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
       Visible = False
