@@ -364,6 +364,7 @@ inherited TaxForm: TTaxForm
           Kind = bkEllipsis
         end>
       TabOrder = 24
+      Text = ' '
       Width = 152
     end
     object cxLabel5: TcxLabel
@@ -942,7 +943,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'PartnerName'
-        Value = ''
+        Value = ' '
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1279,8 +1280,8 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'Key'
       end
       item
-        Name = 'Partnername'
-        Value = ''
+        Name = 'PartnerName'
+        Value = ' '
         Component = GuidesPartner
         ComponentItem = 'TextValue'
       end>
@@ -1560,6 +1561,7 @@ inherited TaxForm: TTaxForm
     KeyField = 'Id'
     LookupControl = edPartner
     Key = '0'
+    TextValue = ' '
     FormNameParam.Value = 'TContractChoicePartnerForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoicePartnerForm'
@@ -1573,7 +1575,7 @@ inherited TaxForm: TTaxForm
       end
       item
         Name = 'PartnerName'
-        Value = ''
+        Value = ' '
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1611,6 +1613,6 @@ inherited TaxForm: TTaxForm
         DataType = ftString
       end>
     Left = 928
-    Top = 32
+    Top = 16
   end
 end
