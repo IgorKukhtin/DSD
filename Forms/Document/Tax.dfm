@@ -2,27 +2,27 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 924
-  ExplicitWidth = 940
-  ExplicitHeight = 703
+  ExplicitWidth = 932
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 924
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 924
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 924
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 920
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 924
-      ExplicitHeight = 518
+      ExplicitWidth = 918
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 924
-        Height = 518
-        ExplicitWidth = 924
-        ExplicitHeight = 518
+        Width = 918
+        Height = 514
+        ExplicitWidth = 918
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -154,14 +154,14 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 924
-      ExplicitHeight = 518
+      ExplicitTop = 22
+      ExplicitWidth = 918
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 924
-        Height = 518
-        ExplicitWidth = 924
-        ExplicitHeight = 518
+        Width = 918
+        Height = 514
+        ExplicitWidth = 918
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -218,7 +218,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -503,7 +503,15 @@ inherited TaxForm: TTaxForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -530,7 +538,15 @@ inherited TaxForm: TTaxForm
       Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
       Params = <
         item
           Name = 'Id'
@@ -630,7 +646,7 @@ inherited TaxForm: TTaxForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1305,14 +1321,6 @@ inherited TaxForm: TTaxForm
       end>
     Left = 696
   end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 245
-  end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
     DataSet = PrintHeaderCDS
@@ -1367,14 +1375,6 @@ inherited TaxForm: TTaxForm
     Params = <>
     Left = 476
     Top = 193
-  end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 194
   end
   object PrintHeaderDS: TDataSource
     DataSet = PrintHeaderCDS
