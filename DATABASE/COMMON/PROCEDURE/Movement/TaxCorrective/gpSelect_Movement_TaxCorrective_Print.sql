@@ -257,22 +257,33 @@ BEGIN
 --*****************************************************************
 
     OPEN Cursor2 FOR
-     WITH tmpMovement AS
+     WITH
+          tmpMovementTaxCount AS
          (
-         /*
-           SELECT Movement.Id AS Id
-           FROM Movement
-           WHERE Movement.Id = inMovementId
-             AND Movement.DescId = zc_Movement_TaxCorrective()
-           UNION
-*/
-           SELECT  MovementLinkMovement_Master.MovementId AS Id
+           SELECT COALESCE(COUNT(MovementLinkMovement_Child.MovementChildId), 0) AS CountTaxId
+           FROM MovementLinkMovement AS MovementLinkMovement_Master
+           JOIN Movement ON Movement.Id = inMovementId
+                        AND Movement.Id = MovementLinkMovement_Master.MovementChildId
+                        AND Movement.DescId = zc_Movement_ReturnIn()
+
+           JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                     ON MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+                                    AND MovementLinkMovement_Child.MovementId = MovementLinkMovement_Master.MovementId
+
+           WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+         )
+         , tmpMovement AS
+         (
+
+           SELECT
+                MovementLinkMovement_Master.MovementId AS Id --CASE WHEN tmpMovementTaxCount<1
+
            FROM MovementLinkMovement AS MovementLinkMovement_Master
            JOIN Movement ON Movement.Id = inMovementId
                         AND Movement.Id = MovementLinkMovement_Master.MovementChildId
                         AND Movement.DescId = zc_Movement_ReturnIn()
            WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-         )
+        )
      , tmpReturnIn AS
       (
         SELECT
@@ -297,7 +308,7 @@ BEGIN
        GROUP BY
              MovementItem.ObjectId
            , MIFloat_Price.ValueData
-       )
+      )
 
        , tmpTaxCorrective AS --строчные корректировок
        (
@@ -329,6 +340,7 @@ BEGIN
            , Object_Goods.ObjectCode         AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
            , Price                           AS Price
+           , CAST(tmpMovementTaxCount.CountTaxId AS Integer) AS CountTaxId
            , SUM (ReturnInAmount)            AS ReturnInAmount
            , SUM (TaxCorrectiveAmount)       AS TaxCorrectiveAmount
        FROM (SELECT tmpReturnIn.GoodsId      AS GoodsId
@@ -344,11 +356,13 @@ BEGIN
              FROM tmpTaxCorrective
           )as tmp
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  tmp.GoodsId
+           LEFT JOIN tmpMovementTaxCount ON 1=1
 
       GROUP BY tmp.GoodsId
              , Object_Goods.ObjectCode
              , Object_Goods.ValueData
              , tmp.Price
+             , tmpMovementTaxCount.CountTaxId
       HAVING
            SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
       ;
@@ -363,6 +377,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.04.14                                                       *
  09.04.14                                                       *
  08.04.14                                                       *
  07.04.14                                                       *
@@ -371,6 +386,6 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 114784, inisClientCopy:=FALSE ,inSession:= '2'); -- возврат № 35953
+ SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 28140, inisClientCopy:=FALSE ,inSession:= '2'); -- возврат № 35953
 COMMIT;
 */

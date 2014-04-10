@@ -55,14 +55,12 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
-    frxDBDMaster: TfrxDBDataset;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
-    frxDBDHeader: TfrxDBDataset;
     PrintHeaderDS: TDataSource;
     mactPrint_Tax: TMultiAction;
     actPrintTax: TdsdPrintAction;

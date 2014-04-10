@@ -52,6 +52,14 @@ type
     colInvNumber_Master: TcxGridDBColumn;
     colInvNumber_Child: TcxGridDBColumn;
     colDocument: TcxGridDBColumn;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    actPrint_TaxCorrective_Us: TdsdPrintAction;
+    actPrint_TaxCorrective_Client: TdsdPrintAction;
+    bbPrintTaxCorrective_Us: TdxBarButton;
+    bbPrintTaxCorrective_Client: TdxBarButton;
   private
     { Private declarations }
   public

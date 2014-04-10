@@ -50,6 +50,18 @@ type
     colPartnerCode: TcxGridDBColumn;
     colPartnerName: TcxGridDBColumn;
     colDocument: TcxGridDBColumn;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectTax_Client: TdsdStoredProc;
+    spSelectTax_Us: TdsdStoredProc;
+    actPrintTax_Us: TdsdPrintAction;
+    actPrintTax_Client: TdsdPrintAction;
+    spGetReporNameTax: TdsdStoredProc;
+    actSPPrintTaxProcName: TdsdExecStoredProc;
+    mactPrint_Tax_Us: TMultiAction;
+    mactPrint_Tax_Client: TMultiAction;
+    bbPrintTax_Us: TdxBarButton;
+    bbPrintTax_Client: TdxBarButton;
   private
     { Private declarations }
   public
