@@ -925,8 +925,13 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       item
         Name = 'inIsTaxLink'
         Value = True
-        DataType = ftFloat
+        DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'
@@ -1056,6 +1061,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'

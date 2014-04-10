@@ -493,6 +493,8 @@ inherited SaleJournalForm: TSaleJournalForm
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 41
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
     object mactPrint_Sale: TMultiAction
       Category = 'DSDLib'
@@ -1033,6 +1035,12 @@ inherited SaleJournalForm: TSaleJournalForm
       end
       item
         Name = 'inDocumentTaxKindId'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
         Value = ''
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
@@ -1043,6 +1051,11 @@ inherited SaleJournalForm: TSaleJournalForm
         Component = MasterCDS
         ComponentItem = 'InvNumberPartner_Master'
         DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Component = MasterCDS
+        ComponentItem = 'DocumentTaxKindId'
       end
       item
         Name = 'outDocumentTaxKindName'

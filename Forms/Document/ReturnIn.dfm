@@ -1664,6 +1664,18 @@ inherited ReturnInForm: TReturnInForm
         Value = True
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
       end>
     Left = 280
     Top = 336
@@ -1764,6 +1776,19 @@ inherited ReturnInForm: TReturnInForm
         Value = False
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 280
     Top = 316
