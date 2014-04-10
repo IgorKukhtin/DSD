@@ -36,6 +36,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
+     IF COALESCE (inDocumentTaxKindId, 0) = 0
+     THEN inDocumentTaxKindId:= zc_Enum_DocumentTaxKind_Corrective();
+     END IF;
+
      -- 
      IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Corrective()
      THEN
@@ -71,7 +75,7 @@ IF 1=1
 THEN 
      -- получилось в налоговой больше чем искали, !!!сохраняем в табл-результата!!!
      INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
-         select 0, 0, GoodsId, GoodsKindId, Amount, OperPrice from _tmpMI_Return
+         select 0, 0, GoodsId, GoodsKindId, Amount, OperPrice from _tmpMI_Return;
 ELSE
      -- выбрали возвраты
      INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, Amount, OperPrice)

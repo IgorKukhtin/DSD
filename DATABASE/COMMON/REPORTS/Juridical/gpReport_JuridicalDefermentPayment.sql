@@ -15,6 +15,7 @@ RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
              , Condition TVarChar, StartContractDate TDateTime, Remains TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , AreaName TVarChar
               )
 AS
 $BODY$
@@ -37,6 +38,7 @@ BEGIN
              , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
              , a.Condition, a.StartContractDate, a.Remains
              , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
+             , a.AreaName
 from (
   SELECT 
      Object_Account_View.AccountName_all AS AccountName
@@ -72,6 +74,8 @@ from (
       , Object_InfoMoney_View.InfoMoneyDestinationName
       , Object_InfoMoney_View.InfoMoneyCode
       , Object_InfoMoney_View.InfoMoneyName
+
+      , Object_Area.ValueData AS AreaName
 
   FROM (SELECT Container.Id
              , Container.ObjectId     AS AccountId
@@ -140,6 +144,12 @@ from (
                   ON CLO_PaidKind.ContainerId = RESULT.Id
                  AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
+                                ON ObjectLink_Contract_Area.ObjectId = RESULT.ContractId
+                               AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
+
 ) as a
 where a.DebetRemains <> 0 or a.KreditRemains <> 0
              or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
@@ -157,6 +167,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 10.04.14                                        * add AreaName
  09.04.14                                        * add !!!
  31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
  30.03.14                          * 

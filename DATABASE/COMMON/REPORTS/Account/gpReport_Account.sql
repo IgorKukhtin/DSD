@@ -60,12 +60,14 @@ BEGIN
                                                                                                   OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
                                                                                                   OR AccountId = COALESCE (inAccountId, 0)
                                                     )
-                AND (COALESCE (inAccountId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0))
+                AND (COALESCE (inAccountId, 0) <> 0 OR COALESCE (inAccountDirectionId, 0) <> 0)
+                   )
                 OR (zc_Enum_Account_100301() IN (SELECT AccountId FROM Object_Account_View WHERE (AccountGroupId = COALESCE (inAccountGroupId, 0) AND COALESCE (inAccountDirectionId, 0) = 0 AND COALESCE (inAccountId, 0) = 0)
                                                                                               OR (AccountDirectionId = COALESCE (inAccountDirectionId, 0) AND COALESCE (inAccountId, 0) = 0)
                                                                                               OR AccountId = COALESCE (inAccountId, 0)
                                                 )
-               AND  COALESCE (inProfitLossId, 0) <> 0);
+                AND COALESCE (inProfitLossId, 0) <> 0
+                   );
 
     --
     RETURN QUERY
@@ -100,12 +102,12 @@ BEGIN
          , '' :: TVarChar AS PersonalName -- Object_Member.ValueData 
          , 0 :: Integer   AS JuridicalCode -- Object_Juridical.ObjectCode
          , '' :: TVarChar AS JuridicalName -- Object_Juridical.ValueData
-         , Object_JuridicalBasis.ObjectCode AS JuridicalBasisCode
-         , Object_JuridicalBasis.ValueData  AS JuridicalBasisName
-         , Object_Business.ObjectCode       AS BusinessCode
-         , Object_Business.ValueData        AS BusinessName
-         , Object_PaidKind.ValueData        AS PaidKindName
-         , Object_Contract.ValueData        AS ContractName
+         , Object_JuridicalBasis.ObjectCode  AS JuridicalBasisCode
+         , Object_JuridicalBasis.ValueData   AS JuridicalBasisName
+         , Object_Business.ObjectCode        AS BusinessCode
+         , Object_Business.ValueData         AS BusinessName
+         , Object_PaidKind.ValueData         AS PaidKindName
+         , View_Contract_InvNumber.InvNumber AS ContractName
          , '' :: TVarChar AS CarModelName -- Object_CarModel.ValueData
          , 0 :: Integer   AS CarCode -- Object_Car.ObjectCode
          , '' :: TVarChar AS CarName -- Object_Car.ValueData
@@ -416,7 +418,7 @@ BEGIN
        LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = tmpReport.JuridicalBasisId
        LEFT JOIN Object AS Object_Business ON Object_Business.Id = tmpReport.BusinessId
        LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpReport.PaidKindId
-       LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = tmpReport.ContractId
+       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpReport.ContractId
 
        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpReport.InfoMoneyId
 

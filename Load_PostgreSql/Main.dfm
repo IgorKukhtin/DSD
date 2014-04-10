@@ -993,6 +993,36 @@ object MainForm: TMainForm
       TabOrder = 27
       OnClick = cbReturnInFlClick
     end
+    object cbErr: TCheckBox
+      Left = 160
+      Top = 451
+      Width = 63
+      Height = 17
+      Caption = 'Error'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 28
+      OnClick = cbReturnInFlClick
+    end
+    object cbTotalTaxCorr: TCheckBox
+      Left = 161
+      Top = 474
+      Width = 63
+      Height = 17
+      Caption = 'TaxCorr'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 29
+      OnClick = cbReturnInFlClick
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1028
