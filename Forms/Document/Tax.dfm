@@ -1284,6 +1284,7 @@ inherited TaxForm: TTaxForm
         Value = ' '
         Component = GuidesPartner
         ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 504
     Top = 16
