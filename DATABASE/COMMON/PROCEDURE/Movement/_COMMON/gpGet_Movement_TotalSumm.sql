@@ -16,7 +16,7 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-            'Ñóììà ñ ÍÄÑ: '||trim(to_char(MovementFloat_TotalSumm.ValueData, '999 999 999 999 999D99'))  AS TotalSumm
+            ('Ñóììà ñ ÍÄÑ: '||trim(to_char(MovementFloat_TotalSumm.ValueData, '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
        FROM Movement                          
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id

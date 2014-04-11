@@ -16,11 +16,11 @@ BEGIN
      -- –ÂÁÛÎ¸Ú‡Ú
      RETURN QUERY 
        SELECT 
-           GoodsByGoodsKind.GoodsId
-        ,  GoodsByGoodsKind.GoodsCode
-        ,  GoodsByGoodsKind.GoodsName
-        ,  GoodsByGoodsKind.GoodsKindId
-        ,  GoodsByGoodsKind.GoodsKindName
+           COALESCE(GoodsByGoodsKind.GoodsId, GoodsByGoodsKind1CLink.GoodsId) AS GoodsId
+        ,  COALESCE(GoodsByGoodsKind.GoodsCode, GoodsByGoodsKind1CLink.GoodsCode) AS GoodsCode
+        ,  COALESCE(GoodsByGoodsKind.GoodsName, GoodsByGoodsKind1CLink.GoodsName) AS GoodsName
+        ,  COALESCE(GoodsByGoodsKind.GoodsKindId, GoodsByGoodsKind1CLink.GoodsKindId) AS GoodsKindId
+        ,  COALESCE(GoodsByGoodsKind.GoodsKindName, GoodsByGoodsKind1CLink.GoodsKindName) AS GoodsKindName
         ,  GoodsByGoodsKind1CLink.Id
         ,  GoodsByGoodsKind1CLink.Code
         ,  GoodsByGoodsKind1CLink.Name
@@ -60,12 +60,17 @@ BEGIN
                AND Object.Id IN (7645, 7601, 6779, 6816) -- “”ÿ≈Õ ¿
             ) AS GoodsByGoodsKind
 
-            LEFT JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id               AS Id 
+            FULL JOIN (SELECT Object_GoodsByGoodsKind1CLink.Id               AS Id 
                             , Object_GoodsByGoodsKind1CLink.ObjectCode       AS Code
                             , Object_GoodsByGoodsKind1CLink.ValueData        AS Name
                             , (COALESCE (ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId, 0) :: TVarChar || '_' || COALESCE (ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId, 0) :: TVarChar) :: TVarChar AS MasterId
                             , Object_Branch.Id                               AS BranchId
                             , Object_Branch.ValueData                        AS BranchName
+                            , Object_Goods.Id AS  GoodsId
+                            , Object_Goods.ObjectCode AS  GoodsCode
+                            , Object_Goods.ValueData AS GoodsName
+                            , Object_GoodsKind.Id AS GoodsKindId
+                            , Object_GoodsKind.ValueData AS GoodsKindName
                        FROM Object AS Object_GoodsByGoodsKind1CLink
                             LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
                                                  ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = Object_GoodsByGoodsKind1CLink.Id
@@ -77,6 +82,8 @@ BEGIN
                                                  ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                 AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
                             LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId   
+                            LEFT JOIN OBJECT AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId 
+                            LEFT JOIN OBJECT AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId 
                        WHERE Object_GoodsByGoodsKind1CLink.DescId = zc_Object_GoodsByGoodsKind1CLink()
                       )  AS GoodsByGoodsKind1CLink
                          ON GoodsByGoodsKind1CLink.MasterId = GoodsByGoodsKind.MasterId;
@@ -89,6 +96,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 11.04.14                        * 
  10.04.14                                        * add Object_InfoMoney_View
  17.02.14                        * 
  15.02.14                                        * all
