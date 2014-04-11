@@ -73,7 +73,7 @@ type
     edPriceList: TcxButtonEdit;
     cxLabel11: TcxLabel;
     GuidesPricelist: TdsdGuides;
-    spTaxCorrectiv: TdsdStoredProc;
+    spTaxCorrective: TdsdStoredProc;
     actTaxCorrective: TdsdExecStoredProc;
     bbTaxCorrective: TdxBarButton;
     RefreshDispatcher: TRefreshDispatcher;
@@ -87,6 +87,9 @@ type
     actPrint_TaxCorrective_Us: TdsdPrintAction;
     bbPrintTaxCorrective_Us: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
+    actCorrective: TdsdExecStoredProc;
+    spCorrective: TdsdStoredProc;
+    bbCorrective: TdxBarButton;
   private
     { Private declarations }
   public

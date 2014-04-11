@@ -215,6 +215,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colAreaName: TcxGridDBColumn
+            Caption = #1056#1077#1075#1080#1086#1085
+            DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object colJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
@@ -531,13 +537,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
-      EditValue = 41609d
+      EditValue = 41640d
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
-      EditValue = 41639d
+      EditValue = 41640d
       ExplicitLeft = 118
       ExplicitTop = 30
     end
@@ -676,13 +682,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Params = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -700,13 +706,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -739,13 +745,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -777,13 +783,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -816,13 +822,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -855,13 +861,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -894,13 +900,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -933,13 +939,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -972,13 +978,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41639d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -1014,14 +1020,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

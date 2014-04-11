@@ -2,26 +2,26 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1099#1084' '#1085#1072#1082#1083#1072#1076#1085#1099#1084'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitWidth = 1126
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1118
-    Height = 478
+    Height = 476
     TabOrder = 3
     ExplicitWidth = 1118
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1118
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1118
-      ExplicitHeight = 478
+      ExplicitWidth = 1112
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1118
-        Height = 478
-        ExplicitWidth = 1118
-        ExplicitHeight = 478
+        Width = 1112
+        Height = 470
+        ExplicitWidth = 1112
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -383,6 +383,90 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
           DataType = ftDateTime
         end>
     end
+    object actPrint_TaxCorrective_Us: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Us
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 16
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint_TaxCorrective_Client: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      Hint = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -431,8 +515,73 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Client'
+        end>
+    end
+    object bbPrintTaxCorrective_Us: TdxBarButton
+      Action = actPrint_TaxCorrective_Us
+      Category = 0
+    end
+    object bbPrintTaxCorrective_Client: TdxBarButton
+      Action = actPrint_TaxCorrective_Client
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
@@ -498,5 +647,73 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       end>
     Left = 208
     Top = 376
+  end
+  object spSelectPrintTaxCorrective_Us: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 671
+    Top = 232
+  end
+  object spSelectPrintTaxCorrective_Client: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 674
+    Top = 282
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 788
+    Top = 233
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 788
+    Top = 286
   end
 end

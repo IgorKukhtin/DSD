@@ -993,6 +993,36 @@ object MainForm: TMainForm
       TabOrder = 27
       OnClick = cbReturnInFlClick
     end
+    object cbErr: TCheckBox
+      Left = 160
+      Top = 451
+      Width = 63
+      Height = 17
+      Caption = 'Error'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 28
+      OnClick = cbReturnInFlClick
+    end
+    object cbTotalTaxCorr: TCheckBox
+      Left = 161
+      Top = 474
+      Width = 63
+      Height = 17
+      Caption = 'TaxCorr'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 29
+      OnClick = cbReturnInFlClick
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1028
@@ -1278,6 +1308,38 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 17
+      OnClick = cbCompleteIncomeClick
+    end
+    object cbCompleteTaxFl: TCheckBox
+      Tag = 30
+      Left = 14
+      Top = 451
+      Width = 194
+      Height = 17
+      Caption = '8.1. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Fl'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 18
+      OnClick = cbCompleteIncomeClick
+    end
+    object cbCompleteTaxCorrective: TCheckBox
+      Tag = 30
+      Left = 14
+      Top = 474
+      Width = 194
+      Height = 17
+      Caption = '8.2. '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' Fl'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 19
       OnClick = cbCompleteIncomeClick
     end
   end

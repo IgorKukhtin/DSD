@@ -558,8 +558,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           Action = actPrintTax_Client
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1082#1083#1080#1077#1085#1090#1091')'
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1082#1083#1080#1077#1085#1090#1091')'
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
     object mactPrint_Bill: TMultiAction [12]
@@ -572,8 +572,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           Action = actPrint_Bill
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
+      Caption = #1057#1095#1077#1090
+      Hint = #1057#1095#1077#1090
       ImageIndex = 21
     end
     object actPrintTax_Us: TdsdPrintAction [13]
@@ -881,6 +881,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbAddMask'
         end
         item
@@ -913,7 +921,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Bill'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -934,14 +950,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTax'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -1895,14 +1903,29 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
       end
       item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'outInvNumberPartner_Master'
         Value = ''
         Component = edTax
         DataType = ftString
       end
       item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
         Name = 'outDocumentTaxKindName'
-        Value = Null
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
       end>
     Left = 456

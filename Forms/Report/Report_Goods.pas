@@ -31,6 +31,13 @@ type
     clSummEnd: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
+    clOperDate: TcxGridDBColumn;
+    clPartnerName: TcxGridDBColumn;
+    clOperDatePartner: TcxGridDBColumn;
+    clPartnerCode: TcxGridDBColumn;
+    clAmountPartner: TcxGridDBColumn;
+    clOperPrice: TcxGridDBColumn;
+    cxGridDBTableViewColumn1: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -11,8 +11,9 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractId Integer, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar,
-               InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractId Integer, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , AreaName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
              , DebetSumm TFloat, KreditSumm TFloat
              , IncomeSumm TFloat, ReturnOutSumm TFloat, SaleSumm TFloat, ReturnInSumm TFloat, MoneySumm TFloat, ServiceSumm TFloat, SendDebtSumm TFloat, OtherSumm TFloat
@@ -41,6 +42,7 @@ BEGIN
         Object_InfoMoney_View.InfoMoneyDestinationName,
         Object_InfoMoney_View.InfoMoneyCode,
         Object_InfoMoney_View.InfoMoneyName,
+        Object_Area.ValueData AS AreaName,
 
         Operation.StartAmount ::TFloat AS StartAmount_A,
         (-1 * Operation.StartAmount) ::TFloat AS StartAmount_P,
@@ -86,15 +88,15 @@ BEGIN
                                                                                      THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS OtherSumm,
                      Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN MIContainer.Amount ELSE 0 END), 0) AS EndAmount
                 FROM ContainerLinkObject AS CLO_Juridical 
-                JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
-           LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
-                  ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
+                     INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
+                     LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
+                                                   ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+                     LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
                                   
-           LEFT JOIN MovementItemContainer AS MIContainer 
-                  ON MIContainer.Containerid = Container.Id
-                 AND MIContainer.OperDate >= inStartDate
-           LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
+                     LEFT JOIN MovementItemContainer AS MIContainer 
+                                                     ON MIContainer.Containerid = Container.Id
+                                                    AND MIContainer.OperDate >= inStartDate
+                     LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
                  AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                  AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
@@ -105,6 +107,11 @@ BEGIN
            LEFT JOIN ContainerLinkObject AS CLO_Contract
                   ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = CLO_Contract.ObjectId
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
+                                ON ObjectLink_Contract_Area.ObjectId = CLO_Contract.ObjectId
+                               AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
+           LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
 
            LEFT JOIN ContainerLinkObject AS CLO_PaidKind 
                   ON CLO_PaidKind.ContainerId = Operation.ContainerId AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -128,6 +135,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.04.14                                        * add AreaName
  10.03.14                                        * add zc_Movement_ProfitLossService
  13.02.14                                        * add OKPO and ContractCode
  30.01.14                                        * 

@@ -56,6 +56,7 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
+    colAreaName: TcxGridDBColumn;
   private
     { Private declarations }
   public

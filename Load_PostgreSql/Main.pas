@@ -142,6 +142,10 @@ type
     cbTaxInt: TCheckBox;
     cbClearDelete: TCheckBox;
     cbOnlyUpdateInt: TCheckBox;
+    cbErr: TCheckBox;
+    cbTotalTaxCorr: TCheckBox;
+    cbCompleteTaxFl: TCheckBox;
+    cbCompleteTaxCorrective: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -9164,6 +9168,8 @@ begin
            +'  and BillItems.Id is not null'
            +'  and Bill_find_check.Id is null'
            );}
+        if cbOnlyInsertDocument.Checked
+        then Add('and isnull(BillItems.Id_Postgres,0)=0');
         Add('order by 2,3,1');
         Open;
         cbSaleInt.Caption:='3.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Ïğîä.ïîê.Int';
@@ -11593,6 +11599,8 @@ begin
         Clear;
         Add('select Bill.Id as ObjectId');
         Add('     , case when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 and inDocumentTaxKindId='+zc_Enum_DocumentTaxKind_Tax+' then '+FormatToVarCharServer_notNULL('-îøèáêà-')+' else '+FormatToVarCharServer_notNULL('')+' end || Bill.BillNumber as inInvNumber');
+        Add('     , case when isnull(Bill_find.findId1,0)>0 and isnull(OperCount1,0)=0 and inDocumentTaxKindId='+zc_Enum_DocumentTaxKind_Tax+' then zc_rvYes() else zc_rvNo() end as isErr');
+
         Add('     , Bill.BillNumberNalog as inInvNumberPartner');
         Add('     , Bill.BillDate as inOperDate');
 
@@ -11606,7 +11614,9 @@ begin
         Add('     , 9399 as inFromId');
         Add('     , _pgPartner.PartnerId_pg as inPartnerId');
 
-        Add('     , case when Bill.ToId in (2535,2842) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS // ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
+        Add('     , case when Bill.ToId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS //  ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à
+                                                                                                             // + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
+                                                                                                             // + ÂÊ ¹51 ÆÎÂÒ² ÂÎÄÈ,ÊĞÀÏÎÒÊ²ÍÀ,35À 37830
 
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ÅÊÑÏÀÍÑ²ß
            +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ÎÌÅÃÀ
@@ -11649,6 +11659,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('34604386')
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('23494714')//ÃĞÀÍÄ-ÌÀĞÊÅÒ ÒÎÂ ÓË.
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
            +'            else '+zc_Enum_DocumentTaxKind_Tax
@@ -11736,9 +11747,12 @@ begin
 // Add('where Bill.BillNumber in (58445,58443)');
 
         if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill.NalogId_PG,0)=0');
+        then Add('where isnull(Bill.NalogId_PG,0)=0')
+        else
+            if cbErr.Checked then Add(' where isErr = zc_rvYes()');
         Add('order by inOperDate, inInvNumber, ObjectId');
         Open;
+
 
         Result:=RecordCount;
         cbTaxFl.Caption:='8.1.('+IntToStr(RecordCount)+') Íàëîãîâûå Fl';
@@ -11986,6 +12000,7 @@ begin
         Clear;
         Add('select Bill.Id as ObjectId');
         Add('     , case when inDocumentTaxKindId_calc<>'+zc_Enum_DocumentTaxKind_Corrective+' then '+FormatToVarCharServer_notNULL('-îøèáêà-')+' else '+FormatToVarCharServer_notNULL('')+' end || Bill.BillNumber as inInvNumber');
+        Add('     , case when inDocumentTaxKindId_calc<>'+zc_Enum_DocumentTaxKind_Corrective+' then zc_rvYes() else zc_rvNo() end as isErr');
         Add('     , Bill.BillDate as inOperDate');
 
         Add('     , Bill.BillNumberNalog as inInvNumberPartner');
@@ -12002,8 +12017,9 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , 9399 as inToId');
 
-        Add('     , case when Bill.FromId in (2535,2842) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR // ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
-
+        Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à
+                                                                                                                       // + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
+                                                                                                                       // + ÂÊ ¹51 ÆÎÂÒ² ÂÎÄÈ,ÊĞÀÏÎÒÊ²ÍÀ,35À 37830
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ÅÊÑÏÀÍÑ²ß
            +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ÎÌÅÃÀ
            +'                         ,'+FormatToVarCharServer_notNULL('32294897')//ÔÎĞÀ
@@ -12043,6 +12059,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('34604386')
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('23494714')//ÃĞÀÍÄ-ÌÀĞÊÅÒ ÒÎÂ ÓË.
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective
@@ -12120,11 +12137,19 @@ begin
         Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
  //Add('where Bill.BillNumber in (136565)');
 
+        if cbOnlyInsertDocument.Checked
+        then Add('where isnull(Bill.NalogId_PG,0)=0')
+        else
+            if cbErr.Checked then Add(' where isErr = zc_rvYes()')
+            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
+
         Add('union all');
 
         Add('select Bill.Id as ObjectId');
         Add('     , case when Bill_find.OperCount1=0 and inDocumentTaxKindId_calc = '+zc_Enum_DocumentTaxKind_Corrective+' then '+FormatToVarCharServer_notNULL('-îøèáêà-')
            +'            else '+FormatToVarCharServer_notNULL('')+' end || Bill.BillNumber as inInvNumber');
+        Add('     , case when Bill_find.OperCount1=0 and inDocumentTaxKindId_calc = '+zc_Enum_DocumentTaxKind_Corrective+' then zc_rvYes()'
+           +'            else zc_rvNo() end as isErr');
         Add('     , Bill.BillDate as inOperDate');
 
         Add('     , Bill_find.inInvNumberPartner');
@@ -12141,7 +12166,7 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , 9399 as inToId');
 
-        Add('     , case when Bill.FromId in (2535,2842) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR // ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à + ÔÓÄÌÀĞÊÅÒ ÂÊ ¹ 51,Æîâò.Âîäè Âåë. êèø
+        Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ÔÓÄÌÀĞÊÅÒ ÂÌ ¹ 05,Âåë.Êèø.,Äí-âñê,Çîğÿíèé,1-à
 
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ÅÊÑÏÀÍÑ²ß
            +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ÎÌÅÃÀ
@@ -12270,7 +12295,10 @@ begin
         Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
 
         if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill.NalogId_PG,0)=0');
+        then Add('where isnull(Bill_find.NalogId_PG,0)=0')
+        else
+            if cbErr.Checked then Add(' where isErr = zc_rvYes()')
+            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
         Add('order by inOperDate, ObjectId');
         Open;
 
