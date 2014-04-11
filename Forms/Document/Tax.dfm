@@ -1104,6 +1104,9 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = edIsDocument
+      end
+      item
+        Control = edPartner
       end>
     Left = 232
     Top = 193
