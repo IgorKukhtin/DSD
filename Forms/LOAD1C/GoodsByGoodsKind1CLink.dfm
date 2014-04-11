@@ -41,7 +41,14 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           object colGoodsKindName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
-            Options.Editing = False
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoiceGoodsKindForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Width = 134
           end
           object colDetailCode: TcxGridDBColumn
@@ -78,6 +85,11 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
           end>
         TabOrder = 1
         Width = 177
+      end
+      object cxLabel1: TcxLabel
+        Left = 224
+        Top = 24
+        Caption = #1060#1080#1083#1080#1072#1083
       end
     end
   end
@@ -158,6 +170,27 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         end>
       isShowModal = False
     end
+    object actChoiceGoodsKindForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoiceGoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = 'TGoodsKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -200,6 +233,10 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
         end
         item
           Visible = True
+          ItemName = 'bbJuridicalLabel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarControlContainerItem'
         end>
     end
@@ -213,6 +250,13 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
     object bbInsertRecord: TdxBarButton
       Action = actInsertRecord
       Category = 0
+    end
+    object bbJuridicalLabel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel1
     end
   end
   object BranchGuides: TdsdGuides

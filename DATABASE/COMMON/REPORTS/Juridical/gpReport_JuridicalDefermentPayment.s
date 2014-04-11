@@ -9,7 +9,6 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
@@ -31,11 +30,10 @@ BEGIN
   RETURN QUERY  
 
  select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindName
-             , a.ContractId, a.ContractCode, a.ContractNumber
-             , a.DebetRemains , a.KreditRemains
-             , a.SaleSumm, a.DefermentPaymentRemains
-             , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
-             , a.Condition, a.StartContractDate, a.Remains
+             , SUM(a.DebetRemains)::TFloat , SUM(a.KreditRemains)::TFloat
+             , SUM(a.SaleSumm)::TFloat, SUM(a.DefermentPaymentRemains)::TFloat
+             , SUM(a.SaleSumm1)::TFloat, SUM(a.SaleSumm2)::TFloat, SUM(a.SaleSumm3)::TFloat, SUM(a.SaleSumm4)::TFloat, SUM(a.SaleSumm5)::TFloat
+             , a.Condition, a.StartContractDate, SUM(a.Remains)::TFloat
              , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
 from (
   SELECT 
@@ -44,9 +42,6 @@ from (
    , Object_Juridical.Valuedata AS JuridicalName
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.ValueData  AS PaidKindName
-   , View_Contract_InvNumber.ContractId
-   , View_Contract_InvNumber.ContractCode
-   , View_Contract_InvNumber.InvNumber AS ContractNumber
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
    , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
    , RESULT.SaleSumm::TFloat
@@ -91,7 +86,7 @@ from (
     LEFT JOIN ContainerLinkObject AS CLO_Contract
            ON CLO_Contract.ContainerId = Container.Id AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                 
-    LEFT JOIN (SELECT Object_Contract_DefermentPaymentView.ContractId
+    LEFT JOIN (SELECT ContractId
                     , zfCalc_DetermentPaymentDate(COALESCE(ContractConditionKindId, 0), DayCount, inOperDate)::Date AS ContractDate
                     , ContractConditionKindId
                     , DayCount
@@ -134,6 +129,9 @@ where a.DebetRemains <> 0 or a.KreditRemains <> 0
              or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
              or  a.SaleSumm1 <> 0 or a.SaleSumm2 <> 0 or a.SaleSumm3 <> 0 or a.SaleSumm4 <> 0 or a.SaleSumm5 <> 0
              or  a.Remains <> 0 
+ GROUP BY a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindName
+             , a.Condition, a.StartContractDate
+             , a.InfoMoneyGroupName, a.InfoMoneyDestinationName, a.InfoMoneyCode, a.InfoMoneyName
     ;
     -- Конец. Добавили строковые данные. 
     -- КОНЕЦ ЗАПРОСА

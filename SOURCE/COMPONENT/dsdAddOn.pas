@@ -6,7 +6,7 @@ uses Classes, cxDBTL, cxTL, Vcl.ImgList, cxGridDBTableView,
      cxTextEdit, DB, dsdAction, cxGridTableView,
      VCL.Graphics, cxGraphics, cxStyles, Forms, Controls,
      SysUtils, dsdDB, Contnrs, cxGridCustomView, cxGridCustomTableView, dsdGuides,
-     VCL.ActnList, cxDBPivotGrid, cxEdit;
+     VCL.ActnList, cxDBPivotGrid, cxEdit, cxCustomData;
 
 type
 
@@ -63,8 +63,6 @@ type
 
   end;
 
-
-
   // Управление цветами
 
   // Значение цвета
@@ -107,6 +105,20 @@ type
     property Column: TcxGridColumn read FColumn write FColumn;
   end;
 
+  TSummaryItemAddOn = class(TCollectionItem)
+  private
+    FDataSummaryItemIndex: Integer;
+    FParam: TdsdParam;
+    procedure SetDataSummaryItemIndex(const Value: Integer);
+    procedure onGetText(Sender: TcxDataSummaryItem; const AValue: Variant; AIsFooter: Boolean; var AText: string);
+  public
+    constructor Create(ACollection: TCollection); override;
+    destructor Destroy;
+  published
+    property Param: TdsdParam read FParam write FParam;
+    property DataSummaryItemIndex: Integer read FDataSummaryItemIndex write SetDataSummaryItemIndex;
+  end;
+
   TColumnAddOn = class(TColumnCollectionItem)
   private
     FAction: TCustomAction;
@@ -137,6 +149,7 @@ type
     FColorRuleList: TCollection;
     FColumnAddOnList: TCollection;
     FColumnEnterList: TCollection;
+    FSummaryItemList: TOwnedCollection;
     procedure OnBeforeOpen(ADataSet: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
     function inColumnEnterList(Column: TcxGridColumn): boolean;
@@ -194,6 +207,7 @@ type
     property ColumnAddOnList: TCollection read FColumnAddOnList write FColumnAddOnList;
     // Переход по данным колонка по Enter
     property ColumnEnterList: TCollection read FColumnEnterList write FColumnEnterList;
+    property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
   end;
 
   TCrossDBViewAddOn = class(TdsdDBViewAddOn)
@@ -410,7 +424,7 @@ type
 implementation
 
 uses utilConvert, FormStorage, Xml.XMLDoc, XMLIntf, Windows,
-     cxFilter, cxClasses, cxLookAndFeelPainters, cxCustomData,
+     cxFilter, cxClasses, cxLookAndFeelPainters,
      cxGridCommon, math, cxPropertiesStore, UtilConst, cxStorage,
      cxGeometry, cxCalendar, cxCheckBox, dxBar, cxButtonEdit, cxCurrencyEdit,
      VCL.Menus, ParentForm, ChoicePeriod, cxGrid, cxDBData, Variants,
@@ -590,6 +604,7 @@ begin
   FColorRuleList := TCollection.Create(TColorRule);
   FColumnAddOnList := TCollection.Create(TColumnAddOn);
   FColumnEnterList := TCollection.Create(TColumnCollectionItem);
+  FSummaryItemList := TOwnedCollection.Create(Self, TSummaryItemAddOn);
 end;
 
 procedure TdsdDBViewAddOn.OnAfterOpen(ADataSet: TDataSet);
@@ -824,7 +839,9 @@ begin
   inherited;
   // обработаем список ColumnAddOnList
   for I := 0 to ColumnAddOnList.Count - 1 do
-      TColumnAddOn(ColumnAddOnList.Items[i]).Init
+      TColumnAddOn(ColumnAddOnList.Items[i]).Init;
+  for I := 0 to SummaryItemList.Count - 1 do
+      TSummaryItemAddOn(SummaryItemList.Items[i]).DataSummaryItemIndex := TSummaryItemAddOn(SummaryItemList.Items[i]).DataSummaryItemIndex
 end;
 
 procedure TdsdDBViewAddOn.lpSetEdFilterPos(inKey: Char);
@@ -1398,9 +1415,11 @@ procedure TRefreshDispatcher.OnComponentChange(Sender: TObject);
 begin
   if Assigned(FRefreshAction) then
   // перечитываем запросы только если форма загружена
-     if Assigned(Self.Owner) and (Self.Owner is TParentForm)
-       and TParentForm(Self.Owner).Visible then
-        FRefreshAction.Execute
+     if Assigned(Self.Owner) and (Self.Owner is TParentForm) then
+        if TParentForm(Self.Owner).Visible then
+           FRefreshAction.Execute
+        else
+           TParentForm(Self.Owner).NeedRefreshOnExecute := true
 end;
 
 procedure TRefreshDispatcher.SetShowDialogAction(const Value: TExecuteDialog);
@@ -1735,6 +1754,40 @@ begin
   result := inherited;
   if Assigned(Column) then
      result := Column.Name
+end;
+
+{ TSummaryItemAddOn }
+
+constructor TSummaryItemAddOn.Create(ACollection: TCollection);
+begin
+  inherited;
+  FParam := TdsdParam.Create(nil);
+end;
+
+destructor TSummaryItemAddOn.Destroy;
+begin
+  FreeAndNil(FParam);
+  inherited;
+end;
+
+procedure TSummaryItemAddOn.onGetText(Sender: TcxDataSummaryItem;
+  const AValue: Variant; AIsFooter: Boolean; var AText: string);
+begin
+  if Param.Value = NULL then
+     AText := ''
+  else
+     AText := Param.Value;
+end;
+
+procedure TSummaryItemAddOn.SetDataSummaryItemIndex(const Value: Integer);
+begin
+  FDataSummaryItemIndex := Value;
+  // пытаемся установить свойство onGetText установить
+  if Collection.Owner is TdsdDBViewAddOn then
+     if Assigned(TdsdDBViewAddOn(Collection.Owner).View) then begin
+        if TdsdDBViewAddOn(Collection.Owner).View.DataController.Summary.FooterSummaryItems.Count > Value then
+           TdsdDBViewAddOn(Collection.Owner).View.DataController.Summary.FooterSummaryItems[Value].OnGetText := onGetText;
+     end;
 end;
 
 end.

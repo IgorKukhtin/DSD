@@ -15,6 +15,7 @@ object PartnerForm: TPartnerForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -130,6 +131,22 @@ object PartnerForm: TPartnerForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel6: TcxLabel
+    Left = 172
+    Top = 78
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 279
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 245
+  end
   object DataSource: TDataSource
     DataSet = ClientDataSet
     Left = 40
@@ -158,8 +175,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -222,6 +239,14 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
+          ItemName = 'bbJuridicalLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalGuides'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic1'
         end
         item
@@ -268,6 +293,20 @@ object PartnerForm: TPartnerForm
       Hint = '     '
       Visible = ivAlways
     end
+    object bbJuridicalLabel: TdxBarControlContainerItem
+      Caption = 'JuridicalLabel'
+      Category = 0
+      Hint = 'JuridicalLabel'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbJuridicalGuides: TdxBarControlContainerItem
+      Caption = 'JuridicalGuides'
+      Category = 0
+      Hint = 'JuridicalGuides'
+      Visible = ivAlways
+      Control = edJuridical
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -275,6 +314,7 @@ object PartnerForm: TPartnerForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -288,6 +328,7 @@ object PartnerForm: TPartnerForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -302,9 +343,11 @@ object PartnerForm: TPartnerForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -322,9 +365,11 @@ object PartnerForm: TPartnerForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -335,6 +380,7 @@ object PartnerForm: TPartnerForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -346,6 +392,7 @@ object PartnerForm: TPartnerForm
     end
     object PriceListPromoChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -366,6 +413,7 @@ object PartnerForm: TPartnerForm
     end
     object PriceListChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
       FormNameParam.Value = ''
@@ -386,6 +434,7 @@ object PartnerForm: TPartnerForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -406,6 +455,7 @@ object PartnerForm: TPartnerForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -413,6 +463,7 @@ object PartnerForm: TPartnerForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -429,7 +480,14 @@ object PartnerForm: TPartnerForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
     Left = 80
     Top = 216
   end
@@ -468,6 +526,10 @@ object PartnerForm: TPartnerForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 464
     Top = 288
   end
@@ -571,5 +633,58 @@ object PartnerForm: TPartnerForm
       end>
     Left = 88
     Top = 344
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 312
+    Top = 48
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 304
+    Top = 88
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 384
+    Top = 112
   end
 end

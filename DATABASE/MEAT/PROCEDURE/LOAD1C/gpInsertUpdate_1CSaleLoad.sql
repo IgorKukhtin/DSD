@@ -8,6 +8,10 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_1CSaleLoad(Integer, TVarChar, TVarChar, T
     TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, TDateTime, TVarChar, TDateTime, TVarChar,
     TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, Integer, TVarChar, Integer, TVarChar);
 
+DROP FUNCTION IF EXISTS gpInsertUpdate_1CSaleLoad(Integer, TVarChar, TVarChar, TDateTime, Integer, 
+    TVarChar, Integer, TVarChar, TFloat, TFloat, TFloat, 
+    TFloat, TFloat, TFloat, TVarChar, TVarChar, TVarChar, Integer, TVarChar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_1CSaleLoad(
     IN inUnitId Integer, 
     IN inVidDoc TVarChar, 
@@ -20,19 +24,12 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_1CSaleLoad(
     IN inOperCount TFloat, 
     IN inOperPrice TFloat,
     IN inTax TFloat, 
-    IN inDoc1Date TDateTime, 
-    IN inDoc1Number TVarChar, 
-    IN inDoc2Date TDateTime, 
-    IN inDoc2Number TVarChar,
     IN inSuma TFloat, 
     IN inPDV TFloat, 
     IN inSumaPDV TFloat, 
     IN inClientINN TVarChar, 
     IN inClientOKPO TVarChar,
     IN inInvNalog TVarChar, 
-    IN inBillId Integer, 
-    IN inEkspCode Integer, 
-    IN inExpName TVarChar, 
     IN inBranchId Integer,
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -49,11 +46,11 @@ BEGIN
      IF inVidDoc = '1' or inVidDoc = '4' THEN
 
         INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
-                            GoodsName, OperCount, OperPrice, Tax, Doc1Date, Doc1Number, Doc2Date, Doc2Number,
-                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog, BillId, EkspCode, ExpName)
+                            GoodsName, OperCount, OperPrice, Tax, 
+                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog)
              VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
-                    inGoodsName, inOperCount, inOperPrice, inTax, inDoc1Date, inDoc1Number, inDoc2Date, inDoc2Number,
-                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog, inBillId, inEkspCode, inExpName);
+                    inGoodsName, inOperCount, inOperPrice, inTax, 
+                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog);
     END IF;
 
      -- сохранили протокол
@@ -66,6 +63,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.04.14                          *
  30.01.14                          *
 */
 

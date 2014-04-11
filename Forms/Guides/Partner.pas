@@ -22,7 +22,8 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit;
+  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
+  cxTextEdit, dsdGuides, cxLabel;
 
 type
   TPartnerForm = class(TParentForm)
@@ -68,6 +69,13 @@ type
     clEndPromo: TcxGridDBColumn;
     PriceListChoiceForm: TOpenChoiceForm;
     PriceListPromoChoiceForm: TOpenChoiceForm;
+    cxLabel6: TcxLabel;
+    JuridicalGuides: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    RefreshDispatcher: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
+    bbJuridicalLabel: TdxBarControlContainerItem;
+    bbJuridicalGuides: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

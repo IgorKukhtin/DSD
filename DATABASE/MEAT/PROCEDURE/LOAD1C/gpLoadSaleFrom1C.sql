@@ -160,6 +160,12 @@ BEGIN
           IF NOT FOUND THEN 
              EXIT;
           END IF;
+          -- –аспровели существующий документ
+          IF COALESCE(vbMovementId, 0) <> 0 THEN
+             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
+                                          , inUserId     := vbUserId);
+          END IF;
+
           -- сохранили ƒокумент
           SELECT tmp.ioId INTO vbMovementId
           FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
@@ -308,6 +314,12 @@ BEGIN
           -- если такого периода и не возникнет, то мы выходим
           IF NOT FOUND THEN 
              EXIT;
+          END IF;
+
+          -- –аспровели существующий документ
+          IF COALESCE(vbMovementId, 0) <> 0 THEN
+             PERFORM lpUnComplete_Movement (inMovementId := vbMovementId
+                                          , inUserId     := vbUserId);
           END IF;
 
           -- сохранили ƒокумент

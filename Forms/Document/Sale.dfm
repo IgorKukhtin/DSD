@@ -2,8 +2,9 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitTop = -78
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -75,6 +76,10 @@ inherited SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.FocusCellOnCycle = False
@@ -513,6 +518,7 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectMIContainer
         end
         item
+          StoredProc = spGetTotalSumm
         end>
       RefreshOnTabSetChanges = True
     end
@@ -962,6 +968,14 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = 5
+      end>
     Left = 830
     Top = 265
   end
@@ -1032,6 +1046,11 @@ inherited SaleForm: TSaleForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
       end>
     Left = 280
     Top = 552
@@ -1927,5 +1946,20 @@ inherited SaleForm: TSaleForm
       end>
     Left = 536
     Top = 448
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
+    Left = 432
+    Top = 432
   end
 end
