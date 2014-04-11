@@ -11,19 +11,19 @@ inherited TaxForm: TTaxForm
     Width = 1067
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 924
+    ExplicitWidth = 1067
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 918
+      ExplicitWidth = 1061
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1061
         Height = 514
-        ExplicitWidth = 918
+        ExplicitWidth = 1061
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -158,12 +158,12 @@ inherited TaxForm: TTaxForm
     inherited tsEntry: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 918
+      ExplicitWidth = 1061
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
         Width = 1061
         Height = 514
-        ExplicitWidth = 918
+        ExplicitWidth = 1061
         ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -189,7 +189,7 @@ inherited TaxForm: TTaxForm
     Width = 1067
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 924
+    ExplicitWidth = 1067
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -519,6 +519,10 @@ inherited TaxForm: TTaxForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -554,6 +558,10 @@ inherited TaxForm: TTaxForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -1398,11 +1406,6 @@ inherited TaxForm: TTaxForm
     Left = 476
     Top = 193
   end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 552
-    Top = 192
-  end
   object spGetReporNameTax: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Tax_ReportName'
     DataSets = <>
@@ -1430,11 +1433,6 @@ inherited TaxForm: TTaxForm
     Params = <>
     Left = 476
     Top = 246
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 552
-    Top = 245
   end
   object HeaderSaver2: THeaderSaver
     IdParam.Value = Null
@@ -1511,6 +1509,9 @@ inherited TaxForm: TTaxForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1539,6 +1540,9 @@ inherited TaxForm: TTaxForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1615,5 +1619,11 @@ inherited TaxForm: TTaxForm
       end>
     Left = 928
     Top = 16
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 484
+    Top = 326
   end
 end

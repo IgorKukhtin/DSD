@@ -62,6 +62,7 @@ type
     mactPrint_Tax_Client: TMultiAction;
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public

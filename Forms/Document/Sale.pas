@@ -105,6 +105,7 @@ type
     actPrint_Bill: TdsdPrintAction;
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public
