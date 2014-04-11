@@ -95,14 +95,12 @@ type
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     spGetTotalSumm: TdsdStoredProc;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  SaleForm: TSaleForm;
 
 implementation
 

@@ -404,6 +404,10 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -438,6 +442,10 @@ inherited TaxJournalForm: TTaxJournalForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -715,6 +723,9 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -743,6 +754,9 @@ inherited TaxJournalForm: TTaxJournalForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -782,5 +796,11 @@ inherited TaxJournalForm: TTaxJournalForm
       end>
     Left = 560
     Top = 224
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 620
+    Top = 422
   end
 end

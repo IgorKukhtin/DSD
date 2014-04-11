@@ -239,6 +239,7 @@ inherited ContractChoiceForm: TContractChoiceForm
         end
         item
           Name = 'PartnerName'
+          Value = ''
           DataType = ftString
         end>
     end
