@@ -69,9 +69,9 @@ BEGIN
            , Object_TaxKind.Id                		AS TaxKindId
            , Object_TaxKind.ValueData         		AS TaxKindName
            , Movement_DocumentMaster.Id                                    AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS InvNumber_Master
+           , CAST (CASE WHEN Movement_DocumentMaster.StatusId = zc_Enum_Status_Erased() THEN '***' ELSE '' END || Movement_DocumentMaster.InvNumber AS TVarChar)          AS InvNumber_Master
            , Movement_DocumentChild.Id                                     AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS InvNumber_Child
+           , CAST (CASE WHEN Movement_DocumentChild.StatusId = zc_Enum_Status_Erased() THEN '***' ELSE '' END || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumber_Child
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode

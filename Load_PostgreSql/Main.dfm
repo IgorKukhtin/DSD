@@ -1342,6 +1342,22 @@ object MainForm: TMainForm
       TabOrder = 19
       OnClick = cbCompleteIncomeClick
     end
+    object cbCompleteTaxInt: TCheckBox
+      Tag = 30
+      Left = 15
+      Top = 497
+      Width = 194
+      Height = 17
+      Caption = '8.3. '#1053#1072#1083#1086#1075#1086#1074#1099#1077' Int'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 20
+      OnClick = cbCompleteIncomeClick
+    end
   end
   object DataSource: TDataSource
     DataSet = fromQuery
