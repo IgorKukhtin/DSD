@@ -227,8 +227,12 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         end
         item
           Action = actSale1CLoadAction
+        end
+        item
+          Action = actRefresh
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1080#1079' 1'#1057
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1088#1072#1089#1093#1086#1076#1086#1074' '#1080#1079' 1'#1057
       ImageIndex = 50
     end
   end
@@ -255,6 +259,13 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
         Value = 41640d
         Component = deEnd
         DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 104
@@ -299,6 +310,15 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
       Action = actLoad1C
       Category = 0
     end
+  end
+  inherited RefreshDispatcher: TRefreshDispatcher
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end
+      item
+        Component = BranchGuides
+      end>
   end
   object spMoveSale: TdsdStoredProc
     StoredProcName = 'gpLoadSaleFrom1C'

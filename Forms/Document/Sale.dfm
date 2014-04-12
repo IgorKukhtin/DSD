@@ -2,27 +2,29 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1115
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1115
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1115
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1111
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1115
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1109
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1115
-        Height = 518
-        ExplicitWidth = 1115
-        ExplicitHeight = 518
+        Width = 1109
+        Height = 514
+        ExplicitWidth = 1109
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -75,6 +77,10 @@ inherited SaleForm: TSaleForm
               Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.FocusCellOnCycle = False
@@ -219,14 +225,15 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1115
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1109
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1115
-        Height = 518
-        ExplicitWidth = 1115
-        ExplicitHeight = 518
+        Width = 1109
+        Height = 514
+        ExplicitWidth = 1109
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -283,7 +290,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -507,12 +514,13 @@ inherited SaleForm: TSaleForm
           StoredProc = spGet
         end
         item
+          StoredProc = spGetTotalSumm
+        end
+        item
           StoredProc = spSelect
         end
         item
           StoredProc = spSelectMIContainer
-        end
-        item
         end>
       RefreshOnTabSetChanges = True
     end
@@ -591,6 +599,10 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -626,6 +638,10 @@ inherited SaleForm: TSaleForm
         item
           DataSet = PrintItemsCDS
           UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintItemsSverkaCDS
+          UserName = 'frxDBDSverka'
         end>
       Params = <
         item
@@ -854,7 +870,7 @@ inherited SaleForm: TSaleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -970,6 +986,14 @@ inherited SaleForm: TSaleForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = 5
+      end>
     Left = 830
     Top = 265
   end
@@ -1040,6 +1064,11 @@ inherited SaleForm: TSaleForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
       end>
     Left = 280
     Top = 552
@@ -1882,6 +1911,9 @@ inherited SaleForm: TSaleForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1910,6 +1942,9 @@ inherited SaleForm: TSaleForm
       end
       item
         DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
       end>
     OutputType = otMultiDataSet
     Params = <
@@ -1950,5 +1985,33 @@ inherited SaleForm: TSaleForm
       end>
     Left = 536
     Top = 448
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
+    Left = 432
+    Top = 432
+end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 644
+    Top = 334
   end
 end

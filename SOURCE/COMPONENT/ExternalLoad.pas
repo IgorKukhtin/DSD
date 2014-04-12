@@ -102,6 +102,7 @@ var
    FExternalLoad: TFileExternalLoad;
    FStoredProc: TdsdStoredProc;
 begin
+  result := false;
   FExternalLoad := TFileExternalLoad(GetExternalLoad);
   try
     FExternalLoad.InitializeDirectory := InitializeDirectory;
@@ -132,6 +133,7 @@ begin
   finally
     FExternalLoad.Free;
   end;
+  result := true
 end;
 
 function TExternalLoadAction.StartDate: TDateTime;

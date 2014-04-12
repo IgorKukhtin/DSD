@@ -61,13 +61,11 @@ type
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     PrintHeaderCDS: TClientDataSet;
-    PrintHeaderDS: TDataSource;
     mactPrint_Tax: TMultiAction;
     actPrintTax: TdsdPrintAction;
     spGetReporNameTax: TdsdStoredProc;
     actSPPrintTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     edIsDocument: TcxCheckBox;
     edIsRegistered: TcxCheckBox;
     HeaderSaver2: THeaderSaver;
@@ -82,6 +80,7 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public

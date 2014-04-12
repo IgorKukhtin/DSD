@@ -20,6 +20,7 @@ type
     FonAfterShow: TNotifyEvent;
     FisAlreadyOpen: boolean;
     FAddOnFormData: TAddOnFormData;
+    FNeedRefreshOnExecute: boolean;
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
     procedure FormCloseQuery(Sender: TObject; var CanClose: boolean);
     procedure FormClose(Sender: TObject; var Action: TCloseAction);
@@ -36,6 +37,8 @@ type
     procedure Close(Sender: TObject);
     property FormClassName: string read FFormClassName write FFormClassName;
     property onAfterShow: TNotifyEvent read FonAfterShow write FonAfterShow;
+    // проперти устанавливается в компоненте TRefreshDispatcher если форма не видима, но было изменение значений для изменения запроса
+    property NeedRefreshOnExecute: boolean read FNeedRefreshOnExecute write FNeedRefreshOnExecute;
   published
     property AddOnFormData: TAddOnFormData read FAddOnFormData write FAddOnFormData;
   end;
@@ -75,6 +78,7 @@ end;
 
 constructor TParentForm.Create(AOwner: TComponent);
 begin
+  FNeedRefreshOnExecute := false;
   FAddOnFormData := TAddOnFormData.Create;
   inherited;
   onKeyDown := FormKeyDown;
@@ -100,12 +104,13 @@ begin
     end;
     FormSender := Sender;
     // Если открыта первый раз и всегда перечитываем
-    if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh then
+    if (not FisAlreadyOpen) or AddOnFormData.isAlwaysRefresh or NeedRefreshOnExecute then
        // Перечитываем запросы
        if Assigned(AddOnFormData.RefreshAction) then
           AddOnFormData.RefreshAction.Execute;
   finally
     FisAlreadyOpen := true;
+    NeedRefreshOnExecute := false;
   end;
 end;
 

@@ -8,16 +8,16 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 88
+    Top = 86
     Width = 804
-    Height = 303
+    Height = 305
     TabOrder = 5
     ExplicitTop = 86
     ExplicitWidth = 804
     ExplicitHeight = 305
-    ClientRectBottom = 299
-    ClientRectRight = 800
-    ClientRectTop = 22
+    ClientRectBottom = 305
+    ClientRectRight = 804
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
@@ -47,7 +47,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 0
       ExplicitHeight = 0
@@ -481,6 +480,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           ParamType = ptInput
         end>
       isShowModal = False
+      IdFieldName = 'Id'
     end
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
@@ -542,7 +542,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -908,6 +908,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 632
     Top = 206
   end

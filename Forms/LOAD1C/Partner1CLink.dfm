@@ -30,6 +30,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            Options.Editing = False
             Width = 189
           end
           object colCode: TcxGridDBColumn
@@ -42,7 +43,14 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           object colName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
-            Options.Editing = False
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = actChoicePartnerForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
             Options.IncSearch = False
             Width = 239
           end
@@ -92,6 +100,11 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           end>
         TabOrder = 1
         Width = 177
+      end
+      object cxLabel1: TcxLabel
+        Left = 224
+        Top = 24
+        Caption = #1060#1080#1083#1080#1072#1083
       end
     end
   end
@@ -218,6 +231,39 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       DataSetRefresh = actRefresh
       IdFieldName = 'PartnerId'
     end
+    object actChoicePartnerForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actChoicePartnerForm'
+      FormName = 'TPartnerForm'
+      FormNameParam.Value = 'TPartnerForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 48
@@ -268,6 +314,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end
         item
           Visible = True
+          ItemName = 'bbBranchLabel'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarControlContainerItem'
         end>
     end
@@ -285,6 +335,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object bbInsertPartner: TdxBarButton
       Action = actInsertPartner
       Category = 0
+    end
+    object bbBranchLabel: TdxBarControlContainerItem
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+      Control = cxLabel1
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

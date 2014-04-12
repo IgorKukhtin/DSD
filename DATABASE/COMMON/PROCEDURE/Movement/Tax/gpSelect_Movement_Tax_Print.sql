@@ -6,31 +6,43 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar)
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inisClientCopy      Boolean  , -- копия для клиента
-    IN inSession       TVarChar    -- сессия пользователя
+    IN inSession           TVarChar    -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
 $BODY$
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
+    DECLARE Cursor3 refcursor;
     DECLARE vbUserId Integer;
-    DECLARE vbMovementId Integer;
+    DECLARE vbMovementSaleId Integer;
+    DECLARE vbMovementTaxId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
-     SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
+
+     SELECT COALESCE(CASE WHEN Movement.DescId = zc_Movement_Tax()
             THEN inMovementId
             ELSE MovementLinkMovement_Master.MovementChildId
-            END
-     INTO vbMovementId
+            END, 0)
+     INTO vbMovementTaxId
      FROM Movement
      LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                     ON MovementLinkMovement_Master.MovementId = Movement.Id
                                    AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-
      WHERE Movement.Id =  inMovementId;
 
+     SELECT COALESCE(CASE WHEN Movement.DescId = zc_Movement_Sale()
+            THEN inMovementId
+            ELSE MovementLinkMovement_Master.MovementId
+            END, 0)
+     INTO vbMovementSaleId
+     FROM Movement
+     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                    ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+     WHERE Movement.Id =  inMovementId;
 
      --
     OPEN Cursor1 FOR
@@ -101,7 +113,6 @@ BEGIN
                         -MovementFloat_TotalSummMVAT.ValueData)>10000)
                   THEN 'X' ELSE '' END                  AS ERPN
 
-
        FROM Movement
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
@@ -111,15 +122,10 @@ BEGIN
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
                                      AND MovementBoolean_Checked.DescId = zc_MovementBoolean_Checked()
-/*
-            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-*/
+
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
                                   AND MovementDate_DateRegistered.DescId = zc_MovementDate_DateRegistered()
-
 
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
@@ -214,9 +220,10 @@ BEGIN
                                   ON ObjectString_ToAddress.ObjectId = Object_To.Id
                                  AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
-       WHERE Movement.Id =  vbMovementId;
+       WHERE Movement.Id =  vbMovementTaxId;
 
     RETURN NEXT Cursor1;
+
     OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS
       ( SELECT
@@ -276,8 +283,6 @@ BEGIN
                              ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = Object_GoodsPropertyValue.Id
                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
-
-
 
         WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
       )
@@ -443,16 +448,101 @@ BEGIN
                                                   AND tmpObject_GoodsPropertyValue.GoodsPropertyId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = MILinkObject_GoodsKind.ObjectId
 
-       WHERE MovementItem.MovementId = vbMovementId
+       WHERE MovementItem.MovementId = vbMovementTaxId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
        ;
-
-
     RETURN NEXT Cursor2;
+-- ********************************************************************
+    OPEN Cursor3 FOR
+     WITH
+     tmpMovementTaxCount AS
+     (
+     SELECT CASE
+            WHEN (vbMovementSaleId <> 0 AND vbMovementTaxId<>0 AND MovementLinkObject_DocumentTaxKind.ObjectId=80787)--тип-налоговой 80787=налоговая простая
+            THEN 1 ELSE 0 END                       AS CountTaxId
+     FROM MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+     WHERE MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+       AND MovementLinkObject_DocumentTaxKind.MovementId = vbMovementTaxId
+     )
+     ,
+     tmpTax AS
+     (
+       SELECT
+             MovementItem.ObjectId                  AS GoodsId
+           , MIFloat_Price.ValueData                AS Price
+           , SUM(MovementItem.Amount)               AS Amount
 
+       FROM MovementItem
+            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                        AND MIFloat_Price.ValueData <> 0
 
+       WHERE MovementItem.MovementId = vbMovementTaxId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE
+       GROUP BY
+             MovementItem.ObjectId
+           , MIFloat_Price.ValueData
+      )
+      ,
+      tmpSale AS
+      (
+        SELECT
+             MovementItem.ObjectId     			        AS GoodsId
+           , MIFloat_Price.ValueData 			        AS Price
+           , SUM(MIFloat_AmountPartner.ValueData)   	AS Amount
+       FROM  MovementItem
+            JOIN MovementItemFloat AS MIFloat_Price
+                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  AND MIFloat_Price.ValueData <> 0
 
+            JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  AND MIFloat_AmountPartner.ValueData <> 0
+       WHERE MovementItem.MovementId = vbMovementSaleId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE--tmpIsErased.isErased)
+       GROUP BY
+             MovementItem.ObjectId
+           , MIFloat_Price.ValueData
+      )
+
+       SELECT GoodsId
+           , Object_Goods.ObjectCode        AS GoodsCode
+           , Object_Goods.ValueData         AS GoodsName
+           , Price                          AS Price
+           , CAST(COALESCE(tmpMovementTaxCount.CountTaxId,0) AS Integer) AS CountTaxId
+           , SUM (SaleAmount)               AS SaleAmount
+           , SUM (TaxAmount)                AS TaxAmount
+
+       FROM (SELECT tmpSale.GoodsId         AS GoodsId
+                  , tmpSale.Price           AS Price
+                  , tmpSale.Amount          AS SaleAmount
+                  , 0                       AS TaxAmount
+             FROM tmpSale
+           UNION ALL
+             SELECT tmpTax.GoodsId          AS GoodsId
+                  , tmpTax.Price            AS Price
+                  , 0                       AS SaleAmount
+                  , tmpTax.Amount           AS TaxAmount
+             FROM tmpTax
+          )as tmp
+           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  tmp.GoodsId
+           LEFT JOIN tmpMovementTaxCount ON 1=1
+
+      GROUP BY tmp.GoodsId
+             , Object_Goods.ObjectCode
+             , Object_Goods.ValueData
+             , tmp.Price
+             , tmpMovementTaxCount.CountTaxId
+      HAVING
+           SUM (tmp.SaleAmount) <>  SUM (tmp.TaxAmount)
+       ;
+    RETURN NEXT Cursor3;
 
 END;
 $BODY$
@@ -461,7 +551,8 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.04.14                                                       *
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
  01.04.14                                                       *  MIFloat_Price.ValueData <> 0
  31.03.14                                                       *  + inisClientCopy
@@ -475,9 +566,10 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 
 -- тест
 -- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 135428, inisClientCopy:=FALSE ,inSession:= '2')
-
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171760, inisClientCopy:=FALSE ,inSession:= '2');
 /*
+-- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 25209, df inisClientCopy:=FALSE ,inSession:= '2');
 BEGIN;
- SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 171051, inisClientCopy:=FALSE ,inSession:= '2');
+ SELECT * FROM gpSelect_Movement_Tax_Print (inMovementId := 135428 , inisClientCopy:=FALSE ,inSession:= '2')
 COMMIT;
 */

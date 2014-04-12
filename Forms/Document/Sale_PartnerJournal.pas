@@ -87,6 +87,7 @@ type
     actPrint_Bill: TdsdPrintAction;
     mactPrint_Bill: TMultiAction;
     bbPrint_Bill: TdxBarButton;
+    PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }
   public
