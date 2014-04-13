@@ -336,6 +336,8 @@ type
     bbReport_GoodsMI_byMovementDifSale: TdxBarButton;
     actSale_Partner: TdsdOpenForm;
     bbSale_Partner: TdxBarButton;
+    actReport_CheckContractInMovement: TdsdOpenForm;
+    bbReport_CheckContractInMovement: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
