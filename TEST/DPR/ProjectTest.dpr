@@ -405,7 +405,8 @@ uses
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
-  TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm};
+  TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
+  Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm};
 
 {$R *.RES}
 

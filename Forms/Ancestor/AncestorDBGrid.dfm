@@ -101,8 +101,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
     Left = 520
     Top = 264
   end
