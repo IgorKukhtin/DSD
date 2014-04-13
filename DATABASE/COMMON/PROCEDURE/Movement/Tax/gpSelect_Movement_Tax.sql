@@ -19,6 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , InvNumber_Master TVarChar, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
@@ -61,8 +62,8 @@ BEGIN
            , Object_To.ValueData               		AS ToName
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_To
 
-           , Object_Unit.ObjectCode                  	AS UnitCode
-           , Object_Unit.ValueData               	AS UnitName
+           , Object_From_Master.ObjectCode              AS UnitCode
+           , Object_From_Master.ValueData               AS UnitName
            , Object_Partner.ObjectCode                  AS PartnerCode
            , Object_Partner.ValueData               	AS PartnerName
 
@@ -70,6 +71,16 @@ BEGIN
            , View_Contract_InvNumber.InvNumber         	AS ContractName
            , Object_TaxKind.Id                		AS TaxKindId
            , Object_TaxKind.ValueData         		AS TaxKindName
+           , Movement_DocumentMaster.InvNumber          AS InvNumberPartner_Master
+           , CAST (CASE WHEN MovementLinkMovement_Master.MovementChildId IS NOT NULL
+                              AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
+                                OR MovementDate_OperDatePartner_Master.ValueData <> Movement.OperDate
+                                OR COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_To_Master.ObjectId, -2)
+                                OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2)
+                                  )
+                              THEN TRUE
+                              ELSE FALSE
+                   END AS Boolean) AS isError
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
@@ -152,7 +163,6 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -165,10 +175,20 @@ BEGIN
                                            ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Child
-                                         ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Master.MovementId
-                                        AND MovementLinkObject_From_Child.DescId = zc_MovementLinkObject_From()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_From_Child.ObjectId
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Master
+                                         ON MovementLinkObject_From_Master.MovementId = MovementLinkMovement_Master.MovementId
+                                        AND MovementLinkObject_From_Master.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From_Master ON Object_From_Master.Id = MovementLinkObject_From_Master.ObjectId
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Master
+                                         ON MovementLinkObject_To_Master.MovementId = MovementLinkMovement_Master.MovementId
+                                        AND MovementLinkObject_To_Master.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Master
+                                         ON MovementLinkObject_Contract_Master.MovementId = MovementLinkMovement_Master.MovementId
+                                        AND MovementLinkObject_Contract_Master.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
+                                   ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementId
+                                  AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
            ;
 
 END;
@@ -179,6 +199,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()
  28.03.14                                        * add TotalSummVAT
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  16.03.14                                        * add all
@@ -187,4 +208,4 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 */
 
 -- òåñò
--- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '30.01.2014', inEndDate:= '02.02.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Tax (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

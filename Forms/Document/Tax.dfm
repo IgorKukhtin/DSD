@@ -2,29 +2,27 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitWidth = 1075
-  ExplicitHeight = 702
+  ExplicitWidth = 1083
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1067
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1067
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1063
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1067
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1061
-      ExplicitHeight = 514
+      ExplicitWidth = 1067
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1061
-        Height = 514
-        ExplicitWidth = 1061
-        ExplicitHeight = 514
+        Width = 1067
+        Height = 518
+        ExplicitWidth = 1067
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -156,15 +154,14 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1061
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1067
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1061
-        Height = 514
-        ExplicitWidth = 1061
-        ExplicitHeight = 514
+        Width = 1067
+        Height = 518
+        ExplicitWidth = 1067
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -221,7 +218,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -662,7 +659,7 @@ inherited TaxForm: TTaxForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -701,11 +698,19 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Us'
         end
         item
           Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -722,7 +727,6 @@ inherited TaxForm: TTaxForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -804,8 +808,8 @@ inherited TaxForm: TTaxForm
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Tax'
-    Left = 104
-    Top = 88
+    Left = 88
+    Top = 56
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Tax'

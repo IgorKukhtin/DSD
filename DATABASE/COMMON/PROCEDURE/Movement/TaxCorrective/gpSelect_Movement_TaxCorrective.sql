@@ -20,7 +20,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, InvNumber_Master TVarChar
-             , DocumentChildId Integer, InvNumber_Child TVarChar
+             , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
+             , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
               )
 AS
@@ -40,38 +41,60 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
      SELECT
-             Movement.Id				AS Id
-           , Movement.InvNumber				AS InvNumber
-           , Movement.OperDate				AS OperDate
-           , Object_Status.ObjectCode    		AS StatusCode
-           , Object_Status.ValueData     		AS StatusName
-           , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementBoolean_Document.ValueData         AS Document
-           , MovementBoolean_Registered.ValueData       AS Registered
-           , MovementDate_DateRegistered.ValueData      AS DateRegistered
-           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData         AS VATPercent
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
+             Movement.Id				 AS Id
+           , Movement.InvNumber				 AS InvNumber
+           , Movement.OperDate				 AS OperDate
+           , Object_Status.ObjectCode    		 AS StatusCode
+           , Object_Status.ValueData     		 AS StatusName
+           , MovementBoolean_Checked.ValueData           AS Checked
+           , MovementBoolean_Document.ValueData          AS Document
+           , MovementBoolean_Registered.ValueData        AS Registered
+           , MovementDate_DateRegistered.ValueData       AS DateRegistered
+           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData          AS VATPercent
+           , MovementFloat_TotalCount.ValueData          AS TotalCount
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
-           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Object_From.Id                    		AS FromId
-           , Object_From.ValueData             		AS FromName
-           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
-           , Object_To.Id                      		AS ToId
-           , Object_To.ValueData               		AS ToName
-           , Object_Partner.ObjectCode                  AS PartnerCode
-           , Object_Partner.ValueData               	AS PartnerName
-           , View_Contract_InvNumber.ContractId        		AS ContractId
-           , View_Contract_InvNumber.invnumber         		AS ContractName
-           , Object_TaxKind.Id                		AS TaxKindId
-           , Object_TaxKind.ValueData         		AS TaxKindName
-           , Movement_DocumentMaster.Id                                    AS DocumentMasterId
-           , CAST (CASE WHEN Movement_DocumentMaster.StatusId = zc_Enum_Status_Erased() THEN '***' ELSE '' END || Movement_DocumentMaster.InvNumber AS TVarChar)          AS InvNumber_Master
-           , Movement_DocumentChild.Id                                     AS DocumentChildId
-           , CAST (CASE WHEN Movement_DocumentChild.StatusId = zc_Enum_Status_Erased() THEN '***' ELSE '' END || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumber_Child
+           , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+           , MovementString_InvNumberPartner.ValueData   AS InvNumberPartner
+           , Object_From.Id                    		 AS FromId
+           , Object_From.ValueData             		 AS FromName
+           , ObjectHistory_JuridicalDetails_View.OKPO    AS OKPO_From
+           , Object_To.Id                      		 AS ToId
+           , Object_To.ValueData               		 AS ToName
+           , Object_Partner.ObjectCode                   AS PartnerCode
+           , Object_Partner.ValueData               	 AS PartnerName
+           , View_Contract_InvNumber.ContractId        	 AS ContractId
+           , View_Contract_InvNumber.invnumber         	 AS ContractName
+           , Object_TaxKind.Id                		 AS TaxKindId
+           , Object_TaxKind.ValueData         		 AS TaxKindName
+           , Movement_DocumentMaster.Id                  AS DocumentMasterId
+           , Movement_DocumentMaster.InvNumber           AS InvNumber_Master
+           , Movement_DocumentChild.Id                   AS DocumentChildId
+           , Movement_DocumentChild.OperDate             AS OperDate_Child
+           , MS_InvNumberPartner_DocumentChild.ValueData AS InvNumberPartner_Child
+           , CAST (CASE WHEN (MovementLinkMovement_Master.MovementChildId IS NOT NULL
+                              AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
+                                OR Movement.OperDate <> MovementDate_OperDatePartner_Master.ValueData
+                                OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_From_Master.ObjectId, -2)
+                                    AND MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                  ))
+                                OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> COALESCE (ObjectLink_Partner_Juridical_Master.ChildObjectId, -2)
+                                OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2)
+                                OR COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, -1) <> COALESCE (MovementLinkObject_DocumentTaxKind_Master.ObjectId, -2)
+                             )
+                          OR (MovementLinkMovement_Child.MovementChildId IS NOT NULL
+                              AND (Movement_DocumentChild.StatusId <> zc_Enum_Status_Complete()
+                                OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_Partner_Child.ObjectId, -2)
+                                    AND MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                  ))
+                                OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> COALESCE (MovementLinkObject_To_Child.ObjectId, -2)
+                                OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Child.ObjectId, -2)
+                             )
+                        THEN TRUE
+                        ELSE FALSE
+                   END AS Boolean) AS isError
            , View_InfoMoney.InfoMoneyGroupName
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
@@ -163,18 +186,41 @@ BEGIN
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
-                                           ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
-                                          AND MovementLinkMovement_DocumentMaster.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_DocumentMaster.MovementChildId
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
+                                   ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementChildId
+                                  AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Master
+                                         ON MovementLinkObject_From_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_From_Master.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical_Master
+                                 ON ObjectLink_Partner_Juridical_Master.ObjectId = MovementLinkObject_From_Master.ObjectId
+                                AND ObjectLink_Partner_Juridical_Master.DescId = zc_ObjectLink_Partner_Juridical()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Master
+                                         ON MovementLinkObject_Contract_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_Contract_Master.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
+                                         ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentChild
-                                           ON MovementLinkMovement_DocumentChild.MovementId = Movement.Id
-                                          AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
-
-            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
-            LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
-                                                                         AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Child
+                                           ON MovementLinkMovement_Child.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
+            LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_Child.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentChild ON MS_InvNumberPartner_DocumentChild.MovementId = MovementLinkMovement_Child.MovementChildId
+                                                                         AND MS_InvNumberPartner_DocumentChild.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Child
+                                         ON MovementLinkObject_Partner_Child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                        AND MovementLinkObject_Partner_Child.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Child
+                                         ON MovementLinkObject_To_Child.MovementId = MovementLinkMovement_Child.MovementChildId
+                                        AND MovementLinkObject_To_Child.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Child
+                                         ON MovementLinkObject_Contract_Child.MovementId = MovementLinkMovement_Child.MovementId
+                                        AND MovementLinkObject_Contract_Child.DescId = zc_MovementLinkObject_Contract()
            ;
 
 END;
@@ -185,6 +231,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()
  28.03.14                                        * add TotalSummVAT
  23.03.14                                        * add Object_InfoMoney_View
  20.03.14                                        * add all
@@ -193,4 +240,4 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '30.01.2014', inEndDate:= '12.12.2014', inIsRegisterDate:=FALSE, inIsErased :=TRUE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_TaxCorrective (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsRegisterDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

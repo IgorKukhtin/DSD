@@ -88,6 +88,7 @@ type
     mactPrint_Bill: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    colIsError: TcxGridDBColumn;
   private
     { Private declarations }
   public

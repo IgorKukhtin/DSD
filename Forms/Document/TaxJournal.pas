@@ -63,6 +63,9 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    colInvNumberPartner_Master: TcxGridDBColumn;
+    colIsError: TcxGridDBColumn;
+    colRegistered: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -44,7 +44,7 @@ begin
    insert into _tmpBill_Scale(BillId)
      select Id
      from
-      (select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory_byObvalka.InsertDate,zc_rpTimeRemainsFree_H10(*)) ) as BillDate_calc
+      (select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory_byObvalka.InsertDate,zc_rpTimeRemainsFree_H04(*)) ) as BillDate_calc
        from dba.Bill
             join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.BillId=Bill.Id
        where Bill.BillDate between @inStartDate-3 and @inEndDate+3
@@ -75,7 +75,7 @@ begin
             , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
-           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId <> 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber
@@ -87,6 +87,7 @@ begin
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
         and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and BillItems.GoodsPropertyId is null
       group by Bill.Id, Bill.BillDate, isnull (_toolsView_Client_isChangeDate.addDay, 0)
       ) as tmp
       where isBillDate = zc_rvYes();

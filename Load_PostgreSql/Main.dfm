@@ -1009,7 +1009,7 @@ object MainForm: TMainForm
       OnClick = cbReturnInFlClick
     end
     object cbTotalTaxCorr: TCheckBox
-      Left = 161
+      Left = 160
       Top = 474
       Width = 63
       Height = 17
@@ -1021,6 +1021,21 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 29
+      OnClick = cbReturnInFlClick
+    end
+    object cblTaxPF: TCheckBox
+      Left = 160
+      Top = 496
+      Width = 63
+      Height = 17
+      Caption = 'PF'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 30
       OnClick = cbReturnInFlClick
     end
   end
