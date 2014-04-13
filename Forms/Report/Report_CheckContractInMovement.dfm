@@ -2,8 +2,8 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1044#1086#1075#1086#1074#1086#1088#1086#1074' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'>'
   ClientHeight = 324
   ClientWidth = 1102
-  ExplicitWidth = 1110
-  ExplicitHeight = 358
+  ExplicitWidth = 1118
+  ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -164,10 +164,12 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
     Width = 1102
     ExplicitWidth = 1102
     inherited deStart: TcxDateEdit
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41639d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
   end
   inherited MasterDS: TDataSource
@@ -183,14 +185,14 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

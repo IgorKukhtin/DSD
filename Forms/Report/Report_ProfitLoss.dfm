@@ -26,14 +26,18 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41548d
+      EditValue = 41640d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41578d
+      EditValue = 41640d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 1
       Width = 85
     end
@@ -215,8 +219,8 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -321,13 +325,13 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41548d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'EndDate'
-          Value = 41578d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -467,14 +471,14 @@ object Report_ProfitLossForm: TReport_ProfitLossForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41548d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41578d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

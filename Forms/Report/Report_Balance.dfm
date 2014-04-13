@@ -36,7 +36,7 @@ object Report_BalanceForm: TReport_BalanceForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41670d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -363,7 +363,7 @@ object Report_BalanceForm: TReport_BalanceForm
         end
         item
           Name = 'EndDate'
-          Value = 41670d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -474,7 +474,7 @@ object Report_BalanceForm: TReport_BalanceForm
       end
       item
         Name = 'inEndDate'
-        Value = 41670d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

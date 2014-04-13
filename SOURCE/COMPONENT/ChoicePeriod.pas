@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
   cxLookAndFeelPainters, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   cxGroupBox, cxRadioGroup, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  cxLabel, cxSpinEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxPropertiesStore;
+  cxLabel, cxSpinEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxPropertiesStore,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
 

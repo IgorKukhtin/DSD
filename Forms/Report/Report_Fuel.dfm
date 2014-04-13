@@ -353,7 +353,8 @@ object Report_FuelForm: TReport_FuelForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -361,7 +362,8 @@ object Report_FuelForm: TReport_FuelForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -465,8 +467,8 @@ object Report_FuelForm: TReport_FuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -547,6 +549,7 @@ object Report_FuelForm: TReport_FuelForm
     Top = 40
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -560,6 +563,7 @@ object Report_FuelForm: TReport_FuelForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -568,19 +572,21 @@ object Report_FuelForm: TReport_FuelForm
     end
     object dsdPrintAction: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
+      DataSets = <>
       Params = <
         item
           Name = 'PeriodStart'
-          Value = 41579d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end
         item
           Name = 'PeriodEnd'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end
@@ -601,6 +607,8 @@ object Report_FuelForm: TReport_FuelForm
           Value = '4'
         end>
       ReportName = #1042#1077#1076#1086#1084#1086#1089#1090#1100' '#1088#1072#1089#1093#1086#1076#1072' '#1090#1086#1087#1083#1080#1074#1072
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -613,14 +621,14 @@ object Report_FuelForm: TReport_FuelForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -656,6 +664,10 @@ object Report_FuelForm: TReport_FuelForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 304
     Top = 296
   end
@@ -671,6 +683,8 @@ object Report_FuelForm: TReport_FuelForm
   object CarGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edCar
+    FormNameParam.Value = 'TCarForm'
+    FormNameParam.DataType = ftString
     FormName = 'TCarForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -721,6 +735,8 @@ object Report_FuelForm: TReport_FuelForm
   object FuelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceFuel
+    FormNameParam.Value = 'TFuelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TFuelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -746,6 +762,8 @@ object Report_FuelForm: TReport_FuelForm
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

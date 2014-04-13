@@ -228,12 +228,14 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
     inherited deStart: TcxDateEdit
       Left = 114
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
       ExplicitTop = 32
     end

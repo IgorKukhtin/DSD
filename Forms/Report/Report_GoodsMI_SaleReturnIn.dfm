@@ -3,9 +3,8 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 339
   ClientWidth = 1137
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -321
-  ExplicitWidth = 1145
-  ExplicitHeight = 366
+  ExplicitWidth = 1153
+  ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -260,12 +259,14 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     ExplicitWidth = 1137
     inherited deStart: TcxDateEdit
       Left = 95
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 95
     end
     inherited deEnd: TcxDateEdit
       Left = 304
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 304
     end
     inherited cxLabel1: TcxLabel
@@ -322,14 +323,14 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41609d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

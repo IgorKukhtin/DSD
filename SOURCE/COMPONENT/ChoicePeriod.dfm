@@ -18,6 +18,7 @@ object PeriodChoiceForm: TPeriodChoiceForm
   object cxDateEnd: TcxDateEdit
     Left = 200
     Top = 44
+    Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.WeekNumbers = True
     TabOrder = 0
@@ -27,6 +28,7 @@ object PeriodChoiceForm: TPeriodChoiceForm
     Left = 200
     Top = 16
     Properties.DateButtons = [btnClear, btnToday]
+    Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 1
     Width = 121

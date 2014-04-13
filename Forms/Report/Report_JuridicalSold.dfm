@@ -538,12 +538,14 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     inherited deStart: TcxDateEdit
       Left = 118
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 30
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 30
     end
