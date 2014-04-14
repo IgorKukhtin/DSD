@@ -53,7 +53,7 @@ BEGIN
            , MovementBoolean_Checked.ValueData          AS Checked
 --           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , repeat(' ', 7 - length(MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
