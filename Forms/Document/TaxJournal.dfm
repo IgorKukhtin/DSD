@@ -10,14 +10,11 @@ inherited TaxJournalForm: TTaxJournalForm
     Width = 1110
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -342,12 +339,6 @@ inherited TaxJournalForm: TTaxJournalForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
-    inherited deStart: TcxDateEdit
-      EditValue = 41609d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 41639d
-    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -370,45 +361,11 @@ inherited TaxJournalForm: TTaxJournalForm
       FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     object actPrintTax_Us: TdsdPrintAction
       Category = 'DSDLib'
@@ -555,14 +512,14 @@ inherited TaxJournalForm: TTaxJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

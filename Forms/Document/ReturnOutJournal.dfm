@@ -2,7 +2,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitLeft = -128
   ExplicitWidth = 1126
   ExplicitHeight = 570
   PixelsPerInch = 96
@@ -277,12 +276,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
-    inherited deStart: TcxDateEdit
-      EditValue = 41609d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 41639d
-    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -305,45 +298,11 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       FormName = 'TReturnOutForm'
       FormNameParam.Name = 'TReturnOutForm'
       FormNameParam.Value = 'TReturnOutForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TReturnOutForm'
       FormNameParam.Name = 'TReturnOutForm'
       FormNameParam.Value = 'TReturnOutForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
   end
   inherited MasterDS: TDataSource
@@ -358,14 +317,14 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

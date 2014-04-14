@@ -19,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PartnerCode Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
-             , DocumentMasterId Integer, InvNumber_Master TVarChar
+             , DocumentMasterId Integer, InvNumber_Master TVarChar, InvNumberPartner_Master TVarChar
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
              , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -71,6 +71,7 @@ BEGIN
            , Object_TaxKind.ValueData         		 AS TaxKindName
            , Movement_DocumentMaster.Id                  AS DocumentMasterId
            , Movement_DocumentMaster.InvNumber           AS InvNumber_Master
+           , MS_InvNumberPartner_DocumentMaster.ValueData AS InvNumberPartner_Master
            , Movement_DocumentChild.Id                   AS DocumentChildId
            , Movement_DocumentChild.OperDate             AS OperDate_Child
            , MS_InvNumberPartner_DocumentChild.ValueData AS InvNumberPartner_Child
@@ -190,6 +191,8 @@ BEGIN
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+            LEFT JOIN MovementString AS MS_InvNumberPartner_DocumentMaster ON MS_InvNumberPartner_DocumentMaster.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                                          AND MS_InvNumberPartner_DocumentMaster.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
                                    ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementChildId
                                   AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()

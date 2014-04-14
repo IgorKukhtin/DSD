@@ -2,29 +2,27 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitWidth = 733
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 57
     Width = 717
-    Height = 270
-    ExplicitTop = 59
+    Height = 272
+    ExplicitTop = 57
     ExplicitWidth = 717
-    ExplicitHeight = 270
-    ClientRectBottom = 266
-    ClientRectRight = 713
+    ExplicitHeight = 272
+    ClientRectBottom = 272
+    ClientRectRight = 717
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 711
-      ExplicitHeight = 264
+      ExplicitWidth = 717
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
-        Width = 711
-        Height = 264
-        ExplicitWidth = 711
-        ExplicitHeight = 264
+        Width = 717
+        Height = 272
+        ExplicitWidth = 717
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -77,16 +75,19 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -143,13 +144,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -173,7 +175,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -181,6 +183,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -314,14 +317,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -340,7 +343,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

@@ -63,6 +63,7 @@ type
     colIsError: TcxGridDBColumn;
     colRegistered: TcxGridDBColumn;
     colOperDate_Child: TcxGridDBColumn;
+    colInvNumberPartner_Master: TcxGridDBColumn;
   private
     { Private declarations }
   public

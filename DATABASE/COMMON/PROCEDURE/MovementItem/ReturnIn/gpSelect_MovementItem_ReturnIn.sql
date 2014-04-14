@@ -30,7 +30,7 @@ BEGIN
      IF inShowAll THEN
 
      --
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+     vbOperDate := COALESCE ((SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId), DATE_TRUNC ('day', CURRENT_TIMESTAMP);
 
      -- Результат
      RETURN QUERY
