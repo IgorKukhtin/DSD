@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , ObjectHistoryString_FullName.ValueData         AS FullName
        , ObjectHistoryString_JuridicalAddress.ValueData AS JuridicalAddress
        , ObjectHistoryString_OKPO.ValueData             AS OKPO
-       , repeat(' ', 12 - length(ObjectHistoryString_INN.ValueData)) || ObjectHistoryString_INN.ValueData AS INN
+       , CAST (REPEAT (' ', 12 - LENGTH (ObjectHistoryString_INN.ValueData)) || ObjectHistoryString_INN.ValueData AS TVarChar) AS INN
 --       , ObjectHistoryString_INN.ValueData              AS INN
        , ObjectHistoryString_NumberVAT.ValueData        AS NumberVAT
        , ObjectHistoryString_AccounterName.ValueData    AS AccounterName
