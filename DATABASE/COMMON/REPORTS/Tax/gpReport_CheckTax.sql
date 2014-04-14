@@ -40,26 +40,25 @@ BEGIN
                                             ELSE 0 
                                   END AS PartnerId_Tax
                           FROM Movement 
-                          JOIN MovementDate AS MovementDate_OperDatePartner
-                                            ON MovementDate_OperDatePartner.MovementId = Movement.Id
-                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
-                                           AND MovementDate_OperDatePartner.ValueData between inStartDate AND inEndDate
+                               JOIN MovementDate AS MovementDate_OperDatePartner
+                                                 ON MovementDate_OperDatePartner.MovementId = Movement.Id
+                                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
+                                                AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+                               JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
+                                                        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+                               LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
 
-                          JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
-                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-                          LEFT JOIN Movement AS Movement_Tax ON Movement_Tax.Id = MovementLinkMovement.MovementChildId
+                               JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
+                                                       ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
+                                                       AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                       AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID OR inDocumentTaxKindID =0)
 
-                          JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
-                                                  ON MovementLO_DocumentTaxKind.MovementId = MovementLinkMovement.MovementChildId
-                                                  AND MovementLO_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-                                                  AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID OR inDocumentTaxKindID =0)
-
-                          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                                       ON MovementLinkObject_Partner.MovementId = Movement_Tax.Id
-                                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                                            ON MovementLinkObject_Partner.MovementId = Movement_Tax.Id
+                                                           AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                                    
-                          WHERE Movement.DescId = zc_Movement_Sale()  
-                            AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
+                          WHERE Movement.DescId = zc_Movement_Sale()
+                            AND (Movement.StatusId = zc_Enum_Status_Complete())
    
                       UNION ALL 
                           SELECT  Movement.Id AS MovementId
@@ -81,7 +80,7 @@ BEGIN
                           JOIN MovementDate AS MovementDate_OperDatePartner
                                             ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                            AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner() 
-                                           AND MovementDate_OperDatePartner.ValueData between inStartDate AND inEndDate
+                                           AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
 
                           JOIN MovementLinkObject AS MovementLO_DocumentTaxKind
                                                   ON MovementLO_DocumentTaxKind.MovementId = Movement.Id 
@@ -94,7 +93,7 @@ BEGIN
                                               ON MovementLinkObject_From.MovementId = Movement.Id
                                              AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
                            WHERE Movement.DescId = zc_Movement_ReturnIn()  
-                            AND (Movement.StatusId = zc_Enum_Status_Complete() OR Movement.StatusId = zc_Enum_Status_UnComplete())
+                            AND (Movement.StatusId = zc_Enum_Status_Complete())
                             AND (inDocumentTaxKindID in (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR(),  0))
                           )
        
@@ -207,7 +206,7 @@ BEGIN
                     
                      , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()) THEN MovementLinkMovement.MovementId ELSE 0 END AS MovementId_Sale
                      , Movement.Id  AS MovementId_Tax
-                     , DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  AS OperDate_Sale
+                     , CASE WHEN (MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Tax()) THEN Movement.OperDate ELSE DATE_TRUNC ('Month', inEndDate) + interval '1 month' - interval '1 day'  END AS OperDate_Sale
                      , Movement.OperDate AS OperDate_Tax
                      , '' AS InvNumber_Sale
                      , MovementItem.ObjectId AS GoodsId
@@ -257,7 +256,7 @@ BEGIN
                                                 AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
                      
                 WHERE Movement.DescId = zc_Movement_Tax()
-                  AND Movement.OperDate between inStartDate AND inEndDate
+                  AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND ((Movement.StatusId = zc_Enum_Status_Complete()) OR (Movement.StatusId = zc_Enum_Status_UnComplete()))
                   
                 ) AS tmpMovement
@@ -304,7 +303,6 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
  18.03.14         *
  17.02.14         * change Amount =  MIFloat_AmountPartner, - summ
  14.02.14         *  
-                
 */
 
 -- тест
