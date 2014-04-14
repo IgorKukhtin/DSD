@@ -50,7 +50,7 @@ type
     colPartnerName: TcxGridDBColumn;
     colOKPO_From: TcxGridDBColumn;
     colInvNumber_Master: TcxGridDBColumn;
-    colInvNumber_Child: TcxGridDBColumn;
+    colInvNumberPartner_Child: TcxGridDBColumn;
     colDocument: TcxGridDBColumn;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
@@ -60,6 +60,9 @@ type
     actPrint_TaxCorrective_Client: TdsdPrintAction;
     bbPrintTaxCorrective_Us: TdxBarButton;
     bbPrintTaxCorrective_Client: TdxBarButton;
+    colIsError: TcxGridDBColumn;
+    colRegistered: TcxGridDBColumn;
+    colOperDate_Child: TcxGridDBColumn;
   private
     { Private declarations }
   public

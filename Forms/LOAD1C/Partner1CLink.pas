@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxSplitter, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   dsdGuides, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, DataModul;
+  dxSkinsdxBarPainter, DataModul, cxLabel;
 
 type
   TPartner1CLinkForm = class(TAncestorDBGridForm)
@@ -34,6 +34,9 @@ type
     actInsertPartner: TdsdInsertUpdateAction;
     bbInsertPartner: TdxBarButton;
     colJuridicalName: TcxGridDBColumn;
+    actChoicePartnerForm: TOpenChoiceForm;
+    cxLabel1: TcxLabel;
+    bbBranchLabel: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

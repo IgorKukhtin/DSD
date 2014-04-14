@@ -190,13 +190,15 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 114
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
       ExplicitTop = 32
     end
@@ -273,14 +275,14 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41609d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

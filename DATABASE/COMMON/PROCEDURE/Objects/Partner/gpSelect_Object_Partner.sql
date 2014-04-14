@@ -1,8 +1,10 @@
 -- Function: gpSelect_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
+    IN inJuridicalId       Integer , 
     IN inSession           TVarChar            -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
@@ -26,56 +28,6 @@ BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Select_Object_Partner());
 
    RETURN QUERY 
-     SELECT 
-           Object_JuridicalGroup.Id          AS Id 
-         , Object_JuridicalGroup.ObjectCode  AS Code
-         , CAST('' AS TVarChar)              AS Name
-         , CAST('' AS TVarChar)              AS Address
-
-         , CAST('' AS TVarChar) AS GLNCode
-         , CAST(0 as TFloat)   AS PrepareDayCount
-         , CAST(0 as TFloat)   AS DocumentDayCount
-         
-         , ObjectLink_JuridicalGroup_Parent.ChildObjectId AS JuridicalGroupId
-         , Object_JuridicalGroup.ObjectCode  AS JuridicalGroupCode
-         , Object_JuridicalGroup.ValueData   AS JuridicalGroupName
-         
-         , CAST (0 as Integer)    AS JuridicalId 
-         , CAST (0 as Integer)    AS JuridicalCode 
-         , CAST('' AS TVarChar)   AS JuridicalName
-         
-         , CAST (0 as Integer)    AS RouteId 
-         , CAST (0 as Integer)    AS RouteCode 
-         , CAST('' AS TVarChar)   AS RouteName
-
-         , CAST (0 as Integer)    AS RouteSortingId 
-         , CAST (0 as Integer)    AS RouteSortingCode 
-         , CAST('' AS TVarChar)   AS RouteSortingName
-         
-         , CAST (0 as Integer)    AS PersonalTakeId
-         , CAST (0 as Integer)    AS PersonalTakeCode
-         , CAST ('' as TVarChar)  AS PersonalTakeName
-                  
-         , CAST ('' as TVarChar)  AS OKPO
-
-         , CAST (0 as Integer)    AS PriceListId 
-         , CAST ('' as TVarChar)  AS PriceListName 
-
-         , CAST (0 as Integer)    AS PriceListPromoId 
-         , CAST ('' as TVarChar)  AS PriceListPromoName 
-       
-         , CURRENT_DATE :: TDateTime AS StartPromo
-         , CURRENT_DATE :: TDateTime AS EndPromo
-
-         , Object_JuridicalGroup.isErased AS isErased
-         
-     FROM Object AS Object_JuridicalGroup
-         LEFT JOIN ObjectLink AS ObjectLink_JuridicalGroup_Parent
-                ON ObjectLink_JuridicalGroup_Parent.ObjectId = Object_JuridicalGroup.Id
-               AND ObjectLink_JuridicalGroup_Parent.DescId = zc_ObjectLink_JuridicalGroup_Parent()
-     WHERE Object_JuridicalGroup.DescId = zc_Object_JuridicalGroup()
-      AND 1=0 -- !!!первого запроса быть не должно!!!
-   UNION
      SELECT 
            Object_Partner.Id               AS Id
          , Object_Partner.ObjectCode       AS Code
@@ -180,17 +132,18 @@ BEGIN
                              AND ObjectLink_Partner_PriceListPromo.DescId = zc_ObjectLink_Partner_PriceListPromo()
          LEFT JOIN Object AS Object_PriceListPromo ON Object_PriceListPromo.Id = ObjectLink_Partner_PriceListPromo.ChildObjectId         
 
-    WHERE Object_Partner.DescId = zc_Object_Partner();
+    WHERE Object_Partner.DescId = zc_Object_Partner() AND (inJuridicalId = 0 OR inJuridicalId = ObjectLink_Partner_Juridical.ChildObjectId);
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Object_Partner (TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Object_Partner (integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.04.14                        * add inJuridicalId
  12.01.14         * add PriceList,
                         PriceListPromo,
                         StartPromo,

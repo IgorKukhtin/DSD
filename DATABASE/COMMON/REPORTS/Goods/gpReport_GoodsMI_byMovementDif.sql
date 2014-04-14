@@ -134,6 +134,7 @@ BEGIN
                                                END) AS Summ
                         FROM tmpMovement
                              JOIN MovementItemReport AS MIReport ON MIReport.MovementId = tmpMovement.MovementId
+                                                                AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                              JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MIReport.ReportContainerId--ReportContainerLink.ContainerId = tmpListContainer.ContainerId
 
                              JOIN (SELECT Container.Id AS ContainerId
@@ -176,7 +177,7 @@ BEGIN
                              , 0 AS Summ
                         FROM tmpMovement
                              JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
-
+                                                                      AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                              JOIN Container ON Container.Id = MIContainer.ContainerId
                                            AND Container.DescId = zc_Container_Count()
                              JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId

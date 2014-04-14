@@ -36,7 +36,7 @@ BEGIN
                                            , inInvNumberPartner := (SELECT ValueData FROM MovementString WHERE MovementId = ioId AND DescId = zc_MovementString_InvNumberPartner())
                                            , inInvNumberOrder   := inInvNumberOrder
                                            , inOperDate         := inOperDate
-                                           , inOperDatePartner  := (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner())
+                                           , inOperDatePartner  := inOperDatePartner -- (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner())
                                            , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
                                            , inPriceWithVAT     := inPriceWithVAT
                                            , inVATPercent       := inVATPercent

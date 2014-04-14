@@ -53,7 +53,7 @@ inherited AncestorDataForm: TAncestorDataForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object Bar: TdxBar
       Caption = 'Custom'

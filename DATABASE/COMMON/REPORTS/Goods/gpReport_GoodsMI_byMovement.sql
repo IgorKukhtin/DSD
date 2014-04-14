@@ -6,10 +6,10 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integ
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
-    IN inJuridicalId       Integer   , 
+    IN inDescId       Integer   ,  -- sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
+    IN inJuridicalId  Integer   , 
     IN inGoodsGroupId Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inSession      TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
 
@@ -64,7 +64,8 @@ BEGIN
                               JOIN Movement ON Movement.Id = MIReport.MovementId
                                            AND Movement.DescId  = inDescId 
                          WHERE ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                           AND ContainerLO_Juridical.ObjectId = inJuridicalId
+                           AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR DATE_TRUNC ('day', inStartDate) = DATE_TRUNC ('day', inEndDate))
+
                          GROUP BY Movement.Id 
                                 , Movement.InvNumber
                                 , Movement.OperDate    
@@ -95,8 +96,19 @@ BEGIN
          , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END) :: TFloat                                AS AmountPartner_Sh
 
          , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
-                     THEN CAST (tmpOperationGroup.Price * COALESCE (tmpOperationGroup.AmountChangePercent, 0) AS NUMERIC (16, 2))
-                ELSE CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (tmpOperationGroup.Price * COALESCE (tmpOperationGroup.AmountChangePercent, 0) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                          -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки для Суммы округленной до 2-х знаков
+                     THEN CASE WHEN MovementFloat_ChangePercent.ValueData < 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                               WHEN MovementFloat_ChangePercent.ValueData > 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                               ELSE CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2))
+                          END
+                     -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС округленной до 2-х знаков (этот вариант будет и для НАЛ и для БН)
+                ELSE CASE WHEN MovementFloat_ChangePercent.ValueData < 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                          WHEN MovementFloat_ChangePercent.ValueData > 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                          ELSE CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (tmpOperationGroup.Price * tmpOperationGroup.AmountChangePercent AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                     END
+                     -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС округленной до 2-х знаков, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                     -- ...
+
            END :: TFloat AS SummChangePercent
          , tmpOperationGroup.SummPartner :: TFloat AS SummPartner
 
@@ -129,8 +141,8 @@ BEGIN
                                                END) AS SummPartner
                  FROM tmpMovement
                       JOIN MovementItemReport AS MIReport ON MIReport.MovementId = tmpMovement.MovementId
-
-                      JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MIReport.ReportContainerId--ReportContainerLink.ContainerId = tmpListContainer.ContainerId
+                                                         AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                      JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MIReport.ReportContainerId --ReportContainerLink.ContainerId = tmpListContainer.ContainerId
 
                              JOIN (SELECT Container.Id AS ContainerId
                                    FROM (SELECT ProfitLossId AS Id, isSale FROM Constant_ProfitLoss_Sale_ReturnIn_View) AS tmpProfitLoss
@@ -176,11 +188,10 @@ BEGIN
                       , 0 AS SummPartner
 
                  FROM tmpMovement
-                      Join MovementItemContainer AS MIContainer 
-                                                 ON MIContainer.MovementId = tmpMovement.MovementId
-
-                      JOIN Container ON Container.Id = MIContainer.ContainerId
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
+                      INNER JOIN MovementItemContainer AS MIContainer ON MIContainer.MovementId = tmpMovement.MovementId
+                                                                     AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
+                      INNER JOIN Container ON Container.Id = MIContainer.ContainerId
+                      INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
 
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId = Container.Id
@@ -255,6 +266,9 @@ BEGIN
           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                   ON MovementFloat_VATPercent.MovementId =  tmpOperationGroup.MovementId
                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = tmpOperationGroup.MovementId
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
    ;
          
 END;
@@ -266,6 +280,7 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
  05.04.14         * add SummChangePercent , AmountChangePercent
  05.02.14         * add inJuridicalId

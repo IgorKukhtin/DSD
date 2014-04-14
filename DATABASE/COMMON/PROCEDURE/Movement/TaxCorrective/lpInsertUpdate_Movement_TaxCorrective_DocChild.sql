@@ -16,7 +16,11 @@ BEGIN
      -- определяем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective());
 
-
+     -- проверка
+     IF inOperDate <> DATE_TRUNC ('day', inOperDate)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_TaxCorrective(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -38,7 +42,6 @@ $BODY$
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
  09.04.14                                                       *
-
 */
 
 -- тест

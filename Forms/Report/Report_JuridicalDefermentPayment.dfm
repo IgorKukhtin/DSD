@@ -322,6 +322,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit

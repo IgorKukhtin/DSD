@@ -2,26 +2,29 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
-    Height = 476
+    Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1110
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1106
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1104
-      ExplicitHeight = 470
+      ExplicitLeft = 0
+      ExplicitTop = 0
+      ExplicitWidth = 1110
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1104
-        Height = 470
-        ExplicitWidth = 1104
-        ExplicitHeight = 470
+        Width = 1110
+        Height = 478
+        ExplicitWidth = 1110
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -137,20 +140,26 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          inherited colOperDate: TcxGridDBColumn [1]
+          object colIsError: TcxGridDBColumn [1]
+            Caption = #1054#1096#1080#1073#1082#1072
+            DataBinding.FieldName = 'isError'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          inherited colOperDate: TcxGridDBColumn [2]
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             Width = 50
           end
-          object colOperDatePartner: TcxGridDBColumn [2]
+          object colOperDatePartner: TcxGridDBColumn [3]
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 65
           end
-          inherited colInvNumber: TcxGridDBColumn [3]
+          inherited colInvNumber: TcxGridDBColumn [4]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 55
@@ -169,14 +178,6 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object colInvNumberOrder: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1082'.'#1079#1072#1103#1074#1082#1072
-            DataBinding.FieldName = 'InvNumberOrder'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 55
-          end
           object colInvNumberPartner: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
@@ -184,6 +185,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
+          end
+          object colInvNumberOrder: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1079#1072#1103#1074#1082#1072
+            DataBinding.FieldName = 'InvNumberOrder'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
@@ -812,7 +821,7 @@ inherited SaleJournalForm: TSaleJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

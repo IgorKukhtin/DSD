@@ -8,9 +8,9 @@ DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inDescId       Integer   ,  --sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
+    IN inDescId       Integer   ,  -- sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inGoodsGroupId Integer   ,
-    IN inSession      TVarChar    -- сессия пользователя
+    IN inSession      TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
              , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
@@ -69,12 +69,12 @@ BEGIN
                       , 0 AS  Amount
                       , 0 AS  AmountChangePercent
                       , 0 AS  AmountPartner
+                      , 0 AS SummChangePercent
                       , SUM (MIReport.Amount * CASE WHEN (ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Active() AND inDescId = zc_Movement_Sale())
                                                       OR (ReportContainerLink.AccountKindId = zc_Enum_AccountKind_Passive() AND inDescId = zc_Movement_ReturnIn())
                                                          THEN -1
                                                     ELSE 1
                                                END) AS SummPartner
-                      , 0 AS SummChangePercent
                  FROM MovementItemReport AS MIReport
                       JOIN Movement ON Movement.Id = MIReport.MovementId
                                    AND Movement.DescId = inDescId
@@ -105,20 +105,30 @@ BEGIN
                 UNION ALL    
                  SELECT Container.ObjectId AS GoodsId       
                       , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) AS GoodsKindId
-                      , SUM (MIContainer.Amount)                                  AS Amount
-                      , SUM (COALESCE (MIFloat_AmountChangePercent.ValueData, 0)) AS AmountChangePercent
-                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0))       AS AmountPartner
-                      , 0 AS SummPartner
+                      , SUM (MIContainer.Amount * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS Amount
+                      , SUM (CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END) AS AmountChangePercent
+                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                       , SUM (CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE OR COALESCE (MovementFloat_VATPercent.ValueData, 0) = 0
-                                       THEN CAST (COALESCE (MIFloat_Price.ValueData, 0) * COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS NUMERIC (16, 2))
-                                  ELSE CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * COALESCE (MIFloat_AmountChangePercent.ValueData, 0) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                            -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки для Суммы округленной до 2-х знаков
+                                       THEN CASE WHEN MovementFloat_ChangePercent.ValueData < 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                                 WHEN MovementFloat_ChangePercent.ValueData > 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                                 ELSE CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2))
+                                            END
+                                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
+                                  ELSE CASE WHEN MovementFloat_ChangePercent.ValueData < 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                            WHEN MovementFloat_ChangePercent.ValueData > 0 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2)) AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                            ELSE CAST ((1 + COALESCE (MovementFloat_VATPercent.ValueData, 0) / 100) * CAST (COALESCE (MIFloat_Price.ValueData, 0) * CASE WHEN inDescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountChangePercent.ValueData, 0) ELSE MIContainer.Amount END AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                       END
+                                       -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС округленной до 2-х знаков, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                                       -- ...
                              END) AS SummChangePercent
+                      , 0 AS SummPartner
                             
                  FROM MovementItemContainer AS MIContainer 
-                      JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                   AND Movement.DescId = inDescId 
-                      JOIN Container ON Container.Id = MIContainer.ContainerId
-                      JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
+                      INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
+                                         AND Movement.DescId = inDescId 
+                      INNER JOIN Container ON Container.Id = MIContainer.ContainerId
+                      INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
 
                       LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind
                                                     ON ContainerLO_GoodsKind.ContainerId = Container.Id
@@ -130,6 +140,10 @@ BEGIN
                       LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                               ON MovementFloat_VATPercent.MovementId =  MIContainer.MovementId
                                              AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+                      LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                              ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                             AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
                       LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
                                                   ON MIFloat_AmountChangePercent.MovementItemId = MIContainer.MovementItemId
@@ -180,6 +194,7 @@ ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarCha
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
  05.04.14         * add SummChangePercent. AmountChangePercent
  04.02.14         * 

@@ -1,34 +1,34 @@
 inherited AncestorDocumentForm: TAncestorDocumentForm
-  ClientHeight = 391
-  ClientWidth = 804
+  ClientHeight = 416
+  ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 820
-  ExplicitHeight = 426
+  ExplicitWidth = 837
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 88
-    Width = 804
-    Height = 303
+    Top = 86
+    Width = 829
+    Height = 330
     TabOrder = 5
     ExplicitTop = 86
-    ExplicitWidth = 804
-    ExplicitHeight = 305
-    ClientRectBottom = 299
-    ClientRectRight = 800
-    ClientRectTop = 22
+    ExplicitWidth = 829
+    ExplicitHeight = 330
+    ClientRectBottom = 330
+    ClientRectRight = 829
+    ClientRectTop = 24
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
       ExplicitTop = 24
-      ExplicitWidth = 804
-      ExplicitHeight = 281
+      ExplicitWidth = 829
+      ExplicitHeight = 306
       inherited cxGrid: TcxGrid
-        Width = 804
-        Height = 281
-        ExplicitWidth = 804
-        ExplicitHeight = 281
+        Width = 829
+        Height = 306
+        ExplicitWidth = 829
+        ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -47,15 +47,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     object tsEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 804
-        Height = 281
+        Width = 829
+        Height = 306
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -224,7 +220,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   object DataPanel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 804
+    Width = 829
     Height = 60
     Align = alTop
     BevelOuter = bvNone
@@ -481,6 +477,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           ParamType = ptInput
         end>
       isShowModal = False
+      IdFieldName = 'Id'
     end
     object actFormClose: TdsdFormClose
       Category = 'DSDLib'
@@ -542,7 +539,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -635,6 +632,14 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Value = Null
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = -1
+      end>
     Left = 318
     Top = 169
   end
@@ -685,6 +690,11 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         Component = actShowAll
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        DataType = ftString
       end>
     Left = 104
     Top = 264
@@ -908,6 +918,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 632
     Top = 206
   end
@@ -942,5 +953,27 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       end>
     Left = 392
     Top = 288
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
+    Left = 436
+    Top = 156
   end
 end
