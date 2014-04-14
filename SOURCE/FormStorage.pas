@@ -182,6 +182,8 @@ end;
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i: integer;
 begin
+  if (FormName = 'NULL') or (FormName = '') then
+     raise Exception.Create('Не передано название формы');
   // Пытаемся найти среди открытых
   for i := 0 to Screen.FormCount - 1 do begin
      if Screen.Forms[i] is TParentForm then

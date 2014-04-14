@@ -16,7 +16,7 @@ BEGIN
 
      RETURN QUERY 
        SELECT
-            ('Сумма с НДС: '||trim(to_char(MovementFloat_TotalSumm.ValueData, '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
+            ('Итого: '||trim(to_char(MovementFloat_TotalSumm.ValueData, '999 999 999 999 999D99')))::TVarChar  AS TotalSumm
        FROM Movement                          
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
