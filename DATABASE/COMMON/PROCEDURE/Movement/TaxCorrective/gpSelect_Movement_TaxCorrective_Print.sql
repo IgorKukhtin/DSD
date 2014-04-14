@@ -250,6 +250,7 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+       ORDER BY MovementString_InvNumberPartner.ValueData
            ;
 -- END MOVEMENT
     RETURN NEXT Cursor1;
@@ -377,6 +378,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.14                                                       *
  10.04.14                                                       *
  09.04.14                                                       *
  08.04.14                                                       *
@@ -386,6 +388,6 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 28140, inisClientCopy:=FALSE ,inSession:= '2'); -- возврат № 35953
+ SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 114784, inisClientCopy:=FALSE ,inSession:= '2'); -- возврат № 35953
 COMMIT;
 */
