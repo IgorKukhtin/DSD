@@ -51,7 +51,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
 --           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
-           , repeat(' ', 8 - length(MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , CAST (REPEAT (' ', 8 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , Object_From.Id                    		                        AS FromId
            , Object_From.ValueData             		                        AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO                       AS OKPO_From
@@ -71,7 +71,7 @@ BEGIN
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS InvNumber_Master
            , Movement_DocumentChild.Id                                      AS DocumentChildId
 --           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
-           , repeat(' ', 7 - length(MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData  AS InvNumber_Child
+           , CAST (REPEAT (' ', 7 - LENGTH (MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
            , movement_documentchild.OperDate                                AS OperDate_Child
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
