@@ -18,21 +18,56 @@ BEGIN
      -- проверка при изменении <Master> на Удален - если <Child> Проведен, то <Ошибка>
      IF inNewStatusId = zc_Enum_Status_Erased()
      THEN
-     IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
-     THEN
-         -- находим параметры <Child> документа
-         SELECT Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
-                INTO vbOperDate, vbInvNumber, vbItemName
-         FROM (SELECT MAX (Movement.Id) AS MovementId
-               FROM Movement
-               WHERE Movement.ParentId = inMovementId
-                 AND Movement.StatusId = zc_Enum_Status_Complete()
-              ) AS tmpMovement
-              LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
-              LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
          --
-         RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен <Подчиненный> документ <%> № <%> от <%> .', inComment, vbItemName, vbInvNumber, vbOperDate;
-     END IF;
+         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.ParentId = inMovementId AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             -- находим параметры <Child> документа
+             SELECT Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
+                    INTO vbOperDate, vbInvNumber, vbItemName
+             FROM (SELECT MAX (Movement.Id) AS MovementId
+                   FROM Movement
+                   WHERE Movement.ParentId = inMovementId
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  ) AS tmpMovement
+                  LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
+                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
+             --
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен <Подчиненный> документ <%> № <%> от <%> .', inComment, vbItemName, vbInvNumber, vbOperDate;
+         END IF;
+         --
+         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             -- находим параметры <Child> документа
+             SELECT Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
+                    INTO vbOperDate, vbInvNumber, vbItemName
+             FROM (SELECT MAX (Movement.Id) AS MovementId
+                   FROM Movement
+                   WHERE Movement.Id IN (SELECT MovementChildId FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  ) AS tmpMovement
+                  LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
+                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
+             --
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> .', inComment, vbItemName, vbInvNumber, vbOperDate;
+         END IF;
+         --
+         IF EXISTS (SELECT Movement.Id FROM Movement WHERE Movement.Id IN (SELECT MovementId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
+                                                       AND Movement.StatusId = zc_Enum_Status_Complete())
+         THEN
+             -- находим параметры <Child> документа
+             SELECT Movement.OperDate, Movement.InvNumber, MovementDesc.ItemName
+                    INTO vbOperDate, vbInvNumber, vbItemName
+             FROM (SELECT MAX (Movement.Id) AS MovementId
+                   FROM Movement
+                   WHERE Movement.Id IN (SELECT MovementId FROM MovementLinkMovement WHERE MovementChildId = inMovementId AND DescId = zc_MovementLinkMovement_Child())
+                     AND Movement.StatusId = zc_Enum_Status_Complete()
+                  ) AS tmpMovement
+                  LEFT JOIN Movement ON Movement.Id = tmpMovement.MovementId
+                  LEFT JOIN MovementDesc ON MovementDesc.Id = Movement.DescId;
+             --
+             RAISE EXCEPTION 'Ошибка.Невозможно % документ т.к. проведен документ <%> № <%> от <%> .', inComment, vbItemName, vbInvNumber, vbOperDate;
+         END IF;
      END IF;
 
 END;
@@ -44,6 +79,7 @@ ALTER FUNCTION lfCheck_Movement_ChildStatus (Integer, Integer, TVarChar) OWNER T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 13.04.14                                        * add zc_MovementLinkMovement_Child
  12.10.13                                        *
 */
 

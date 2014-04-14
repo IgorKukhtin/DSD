@@ -3,8 +3,8 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 986
-  ExplicitHeight = 379
+  ExplicitWidth = 994
+  ExplicitHeight = 380
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -315,12 +315,14 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
     inherited deStart: TcxDateEdit
       Left = 114
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
     end
     inherited deEnd: TcxDateEdit
       Left = 114
       Top = 32
       EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 114
       ExplicitTop = 32
     end

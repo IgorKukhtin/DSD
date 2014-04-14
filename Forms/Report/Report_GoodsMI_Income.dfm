@@ -4,8 +4,8 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 981
-  ExplicitHeight = 378
+  ExplicitWidth = 989
+  ExplicitHeight = 379
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -90,6 +90,10 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
           OptionsData.DeletingConfirmation = False
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
@@ -200,10 +204,12 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     Width = 973
     ExplicitWidth = 973
     inherited deStart: TcxDateEdit
-      EditValue = 41579d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41608d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
       Left = 413
@@ -253,14 +259,14 @@ inherited Report_GoodsMI_IncomeForm: TReport_GoodsMI_IncomeForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -2,9 +2,8 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
   ClientWidth = 1102
-  ExplicitLeft = -229
-  ExplicitWidth = 1110
-  ExplicitHeight = 358
+  ExplicitWidth = 1118
+  ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -200,10 +199,12 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Width = 1102
     ExplicitWidth = 1102
     inherited deStart: TcxDateEdit
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41639d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
       Left = 441
@@ -237,14 +238,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -217,11 +217,13 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
     ExplicitWidth = 990
     inherited deStart: TcxDateEdit
       Left = 107
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 107
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41639d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
       Left = 441
@@ -253,14 +255,14 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

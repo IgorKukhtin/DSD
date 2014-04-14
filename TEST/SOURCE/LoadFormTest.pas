@@ -710,6 +710,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckBonusForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_CheckBonusForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_CheckContractInMovementForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_CheckContractInMovementForm');
 end;
 
 procedure TLoadFormTest.LoadUnionFormTest;

@@ -260,9 +260,11 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     ExplicitWidth = 973
     inherited deStart: TcxDateEdit
       EditValue = 41640d
+      Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
       EditValue = 41640d
+      Properties.SaveTime = False
     end
     object cxLabel4: TcxLabel
       Left = 413

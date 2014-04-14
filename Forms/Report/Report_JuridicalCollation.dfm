@@ -197,12 +197,16 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     inherited deStart: TcxDateEdit
       Left = 118
       Top = 4
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
       Left = 118
       Top = 29
+      EditValue = 41640d
+      Properties.SaveTime = False
       ExplicitLeft = 118
       ExplicitTop = 29
     end
@@ -313,7 +317,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Params = <
         item
           Name = 'EndDate'
-          Value = 41395d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -438,7 +442,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Params = <
         item
           Name = 'EndDate'
-          Value = 41395d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -494,14 +498,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -670,7 +674,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Params = <
       item
         Name = 'inOperDate'
-        Value = 41395d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
@@ -744,7 +748,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Params = <
       item
         Name = 'OperDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -779,7 +783,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'inOperDate'
-        Value = 41395d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

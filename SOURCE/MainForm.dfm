@@ -820,6 +820,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReportHistoryCost'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReportsGoods_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_CheckContractInMovement'
         end>
     end
     object bbReportsGoods_Separator: TdxBarSeparator
@@ -1489,6 +1497,10 @@ object MainForm: TMainForm
     end
     object bbGoodsKindWeighing: TdxBarButton
       Action = actGoodsKindWeighing
+      Category = 0
+    end
+    object bbReport_CheckContractInMovement: TdxBarButton
+      Action = actReport_CheckContractInMovement
       Category = 0
     end
   end
@@ -3020,6 +3032,26 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_CheckContractInMovement: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1086#1074' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093
+      FormName = 'TReport_CheckContractInMovementForm'
+      FormNameParam.Value = 'TReport_CheckContractInMovementForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'InDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1088#1072#1079#1085#1080#1094#1072')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -3046,7 +3078,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

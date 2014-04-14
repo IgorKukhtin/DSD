@@ -2,8 +2,8 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1099#1084' '#1085#1072#1082#1083#1072#1076#1085#1099#1084'>'
   ClientHeight = 319
   ClientWidth = 990
-  ExplicitWidth = 998
-  ExplicitHeight = 353
+  ExplicitWidth = 1006
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -213,10 +213,12 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
     Width = 990
     ExplicitWidth = 990
     inherited deStart: TcxDateEdit
-      EditValue = 41609d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
     inherited deEnd: TcxDateEdit
-      EditValue = 41639d
+      EditValue = 41640d
+      Properties.SaveTime = False
     end
   end
   inherited MasterDS: TDataSource
@@ -232,14 +234,14 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

@@ -473,11 +473,10 @@ object Report_AccountForm: TReport_AccountForm
     Height = 111
     Align = alTop
     TabOrder = 1
-    ExplicitTop = 20
     object deStart: TcxDateEdit
       Left = 10
       Top = 29
-      EditValue = 41609d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
@@ -486,7 +485,7 @@ object Report_AccountForm: TReport_AccountForm
     object deEnd: TcxDateEdit
       Left = 10
       Top = 79
-      EditValue = 41639d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -692,8 +691,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -832,7 +831,7 @@ object Report_AccountForm: TReport_AccountForm
       GuiParams = <
         item
           Name = 'inOperDate'
-          Value = 41609d
+          Value = 41640d
           Component = deStart
           ComponentItem = 'OperDate'
         end
@@ -864,14 +863,14 @@ object Report_AccountForm: TReport_AccountForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -951,6 +950,8 @@ object Report_AccountForm: TReport_AccountForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 312
     Top = 264
   end
@@ -1044,13 +1045,13 @@ object Report_AccountForm: TReport_AccountForm
       end
       item
         Name = 'StartDate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
       end
       item
         Name = 'EndDate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
       end

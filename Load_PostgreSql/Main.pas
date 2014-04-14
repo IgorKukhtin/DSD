@@ -146,6 +146,8 @@ type
     cbTotalTaxCorr: TCheckBox;
     cbCompleteTaxFl: TCheckBox;
     cbCompleteTaxCorrective: TCheckBox;
+    cbCompleteTaxInt: TCheckBox;
+    cblTaxPF: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -196,6 +198,11 @@ type
     procedure pCompleteDocument_ProductionUnion(isLastComplete:Boolean);
     procedure pCompleteDocument_ProductionSeparate(isLastComplete:Boolean);
     procedure pCompleteDocument_Inventory(isLastComplete:Boolean);
+
+    procedure pCompleteDocument_TaxFl(isLastComplete:Boolean);
+    procedure pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
+    procedure pCompleteDocument_TaxInt(isLastComplete:Boolean);
+
     // Documents :
     function pLoadDocument_Income:Integer;
     procedure pLoadDocumentItem_Income(SaveCount:Integer);
@@ -328,7 +335,7 @@ uses Authentication,CommonData,Storage;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
 begin
-             // В 1-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ!!!
+             // В 1.1.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье!!!
              Result:=0;
              if myContractNumber<>'' then
              begin
@@ -336,6 +343,22 @@ begin
                                  +' from Object_Contract_View'
                                  +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
                                  +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи!!!
+             if (Result=0)and(myContractNumber<>'') then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
                                  +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
                                  +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
@@ -906,6 +929,9 @@ begin
      if not fStop then pCompleteDocument_Sale_Fl(True);
      if not fStop then pCompleteDocument_ReturnIn_Fl(True);
 
+     if not fStop then pCompleteDocument_TaxFl(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_TaxCorrective(cbLastComplete.Checked);
+
      if not fStop then DataSource.DataSet:=fromQuery;
      //!!!end FLOAT!!!
 
@@ -934,6 +960,7 @@ begin
      if not fStop then pCompleteDocument_ProductionUnion(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_ProductionSeparate(cbLastComplete.Checked);
      if not fStop then pCompleteDocument_Inventory(cbLastComplete.Checked);
+     if not fStop then pCompleteDocument_TaxInt(cbLastComplete.Checked);
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -10988,7 +11015,12 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730'
+           +'                           then 30103'//(30103) Доходы Продукция Хлеб
+           +'                      when Goods.Id = 2514 and 1=0'
+           +'                           then 30201'//(30201) Доходы Мясное сырье
+           +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
+           +'                 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
@@ -11267,6 +11299,84 @@ begin
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!Integer
+procedure TMainForm.pCompleteDocument_TaxInt(isLastComplete:Boolean);
+begin
+     if (not cbCompleteTaxInt.Checked)or(not cbCompleteTaxInt.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteTaxInt);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , Bill.FromID');
+        Add('     , Bill.ToID');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , Bill.NalogId_PG as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Unit as Client on Client.ID = Bill.ToId');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Client.Id');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
+           +'  and Bill.NalogId_PG>0');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
+
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+
+        cbCompleteTaxInt.Caption:='8.3.('+IntToStr(RecordCount)+')Налоговые Int';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+             begin
+                  // проводим
+                  fExecSqToQuery (' UPDATE Movement SET StatusId = zc_Enum_Status_Complete()'
+                                 +' where Id='+FieldByName('Id_Postgres').AsString);
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteTaxInt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!Integer
 function TMainForm.pLoadDocument_Tax_Int:Integer;
 var ContractId_pg,ToId_pg:Integer;
     zc_Enum_DocumentTaxKind_Tax:String;
@@ -11274,10 +11384,29 @@ begin
      Result:=0;
      if (not cbTaxInt.Checked)or(not cbTaxInt.Enabled) then exit;
      //
+     myEnabledCB(cbTaxInt);
+     //
      fOpenSqToQuery ('select zc_Enum_DocumentTaxKind_Tax() as RetV');
      zc_Enum_DocumentTaxKind_Tax:=toSqlQuery.FieldByName('RetV').AsString;
      //
-     myEnabledCB(cbTaxInt);
+     fExecSqFromQuery('delete from dba._pgList_tmp');
+     fExecSqFromQuery('insert into _pgList_tmp(Id)'
+           +'        select Id '
+           +'        from (select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory_byObvalka.InsertDate,zc_rpTimeRemainsFree_H04()) ) as BillDate_calc'
+           +'              from dba.Bill'
+           +'                   join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.BillId=Bill.Id'
+           +'              where Bill.BillDate between ' + FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-3)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+3)
+           +'                and Bill.BillKind = zc_bkSaleToClient()'
+           +'              group by Bill.Id, Bill.BillDate'
+           +'              having Bill.BillDate <> BillDate_calc'
+           +'            union'
+           +'             select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory.InsertDate,zc_rpTimeRemainsFree_H10()) ) as BillDate_calc'
+           +'              from dba.Bill'
+           +'                   join dba.ScaleHistory on ScaleHistory.BillId=Bill.Id'
+           +'              where Bill.BillDate between ' + FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text)-3)+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text)+3)
+           +'                and Bill.BillKind = zc_bkSaleToClient()'
+           +'              group by Bill.Id, Bill.BillDate'
+           +'              having Bill.BillDate <> BillDate_calc) as a');
      //
      with fromQuery,Sql do begin
         Close;
@@ -11311,21 +11440,28 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres_two');
         Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=1 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730'
+           +'                           then 30103'//(30103) Доходы Продукция Хлеб
+           +'                      when BillItems.GoodsPropertyId = 5510'
+           +'                        or Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
+           +'                           then 30201'//(30201) Доходы Мясное сырье
+           +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
+           +'                 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
            +'                             and BillItems.OperCount<>0'
            +'                             and BillItems.OperPrice<>0'
-           +'                             and BillItems.GoodsPropertyId <> 5510'//РУЛЬКА ВАРЕНАЯ в пакете для запекания
-//           +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
+           //+'           left join dba.BillItems as BillItems_5510 on BillItems_5510.BillId = Bill.Id'
+           //+'                                                    and BillItems_5510.GoodsPropertyId = 5510'//РУЛЬКА ВАРЕНАЯ в пакете для запекания
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSaleToClient())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'        and Bill.BillNumberNalog <> 0'
-           +'        and Bill.FromId in (zc_UnitId_StoreSale())'
+           +'        and Bill.FromId in (zc_UnitId_StoreSale(),zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
            +'        and Bill.Id_Postgres<>0'
+           //+'        and BillItems_5510.BillId is null'
            +'        and (Bill.BillDate >=zc_def_StartDate_PG() or Bill.FromId=zc_UnitId_StoreSale())'
            +'      group by Bill.Id'
            +'      ) as Bill_find');
@@ -11355,12 +11491,17 @@ begin
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = UnitTo.InformationFromUnitID'
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
         Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitTo.Id');
-        Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID');
+
+        Add('     left outer join _pgList_tmp  on _pgList_tmp .Id = Bill.Id');
+        Add('     left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID'
+           +'                                                       and _pgList_tmp.Id is null');
 //  Add('where inInvNumberPartner in (3450)');
 // Add('where Bill.BillNumber in (58445,58443)');
 
-        if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill.NalogId_PG,0)=0');
+        if cblTaxPF.Checked
+        then Add('where Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
+        else if cbOnlyInsertDocument.Checked
+             then Add('where isnull(Bill.NalogId_PG,0)=0');
         Add('order by inOperDate, inInvNumber, ObjectId');
         Open;
 
@@ -11506,8 +11647,11 @@ begin
 // +'  and 1=0'
 // +'  and MovementId_Postgres = 10154'
            );
-        if cbOnlyInsertDocument.Checked
-        then Add('and isnull(BillItems.NalogId_PG,0)=0');
+        if cblTaxPF.Checked
+        then Add(' and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
+        else
+            if cbOnlyInsertDocument.Checked
+            then Add('and isnull(BillItems.NalogId_PG,0)=0');
         Add('order by 2,3,1');
         Open;
 
@@ -11569,6 +11713,84 @@ begin
      end;
      //
      myDisabledCB(cbTaxInt);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+procedure TMainForm.pCompleteDocument_TaxFl;
+begin
+     if (not cbCompleteTaxFl.Checked)or(not cbCompleteTaxFl.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteTaxFl);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , Bill.FromID');
+        Add('     , Bill.ToID');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , Bill.NalogId_PG as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Unit as Client on Client.ID = Bill.ToId');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Client.Id');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind in (zc_bkSaleToClient())'
+           +'  and Bill.NalogId_PG>0');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
+
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+
+        cbCompleteTaxFl.Caption:='8.1.('+IntToStr(RecordCount)+')Налоговые Fl';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+             begin
+                  // проводим
+                  fExecSqToQuery (' UPDATE Movement SET StatusId = zc_Enum_Status_Complete()'
+                                 +' where Id='+FieldByName('Id_Postgres').AsString);
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteTaxFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 //!!!!FLOAT
@@ -11677,7 +11899,12 @@ begin
         Add('     , Bill.Id_Postgres as Id_Postgres_two');
         Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730'
+           +'                           then 30103'//(30103) Доходы Продукция Хлеб
+           +'                      when Goods.Id = 2514 and 1=0'
+           +'                           then 30201'//(30201) Доходы Мясное сырье
+           +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
+           +'                 end) as CodeIM'
            +'           , max(isnull(BillItems.OperCount,0)) as OperCount1'
            +'           , max(isnull(BillItems_byParent.OperCount,0)) as OperCount2'
            +'           , max(isnull(BillItems_byParent.Id,0)) as findId1'
@@ -11969,6 +12196,114 @@ begin
      myDisabledCB(cbTaxFl);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
+procedure TMainForm.pCompleteDocument_TaxCorrective(isLastComplete:Boolean);
+begin
+     if (not cbCompleteTaxCorrective.Checked)or(not cbCompleteTaxCorrective.Enabled) then exit;
+     //
+     myEnabledCB(cbCompleteTaxCorrective);
+     //
+     with fromFlQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , Bill.FromID');
+        Add('     , Bill.ToID');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , Bill.NalogId_PG as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     left outer join dba.Unit as Client on Client.ID = Bill.FromId');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Client.Id');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'  and Bill.NalogId_PG>0');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
+        Add('union all');
+        Add('select Bill.Id as ObjectId');
+        Add('     , Bill.BillDate as OperDate');
+        Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , Bill.FromID');
+        Add('     , Bill.ToID');
+        Add('     , Bill.MoneyKindId');
+        Add('     , zc_mkBN() as zc_mkBN');
+        Add('     , BillItems_byParent.NalogId_PG as Id_Postgres');
+        Add('from dba.Bill');
+        Add('     join dba.BillItems_byParent on BillItems_byParent.BillId=Bill.ID');
+        Add('     left outer join dba.Unit as Client on Client.ID = Bill.FromId');
+        Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
+           +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
+        Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = Client.Id');
+        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+           +'  and Bill.BillKind in (zc_bkReturnToUnit())'
+           +'  and BillItems_byParent.NalogId_PG>0');
+        Add('group by Bill.Id');
+        Add('       , Bill.BillDate');
+        Add('       , Bill.BillNumber');
+        Add('       , Bill.FromID');
+        Add('       , Bill.ToID');
+        Add('       , Bill.MoneyKindId');
+        Add('       , BillItems_byParent.NalogId_PG');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
+
+        Add('order by OperDate,InvNumber,ObjectId');
+        Open;
+
+        cbCompleteTaxCorrective.Caption:='8.2.('+IntToStr(RecordCount)+')Корректировки Fl';
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        toStoredProc.StoredProcName:='gpUnComplete_Movement';
+        toStoredProc.OutputType := otResult;
+        toStoredProc.Params.Clear;
+        toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             if cbUnComplete.Checked then
+             begin
+                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                  if not myExecToStoredProc then ;//exit;
+             end;
+             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
+             begin
+                  // проводим
+                  fExecSqToQuery (' UPDATE Movement SET StatusId = zc_Enum_Status_Complete()'
+                                 +' where Id='+FieldByName('Id_Postgres').AsString);
+             end;
+             //
+             Next;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbCompleteTaxCorrective);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+//!!!!FLOAT
 function TMainForm.pLoadDocument_TaxCorrective_Fl:Integer;
 var ContractId_pg,FromId_pg:Integer;
     zc_Enum_DocumentTaxKind_Corrective:String;
@@ -12080,7 +12415,12 @@ begin
         Add('     , Bill.NalogId_PG as Id_Postgres');
 
         Add('from (select Bill.Id as BillId'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730'
+           +'                           then 30103'//(30103) Доходы Продукция Хлеб
+           +'                      when Goods.Id = 2514 and 1=0'
+           +'                           then 30201'//(30201) Доходы Мясное сырье
+           +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
+           +'                 end) as CodeIM'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
 //           +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
@@ -12232,7 +12572,12 @@ begin
            +'           , Bill_nalog.NalogId_PG as Id_Postgres_Child'
            +'           , max(isnull(BillItems_byParent.NalogId_PG,0)) as NalogId_PG'
            +'           , BillItems_byParent.addBillNumber as inInvNumberPartner'
-           +'           , max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM'
+           +'           , max(case when isnull(Goods.ParentId,0) = 1730'
+           +'                           then 30103'//(30103) Доходы Продукция Хлеб
+           +'                      when Goods.Id = 2514 and 1=0'
+           +'                           then 30201'//(30201) Доходы Мясное сырье
+           +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
+           +'                 end) as CodeIM'
            +'           , max(BillItems.OperCount) as OperCount1'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'

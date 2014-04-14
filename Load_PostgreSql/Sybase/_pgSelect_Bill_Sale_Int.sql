@@ -5,6 +5,11 @@ result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLo
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
+  declare local temporary table _tmpBill_Scale(
+       BillId Integer
+     , primary key(BillId)
+  ) on commit preserve rows;
+  //
   declare local temporary table _tmpList(
        ObjectId Integer
      , BillId_pg Integer null
@@ -36,6 +41,26 @@ begin
   ) on commit preserve rows;
    //
    //
+   insert into _tmpBill_Scale(BillId)
+     select Id
+     from
+      (select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory_byObvalka.InsertDate,zc_rpTimeRemainsFree_H04(*)) ) as BillDate_calc
+       from dba.Bill
+            join dba.ScaleHistory_byObvalka on ScaleHistory_byObvalka.BillId=Bill.Id
+       where Bill.BillDate between @inStartDate-3 and @inEndDate+3
+         and Bill.BillKind = zc_bkSaleToClient()
+       group by Bill.Id, Bill.BillDate
+       having Bill.BillDate <> BillDate_calc
+     union 
+      select Bill.Id, Bill.BillDate, max (fCalcCurrentBillDate_byPG (ScaleHistory.InsertDate,zc_rpTimeRemainsFree_H10(*)) ) as BillDate_calc
+       from dba.Bill
+            join dba.ScaleHistory on ScaleHistory.BillId=Bill.Id
+       where Bill.BillDate between @inStartDate-3 and @inEndDate+3
+         and Bill.BillKind = zc_bkSaleToClient()
+       group by Bill.Id, Bill.BillDate
+       having Bill.BillDate <> BillDate_calc) as a;
+ 
+   //
    --
    delete from dba._pgBillLoad_union;
    --
@@ -50,7 +75,7 @@ begin
             , case when Bill.BillDate + isnull (_toolsView_Client_isChangeDate.addDay, 0) < zc_def_StartDate_PG() then zc_rvNo() else zc_rvYes() end as isBillDate
       from dba.Bill
            left join _toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = Bill.ToId
-           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId <> 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+           left join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.GoodsPropertyId = 5510 -- BillItems.OperCount<>0 and BillItems.GoodsPropertyId <> 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
            left outer join dba.Bill as Bill_find on Bill_find.BillDate = Bill.BillDate
                                                 and Bill_find.BillKind = Bill.BillKind
                                                 and Bill_find.BillNumber = Bill.BillNumber
@@ -62,6 +87,7 @@ begin
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
         and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and BillItems.GoodsPropertyId is null
       group by Bill.Id, Bill.BillDate, isnull (_toolsView_Client_isChangeDate.addDay, 0)
       ) as tmp
       where isBillDate = zc_rvYes();
@@ -181,7 +207,9 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
      left outer join dba.MoneyKind on MoneyKind.Id = Bill.MoneyKindId
      -- left outer join dba.Unit as Unit_RouteSorting on Unit_RouteSorting.Id = Bill.RouteUnitId
      -- left outer join dba._pgPersonal on _pgPersonal.Id = Unit_RouteSorting.PersonalId_Postgres
+     left outer join _tmpBill_Scale on _tmpBill_Scale.BillId = Bill_find.Id
      left outer join dba._toolsView_Client_isChangeDate on _toolsView_Client_isChangeDate.ClientId = UnitTo.ID
+                                                       and _tmpBill_Scale.BillId is null
                                                           -- and 1=0
      -- left outer join dba._pgInfoMoney on _pgInfoMoney.ObjectCode = 30201
 

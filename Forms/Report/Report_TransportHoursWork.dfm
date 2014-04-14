@@ -312,7 +312,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     object deStart: TcxDateEdit
       Left = 101
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 0
       Width = 85
@@ -320,7 +321,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -500,8 +502,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -570,6 +572,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     Top = 240
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -583,6 +586,7 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -600,14 +604,14 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -634,6 +638,10 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 312
     Top = 264
   end
@@ -665,6 +673,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPersonalDriver
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -689,6 +699,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object BranchGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edBranch
+    FormNameParam.Value = 'TBranchForm'
+    FormNameParam.DataType = ftString
     FormName = 'TBranchForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
