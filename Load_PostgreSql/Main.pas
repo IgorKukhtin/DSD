@@ -5906,7 +5906,8 @@ begin
         Add('     left outer join dba.GoodsProperty_Postgres as PG17 on PG17.Id=17');
         Add('     left outer join dba.GoodsProperty_Postgres as PG18 on PG18.Id=18');
 //        Add('where is4=zc_rvYes()'
-        Add('where is1=zc_rvYes()'
+        Add('where KindPackage.Id_Postgres is not null'
+             +' and(is1=zc_rvYes()'
              +' or is2=zc_rvYes()'
              +' or is3=zc_rvYes()'
              +' or is4=zc_rvYes()'
@@ -5924,6 +5925,7 @@ begin
              +' or is16=zc_rvYes()'
              +' or is17=zc_rvYes()'
              +' or is18=zc_rvYes()'
+             +'   )'
            );
         Add('order by is7, BarCode7, ObjectId');
         Open;

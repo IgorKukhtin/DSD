@@ -198,6 +198,8 @@ BEGIN
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
     RETURN NEXT Cursor1;
+
+
     OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS
       ( SELECT
