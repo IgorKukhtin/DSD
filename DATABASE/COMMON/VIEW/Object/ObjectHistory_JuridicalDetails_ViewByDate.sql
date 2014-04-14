@@ -10,7 +10,7 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_ViewByDate AS
        , ObjectHistoryString_FullName.ValueData         AS FullName
        , ObjectHistoryString_JuridicalAddress.ValueData AS JuridicalAddress
        , ObjectHistoryString_OKPO.ValueData             AS OKPO
-       , repeat(' ', 12 - length(ObjectHistoryString_INN.ValueData)) || ObjectHistoryString_INN.ValueData AS INN
+       , repeat(' ', 12 - length(ObjectHistoryString_INN.ValueData)) || ObjectHistoryString_INN.ValueData AS INN -- выравнивание пробелами для печати
 --       , ObjectHistoryString_INN.ValueData              AS INN
        , ObjectHistoryString_NumberVAT.ValueData        AS NumberVAT
        , ObjectHistoryString_AccounterName.ValueData    AS AccounterName
@@ -66,7 +66,7 @@ ALTER TABLE ObjectHistory_JuridicalDetails_ViewByDate  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 14.04.14                                                       *
+ 14.04.14                                                       *  -- выравнивание пробелами INN для печати
  12.02.14                                                       *  + phone
  07.02.14                                                       *  + bank
  05.02.14                                                       *
