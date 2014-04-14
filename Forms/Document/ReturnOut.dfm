@@ -2,27 +2,27 @@ inherited ReturnOutForm: TReturnOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091'>'
   ClientHeight = 668
   ClientWidth = 1015
-  ExplicitWidth = 1031
-  ExplicitHeight = 703
+  ExplicitWidth = 1023
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 139
+    Top = 115
     Width = 1015
-    Height = 529
-    ExplicitTop = 139
+    Height = 553
+    ExplicitTop = 115
     ExplicitWidth = 1015
-    ExplicitHeight = 529
-    ClientRectBottom = 529
+    ExplicitHeight = 553
+    ClientRectBottom = 553
     ClientRectRight = 1015
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1015
-      ExplicitHeight = 505
+      ExplicitHeight = 529
       inherited cxGrid: TcxGrid
         Width = 1015
-        Height = 505
+        Height = 529
         ExplicitWidth = 1015
-        ExplicitHeight = 505
+        ExplicitHeight = 529
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -73,6 +73,10 @@ inherited ReturnOutForm: TReturnOutForm
               Format = ',0.####'
               Kind = skSum
               Column = colHeadCount
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           Images = dmMain.SortImageList
           OptionsBehavior.FocusCellOnCycle = False
@@ -198,15 +202,14 @@ inherited ReturnOutForm: TReturnOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1009
-      ExplicitHeight = 501
+      ExplicitTop = 24
+      ExplicitWidth = 1015
+      ExplicitHeight = 529
       inherited cxGridEntry: TcxGrid
-        Width = 1009
-        Height = 501
-        ExplicitWidth = 1009
-        ExplicitHeight = 501
+        Width = 1015
+        Height = 529
+        ExplicitWidth = 1015
+        ExplicitHeight = 529
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -229,10 +232,10 @@ inherited ReturnOutForm: TReturnOutForm
   end
   inherited DataPanel: TPanel
     Width = 1015
-    Height = 113
+    Height = 89
     TabOrder = 3
     ExplicitWidth = 1015
-    ExplicitHeight = 113
+    ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
       ExplicitLeft = 8
@@ -259,6 +262,7 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 90
+      ExplicitHeight = 22
       Width = 90
     end
     object cxLabel3: TcxLabel
@@ -392,14 +396,24 @@ inherited ReturnOutForm: TReturnOutForm
           StoredProc = spGet
         end
         item
+          StoredProc = spGetTotalSumm
+        end
+        item
           StoredProc = spSelect
         end
         item
           StoredProc = spSelectMIContainer
-        end
-        item
         end>
       RefreshOnTabSetChanges = True
+    end
+    inherited actUpdateMainDS: TdsdUpdateDataSet
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
+        end>
     end
     object mactPrint_ReturnOut: TMultiAction [9]
       Category = 'DSDLib'
@@ -657,6 +671,13 @@ inherited ReturnOutForm: TReturnOutForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = 5
+      end>
     Left = 830
     Top = 265
   end
@@ -1013,6 +1034,245 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 162
     Top = 312
   end
+  object GuidesFrom: TdsdGuides [19]
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 312
+    Top = 8
+  end
+  object GuidesTo: TdsdGuides [20]
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 8
+  end
+  object PaidKindGuides: TdsdGuides [21]
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 528
+  end
+  object ContractGuides: TdsdGuides [22]
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 728
+  end
+  object frxDBDMaster: TfrxDBDataset [23]
+    UserName = 'frxDBDMaster'
+    CloseDataSource = False
+    DataSet = PrintItemsCDS
+    BCDToCurrency = False
+    Left = 398
+    Top = 245
+  end
+  object spSelectPrint: TdsdStoredProc [24]
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 319
+    Top = 208
+  end
+  object spGetReportName: TdsdStoredProc [25]
+    StoredProcName = 'gpGet_Movement_ReturnOut_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnOut_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameReturnOut'
+        DataType = ftString
+      end>
+    Left = 312
+    Top = 392
+  end
+  object RefreshDispatcher: TRefreshDispatcher [26]
+    RefreshAction = actRefreshPrice
+    ComponentList = <>
+    Left = 528
+    Top = 320
+  end
+  object PrintHeaderCDS: TClientDataSet [27]
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 193
+  end
+  object frxDBDHeader: TfrxDBDataset [28]
+    UserName = 'frxDBDHeader'
+    CloseDataSource = False
+    DataSet = PrintHeaderCDS
+    BCDToCurrency = False
+    Left = 398
+    Top = 194
+  end
+  object PrintHeaderDS: TDataSource [29]
+    DataSet = PrintHeaderCDS
+    Left = 552
+    Top = 192
+  end
+  object spGetReporNameTax: TdsdStoredProc [30]
+    StoredProcName = 'gpGet_Movement_ReturnOut_ReportNameTax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnOut_ReportNameTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameReturnOutTax'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 384
+  end
+  object PrintItemsCDS: TClientDataSet [31]
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 246
+  end
+  object PrintItemsDS: TDataSource [32]
+    DataSet = PrintItemsCDS
+    Left = 552
+    Top = 245
+  end
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
@@ -1171,169 +1431,7 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 912
     Top = 262
   end
-  object GuidesFrom: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 312
-    Top = 8
-  end
-  object GuidesTo: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end>
-    Left = 416
-    Top = 8
-  end
-  object PaidKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 528
-  end
-  object ContractGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 728
-  end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = PrintItemsCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 245
-  end
-  object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 319
-    Top = 208
-  end
-  object spGetReportName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnOut_ReportName'
-    DataSets = <>
-    OutputType = otResult
+  inherited spGetTotalSumm: TdsdStoredProc
     Params = <
       item
         Name = 'inMovementId'
@@ -1343,71 +1441,10 @@ inherited ReturnOutForm: TReturnOutForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_ReturnOut_ReportName'
-        Value = Null
+        Name = 'TotalSumm'
         Component = FormParams
-        ComponentItem = 'ReportNameReturnOut'
+        ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
-    Left = 312
-    Top = 392
-  end
-  object RefreshDispatcher: TRefreshDispatcher
-    RefreshAction = actRefreshPrice
-    ComponentList = <>
-    Left = 528
-    Top = 320
-  end
-  object PrintHeaderCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 193
-  end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 398
-    Top = 194
-  end
-  object PrintHeaderDS: TDataSource
-    DataSet = PrintHeaderCDS
-    Left = 552
-    Top = 192
-  end
-  object spGetReporNameTax: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_ReturnOut_ReportNameTax'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_ReturnOut_ReportNameTax'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameReturnOutTax'
-        DataType = ftString
-      end>
-    Left = 416
-    Top = 384
-  end
-  object PrintItemsCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 246
-  end
-  object PrintItemsDS: TDataSource
-    DataSet = PrintItemsCDS
-    Left = 552
-    Top = 245
   end
 end

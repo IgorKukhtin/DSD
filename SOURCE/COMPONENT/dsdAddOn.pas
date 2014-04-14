@@ -1782,6 +1782,8 @@ end;
 procedure TSummaryItemAddOn.SetDataSummaryItemIndex(const Value: Integer);
 begin
   FDataSummaryItemIndex := Value;
+  if Value = -1  then
+     exit;
   // пытаемся установить свойство onGetText установить
   if Collection.Owner is TdsdDBViewAddOn then
      if Assigned(TdsdDBViewAddOn(Collection.Owner).View) then begin
