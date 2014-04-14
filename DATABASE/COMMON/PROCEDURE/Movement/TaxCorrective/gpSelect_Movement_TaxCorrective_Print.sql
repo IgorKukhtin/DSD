@@ -50,7 +50,8 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
-           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
+--           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
+           , repeat(' ', 8 - length(MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Object_From.Id                    		                        AS FromId
            , Object_From.ValueData             		                        AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO                       AS OKPO_From
@@ -69,7 +70,8 @@ BEGIN
            , Movement_DocumentMaster.Id                                     AS DocumentMasterId
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS InvNumber_Master
            , Movement_DocumentChild.Id                                      AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
+--           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
+           , repeat(' ', 7 - length(MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData  AS InvNumber_Child
            , movement_documentchild.OperDate                                AS OperDate_Child
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
@@ -79,30 +81,29 @@ BEGIN
                         -MovementFloat_TotalSummMVAT.ValueData)>10000)
                   THEN 'X' ELSE '' END                                      AS ERPN
 
-           , OH_JuridicalDetails_To.JuridicalId         AS JuridicalId_To
-           , OH_JuridicalDetails_To.FullName            AS JuridicalName_To
-           , OH_JuridicalDetails_To.JuridicalAddress    AS JuridicalAddress_To
-           , OH_JuridicalDetails_To.OKPO                AS OKPO_To
-           , OH_JuridicalDetails_To.INN                 AS INN_To
-           , OH_JuridicalDetails_To.NumberVAT           AS NumberVAT_To
-           , OH_JuridicalDetails_To.AccounterName       AS AccounterName_To
-           , OH_JuridicalDetails_To.BankAccount         AS BankAccount_To
-           , OH_JuridicalDetails_To.BankName            AS BankName_To
-           , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
-           , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , OH_JuridicalDetails_To.JuridicalId                             AS JuridicalId_To
+           , OH_JuridicalDetails_To.FullName                                AS JuridicalName_To
+           , OH_JuridicalDetails_To.JuridicalAddress                        AS JuridicalAddress_To
+           , OH_JuridicalDetails_To.OKPO                                    AS OKPO_To
+           , OH_JuridicalDetails_To.INN                                     AS INN_To
+           , OH_JuridicalDetails_To.NumberVAT                               AS NumberVAT_To
+           , OH_JuridicalDetails_To.AccounterName                           AS AccounterName_To
+           , OH_JuridicalDetails_To.BankAccount                             AS BankAccount_To
+           , OH_JuridicalDetails_To.BankName                                AS BankName_To
+           , OH_JuridicalDetails_To.MFO                                     AS BankMFO_To
+           , OH_JuridicalDetails_To.Phone                                   AS Phone_To
 
-           , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
-           , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
-           , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
-           , OH_JuridicalDetails_From.OKPO              AS OKPO_From
-           , OH_JuridicalDetails_From.INN               AS INN_From
-           , OH_JuridicalDetails_From.NumberVAT         AS NumberVAT_From
-           , OH_JuridicalDetails_From.AccounterName     AS AccounterName_From
-           , OH_JuridicalDetails_From.BankAccount       AS BankAccount_From
-           , OH_JuridicalDetails_From.BankName          AS BankName_From
-           , OH_JuridicalDetails_From.MFO               AS BankMFO_From
-           , OH_JuridicalDetails_From.Phone             AS Phone_From
-
+           , OH_JuridicalDetails_From.JuridicalId                           AS JuridicalId_From
+           , OH_JuridicalDetails_From.FullName                              AS JuridicalName_From
+           , OH_JuridicalDetails_From.JuridicalAddress                      AS JuridicalAddress_From
+           , OH_JuridicalDetails_From.OKPO                                  AS OKPO_From
+           , OH_JuridicalDetails_From.INN                                   AS INN_From
+           , OH_JuridicalDetails_From.NumberVAT                             AS NumberVAT_From
+           , OH_JuridicalDetails_From.AccounterName                         AS AccounterName_From
+           , OH_JuridicalDetails_From.BankAccount                           AS BankAccount_From
+           , OH_JuridicalDetails_From.BankName                              AS BankName_From
+           , OH_JuridicalDetails_From.MFO                                   AS BankMFO_From
+           , OH_JuridicalDetails_From.Phone                                 AS Phone_From
 -- END MOVEMENT
            , MovementItem.Id                                                AS Id
            , Object_Goods.Id                                                AS GoodsId
