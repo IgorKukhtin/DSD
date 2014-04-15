@@ -13,7 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
              , InvNumberPartner TVarChar
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, PartnerId Integer, PartnerName TVarChar, ToId Integer, ToName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, DocumentMasterName TVarChar
@@ -47,6 +47,8 @@ BEGIN
              , tmpInvNum.InvNumber                  AS InvNumberPartner
              , 0                     				AS FromId
              , CAST ('' as TVarChar) 				AS FromName
+             , 0                                    AS PartnerId
+             , CAST ('' as TVarChar)               	AS PartnerName
              , Object_Juridical_Basis.Id			AS ToId
              , Object_Juridical_Basis.ValueData		AS ToName
              , 0                     				AS ContractId
@@ -67,33 +69,35 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             Movement.Id								AS Id
-           , Movement.InvNumber							AS InvNumber
-           , Movement.OperDate							AS OperDate
-           , Object_Status.ObjectCode    				AS StatusCode
-           , Object_Status.ValueData     				AS StatusName
-           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
-           , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
-           , COALESCE (MovementBoolean_Registered.ValueData, FALSE)     AS Registered
+             Movement.Id								                    AS Id
+           , Movement.InvNumber							                    AS InvNumber
+           , Movement.OperDate							                    AS OperDate
+           , Object_Status.ObjectCode    				                    AS StatusCode
+           , Object_Status.ValueData     				                    AS StatusName
+           , COALESCE (MovementBoolean_Checked.ValueData, FALSE)            AS Checked
+           , COALESCE (MovementBoolean_Document.ValueData, FALSE)           AS Document
+           , COALESCE (MovementBoolean_Registered.ValueData, FALSE)         AS Registered
            , COALESCE (MovementDate_DateRegistered.ValueData,Movement.OperDate) AS DateRegistered
-           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData         AS VATPercent
-           , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
-           , Object_From.Id                    			AS FromId
-           , Object_From.ValueData             			AS FromName
-           , Object_To.Id                      			AS ToId
-           , Object_To.ValueData               			AS ToName
-           , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
-           , Object_TaxKind.Id                			AS TaxKindId
-           , Object_TaxKind.ValueData         			AS TaxKindName
-           , Movement_DocumentMaster.Id                                    AS DocumentMasterId
-           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)           AS DocumentMasterName
-           , Movement_DocumentChild.Id                                     AS DocumentChildId
-           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar) AS DocumentChildName
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)       AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData                             AS VATPercent
+           , MovementFloat_TotalCount.ValueData                             AS TotalCount
+           , MovementFloat_TotalSummMVAT.ValueData                          AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
+           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
+           , Object_From.Id                    			                    AS FromId
+           , Object_From.ValueData             			                    AS FromName
+           , Object_Partner.Id                 			                    AS PartnerId
+           , Object_Partner.ValueData          			                    AS PartnerName
+           , Object_To.Id                      			                    AS ToId
+           , Object_To.ValueData               			                    AS ToName
+           , Object_Contract.ContractId        			                    AS ContractId
+           , Object_Contract.invnumber         			                    AS ContractName
+           , Object_TaxKind.Id                			                    AS TaxKindId
+           , Object_TaxKind.ValueData         			                    AS TaxKindName
+           , Movement_DocumentMaster.Id                                     AS DocumentMasterId
+           , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS DocumentMasterName
+           , Movement_DocumentChild.Id                                      AS DocumentChildId
+           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS DocumentChildName
 
 
        FROM Movement
@@ -145,6 +149,12 @@ BEGIN
 
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -192,6 +202,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿
+ 15.04.14                                                        *   + Partner
  27.02.14                                                        *
  17.02.14                                                        *   fix is default is null
  10.02.14                                                        *
