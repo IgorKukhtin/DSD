@@ -64,6 +64,9 @@ type
     colRegistered: TcxGridDBColumn;
     colOperDate_Child: TcxGridDBColumn;
     colInvNumberPartner_Master: TcxGridDBColumn;
+    spSelectPrintTaxCorrective_Reest: TdsdStoredProc;
+    actPrint_TaxCorrective_Reestr: TdsdPrintAction;
+    bbPrintTaxCorrective_Reestr: TdxBarButton;
   private
     { Private declarations }
   public
