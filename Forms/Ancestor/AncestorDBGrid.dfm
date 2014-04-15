@@ -17,8 +17,6 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       Caption = 'tsMain'
       ImageIndex = 0
       TabVisible = False
-      ExplicitWidth = 0
-      ExplicitHeight = 0
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -31,6 +29,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
           DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Filter.AutoDataSetFilter = True
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
@@ -66,6 +65,9 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       ShortCut = 16472
     end
   end
+  inherited MasterCDS: TClientDataSet
+    FilterOptions = [foCaseInsensitive]
+  end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
       0
@@ -97,10 +99,11 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 520
     Top = 264
   end

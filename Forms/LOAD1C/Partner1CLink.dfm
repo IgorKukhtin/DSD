@@ -22,7 +22,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ExplicitWidth = 877
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
-          OptionsBehavior.IncSearch = True
+          Images = dmMain.SortImageList
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -169,6 +169,17 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Name = 'PartnerCode'
           Component = MasterCDS
           ComponentItem = 'PartnerCode'
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
       ShortCut = 45
@@ -225,10 +236,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
+        end
+        item
+          Name = 'Id'
+          Value = '0'
         end>
       isShowModal = True
       DataSource = MasterDS
-      DataSetRefresh = actRefresh
       IdFieldName = 'PartnerId'
     end
     object actChoicePartnerForm: TOpenChoiceForm
@@ -263,6 +277,16 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           DataType = ftString
         end>
       isShowModal = False
+    end
+    object actGetPointName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetPointName
+      StoredProcList = <
+        item
+          StoredProc = spGetPointName
+        end>
+      Caption = 'actGetPointName'
     end
   end
   inherited MasterDS: TDataSource
@@ -345,6 +369,13 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    ColumnAddOnList = <
+      item
+        Column = colDetailCode
+        onExitColumn.Active = True
+        onExitColumn.AfterEmptyValue = True
+        onExitColumn.Action = actGetPointName
+      end>
     Left = 224
     Top = 208
   end
@@ -447,5 +478,33 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       end>
     Left = 624
     Top = 216
+  end
+  object spGetPointName: TdsdStoredProc
+    StoredProcName = 'gpGet_PointName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inCode'
+        Component = MasterCDS
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioName'
+        Component = MasterCDS
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 344
+    Top = 168
   end
 end

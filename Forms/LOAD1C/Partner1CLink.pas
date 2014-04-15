@@ -37,6 +37,8 @@ type
     actChoicePartnerForm: TOpenChoiceForm;
     cxLabel1: TcxLabel;
     bbBranchLabel: TdxBarControlContainerItem;
+    spGetPointName: TdsdStoredProc;
+    actGetPointName: TdsdExecStoredProc;
   private
     { Private declarations }
   public

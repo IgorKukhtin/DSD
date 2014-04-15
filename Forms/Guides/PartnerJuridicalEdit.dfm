@@ -3,7 +3,7 @@
   ClientHeight = 443
   ClientWidth = 384
   ExplicitWidth = 390
-  ExplicitHeight = 475
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -65,7 +65,6 @@
         Default = True
         Kind = bkEllipsis
       end>
-    Properties.ReadOnly = True
     TabOrder = 7
     Width = 255
   end
@@ -473,6 +472,8 @@
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -498,6 +499,8 @@
   object dsdPersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalTake
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -523,6 +526,8 @@
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -548,6 +553,8 @@
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRoute
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -573,6 +580,8 @@
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -598,6 +607,8 @@
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceListPromo
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

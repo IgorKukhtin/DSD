@@ -3,28 +3,26 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 57
     Width = 717
-    Height = 270
-    ExplicitTop = 59
+    Height = 272
+    ExplicitTop = 57
     ExplicitWidth = 717
-    ExplicitHeight = 270
-    ClientRectBottom = 266
-    ClientRectRight = 713
+    ExplicitHeight = 272
+    ClientRectBottom = 272
+    ClientRectRight = 717
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 711
-      ExplicitHeight = 264
+      ExplicitWidth = 717
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
-        Width = 711
-        Height = 264
-        ExplicitWidth = 711
-        ExplicitHeight = 264
+        Width = 717
+        Height = 272
+        ExplicitWidth = 717
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -150,6 +148,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -181,6 +180,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       ActionType = acUpdate
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
@@ -229,9 +229,11 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actComplete
+          Action = actSimpleCompleteList
+        end
+        item
+          Action = actRefresh
         end>
-      DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -243,7 +245,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUnComplete
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
         end>
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
@@ -257,7 +262,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSetErased
+          Action = spErased
         end>
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
@@ -303,6 +308,69 @@ inherited AncestorJournalForm: TAncestorJournalForm
       ImageIndexTrue = 65
       ImageIndexFalse = 64
     end
+    object spCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'spCompete'
+    end
+    object spUncomplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object spErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'spErased'
+    end
+    object actSimpleCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      DataSource = MasterDS
+      Caption = 'actSimpleCompleteList'
+    end
+    object actSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      DataSource = MasterDS
+      Caption = 'actSimpleUncompleteList'
+    end
+    object actSimpleErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
+        end>
+      DataSource = MasterDS
+      Caption = 'actSimpleErased'
+    end
   end
   inherited MasterDS: TDataSource
     Top = 99
@@ -340,7 +408,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

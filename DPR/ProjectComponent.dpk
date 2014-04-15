@@ -55,7 +55,8 @@ requires
   dxBarExtItemsRS16,
   cxPivotGridRS16,
   VclSmp,
-  cxVerticalGridRS16;
+  cxVerticalGridRS16,
+  dxSkinsCoreRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

@@ -190,6 +190,8 @@ type
   end;
 
   TdsdExecStoredProc = class(TdsdCustomDataSetAction)
+  public
+    constructor Create(AOwner: TComponent); override;
   published
     property QuestionBeforeExecute;
     property InfoAfterExecute;
@@ -392,6 +394,7 @@ type
     property DataSource: TDataSource read GetDataSource write SetDataSource;
     property DataSetRefresh: TdsdDataSetRefresh read FdsdDataSetRefresh write FdsdDataSetRefresh;
     property IdFieldName: string read GetFieldName write SetFieldName;
+    property PostDataSetBeforeExecute default true;
   end;
 
 
@@ -1677,15 +1680,14 @@ begin
 end;
 
 procedure TMultiAction.DataSourceExecute;
-var B: TBookmark;
 begin
   if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
-     B := DataSource.DataSet.Bookmark;
-     DataSource.DataSet.DisableControls;
+ //    DataSource.DataSet.DisableControls;
      try
        DataSource.DataSet.First;
        with TGaugeFactory.GetGauge(Caption, 0, DataSource.DataSet.RecordCount) do
          try
+           Start;
            while not DataSource.DataSet.Eof do begin
              ListExecute;
              IncProgress(1);
@@ -1693,14 +1695,14 @@ begin
              DataSource.DataSet.Next;
            end;
          finally
-           Free;
+           Finish;
          end;
      finally
-       DataSource.DataSet.GotoBookmark(B);
-       DataSource.DataSet.FreeBookmark(B);
-       DataSource.DataSet.EnableControls;
+       Application.ProcessMessages;
+//       DataSource.DataSet.EnableControls;
      end;
   end;
+  Application.ProcessMessages;
 end;
 
 procedure TMultiAction.ListExecute;
@@ -1714,6 +1716,7 @@ end;
 
 function TMultiAction.LocalExecute: boolean;
 begin
+  result := false;
   if QuestionBeforeExecute <> '' then
      SaveQuestionBeforeExecute;
   if InfoAfterExecute <> '' then
@@ -1729,6 +1732,7 @@ begin
     if InfoAfterExecute <> '' then
        RestoreInfoAfterExecute;
   end;
+  result := true
 end;
 
 procedure TMultiAction.Notification(AComponent: TComponent;
@@ -1853,6 +1857,14 @@ begin
 end;
 
 { TfrxAccessComponent }
+
+{ TdsdExecStoredProc }
+
+constructor TdsdExecStoredProc.Create(AOwner: TComponent);
+begin
+  inherited;
+  PostDataSetBeforeExecute := false
+end;
 
 end.
 

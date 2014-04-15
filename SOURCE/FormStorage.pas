@@ -228,7 +228,11 @@ begin
     // Загрузить пользователские дефотлы!!!
     for i := 0 to Result.ComponentCount - 1 do
       if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-         TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+         try
+            TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+         except
+
+         end;
   finally
     StringStream.Clear;
     MemoryStream.Clear;
@@ -308,7 +312,8 @@ end;
 procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Data: String);
 begin
   SaveUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
-  SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := ANSIToXML(Data);
+  SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := Data;
+  //SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := ANSIToXML(Data);
   SaveUserFormSettingsStoredProc.Execute;
 end;
 

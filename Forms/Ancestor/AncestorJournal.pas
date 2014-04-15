@@ -66,6 +66,12 @@ type
     actShowErased: TBooleanStoredProcAction;
     bbShowErased: TdxBarButton;
     FormParams: TdsdFormParams;
+    spCompete: TdsdExecStoredProc;
+    spUncomplete: TdsdExecStoredProc;
+    spErased: TdsdExecStoredProc;
+    actSimpleCompleteList: TMultiAction;
+    actSimpleUncompleteList: TMultiAction;
+    actSimpleErased: TMultiAction;
   private
     { Private declarations }
   public
