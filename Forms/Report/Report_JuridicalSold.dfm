@@ -219,6 +219,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'AreaName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object colJuridicalCode: TcxGridDBColumn
@@ -257,19 +258,30 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 40
           end
+          object colStartDate: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
+            DataBinding.FieldName = 'StartDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colEndDate: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
+            DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
-          end
-          object colAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090
-            DataBinding.FieldName = 'AccountName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -301,6 +313,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
+          end
+          object colAccountName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090
+            DataBinding.FieldName = 'AccountName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object colStartAmount_A: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -1326,8 +1345,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'OtherDesc'
         DataType = ftString
       end>
-    Left = 272
-    Top = 176
+    Left = 296
+    Top = 232
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -1371,7 +1390,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Value = Null
         DataType = ftString
       end>
-    Left = 248
-    Top = 144
+    Left = 240
+    Top = 232
   end
 end

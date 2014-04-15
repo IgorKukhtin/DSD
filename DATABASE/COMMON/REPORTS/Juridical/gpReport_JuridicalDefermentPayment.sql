@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar
-             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, StartDate TDateTime, EndDate TDateTime
              , DebetRemains TFloat, KreditRemains TFloat
              , SaleSumm TFloat, DefermentPaymentRemains TFloat
              , SaleSumm1 TFloat, SaleSumm2 TFloat, SaleSumm3 TFloat, SaleSumm4 TFloat, SaleSumm5 TFloat
@@ -32,7 +32,7 @@ BEGIN
   RETURN QUERY  
 
  select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindName
-             , a.ContractId, a.ContractCode, a.ContractNumber
+             , a.ContractId, a.ContractCode, a.ContractNumber, a.StartDate, a.EndDate
              , a.DebetRemains , a.KreditRemains
              , a.SaleSumm, a.DefermentPaymentRemains
              , a.SaleSumm1, a.SaleSumm2, a.SaleSumm3, a.SaleSumm4, a.SaleSumm5
@@ -49,6 +49,8 @@ from (
    , View_Contract_InvNumber.ContractId
    , View_Contract_InvNumber.ContractCode
    , View_Contract_InvNumber.InvNumber AS ContractNumber
+   , ObjectDate_Start.ValueData        AS StartDate
+   , ObjectDate_End.ValueData          AS EndDate
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
    , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
    , RESULT.SaleSumm::TFloat
@@ -117,10 +119,17 @@ from (
              , ContractConditionKindId
              , DayCount
              , ContractDate) AS RESULT
-  LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
-  LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
-  LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = RESULT.ContractId
-  LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId
+
+       LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
+       LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
+       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = RESULT.ContractId
+       LEFT JOIN ObjectDate AS ObjectDate_Start
+                            ON ObjectDate_Start.ObjectId = RESULT.ContractId
+                           AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+       LEFT JOIN ObjectDate AS ObjectDate_End
+                            ON ObjectDate_End.ObjectId = RESULT.ContractId
+                           AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
+       LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId
 
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
@@ -156,6 +165,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
  09.04.14                                        * add !!!
  31.03.14                                        * add Object_Contract_View and Object_InfoMoney_View and ObjectHistory_JuridicalDetails_View and Object_PaidKind
