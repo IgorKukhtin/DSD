@@ -27,6 +27,14 @@ BEGIN
    FROM OBJECT AS Object_ContractConditionKind
                               
    WHERE Object_ContractConditionKind.DescId = zc_Object_ContractConditionKind()
+  UNION ALL
+   SELECT
+        0 AS Id 
+      , 0 AS Code
+      , 'УДАЛИТЬ' :: TVarChar AS NAME
+      , FALSE AS isErased
+      
+      
       
 ;
   
@@ -40,10 +48,10 @@ ALTER FUNCTION gpSelect_Object_ContractConditionKind (TVarChar) OWNER TO postgre
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.14                                        * add 'УДАЛИТЬ'
  20.02.14         * del inContractId
  04.01.14         * add inContractId
  16.11.13         *
-
 */
 
 -- тест

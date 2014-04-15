@@ -257,9 +257,9 @@ BEGIN
                      
                 WHERE Movement.DescId = zc_Movement_Tax()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                  AND ((Movement.StatusId = zc_Enum_Status_Complete()) OR (Movement.StatusId = zc_Enum_Status_UnComplete()))
-                  
-                ) AS tmpMovement
+                  AND Movement.StatusId = zc_Enum_Status_Complete()
+
+               ) AS tmpMovement
                GROUP BY tmpMovement.JuridicalBasisId
                       , tmpMovement.JuridicalId
                       , tmpMovement.GoodsId

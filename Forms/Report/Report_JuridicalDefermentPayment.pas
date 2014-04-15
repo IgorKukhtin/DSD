@@ -57,6 +57,8 @@ type
     colInfoMoneyName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colAreaName: TcxGridDBColumn;
+    colStartDate: TcxGridDBColumn;
+    colEndDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

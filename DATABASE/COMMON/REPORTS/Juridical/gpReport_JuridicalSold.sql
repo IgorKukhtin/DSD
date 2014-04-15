@@ -11,7 +11,8 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyDestinationId   Integer,    --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar, ContractId Integer, ContractCode Integer, ContractNumber TVarChar, PaidKindName TVarChar, AccountName TVarChar
+RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, StartDate TDateTime, EndDate TDateTime, PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -36,6 +37,8 @@ BEGIN
         View_Contract_InvNumber.ContractId,
         View_Contract_InvNumber.ContractCode,
         View_Contract_InvNumber.InvNumber AS ContractNumber,
+        ObjectDate_Start.ValueData        AS StartDate,
+        ObjectDate_End.ValueData          AS EndDate,
         Object_PaidKind.ValueData AS PaidKindName,
         Object_Account_View.AccountName_all AS AccountName,
         Object_InfoMoney_View.InfoMoneyGroupName,
@@ -107,6 +110,12 @@ BEGIN
            LEFT JOIN ContainerLinkObject AS CLO_Contract
                   ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = CLO_Contract.ObjectId
+           LEFT JOIN ObjectDate AS ObjectDate_Start
+                                ON ObjectDate_Start.ObjectId = CLO_Contract.ObjectId
+                               AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+           LEFT JOIN ObjectDate AS ObjectDate_End
+                                ON ObjectDate_End.ObjectId = CLO_Contract.ObjectId
+                               AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                                 ON ObjectLink_Contract_Area.ObjectId = CLO_Contract.ObjectId
@@ -135,6 +144,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
  10.03.14                                        * add zc_Movement_ProfitLossService
  13.02.14                                        * add OKPO and ContractCode

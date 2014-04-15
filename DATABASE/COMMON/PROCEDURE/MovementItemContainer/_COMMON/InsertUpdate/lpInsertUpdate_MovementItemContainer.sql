@@ -16,6 +16,9 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer(
 AS
 $BODY$
 BEGIN
+     -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
+     PERFORM 1 FROM Container WHERE Id = inContainerId FOR UPDATE;
+
      -- меняем параметр
      IF inParentId = 0 THEN inParentId:= NULL; END IF;
 
@@ -33,6 +36,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItemContainer (Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 15.04.14                                        * add так так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
  07.08.13                                        * add inParentId and inIsActive
  25.07.13                                        * add inMovementItemId
  11.07.13                                        * !!! finich !!!
