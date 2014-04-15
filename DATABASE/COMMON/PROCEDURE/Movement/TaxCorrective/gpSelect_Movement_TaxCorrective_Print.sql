@@ -71,7 +71,7 @@ BEGIN
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS InvNumber_Master
            , Movement_DocumentChild.Id                                      AS DocumentChildId
 --           , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS InvNumber_Child
-           , CAST (REPEAT (' ', 7 - LENGTH (MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
+           , CAST (REPEAT (' ', 7 - LENGTH (MS_DocumentChild_InvNumberPartner.ValueData)) || MS_DocumentChild_InvNumberPartner.ValueData AS TVarChar) AS InvNumber_Child
            , movement_documentchild.OperDate                                AS OperDate_Child
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                                      AS CopyForClient
