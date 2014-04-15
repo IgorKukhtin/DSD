@@ -29,10 +29,10 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
           DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Filter.AutoDataSetFilter = True
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True

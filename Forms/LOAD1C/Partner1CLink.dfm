@@ -22,6 +22,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ExplicitWidth = 877
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
+          DataController.Filter.AutoDataSetFilter = False
           Images = dmMain.SortImageList
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -244,6 +245,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       isShowModal = True
       DataSource = MasterDS
       IdFieldName = 'PartnerId'
+      PostDataSetBeforeExecute = False
     end
     object actChoicePartnerForm: TOpenChoiceForm
       Category = 'DSDLib'
