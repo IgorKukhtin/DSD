@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 725
-  ExplicitHeight = 356
+  ExplicitWidth = 733
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -75,16 +75,19 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Align = alTop
     TabOrder = 5
     object deStart: TcxDateEdit
-      Left = 101
+      Left = 107
       Top = 5
-      EditValue = 41579d
+      EditValue = 41640d
+      Properties.SaveTime = False
+      Properties.ShowTime = False
       TabOrder = 0
       Width = 85
     end
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41608d
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
       Width = 85
@@ -141,7 +144,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -172,7 +175,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
@@ -382,14 +385,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

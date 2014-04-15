@@ -57,7 +57,8 @@ BEGIN
                                                
                                       WHERE Object_ContractConditionKind.Id in (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
                                         AND Object_ContractCondition.isErased = False
-                                        AND Object_Contract_View.isErased = False 
+                                        AND Object_Contract_View.isErased = False
+                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                       ORDER BY Object_Contract_View.invnumber
                                      )
 
@@ -177,7 +178,8 @@ BEGIN
             , View_Contract_InvNumber.InvNumber                AS Contract_InvNumber
             , View_Contract_2.InvNumber                        AS Contract_InvNumber_child
             , Object_ContractConditionKind.ValueData           AS ContractConditionKindName
-            , CAST (max(tmpAll.value) AS Tfloat)               AS Value
+            --, CAST (max(tmpAll.value) AS Tfloat)               AS Value
+            , CAST (tmpAll.value AS Tfloat)                    AS Value
             , Object_BonusKind.ValueData                       AS BonusKindName
             , Object_InfoMoney_View.InfoMoneyName              AS InfoMoneyName
             , Object_PaidKind.ValueData                        AS PaidKindName
@@ -265,6 +267,7 @@ BEGIN
               , Object_InfoMoney_View.InfoMoneyId                
               , Object_InfoMoney_View.InfoMoneyName          
               , Object_PaidKind.ValueData 
+              , tmpAll.value                 ---
       ORDER BY 9                    
  ;
 
@@ -285,4 +288,3 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 --select * from gpReport_CheckBonus(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014 23:59:00')::TDateTime ,  inSession := '5');
-             

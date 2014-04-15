@@ -10,14 +10,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Width = 1118
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1118
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1118
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -138,6 +135,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
+          end
+          object colInvNumberPartner_Master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'InvNumberPartner_Master'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object colInvNumberPartner_Child: TcxGridDBColumn
             Caption = #8470' '#1085#1072#1083#1086#1075'.'
@@ -340,12 +345,6 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   inherited Panel: TPanel
     Width = 1118
     ExplicitWidth = 1118
-    inherited deStart: TcxDateEdit
-      EditValue = 41609d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 41639d
-    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -368,45 +367,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     object actPrint_TaxCorrective_Us: TdsdPrintAction
       Category = 'DSDLib'
@@ -505,14 +470,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
