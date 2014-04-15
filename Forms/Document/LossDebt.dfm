@@ -43,7 +43,7 @@ object LossDebtForm: TLossDebtForm
     object edOperDate: TcxDateEdit
       Left = 270
       Top = 23
-      EditValue = 0d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -997,7 +997,7 @@ object LossDebtForm: TLossDebtForm
         end
         item
           Name = 'OperDate'
-          Value = 0d
+          Value = 41640d
           Component = edOperDate
           DataType = ftDateTime
           ParamType = ptInput
@@ -1391,6 +1391,8 @@ object LossDebtForm: TLossDebtForm
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 328
     Top = 312
   end
@@ -1407,6 +1409,8 @@ object LossDebtForm: TLossDebtForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 368
     Top = 272
   end
@@ -1431,7 +1435,7 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Name = 'inOperDate'
-        Value = 0d
+        Value = 41640d
         Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
@@ -1487,6 +1491,9 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Control = edAccount
+      end
+      item
+        Control = edPaidKind
       end>
     GetStoredProc = spGet
     Left = 306
@@ -1524,7 +1531,7 @@ object LossDebtForm: TLossDebtForm
       end
       item
         Name = 'OperDate'
-        Value = 0d
+        Value = 41640d
         Component = edOperDate
       end
       item
@@ -1609,7 +1616,10 @@ object LossDebtForm: TLossDebtForm
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = GuidesJuridicalBasis
+        Guides = GuidesAccount
+      end
+      item
+        Guides = PaidKindGuides
       end>
     ActionItemList = <
       item

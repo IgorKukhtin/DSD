@@ -3,10 +3,12 @@
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Boolean, Boolean, TVarChar);
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_Sale(
     IN inMovementId  Integer      , -- ключ Документа
     IN inPriceListId Integer      , -- ключ Прайс листа
+    IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --
     IN inSession     TVarChar       -- сессия пользователя
@@ -19,7 +21,7 @@ RETURNS TABLE (Id Integer, GoodsId Integer, GoodsCode Integer, GoodsName TVarCha
               )
 AS
 $BODY$
-  DECLARE vbOperDate TDateTime;
+--  DECLARE vbOperDate TDateTime;
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
@@ -29,7 +31,7 @@ BEGIN
 
      IF inShowAll THEN
 
-     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
+--     vbOperDate := (SELECT Movement.OperDate FROM Movement WHERE Movement.Id = inMovementId);
 
      RETURN QUERY
        SELECT
@@ -84,7 +86,7 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= vbOperDate)
+            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
                    AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
@@ -257,11 +259,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_Sale (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 14.04.14                                                       * add inOperDate
  08.04.14                                        * add zc_Enum_InfoMoneyDestination_30100
  08.04.14                                        * add MeasureName
  30.01.14                                                        * inisErased

@@ -94,7 +94,6 @@ type
     actPrint_Bill: TdsdPrintAction;
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
-    spGetTotalSumm: TdsdStoredProc;
     PrintItemsSverkaCDS: TClientDataSet;
   private
     { Private declarations }

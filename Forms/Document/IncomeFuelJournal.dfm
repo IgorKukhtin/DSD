@@ -35,7 +35,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     object deEnd: TcxDateEdit
       Left = 310
       Top = 5
-      EditValue = 41670d
+      EditValue = 41640d
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
@@ -587,6 +587,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     Top = 64
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -600,6 +601,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -608,6 +610,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TIncomeFuelForm'
@@ -626,9 +629,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TIncomeFuelForm'
@@ -649,9 +654,11 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -665,6 +672,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -678,6 +686,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -691,6 +700,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -720,7 +730,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end
       item
         Name = 'inEndDate'
-        Value = 41670d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -809,6 +819,10 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 216
   end
@@ -841,7 +855,7 @@ object IncomeFuelJournalForm: TIncomeFuelJournalForm
       end
       item
         Name = 'inEndtDate'
-        Value = 41670d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
