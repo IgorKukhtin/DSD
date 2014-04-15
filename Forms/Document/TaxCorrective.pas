@@ -38,7 +38,6 @@ type
     edPriceWithVAT: TcxCheckBox;
     edVATPercent: TcxCurrencyEdit;
     cxLabel7: TcxLabel;
-    GuidesFrom: TdsdGuides;
     GuidesTo: TdsdGuides;
     DocumentTaxKindGuides: TdsdGuides;
     ContractGuides: TdsdGuides;
@@ -77,6 +76,10 @@ type
     DocumentTaxGuides: TdsdGuides;
     HeaderSaverDocChild: THeaderSaver;
     spInsertUpdateMovement_DocChild: TdsdStoredProc;
+    cxLabel11: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
+    GuidesFrom: TdsdGuides;
   private
     { Private declarations }
   public
