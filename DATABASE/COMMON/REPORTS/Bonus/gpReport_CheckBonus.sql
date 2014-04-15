@@ -184,9 +184,9 @@ BEGIN
             , Object_InfoMoney_View.InfoMoneyName              AS InfoMoneyName
             , Object_PaidKind.ValueData                        AS PaidKindName
             , Object_Juridical.ValueData                       AS JuridicalName
-            , CAST (sum (tmpAll.Sum_CheckBonus) AS Tfloat)     AS Sum_CheckBonus
-            , CAST (sum (tmpAll.Sum_Bonus) AS Tfloat)          AS Sum_Bonus
-            , CAST (sum (tmpAll.Sum_BonusFact)*(-1) AS Tfloat) AS Sum_BonusFact
+            , CAST ((tmpAll.Sum_CheckBonus) AS Tfloat)     AS Sum_CheckBonus
+            , CAST ((tmpAll.Sum_Bonus) AS Tfloat)          AS Sum_Bonus
+            , CAST ((tmpAll.Sum_BonusFact)*(-1) AS Tfloat) AS Sum_BonusFact
       FROM  
           (SELECT tmpContract.ContractMasterId
                 , tmpContract.ContractChildId 
@@ -255,7 +255,7 @@ BEGIN
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpAll.ContractConditionKindId
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpAll.ContractMasterId  
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_2 ON View_Contract_2.ContractId = tmpAll.ContractChildId    
-      GROUP BY  View_Contract_InvNumber.ContractId                    
+  /*    GROUP BY  View_Contract_InvNumber.ContractId                    
               , View_Contract_InvNumber.InvNumber   
               , View_Contract_2.InvNumber           
               , tmpAll.JuridicalId                        
@@ -268,6 +268,7 @@ BEGIN
               , Object_InfoMoney_View.InfoMoneyName          
               , Object_PaidKind.ValueData 
               , tmpAll.value                 ---
+  */
       ORDER BY 9                    
  ;
 
