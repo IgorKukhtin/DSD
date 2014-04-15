@@ -111,10 +111,10 @@ BEGIN
                   ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = CLO_Contract.ObjectId
            LEFT JOIN ObjectDate AS ObjectDate_Start
-                                ON ObjectDate_Start.ObjectId = RESULT.ContractId
+                                ON ObjectDate_Start.ObjectId = CLO_Contract.ObjectId
                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
            LEFT JOIN ObjectDate AS ObjectDate_End
-                                ON ObjectDate_End.ObjectId = RESULT.ContractId
+                                ON ObjectDate_End.ObjectId = CLO_Contract.ObjectId
                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
