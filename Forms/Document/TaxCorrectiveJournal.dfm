@@ -2,26 +2,29 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1099#1084' '#1085#1072#1082#1083#1072#1076#1085#1099#1084'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitWidth = 1126
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1118
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1118
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1118
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1114
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1118
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1112
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1118
-        Height = 478
-        ExplicitWidth = 1118
-        ExplicitHeight = 478
+        Width = 1112
+        Height = 470
+        ExplicitWidth = 1112
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -457,6 +460,45 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
+    object actPrint_TaxCorrective_Reestr: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Reest
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Reest
+        end>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1088#1077#1077#1089#1090#1088')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1088#1077#1077#1089#1090#1088')'
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = 'PrintMovement_TaxCorrectiveReestr'
+      ReportNameParam.Name = 'PrintMovement_TaxCorrectiveReestr'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrectiveReestr'
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -505,7 +547,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -561,6 +603,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintTaxCorrective_Reestr'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -574,6 +620,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbPrintTaxCorrective_Client: TdxBarButton
       Action = actPrint_TaxCorrective_Client
+      Category = 0
+    end
+    object bbPrintTaxCorrective_Reestr: TdxBarButton
+      Action = actPrint_TaxCorrective_Reestr
       Category = 0
     end
   end
@@ -642,6 +692,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Left = 208
     Top = 376
   end
+  inherited FormParams: TdsdFormParams
+    Left = 376
+    Top = 168
+  end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
     DataSet = PrintItemsCDS
@@ -709,5 +763,41 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <>
     Left = 788
     Top = 286
+  end
+  object spSelectPrintTaxCorrective_Reest: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Reestr'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsRegisterDate'
+        Value = 'False'
+        Component = edIsRegisterDate
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 674
+    Top = 362
   end
 end
