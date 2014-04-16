@@ -27,6 +27,7 @@ RETURNS RECORD
 AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('day', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('day', inOperDatePartner) 
@@ -41,6 +42,9 @@ BEGIN
 
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Sale());
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Sale(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -131,8 +135,11 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -141,6 +148,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.04.14                                        * add lpInsert_MovementProtocol
  07.04.14                                        * add проверка
  10.02.14                                        * в lp-должно быть все
  04.02.14                         * 
