@@ -17,11 +17,11 @@ uses
 
 type
   TReport_CheckBonusForm = class(TAncestorReportForm)
-    cContract_InvNumber: TcxGridDBColumn;
+    clInvNumber: TcxGridDBColumn;
     clValue: TcxGridDBColumn;
     clSum_CheckBonus: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
-    clContractConditionKindName: TcxGridDBColumn;
+    clConditionKindName: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clSum_Bonus: TcxGridDBColumn;
     clBonusKindName: TcxGridDBColumn;
@@ -30,7 +30,7 @@ type
     edBonusKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
     clSum_BonusFact: TcxGridDBColumn;
-    clContract_InvNumberChild: TcxGridDBColumn;
+    clInvNumber_child: TcxGridDBColumn;
   private
     { Private declarations }
   public

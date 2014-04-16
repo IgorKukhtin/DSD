@@ -91,7 +91,9 @@ BEGIN
                               AND ObjectLink_Update.DescId = zc_ObjectLink_Protocol_Update()
           LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
-     WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition();
+     WHERE Object_ContractCondition.DescId = zc_Object_ContractCondition()
+       AND Object_ContractCondition.isErased = FALSE
+    ;
   
 END;
 $BODY$
@@ -102,6 +104,7 @@ ALTER FUNCTION gpSelect_Object_ContractCondition (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.04.14                                        * add isErased = FALSE
  14.03.14         * add InfoMoney
  25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...
  19.02.14         * add BonusKind             
