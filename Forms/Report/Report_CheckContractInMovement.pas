@@ -26,6 +26,7 @@ type
     clMovementDate: TcxGridDBColumn;
     clContractStartDate: TcxGridDBColumn;
     clContractEndDate: TcxGridDBColumn;
+    clContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

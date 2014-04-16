@@ -15,7 +15,7 @@ BEGIN
     WHEN 1048 THEN Return(8374);  -- Одесса
     WHEN 5271 THEN Return(8381);  -- Харьков
     WHEN 2991 THEN Return(8373);  -- Херсон-Николаев
-    WHEN 2780 THEN Return(8353);  -- Черкассы
+    WHEN 2780 THEN Return(8375);  -- Черкассы
   END CASE;
 END;
 $BODY$

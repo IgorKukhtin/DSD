@@ -36,6 +36,9 @@ type
     clAmountChangePercent_Sh: TcxGridDBColumn;
     clAmountChangePercent_Weight: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    UnitGuides: TdsdGuides;
+    edUnit: TcxButtonEdit;
   private
     { Private declarations }
   public

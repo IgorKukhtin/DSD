@@ -30,10 +30,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ExplicitWidth = 829
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'

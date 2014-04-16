@@ -851,14 +851,17 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMISale: TdxBarButton
       Action = actReport_GoodsMISale
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084
       Category = 0
     end
     object bbReport_GoodsMI_byMovementSale: TdxBarButton
       Action = actReport_GoodsMI_byMovementSale
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
       Category = 0
     end
     object bbReport_GoodsMI_byMovementDifSale: TdxBarButton
       Action = actReport_GoodsMI_byMovementDifSale
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093')'
       Category = 0
     end
     object bbReport_GoodsMI_Income: TdxBarButton
@@ -871,14 +874,17 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMIReturn: TdxBarButton
       Action = actReport_GoodsMIReturn
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       Category = 0
     end
     object bbReport_GoodsMI_byMovementReturn: TdxBarButton
       Action = actReport_GoodsMI_byMovementReturn
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
       Category = 0
     end
     object bbReport_GoodsMI_byMovementDifReturn: TdxBarButton
       Action = actReport_GoodsMI_byMovementDifReturn
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1085#1072#1082#1083#1072#1076#1085#1099#1093')'
       Category = 0
     end
     object bbReportHistoryCost: TdxBarButton

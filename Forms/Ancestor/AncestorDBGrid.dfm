@@ -34,6 +34,7 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <>
           DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = True
           OptionsBehavior.FocusCellOnCycle = True
           OptionsCustomize.ColumnHiding = True
@@ -66,6 +67,9 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       ShortCut = 16472
     end
   end
+  inherited MasterCDS: TClientDataSet
+    FilterOptions = [foCaseInsensitive]
+  end
   inherited BarManager: TdxBarManager
     DockControlHeights = (
       0
@@ -97,10 +101,11 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
     View = cxGridDBTableView
     OnDblClickActionList = <>
     ActionItemList = <>
-    SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 520
     Top = 264
   end

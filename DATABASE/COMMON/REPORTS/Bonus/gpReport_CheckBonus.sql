@@ -146,7 +146,7 @@ BEGIN
                                    , tmpContainer.PaidKindId
                                    , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN SUM(MIContainer.Amount) ELSE 0 END AS Sum_Sale
                                    , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN SUM(MIContainer.Amount) WHEN Movement.DescId = zc_Movement_ReturnIn() THEN SUM(MIContainer.Amount) ELSE 0 END AS Sum_SaleReturnIn
-                                   , CASE WHEN ((Movement.DescId = zc_Movement_BankAccount() OR Movement.DescId = zc_Movement_Cash()) AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_30101()) THEN SUM(MIContainer.Amount*(-1)) ELSE 0 END AS Sum_Account
+                                   , CASE WHEN ((Movement.DescId = zc_Movement_BankAccount() OR Movement.DescId = zc_Movement_Cash() OR Movement.DescId = zc_Movement_SendDebt()) AND MILinkObject_InfoMoney.ObjectId = zc_Enum_InfoMoney_30101()) THEN SUM(MIContainer.Amount*(-1)) ELSE 0 END AS Sum_Account
                                    , Movement.DescId as MovementDescId                                                                                            --select * from Object where id= zc_Enum_InfoMoney_30101()  "Готовая продукция"   8962
                                    , Movement.invnumber
                               FROM tmpContainer
@@ -155,7 +155,7 @@ BEGIN
                                                              AND MIContainer.DescId = zc_MIContainer_Summ()
                                                              AND MIContainer.OperDate BETWEEN inStartDate AND inEndDate
                                    JOIN Movement ON Movement.Id = MIContainer.MovementId
-                                                AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash()) 
+                                                AND Movement.DescId in (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_BankAccount(),zc_Movement_Cash(), zc_Movement_SendDebt()) 
 
                                    LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                                                     ON MILinkObject_InfoMoney.MovementItemId =  MIContainer.MovementItemId
@@ -288,3 +288,5 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 --select * from gpReport_CheckBonus(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014 23:59:00')::TDateTime ,  inSession := '5');
+--select * from gpReport_CheckBonus(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014')::TDateTime ,  inSession := '5');
+
