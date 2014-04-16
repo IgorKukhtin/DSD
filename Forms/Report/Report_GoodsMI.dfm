@@ -1,29 +1,31 @@
 inherited Report_GoodsMIForm: TReport_GoodsMIForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
-  ClientHeight = 344
+  ClientHeight = 374
   ClientWidth = 973
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
-  ExplicitHeight = 379
+  ExplicitWidth = 981
+  ExplicitHeight = 408
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
+    Top = 83
     Width = 973
-    Height = 287
+    Height = 291
     TabOrder = 3
+    ExplicitTop = 83
     ExplicitWidth = 973
-    ExplicitHeight = 287
-    ClientRectBottom = 287
+    ExplicitHeight = 291
+    ClientRectBottom = 291
     ClientRectRight = 973
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 973
-      ExplicitHeight = 287
+      ExplicitHeight = 291
       inherited cxGrid: TcxGrid
         Width = 973
-        Height = 287
+        Height = 291
         ExplicitWidth = 973
-        ExplicitHeight = 287
+        ExplicitHeight = 291
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -257,34 +259,48 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   end
   inherited Panel: TPanel
     Width = 973
+    Height = 57
     ExplicitWidth = 973
+    ExplicitHeight = 57
     inherited deStart: TcxDateEdit
+      Left = 125
       EditValue = 41640d
       Properties.SaveTime = False
+      ExplicitLeft = 125
     end
     inherited deEnd: TcxDateEdit
+      Left = 125
+      Top = 32
       EditValue = 41640d
       Properties.SaveTime = False
+      ExplicitLeft = 125
+      ExplicitTop = 32
+    end
+    inherited cxLabel2: TcxLabel
+      Left = 10
+      Top = 29
+      ExplicitLeft = 10
+      ExplicitTop = 29
     end
     object cxLabel4: TcxLabel
-      Left = 413
-      Top = 6
+      Left = 240
+      Top = 29
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 501
-      Top = 5
+      Left = 335
+      Top = 28
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 207
+      Width = 242
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 730
+      Left = 696
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -298,7 +314,23 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 231
+      Width = 265
+    end
+    object cxLabel3: TcxLabel
+      Left = 240
+      Top = 6
+      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
+    end
+    object edUnit: TcxButtonEdit
+      Left = 335
+      Top = 1
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 8
+      Width = 242
     end
   end
   inherited MasterDS: TDataSource
@@ -339,9 +371,16 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inUnitId'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 112
-    Top = 208
+    Top = 192
   end
   inherited BarManager: TdxBarManager
     Left = 160
@@ -367,9 +406,12 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       end
       item
         Component = GoodsGroupGuides
+      end
+      item
+        Component = UnitGuides
       end>
-    Left = 184
-    Top = 136
+    Left = 208
+    Top = 168
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -395,7 +437,8 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 600
+    Left = 432
+    Top = 24
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -413,5 +456,32 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       end>
     Left = 328
     Top = 170
+  end
+  object UnitGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = UnitGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 504
+    Top = 65528
   end
 end
