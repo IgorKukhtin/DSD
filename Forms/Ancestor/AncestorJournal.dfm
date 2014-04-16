@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 733
-  ExplicitHeight = 364
+  ExplicitWidth = 725
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -348,7 +348,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = spCompete
         end>
-      DataSource = MasterDS
+      View = cxGridDBTableView
       Caption = 'actSimpleCompleteList'
     end
     object actSimpleUncompleteList: TMultiAction
@@ -358,7 +358,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = spUncomplete
         end>
-      DataSource = MasterDS
+      View = cxGridDBTableView
       Caption = 'actSimpleUncompleteList'
     end
     object actSimpleErased: TMultiAction
@@ -371,7 +371,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = actRefresh
         end>
-      DataSource = MasterDS
+      View = cxGridDBTableView
       Caption = 'actSimpleErased'
     end
   end
@@ -501,6 +501,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 224
     Top = 200
   end

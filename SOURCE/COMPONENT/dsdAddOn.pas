@@ -918,7 +918,9 @@ begin
        AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, vbValue, '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
-  FView.DataController.Filter.Active := True;
+  View.DataController.Filter.Active := True;
+  if View.DataController.FilteredRecordCount > 0 then
+     View.DataController.FocusedRecordIndex := View.DataController.FilteredRecordIndex[0];
 end;
 
 procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;

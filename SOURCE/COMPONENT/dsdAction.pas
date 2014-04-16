@@ -3,7 +3,8 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridDBTableView, frxClass;
+     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
+     cxGridDBTableView, frxClass;
 
 type
 
@@ -143,12 +144,15 @@ type
     FDataSource: TDataSource;
     FQuestionBeforeExecuteList: TStringList;
     FInfoAfterExecuteList: TStringList;
+    FView: TcxGridTableView;
     procedure ListExecute;
     procedure DataSourceExecute;
     procedure SaveQuestionBeforeExecute;
     procedure SaveInfoAfterExecute;
     procedure RestoreQuestionBeforeExecute;
     procedure RestoreInfoAfterExecute;
+    procedure SetDataSource(const Value: TDataSource);
+    procedure SetView(const Value: TcxGridTableView);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     function LocalExecute: boolean; override;
@@ -156,7 +160,10 @@ type
     constructor Create(AOwner: TComponent); override;
   published
     property ActionList: TOwnedCollection read FActionList write FActionList;
-    property DataSource: TDataSource read FDataSource write FDataSource;
+    // Ссылка на элемент отображающий список
+    property View: TcxGridTableView read FView write SetView;
+    // Ссылка на список данных. Может быть установлен только один источник данных
+    property DataSource: TDataSource read FDataSource write SetDataSource;
     property QuestionBeforeExecute;
     property InfoAfterExecute;
     property Caption;
@@ -1680,27 +1687,45 @@ begin
 end;
 
 procedure TMultiAction.DataSourceExecute;
+var i: integer;
 begin
-  if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
- //    DataSource.DataSet.DisableControls;
-     try
-       DataSource.DataSet.First;
-       with TGaugeFactory.GetGauge(Caption, 0, DataSource.DataSet.RecordCount) do
-         try
-           Start;
-           while not DataSource.DataSet.Eof do begin
-             ListExecute;
-             IncProgress(1);
-             Application.ProcessMessages;
-             DataSource.DataSet.Next;
-           end;
+  if Assigned(View) then begin
+     with TGaugeFactory.GetGauge(Caption, 0, View.DataController.FilteredRecordCount) do begin
+        Start;
+        try
+           for i := 0 to View.DataController.FilteredRecordCount - 1 do begin
+               View.DataController.FocusedRecordIndex := View.DataController.FilteredRecordIndex[i];
+               ListExecute;
+               IncProgress(1);
+               Application.ProcessMessages;
+            end;
          finally
            Finish;
          end;
-     finally
-       Application.ProcessMessages;
-//       DataSource.DataSet.EnableControls;
      end;
+  end
+  else begin
+    if Assigned(DataSource.DataSet) and DataSource.DataSet.Active and (DataSource.DataSet.RecordCount > 0) then begin
+   //    DataSource.DataSet.DisableControls;
+       try
+         DataSource.DataSet.First;
+         with TGaugeFactory.GetGauge(Caption, 0, DataSource.DataSet.RecordCount) do
+           try
+             Start;
+             while not DataSource.DataSet.Eof do begin
+               ListExecute;
+               IncProgress(1);
+               Application.ProcessMessages;
+               DataSource.DataSet.Next;
+             end;
+           finally
+             Finish;
+           end;
+       finally
+         Application.ProcessMessages;
+  //       DataSource.DataSet.EnableControls;
+       end;
+    end;
   end;
   Application.ProcessMessages;
 end;
@@ -1722,7 +1747,7 @@ begin
   if InfoAfterExecute <> '' then
      SaveInfoAfterExecute;
   try
-    if Assigned(DataSource) then
+    if Assigned(DataSource) or Assigned(View) then
        DataSourceExecute
     else
        ListExecute;
@@ -1796,6 +1821,24 @@ begin
       end
       else
          FQuestionBeforeExecuteList.Add('');
+end;
+
+procedure TMultiAction.SetDataSource(const Value: TDataSource);
+begin
+  if Assigned(View) and Assigned(Value) then begin
+     ShowMessage('Установлен View. Нельзя установить DataSource');
+     exit;
+  end;
+  FDataSource := Value;
+end;
+
+procedure TMultiAction.SetView(const Value: TcxGridTableView);
+begin
+  if Assigned(DataSource) and Assigned(Value) then begin
+     ShowMessage('Установлен DataSource. Нельзя установить View');
+     exit;
+  end;
+  FView := Value;
 end;
 
 { TExecServerStoredProc }
