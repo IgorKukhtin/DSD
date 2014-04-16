@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  -- sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inGoodsGroupId Integer   ,
-    IN inUnitId  Integer   , 
+    IN inUnitId       Integer   , 
     IN inSession      TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
@@ -216,6 +216,7 @@ ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.14         add inUnitId
  13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
  05.04.14         * add SummChangePercent. AmountChangePercent
