@@ -144,7 +144,7 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
             Width = 54
           end
           object clGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
             DataBinding.FieldName = 'GoodsKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter

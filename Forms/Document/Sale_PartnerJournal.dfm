@@ -2,22 +2,21 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitLeft = -273
+  ExplicitTop = -143
+  ExplicitWidth = 1118
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
     Height = 478
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -27,9 +26,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
-          DataController.Filter.TranslateBetween = True
-          DataController.Filter.TranslateIn = True
-          DataController.Filter.TranslateLike = True
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
@@ -122,7 +118,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
               Kind = skSum
               Column = colTotalCountKg
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -409,12 +404,6 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
-    inherited deStart: TcxDateEdit
-      EditValue = 41640d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 41640d
-    end
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -452,44 +441,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
