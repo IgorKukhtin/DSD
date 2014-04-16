@@ -138,7 +138,7 @@ BEGIN
      IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
+         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
      END IF;
 
 END;
