@@ -1,26 +1,27 @@
 inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1044#1086#1075#1086#1074#1086#1088#1086#1074' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'>'
   ClientHeight = 324
-  ClientWidth = 1102
-  ExplicitWidth = 1118
+  ClientWidth = 1020
+  ExplicitLeft = -38
+  ExplicitWidth = 1036
   ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1102
+    Width = 1020
     Height = 267
     TabOrder = 3
-    ExplicitWidth = 1102
+    ExplicitWidth = 1020
     ExplicitHeight = 267
     ClientRectBottom = 267
-    ClientRectRight = 1102
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1102
+      ExplicitWidth = 1020
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
-        Width = 1102
+        Width = 1020
         Height = 267
-        ExplicitWidth = 1102
+        ExplicitWidth = 1020
         ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -88,15 +89,14 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
           Styles.Footer = nil
           Styles.Header = nil
           object clMovementDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'MovementDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 89
           end
           object clMovementInvNumber: TcxGridDBColumn
-            AlternateCaption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
-            Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'
             DataBinding.FieldName = 'MovementInvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -133,8 +133,15 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
             HeaderAlignmentVert = vaCenter
             Width = 81
           end
+          object clContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
           object cContract_InvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'Contract_InvNumber'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -143,14 +150,14 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
             Width = 123
           end
           object clContractStartDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'ContractStartDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
           object clContractEndDate: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'ContractEndDate'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -161,8 +168,8 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
     end
   end
   inherited Panel: TPanel
-    Width = 1102
-    ExplicitWidth = 1102
+    Width = 1020
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       EditValue = 41640d
       Properties.SaveTime = False
