@@ -8,8 +8,8 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inEndDate             TDateTime ,
     IN inSessiON             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE ( ContractId Integer, Contract_InvNumber TVarChar , Contract_InvNumber_child TVarChar
-              , ContractConditionKindName TVarChar
+RETURNS TABLE ( ContractId Integer, InvNumber TVarChar , InvNumber_child TVarChar
+              , ConditionKindName TVarChar
               , Value TFloat
               , BonusKindName TVarChar
               , InfoMoneyName TVarChar
@@ -41,7 +41,7 @@ BEGIN
                                              END AS InfoMoneyId_child
                                            , Object_Contract_View.PaidKindId
                                            , Object_ContractConditionKind.Id AS ContractConditionKindID
-                                           , Object_ContractConditionKind.ValueData AS ContractConditionKindName 
+                                           , Object_ContractConditionKind.ValueData AS ContractConditionKindName
                                            , ObjectLink_ContractCondition_BonusKind.ChildObjectId AS BonusKindId
                                            , COALESCE (ObjectFloat_Value.ValueData, 0) AS Value
                                       FROM Object AS Object_ContractConditionKind
@@ -181,18 +181,18 @@ BEGIN
 
 
       SELECT  View_Contract_InvNumber.ContractId               AS ContractId            
-            , View_Contract_InvNumber.InvNumber                AS Contract_InvNumber
-            , View_Contract_2.InvNumber                        AS Contract_InvNumber_child
-            , Object_ContractConditionKind.ValueData           AS ContractConditionKindName
+            , View_Contract_InvNumber.InvNumber                AS InvNumber
+            , View_Contract_2.InvNumber                        AS InvNumber_child
+            , Object_ContractConditionKind.ValueData           AS ConditionKindName
             --, CAST (max(tmpAll.value) AS Tfloat)               AS Value
             , CAST (tmpAll.value AS Tfloat)                    AS Value
             , Object_BonusKind.ValueData                       AS BonusKindName
             , Object_InfoMoney_View.InfoMoneyName              AS InfoMoneyName
             , Object_PaidKind.ValueData                        AS PaidKindName
             , Object_Juridical.ValueData                       AS JuridicalName
-            , CAST (sum (tmpAll.Sum_CheckBonus) AS Tfloat)     AS Sum_CheckBonus
-            , CAST (sum (tmpAll.Sum_Bonus) AS Tfloat)          AS Sum_Bonus
-            , CAST (sum (tmpAll.Sum_BonusFact)*(-1) AS Tfloat) AS Sum_BonusFact
+            , CAST ( (tmpAll.Sum_CheckBonus) AS Tfloat)     AS Sum_CheckBonus
+            , CAST ( (tmpAll.Sum_Bonus) AS Tfloat)          AS Sum_Bonus
+            , CAST ( (tmpAll.Sum_BonusFact)*(-1) AS Tfloat) AS Sum_BonusFact
       FROM  
           (SELECT tmpContract.ContractId_master
                 , tmpContract.ContractId_child 
@@ -260,7 +260,7 @@ BEGIN
             LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = tmpAll.ContractConditionKindId
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpAll.ContractId_master  
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_2 ON View_Contract_2.ContractId = tmpAll.ContractId_child    
-      GROUP BY  View_Contract_InvNumber.ContractId                    
+      /*GROUP BY  View_Contract_InvNumber.ContractId                    
               , View_Contract_InvNumber.InvNumber   
               , View_Contract_2.InvNumber           
               , tmpAll.JuridicalId                        
@@ -272,7 +272,7 @@ BEGIN
               , Object_InfoMoney_View.InfoMoneyId                
               , Object_InfoMoney_View.InfoMoneyName          
               , Object_PaidKind.ValueData 
-              , tmpAll.value                 ---
+              , tmpAll.value*/                 ---
       ORDER BY 9                    
  ;
 
@@ -287,11 +287,11 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.14                                        * all
  10.04.14         *
-
-                
 */
 
---select * from gpReport_CheckBonus(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014 23:59:00')::TDateTime ,  inSession := '5');
---select * from gpReport_CheckBonus(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014')::TDateTime ,  inSession := '5');
+-- тест
+-- select * from gpReport_CheckBonus (inStartDate:= '03.01.2014', inEndDate:= '31.03.2014', inSession:= '5');
+-- select * from gpReport_CheckBonus (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inSession:= '5');
 
