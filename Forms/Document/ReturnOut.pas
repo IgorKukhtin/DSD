@@ -58,19 +58,15 @@ type
     colHeadCount: TcxGridDBColumn;
     colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
-    frxDBDMaster: TfrxDBDataset;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
     spGetReportName: TdsdStoredProc;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    frxDBDHeader: TfrxDBDataset;
-    PrintHeaderDS: TDataSource;
     spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    PrintItemsDS: TDataSource;
     colMeasureName: TcxGridDBColumn;
   private
     { Private declarations }

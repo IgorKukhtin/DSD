@@ -1,6 +1,6 @@
 -- View: Object_ContractCondition_PercentView
 
-DROP VIEW IF EXISTS Object_ContractCondition_DefermentPaymentView;
+DROP VIEW IF EXISTS Object_ContractCondition_DefermentPaymentView CASCADE;
 
 CREATE OR REPLACE VIEW Object_ContractCondition_DefermentPaymentView AS
         SELECT zc_Enum_ContractConditionKind_DelayDayCalendar()  AS ConditionKindId

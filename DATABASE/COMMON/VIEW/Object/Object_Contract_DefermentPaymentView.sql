@@ -4,9 +4,8 @@ DROP VIEW IF EXISTS Object_Contract_DefermentPaymentView;
 
 CREATE OR REPLACE VIEW Object_Contract_DefermentPaymentView AS
         SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
-               --     , zfCalc_DetermentPaymentDate(COALESCE(ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId, 0), ObjectFloat_Value.ValueData::Integer, CURRENT_DATE)::Date AS ContractDate
                     , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-                    , ObjectFloat_Value.ValueData::Integer AS DayCount
+                    , CAST(ObjectFloat_Value.ValueData AS Integer) AS DayCount
                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                  JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId

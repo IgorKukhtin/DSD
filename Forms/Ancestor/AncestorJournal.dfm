@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 733
-  ExplicitHeight = 364
+  ExplicitWidth = 725
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -232,9 +232,11 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actComplete
+          Action = actSimpleCompleteList
+        end
+        item
+          Action = actRefresh
         end>
-      DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
@@ -246,7 +248,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actUnComplete
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
         end>
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
@@ -260,7 +265,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = actSetErased
+          Action = spErased
         end>
       DataSource = MasterDS
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
@@ -305,6 +310,69 @@ inherited AncestorJournalForm: TAncestorJournalForm
       CaptionFalse = #1055#1086#1082#1072#1079#1072#1090#1100' '#1074#1089#1077
       ImageIndexTrue = 65
       ImageIndexFalse = 64
+    end
+    object spCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'spCompete'
+    end
+    object spUncomplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object spErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'spErased'
+    end
+    object actSimpleCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = 'actSimpleCompleteList'
+    end
+    object actSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = 'actSimpleUncompleteList'
+    end
+    object actSimpleErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      Caption = 'actSimpleErased'
     end
   end
   inherited MasterDS: TDataSource
@@ -433,6 +501,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         Action = actUpdate
         ShortCut = 13
       end>
+    SortImages = dmMain.SortImageList
     Left = 224
     Top = 200
   end

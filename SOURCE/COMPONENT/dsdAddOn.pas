@@ -97,12 +97,37 @@ type
     property ColorValueList: TCollection read FColorValueList write FColorValueList;
   end;
 
+  TColumnActionOptions = class(TPersistent)
+  private
+    FOnlyEditMode: boolean;
+    FAfterEmptyValue: boolean;
+    FActive: boolean;
+    FAction: TCustomAction;
+  published
+    property Active: boolean read FActive write FActive;
+    //  только если пустое значение было
+    property AfterEmptyValue: boolean read FAfterEmptyValue write FAfterEmptyValue;
+    property Action: TCustomAction read FAction write FAction;
+  end;
+
   TColumnCollectionItem = class(TCollectionItem)
     FColumn: TcxGridColumn;
   protected
     function GetDisplayName: string; override;
   published
     property Column: TcxGridColumn read FColumn write FColumn;
+  end;
+
+  TColumnAddOn = class(TColumnCollectionItem)
+  private
+    FAction: TCustomAction;
+    FonExitColumn: TColumnActionOptions;
+  public
+    constructor Create(Collection: TCollection); override;
+    procedure Init;
+  published
+    property Action: TCustomAction read FAction write FAction;
+    property onExitColumn: TColumnActionOptions read FonExitColumn write FonExitColumn;
   end;
 
   TSummaryItemAddOn = class(TCollectionItem)
@@ -117,15 +142,6 @@ type
   published
     property Param: TdsdParam read FParam write FParam;
     property DataSummaryItemIndex: Integer read FDataSummaryItemIndex write SetDataSummaryItemIndex;
-  end;
-
-  TColumnAddOn = class(TColumnCollectionItem)
-  private
-    FAction: TCustomAction;
-  public
-    procedure Init;
-  published
-    property Action: TCustomAction read FAction write FAction;
   end;
 
   // Добавляет ряд функционала на GridView
@@ -150,6 +166,9 @@ type
     FColumnAddOnList: TCollection;
     FColumnEnterList: TCollection;
     FSummaryItemList: TOwnedCollection;
+    FGridFocusedItemChangedEvent: TcxGridFocusedItemChangedEvent;
+    procedure TableViewFocusedItemChanged(Sender: TcxCustomGridTableView;
+                        APrevFocusedItem, AFocusedItem: TcxCustomGridTableItem);
     procedure OnBeforeOpen(ADataSet: TDataSet);
     procedure OnAfterOpen(ADataSet: TDataSet);
     function inColumnEnterList(Column: TcxGridColumn): boolean;
@@ -183,6 +202,7 @@ type
     procedure OnExit(Sender: TObject);
     procedure SetOnlyEditingCellOnEnter(const Value: boolean);
     function GetErasedColumn(Sender: TObject): TcxGridColumn;
+
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
     procedure Loaded; override;
@@ -207,6 +227,7 @@ type
     property ColumnAddOnList: TCollection read FColumnAddOnList write FColumnAddOnList;
     // Переход по данным колонка по Enter
     property ColumnEnterList: TCollection read FColumnEnterList write FColumnEnterList;
+    // Отображение элементов на футерах
     property SummaryItemList: TOwnedCollection read FSummaryItemList write FSummaryItemList;
   end;
 
@@ -897,7 +918,9 @@ begin
        AddItem(GetItem(View.VisibleColumns[Controller.FocusedItemIndex].Index), foLike, vbValue, '"' + edFilter.Text + '"');
   end;
   edFilter.Text := '';
-  FView.DataController.Filter.Active := True;
+  View.DataController.Filter.Active := True;
+  if View.DataController.FilteredRecordCount > 0 then
+     View.DataController.FocusedRecordIndex := View.DataController.FilteredRecordIndex[0];
 end;
 
 procedure TdsdDBViewAddOn.Notification(AComponent: TComponent;
@@ -947,6 +970,8 @@ begin
        FOnExit := TcxGrid(FView.Control).OnExit;
        TcxGrid(FView.Control).OnExit := OnExit;
     end;
+    FGridFocusedItemChangedEvent := FView.OnFocusedItemChanged;
+    FView.OnFocusedItemChanged := TableViewFocusedItemChanged;
     FOnKeyDown := FView.OnKeyDown;
     FView.OnKeyDown := OnKeyDown;
     FView.OnKeyPress := OnKeyPress;
@@ -970,6 +995,21 @@ begin
           TcxDBDataController(FView.DataController).DataSource.DataSet.AfterOpen := OnAfterOpen;
      end;
   end;
+end;
+
+procedure TdsdDBViewAddOn.TableViewFocusedItemChanged(
+  Sender: TcxCustomGridTableView; APrevFocusedItem,
+  AFocusedItem: TcxCustomGridTableItem);
+var i: integer;
+begin
+  if Assigned(FGridFocusedItemChangedEvent) then
+     FGridFocusedItemChangedEvent(Sender, APrevFocusedItem, AFocusedItem);
+  for i := 0 to ColumnAddOnList.Count - 1 do
+      with TColumnAddOn(ColumnAddOnList.Items[i]) do
+         if onExitColumn.Active then begin
+            if Column = APrevFocusedItem then
+                onExitColumn.Action.Execute;
+         end;
 end;
 
 { TdsdUserSettingsStorageAddOn }
@@ -1013,7 +1053,7 @@ begin
      FormName := TParentForm(Owner).FormClassName
   else
      FormName := Owner.ClassName;
-  Data := StringReplace(TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName), '&', '&amp;', [rfReplaceAll]);
+  Data := TdsdFormStorageFactory.GetStorage.LoadUserFormSettings(FormName);
   if Data <> '' then begin
     XMLDocument := TXMLDocument.Create(nil);
     XMLDocument.LoadFromXML(Data);
@@ -1022,23 +1062,23 @@ begin
         if ChildNodes[i].NodeName = 'cxGridView' then begin
            GridView := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxCustomGridView;
            if Assigned(GridView) then
-              GridView.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+              GridView.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
         end;
         if ChildNodes[i].NodeName = 'cxTreeList' then begin
            TreeList := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxDBTreeList;
            if Assigned(TreeList) then
-              TreeList.RestoreFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+              TreeList.RestoreFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
         end;
         if ChildNodes[i].NodeName = 'dxBarManager' then begin
            BarManager := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TdxBarManager;
            if Assigned(BarManager) then
-              BarManager.LoadFromStream(TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data')))));
+              BarManager.LoadFromStream(TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data'))));
         end;
         if ChildNodes[i].NodeName = 'cxPropertiesStore' then begin
            PropertiesStore := Owner.FindComponent(ChildNodes[i].GetAttribute('name')) as TcxPropertiesStore;
            if Assigned(PropertiesStore) then begin
               PropertiesStore.StorageType := stStream;
-              PropertiesStore.StorageStream := TStringStream.Create(gfStrXmlToStr(XMLToAnsi(ChildNodes[i].GetAttribute('data'))));
+              PropertiesStore.StorageStream := TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data')));
               PropertiesStore.RestoreFrom;
               PropertiesStore.StorageStream.Free;
            end;
@@ -1067,19 +1107,19 @@ begin
       if Owner.Components[i] is TdxBarManager then
          with TdxBarManager(Owner.Components[i]) do begin
            SaveToStream(TempStream);
-           xml := xml + '<dxBarManager name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           xml := xml + '<dxBarManager name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
       if Owner.Components[i] is TcxCustomGridView then
          with TcxCustomGridView(Owner.Components[i]) do begin
            StoreToStream(TempStream);
-           xml := xml + '<cxGridView name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           xml := xml + '<cxGridView name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
       if Owner.Components[i] is TcxDBTreeList then
          with TcxDBTreeList(Owner.Components[i]) do begin
            StoreToStream(TempStream);
-           xml := xml + '<cxTreeList name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '" />';
+           xml := xml + '<cxTreeList name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '" />';
            TempStream.Clear;
          end;
       // сохраняем остальные установки
@@ -1088,12 +1128,12 @@ begin
             StorageType := stStream;
             StorageStream := TempStream;
             StoreTo;
-            xml := xml + '<cxPropertiesStore name = "' + Name + '" data = "' + gfStrToXmlStr(TempStream.DataString) + '"/>';
+            xml := xml + '<cxPropertiesStore name = "' + Name + '" data = "' + ConvertConvert(TempStream.DataString) + '"/>';
             TempStream.Clear;
          end;
     end;
     xml := xml + '</root>';
-    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FormName, xml);
+    TdsdFormStorageFactory.GetStorage.SaveUserFormSettings(FormName, gfStrToXmlStr(xml));
   finally
     TempStream.Free;
   end;
@@ -1668,6 +1708,12 @@ begin
 end;
 
 { TColumnAddOn }
+
+constructor TColumnAddOn.Create(Collection: TCollection);
+begin
+  inherited;
+  onExitColumn := TColumnActionOptions.Create;
+end;
 
 procedure TColumnAddOn.Init;
 begin

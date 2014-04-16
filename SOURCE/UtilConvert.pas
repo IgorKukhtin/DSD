@@ -191,6 +191,7 @@ function gfStrToXmlStr(const inStr: string): string;
 var pS: string;
 begin
   pS := StringReplace(inStr, '&', '&amp;', [rfReplaceAll]);
+  pS := StringReplace(pS, char(28), '', [rfReplaceAll]);
   pS := StringReplace(pS, '''', '&apos;', [rfReplaceAll]);
   pS := StringReplace(pS, '"', '&quot;', [rfReplaceAll]);
   pS := StringReplace(pS, '<', '&lt;', [rfReplaceAll]);
