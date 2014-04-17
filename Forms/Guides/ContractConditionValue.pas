@@ -70,6 +70,12 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyCode: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
+    clInfoMoneyGroupCode_ch: TcxGridDBColumn;
+    clInfoMoneyGroupName_ch: TcxGridDBColumn;
+    clInfoMoneyDestinationCode_ch: TcxGridDBColumn;
+    clInfoMoneyDestinationName_ch: TcxGridDBColumn;
+    clInfoMoneyCode_ch: TcxGridDBColumn;
+    clInfoMoneyName_ch: TcxGridDBColumn;
     clIsErased: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     clAreaName: TcxGridDBColumn;

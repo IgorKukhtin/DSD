@@ -335,7 +335,7 @@ uses Authentication,CommonData,Storage;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
 begin
-             // В 1.1.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье!!!
+             // В 1.1.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + не закрыт!!!
              Result:=0;
              if myContractNumber<>'' then
              begin
@@ -354,12 +354,33 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
-             // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи!!!
+             // В 1.2.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + УП статье + закрыт!!!
              if (Result=0)and(myContractNumber<>'') then
              begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
                                  +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyCode = '+IntToStr(IMCode)
                                  +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId = zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // В 1.3.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи + не закрыт!!!
+             if (Result=0)and(myContractNumber<>'') then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500()'
+
+                                +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
                                  +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
                                  +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
                                  +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
@@ -370,7 +391,26 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
-             // Во 2-ой раз Пытаемся найти <Договор> !!!по УП статье!!!
+             // В 1.4.-ый раз Пытаемся найти <Договор> !!!по НОМЕРУ + без УП статьи + закрыт!!!
+             if (Result=0)and(myContractNumber<>'') then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                AND Object_InfoMoney_View.InfoMoneyDestinationId <> zc_Enum_InfoMoneyDestination_21500()'
+
+                                 +'      JOIN ObjectLink AS ObjectLink_Partner_Juridical'
+                                 +'                         ON ObjectLink_Partner_Juridical.childobjectid = Object_Contract_View.JuridicalId'
+                                 +'                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()'
+                                 +' where ObjectLink_Partner_Juridical.ObjectId='+IntToStr(PartnerId)
+                                 //+'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
+                                 +'   and ContractStateKindId = zc_Enum_ContractStateKind_Close()'
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.InvNumber = '+FormatToVarCharServer_notNULL(myContractNumber)
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // Во 2-ой раз Пытаемся найти <Договор> !!!по УП статье + не закрыт!!!
              if Result=0 then
              begin
                   fOpenSqToQuery (' select max(ContractId) as ContractId'
@@ -409,7 +449,7 @@ begin
                                  );
                   Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;}
-             // В 4-ый раз Пытаемся найти <Договор> !!!c "альтернативной" УП статьей!!!
+             // В 4-ый раз Пытаемся найти <Договор> !!!c "альтернативной" УП статьей + не закрыт!!!
              if (Result=0)and(IMCode_two<>0) then
              begin
 
@@ -10729,8 +10769,18 @@ begin
         Add('     , zc_rvYes() as zc_rvYes');
         Add('from (select Bill.Id as BillId'
            +'           , 30201 as CodeIM' // Мясное сырье
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
            +'        and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
@@ -10739,8 +10789,18 @@ begin
            +'     union all'
            +'      select Bill.Id as BillId'
            +'           , 30101 as CodeIM' // Готовая продукция
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillDate >=zc_def_StartDate_PG()'
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
@@ -10750,7 +10810,7 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -10761,8 +10821,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find '); // Contract_find.Id
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                          ) as _pgPartner on _pgPartner.UnitId = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
@@ -11023,11 +11083,21 @@ begin
            +'                           then 30201'//(30201) Доходы Мясное сырье
            +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
            +'                 end) as CodeIM'
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0'
            +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
 //!!!           +'       and Bill.FromId<>1022' // ВИЗАРД 1
@@ -11039,7 +11109,7 @@ begin
            +'      ) as Bill_find');
 
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11050,8 +11120,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find'); // Contract_find.Id
         Add('          left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                          ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('          left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -11449,6 +11519,7 @@ begin
            +'                           then 30201'//(30201) Доходы Мясное сырье
            +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
            +'                 end) as CodeIM'
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
            +'                             and BillItems.OperCount<>0'
@@ -11457,6 +11528,15 @@ begin
            //+'                                                    and BillItems_5510.GoodsPropertyId = 5510'//РУЛЬКА ВАРЕНАЯ в пакете для запекания
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.ToId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSaleToClient())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
@@ -11469,7 +11549,7 @@ begin
            +'      ) as Bill_find');
 
         Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11480,8 +11560,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.ToId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.ToId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find'); // Contract_find.Id
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
            +'                     ) as _pgPartner on _pgPartner.UnitId = Bill.ToId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
@@ -11838,7 +11918,8 @@ begin
         Add('     , 9399 as inFromId');
         Add('     , _pgPartner.PartnerId_pg as inPartnerId');
 
-        Add('     , case when Bill.ToId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+        //Add('     , case when Bill.ToId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+        Add('     , case when Bill.ToId in (2842,5887) then '+zc_Enum_DocumentTaxKind_TaxSummaryPartnerS //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
                                                                                                              // + ФУДМАРКЕТ ВК № 51,Жовт.Води Вел. киш
                                                                                                              // + ВК №51 ЖОВТІ ВОДИ,КРАПОТКІНА,35А 37830
 
@@ -11911,6 +11992,7 @@ begin
            +'           , max(isnull(BillItems_byParent.OperCount,0)) as OperCount2'
            +'           , max(isnull(BillItems_byParent.Id,0)) as findId1'
            +'           , max(isnull(BillItems_byParent_find.Id,0)) as findId2'
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
            +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
@@ -11918,6 +12000,17 @@ begin
            +'           left join dba.BillItems_byParent as BillItems_byParent_find on BillItems_byParent_find.ParentBillItemsId = BillItems.Id and BillItems_byParent_find.ParentBillItemsId<>BillItems_byParent_find.BillItemsId'
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+
+           +'                           left outer join dba.Unit on Unit.Id = Bill.ToId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkSaleToClient())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
@@ -11929,7 +12022,7 @@ begin
 
         Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
         Add('     left outer join dba.Bill_i AS Bill_find_i on Bill_find_i.Id = Bill.BillId_byLoad');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -11940,8 +12033,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.ToId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.ToId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find'); // Contract_find.Id
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_To on Unit_byLoad_To.UnitId = Bill.ToId'
            +'                                        and Bill_find_i.Id is null');
@@ -12354,7 +12447,8 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , 9399 as inToId');
 
-        Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+        //Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+        Add('     , case when Bill.FromId in (2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
                                                                                                                        // + ФУДМАРКЕТ ВК № 51,Жовт.Води Вел. киш
                                                                                                                        // + ВК №51 ЖОВТІ ВОДИ,КРАПОТКІНА,35А 37830
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ЕКСПАНСІЯ
@@ -12423,12 +12517,22 @@ begin
            +'                           then 30201'//(30201) Доходы Мясное сырье
            +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
            +'                 end) as CodeIM'
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
 //           +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
            +'           left join dba.BillItems_byParent on BillItems_byParent.BillID=Bill.ID'
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
@@ -12437,7 +12541,7 @@ begin
            +'      group by Bill.Id'
            +'      ) as Bill_find');
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -12448,8 +12552,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find');//Contract_find.Id
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'
@@ -12508,8 +12612,10 @@ begin
         Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('     , 9399 as inToId');
 
-        Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
-
+        //Add('     , case when Bill.FromId in (2535,2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+        Add('     , case when Bill.FromId in (2842,5887) then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR //  ФУДМАРКЕТ ВМ № 05,Вел.Киш.,Дн-вск,Зоряний,1-а
+                                                                                                                  // + ФУДМАРКЕТ ВК № 51,Жовт.Води Вел. киш
+                                                                                                                  // + ВК №51 ЖОВТІ ВОДИ,КРАПОТКІНА,35А 37830
            +'            when OKPO in ('+FormatToVarCharServer_notNULL('38939423')//ЕКСПАНСІЯ
            +'                         ,'+FormatToVarCharServer_notNULL('30982361')//ОМЕГА
            +'                         ,'+FormatToVarCharServer_notNULL('32294897')//ФОРА
@@ -12549,6 +12655,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('34604386')
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
+           +'                         ,'+FormatToVarCharServer_notNULL('23494714')//ГРАНД-МАРКЕТ ТОВ УЛ.
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective
@@ -12581,6 +12688,7 @@ begin
            +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
            +'                 end) as CodeIM'
            +'           , max(BillItems.OperCount) as OperCount1'
+           +'           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find'
            +'      from dba.Bill'
            +'           join dba.BillItems on BillItems.BillId = Bill.Id'
 //           +'                             and BillItems.GoodsPropertyId<>1041' // КОВБАСНI ВИРОБИ
@@ -12589,6 +12697,15 @@ begin
            +'           left join dba.Bill as Bill_nalog on Bill_nalog.Id = BillItems_nalog.BillId'
            +'           left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId'
            +'           left join dba.Goods on Goods.Id = GoodsProperty.GoodsId'
+           +'                           left outer join dba.Unit on Unit.Id = Bill.FromId'
+           +'                           left outer join dba.ContractKind_byHistory as find1'
+           +'                                on find1.ClientId = Unit.DolgByUnitID'
+           +'                              and Bill.BillDate between find1.StartDate and find1.EndDate'
+           +'                              and find1.ContractNumber <> '+FormatToVarCharServer_notNULL('')
+           +'                           left outer join dba.ContractKind_byHistory as find2'
+           +'                               on find2.ClientId = Unit.Id'
+           +'                              and Bill.BillDate between find2.StartDate and find2.EndDate'
+           +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
@@ -12600,7 +12717,7 @@ begin
            +'           , inInvNumberPartner'
            +'      ) as Bill_find');
         Add('          left outer join dba.Bill on Bill.Id = Bill_find.BillId');
-        Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
+        {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
            +'                                on find1.ClientId = Unit.DolgByUnitID'
@@ -12611,8 +12728,8 @@ begin
            +'                              and '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' between find2.StartDate and find2.EndDate'
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'                           group by Unit.Id'
-           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'
-           +'          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id');
+           +'                          ) as Contract_find on Contract_find.ClientId = Bill.FromId'}
+        Add('          left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find');//Contract_find.Id
         Add('     left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId'
            +'                     ) as Unit_byLoad_From on Unit_byLoad_From.UnitId = Bill.FromId');
         Add('     left outer join (select JuridicalId_pg, PartnerId_pg, UnitId from dba._pgPartner where PartnerId_pg <> 0 and UnitId <>0 group by JuridicalId_pg, PartnerId_pg, UnitId'

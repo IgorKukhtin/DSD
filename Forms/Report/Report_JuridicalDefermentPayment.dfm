@@ -3,7 +3,6 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1194
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -212
   ExplicitWidth = 1210
   ExplicitHeight = 429
   PixelsPerInch = 96
@@ -211,11 +210,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Width = 70
           end
           object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 30
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103

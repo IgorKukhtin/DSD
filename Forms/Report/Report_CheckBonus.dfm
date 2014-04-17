@@ -1,24 +1,25 @@
 inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
-  ClientWidth = 1102
-  ExplicitWidth = 1118
+  ClientWidth = 1110
+  ExplicitLeft = -128
+  ExplicitWidth = 1126
   ExplicitHeight = 359
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1102
+    Width = 1110
     Height = 267
     TabOrder = 3
     ExplicitWidth = 1102
     ExplicitHeight = 267
     ClientRectBottom = 267
-    ClientRectRight = 1102
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1102
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
-        Width = 1102
+        Width = 1110
         Height = 267
         ExplicitWidth = 1102
         ExplicitHeight = 267
@@ -93,35 +94,42 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clInvNumber: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
-            DataBinding.FieldName = 'InvNumber'
+          object clInvNumber_master: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'InvNumber_master'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 85
+            Width = 60
           end
           object clInvNumber_child: TcxGridDBColumn
-            Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072' ('#1073#1072#1079#1086#1074#1099#1081')'
+            Caption = #8470' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
             DataBinding.FieldName = 'InvNumber_child'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 102
+            Width = 60
+          end
+          object clInvNumber_find: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'. ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'InvNumber_find'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 155
+            Width = 80
           end
           object clConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ConditionKindName'
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 129
+            Width = 60
           end
           object clValue: TcxGridDBColumn
             Caption = '% '#1073#1086#1085#1091#1089#1072
@@ -130,7 +138,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 55
+            Width = 35
           end
           object clBonusKindName: TcxGridDBColumn
             AlternateCaption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
@@ -138,22 +146,33 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             DataBinding.FieldName = 'BonusKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 103
+            Width = 50
           end
-          object clInfoMoneyName: TcxGridDBColumn
+          object clInfoMoneyName_master: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-            DataBinding.FieldName = 'InfoMoneyName'
+            DataBinding.FieldName = 'InfoMoneyName_master'
             HeaderAlignmentVert = vaCenter
-            Width = 152
+            Width = 70
+          end
+          object clInfoMoneyName_child: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'InfoMoneyName_child'
+            Visible = False
+            Width = 80
+          end
+          object clInfoMoneyName_find: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103' ('#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103')'
+            DataBinding.FieldName = 'InfoMoneyName_find'
+            Width = 100
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 29
+            Width = 30
           end
           object clSum_CheckBonus: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072
@@ -165,10 +184,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 90
+            Width = 60
           end
           object clSum_Bonus: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1085#1091#1089#1072' ('#1088#1072#1089#1095#1077#1090')'
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1088#1072#1089#1095#1077#1090')'
             DataBinding.FieldName = 'Sum_Bonus'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -177,10 +196,10 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 90
+            Width = 60
           end
           object clSum_BonusFact: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1073#1086#1085#1091#1089#1072' ('#1092#1072#1082#1090')'
+            Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' ('#1092#1072#1082#1090')'
             DataBinding.FieldName = 'Sum_BonusFact'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -189,14 +208,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 90
+            Width = 60
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 1102
+    Width = 1110
     ExplicitWidth = 1102
     inherited deStart: TcxDateEdit
       EditValue = 41640d
