@@ -56,7 +56,7 @@ type
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clPriceWithVAT: TcxGridDBColumn;
-    Ò‰VATPercen: TcxGridDBColumn;
+    clVATPercent: TcxGridDBColumn;
   private
     { Private declarations }
   public

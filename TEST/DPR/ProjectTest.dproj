@@ -127,10 +127,10 @@
 			<DCCReference Include="..\..\Forms\GoodsGroupEdit.pas">
 				<Form>GoodsGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceListEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceListEdit.pas">
 				<Form>PriceListEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceList.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
 				<Form>PriceListForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
