@@ -12,6 +12,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -289,7 +291,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       end
       item
         Name = 'TextValue'
-        Value = Null
+        Value = ''
         Component = FormParams
         ComponentItem = 'PriceListName'
         DataType = ftString
@@ -329,22 +331,30 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'PriceListId'
         Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'PriceListName'
-        Value = Null
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
       item
         Name = 'GoodsId'
         Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'GoodsName'
         Value = ''
+        Component = GoodsGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
