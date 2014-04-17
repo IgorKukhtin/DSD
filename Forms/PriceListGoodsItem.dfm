@@ -132,7 +132,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
+    Left = 392
     Top = 128
   end
   object dxBarManager: TdxBarManager
@@ -207,6 +207,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -220,6 +221,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -238,15 +240,15 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inGoodsId'
         Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'Key'
+        Component = FormParams
+        ComponentItem = 'GoodsId'
         ParamType = ptInput
       end>
     Left = 144
@@ -259,6 +261,10 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 184
     Top = 240
   end
@@ -269,47 +275,80 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
-    Left = 136
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'PriceListId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PriceListName'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 144
+    Top = 16
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
+    FormNameParam.Value = 'TGoods_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TGoods_ObjectForm'
-    PositionDataSet = 'GridDataSet'
-    Params = <>
-    Left = 344
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 376
+    Top = 16
   end
   object FormParams: TdsdFormParams
     Params = <
       item
         Name = 'PriceListId'
         Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'PriceListName'
-        Value = ''
-        Component = PriceListGuides
-        ComponentItem = 'TextValue'
+        Value = Null
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'GoodsId'
         Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'GoodsName'
         Value = ''
-        Component = GoodsGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 264
+    Left = 256
+    Top = 8
   end
 end
