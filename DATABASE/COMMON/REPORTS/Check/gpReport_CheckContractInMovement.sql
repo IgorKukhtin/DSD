@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckContractInMovement (
 RETURNS TABLE ( MovementDate TDateTime, MovementDescName TVarChar, MovementInvNumber TVarChar
               , PaidKindName TVarChar
               , JuridicalName TVarChar, OKPO TVarChar
-              , Contract_InvNumber TVarChar, ContractStartDate TDateTime, ContractEndDate TDateTime
+              , ContractCode Integer, Contract_InvNumber TVarChar, ContractStartDate TDateTime, ContractEndDate TDateTime
               )  
 AS
 $BODY$
@@ -26,6 +26,7 @@ BEGIN
          , Object_PaidKind.ValueData                 AS PaidKindName
          , Object_Juridical.ValueData                AS JuridicalName
          , ObjectHistory_JuridicalDetails_View.OKPO
+         , tmpMovement.ContractCode
          , tmpMovement.InvNumber                     AS Contract_InvNumber
          , tmpMovement.ContractStartDate
          , tmpMovement.ContractEndDate
@@ -36,6 +37,7 @@ BEGIN
                , Movement.OperDate                      AS MovementDate
                , Object_Contract_View.StartDate         AS ContractStartDate
                , Object_Contract_View.EndDate           AS ContractEndDate
+               , Object_Contract_View.ContractCode
                , Object_Contract_View.InvNumber
                , Object_Contract_View.JuridicalId
                , MovementLinkObject_PaidKind.ObjectId   AS PaidKindId
@@ -50,7 +52,7 @@ BEGIN
                                            AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
           WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
             AND Movement.StatusId = zc_Enum_Status_Complete()
-            AND Movement.DescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_ProfitLossService(), zc_Movement_TransportService(), zc_Movement_PersonalAccount())
+            AND Movement.DescId NOT IN (zc_Movement_BankAccount(), zc_Movement_Cash(), zc_Movement_ReturnIn(), zc_Movement_TaxCorrective(), zc_Movement_ProfitLossService(), zc_Movement_TransportService(), zc_Movement_PersonalAccount())
             AND (Movement.OperDate < Object_Contract_View.StartDate OR Movement.OperDate > Object_Contract_View.EndDate)
 
          UNION ALL
@@ -60,6 +62,7 @@ BEGIN
                , Movement.OperDate              AS MovementDate
                , Object_Contract_View.StartDate AS ContractStartDate
                , Object_Contract_View.EndDate   AS ContractEndDate
+               , Object_Contract_View.ContractCode
                , Object_Contract_View.InvNumber
                , MovementItem.ObjectId          AS JuridicalId
                , MILinkObject_PaidKind.ObjectId AS PaidKindId
@@ -91,7 +94,7 @@ BEGIN
             
 END;
 $BODY$
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_CheckContractInMovement (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
@@ -99,7 +102,6 @@ ALTER FUNCTION gpReport_CheckContractInMovement (TDateTime, TDateTime, TVarChar)
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
  13.04.14         *
-                
 */
 
 --select * from gpReport_CheckContractInMovement(inStartDate := ('01.01.2014')::TDateTime , inEndDate := ('31.01.2014 23:59:00')::TDateTime ,  inSession := '5');

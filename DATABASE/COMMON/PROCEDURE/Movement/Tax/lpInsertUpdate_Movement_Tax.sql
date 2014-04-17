@@ -23,6 +23,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
 RETURNS RECORD AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- определяем ключ доступа
      -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_Tax());
@@ -47,6 +48,9 @@ BEGIN
      END IF;
 
      
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Tax(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
@@ -77,8 +81,11 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -87,6 +94,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.04.14                                        * add lpInsert_MovementProtocol
  29.03.14         * add  INOUT ioInvNumberPartner 
  16.03.14                                        * add inPartnerId
  12.02.14                                                       * change to inDocumentTaxKindId

@@ -21,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnIn(
 RETURNS Integer AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
      IF inOperDate <> DATE_TRUNC ('day', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('day', inOperDatePartner) 
@@ -29,6 +30,9 @@ BEGIN
      END IF;
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ReturnIn(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
@@ -61,8 +65,11 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -71,6 +78,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.04.14                                        * add lpInsert_MovementProtocol
  26.03.14                                        * add inInvNumberPartner
  14.02.14                                                         * del DocumentTaxKind
  11.02.14                         *

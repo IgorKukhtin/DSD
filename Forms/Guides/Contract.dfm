@@ -407,7 +407,7 @@ object ContractForm: TContractForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clBonusKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
+        Caption = #1042#1080#1076' '#1073#1086#1085#1091#1089#1072
         DataBinding.FieldName = 'BonusKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -421,7 +421,7 @@ object ContractForm: TContractForm
         Width = 150
       end
       object cContractConditionKindName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
         DataBinding.FieldName = 'ContractConditionKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -435,7 +435,7 @@ object ContractForm: TContractForm
         Width = 150
       end
       object clccInfoMoneyName: TcxGridDBColumn
-        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -660,6 +660,7 @@ object ContractForm: TContractForm
     Top = 136
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -676,6 +677,7 @@ object ContractForm: TContractForm
     end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
@@ -696,6 +698,7 @@ object ContractForm: TContractForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -719,9 +722,11 @@ object ContractForm: TContractForm
       isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -750,9 +755,11 @@ object ContractForm: TContractForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object ContractKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ContractKindChoiceForm'
       FormName = 'TContractKindForm'
       FormNameParam.Value = ''
@@ -773,6 +780,7 @@ object ContractForm: TContractForm
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -787,6 +795,7 @@ object ContractForm: TContractForm
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -823,6 +832,7 @@ object ContractForm: TContractForm
     end
     object InfoMoneyChoiceForm1: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -843,6 +853,7 @@ object ContractForm: TContractForm
     end
     object JuridicalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'JuridicalChoiceForm'
       FormName = 'TJuridical_ObjectForm'
       FormNameParam.Value = ''
@@ -885,6 +896,7 @@ object ContractForm: TContractForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -900,6 +912,7 @@ object ContractForm: TContractForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -924,6 +937,7 @@ object ContractForm: TContractForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -932,6 +946,7 @@ object ContractForm: TContractForm
     end
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
@@ -952,6 +967,7 @@ object ContractForm: TContractForm
     end
     object BonusKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'BonusKindChoiceForm'
       FormName = 'TBonusKindForm'
       FormNameParam.Value = 'TBonusKindForm'
@@ -972,6 +988,7 @@ object ContractForm: TContractForm
     end
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
       View = cxGridDBTableViewContractCondition
       Action = ContractConditionKindChoiceForm
       Params = <>
@@ -981,6 +998,7 @@ object ContractForm: TContractForm
     end
     object actContractCondition: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateContractCondition
       StoredProcList = <
         item
@@ -991,6 +1009,7 @@ object ContractForm: TContractForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -1055,6 +1074,8 @@ object ContractForm: TContractForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 272
     Top = 184
   end
@@ -1302,6 +1323,8 @@ object ContractForm: TContractForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 448
     Top = 360
   end

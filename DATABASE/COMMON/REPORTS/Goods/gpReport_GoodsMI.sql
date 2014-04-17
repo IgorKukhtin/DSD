@@ -4,12 +4,14 @@
 -- Function: gpReport_GoodsMI ()
 
 DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
     IN inDescId       Integer   ,  -- sale(продажа покупателю) = 5, returnin (возврат покупателя) = 6
     IN inGoodsGroupId Integer   ,
+    IN inUnitId       Integer   , 
     IN inSession      TVarChar     -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar
@@ -26,6 +28,8 @@ $BODY$
 BEGIN
     -- Ограничения по товару
     CREATE TEMP TABLE _tmpGoods (GoodsId Integer) ON COMMIT DROP;
+    CREATE TEMP TABLE _tmpUnit (UnitId Integer) ON COMMIT DROP;
+    
     IF inGoodsGroupId <> 0 
     THEN 
         INSERT INTO _tmpGoods (GoodsId)
@@ -34,6 +38,15 @@ BEGIN
     ELSE 
         INSERT INTO _tmpGoods (GoodsId)
            SELECT Object.Id FROM Object WHERE DescId = zc_Object_Goods();
+    END IF;
+
+    IF inUnitId <> 0 
+    THEN 
+        INSERT INTO _tmpUnit (UnitId)
+           SELECT inUnitId;
+    ELSE 
+        INSERT INTO _tmpUnit (UnitId)
+           SELECT Id FROM Object WHERE DescId = zc_Object_Unit();    
     END IF;
 
 
@@ -78,7 +91,11 @@ BEGIN
                  FROM MovementItemReport AS MIReport
                       JOIN Movement ON Movement.Id = MIReport.MovementId
                                    AND Movement.DescId = inDescId
-
+                      JOIN MovementLinkObject AS MovementLinkObject_From
+                                              ON MovementLinkObject_From.MovementId = Movement.Id
+                                             AND MovementLinkObject_From.DescId = (CASE WHEN inDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END)
+                      JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+                      
                       JOIN ReportContainerLink ON ReportContainerLink.ReportContainerId = MIReport.ReportContainerId
                       
                              JOIN (SELECT Container.Id AS ContainerId
@@ -127,6 +144,11 @@ BEGIN
                  FROM MovementItemContainer AS MIContainer 
                       INNER JOIN Movement ON Movement.Id = MIContainer.MovementId
                                          AND Movement.DescId = inDescId 
+                      INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                   ON MovementLinkObject_From.MovementId = Movement.Id
+                                                   AND MovementLinkObject_From.DescId = CASE WHEN inDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_From() ELSE zc_MovementLinkObject_To() END
+                      INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_From.ObjectId
+
                       INNER JOIN Container ON Container.Id = MIContainer.ContainerId
                       INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = Container.ObjectId
 
@@ -188,12 +210,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 16.04.14         add inUnitId
  13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
  05.04.14         * add SummChangePercent. AmountChangePercent
@@ -202,5 +225,6 @@ ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, TVarCha
  22.01.14         *
 */
 
+
 -- тест
--- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDescId:= 5, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_GoodsMI (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDescId:= 6, inGoodsGroupId:= 0, inUnitId:= 0, inSession:= zfCalc_UserAdmin());
