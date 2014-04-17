@@ -246,6 +246,18 @@
         Component = dsdJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = edAddress
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
       end>
     Left = 8
     Top = 72
