@@ -404,6 +404,10 @@ type
     property PostDataSetBeforeExecute default true;
   end;
 
+  TInsertUpdateChoiceAction = class(TdsdInsertUpdateAction)
+  protected
+    procedure OnFormClose(Params: TdsdParams); override;
+  end;
 
   TdsdFormClose = class(TdsdCustomAction)
   protected
@@ -545,6 +549,7 @@ begin
   RegisterActions('DSDLib', [TdsdPrintAction],    TdsdPrintAction);
   RegisterActions('DSDLib', [TdsdUpdateErased], TdsdUpdateErased);
   RegisterActions('DSDLib', [TdsdUpdateDataSet], TdsdUpdateDataSet);
+  RegisterActions('DSDLib', [TInsertUpdateChoiceAction], TInsertUpdateChoiceAction);
   RegisterActions('DSDLib', [TInsertRecord], TInsertRecord);
   RegisterActions('DSDLib', [TMultiAction], TMultiAction);
   RegisterActions('DSDLib', [TOpenChoiceForm], TOpenChoiceForm);
@@ -1907,6 +1912,16 @@ constructor TdsdExecStoredProc.Create(AOwner: TComponent);
 begin
   inherited;
   PostDataSetBeforeExecute := false
+end;
+
+{ TInsertUpdateChoiceAction }
+
+procedure TInsertUpdateChoiceAction.OnFormClose(Params: TdsdParams);
+begin
+  // Передаем параметры
+  Self.GuiParams.AssignParams(Params);
+  // потом перечитываем и позиционируемся
+  inherited;
 end;
 
 end.

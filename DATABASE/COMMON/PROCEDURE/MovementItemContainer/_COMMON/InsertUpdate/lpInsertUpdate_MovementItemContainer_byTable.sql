@@ -6,10 +6,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItemContainer_byTable ()
   RETURNS void
 AS
 $BODY$
-
+   DECLARE vbCount Integer;
 BEGIN
      -- так блокируем что б не было ОШИБКИ: обнаружена взаимоблокировка
-     PERFORM 1 FROM Container WHERE Id IN (SELECT ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
+     PERFORM * FROM Container WHERE Id IN (SELECT ContainerId FROM _tmpMIContainer_insert) FOR UPDATE;
 
      -- изменить значение остатка
      UPDATE Container SET Amount = Container.Amount + _tmpMIContainer.Amount

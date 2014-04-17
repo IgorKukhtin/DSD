@@ -70,8 +70,8 @@ var FormAction: IFormAction;
 begin
   // Вызывается событие на закрытие формы, например для справочников для перечитывания
   if Sender is TdsdInsertUpdateGuides then
-     if Assigned(FSender) then
-        if FSender.GetInterface(IFormAction, FormAction) then
+     if Assigned(FormSender) then
+        if FormSender.GetInterface(IFormAction, FormAction) then
            FormAction.OnFormClose(AddOnFormData.Params.Params);
   inherited Close;
 end;
@@ -210,18 +210,18 @@ begin
 
   // Если вызывали для выбора, то делаем видимой кнопку выбора
   if Assigned(AddOnFormData.ChoiceAction) then begin
-     AddOnFormData.ChoiceAction.Visible := Assigned(FSender) and Supports(FSender, IChoiceCaller);
+     AddOnFormData.ChoiceAction.Visible := Assigned(FormSender) and Supports(FormSender, IChoiceCaller);
      AddOnFormData.ChoiceAction.Enabled := AddOnFormData.ChoiceAction.Visible;
-     if Supports(FSender, IChoiceCaller) then begin
+     if Supports(FormSender, IChoiceCaller) then begin
         try
           TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := nil;
         except
           // пока под стул!!!
         end;
         // объединили вызывающий справочник и кнопку выбора!!!
-        TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := FSender as IChoiceCaller;
-        (FSender as IChoiceCaller).Owner := AddOnFormData.ChoiceAction;
-     end;
+        TdsdChoiceGuides(AddOnFormData.ChoiceAction).ChoiceCaller := FormSender as IChoiceCaller;
+        (FormSender as IChoiceCaller).Owner := AddOnFormData.ChoiceAction;
+    end;
   end;
 end;
 
@@ -302,6 +302,7 @@ initialization
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
   RegisterClass (TInsertRecord);
+  RegisterClass (TInsertUpdateChoiceAction);
   RegisterClass (TMultiAction);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);

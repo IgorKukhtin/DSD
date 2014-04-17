@@ -2,8 +2,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 927
-  ExplicitWidth = 943
-  ExplicitHeight = 424
+  ExplicitWidth = 935
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -313,7 +313,11 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Hint = #1040#1082#1090' '#1089#1074#1077#1088#1082#1080' ('#1073#1091#1093#1075#1072#1083#1090#1077#1088#1089#1082#1080#1081')'
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'EndDate'
@@ -437,6 +441,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       DataSets = <
         item
           DataSet = MasterCDS
+          UserName = 'frxDBDataset'
           IndexFieldNames = 'ItemName;OperDate'
         end>
       Params = <
@@ -601,14 +606,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end>
     Left = 408
     Top = 72
-  end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSource = MasterDS
-    BCDToCurrency = False
-    Left = 184
-    Top = 264
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'

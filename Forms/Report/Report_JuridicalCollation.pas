@@ -23,7 +23,6 @@ type
     colKredit: TcxGridDBColumn;
     colOperDate: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
-    frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
     cxLabel6: TcxLabel;
     edJuridical: TcxButtonEdit;

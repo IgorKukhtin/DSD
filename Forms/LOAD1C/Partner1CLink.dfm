@@ -22,8 +22,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         ExplicitWidth = 877
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
-          DataController.Filter.AutoDataSetFilter = False
-          Images = dmMain.SortImageList
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -218,7 +216,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end>
       isShowModal = False
     end
-    object actInsertPartner: TdsdInsertUpdateAction
+    object actInsertPartner: TInsertUpdateChoiceAction
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
@@ -241,9 +239,21 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
           Name = 'Id'
           Value = '0'
+        end
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'PartnerName'
+          DataType = ftString
         end>
       isShowModal = True
       DataSource = MasterDS
+      DataSetRefresh = actRefresh
       IdFieldName = 'PartnerId'
       PostDataSetBeforeExecute = False
     end
