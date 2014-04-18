@@ -40,10 +40,6 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clAmountPartner_Weight
             end
             item
@@ -81,10 +77,6 @@ inherited Report_GoodsMI_byMovementForm: TReport_GoodsMI_byMovementForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmountPartner_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Format = ',0.####'

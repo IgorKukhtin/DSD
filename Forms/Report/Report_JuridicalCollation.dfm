@@ -2,8 +2,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 935
-  ExplicitWidth = 943
-  ExplicitHeight = 416
+  ExplicitWidth = 951
+  ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,65 +27,59 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colDebet
             end
             item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colKredit
             end
             item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colDebet
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colKredit
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
-              Kind = skSum
-            end
-            item
-              Format = ',0.00'
+              Format = ',0.00##'
               Kind = skSum
               Column = colStartRemains
             end
             item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colEndRemains
+            end>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colDebet
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colKredit
+            end
+            item
               Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+            end
+            item
+              Format = ',0.00##'
+              Kind = skSum
+              Column = colStartRemains
+            end
+            item
+              Format = ',0.00##'
               Kind = skSum
               Column = colEndRemains
             end>
@@ -120,7 +114,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Width = 93
           end
           object colStartRemains: TcxGridDBColumn
-            Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'StartRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; '
@@ -146,7 +140,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Width = 99
           end
           object colEndRemains: TcxGridDBColumn
-            Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
             DataBinding.FieldName = 'EndRemains'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DisplayFormat = ',0.00;-,0.00; '
