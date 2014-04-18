@@ -254,6 +254,38 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
  11.01.14                                        * add Checked, TotalCountPartner
  17.07.13         *
 */
+/*
+!!!!!!!!!!!!!!!!!удаление задвоенных накл по филиалам
+DO $$
+BEGIN
+
+ perform lpSetErased_Movement (a.Id, 5)
+  from (
+       SELECT Movement.InvNumber, Movement.OperDate, Min (Movement.Id) as Id
+       FROM Movement 
+            JOIN MovementLinkObject AS MovementLinkObject_To
+                                    ON MovementLinkObject_To.MovementId = Movement.Id
+                                   AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                   AND MovementLinkObject_To.ObjectId in (select 18341 as id -- ;22100;"ф. Никополь"
+                                                                union all select 8425 as id -- ;22090;"ф. Харьков"
+                                                                union all select 8423 as id -- ;22080;"ф. Одесса"
+                                                                union all select 8421 as id -- ;22070;"ф. Донецк"
+                                                                union all select 8419 as id -- ;22060;"ф. Крым"
+                                                                union all select 8417 as id -- ;22050;"ф. Николаев (Херсон)"
+                                                                union all select 8415 as id -- ;22040;"ф. Черкассы ( Кировоград)"
+                                                                union all select 8413 as id -- ;22030;"ф. Кр.Рог"
+                                                                union all select 8411 as id -- ;22021;"Склад гп ф.Киев"
+                                                                         )
+       where Movement.OperDate BETWEEN '01.04.2014' AND '30.04.2014'
+         AND Movement.DescId = zc_Movement_ReturnIn()
+         AND Movement.StatusId <> zc_Enum_Status_Erased()
+       group by Movement.InvNumber, Movement.OperDate
+       having count(*) > 1
+) as a ;
+
+
+END $$;
+*/
 
 -- тест
---  SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_ReturnIn (inStartDate:= '01.01.2014', inEndDate:= '02.02.2014', inIsPartnerDate:=FALSE, inIsErased :=TRUE, inSession:= zfCalc_UserAdmin())
