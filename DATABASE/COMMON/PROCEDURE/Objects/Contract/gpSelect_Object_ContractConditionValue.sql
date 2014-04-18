@@ -28,6 +28,9 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , ContractConditionComment TVarChar 
              , Value TFloat
+             , InfoMoneyGroupCode_ch Integer, InfoMoneyGroupName_ch TVarChar
+             , InfoMoneyDestinationCode_ch Integer, InfoMoneyDestinationName_ch TVarChar
+             , InfoMoneyId_ch Integer, InfoMoneyCode_ch Integer, InfoMoneyName_ch TVarChar
              , isDefault Boolean, isStandart Boolean
              , isErased Boolean 
               )
@@ -97,7 +100,15 @@ BEGIN
               
        , tmpContractCondition.Comment      AS ContractConditionComment
        , ObjectFloat_Value.ValueData       AS Value  
-       
+
+       , View_InfoMoney_ContractCondition.InfoMoneyGroupCode AS InfoMoneyGroupCode_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyGroupName AS InfoMoneyGroupName_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyDestinationCode AS InfoMoneyDestinationCode_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyDestinationName AS InfoMoneyDestinationName_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyId   AS InfoMoneyId_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyCode AS InfoMoneyCode_ch
+       , View_InfoMoney_ContractCondition.InfoMoneyName AS InfoMoneyName_ch
+
        , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
        , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
 
@@ -189,6 +200,12 @@ BEGIN
         LEFT JOIN ObjectFloat AS ObjectFloat_Value 
                               ON ObjectFloat_Value.ObjectId = tmpContractCondition.ContractConditionId
                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+
+        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_InfoMoney
+                             ON ObjectLink_ContractCondition_InfoMoney.ObjectId = tmpContractCondition.ContractConditionId
+                            AND ObjectLink_ContractCondition_InfoMoney.DescId = zc_ObjectLink_ContractCondition_InfoMoney()
+        LEFT JOIN Object_InfoMoney_View AS View_InfoMoney_ContractCondition ON View_InfoMoney_ContractCondition.InfoMoneyId = ObjectLink_ContractCondition_InfoMoney.ChildObjectId
+
    ;
   
 END;
@@ -200,6 +217,7 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.04.14                                        * add InfoMoney..._ch
  14.03.14         * add isStandart
  14.03.14         * add isDefault
  21.02.14         * add Bank, BankAccount

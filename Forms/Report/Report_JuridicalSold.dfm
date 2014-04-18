@@ -244,19 +244,26 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 55
           end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1053#1072#1083'/'#1041#1085
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 30
+          end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 45
           end
           object colContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 40
+            Width = 55
           end
           object colStartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
@@ -275,13 +282,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
-          end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 45
           end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
@@ -317,9 +317,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
           object colStartAmount_A: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -1124,34 +1125,50 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Column = colIncomeSumm
         Action = IncomeJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colReturnOutSumm
         Action = ReturnOutJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colSaleSumm
         Action = SaleJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colReturnInSumm
         Action = ReturnInJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colMoneySumm
         Action = MoneyJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colServiceSumm
         Action = ServiceJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colSendDebtSumm
         Action = SendDebtJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end
       item
         Column = colOtherSumm
         Action = OtherJournal
+        onExitColumn.Active = False
+        onExitColumn.AfterEmptyValue = False
       end>
   end
   inherited RefreshDispatcher: TRefreshDispatcher

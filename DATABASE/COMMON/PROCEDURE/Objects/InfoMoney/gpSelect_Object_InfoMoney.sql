@@ -29,8 +29,24 @@ $BODY$BEGIN
          , Object_InfoMoney_View.InfoMoneyDestinationName
          
          , Object_InfoMoney_View.isErased
-      FROM Object_InfoMoney_View;
-  
+      FROM Object_InfoMoney_View
+    UNION ALL
+      SELECT 0 AS Id
+           , 0 AS Code
+           , 'УДАЛИТЬ' :: TVarChar AS Name
+           , '' :: TVarChar AS NameAll
+    
+           , 0 AS InfoMoneyGroupId
+           , 0 AS InfoMoneyGroupCode
+           , '' :: TVarChar as InfoMoneyGroupName
+        
+           , 0 AS InfoMoneyDestinationId
+           , 0 AS InfoMoneyDestinationCode
+           , '' :: TVarChar as InfoMoneyDestinationName
+         
+           , FALSE AS isErased
+;
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
@@ -40,6 +56,7 @@ ALTER FUNCTION gpSelect_Object_InfoMoney (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.13                                        * add UNION ALL
  26.12.13                                        * add NameAll
  30.09.13                                        * Object_InfoMoney_View
  21.06.13          *    + все поля          

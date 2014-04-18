@@ -204,6 +204,7 @@ BEGIN
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 80000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_80000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 90000,  inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_90000');
      PERFORM lpUpdate_Object_Enum_byCode (inCode:= 100000, inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_100000');
+     PERFORM lpUpdate_Object_Enum_byCode (inCode:= 110000, inDescId:= zc_Object_AccountGroup(), inEnumName:= 'zc_Enum_AccountGroup_110000');
 
      -- !!!
      -- !!! Баланс: 2-уровень Управленческих Счетов
@@ -461,6 +462,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.04.14                                        * add zc_Enum_AccountGroup_110000
  16.04.14                                        * add zc_Enum_InfoMoney_30201
  08.04.14                                        * add zc_Enum_GoodsKind_Main
  21.03.14                                        * add zc_Enum_Account_3020... and zc_Enum_InfoMoney_20...

@@ -155,11 +155,11 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             Width = 136
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 24
+            Width = 35
           end
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072

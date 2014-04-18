@@ -42,13 +42,10 @@ BEGIN
                                            ,  FALSE, inSession)) AS tmpReestr
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails
                                                                 ON OH_JuridicalDetails.JuridicalId = tmpReestr.FromId
-                                                               AND tmpReestr.OperDate BETWEEN OH_JuridicalDetails.StartDate AND OH_JuridicalDetails.EndDate
-
-
-       WHERE tmpReestr.StatusCode = 2;
+       WHERE tmpReestr.StatusCode = 2
+       ORDER BY ToName, OperDate, InvNumber_Master, InvNumberPartner_Master, InvNumberPartner_Child
+      ;
     RETURN NEXT Cursor2;
-
-
 
 END;
 $BODY$

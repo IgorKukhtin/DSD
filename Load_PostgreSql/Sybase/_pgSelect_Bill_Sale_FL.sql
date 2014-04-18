@@ -8,6 +8,7 @@ begin
   declare local temporary table _tmpBill_NotNalog(
        BillId Integer not null
      , CodeIM Integer not null
+     , ContractId_find Integer not null
   ) on commit preserve rows;
   //
   declare local temporary table _tmpList(
@@ -42,13 +43,24 @@ begin
      , Id_Postgres integer
   ) on commit preserve rows;
 
-  insert into _tmpBill_NotNalog (BillId, CodeIM)
+  insert into _tmpBill_NotNalog (BillId, CodeIM, ContractId_find)
            select Bill.Id as BillId, max(case when isnull(Goods.ParentId,0) = 1730 then 30103 when Goods.Id = 2514 and 1=0 then 30201 else 30101 end) as CodeIM
+                , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            from dba.Bill
                 join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
                                   and BillItems.GoodsPropertyId<>1041 --  Œ¬¡¿—ÕI ¬»–Œ¡»
                 left join dba.GoodsProperty on GoodsProperty.Id = BillItems.GoodsPropertyId
                 left join dba.Goods on Goods.Id = GoodsProperty.GoodsId
+                      left outer join dba.Unit on Unit.Id = Bill.ToId
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and Bill.BillDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and Bill.BillDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
+
            where Bill.BillDate between @inStartDate and @inEndDate
              and Bill.BillKind in (zc_bkSaleToClient())
          -- and Bill.BillNumber = 121710
@@ -137,7 +149,7 @@ select Bill.Id as ObjectId
 from _tmpBill_NotNalog
      left outer join dba.Bill on Bill.Id = _tmpBill_NotNalog.BillId
 
-     left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
+     /*left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
                       from dba.Unit
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -148,8 +160,8 @@ from _tmpBill_NotNalog
                          and @inStartDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
                       group by Unit.Id
-                     ) as Contract_find on Contract_find.ClientId = Bill.ToId
-     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id
+                     ) as Contract_find on Contract_find.ClientId = Bill.ToId*/
+     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = _tmpBill_NotNalog.ContractId_find -- Contract_find.Id
 
      left outer join dba.Bill_i AS Bill_find on Bill_find.Id = Bill.BillId_byLoad
      left outer join (select max (Unit_byLoad.Id_byLoad) as Id_byLoad, UnitId from dba.Unit_byLoad where Unit_byLoad.Id_byLoad <> 0 group by UnitId

@@ -2,7 +2,6 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1079#1072#1087#1086#1083#1085#1077#1085#1080#1103' '#1044#1086#1075#1086#1074#1086#1088#1086#1074' '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090#1072#1093'>'
   ClientHeight = 324
   ClientWidth = 1020
-  ExplicitLeft = -38
   ExplicitWidth = 1036
   ExplicitHeight = 359
   PixelsPerInch = 96
@@ -111,7 +110,7 @@ inherited Report_CheckContractInMovementForm: TReport_CheckContractInMovementFor
             Width = 171
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1060#1054
+            Caption = #1053#1072#1083'/'#1041#1085
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
