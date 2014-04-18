@@ -1,28 +1,28 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 927
-  ExplicitWidth = 935
+  ClientWidth = 935
+  ExplicitWidth = 943
   ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 927
+    Width = 935
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 927
+    ExplicitWidth = 935
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 927
+    ClientRectRight = 935
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 927
+      ExplicitWidth = 935
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 927
+        Width = 935
         Height = 309
-        ExplicitWidth = 927
+        ExplicitWidth = 935
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -78,6 +78,16 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             item
               Format = ',0.00'
               Kind = skSum
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colStartRemains
+            end
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colEndRemains
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -109,6 +119,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Options.Editing = False
             Width = 93
           end
+          object colStartRemains: TcxGridDBColumn
+            Caption = #1053#1072#1095#1072#1083#1100#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'StartRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
             DataBinding.FieldName = 'Debet'
@@ -126,6 +144,25 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 99
+          end
+          object colEndRemains: TcxGridDBColumn
+            Caption = #1050#1086#1085#1077#1095#1085#1099#1081' '#1086#1089#1090#1072#1090#1086#1082
+            DataBinding.FieldName = 'EndRemains'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DisplayFormat = ',0.00;-,0.00; '
+            HeaderAlignmentVert = vaCenter
+          end
+          object colFrom: TcxGridDBColumn
+            Caption = #1054#1090' '#1082#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
+            HeaderAlignmentVert = vaCenter
+            Width = 65
+          end
+          object colTo: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentVert = vaCenter
+            Width = 65
           end
           object colAccountCode: TcxGridDBColumn
             DataBinding.FieldName = 'AccountCode'
@@ -190,9 +227,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 927
+    Width = 935
     Height = 54
-    ExplicitWidth = 927
+    ExplicitWidth = 935
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -495,7 +532,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited MasterCDS: TClientDataSet
-    IndexFieldNames = 'ItemName;OperDate'
+    IndexFieldNames = 'OperationSort;ItemName;OperDate'
     Top = 24
   end
   inherited spSelect: TdsdStoredProc

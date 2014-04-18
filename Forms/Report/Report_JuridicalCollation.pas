@@ -56,6 +56,10 @@ type
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    colStartRemains: TcxGridDBColumn;
+    colEndRemains: TcxGridDBColumn;
+    colFrom: TcxGridDBColumn;
+    colTo: TcxGridDBColumn;
   private
     { Private declarations }
   public
