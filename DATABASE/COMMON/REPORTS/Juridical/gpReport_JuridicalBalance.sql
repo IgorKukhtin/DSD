@@ -21,7 +21,6 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
      -- ќдин запрос, который считает остаток и движение. 
-     -- √лавна€ задача - выбор контейнера. ¬ыбираем контейнеры по группе счетов 20400 дл€ топлива и 30500 дл€ денежных средств
   SELECT SUM(Amount) INTO StartBalance
     FROM  (SELECT  Container.Amount - SUM(MIContainer.Amount) AS Amount
              FROM ContainerLinkObject AS CLO_Juridical 
