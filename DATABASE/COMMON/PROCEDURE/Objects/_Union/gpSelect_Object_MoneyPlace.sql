@@ -128,7 +128,7 @@ BEGIN
        AND ((View_Contract.PaidKindId = zc_Enum_PaidKind_SecondForm() AND vbUserId IN (SELECT UserId FROM tmpUserTransport))
           OR View_Contract.PaidKindId = zc_Enum_PaidKind_FirstForm()
            )
-       AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+       -- AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
        AND View_Contract.isErased = FALSE
        AND Object_Juridical.isErased = FALSE
     ;
@@ -142,6 +142,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.14                                        * rem View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
  18.03.14                                        * add all
  13.02.14                                        * add ObjectHistory_JuridicalDetails_View and ContractStateKindCode and InfoMoney...
  22.01.14                                        * add tmpUserTransport
