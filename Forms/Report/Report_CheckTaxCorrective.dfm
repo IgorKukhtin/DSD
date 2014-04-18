@@ -30,17 +30,9 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
               Column = clAmount_ReturnIn
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_TaxCorrective
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -49,17 +41,9 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
               Column = clAmount_ReturnIn
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_TaxCorrective
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True

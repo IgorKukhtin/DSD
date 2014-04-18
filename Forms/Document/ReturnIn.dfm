@@ -2,29 +2,27 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 970
-  ExplicitWidth = 978
-  ExplicitHeight = 702
+  ExplicitWidth = 986
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 970
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 970
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 966
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 970
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -80,7 +78,6 @@ inherited ReturnInForm: TReturnInForm
               Kind = skSum
               Column = colPrice
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -206,15 +203,14 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 964
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 970
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 964
-        Height = 514
-        ExplicitWidth = 964
-        ExplicitHeight = 514
+        Width = 970
+        Height = 518
+        ExplicitWidth = 970
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -273,7 +269,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 159
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 159
     end
     object cxLabel3: TcxLabel
@@ -365,6 +361,7 @@ inherited ReturnInForm: TReturnInForm
     object edChangePercent: TcxCurrencyEdit
       Left = 476
       Top = 63
+      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 19
@@ -739,7 +736,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -884,56 +881,7 @@ inherited ReturnInForm: TReturnInForm
       Action = actMISetUnErased
     end
   end
-  inherited EntryCDS: TClientDataSet
-    Left = 629
-    Top = 236
-  end
-  inherited EntryDS: TDataSource
-    Left = 581
-    Top = 236
-  end
-  inherited spSelectMIContainer: TdsdStoredProc
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 477
-    Top = 388
-  end
-  inherited FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'Key'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'ShowAll'
-        Value = False
-        Component = actShowAll
-        DataType = ftBoolean
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'ReportName'
-        Value = 'PrintMovement_TaxCorrective'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 280
-    Top = 552
-  end
-  object GuidesTo: TdsdGuides [17]
+  object GuidesTo: TdsdGuides [13]
     KeyField = 'Id'
     LookupControl = edTo
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
@@ -960,7 +908,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 515
     Top = 12
   end
-  object GuidesFrom: TdsdGuides [18]
+  object GuidesFrom: TdsdGuides [14]
     KeyField = 'Id'
     LookupControl = edFrom
     FormNameParam.Value = 'TContractChoicePartnerForm'
@@ -1010,7 +958,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 360
     Top = 1
   end
-  object PaidKindGuides: TdsdGuides [19]
+  object PaidKindGuides: TdsdGuides [15]
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -1037,7 +985,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 584
     Top = 108
   end
-  object ContractGuides: TdsdGuides [20]
+  object ContractGuides: TdsdGuides [16]
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
@@ -1064,13 +1012,13 @@ inherited ReturnInForm: TReturnInForm
     Left = 792
     Top = 65531
   end
-  object PrintHeaderCDS: TClientDataSet [21]
+  object PrintHeaderCDS: TClientDataSet [17]
     Aggregates = <>
     Params = <>
     Left = 468
     Top = 242
   end
-  object spSelectPrint: TdsdStoredProc [22]
+  object spSelectPrint: TdsdStoredProc [18]
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -1092,7 +1040,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 306
     Top = 266
   end
-  object spGetReportName: TdsdStoredProc [23]
+  object spGetReportName: TdsdStoredProc [19]
     StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
     DataSets = <>
     OutputType = otResult
@@ -1114,13 +1062,13 @@ inherited ReturnInForm: TReturnInForm
     Left = 320
     Top = 392
   end
-  object PrintItemsCDS: TClientDataSet [24]
+  object PrintItemsCDS: TClientDataSet [20]
     Aggregates = <>
     Params = <>
     Left = 469
     Top = 294
   end
-  object DocumentTaxKindGuides: TdsdGuides [25]
+  object DocumentTaxKindGuides: TdsdGuides [21]
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
@@ -1147,7 +1095,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 872
     Top = 72
   end
-  object GuidesPricelist: TdsdGuides [26]
+  object GuidesPricelist: TdsdGuides [22]
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
@@ -1175,7 +1123,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 748
     Top = 72
   end
-  object spTaxCorrective: TdsdStoredProc [27]
+  object spTaxCorrective: TdsdStoredProc [23]
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
     DataSets = <>
     OutputType = otResult
@@ -1222,7 +1170,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 280
     Top = 336
   end
-  object RefreshDispatcher: TRefreshDispatcher [28]
+  object RefreshDispatcher: TRefreshDispatcher [24]
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -1231,7 +1179,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 464
     Top = 360
   end
-  object spSelectPrintTaxCorrective_Us: TdsdStoredProc [29]
+  object spSelectPrintTaxCorrective_Us: TdsdStoredProc [25]
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -1259,7 +1207,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 250
     Top = 442
   end
-  object spSelectPrintTaxCorrective_Client: TdsdStoredProc [30]
+  object spSelectPrintTaxCorrective_Client: TdsdStoredProc [26]
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
     DataSet = PrintItemsCDS
     DataSets = <
@@ -1287,7 +1235,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 426
     Top = 458
   end
-  object spCorrective: TdsdStoredProc [31]
+  object spCorrective: TdsdStoredProc [27]
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
     DataSets = <>
     OutputType = otResult
@@ -1334,6 +1282,55 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 280
     Top = 316
+  end
+  inherited EntryCDS: TClientDataSet
+    Left = 629
+    Top = 236
+  end
+  inherited EntryDS: TDataSource
+    Left = 581
+    Top = 236
+  end
+  inherited spSelectMIContainer: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 477
+    Top = 388
+  end
+  inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Id'
+        Value = Null
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'Key'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ShowAll'
+        Value = False
+        Component = actShowAll
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'ReportName'
+        Value = 'PrintMovement_TaxCorrective'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 280
+    Top = 552
   end
   inherited StatusGuides: TdsdGuides
     Left = 24
@@ -1616,37 +1613,43 @@ inherited ReturnInForm: TReturnInForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
+        Control = edInvNumber
+      end
+      item
+        Control = edInvNumberPartner
+      end
+      item
         Control = edOperDate
-      end
-      item
-        Control = edChangePercent
-      end
-      item
-        Control = edDocumentTaxKind
       end
       item
         Control = edOperDatePartner
       end
       item
-        Control = edPriceWithVAT
+        Control = edFrom
       end
       item
         Control = edTo
       end
       item
-        Control = edFrom
+        Control = edPriceWithVAT
       end
       item
         Control = edPriceWithVAT
       end
       item
+        Control = edChangePercent
+      end
+      item
+        Control = edPaidKind
+      end
+      item
+        Control = edContract
+      end
+      item
         Control = edIsChecked
       end
       item
-        Control = edInvNumber
-      end
-      item
-        Control = edInvNumberPartner
+        Control = edDocumentTaxKind
       end>
     Left = 232
     Top = 193
