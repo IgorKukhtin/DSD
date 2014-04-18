@@ -232,11 +232,11 @@ BEGIN
      -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер.
      PERFORM gpSetErased_Movement(Movement.Id, inSession) 
      FROM Movement  
-          JOIN MovementLinkObject AS MLO_From
-                                  ON MLO_From.MovementId = Movement.Id
-                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
+          JOIN MovementLinkObject AS MLO_To
+                                  ON MLO_To.MovementId = Movement.Id
+                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
           JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_To.ObjectId 
                          AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           JOIN MovementBoolean AS MovementBoolean_isLoad 
@@ -287,11 +287,11 @@ BEGIN
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                LEFT JOIN  (SELECT Movement.Id, Movement.InvNumber, Movement.OperDate 
                                 FROM Movement  
-          JOIN MovementLinkObject AS MLO_From
-                                  ON MLO_From.MovementId = Movement.Id
-                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
+          JOIN MovementLinkObject AS MLO_To
+                                  ON MLO_To.MovementId = Movement.Id
+                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
           JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
+                          ON ObjectLink_Unit_Branch.ObjectId = MLO_To.ObjectId 
                          AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
                          AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
           JOIN MovementBoolean AS MovementBoolean_isLoad 
@@ -391,6 +391,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.14                        *  	Задваивал возвраты
  07.04.14                        * 
  31.03.14                        * 
  18.02.14                        * add inBranchId

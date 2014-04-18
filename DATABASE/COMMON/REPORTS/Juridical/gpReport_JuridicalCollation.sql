@@ -122,7 +122,7 @@ UNION
 
                   JOIN MovementItemContainer AS MIContainer 
                     ON MIContainer.Containerid = Container.Id
-                   AND MIContainer.OperDate > inStartDate
+                   AND MIContainer.OperDate >= inStartDate
              LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                     ON CLO_InfoMoney.ContainerId = Container.Id
                    AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
