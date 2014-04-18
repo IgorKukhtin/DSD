@@ -11578,10 +11578,14 @@ begin
 //  Add('where inInvNumberPartner in (3450)');
 // Add('where Bill.BillNumber in (58445,58443)');
 
-        if cblTaxPF.Checked
-        then Add('where Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
-        else if cbOnlyInsertDocument.Checked
-             then Add('where isnull(Bill.NalogId_PG,0)=0');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
+        then Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)))
+        else
+            if cblTaxPF.Checked
+            then Add('where Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
+            else
+                if cbOnlyInsertDocument.Checked
+                then Add('where isnull(Bill.NalogId_PG,0)=0');
         Add('order by inOperDate, inInvNumber, ObjectId');
         Open;
 
@@ -11684,6 +11688,7 @@ end;
 //!!!!Integer
 procedure TMainForm.pLoadDocumentItem_Tax_Int(SaveCount:Integer);
 begin
+     if (cbOKPO.Checked)then exit;
      if (not cbTaxInt.Checked)or(not cbTaxInt.Enabled) then exit;
      //
      myEnabledCB(cbTaxInt);
@@ -11821,6 +11826,7 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkSaleToClient())'
            +'  and Bill.NalogId_PG>0');
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
@@ -12066,10 +12072,14 @@ begin
 //  Add('where inInvNumberPartner in (3450)');
 // Add('where Bill.BillNumber in (58445,58443)');
 
-        if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill.NalogId_PG,0)=0')
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
+        then Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)))
         else
-            if cbErr.Checked then Add(' where isErr = zc_rvYes()');
+            if cbOnlyInsertDocument.Checked
+            then Add('where isnull(Bill.NalogId_PG,0)=0')
+            else
+                if cbErr.Checked
+                then Add(' where isErr = zc_rvYes()');
         Add('order by inOperDate, inInvNumber, ObjectId');
         Open;
 
@@ -12176,6 +12186,7 @@ end;
 //!!!!FLOAT
 procedure TMainForm.pLoadDocumentItem_Tax_Fl(SaveCount:Integer);
 begin
+     if (cbOKPO.Checked)then exit;
      if (not cbTaxFl.Checked)or(not cbTaxFl.Enabled) then exit;
      //
      myEnabledCB(cbTaxFl);
@@ -12337,6 +12348,10 @@ begin
         Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
            +'  and Bill.BillKind in (zc_bkReturnToUnit())'
            +'  and BillItems_byParent.NalogId_PG>0');
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
+        begin
+             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
+        end;
         Add('group by Bill.Id');
         Add('       , Bill.BillDate');
         Add('       , Bill.BillNumber');
@@ -12344,10 +12359,6 @@ begin
         Add('       , Bill.ToID');
         Add('       , Bill.MoneyKindId');
         Add('       , BillItems_byParent.NalogId_PG');
-        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
-        begin
-             Add('   and isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)));
-        end;
 
         Add('order by OperDate,InvNumber,ObjectId');
         Open;
@@ -12581,11 +12592,17 @@ begin
         Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
  //Add('where Bill.BillNumber in (136565)');
 
-        if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill.NalogId_PG,0)=0')
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
+        then Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)))
         else
-            if cbErr.Checked then Add(' where isErr = zc_rvYes()')
-            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
+            if cbOnlyInsertDocument.Checked
+            then Add('where isnull(Bill.NalogId_PG,0)=0')
+            else
+                if cbErr.Checked
+                then Add(' where isErr = zc_rvYes()')
+                else
+                    if cbTotalTaxCorr.Checked
+                    then Add(' where isErr = zc_rvNo()');
 
         Add('union all');
 
@@ -12756,11 +12773,16 @@ begin
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
         Add('     left outer join dba.ClientInformation as Information2 on Information2.ClientID = UnitFrom.Id');
 
-        if cbOnlyInsertDocument.Checked
-        then Add('where isnull(Bill_find.NalogId_PG,0)=0')
+        if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'')
+        then Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)))
         else
-            if cbErr.Checked then Add(' where isErr = zc_rvYes()')
-            else if cbTotalTaxCorr.Checked then Add(' where isErr = zc_rvNo()');
+            if cbOnlyInsertDocument.Checked
+            then Add('where isnull(Bill_find.NalogId_PG,0)=0')
+            else
+                if cbErr.Checked then Add(' where isErr = zc_rvYes()')
+                else
+                    if cbTotalTaxCorr.Checked
+                    then Add(' where isErr = zc_rvNo()');
         Add('order by inOperDate, ObjectId');
         Open;
 
@@ -12875,6 +12897,7 @@ end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadDocumentItem_TaxCorrective_Fl(SaveCount:Integer);
 begin
+     if (cbOKPO.Checked)then exit;
      if (not cbTaxCorrective.Checked)or(not cbTaxCorrective.Enabled) then exit;
      //
      myEnabledCB(cbTaxCorrective);

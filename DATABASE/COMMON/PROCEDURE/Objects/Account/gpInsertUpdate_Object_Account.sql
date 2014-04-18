@@ -19,7 +19,7 @@ $BODY$
    DECLARE vbAccountKindId Integer;
 BEGIN
    -- !!! это временно !!!
-   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_Account());
+   -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_Account());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Account());
@@ -65,6 +65,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Account (Integer, Integer, TVarChar, Intege
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.14                                        * rem !!! это временно !!!
  31.01.14                                        * add zc_ObjectBoolean_Account_onComplete
  25.08.13                                        * !!! это временно !!!
  08.07.13                                        * vbAccountKindId

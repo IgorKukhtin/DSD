@@ -33,10 +33,10 @@ BEGIN
       vbBranchId := inBranchId;
    END IF;
    
-   IF COALESCE (inCode, 0) = 0 AND COALESCE (inName, '') = '' THEN
-       RAISE EXCEPTION 'Ошибка.Не установлен <Код>.';
-   END IF;
-   IF COALESCE (inName, '') = '' THEN
+   -- IF COALESCE (inCode, 0) = 0 AND COALESCE (inName, '') = '' THEN
+   --     RAISE EXCEPTION 'Ошибка.Не установлен <Код>.';
+   -- END IF;
+   IF COALESCE (inName, '') = '' AND inCode <> 0 THEN
        RAISE EXCEPTION 'Ошибка.Не установлено <Название>.';
    END IF;
    IF COALESCE (vbBranchId, 0) = 0 THEN

@@ -15,7 +15,7 @@ $BODY$
 
 BEGIN
    -- !!! это временно !!!
-   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId = zc_Object_InfoMoneyDestination());
+   -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId = zc_Object_InfoMoneyDestination());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_InfoMoneyDestination());
@@ -36,19 +36,17 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_InfoMoneyDestination (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
-
 
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.04.14                                        * rem !!! это временно !!!
  21.09.13                                        * !!! это временно !!!
  21.06.13          * gpInsertUpdate_Object_InfoMoneyDestination(); Code_calc
  19.06.13                                        * rem lpCheckUnique_Object_ValueData
-
 */
 
 -- тест

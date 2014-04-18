@@ -16,10 +16,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ProfitLoss(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;   
-
 BEGIN
    -- !!! это временно !!!
-   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_ProfitLoss());
+   -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_ProfitLoss());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ProfitLoss());
@@ -57,6 +56,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ProfitLoss(Integer, Integer, TVarChar, Inte
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.14                                        * rem !!! это временно !!!
  31.01.14                                        * add zc_ObjectBoolean_ProfitLoss_onComplete
  08.09.13                                        * !!! это временно !!!
  18.06.13          *   vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ProfitLoss());             

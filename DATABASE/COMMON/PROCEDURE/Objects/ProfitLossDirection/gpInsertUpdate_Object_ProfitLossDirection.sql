@@ -15,7 +15,7 @@ $BODY$
  
 BEGIN
     -- !!! это временно !!!
-   ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_ProfitLossDirection());
+   -- ioId := (SELECT Id FROM Object WHERE ObjectCode=inCode AND DescId =zc_Object_ProfitLossDirection());
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ProfitLossDirection());
@@ -37,8 +37,7 @@ BEGIN
    PERFORM lpInsert_ObjectProtocol (ioId, UserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_ProfitLossDirection (Integer, Integer, TVarChar, TVarChar) OWNER TO postgres;
 
 
@@ -46,6 +45,7 @@ ALTER FUNCTION gpInsertUpdate_Object_ProfitLossDirection (Integer, Integer, TVar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 18.04.14                                        * rem !!! это временно !!!
  08.09.13                                        * !!! это временно !!!
  21.06.13          *   Code_calc      
  19.06.13                                        * rem lpCheckUnique_Object_ValueData
