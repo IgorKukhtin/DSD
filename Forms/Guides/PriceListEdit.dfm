@@ -86,6 +86,7 @@
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -97,9 +98,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item

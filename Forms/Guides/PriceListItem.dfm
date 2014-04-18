@@ -136,8 +136,8 @@ object PriceListItemForm: TPriceListItemForm
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 24
-    Top = 144
+    Left = 40
+    Top = 160
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -151,14 +151,14 @@ object PriceListItemForm: TPriceListItemForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 344
-    Top = 128
+    Left = 376
+    Top = 144
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -235,10 +235,11 @@ object PriceListItemForm: TPriceListItemForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 304
+    Left = 320
     Top = 112
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -252,6 +253,7 @@ object PriceListItemForm: TPriceListItemForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -260,17 +262,19 @@ object PriceListItemForm: TPriceListItemForm
     end
     object actPriceListGoods: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       Hint = #1062#1077#1085#1099' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       ImageIndex = 28
       FormName = 'TPriceListGoodsItemForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'PriceListId'
-          Value = ''
+          Value = '0'
           Component = PriceListGuides
           ComponentItem = 'Key'
-          ParamType = ptInput
         end
         item
           Name = 'PriceListName'
@@ -278,20 +282,17 @@ object PriceListItemForm: TPriceListItemForm
           Component = PriceListGuides
           ComponentItem = 'TextValue'
           DataType = ftString
-          ParamType = ptInput
         end
         item
           Name = 'GoodsId'
           Component = ClientDataSet
           ComponentItem = 'GoodsId'
-          ParamType = ptInput
         end
         item
           Name = 'GoodsName'
           Component = ClientDataSet
           ComponentItem = 'GoodsName'
           DataType = ftString
-          ParamType = ptInput
         end>
       isShowModal = False
     end
@@ -306,7 +307,7 @@ object PriceListItemForm: TPriceListItemForm
     Params = <
       item
         Name = 'inPriceListId'
-        Value = ''
+        Value = '0'
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -328,22 +329,29 @@ object PriceListItemForm: TPriceListItemForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
-    Left = 184
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 168
     Top = 240
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 288
+    Left = 296
     Top = 200
   end
   object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
+    Key = '0'
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
-        Value = ''
+        Value = '0'
         Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
@@ -356,6 +364,7 @@ object PriceListItemForm: TPriceListItemForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 136
+    Left = 160
+    Top = 16
   end
 end

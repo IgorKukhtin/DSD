@@ -127,10 +127,10 @@
 			<DCCReference Include="..\..\Forms\GoodsGroupEdit.pas">
 				<Form>GoodsGroupEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceListEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceListEdit.pas">
 				<Form>PriceListEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceList.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
 				<Form>PriceListForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
@@ -167,7 +167,7 @@
 			<DCCReference Include="..\..\Forms\BankEdit.pas">
 				<Form>BankEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceListGoodsItem.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractKindEdit.pas">
@@ -368,7 +368,7 @@
 			<DCCReference Include="..\..\Forms\Measure.pas">
 				<Form>MeasureForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\PriceListItem.pas">
+			<DCCReference Include="..\..\Forms\Guides\PriceListItem.pas">
 				<Form>PriceListItemForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\ComponentActionTest.pas"/>

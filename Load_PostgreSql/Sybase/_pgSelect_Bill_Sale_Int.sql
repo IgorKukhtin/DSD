@@ -139,9 +139,19 @@ begin
      , (case when Bill_find.Id_Postgres<>0 then Bill_find.Id_Postgres else Bill.Id_Postgres end) as Id_Postgres
 
 from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
+           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+                      left outer join dba.Unit on Unit.Id = Bill.ToId
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and Bill.BillDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and Bill.BillDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
         and Bill.BillKind in (zc_bkSaleToClient())
@@ -153,9 +163,19 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
        group by Bill.Id
      union
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
+           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvNo() as isOnlyUpdateInt
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
+                      left outer join dba.Unit on Unit.Id = Bill.ToId
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and Bill.BillDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and Bill.BillDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
       where Bill.BillDate between @inStartDate and @inEndDate
         and Bill.FromId in (zc_UnitId_StoreSale())
         and Bill.BillKind in (zc_bkSaleToClient())
@@ -165,14 +185,24 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
       group by Bill.Id
      union
       select BillId_union AS Id, max  (isnull(Bill.Id_Postgres,0)) as Id_Postgres, 30101 as CodeIM -- Готовая продукция
+           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
            , zc_rvYes() as isOnlyUpdateInt
       from dba._pgBillLoad_union
             join dba.Bill on Bill.Id = _pgBillLoad_union.BillId
+                      left outer join dba.Unit on Unit.Id = Bill.ToId
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and Bill.BillDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and Bill.BillDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
       group by BillId_union
      ) as Bill_find
 
      left outer join dba.Bill on Bill.Id = Bill_find.Id
-     left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
+     /*left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId
                       from dba.Unit
                       left outer join dba.ContractKind_byHistory as find1
                            on find1.ClientId = Unit.DolgByUnitID
@@ -183,8 +213,8 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
                          and @inStartDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
                       group by Unit.Id
-                     ) as Contract_find on Contract_find.ClientId = Bill.ToId
-     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Contract_find.Id
+                     ) as Contract_find on Contract_find.ClientId = Bill.ToId*/
+     left outer join dba.ContractKind_byHistory as Contract on Contract.Id = Bill_find.ContractId_find -- Contract_find.Id
 
      left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
      left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id=UnitFrom.pgUnitId

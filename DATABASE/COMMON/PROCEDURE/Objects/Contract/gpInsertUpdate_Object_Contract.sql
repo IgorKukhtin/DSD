@@ -69,7 +69,7 @@ BEGIN
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
    -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
-   IF inInvNumber <> '' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
+   IF TRIM (inInvNumber) <> '' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
    THEN
        IF EXISTS (SELECT ObjectLink.ChildObjectId
                   FROM ObjectLink
@@ -78,12 +78,12 @@ BEGIN
                                       AND ObjectLink_InfoMoney.ChildObjectId = inInfoMoneyId
                                       AND ObjectLink_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
                        JOIN Object ON Object.Id = ObjectLink.ObjectId
-                                  AND Object.ValueData = inInvNumber
+                                  AND TRIM (Object.ValueData) = TRIM (inInvNumber)
                   WHERE ObjectLink.ChildObjectId = inJuridicalId
                     AND ObjectLink.ObjectId <> COALESCE (ioId, 0)
                     AND ObjectLink.DescId = zc_ObjectLink_Contract_Juridical())
        THEN
-           RAISE EXCEPTION 'Ошибка. Номер договора <%> уже установлен у <%>.', inInvNumber, lfGet_Object_ValueData (inJuridicalId);
+           RAISE EXCEPTION 'Ошибка. Номер договора <%> уже установлен у <%>.', TRIM (inInvNumber), lfGet_Object_ValueData (inJuridicalId);
        END IF;
    END IF;
 
@@ -118,7 +118,7 @@ BEGIN
    vbIsUpdate:= COALESCE (ioId, 0) > 0;
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode, inInvNumber);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Contract(), vbCode, TRIM (inInvNumber));
 
    -- сохранили свойство <Номер договора>
    -- PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_InvNumber(), ioId, inInvNumber);
@@ -177,6 +177,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.04.14                                        * add TRIM
  19.03.14         * add inisStandart
  13.03.14         * add inisDefault
  05.01.14                                        * add проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи

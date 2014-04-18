@@ -1,4 +1,4 @@
-﻿object PriceListForm: TPriceListForm
+object PriceListForm: TPriceListForm
   Left = 0
   Top = 0
   Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
@@ -25,7 +25,6 @@
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = False
-    ExplicitWidth = 390
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -75,9 +74,9 @@
         HeaderAlignmentVert = vaCenter
         Width = 53
       end
-      object сдVATPercen: TcxGridDBColumn
+      object clVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercen'
+        DataBinding.FieldName = 'VATPercent'
         HeaderAlignmentVert = vaCenter
         Width = 70
       end
@@ -237,6 +236,7 @@
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -250,10 +250,13 @@
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
       FormName = 'TPriceListEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -262,13 +265,17 @@
       isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
       FormName = 'TPriceListEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -280,9 +287,11 @@
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -297,6 +306,7 @@
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -312,6 +322,7 @@
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -331,6 +342,7 @@
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -387,6 +399,10 @@
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 320
     Top = 208
   end
