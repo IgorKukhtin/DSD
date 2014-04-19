@@ -26,8 +26,6 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NULL
                                                            THEN zc_Enum_AccountDirection_40100() -- касса
 
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Member() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_40000() -- Финансовая деятельность
-                                                           THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Member() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_80300() -- Расчеты с участниками
                                                            THEN zc_Enum_AccountDirection_100400() -- Расчеты с участниками
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Member()
@@ -37,13 +35,13 @@ BEGIN
 
                                                       WHEN COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE) = TRUE
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_40900()) -- Финансовая помощь
-                                                           THEN zc_Enum_AccountDirection_30200() -- наши компании
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                                                            THEN zc_Enum_AccountDirection_30200() -- наши компании
 
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
-                                                           THEN zc_Enum_AccountDirection_30300() -- услуги предоставленные
+                                                           THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
+                                                           THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
@@ -112,7 +110,7 @@ BEGIN
                                           WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
-                                               THEN zc_Enum_Account_110101() -- Транзит
+                                               THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
                                                THEN CASE WHEN zc_Enum_InfoMoney_20801() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
@@ -217,7 +215,7 @@ BEGIN
     ;
 
      -- 2. определяется ContainerId для проводок суммового учета
-     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110101() -- Транзит
+     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -373,6 +371,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.04.14                                        * del zc_Enum_InfoMoneyDestination_40900
  04.04.14                                        * add ЕКСПЕРТ-АГРОТРЕЙД
  10.03.14                                        * add no calc AccountId
  28.01.14                                        * add zc_Movement_SendDebt

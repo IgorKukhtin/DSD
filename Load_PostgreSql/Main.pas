@@ -148,6 +148,7 @@ type
     cbCompleteTaxCorrective: TCheckBox;
     cbCompleteTaxInt: TCheckBox;
     cblTaxPF: TCheckBox;
+    cbUpdateConrtact: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -7293,6 +7294,21 @@ begin
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
              //
+             // !!!не меняем договор!!! если в документе установили "свой" договор, и он не "закрыт" и не "удален"
+             if (not cbUpdateConrtact.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery (' select MovementLinkObject.ObjectId as ContractId'
+                                 +' from MovementLinkObject'
+                                 +'      join Object_Contract_View on Object_Contract_View.ContractId = MovementLinkObject.ObjectId'
+                                 +'                               and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'                               and Object_Contract_View.isErased = FALSE'
+                                 +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
+                                 );
+                  if toSqlQuery.FieldByName('ContractId').AsInteger<>0
+                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-от кого:'+FieldByName('UnitNameFrom').AsString
                                  else if (ContractId_pg=0)and(FieldByName('findId').AsInteger<>0)
@@ -10597,6 +10613,20 @@ begin
                                  +'   and Object_Contract_View.isErased = FALSE'
                                  );
                   ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             // !!!не меняем договор!!! если в документе установили "свой" договор, и он не "закрыт" и не "удален"
+             if (not cbUpdateConrtact.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)then
+             begin
+                  fOpenSqToQuery (' select MovementLinkObject.ObjectId as ContractId'
+                                 +' from MovementLinkObject'
+                                 +'      join Object_Contract_View on Object_Contract_View.ContractId = MovementLinkObject.ObjectId'
+                                 +'                               and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'                               and Object_Contract_View.isErased = FALSE'
+                                 +' where MovementLinkObject.MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
+                                 );
+                  if toSqlQuery.FieldByName('ContractId').AsInteger<>0
+                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
              end;
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;

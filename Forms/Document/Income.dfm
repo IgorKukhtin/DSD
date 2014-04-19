@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 462
-  ClientWidth = 971
+  ClientWidth = 928
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,18 +21,19 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 971
+    Width = 928
     Height = 100
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
+    ExplicitWidth = 971
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
       Enabled = False
       Properties.ReadOnly = True
       TabOrder = 0
-      Width = 95
+      Width = 74
     end
     object cxLabel1: TcxLabel
       Left = 8
@@ -40,20 +41,20 @@ object IncomeForm: TIncomeForm
       Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
     end
     object edOperDate: TcxDateEdit
-      Left = 112
+      Left = 171
       Top = 23
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 1
-      Width = 108
+      Width = 94
     end
     object cxLabel2: TcxLabel
-      Left = 112
+      Left = 171
       Top = 5
       Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
     end
     object edFrom: TcxButtonEdit
-      Left = 227
+      Left = 271
       Top = 23
       Properties.Buttons = <
         item
@@ -61,10 +62,10 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 3
-      Width = 140
+      Width = 173
     end
     object edTo: TcxButtonEdit
-      Left = 374
+      Left = 451
       Top = 23
       Properties.Buttons = <
         item
@@ -72,61 +73,61 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 2
-      Width = 130
+      Width = 144
     end
     object cxLabel3: TcxLabel
-      Left = 227
+      Left = 271
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object cxLabel4: TcxLabel
-      Left = 374
+      Left = 451
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 374
-      Top = 63
+      Left = 271
+      Top = 64
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 9
       Width = 130
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 512
-      Top = 63
+      Left = 404
+      Top = 64
       Properties.Alignment.Horz = taRightJustify
       Properties.Alignment.Vert = taVCenter
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
       TabOrder = 10
-      Width = 77
+      Width = 40
     end
     object cxLabel5: TcxLabel
-      Left = 225
-      Top = 45
-      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072
+      Left = 85
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
     end
     object cxLabel6: TcxLabel
-      Left = 112
+      Left = 171
       Top = 45
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
     end
     object edOperDatePartner: TcxDateEdit
-      Left = 112
+      Left = 171
       Top = 63
       Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 7
-      Width = 108
+      Width = 94
     end
     object edInvNumberPartner: TcxTextEdit
-      Left = 227
-      Top = 63
+      Left = 85
+      Top = 23
       TabOrder = 6
-      Width = 140
+      Width = 81
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 598
+      Left = 451
       Top = 63
       Enabled = False
       Properties.Alignment.Horz = taRightJustify
@@ -137,22 +138,22 @@ object IncomeForm: TIncomeForm
       Width = 144
     end
     object cxLabel7: TcxLabel
-      Left = 519
+      Left = 404
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object cxLabel8: TcxLabel
-      Left = 598
+      Left = 451
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel9: TcxLabel
-      Left = 598
+      Left = 688
       Top = 5
-      Caption = #1053#1086#1084#1077#1088' '#1076#1086#1075#1086#1074#1086#1088#1072
+      Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 598
+      Left = 688
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -161,15 +162,15 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 4
-      Width = 286
+      Width = 113
     end
     object cxLabel10: TcxLabel
-      Left = 512
+      Left = 603
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 512
+      Left = 603
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -181,12 +182,12 @@ object IncomeForm: TIncomeForm
       Width = 77
     end
     object cxLabel13: TcxLabel
-      Left = 754
+      Left = 603
       Top = 45
       Caption = #1047#1072#1075#1086#1090#1086#1074#1080#1090#1077#1083#1100
     end
     object edPacker: TcxButtonEdit
-      Left = 754
+      Left = 603
       Top = 63
       Properties.Buttons = <
         item
@@ -194,7 +195,7 @@ object IncomeForm: TIncomeForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 130
+      Width = 198
     end
     object cxLabel11: TcxLabel
       Left = 8
@@ -221,31 +222,34 @@ object IncomeForm: TIncomeForm
       Properties.Images = dmMain.ImageList
       Properties.ReadOnly = True
       TabOrder = 24
-      Width = 95
+      Width = 157
     end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 971
+    Width = 928
     Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
+    ExplicitWidth = 971
     ClientRectBottom = 336
-    ClientRectRight = 971
+    ClientRectRight = 928
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
+      ExplicitWidth = 971
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
+        Width = 928
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 971
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -413,11 +417,12 @@ object IncomeForm: TIncomeForm
             Width = 80
           end
           object colCountForPrice: TcxGridDBColumn
-            Caption = #1050#1086#1083' '#1074' '#1094#1077#1085#1077
+            Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
@@ -509,16 +514,15 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitTop = 0
-      ExplicitWidth = 0
-      ExplicitHeight = 0
+      ExplicitWidth = 971
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 971
+        Width = 928
         Height = 312
         Align = alClient
         TabOrder = 0
+        ExplicitWidth = 971
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -1062,8 +1066,6 @@ object IncomeForm: TIncomeForm
         item
           Name = 'From'
           Value = ''
-          Component = dsdGuidesFrom
-          ComponentItem = 'TextValue'
           DataType = ftString
           ParamType = ptInput
         end
@@ -1197,33 +1199,6 @@ object IncomeForm: TIncomeForm
     Left = 16
     Top = 303
   end
-  object dsdGuidesFrom: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TPartner_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPartner_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = dsdGuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = dsdGuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 272
-    Top = 8
-  end
   object dsdGuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
@@ -1248,8 +1223,7 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 416
-    Top = 8
+    Left = 520
   end
   object PopupMenu: TPopupMenu
     Images = dmMain.ImageList
@@ -1395,6 +1369,8 @@ object IncomeForm: TIncomeForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 347
     Top = 337
   end
@@ -1411,6 +1387,8 @@ object IncomeForm: TIncomeForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 180
     Top = 360
   end
@@ -1478,8 +1456,6 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inFromId'
         Value = ''
-        Component = dsdGuidesFrom
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -1508,8 +1484,8 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 282
-    Top = 96
+    Left = 378
+    Top = 216
   end
   object HeaderSaver: THeaderSaver
     IdParam.Value = Null
@@ -1594,14 +1570,15 @@ object IncomeForm: TIncomeForm
       item
         Name = 'FromId'
         Value = ''
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'Key'
       end
       item
         Name = 'FromName'
         Value = ''
-        Component = dsdGuidesFrom
+        Component = GuidesFrom
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'ToId'
@@ -1614,6 +1591,7 @@ object IncomeForm: TIncomeForm
         Value = ''
         Component = dsdGuidesTo
         ComponentItem = 'TextValue'
+        DataType = ftString
       end
       item
         Name = 'ToParentId'
@@ -1709,7 +1687,6 @@ object IncomeForm: TIncomeForm
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
-        Guides = dsdGuidesFrom
       end
       item
         Guides = dsdGuidesTo
@@ -1745,8 +1722,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
-    Top = 88
+    Left = 728
+    Top = 8
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1772,8 +1749,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 88
+    Left = 624
+    Top = 16
   end
   object PackerGuides: TdsdGuides
     KeyField = 'Id'
@@ -1799,18 +1776,8 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 784
-    Top = 88
-  end
-  object ChangeStatus: TChangeStatus
-    KeyField = 'Code'
-    LookupControl = ceStatus
-    IdParam.Value = Null
-    IdParam.Component = FormParams
-    IdParam.ComponentItem = 'Id'
-    StoredProcName = 'gpUpdate_Status_Income'
-    Left = 488
-    Top = 88
+    Left = 672
+    Top = 64
   end
   object spErasedMIMaster: TdsdStoredProc
     StoredProcName = 'gpSetErased_MovementItem'
@@ -1859,8 +1826,8 @@ object IncomeForm: TIncomeForm
     FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 47
-    Top = 24
+    Left = 39
+    Top = 72
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
@@ -1881,7 +1848,63 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 76
-    Top = 24
+    Left = 84
+    Top = 88
+  end
+  object GuidesFrom: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        DataType = ftFloat
+      end>
+    Left = 336
+    Top = 8
   end
 end

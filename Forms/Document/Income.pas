@@ -46,7 +46,6 @@ type
     edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    dsdGuidesFrom: TdsdGuides;
     dsdGuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
@@ -156,6 +155,7 @@ type
     clInfoMoneyDestinationName: TcxGridDBColumn;
     clInfoMoneyName: TcxGridDBColumn;
     colMeasureName: TcxGridDBColumn;
+    GuidesFrom: TdsdGuides;
   private
   public
   end;
