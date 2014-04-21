@@ -6,6 +6,7 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarCh
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
@@ -14,7 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inInvNumber           TVarChar,      -- Номер договора
     IN inInvNumberArchive    TVarChar,      -- Номер архивирования
     IN inComment             TVarChar,      -- Комментарий
-    IN inBankAccount         TVarChar,      -- р.счет
+    IN inBankAccountExternal TVarChar,      -- р.счет
     
     IN inSigningDate         TDateTime,     -- свойство Дата заключения договора
     IN inStartDate           TDateTime,     -- свойство Дата с которой действует договор
@@ -27,6 +28,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inPaidKindId          Integer  ,     -- Виды форм оплаты
     
     IN inPersonalId          Integer  ,     -- Сотрудники (отвественное лицо)
+    IN inPersonalTradeId     Integer  ,     -- Сотрудники (торговый)
+    IN inPersonalCollationId Integer  ,     -- Сотрудники (сверка)
+    IN inBankAccountId       Integer  ,     -- Расчетные счета(оплата нам)
+    IN inContractTagId       Integer  ,     -- Признак договора
+    
     IN inAreaId              Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
@@ -136,7 +142,7 @@ BEGIN
    -- сохранили свойство <Комментарий>
    PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_Comment(), ioId, inComment);
    -- сохранили свойство <>
-   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccount);
+   PERFORM lpInsertUpdate_ObjectString (zc_ObjectString_Contract_BankAccount(), ioId, inBankAccountExternal);
 
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Default(), ioId, inisDefault);
@@ -157,6 +163,19 @@ BEGIN
 
    -- сохранили связь с <Сотрудники (отвественное лицо)>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), ioId, inPersonalId);
+   
+   -- сохранили связь с <Сотрудники (отвественное лицо)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Personal(), ioId, inPersonalId);
+
+   -- сохранили связь с <Сотрудники (торговый)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalTrade(), ioId, inPersonalTradeId);
+   -- сохранили связь с <Сотрудники (сверка)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_PersonalCollation(), ioId, inPersonalCollationId);
+   -- сохранили связь с <Расчетные счета(оплата нам)>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_BankAccount(), ioId, inBankAccountId);
+   -- сохранили связь с <Признак договора>
+   PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractTag(), ioId, inContractTagId);
+   
    -- сохранили связь с <Регион>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Area(), ioId, inAreaId);
    -- сохранили связь с <Предмет договора>
@@ -177,6 +196,10 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
+                        zc_ObjectLink_Contract_PersonalCollation
+                        zc_ObjectLink_Contract_BankAccount
+                        zc_ObjectLink_Contract_ContractTag
  17.04.14                                        * add TRIM
  19.03.14         * add inisStandart
  13.03.14         * add inisDefault
