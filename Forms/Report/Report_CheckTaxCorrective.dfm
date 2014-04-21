@@ -278,6 +278,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
         Component = PeriodChoice
       end
       item
+        Component = DocumentTaxKindGuides
       end>
     Left = 184
     Top = 136
