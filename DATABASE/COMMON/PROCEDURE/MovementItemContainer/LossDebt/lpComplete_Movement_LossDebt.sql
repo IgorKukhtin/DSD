@@ -186,6 +186,7 @@ BEGIN
                                       , tmpListContainer.PaidKindId
                                       , tmpListContainer.JuridicalId_Basis
                                       , tmpListContainer.BusinessId
+                               HAVING tmpListContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0)  <> 0
                               )
         , tmpResult AS (SELECT tmpMovementItem.OperDate
                              , tmpMovementItem.ObjectId
@@ -386,6 +387,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.04.14                                        * add HAVING ...
  20.03.14                                        * add !!!некрасивое решение!!!
  19.03.14                                        * add View_Account_find
  10.03.14                                        * add zc_Enum_Account_50401

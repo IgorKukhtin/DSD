@@ -157,10 +157,12 @@ BEGIN
      -- !!! Типы условий договоров
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_ChangePercent()         , inDescId:= zc_Object_ContractConditionKind(), inCode:= 1,  inName:= '(-)% Скидки (+)% Наценки'     , inEnumName:= 'zc_Enum_ContractConditionKind_ChangePercent');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_ChangePrice()           , inDescId:= zc_Object_ContractConditionKind(), inCode:= 2,  inName:= 'Скидка в цене'                , inEnumName:= 'zc_Enum_ContractConditionKind_ChangePrice');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayCalendar()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 3,  inName:= 'Отсрочка в календарных днях'  , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayCalendar');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayBank()          , inDescId:= zc_Object_ContractConditionKind(), inCode:= 4,  inName:= 'Отсрочка в банковских днях'   , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayBank');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayCalendarSale()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 5,  inName:= 'Отсрочка по реализации в календарных днях'  , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayCalendarSale');
-     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayBankSale()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 6,  inName:= 'Отсрочка по реализации в банковских днях'   , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayBankSale');
+
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayCalendar()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 3,  inName:= 'Отсрочка в календарных днях'               , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayCalendar');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayBank()          , inDescId:= zc_Object_ContractConditionKind(), inCode:= 4,  inName:= 'Отсрочка в банковских днях'                , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayBank');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayCalendarSale()  , inDescId:= zc_Object_ContractConditionKind(), inCode:= 5,  inName:= 'Отсрочка по реализации в календарных днях' , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayCalendarSale');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayDayBankSale()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 6,  inName:= 'Отсрочка по реализации в банковских днях'  , inEnumName:= 'zc_Enum_ContractConditionKind_DelayDayBankSale');
+     PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_DelayCreditLimit()      , inDescId:= zc_Object_ContractConditionKind(), inCode:= 7,  inName:= 'Отсрочка на кредитный лимит '              , inEnumName:= 'zc_Enum_ContractConditionKind_DelayCreditLimit');
 
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_CreditPercent()         , inDescId:= zc_Object_ContractConditionKind(), inCode:= 11,  inName:= '% по кредиту'                      , inEnumName:= 'zc_Enum_ContractConditionKind_CreditPercent');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_ContractConditionKind_CreditLimit()           , inDescId:= zc_Object_ContractConditionKind(), inCode:= 12,  inName:= 'Лимит кредита'                     , inEnumName:= 'zc_Enum_ContractConditionKind_CreditLimit');
@@ -467,6 +469,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 21.04.14                                        * add zc_Enum_ContractConditionKind_DelayCreditLimit
  19.04.14                                        * add zc_Enum_Account_110...
  17.04.14                                        * add zc_Enum_AccountGroup_110000
  16.04.14                                        * add zc_Enum_InfoMoney_30201

@@ -1015,7 +1015,7 @@ BEGIN
       ;
 
 
-     -- 5.1. формируются Проводки для отчета (Аналитики: Товар и Поставщик или Сотрудник (подотчетные лица)) !!!связь по InfoMoneyId_Detail!!!
+     -- 5.1. формируются Проводки для отчета (Счета: Товар(с/с) <-> долг Поставщику или Физ.лицу (подотчетные лица)) !!!связь по InfoMoneyId_Detail!!!
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := tmpMIReport.MovementItemId
                                               , inActiveContainerId  := tmpMIReport.ActiveContainerId
@@ -1053,7 +1053,7 @@ BEGIN
            WHERE _tmpItem.OperSumm_Partner <> 0
           ) AS tmpMIReport;
 
-     -- 5.2. формируются Проводки для отчета (Аналитики: Товар и Сотрудник (заготовитель)) !!!связь по InfoMoneyId!!!
+     -- 5.2. формируются Проводки для отчета (Счета: Товар(с/с) <-> долг Физ.лицу (заготовитель)) !!!связь по InfoMoneyId!!!
      PERFORM lpInsertUpdate_MovementItemReport (inMovementId         := inMovementId
                                               , inMovementItemId     := _tmpItem.MovementItemId
                                               , inActiveContainerId  := _tmpItem.ContainerId_Summ
