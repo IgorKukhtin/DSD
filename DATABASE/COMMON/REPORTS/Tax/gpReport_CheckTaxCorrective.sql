@@ -133,8 +133,10 @@ BEGIN
                      LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectLink_Contract_JuridicalBasis.ChildObjectId
                                                                               
                 WHERE Movement.DescId = zc_Movement_ReturnIn()
+                  AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID
+
                 GROUP BY Object_Juridical_From.ObjectCode 
                      , Object_Juridical_From.ValueData
                      , Object_JuridicalBasis.ObjectCode
@@ -210,8 +212,10 @@ BEGIN
                      --LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId                        
                      
                 WHERE Movement.DescId = zc_Movement_TaxCorrective()
+                  AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindID
+                  
                 GROUP BY Object_Juridical.ObjectCode 
                        , Object_Juridical.ValueData  
                        , Object_Contract_Juridical.ObjectCode

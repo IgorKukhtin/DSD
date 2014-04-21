@@ -20,8 +20,8 @@ RETURNS TABLE (Id Integer, Code Integer
              
              , PersonalId Integer, PersonalName TVarChar
              
-             , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
-             , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
+             , PersonalTradeId Integer, PersonalTradeName TVarChar
+             , PersonalCollationId Integer, PersonalCollationName TVarChar
              , BankAccountId Integer, BankAccountName TVarChar
              , ContractTagId Integer, ContractTagName TVarChar
              
@@ -71,11 +71,9 @@ BEGIN
            , '' :: TVarChar AS PersonalName
            
            , 0 :: Integer     AS PersonalTradeId
-           , 0 :: Integer     AS PersonalTradeCode
            , '' :: TVarChar   AS PersonalTradeName
 
            , 0 :: Integer     AS PersonalCollationId
-           , 0 :: Integer     AS PersonalCollationCode
            , '' :: TVarChar   AS PersonalCollationName
 
            , 0 :: Integer     AS BankAccountId
@@ -135,11 +133,9 @@ BEGIN
            , Object_Personal_View.PersonalName  AS PersonalName
            
            , Object_PersonalTrade.PersonalId    AS PersonalTradeId
-           , Object_PersonalTrade.PersonalCode  AS PersonalTradeCode
            , Object_PersonalTrade.PersonalName  AS PersonalTradeName
 
            , Object_PersonalCollation.PersonalId    AS PersonalCollationId
-           , Object_PersonalCollation.PersonalCode  AS PersonalCollationCode
            , Object_PersonalCollation.PersonalName  AS PersonalCollationName
 
            , Object_BankAccount.Id              AS BankAccountId

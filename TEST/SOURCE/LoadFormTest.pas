@@ -221,6 +221,11 @@ begin
   // Условия договоров
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionByContractForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionByContractForm');
+  // Признак договора
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractTagEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;

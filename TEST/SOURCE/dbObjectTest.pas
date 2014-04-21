@@ -98,8 +98,10 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
-  Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
-  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+  Comment,BankAccountExternal: string; SigningDate, StartDate, EndDate: TDateTime;
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
+  PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
+  AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
   isDefault, isStandart: boolean ): integer;
     constructor Create; override;
   end;
@@ -1002,9 +1004,11 @@ end;
 
 function TContractTest.InsertDefault: integer;
 var Id,Code: integer;
-    InvNumber,InvNumberArchive,Comment,BankAccount: string;
+    InvNumber,InvNumberArchive,Comment,BankAccountExternal: string;
     SigningDate, StartDate, EndDate: TDateTime;
-    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
+    PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
+    AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
     isDefault, isStandart: boolean;
 begin
     Id:=0;
@@ -1012,7 +1016,7 @@ begin
     InvNumber:='123456-test';
     InvNumberArchive:='';
     Comment:='comment';
-    BankAccount:='BankAccount';
+    BankAccountExternal:='BankAccountExternal';
     SigningDate:=date; StartDate:=date; EndDate:=date;
     JuridicalId:=TJuridical.Create.GetDefault;
     JuridicalBasisId:=9399;//ŒŒŒ ¿À¿Õ
@@ -1020,6 +1024,12 @@ begin
     ContractKindId:=0;
     PaidKindId:=3;//¡Õ
     PersonalId:=0;
+
+    PersonalTradeId:=0;
+    PersonalCollationId:=0;
+    BankAccountId:=0;
+    ContractTagId:=0;
+
     AreaId:=0;
     ContractArticleId:=0;
     ContractStateKindId:=0;
@@ -1028,16 +1038,19 @@ begin
     isStandart:=True;
 
   result := InsertUpdateContract(Id,Code,
-    InvNumber,InvNumberArchive,Comment,BankAccount,
+    InvNumber,InvNumberArchive,Comment,BankAccountExternal,
     SigningDate, StartDate, EndDate,
-    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId
-    ,AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault,isStandart);
+    JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
+    PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
+    AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault,isStandart);
   inherited;
 end;
 
 function TContractTest.InsertUpdateContract(const Id: integer; Code: integer; InvNumber,InvNumberArchive,
-  Comment,BankAccount: string; SigningDate, StartDate, EndDate: TDateTime;
-  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
+  Comment,BankAccountExternal: string; SigningDate, StartDate, EndDate: TDateTime;
+  JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
+  PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
+  AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
   isDefault, isStandart: boolean): integer;
 
 begin
@@ -1047,7 +1060,7 @@ begin
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inInvNumberArchive', ftString, ptInput, InvNumberArchive);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
-  FParams.AddParam('inBankAccount', ftString, ptInput, BankAccount);
+  FParams.AddParam('inBankAccountExternal', ftString, ptInput, BankAccountExternal);
   FParams.AddParam('inSigningDate', ftDateTime, ptInput, SigningDate);
   FParams.AddParam('inStartDate', ftDateTime, ptInput, StartDate);
   FParams.AddParam('inEndDate', ftDateTime, ptInput, EndDate);
@@ -1057,6 +1070,12 @@ begin
   FParams.AddParam('inContractKindId', ftInteger, ptInput, ContractKindId);
   FParams.AddParam('inPaidKindId', ftInteger, ptInput, PaidKindId);
   FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
+
+  FParams.AddParam('inPersonalTradeId', ftInteger, ptInput, PersonalTradeId);
+  FParams.AddParam('inPersonalCollationId', ftInteger, ptInput, PersonalCollationId);
+  FParams.AddParam('inBankAccountId', ftInteger, ptInput, BankAccountId);
+  FParams.AddParam('inContractTagId', ftInteger, ptInput, ContractTagId);
+
   FParams.AddParam('inAreaId', ftInteger, ptInput, AreaId);
   FParams.AddParam('inContractArticleId', ftInteger, ptInput, ContractArticleId);
   FParams.AddParam('inContractStateKindId', ftInteger, ptInput, ContractStateKindId);

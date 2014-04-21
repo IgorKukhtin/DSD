@@ -294,9 +294,9 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 70
       end
-      object clBankAccount: TcxGridDBColumn
-        Caption = #1056'.'#1089#1095#1077#1090
-        DataBinding.FieldName = 'BankAccount'
+      object clBankAccountExternal: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090'('#1086#1087#1083#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091')'
+        DataBinding.FieldName = 'BankAccountExternal'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -362,6 +362,30 @@ object ContractForm: TContractForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 40
+      end
+      object clPersonalTradeName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1087#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'PersonalTradeName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clPersonalCollationName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' ('#1089#1074#1077#1088#1082#1072')'
+        DataBinding.FieldName = 'PersonalCollationName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clBankAccountName: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090'('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084')'
+        DataBinding.FieldName = 'BankAccountName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clContractTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+        DataBinding.FieldName = 'ContractTagName'
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -535,8 +559,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1029,7 +1053,10 @@ object ContractForm: TContractForm
       item
         DataSet = ClientDataSet
       end>
-    Params = <>
+    Params = <
+      item
+        Value = Null
+      end>
     Left = 216
     Top = 224
   end
@@ -1196,9 +1223,9 @@ object ContractForm: TContractForm
         ParamType = ptInput
       end
       item
-        Name = 'inBankAccount'
+        Name = 'inBankAccountExternal'
         Component = ClientDataSet
-        ComponentItem = 'BankAccount'
+        ComponentItem = 'BankAccountExternal'
         DataType = ftString
         ParamType = ptInput
       end
@@ -1257,6 +1284,30 @@ object ContractForm: TContractForm
         Name = 'inPersonalId'
         Component = ClientDataSet
         ComponentItem = 'PersonalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalTradeId'
+        Component = ClientDataSet
+        ComponentItem = 'PersonalTradeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalCollationId'
+        Component = ClientDataSet
+        ComponentItem = 'PersonalCollationId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankAccountId'
+        Component = ClientDataSet
+        ComponentItem = 'BankAccountId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractTagId'
+        Component = ClientDataSet
+        ComponentItem = 'ContractTagId'
         ParamType = ptInput
       end
       item
