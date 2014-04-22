@@ -116,6 +116,10 @@ type
     clPersonalCollationName: TcxGridDBColumn;
     clBankAccountName: TcxGridDBColumn;
     clContractTagName: TcxGridDBColumn;
+    PersonalTradeChoiceForm: TOpenChoiceForm;
+    PersonalCollationChoiceForm: TOpenChoiceForm;
+    BankAccountChoiceForm: TOpenChoiceForm;
+    ContractTagChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
