@@ -577,7 +577,6 @@ SELECT Container.ObjectId AS AccountId
 ) as a
 where a. ContainerId = container.Id
 */
-
 -- тест
 /*
 CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
