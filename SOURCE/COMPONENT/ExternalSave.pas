@@ -62,6 +62,7 @@ begin
   inherited Create;
   FFieldDefs := AFieldDefs;
   FSourceDataSet := ASourceDataSet;
+  Self.FOEM := true;
 end;
 
 procedure TFileExternalSave.CreateFieldList;

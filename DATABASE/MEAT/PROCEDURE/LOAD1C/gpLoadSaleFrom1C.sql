@@ -168,8 +168,8 @@ BEGIN
 
           -- сохранили Документ
           SELECT tmp.ioId INTO vbMovementId
-          FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := '', inInvNumberOrder := ''
-                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
+          FROM lpInsertUpdate_Movement_Sale (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberOrder := ''
+                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                            , inChangePercent := 0, inFromId := vbUnitId, inToId := vbPartnerId, inPaidKindId:= zc_Enum_PaidKind_FirstForm()
                                            , inContractId:= vbContractId, ioPriceListId:= 0, inRouteSortingId:= 0, inUserId:= vbUserId
                                             ) AS tmp;
@@ -323,8 +323,8 @@ BEGIN
           END IF;
 
           -- сохранили Документ
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := ''
-                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := TRUE, inVATPercent := 20
+          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
+                                                          , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
                                                           , inContractId := vbContractId, inUserId := vbUserId);
           -- сохранили свойство <Загружен из 1С>

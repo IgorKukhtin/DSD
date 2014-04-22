@@ -1,4 +1,5 @@
 inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
+  ActiveControl = deStart
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' '#1052#1077#1076#1086#1082
   ClientHeight = 108
   ClientWidth = 494
@@ -22,17 +23,29 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     ExplicitLeft = 292
     ExplicitTop = 56
   end
-  object cxDateEdit1: TcxDateEdit [2]
+  object deStart: TcxDateEdit [2]
     Left = 131
     Top = 16
+    Properties.ShowTime = False
     TabOrder = 2
     Width = 121
   end
-  object cxDateEdit2: TcxDateEdit [3]
+  object deEnd: TcxDateEdit [3]
     Left = 371
     Top = 16
+    Properties.ShowTime = False
     TabOrder = 3
     Width = 121
+  end
+  object cxLabel1: TcxLabel [4]
+    Left = 38
+    Top = 18
+    Caption = #1053#1072#1095#1072#1083#1100#1085#1072#1103' '#1076#1072#1090#1072':'
+  end
+  object cxLabel2: TcxLabel [5]
+    Left = 278
+    Top = 18
+    Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072':'
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -41,12 +54,12 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = cxDateEdit1
+        Component = deEnd
         Properties.Strings = (
           'Date')
       end
       item
-        Component = cxDateEdit2
+        Component = deStart
         Properties.Strings = (
           'Date')
       end
@@ -73,6 +86,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     end
     object MultiAction: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actRefresh
@@ -87,6 +101,7 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     end
     object ExternalSaveAction: TExternalSaveAction
       Category = 'DSDLib'
+      MoveParams = <>
       FieldDefs = <
         item
           Name = 'NPP'
@@ -171,13 +186,13 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     end
     object actClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
   end
   inherited FormParams: TdsdFormParams
-    Left = 32
-    Top = 16
+    Top = 32
   end
   object spTaxBillList: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Load'
@@ -190,14 +205,14 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
       item
         Name = 'inStartDate'
         Value = 0d
-        Component = cxDateEdit1
+        Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
         Value = 0d
-        Component = cxDateEdit2
+        Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end>
@@ -209,5 +224,11 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     Params = <>
     Left = 256
     Top = 8
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 392
+    Top = 56
   end
 end

@@ -181,6 +181,7 @@ end;
 
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i: integer;
+    FormStr: string;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Не передано название формы');
@@ -208,31 +209,33 @@ begin
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
   try
-    StringStream.WriteString(gfStrXmlToStr(LoadStoredProc.Execute));
-    // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!!
-    //StringStream.WriteString(ReConvertConvert(LoadStoredProc.Execute));
-    if StringStream.Size = 0 then
-       raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
-    StringStream.Position := 0;
-    // Преобразовать текст в бинарные данные
-    ObjectTextToBinary(StringStream, MemoryStream);
-    // Вернуть смещение
-    MemoryStream.Position := 0;
+    try
+      FormStr := gfStrXmlToStr(LoadStoredProc.Execute);
+      StringStream.WriteString(FormStr);
+      // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!!
+      //StringStream.WriteString(ReConvertConvert(LoadStoredProc.Execute));
+      if StringStream.Size = 0 then
+         raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
+      StringStream.Position := 0;
+      // Преобразовать текст в бинарные данные
+      ObjectTextToBinary(StringStream, MemoryStream);
+      // Вернуть смещение
+      MemoryStream.Position := 0;
 
-    // Создаем форму
-    Application.CreateForm(TParentForm, Result);
-    Result.FormClassName := FormName;
+      // Создаем форму
+      Application.CreateForm(TParentForm, Result);
+      Result.FormClassName := FormName;
 
-    // Прочитать компонент из потока
-    MemoryStream.ReadComponent(Result);
-    // Загрузить пользователские дефотлы!!!
-    for i := 0 to Result.ComponentCount - 1 do
-      if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-         try
-            TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
-         except
-
-         end;
+      // Прочитать компонент из потока
+      MemoryStream.ReadComponent(Result);
+      // Загрузить пользователские дефотлы!!!
+      for i := 0 to Result.ComponentCount - 1 do
+        if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+              TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+    except
+      on E: Exception do
+        raise Exception.Create('TdsdFormStorage.Load ' + E.Message + chr(13) + chr(10) + FormStr);
+    end;
   finally
     StringStream.Clear;
     MemoryStream.Clear;

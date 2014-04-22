@@ -84,7 +84,12 @@ BEGIN
                                          AND PlaceFrom.DescId = zc_Object_Juridical() 
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() 
-                                  AND Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount())
+                                  AND Movement.DescId IN (zc_Movement_Cash(), zc_Movement_BankAccount()
+                                                        , zc_Movement_ProfitLossService(), zc_Movement_Service()
+                                                        , zc_Movement_SendDebt(), zc_Movement_LossDebt())
+
+            LEFT JOIN MovementItem AS MI_Child ON MI_Child.MovementId = Movement.Id AND MI_Child.DescId = zc_MI_Child() 
+                                  AND Movement.DescId IN (zc_Movement_SendDebt())
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
                                          ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
@@ -104,6 +109,8 @@ BEGIN
          AND (COALESCE(ObjectLink_Partner_JuridicalTo.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId 
                  OR COALESCE(ObjectLink_Partner_JuridicalFrom.ChildObjectId, MovementLinkObject_From.ObjectId) = inJuridicalId 
                  OR MILinkObject_MoneyPlace.ObjectId = inJuridicalId
+                 OR MovementItem.ObjectId = inJuridicalId
+                 OR MI_Child.ObjectId = inJuridicalId
                  OR inJuridicalId = 0)
          AND (MILinkObject_Contract.ObjectId = inContractId 
            OR MovementLinkObject_Contract.ObjectId = inContractId 
@@ -120,6 +127,7 @@ ALTER FUNCTION gpSelect_Movement (TDateTime, TDateTime, Integer, Integer, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 22.04.14                         *
  11.03.14                         *
 
 */

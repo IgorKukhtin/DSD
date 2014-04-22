@@ -38,7 +38,6 @@ type
     actPrintThreeWeek: TdsdPrintAction;
     actPrintFourWeek: TdsdPrintAction;
     spReport: TdsdStoredProc;
-    frxDBDataset: TfrxDBDataset;
     cdsReport: TClientDataSet;
     bbReportOneWeek: TdxBarButton;
     FormParams: TdsdFormParams;
@@ -48,7 +47,6 @@ type
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
-    frDataSet: TfrxDBDataset;
     colOKPO: TcxGridDBColumn;
     colContractCode: TcxGridDBColumn;
     colInfoMoneyCode: TcxGridDBColumn;
@@ -59,6 +57,9 @@ type
     colAreaName: TcxGridDBColumn;
     colStartDate: TcxGridDBColumn;
     colEndDate: TcxGridDBColumn;
+    actPrintSale: TdsdPrintAction;
+    spReport_JuridicalSaleDocument: TdsdStoredProc;
+    bbSale: TdxBarButton;
   private
     { Private declarations }
   public
