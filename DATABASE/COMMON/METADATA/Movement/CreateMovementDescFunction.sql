@@ -131,11 +131,19 @@ CREATE OR REPLACE FUNCTION zc_Movement_WeighingProduction() RETURNS Integer AS $
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_WeighingProduction', 'Взвешивание (производство)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_WeighingProduction');
 
+CREATE OR REPLACE FUNCTION zc_Movement_TransferDebtOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TransferDebtOut'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_TransferDebtOut', 'Перевод долга (расход)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TransferDebtOut');
+
+CREATE OR REPLACE FUNCTION zc_Movement_TransferDebtIn() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_TransferDebtIn'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_TransferDebtIn', 'Перевод долга (приход)' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_TransferDebtIn');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 15.03.14         * add 
+ 22.04.14         * add TransferDebtOut, TransferDebtIn
  11.03.14         * add zc_Movement_WeighingPartner              
  17.02.14         												*    add zc_Movement_ProfitLossService
  08.02.14         												*    add zc_Movement_Tax, zc_Movement_TaxCorrective
