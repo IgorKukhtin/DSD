@@ -2,7 +2,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
   ClientWidth = 1110
-  ExplicitLeft = -128
   ExplicitWidth = 1126
   ExplicitHeight = 359
   PixelsPerInch = 96
@@ -11,36 +10,20 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
     Width = 1110
     Height = 267
     TabOrder = 3
-    ExplicitWidth = 1102
+    ExplicitWidth = 1110
     ExplicitHeight = 267
     ClientRectBottom = 267
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1102
+      ExplicitWidth = 1110
       ExplicitHeight = 267
       inherited cxGrid: TcxGrid
         Width = 1110
         Height = 267
-        ExplicitWidth = 1102
+        ExplicitWidth = 1110
         ExplicitHeight = 267
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-            end
             item
               Format = ',0.00##'
               Kind = skSum
@@ -57,22 +40,6 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
               Column = clSum_BonusFact
             end>
           DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
-            end
             item
               Format = ',0.00##'
               Kind = skSum
@@ -216,7 +183,7 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   end
   inherited Panel: TPanel
     Width = 1110
-    ExplicitWidth = 1102
+    ExplicitWidth = 1110
     inherited deStart: TcxDateEdit
       EditValue = 41640d
       Properties.SaveTime = False

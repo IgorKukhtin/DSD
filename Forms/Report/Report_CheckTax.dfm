@@ -30,17 +30,9 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
               Column = clAmount_Sale
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Tax
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -49,17 +41,9 @@ inherited Report_CheckTaxForm: TReport_CheckTaxForm
               Column = clAmount_Sale
             end
             item
-              Format = ',0.##'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_Tax
-            end
-            item
-              Format = ',0.##'
-              Kind = skSum
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True

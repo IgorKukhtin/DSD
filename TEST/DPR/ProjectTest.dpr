@@ -254,8 +254,8 @@ uses
   ContractStateKind in '..\..\Forms\Enum\ContractStateKind.pas' {ContractStateKindForm: TParentForm},
   ContractArticleEdit in '..\..\Forms\Guides\ContractArticleEdit.pas' {ContractArticleEditForm: TParentForm},
   ContractArticle in '..\..\Forms\Guides\ContractArticle.pas' {ContractArticleForm: TParentForm},
-  Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
-  AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
+  ContractTag in '..\..\Forms\Guides\ContractTag.pas' {ContractTagForm: TParentForm},
+  ContractTagEdit in '..\..\Forms\Guides\ContractTagEdit.pas' {ContractTagEditForm: TParentForm},
   BankStatement in '..\..\Forms\Document\BankStatement.pas' {BankStatementForm: TParentForm},
   ContractChoicePartner in '..\..\Forms\Guides\ContractChoicePartner.pas' {ContractChoicePartnerForm: TParentForm},
   ContractConditionByContract in '..\..\Forms\Guides\ContractConditionByContract.pas' {ContractConditionByContractForm: TParentForm},
@@ -406,7 +406,9 @@ uses
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
-  Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm};
+  Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm},
+  Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
+  AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm};
 
 {$R *.RES}
 

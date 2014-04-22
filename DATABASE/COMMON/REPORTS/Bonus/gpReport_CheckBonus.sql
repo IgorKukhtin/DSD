@@ -323,7 +323,9 @@ BEGIN
            WHERE Movement.DescId = zc_Movement_ProfitLossService()
              AND Movement.StatusId = zc_Enum_Status_Complete()
              AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-             AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
+             AND MILinkObject_InfoMoney.ObjectId IN (zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
+                                                   , zc_Enum_InfoMoney_21502()) -- Маркетинг + Бонусы за мясное сырье
+             -- AND MILinkObject_ContractConditionKind.ObjectId IN (zc_Enum_ContractConditionKind_BonusPercentAccount(), zc_Enum_ContractConditionKind_BonusPercentSaleReturn(), zc_Enum_ContractConditionKind_BonusPercentSale())
           ) AS tmpAll
 
             LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpAll.JuridicalId 

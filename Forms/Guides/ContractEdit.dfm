@@ -1,19 +1,19 @@
 inherited ContractEditForm: TContractEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1044#1086#1075#1086#1074#1086#1088'>'
-  ClientHeight = 489
+  ClientHeight = 567
   ClientWidth = 885
   ExplicitWidth = 891
-  ExplicitHeight = 521
+  ExplicitHeight = 599
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
-    Top = 438
+    Top = 535
     TabOrder = 2
-    ExplicitTop = 438
+    ExplicitTop = 535
   end
   inherited bbCancel: TcxButton
-    Top = 438
-    ExplicitTop = 438
+    Top = 535
+    ExplicitTop = 535
   end
   object edInvNumber: TcxTextEdit [2]
     Left = 18
@@ -38,13 +38,13 @@ inherited ContractEditForm: TContractEditForm
   end
   object ceComment: TcxTextEdit [6]
     Left = 16
-    Top = 399
+    Top = 499
     TabOrder = 4
     Width = 328
   end
   object cxLabel5: TcxLabel [7]
     Left = 16
-    Top = 384
+    Top = 484
     Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
   end
   object edContractKind: TcxButtonEdit [8]
@@ -258,10 +258,11 @@ inherited ContractEditForm: TContractEditForm
     Left = 452
     Top = 0
     Width = 433
-    Height = 489
+    Height = 567
     Align = alRight
     BevelOuter = bvNone
     TabOrder = 30
+    ExplicitHeight = 489
     object cxGridContractCondition: TcxGrid
       Left = 0
       Top = 26
@@ -376,7 +377,7 @@ inherited ContractEditForm: TContractEditForm
       Left = 0
       Top = 224
       Width = 433
-      Height = 265
+      Height = 343
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -392,6 +393,7 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
+      ExplicitHeight = 265
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -448,10 +450,10 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 36
     Width = 162
   end
-  object edBankAccount: TcxTextEdit [37]
+  object edBankAccountExternal: TcxTextEdit [37]
     Left = 184
     Top = 361
-    TabOrder = 40
+    TabOrder = 38
     Width = 161
   end
   object cxLabel17: TcxLabel [38]
@@ -463,7 +465,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 129
     Top = 23
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-    TabOrder = 43
+    TabOrder = 42
     Width = 111
   end
   object ceisStandart: TcxCheckBox [40]
@@ -473,17 +475,97 @@ inherited ContractEditForm: TContractEditForm
     TabOrder = 44
     Width = 67
   end
+  object cxLabel18: TcxLabel [41]
+    Left = 16
+    Top = 388
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+  end
+  object cxLabel19: TcxLabel [42]
+    Left = 184
+    Top = 388
+    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' ('#1089#1074#1077#1088#1082#1072')'
+  end
+  object edPersonalTrade: TcxButtonEdit [43]
+    Left = 16
+    Top = 405
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 47
+    Width = 162
+  end
+  object edPersonalCollation: TcxButtonEdit [44]
+    Left = 184
+    Top = 405
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 48
+    Width = 162
+  end
+  object cxLabel20: TcxLabel [45]
+    Left = 16
+    Top = 434
+    Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' ('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084')'
+  end
+  object cxLabel21: TcxLabel [46]
+    Left = 184
+    Top = 434
+    Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
+  end
+  object edContractTag: TcxButtonEdit [47]
+    Left = 184
+    Top = 452
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 51
+    Width = 162
+  end
+  object cxButtonEdit2: TcxButtonEdit [48]
+    Left = 648
+    Top = 573
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 52
+    Width = 162
+  end
+  object ceBankAccount: TcxButtonEdit [49]
+    Left = 16
+    Top = 452
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 53
+    Width = 162
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 331
-    Top = 445
+    Left = 371
+    Top = 404
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 184
-    Top = 429
+    Top = 532
   end
   inherited ActionList: TActionList
     Left = 159
-    Top = 428
+    Top = 531
     inherited actRefresh: TdsdDataSetRefresh
       StoredProcList = <
         item
@@ -498,6 +580,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actConditionRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -507,6 +590,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object ContractConditionKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ContractConditionKindChoiceForm'
       FormName = 'TContractConditionKindForm'
       FormNameParam.Value = ''
@@ -527,6 +611,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object InsertRecordCCK: TInsertRecord
       Category = 'DSDLib'
+      MoveParams = <>
       View = cxGridDBTableViewContractCondition
       Action = ContractConditionKindChoiceForm
       Params = <>
@@ -536,6 +621,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'InfoMoneyChoiceForm'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = ''
@@ -556,6 +642,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actContractCondition: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateContractCondition
       StoredProcList = <
         item
@@ -566,6 +653,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object BonusKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'BonusKindChoiceForm'
       FormName = 'TBonusKindForm'
       FormNameParam.Value = 'TBonusKindForm'
@@ -586,6 +674,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actInsertDocument: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertDocument
       StoredProcList = <
         item
@@ -597,6 +686,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object DocumentRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spDocumentSelect
       StoredProcList = <
         item
@@ -610,6 +700,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object DocumentOpenAction: TDocumentOpenAction
       Category = 'DSDLib'
+      MoveParams = <>
       Document = Document
       Caption = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1054#1090#1082#1088#1099#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
@@ -617,6 +708,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object MultiActionInsertContractCondition: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = spInserUpdateContract
@@ -629,6 +721,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object MultiActionInsertDocument: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = spInserUpdateContract
@@ -644,6 +737,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object spInserUpdateContract: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -653,6 +747,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actSetErasedContractCondition: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedCondition
       StoredProcList = <
         item
@@ -667,6 +762,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actSetUnErasedContractCondition: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErasedCondition
       StoredProcList = <
         item
@@ -682,6 +778,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actDeleteDocument: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spDeleteDocument
       StoredProcList = <
         item
@@ -696,6 +793,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actGetStateKindUnSigned: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetStateKindUnSigned
       StoredProcList = <
         item
@@ -706,6 +804,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actGetStateKindSigned: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetStateKindSigned
       StoredProcList = <
         item
@@ -716,6 +815,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actGetStateKindPartner: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetStateKindPartner
       StoredProcList = <
         item
@@ -726,6 +826,7 @@ inherited ContractEditForm: TContractEditForm
     end
     object actGetStateKindClose: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGetStateKindClose
       StoredProcList = <
         item
@@ -755,7 +856,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end>
     Left = 112
-    Top = 401
+    Top = 504
   end
   inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Contract'
@@ -795,9 +896,9 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
-        Name = 'inBankAccount'
+        Name = 'inBankAccountExternal'
         Value = ''
-        Component = edBankAccount
+        Component = edBankAccountExternal
         DataType = ftString
         ParamType = ptInput
       end
@@ -860,6 +961,30 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end
       item
+        Name = 'inPersonalTradeId'
+        Value = ''
+        Component = PersonalTradeGuides
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPersonalCollationId'
+        Value = ''
+        Component = PersonalCollationGuides
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankAccountId'
+        Value = ''
+        Component = BankAccountGuides
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractTagId'
+        Value = ''
+        Component = ContractTagGuides
+        ParamType = ptInput
+      end
+      item
         Name = 'inAreaId'
         Value = ''
         Component = AreaGuides
@@ -898,7 +1023,7 @@ inherited ContractEditForm: TContractEditForm
         ParamType = ptInput
       end>
     Left = 368
-    Top = 389
+    Top = 492
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Contract'
@@ -998,6 +1123,58 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end
       item
+        Name = 'PersonalTradeId'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalTradeName'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PersonalCollationId'
+        Value = ''
+        Component = PersonalCollationGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PersonalCollationName'
+        Value = ''
+        Component = PersonalCollationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'BankAccountId'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'BankAccountName'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ContractTagId'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'ContractTagName'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'AreaId'
         Value = ''
         Component = AreaGuides
@@ -1043,9 +1220,9 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
       end
       item
-        Name = 'BankAccount'
+        Name = 'BankAccountExternal'
         Value = ''
-        Component = edBankAccount
+        Component = edBankAccountExternal
         DataType = ftString
       end
       item
@@ -1087,7 +1264,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftBoolean
       end>
     Left = 272
-    Top = 405
+    Top = 508
   end
   object JuridicalGuides: TdsdGuides
     KeyField = 'Id'
@@ -1408,7 +1585,7 @@ inherited ContractEditForm: TContractEditForm
     PopupMenuLinks = <>
     UseSystemFont = True
     Left = 32
-    Top = 429
+    Top = 532
     DockControlHeights = (
       0
       0
@@ -1676,6 +1853,8 @@ inherited ContractEditForm: TContractEditForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 616
     Top = 72
   end
@@ -1823,5 +2002,113 @@ inherited ContractEditForm: TContractEditForm
       end>
     Left = 80
     Top = 353
+  end
+  object PersonalTradeGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalTrade
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalTradeGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 104
+    Top = 393
+  end
+  object PersonalCollationGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPersonalCollation
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPersonal_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PersonalCollationGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PersonalCollationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 256
+    Top = 385
+  end
+  object BankAccountGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceBankAccount
+    FormNameParam.Value = 'TBankAccountForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TBankAccountForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 88
+    Top = 449
+  end
+  object ContractTagGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edContractTag
+    FormNameParam.Value = 'TContractTagForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractTagForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractTagGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 216
+    Top = 441
   end
 end

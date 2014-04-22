@@ -130,6 +130,7 @@
     Top = 32
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -143,9 +144,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -188,7 +191,7 @@
       item
         Name = 'inAccountDirectionId'
         Value = ''
-        Component = AccountDirectionnGuides
+        Component = AccountDirectionGuides
         ParamType = ptInput
       end
       item
@@ -255,13 +258,13 @@
       item
         Name = 'AccountDirectionId'
         Value = ''
-        Component = AccountDirectionnGuides
+        Component = AccountDirectionGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'AccountDirectionName'
         Value = ''
-        Component = AccountDirectionnGuides
+        Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
       end
       item
@@ -294,22 +297,52 @@
   object AccountGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountGroup
-    FormNameParam.Value = 'TInfoMoneyGroupForm'
+    FormNameParam.Value = 'TAccountGroupForm'
     FormNameParam.DataType = ftString
-    FormName = 'TInfoMoneyGroupForm'
+    FormName = 'TAccountGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 328
     Top = 125
   end
-  object AccountDirectionnGuides: TdsdGuides
+  object AccountDirectionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceAccountDirection
     FormNameParam.Value = 'TAccountDirectionForm'
     FormNameParam.DataType = ftString
     FormName = 'TAccountDirectionForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 328
     Top = 173
   end
@@ -338,7 +371,22 @@
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyDestinationGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyDestinationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 336
     Top = 229
   end
@@ -349,7 +397,21 @@
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+      end>
     Left = 336
     Top = 269
   end

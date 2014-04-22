@@ -38,7 +38,7 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     AccountGroupGuides: TdsdGuides;
-    AccountDirectionnGuides: TdsdGuides;
+    AccountDirectionGuides: TdsdGuides;
     cxPropertiesStore: TcxPropertiesStore;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxLabel4: TcxLabel;

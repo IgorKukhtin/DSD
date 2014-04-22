@@ -34,6 +34,9 @@ type
     clInvNumber_TaxCorrective: TcxGridDBColumn;
     clOperDate_TaxCorrective: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

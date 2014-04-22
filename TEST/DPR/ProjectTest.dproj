@@ -688,12 +688,12 @@
 				<Form>ContractArticleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Area.pas">
-				<Form>AreaForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractTag.pas">
+				<Form>ContractTagForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\AreaEdit.pas">
-				<Form>AreaEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ContractTagEdit.pas">
+				<Form>ContractTagEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\BankStatement.pas">
@@ -1231,6 +1231,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_CheckContractInMovement.pas">
 				<Form>Report_CheckContractInMovementForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Area.pas">
+				<Form>AreaForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\AreaEdit.pas">
+				<Form>AreaEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar, BankAccount TVarChar
+             , Comment TVarChar, BankAccountExternal TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -19,6 +19,12 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
+             
+             , PersonalTradeId Integer, PersonalTradeCode Integer, PersonalTradeName TVarChar
+             , PersonalCollationId Integer, PersonalCollationCode Integer, PersonalCollationName TVarChar
+             , BankAccountId Integer, BankAccountName TVarChar
+             , ContractTagId Integer, ContractTagName TVarChar
+                          
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
              , ContractStateKindId Integer, ContractStateKindCode Integer
@@ -44,7 +50,7 @@ BEGIN
        
        , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
        , ObjectString_Comment.ValueData            AS Comment 
-       , ObjectString_BankAccount.ValueData        AS BankAccount
+       , ObjectString_BankAccount.ValueData        AS BankAccountExternal
       
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -73,6 +79,20 @@ BEGIN
        , Object_Personal_View.PersonalId    AS PersonalId
        , Object_Personal_View.PersonalCode  AS PersonalCode
        , Object_Personal_View.PersonalName  AS PersonalName
+       
+       , Object_PersonalTrade.PersonalId    AS PersonalTradeId
+       , Object_PersonalTrade.PersonalCode  AS PersonalTradeCode
+       , Object_PersonalTrade.PersonalName  AS PersonalTradeName
+
+       , Object_PersonalCollation.PersonalId    AS PersonalCollationId
+       , Object_PersonalCollation.PersonalCode  AS PersonalCollationCode
+       , Object_PersonalCollation.PersonalName  AS PersonalCollationName
+
+       , Object_BankAccount.Id              AS BankAccountId
+       , Object_BankAccount.ValueData       AS BankAccountName
+
+       , Object_ContractTag.Id              AS ContractTagId
+       , Object_ContractTag.ValueData       AS ContractTagName
 
        , Object_Area.Id                     AS AreaId
        , Object_Area.ValueData              AS AreaName
@@ -138,6 +158,26 @@ BEGIN
                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
         LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
+                             ON ObjectLink_Contract_PersonalTrade.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_PersonalTrade.DescId = zc_ObjectLink_Contract_PersonalTrade()
+        LEFT JOIN Object_Personal_View AS Object_PersonalTrade ON Object_PersonalTrade.PersonalId = ObjectLink_Contract_PersonalTrade.ChildObjectId
+        
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                             ON ObjectLink_Contract_PersonalCollation.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+        LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId        
+        
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
+                             ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
+        LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
+                
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                             ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract_View.ContractId 
+                            AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+        LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                              ON ObjectLink_Contract_Area.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
@@ -187,6 +227,11 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
+                        zc_ObjectLink_Contract_PersonalCollation
+                        zc_ObjectLink_Contract_BankAccount
+                        zc_ObjectLink_Contract_ContractTag
+
  19.03.14         * add zc_ObjectBoolean_Contract_Standart
  13.03.14         * add zc_ObjectBoolean_Contract_Default
  25.02.14                                        * add zc_ObjectDate_Protocol_... and zc_ObjectLink_Protocol_...
@@ -202,6 +247,4 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())
-
-
+ --SELECT * FROM gpSelect_Object_Contract (inSession := zfCalc_UserAdmin())

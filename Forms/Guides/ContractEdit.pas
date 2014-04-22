@@ -117,12 +117,25 @@ type
     cxLabel16: TcxLabel;
     edBankId: TcxButtonEdit;
     BankGuides: TdsdGuides;
-    edBankAccount: TcxTextEdit;
+    edBankAccountExternal: TcxTextEdit;
     cxLabel17: TcxLabel;
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm: TOpenChoiceForm;
     cbisDefault: TcxCheckBox;
     ceisStandart: TcxCheckBox;
+    cxLabel18: TcxLabel;
+    cxLabel19: TcxLabel;
+    edPersonalTrade: TcxButtonEdit;
+    PersonalTradeGuides: TdsdGuides;
+    edPersonalCollation: TcxButtonEdit;
+    PersonalCollationGuides: TdsdGuides;
+    cxLabel20: TcxLabel;
+    cxLabel21: TcxLabel;
+    edContractTag: TcxButtonEdit;
+    cxButtonEdit2: TcxButtonEdit;
+    ceBankAccount: TcxButtonEdit;
+    BankAccountGuides: TdsdGuides;
+    ContractTagGuides: TdsdGuides;
   private
     { Private declarations }
   public

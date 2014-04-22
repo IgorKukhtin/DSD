@@ -325,6 +325,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '7.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1072#1085#1072#1083#1080#1090#1080#1082
+      Enabled = False
       TabOrder = 19
     end
     object cbInfoMoneyDestination: TCheckBox
@@ -334,6 +335,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '7.2. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080' - '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      Enabled = False
       TabOrder = 20
     end
     object cbInfoMoney: TCheckBox
@@ -343,6 +345,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '7.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1072#1085#1072#1083#1080#1090#1080#1082#1080
+      Enabled = False
       TabOrder = 21
     end
     object cbAccountGroup: TCheckBox
@@ -352,6 +355,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '8.1. '#1043#1088#1091#1087#1087#1099' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074
+      Enabled = False
       TabOrder = 22
     end
     object cbAccountDirection: TCheckBox
@@ -361,6 +365,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '8.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1091#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1093' '#1089#1095#1077#1090#1086#1074' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077
+      Enabled = False
       TabOrder = 23
     end
     object cbAccount: TCheckBox
@@ -370,6 +375,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '8.3. '#1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1077' '#1089#1095#1077#1090#1072
+      Enabled = False
       TabOrder = 24
     end
     object cbProfitLoss: TCheckBox
@@ -379,6 +385,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '9.3. '#1057#1090#1072#1090#1100#1080' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093' '
+      Enabled = False
       TabOrder = 25
     end
     object cbProfitLossDirection: TCheckBox
@@ -388,6 +395,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '9.2. '#1040#1085#1072#1083#1080#1090#1080#1082#1080' '#1089#1090#1072#1090#1077#1081' '#1054#1055#1048#1059' - '#1085#1072#1087#1088#1072#1074#1083#1077#1085#1080#1077' '
+      Enabled = False
       TabOrder = 26
     end
     object cbProfitLossGroup: TCheckBox
@@ -397,6 +405,7 @@ object MainForm: TMainForm
       Width = 289
       Height = 17
       Caption = '9.1. '#1043#1088#1091#1087#1087#1099' '#1089#1090#1072#1090#1077#1081' '#1086#1090#1095#1077#1090#1072' '#1086' '#1087#1088#1080#1073#1099#1083#1103#1093' '#1080' '#1091#1073#1099#1090#1082#1072#1093
+      Enabled = False
       TabOrder = 27
     end
     object cbMember_andPersonal: TCheckBox
@@ -1036,6 +1045,22 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 30
+      OnClick = cbReturnInFlClick
+    end
+    object cbUpdateConrtact: TCheckBox
+      Left = 185
+      Top = 61
+      Width = 53
+      Height = 51
+      Caption = #1080#1089#1087#1088#1072#1074#1080#1090#1100' '#1076#1086#1075#1086#1074#1086#1088
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 31
+      WordWrap = True
       OnClick = cbReturnInFlClick
     end
   end

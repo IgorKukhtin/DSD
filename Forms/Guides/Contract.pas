@@ -102,7 +102,7 @@ type
     clBonusKindName: TcxGridDBColumn;
     BonusKindChoiceForm: TOpenChoiceForm;
     colComment: TcxGridDBColumn;
-    clBankAccount: TcxGridDBColumn;
+    clBankAccountExternal: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
     clInsertName: TcxGridDBColumn;
     clUpdateName: TcxGridDBColumn;
@@ -112,6 +112,14 @@ type
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm1: TOpenChoiceForm;
     clisStandart: TcxGridDBColumn;
+    clPersonalTradeName: TcxGridDBColumn;
+    clPersonalCollationName: TcxGridDBColumn;
+    clBankAccountName: TcxGridDBColumn;
+    clContractTagName: TcxGridDBColumn;
+    PersonalTradeChoiceForm: TOpenChoiceForm;
+    PersonalCollationChoiceForm: TOpenChoiceForm;
+    BankAccountChoiceForm: TOpenChoiceForm;
+    ContractTagChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

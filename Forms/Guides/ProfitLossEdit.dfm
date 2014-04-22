@@ -130,6 +130,7 @@
     Top = 120
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -143,9 +144,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -297,7 +300,22 @@
     FormNameParam.DataType = ftString
     FormName = 'TProfitLossGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 184
     Top = 117
   end
@@ -308,7 +326,22 @@
     FormNameParam.DataType = ftString
     FormName = 'TProfitLossDirectionForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 192
     Top = 173
   end
@@ -338,7 +371,22 @@
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyDestinationForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyDestinationGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyDestinationGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 208
     Top = 229
   end
@@ -349,7 +397,22 @@
     FormNameParam.DataType = ftString
     FormName = 'TInfoMoney_ObjectForm'
     PositionDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 184
     Top = 269
   end

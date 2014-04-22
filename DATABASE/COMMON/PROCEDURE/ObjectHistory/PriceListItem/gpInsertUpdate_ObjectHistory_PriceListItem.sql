@@ -1,39 +1,39 @@
-п»ї-- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
+-- Function: gpInsertUpdate_ObjectHistory_PriceListItem()
 
 -- DROP FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_ObjectHistory_PriceListItem(
- INOUT ioId                     Integer,    -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р­Р»РµРјРµРЅС‚ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°>
-    IN inPriceListId            Integer,    -- РџСЂР°Р№СЃ-Р»РёСЃС‚
-    IN inGoodsId                Integer,    -- РўРѕРІР°СЂ
-    IN inOperDate               TDateTime,  -- Р”Р°С‚Р° РґРµР№СЃС‚РІРёСЏ РїСЂР°Р№СЃ-Р»РёСЃС‚Р°
-    IN inValue                  TFloat,     -- Р—РЅР°С‡РµРЅРёРµ С†РµРЅС‹
-    IN inSession                TVarChar    -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId                     Integer,    -- ключ объекта <Элемент прайс-листа>
+    IN inPriceListId            Integer,    -- Прайс-лист
+    IN inGoodsId                Integer,    -- Товар
+    IN inOperDate               TDateTime,  -- Дата действия прайс-листа
+    IN inValue                  TFloat,     -- Значение цены
+    IN inSession                TVarChar    -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
 DECLARE
-  PriceListItemId Integer;
+   DECLARE vbUserId Integer;
+   DECLARE vbPriceListItemId Integer;
 BEGIN
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Account());
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId:= lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem());
 
-   -- РџРѕР»СѓС‡Р°РµРј СЃСЃС‹Р»РєСѓ РЅР° РѕР±СЉРµРєС‚ С†РµРЅ
-   PriceListItemId := lpGetInsert_Object_PriceListItem(inPriceListId, inGoodsId);
+   -- Получаем ссылку на объект цен
+   vbPriceListItemId := lpGetInsert_Object_PriceListItem (inPriceListId, inGoodsId);
  
-   -- Р’СЃС‚Р°РІР»СЏРµРј РёР»Рё РјРµРЅСЏРµРј РѕР±СЉРµРєС‚ РёСЃС‚РѕСЂРёСЋ С†РµРЅ
-   ioId := lpInsertUpdate_ObjectHistory(ioId, zc_ObjectHistory_PriceListItem(), PriceListItemId, inOperDate);
-   -- РЈСЃС‚Р°РЅР°РІР»РёРІР°РµРј С†РµРЅСѓ
-   PERFORM lpInsertUpdate_ObjectHistoryFloat(zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
+   -- Вставляем или меняем объект историю цен
+   ioId := lpInsertUpdate_ObjectHistory (ioId, zc_ObjectHistory_PriceListItem(), vbPriceListItemId, inOperDate);
+   -- Устанавливаем цену
+   PERFORM lpInsertUpdate_ObjectHistoryFloat (zc_ObjectHistoryFloat_PriceListItem_Value(), ioId, inValue);
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
+  LANGUAGE plpgsql VOLATILE;
   
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 18.04.14                                        * add zc_Enum_Process_InsertUpdate_ObjectHistory_PriceListItem
  06.06.13                        *
-
 */

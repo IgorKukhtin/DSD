@@ -63,8 +63,8 @@ BEGIN
                 , _tmp.ContainerId
                 , _tmp.AccountId
                 , _tmp.OperDate
-                , 0 AS Amount_A
-                , SUM (_tmp.Amount) AS Amount
+                , 0 AS Amount
+                , SUM (_tmp.Amount) AS Amount_check
            FROM (SELECT MIContainer.MovementId
                       , MIContainer.ContainerId
                       , Container.ObjectId AS AccountId

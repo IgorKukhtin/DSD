@@ -558,7 +558,25 @@ ALTER FUNCTION lpInsertFind_Container (Integer, Integer, Integer, Integer, Integ
  03.07.13                                        * то что здорово, работает не правильно :)))
  02.07.13                                        * А здорово получилось
 */
-
+/*
+!!!CHECK Amount !!!
+-- update container set Amount = a.AmountRemainsStart from (
+SELECT Container.ObjectId AS AccountId
+                      , Container.Id AS ContainerId
+                      , Container.ParentId
+                      , Container.Amount ,  COALESCE (SUM (MIContainer.Amount), 0) AS AmountRemainsStart
+                 FROM Container
+                      LEFT JOIN MovementItemContainer AS MIContainer
+                                                      ON MIContainer.Containerid = Container.Id
+--                 WHERE Container.DescId = 2
+                 GROUP BY Container.ObjectId
+                        , Container.Amount
+                        , Container.Id
+                        , Container.ParentId
+                 HAVING (Container.Amount <> COALESCE (SUM (MIContainer.Amount), 0) )
+) as a
+where a. ContainerId = container.Id
+*/
 -- тест
 /*
 CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
