@@ -11999,6 +11999,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
            +'                         ,'+FormatToVarCharServer_notNULL('23494714')//√–¿Õƒ-Ã¿– ≈“ “Œ¬ ”À.
+           +'                         ,'+FormatToVarCharServer_notNULL('38978614')//√–¿Õƒ-Ã¿– ≈“
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS
            +'            else '+zc_Enum_DocumentTaxKind_Tax
@@ -12530,6 +12531,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
            +'                         ,'+FormatToVarCharServer_notNULL('23494714')//√–¿Õƒ-Ã¿– ≈“ “Œ¬ ”À.
+           +'                         ,'+FormatToVarCharServer_notNULL('38978614')//√–¿Õƒ-Ã¿– ≈“
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective
@@ -12701,6 +12703,7 @@ begin
            +'                         ,'+FormatToVarCharServer_notNULL('30512339')
            +'                         ,'+FormatToVarCharServer_notNULL('32294926')
            +'                         ,'+FormatToVarCharServer_notNULL('23494714')//√–¿Õƒ-Ã¿– ≈“ “Œ¬ ”À.
+           +'                         ,'+FormatToVarCharServer_notNULL('38978614')//√–¿Õƒ-Ã¿– ≈“
            +'                         )'
            +'                 then '+zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR
            +'            else '+zc_Enum_DocumentTaxKind_Corrective

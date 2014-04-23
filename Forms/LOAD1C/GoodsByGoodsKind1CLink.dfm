@@ -2,8 +2,8 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1074#1072#1088#1072#1084#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 835
-  ExplicitWidth = 843
-  ExplicitHeight = 428
+  ExplicitWidth = 851
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -50,6 +50,12 @@ inherited GoodsByGoodsKind1CLinkForm: TGoodsByGoodsKind1CLinkForm
               end>
             Properties.ReadOnly = True
             Width = 134
+          end
+          object colPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            Options.Editing = False
+            Width = 55
           end
           object colDetailCode: TcxGridDBColumn
             Caption = #1050#1086#1076' 1'#1057
