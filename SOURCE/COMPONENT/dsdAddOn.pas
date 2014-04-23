@@ -1047,6 +1047,7 @@ var
   BarManager: TdxBarManager;
   FormName: string;
 begin
+  try
   if gc_isSetDefault then
      exit;
   if Owner is TParentForm then
@@ -1085,6 +1086,11 @@ begin
         end;
       end;
     end;
+  end;
+
+
+  except
+
   end;
 end;
 
