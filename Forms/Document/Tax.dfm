@@ -70,7 +70,6 @@ inherited TaxForm: TTaxForm
               Format = ',0.####'
               Kind = skSum
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -702,11 +701,11 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Us'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_Us'
         end
         item
           Visible = True
@@ -727,9 +726,17 @@ inherited TaxForm: TTaxForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = -1
+      end>
     Left = 830
     Top = 265
   end
@@ -1078,10 +1085,10 @@ inherited TaxForm: TTaxForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
-        Control = edOperDate
+        Control = edInvNumberPartner
       end
       item
-        Control = edDocumentTaxKind
+        Control = edOperDate
       end
       item
         Control = edFrom
@@ -1090,15 +1097,13 @@ inherited TaxForm: TTaxForm
         Control = edTo
       end
       item
-        Control = edInvNumberPartner
-      end
-      item
-      end
-      item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edContract
       end
       item
         Control = edDocumentTaxKind
@@ -1111,6 +1116,12 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = edPartner
+      end
+      item
+        Control = edDateRegistered
+      end
+      item
+        Control = edIsRegistered
       end>
     Left = 232
     Top = 193
@@ -1220,6 +1231,22 @@ inherited TaxForm: TTaxForm
   inherited EntryViewAddOn: TdsdDBViewAddOn
     Left = 912
     Top = 262
+  end
+  inherited spGetTotalSumm: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

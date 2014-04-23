@@ -28,6 +28,7 @@ BEGIN
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -81,8 +82,11 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
-           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
 
@@ -357,6 +361,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.04.14                                        * add InvNumberMark
  23.04.14                                                       *
  09.04.14                                        * add InvNumberPartner and JOIN MIFloat_AmountPartner
  07.02.14                                                       * change to Cursor

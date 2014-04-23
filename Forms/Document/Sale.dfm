@@ -493,119 +493,7 @@ inherited SaleForm: TSaleForm
       Width = 114
     end
   end
-  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 171
-    Top = 552
-  end
-  object GuidesRouteSorting: TdsdGuides [3]
-    KeyField = 'Id'
-    LookupControl = edRouteSorting
-    FormNameParam.Value = 'TRouteSortingForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TRouteSortingForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesRouteSorting
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 912
-    Top = 64
-  end
-  object GuidesFrom: TdsdGuides [4]
-    KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TUnitForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 408
-  end
-  object GuidesTo: TdsdGuides [5]
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
-      end>
-    Left = 616
-  end
-  object PaidKindGuides: TdsdGuides [6]
+  object PaidKindGuides: TdsdGuides [2]
     KeyField = 'Id'
     LookupControl = edPaidKind
     FormNameParam.Value = 'TPaidKindForm'
@@ -631,7 +519,7 @@ inherited SaleForm: TSaleForm
       end>
     Left = 808
   end
-  object ContractGuides: TdsdGuides [7]
+  object ContractGuides: TdsdGuides [3]
     KeyField = 'Id'
     LookupControl = edContract
     FormNameParam.Value = 'TContractForm'
@@ -658,7 +546,7 @@ inherited SaleForm: TSaleForm
     Left = 928
     Top = 65528
   end
-  object GuidesPricelist: TdsdGuides [8]
+  object GuidesPricelist: TdsdGuides [4]
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceListForm'
@@ -685,7 +573,7 @@ inherited SaleForm: TSaleForm
     Left = 804
     Top = 64
   end
-  object spSelectPrint: TdsdStoredProc [9]
+  object spSelectPrint: TdsdStoredProc [5]
     StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -707,7 +595,7 @@ inherited SaleForm: TSaleForm
     Left = 319
     Top = 208
   end
-  object spGetReportName: TdsdStoredProc [10]
+  object spGetReportName: TdsdStoredProc [6]
     StoredProcName = 'gpGet_Movement_Sale_ReportName'
     DataSets = <>
     OutputType = otResult
@@ -729,7 +617,7 @@ inherited SaleForm: TSaleForm
     Left = 552
     Top = 384
   end
-  object RefreshDispatcher: TRefreshDispatcher [11]
+  object RefreshDispatcher: TRefreshDispatcher [7]
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
@@ -738,13 +626,13 @@ inherited SaleForm: TSaleForm
     Left = 528
     Top = 320
   end
-  object PrintHeaderCDS: TClientDataSet [12]
+  object PrintHeaderCDS: TClientDataSet [8]
     Aggregates = <>
     Params = <>
     Left = 476
     Top = 193
   end
-  object spGetReporNameTax: TdsdStoredProc [13]
+  object spGetReporNameTax: TdsdStoredProc [9]
     StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
     DataSets = <>
     OutputType = otResult
@@ -766,13 +654,13 @@ inherited SaleForm: TSaleForm
     Left = 440
     Top = 384
   end
-  object PrintItemsCDS: TClientDataSet [14]
+  object PrintItemsCDS: TClientDataSet [10]
     Aggregates = <>
     Params = <>
     Left = 476
     Top = 246
   end
-  object DocumentTaxKindGuides: TdsdGuides [15]
+  object DocumentTaxKindGuides: TdsdGuides [11]
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
     FormNameParam.Value = 'TDocumentTaxKindForm'
@@ -799,7 +687,7 @@ inherited SaleForm: TSaleForm
     Left = 1024
     Top = 72
   end
-  object spTax: TdsdStoredProc [16]
+  object spTax: TdsdStoredProc [12]
     StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
     DataSets = <>
     OutputType = otResult
@@ -847,7 +735,7 @@ inherited SaleForm: TSaleForm
     Left = 456
     Top = 304
   end
-  object spSelectTax_Client: TdsdStoredProc [17]
+  object spSelectTax_Client: TdsdStoredProc [13]
     StoredProcName = 'gpSelect_Movement_Tax_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -878,7 +766,7 @@ inherited SaleForm: TSaleForm
     Left = 319
     Top = 304
   end
-  object spSelectTax_Us: TdsdStoredProc [18]
+  object spSelectTax_Us: TdsdStoredProc [14]
     StoredProcName = 'gpSelect_Movement_Tax_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
@@ -909,7 +797,7 @@ inherited SaleForm: TSaleForm
     Left = 319
     Top = 360
   end
-  object spGetReporNameBill: TdsdStoredProc [19]
+  object spGetReporNameBill: TdsdStoredProc [15]
     StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
     DataSets = <>
     OutputType = otResult
@@ -931,11 +819,15 @@ inherited SaleForm: TSaleForm
     Left = 536
     Top = 448
   end
-  object PrintItemsSverkaCDS: TClientDataSet [20]
+  object PrintItemsSverkaCDS: TClientDataSet [16]
     Aggregates = <>
     Params = <>
     Left = 644
     Top = 334
+  end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 171
+    Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Left = 40
@@ -1397,11 +1289,11 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax'
+          ItemName = 'bbPrintTax_Client'
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Client'
+          ItemName = 'bbPrintTax'
         end
         item
           Visible = True
@@ -2034,5 +1926,113 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+  end
+  object GuidesRouteSorting: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRouteSortingForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesRouteSorting
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 912
+    Top = 64
+  end
+  object GuidesFrom: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnitForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 408
+  end
+  object GuidesTo: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        DataType = ftFloat
+      end>
+    Left = 616
   end
 end
