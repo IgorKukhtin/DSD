@@ -75,6 +75,7 @@ type
     actCorrective: TdsdExecStoredProc;
     bbCorrective: TdxBarButton;
     spCorrective: TdsdStoredProc;
+    colInvNumberMark: TcxGridDBColumn;
   private
     { Private declarations }
   public

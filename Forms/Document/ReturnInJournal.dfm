@@ -119,7 +119,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
               Kind = skSum
               Column = colTotalCountKg
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -161,6 +160,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 48
+          end
+          object colInvNumberMark: TcxGridDBColumn
+            Caption = #8470' '#1079'.'#1084'.'
+            DataBinding.FieldName = 'InvNumberMark'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
