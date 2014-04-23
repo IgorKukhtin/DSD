@@ -5,8 +5,10 @@ DROP FUNCTION IF EXISTS gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar, 
-               Id Integer, Code Integer, Name TVarChar, BranchId Integer, BranchName TVarChar)
+RETURNS TABLE (GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, GoodsKindId Integer, GoodsKindName TVarChar
+             , Id Integer, Code Integer, Name TVarChar, BranchId Integer, BranchName TVarChar
+             , Price TFloat
+              )
 AS
 $BODY$
 BEGIN
@@ -16,6 +18,19 @@ BEGIN
      -- Результат
      RETURN QUERY 
        SELECT 
+           tmpResult.GoodsId
+        ,  tmpResult.GoodsCode
+        ,  tmpResult.GoodsName
+        ,  tmpResult.GoodsKindId
+        ,  tmpResult.GoodsKindName
+        ,  tmpResult.Id
+        ,  tmpResult.Code
+        ,  tmpResult.Name
+        ,  tmpResult.BranchId
+        ,  tmpResult.BranchName
+        ,  lfObjectHistory_PriceListItem.ValuePrice AS Price
+       FROM
+       (SELECT 
            COALESCE(GoodsByGoodsKind.GoodsId, GoodsByGoodsKind1CLink.GoodsId) AS GoodsId
         ,  COALESCE(GoodsByGoodsKind.GoodsCode, GoodsByGoodsKind1CLink.GoodsCode) AS GoodsCode
         ,  COALESCE(GoodsByGoodsKind.GoodsName, GoodsByGoodsKind1CLink.GoodsName) AS GoodsName
@@ -86,7 +101,11 @@ BEGIN
                             LEFT JOIN OBJECT AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId 
                        WHERE Object_GoodsByGoodsKind1CLink.DescId = zc_Object_GoodsByGoodsKind1CLink()
                       )  AS GoodsByGoodsKind1CLink
-                         ON GoodsByGoodsKind1CLink.MasterId = GoodsByGoodsKind.MasterId;
+                         ON GoodsByGoodsKind1CLink.MasterId = GoodsByGoodsKind.MasterId
+       ) AS tmpResult
+       LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= DATE_TRUNC ('DAY', CURRENT_TIMESTAMP))
+              AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpResult.GoodsId
+      ;
 
 END;
 $BODY$
@@ -96,6 +115,7 @@ ALTER FUNCTION gpSelect_Object_GoodsByGoodsKind1CLink (TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.04.14                                        * add Price
  11.04.14                        * 
  10.04.14                                        * add Object_InfoMoney_View
  17.02.14                        * 

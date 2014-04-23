@@ -32,6 +32,7 @@ type
     cxLabel1: TcxLabel;
     bbJuridicalLabel: TdxBarControlContainerItem;
     actChoiceGoodsKindForm: TOpenChoiceForm;
+    colPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
