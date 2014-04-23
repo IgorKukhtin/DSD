@@ -10760,6 +10760,7 @@ end;
 //!!!!INTEGER
 function TMainForm.pLoadDocument_ReturnIn:Integer;
 var ContractId_pg:Integer;
+    InvNumberMark:String;
 begin
      Result:=0;
      if (not cbReturnInInt.Checked)or(not cbReturnInInt.Enabled) then exit;
@@ -10889,6 +10890,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -10910,6 +10912,14 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Номер "перекресленої зеленої марки зi складу" не должен измениться
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                  fOpenSqToQuery ('select ValueData AS InvNumberMark from MovementString where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementString_InvNumberMark()');
+                  InvNumberMark:=toSqlQuery.FieldByName('PriceListId').AsString;
+             end
+             else InvNumberMark:='';
+
              //Определяем Договор
              ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
@@ -10917,6 +10927,8 @@ begin
              if ContractId_pg=0
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberMark').Value:=InvNumberMark;
+
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
 

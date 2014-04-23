@@ -1116,12 +1116,6 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = edPartner
-      end
-      item
-        Control = edDateRegistered
-      end
-      item
-        Control = edIsRegistered
       end>
     Left = 232
     Top = 193

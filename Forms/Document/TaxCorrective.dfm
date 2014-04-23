@@ -2,7 +2,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitLeft = -75
   ExplicitWidth = 1129
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -1090,19 +1089,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsChecked
       end
       item
-        Control = edIsDocument
-      end
-      item
         Control = edPartner
       end
       item
         Control = edDocumentTax
-      end
-      item
-        Control = edDateRegistered
-      end
-      item
-        Control = edIsRegistered
       end>
     Left = 232
     Top = 193
@@ -1374,7 +1364,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 476
     Top = 246
   end
-  object HeaderSaver2: THeaderSaver
+  object HeaderSaverParams: THeaderSaver
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
@@ -1387,8 +1377,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsRegistered
       end>
     GetStoredProc = spGet
-    Left = 552
-    Top = 553
+    Left = 280
+    Top = 177
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_Params'
@@ -1661,5 +1651,40 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 344
     Top = 8
+  end
+  object HeaderSaverIsDocument: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_IsDocument
+    ControlList = <
+      item
+        Control = edIsDocument
+      end>
+    GetStoredProc = spGet
+    Left = 384
+    Top = 209
+  end
+  object spInsertUpdateMovement_IsDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_IsDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsDocument'
+        Value = 'False'
+        Component = edIsDocument
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 497
+    Top = 512
   end
 end
