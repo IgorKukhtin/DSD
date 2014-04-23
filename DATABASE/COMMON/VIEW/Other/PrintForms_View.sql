@@ -180,6 +180,22 @@ AS
            , CAST (0 AS INTEGER)
            , CAST (0 AS INTEGER)
            , CAST ('PrintMovement_ReturnIn' AS TVarChar)
+      UNION
+-- Metro
+      SELECT
+             zc_movement_returnin()
+           , CAST ('ReturnIn' AS TVarChar)
+           , CAST ('01.01.2000' AS TDateTime)
+           , CAST ('01.01.2200' AS TDateTime)
+           , CAST (Object_Juridical.Id AS INTEGER)
+           , zc_Enum_PaidKind_FirstForm()
+           , CAST ('PrintMovement_ReturnIn32049199' AS TVarChar)
+      FROM Object AS Object_Juridical
+      JOIN ObjectHistory_JuridicalDetails_View AS OH_JuridicalDetails ON OH_JuridicalDetails.JuridicalId = Object_Juridical.Id
+       AND OH_JuridicalDetails.OKPO IN ('32049199')
+      WHERE Object_Juridical.DescId = zc_Object_Juridical()
+
+
 -- возвраты поставщ стандарт
       UNION
       SELECT
@@ -215,6 +231,7 @@ ALTER TABLE PrintForms_View OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.04.14                                                        * + PrintMovement_ReturnIn32049199
  07.04.14                                                        * + Bill
  03.04.14                                                        * + Bill
  02.04.14                                                        * + Adventis + Billa + Kray
