@@ -9,17 +9,20 @@ uses
   dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, ExternalSave, Data.DB,
-  Datasnap.DBClient;
+  Datasnap.DBClient, cxLabel, ChoicePeriod;
 
 type
   TSaveTaxDocumentForm = class(TAncestorDialogForm)
-    cxDateEdit1: TcxDateEdit;
-    cxDateEdit2: TcxDateEdit;
+    deStart: TcxDateEdit;
+    deEnd: TcxDateEdit;
     MultiAction: TMultiAction;
     spTaxBillList: TdsdStoredProc;
     TaxBillList: TClientDataSet;
     ExternalSaveAction: TExternalSaveAction;
     actClose: TdsdFormClose;
+    cxLabel1: TcxLabel;
+    cxLabel2: TcxLabel;
+    PeriodChoice: TPeriodChoice;
   private
     { Private declarations }
   public

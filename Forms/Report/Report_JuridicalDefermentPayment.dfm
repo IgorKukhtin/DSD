@@ -3,8 +3,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1194
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1210
-  ExplicitHeight = 429
+  ExplicitWidth = 1202
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -350,7 +350,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Visible = False
@@ -409,7 +409,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
       Hint = #1055#1077#1088#1074#1072#1103' '#1085#1077#1076#1077#1083#1103
       ImageIndex = 21
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'OperDate'
@@ -454,7 +458,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrintTwoWeek: TdsdPrintAction
@@ -474,7 +479,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
       Hint = #1042#1090#1086#1088#1072#1103' '#1085#1077#1076#1077#1083#1103
       ImageIndex = 17
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'OperDate'
@@ -519,7 +528,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrintThreeWeek: TdsdPrintAction
@@ -539,7 +549,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
       Hint = #1058#1088#1077#1090#1100#1103' '#1085#1077#1076#1077#1083#1103
       ImageIndex = 19
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'OperDate'
@@ -584,7 +598,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrintFourWeek: TdsdPrintAction
@@ -604,7 +619,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
       Hint = #1063#1077#1090#1074#1077#1088#1090#1072#1103' '#1085#1077#1076#1077#1083#1103
       ImageIndex = 22
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'OperDate'
@@ -649,7 +668,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrintOther: TdsdPrintAction
@@ -669,7 +689,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
       Hint = #1041#1086#1083#1100#1096#1077' 28 '#1076#1085#1077#1081
       ImageIndex = 23
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'OperDate'
@@ -714,7 +738,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
-      ReportNameParam.Value = ''
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.DataType = ftString
     end
     object actPrint: TdsdPrintAction
@@ -724,10 +749,36 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Caption = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 16
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frDataSet'
+        end>
       Params = <>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintSale: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spReport_JuridicalSaleDocument
+      StoredProcList = <
+        item
+          StoredProc = spReport_JuridicalSaleDocument
+        end>
+      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      Hint = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      ImageIndex = 3
+      DataSets = <
+        item
+          DataSet = cdsReport
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'OperDate'
+        end>
+      Params = <>
+      ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.DataType = ftString
     end
   end
@@ -777,6 +828,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         item
           Visible = True
           ItemName = 'bbPribt'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSale'
         end
         item
           Visible = True
@@ -841,6 +900,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     object bbPribt: TdxBarButton
       Action = actPrint
+      Category = 0
+    end
+    object bbSale: TdxBarButton
+      Action = actPrintSale
       Category = 0
     end
   end
@@ -943,14 +1006,6 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Left = 192
     Top = 192
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = cdsReport
-    BCDToCurrency = False
-    Left = 248
-    Top = 216
-  end
   object cdsReport: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -966,12 +1021,48 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Left = 344
     Top = 112
   end
-  object frDataSet: TfrxDBDataset
-    UserName = 'frDataSet'
-    CloseDataSource = False
-    DataSource = MasterDS
-    BCDToCurrency = False
-    Left = 288
-    Top = 136
+  object spReport_JuridicalSaleDocument: TdsdStoredProc
+    StoredProcName = 'gpReport_JuridicalSaleDocument'
+    DataSet = cdsReport
+    DataSets = <
+      item
+        DataSet = cdsReport
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Component = MasterCDS
+        ComponentItem = 'StartContractDate'
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end>
+    Left = 200
+    Top = 248
   end
 end

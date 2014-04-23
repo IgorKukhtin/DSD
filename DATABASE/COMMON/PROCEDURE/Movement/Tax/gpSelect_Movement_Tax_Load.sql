@@ -27,9 +27,18 @@ BEGIN
            , Movement.OperDate				AS OperDate
            , ObjectHistoryString_JuridicalDetails_FullName.ValueData   AS ToName
            , ObjectHistoryString_JuridicalDetails_INN.ValueData   AS INN
-           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
-           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
-           , (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat AS SUMPDV
+           , CASE Movement.DescId 
+                  WHEN zc_Movement_Tax() THEN MovementFloat_TotalSummPVAT.ValueData      
+                  ELSE - MovementFloat_TotalSummPVAT.ValueData
+             END                                        AS TotalSummPVAT
+           , CASE Movement.DescId 
+                  WHEN zc_Movement_Tax() THEN MovementFloat_TotalSummMVAT.ValueData      
+                  ELSE - MovementFloat_TotalSummMVAT.ValueData
+             END                                        AS TotalSummMVAT
+           , CASE Movement.DescId 
+                  WHEN zc_Movement_Tax() THEN (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat      
+                  ELSE - (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat
+             END                                        AS SUMPDV
            , 0::TFloat AS ZVILN
            , 0::TFloat AS EXPORT
            , 0::TFloat AS PZOB
@@ -76,6 +85,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Load(TDateTime, TDateTime, TVarChar) OWNER 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.04.14                         *
  27.02.14                         *
 */
 

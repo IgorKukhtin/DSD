@@ -19,11 +19,11 @@ BEGIN
         , zc_Movement_ReturnIn()::TVarChar  AS ReturnInDesc
         , (zc_Movement_Cash()::TVarChar||';'||zc_Movement_BankAccount()::TVarChar||';'||zc_Movement_PersonalAccount()::TVarChar)::TVarChar
                                             AS MoneyDesc
-        , (zc_Movement_Service()::TVarChar||';'||zc_Movement_TransportService()::TVarChar)::TVarChar
+        , (zc_Movement_ProfitLossService()::TVarChar||';'||zc_Movement_Service()::TVarChar||';'||zc_Movement_TransportService()::TVarChar)::TVarChar
                                             AS ServiceDesc
-        , (zc_Movement_LossDebt()::TVarChar||';'||zc_Movement_SendDebt()::TVarChar)::TVarChar
+        , (zc_Movement_SendDebt()::TVarChar)::TVarChar
                                             AS SendDebtDesc
-        , zc_Movement_ProfitLossService()::TVarChar AS OtherDesc;
+        , zc_Movement_LossDebt()::TVarChar AS OtherDesc;
 
 END;
 $BODY$
@@ -34,6 +34,7 @@ ALTER FUNCTION gpGetDescSets (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.04.14                         *
  11.03.14                         *
 
 */
