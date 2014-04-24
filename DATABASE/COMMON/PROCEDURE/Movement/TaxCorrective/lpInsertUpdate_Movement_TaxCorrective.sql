@@ -52,8 +52,10 @@ BEGIN
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
+
      -- сохранили свойство <Есть ли подписанный документ>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), ioId, inDocument);
+     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), ioId, inDocument);
+
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
 
@@ -87,6 +89,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.04.14                                        * del <Есть ли подписанный документ>
  16.04.14                                        * add lpInsert_MovementProtocol
  19.03.14                                        * add inPartnerId
  11.02.14                                                       *

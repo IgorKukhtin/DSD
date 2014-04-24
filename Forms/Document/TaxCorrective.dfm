@@ -2,29 +2,27 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitWidth = 1121
-  ExplicitHeight = 702
+  ExplicitWidth = 1129
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1113
-    Height = 540
-    ExplicitTop = 128
-    ExplicitWidth = 986
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1109
+    Height = 542
+    ExplicitTop = 126
+    ExplicitWidth = 1113
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 980
-      ExplicitHeight = 514
+      ExplicitWidth = 1113
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1107
-        Height = 514
-        ExplicitWidth = 980
-        ExplicitHeight = 514
+        Width = 1113
+        Height = 518
+        ExplicitWidth = 1113
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -72,7 +70,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
               Format = ',0.####'
               Kind = skSum
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -156,15 +153,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1107
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1113
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1107
-        Height = 514
-        ExplicitWidth = 1107
-        ExplicitHeight = 514
+        Width = 1113
+        Height = 518
+        ExplicitWidth = 1113
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -189,7 +185,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1113
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 986
+    ExplicitWidth = 1113
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -221,7 +217,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -607,7 +603,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -650,11 +646,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_TaxCorrective_Client'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_TaxCorrective_Client'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -1066,10 +1062,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
-        Control = edOperDate
+        Control = edInvNumberPartner
       end
       item
-        Control = edDocumentTaxKind
+        Control = edOperDate
       end
       item
         Control = edFrom
@@ -1078,15 +1074,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edTo
       end
       item
-        Control = edInvNumberPartner
-      end
-      item
-      end
-      item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edContract
       end
       item
         Control = edDocumentTaxKind
@@ -1095,7 +1089,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsChecked
       end
       item
-        Control = edIsDocument
+        Control = edPartner
+      end
+      item
+        Control = edDocumentTax
       end>
     Left = 232
     Top = 193
@@ -1367,7 +1364,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 476
     Top = 246
   end
-  object HeaderSaver2: THeaderSaver
+  object HeaderSaverParams: THeaderSaver
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
@@ -1380,8 +1377,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsRegistered
       end>
     GetStoredProc = spGet
-    Left = 552
-    Top = 553
+    Left = 280
+    Top = 177
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_Params'
@@ -1654,5 +1651,40 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 344
     Top = 8
+  end
+  object HeaderSaverIsDocument: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_IsDocument
+    ControlList = <
+      item
+        Control = edIsDocument
+      end>
+    GetStoredProc = spGet
+    Left = 384
+    Top = 209
+  end
+  object spInsertUpdateMovement_IsDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_IsDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsDocument'
+        Value = 'False'
+        Component = edIsDocument
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 497
+    Top = 512
   end
 end

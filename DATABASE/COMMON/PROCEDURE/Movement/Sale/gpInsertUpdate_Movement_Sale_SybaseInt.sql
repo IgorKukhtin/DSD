@@ -55,11 +55,11 @@ BEGIN
                  INTO ioId, ioPriceListId, outPriceListName
           FROM gpInsertUpdate_Movement_Sale (ioId               := ioId
                                            , inInvNumber        := inInvNumber
-                                           , inInvNumberPartner := inInvNumberPartner
+                                           , inInvNumberPartner := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = ioId AND DescId = zc_MovementString_InvNumberPartner()), inInvNumberPartner)
                                            , inInvNumberOrder   := inInvNumberOrder
                                            , inOperDate         := inOperDate
                                            , inOperDatePartner  := inOperDatePartner
-                                           , inChecked          := inChecked
+                                           , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked()), inChecked)
                                            , inPriceWithVAT     := inPriceWithVAT
                                            , inVATPercent       := inVATPercent
                                            , inChangePercent    := inChangePercent
@@ -81,6 +81,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.04.14                                        * add COALESCE ...
  05.04.14                                        *
 */
 -- тест

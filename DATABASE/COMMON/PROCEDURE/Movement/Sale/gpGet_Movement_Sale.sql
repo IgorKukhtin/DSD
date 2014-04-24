@@ -36,11 +36,11 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_sale_seq') AS TVarChar) AS InvNumber
-             , inOperDate				        AS OperDate
+             , inOperDate				                    AS OperDate
              , Object_Status.Code               	        AS StatusCode
              , Object_Status.Name              		        AS StatusName
              , CAST (FALSE AS Boolean)         		        AS Checked
-             , inOperDate			     	        AS OperDatePartner
+             , inOperDate			     	                AS OperDatePartner
              , CAST ('' AS TVarChar)                        AS InvNumberPartner
              , CAST (False AS Boolean)                      AS PriceWithVAT
              , CAST (20 AS TFloat)                          AS VATPercent
@@ -60,7 +60,7 @@ BEGIN
              , 0                     				        AS RouteSortingId
              , CAST ('' AS TVarChar) 				        AS RouteSortingName
              , CAST ('' AS TVarChar) 				        AS InvNumberOrder
-             , CAST (0  AS INTEGER)                                     AS PriceListId
+             , CAST (0  AS INTEGER)                         AS PriceListId
              , CAST ('' AS TVarChar) 				        AS PriceListName
              , 0                     				        AS DocumentTaxKindId
              , CAST ('' AS TVarChar) 				        AS DocumentTaxKindName
@@ -100,8 +100,8 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
-           , Object_TaxKind.Id                		    AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+           , Object_TaxKind.Id                		        AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         		        AS DocumentTaxKindName
            , Movement_Master.Id                             AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 

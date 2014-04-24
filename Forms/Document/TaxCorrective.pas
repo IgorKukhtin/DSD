@@ -63,7 +63,7 @@ type
     PrintItemsCDS: TClientDataSet;
     edIsDocument: TcxCheckBox;
     edIsRegistered: TcxCheckBox;
-    HeaderSaver2: THeaderSaver;
+    HeaderSaverParams: THeaderSaver;
     spInsertUpdateMovement_Params: TdsdStoredProc;
     cxLabel5: TcxLabel;
     edReturnIn: TcxTextEdit;
@@ -80,6 +80,8 @@ type
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
     GuidesFrom: TdsdGuides;
+    HeaderSaverIsDocument: THeaderSaver;
+    spInsertUpdateMovement_IsDocument: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,72 +1,90 @@
 -- Function: gpSelect_Movement_SendOnPrice()
 
--- DROP FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_SendOnPrice(
-    IN inStartDate   TDateTime , --
-    IN inEndDate     TDateTime , --
-    IN inSession     TVarChar    -- сессия пользователя
+    IN inStartDate     TDateTime , --
+    IN inEndDate       TDateTime , --
+    IN inIsPartnerDate Boolean ,
+    IN inIsErased      Boolean ,
+    IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCountTare TFloat, TotalCount TFloat, TotalCountPartner TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , CarId Integer, CarName TVarChar, PersonalDriverId Integer, PersonalDriverName TVarChar
-             , RouteId Integer, RouteName TVarChar, RouteSortingId Integer, RouteSortingName TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar
               )
 AS
 $BODY$
+   DECLARE vbUserId Integer;
 BEGIN
-
--- inStartDate:= '01.01.2013';
--- inEndDate:= '01.01.2100';
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_SendOnPrice());
-
-     RETURN QUERY 
+--     vbUserId:= lpGetUserBySession (inSession);
+     RETURN QUERY
+     WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId
+                  UNION SELECT zc_Enum_Status_UnComplete() AS StatusId
+                  UNION SELECT zc_Enum_Status_Erased()     AS StatusId WHERE inIsErased = TRUE
+                       )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                              )
        SELECT
-             Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+             Movement.Id                                AS Id
+           , Movement.InvNumber                         AS InvNumber
+           , Movement.OperDate                          AS OperDate
+           , Object_Status.ObjectCode                   AS StatusCode
+           , Object_Status.ValueData                    AS StatusName
 
-           , MovementDate_OperDatePartner.ValueData      AS OperDatePartner
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
 
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData          AS VATPercent
-           , MovementFloat_ChangePercent.ValueData       AS ChangePercent
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
 
-           , MovementFloat_TotalCountKg.ValueData        AS TotalCountKg
-           , MovementFloat_TotalCountSh.ValueData        AS TotalCountSh
-           , MovementFloat_TotalCountTare.ValueData      AS TotalCountTare
+           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+           , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
 
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-           , MovementFloat_TotalCountPartner.ValueData   AS TotalCountPartner
-          
-           , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
+           , MovementFloat_TotalCountPartner.ValueData  AS TotalCountPartner
 
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_Car.Id                     AS CarId
-           , Object_Car.ValueData              AS CarName
-           , Object_PersonalDriver.Id          AS PersonalDriverId
-           , Object_PersonalDriver.ValueData   AS PersonalDriverName
-           
-           , Object_Route.Id               AS RouteId
-           , Object_Route.ValueData        AS RouteName
-           , Object_RouteSorting.Id        AS RouteSortingId
-           , Object_RouteSorting.ValueData AS RouteSortingName       
-               
-       FROM Movement
+           , Object_From.Id                             AS FromId
+           , Object_From.ValueData                      AS FromName
+           , Object_To.Id                               AS ToId
+           , Object_To.ValueData                        AS ToName
+
+           , Object_RouteSorting.Id                     AS RouteSortingId
+           , Object_RouteSorting.ValueData              AS RouteSortingName
+
+
+       FROM (SELECT Movement.id
+             FROM tmpStatus
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = FALSE
+            UNION ALL
+             SELECT MovementDate_OperDatePartner.MovementId  AS Id
+             FROM MovementDate AS MovementDate_OperDatePartner
+                  JOIN Movement ON Movement.Id = MovementDate_OperDatePartner.MovementId AND Movement.DescId = zc_Movement_SendOnPrice()
+                  JOIN tmpStatus ON tmpStatus.StatusId = Movement.StatusId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+             WHERE inIsPartnerDate = TRUE
+               AND MovementDate_OperDatePartner.ValueData BETWEEN inStartDate AND inEndDate
+               AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            ) AS tmpMovement
+
+            LEFT JOIN Movement ON Movement.id = tmpMovement.id
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
@@ -101,7 +119,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountPartner
                                     ON MovementFloat_TotalCountPartner.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountPartner.DescId = zc_MovementFloat_TotalCountPartner()
-                                   
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
@@ -116,49 +134,33 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-           
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                         ON MovementLinkObject_Route.MovementId = Movement.Id
-                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+;
 
-       WHERE Movement.DescId = zc_Movement_SendOnPrice()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
-  
 END;
 $BODY$
 
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 05.09.13                                        * add TotalCountPartner               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.04.14                                                        * all new
+ 05.09.13                                        * add TotalCountPartner
  12.07.13          *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '30.01.2013', inEndDate:= '01.02.2013', inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_SendOnPrice (inStartDate:= '01.01.2013', inEndDate:= '01.02.2014', inIsPartnerDate:= FALSE, inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

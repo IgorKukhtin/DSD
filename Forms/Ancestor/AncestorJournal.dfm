@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitWidth = 733
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -346,6 +346,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = spCompete
         end>
+      View = cxGridDBTableView
       Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
       Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
     end
@@ -356,6 +357,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = spUncomplete
         end>
+      View = cxGridDBTableView
       Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end
@@ -369,6 +371,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Action = actRefresh
         end>
+      View = cxGridDBTableView
       Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
     end

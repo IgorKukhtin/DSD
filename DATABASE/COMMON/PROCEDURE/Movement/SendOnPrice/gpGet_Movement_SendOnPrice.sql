@@ -22,44 +22,37 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_SendOnPrice());
 
-     RETURN QUERY 
+     RETURN QUERY
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode          AS StatusCode
-           , Object_Status.ValueData           AS StatusName
+           , Object_Status.ObjectCode                   AS StatusCode
+           , Object_Status.ValueData                    AS StatusName
 
-           , MovementDate_OperDatePartner.ValueData      AS OperDatePartner
+           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
 
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData          AS VATPercent
-           , MovementFloat_ChangePercent.ValueData       AS ChangePercent
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
 
-           , MovementFloat_TotalCountKg.ValueData        AS TotalCountKg
-           , MovementFloat_TotalCountSh.ValueData        AS TotalCountSh
-           , MovementFloat_TotalCountTare.ValueData      AS TotalCountTare
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
-          
-           , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
+           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+           , MovementFloat_TotalCountTare.ValueData     AS TotalCountTare
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
 
-           , Object_From.Id                    AS FromId
-           , Object_From.ValueData             AS FromName
-           , Object_To.Id                      AS ToId
-           , Object_To.ValueData               AS ToName
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_Car.Id                     AS CarId
-           , Object_Car.ValueData              AS CarName
-           , Object_PersonalDriver.Id          AS PersonalDriverId
-           , Object_PersonalDriver.ValueData   AS PersonalDriverName
-           
-           , Object_Route.Id               AS RouteId
-           , Object_Route.ValueData        AS RouteName
-           , Object_RouteSorting.Id        AS RouteSortingId
-           , Object_RouteSorting.ValueData AS RouteSortingName   
-                   
+           , Object_From.Id                             AS FromId
+           , Object_From.ValueData                      AS FromName
+           , Object_To.Id                               AS ToId
+           , Object_To.ValueData                        AS ToName
+
+           , Object_RouteSorting.Id                     AS RouteSortingId
+           , Object_RouteSorting.ValueData              AS RouteSortingName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -92,7 +85,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
-                                   
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
                                     ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
@@ -107,26 +100,12 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-           
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
-                                         ON MovementLinkObject_Car.MovementId = Movement.Id
-                                        AND MovementLinkObject_Car.DescId = zc_MovementLinkObject_Car()
-            LEFT JOIN Object AS Object_Car ON Object_Car.Id = MovementLinkObject_Car.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_PersonalDriver
-                                         ON MovementLinkObject_PersonalDriver.MovementId = Movement.Id
-                                        AND MovementLinkObject_PersonalDriver.DescId = zc_MovementLinkObject_PersonalDriver()
-            LEFT JOIN Object AS Object_PersonalDriver ON Object_PersonalDriver.Id = MovementLinkObject_PersonalDriver.ObjectId
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Route
-                                         ON MovementLinkObject_Route.MovementId = Movement.Id
-                                        AND MovementLinkObject_Route.DescId = zc_MovementLinkObject_Route()
-            LEFT JOIN Object AS Object_Route ON Object_Route.Id = MovementLinkObject_Route.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
@@ -134,7 +113,7 @@ BEGIN
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_SendOnPrice();
-  
+
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -143,8 +122,8 @@ ALTER FUNCTION gpGet_Movement_SendOnPrice (Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 18.04.14                                                        *
  09.07.13                                        * Красота
  08.07.13                                        * zc_MovementFloat_ChangePercent
  30.06.13                                        *

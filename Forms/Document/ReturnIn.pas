@@ -90,6 +90,8 @@ type
     actCorrective: TdsdExecStoredProc;
     spCorrective: TdsdStoredProc;
     bbCorrective: TdxBarButton;
+    edInvNumberMark: TcxTextEdit;
+    cxLabel13: TcxLabel;
   private
     { Private declarations }
   public

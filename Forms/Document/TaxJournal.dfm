@@ -1,5 +1,5 @@
 inherited TaxJournalForm: TTaxJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1085#1072#1082#1083#1072#1076#1085#1099#1077'>'
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
   ExplicitWidth = 1126
@@ -87,7 +87,6 @@ inherited TaxJournalForm: TTaxJournalForm
               Kind = skSum
               Column = colTotalSummPVAT
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -321,12 +320,13 @@ inherited TaxJournalForm: TTaxJournalForm
           object colChecked: TcxGridDBColumn
             Caption = #1055#1088#1086#1074#1077#1088#1077#1085
             DataBinding.FieldName = 'Checked'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 50
           end
           object colDocument: TcxGridDBColumn
-            Caption = #1044#1086#1082#1091#1084#1077#1085#1090
+            Caption = #1055#1086#1076#1087#1080#1089#1072#1085
             DataBinding.FieldName = 'Document'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -595,11 +595,11 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Us'
+          ItemName = 'bbPrintTax_Client'
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Client'
+          ItemName = 'bbPrintTax_Us'
         end
         item
           Visible = True

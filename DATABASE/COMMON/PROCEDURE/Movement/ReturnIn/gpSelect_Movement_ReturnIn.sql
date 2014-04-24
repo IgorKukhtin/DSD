@@ -13,7 +13,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , Checked Boolean
              , PriceWithVAT Boolean
-             , OperDatePartner TDateTime, InvNumberPartner TVarChar
+             , OperDatePartner TDateTime, InvNumberPartner TVarChar, InvNumberMark TVarChar
              , VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalCountTare TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -53,6 +53,7 @@ BEGIN
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -116,6 +117,9 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
                                      ON MovementString_InvNumberPartner.MovementId =  Movement.Id
                                     AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
@@ -241,6 +245,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 23.04.14                                        * add InvNumberMark
  31.03.14                                        * add TotalCount...
  28.03.14                                        * add TotalSummVAT
  26.03.14                                        * add InvNumberPartner
@@ -258,7 +263,6 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 !!!!!!!!!!!!!!!!!óäàëåíèå çàäâîåííûõ íàêë ïî ôèëèàëàì
 DO $$
 BEGIN
-
  perform lpSetErased_Movement (a.Id, 5)
   from (
        SELECT Movement.InvNumber, Movement.OperDate, Min (Movement.Id) as Id
@@ -282,7 +286,6 @@ BEGIN
        group by Movement.InvNumber, Movement.OperDate
        having count(*) > 1
 ) as a ;
-
 END $$;
 */
 
