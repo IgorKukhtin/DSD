@@ -1,9 +1,10 @@
 -- Function: gpGet_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Object_Partner (Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_Partner(
     IN inId          Integer,        -- Контрагенты 
+    IN inJuridicalId Integer,        -- 
     IN inSession     TVarChar        -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
@@ -27,7 +28,7 @@ BEGIN
        RETURN QUERY 
        SELECT
              CAST (0 as Integer)    AS Id
-           , lfGet_ObjectCode(0, zc_Object_Partner()) AS Code
+           , lfGet_ObjectCode (0, zc_Object_Partner()) AS Code
            , CAST ('' as TVarChar)  AS Name
            , CAST ('' as TVarChar)  AS Address
            
@@ -36,8 +37,8 @@ BEGIN
            , CAST (0 as TFloat)  AS PrepareDayCount
            , CAST (0 as TFloat)  AS DocumentDayCount
            
-           , CAST (0 as Integer)    AS JuridicalId
-           , CAST ('' as TVarChar)  AS JuridicalName
+           , inJuridicalId    AS JuridicalId
+           , lfGet_Object_ValueData (inJuridicalId)  AS JuridicalName
        
            , CAST (0 as Integer)    AS RouteId
            , CAST ('' as TVarChar)  AS RouteName
@@ -154,12 +155,13 @@ END;
 $BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Object_Partner (Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.04.14                                        * add inJuridicalId
  12.01.14         * add PriceList,
                         PriceListPromo,
                         StartPromo,
@@ -175,4 +177,4 @@ ALTER FUNCTION gpGet_Object_Partner(integer, TVarChar) OWNER TO postgres;
 */
 
 -- тест
--- SELECT * FROM gpGet_Object_Partner (1, '2')
+-- SELECT * FROM gpGet_Object_Partner (0, 1, '2')

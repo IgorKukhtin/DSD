@@ -1,12 +1,13 @@
 -- Function: gpSelect_Movement_Tax_ByPartner()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_ByPartner(
     IN inStartDate      TDateTime , --
     IN inEndDate        TDateTime , --
     IN inIsRegisterDate Boolean ,
     IN inIsErased       Boolean ,
+    IN inJuridicalId    Integer,
     IN inPartnerId      Integer,
     IN inSession        TVarChar    -- сессия пользователя
 )
@@ -144,18 +145,14 @@ BEGIN
             INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                                        AND MovementLinkObject_To.ObjectId = inPartnerId
-
+                                        AND MovementLinkObject_To.ObjectId = inJuridicalId
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                          ON MovementLinkObject_Partner.MovementId = Movement.Id
                                         AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-
-
             LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
-
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
@@ -177,16 +174,18 @@ BEGIN
                                          ON MovementLinkObject_From_Child.MovementId = MovementLinkMovement_Master.MovementId
                                         AND MovementLinkObject_From_Child.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MovementLinkObject_From_Child.ObjectId
+       WHERE MovementLinkObject_Partner.ObjectId = inPartnerId OR COALESCE (inPartnerId, 0) = 0
            ;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Tax_ByPartner (TDateTime, TDateTime, Boolean, Boolean, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                        * add inJuridicalId
  09.04.14                                                         *
 */
 

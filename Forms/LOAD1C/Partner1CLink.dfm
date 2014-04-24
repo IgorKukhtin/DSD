@@ -2,8 +2,8 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1090#1086#1095#1082#1072#1084#1080' '#1076#1086#1089#1090#1072#1074#1082#1080' '#1089' 1'#1057
   ClientHeight = 401
   ClientWidth = 877
-  ExplicitWidth = 885
-  ExplicitHeight = 428
+  ExplicitWidth = 893
+  ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -27,7 +27,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Styles.Footer = nil
           Styles.Header = nil
           object colJuridicalName: TcxGridDBColumn
-            Caption = #1070#1088'. '#1083#1080#1094#1086
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             Options.Editing = False
             Width = 189
@@ -148,27 +148,21 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end>
       isShowModal = False
     end
+    object actInsertRecordEmpty: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100
+      ShortCut = 45
+      ImageIndex = 0
+    end
     object actInsertRecord: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
       View = cxGridDBTableView
       Params = <
-        item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerCode'
-          Component = MasterCDS
-          ComponentItem = 'PartnerCode'
-        end
         item
           Name = 'JuridicalId'
           Component = MasterCDS
@@ -180,9 +174,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           ComponentItem = 'JuridicalName'
           DataType = ftString
         end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1079#1072#1087#1080#1089#1100
-      ShortCut = 45
-      ImageIndex = 0
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
     end
     object actChoiceContractForm: TOpenChoiceForm
       Category = 'DSDLib'
@@ -219,10 +214,11 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
     object actInsertPartner: TInsertUpdateChoiceAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
-      ImageIndex = 27
-      FormName = 'TPartnerJuridicalEditForm'
-      FormNameParam.Value = 'TPartnerJuridicalEditForm'
+      Caption = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+      ImageIndex = 1
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -231,14 +227,9 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           ComponentItem = 'JuridicalId'
         end
         item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
           Name = 'Id'
-          Value = '0'
+          Component = MasterCDS
+          ComponentItem = 'PartnerId'
         end
         item
           Name = 'Key'
@@ -246,7 +237,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           ComponentItem = 'PartnerId'
         end
         item
-          Name = 'TextValue'
+          Name = 'PartnerName'
           Component = MasterCDS
           ComponentItem = 'PartnerName'
           DataType = ftString
@@ -322,6 +313,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbInsertEmptyRecord'
+        end
+        item
+          Visible = True
           ItemName = 'bbAddRecord'
         end
         item
@@ -378,6 +373,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
+    end
+    object bbInsertEmptyRecord: TdxBarButton
+      Action = actInsertRecordEmpty
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

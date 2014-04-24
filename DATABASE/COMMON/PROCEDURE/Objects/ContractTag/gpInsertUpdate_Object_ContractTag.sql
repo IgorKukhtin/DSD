@@ -1,12 +1,12 @@
-п»ї-- Function: gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar)
+-- Function: gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContractTag(Integer,Integer,TVarChar,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContractTag(
- INOUT ioId	                 Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <РџСЂРёР·РЅРёРє РґРѕРіРѕРІРѕСЂР°>
-    IN inCode                Integer,       -- РљРѕРґ РѕР±СЉРµРєС‚Р° <>
-    IN inName                TVarChar,      -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <>
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	                 Integer,       -- ключ объекта <Призник договора>
+    IN inCode                Integer,       -- Код объекта <>
+    IN inName                TVarChar,      -- Название объекта <>
+    IN inSession             TVarChar       -- сессия пользователя
 )
   RETURNS integer AS
 $BODY$
@@ -14,25 +14,25 @@ $BODY$
    DECLARE vbCode_calc Integer;  
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractTag());
    vbUserId := inSession;
 
-   -- РїС‹С‚Р°РµРјСЃСЏ РЅР°Р№С‚Рё РєРѕРґ
+   -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
 
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_ContractTag());
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ>
+   -- проверка прав уникальности для свойства <Наименование>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_ContractTag(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ>
+   -- проверка прав уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_ContractTag(), vbCode_calc);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_ContractTag(), vbCode_calc, inName);
    
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
+   -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;
 $BODY$
@@ -42,12 +42,12 @@ ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,TVarC
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  21.04.14         *
       
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_ContractTag ()
                             

@@ -1482,8 +1482,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = 'PartnerId'
+        Name = 'JuridicalId'
         Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 912

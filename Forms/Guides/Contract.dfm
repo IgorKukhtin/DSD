@@ -101,6 +101,20 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 70
       end
+      object clContractTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082
+        DataBinding.FieldName = 'ContractTagName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = ContractTagChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = False
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
         DataBinding.FieldName = 'JuridicalCode'
@@ -272,6 +286,36 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 55
       end
+      object clPersonalTradeName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1087#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100
+        DataBinding.FieldName = 'PersonalTradeName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalTradeChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clPersonalCollationName: TcxGridDBColumn
+        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1074#1077#1088#1082#1072')'
+        DataBinding.FieldName = 'PersonalCollationName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = PersonalCollationChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object clAreaName: TcxGridDBColumn
         Caption = #1056#1077#1075#1080#1086#1085
         DataBinding.FieldName = 'AreaName'
@@ -298,17 +342,34 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 70
       end
+      object clBankAccountName: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090'('#1040#1083#1072#1085')'
+        DataBinding.FieldName = 'BankAccountName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = BankAccountChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
+        Visible = False
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object clBankAccountExternal: TcxGridDBColumn
-        Caption = #1056'.'#1089#1095#1077#1090'('#1086#1087#1083#1072#1090#1072' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1091')'
+        Caption = #1056'.'#1089#1095#1077#1090'('#1102#1088'.'#1083#1080#1094#1072')'
         DataBinding.FieldName = 'BankAccountExternal'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 47
       end
       object clBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
+        Caption = #1041#1072#1085#1082' ('#1102#1088'.'#1083#1080#1094#1072')'
         DataBinding.FieldName = 'BankName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -367,62 +428,6 @@ object ContractForm: TContractForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 40
-      end
-      object clPersonalTradeName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1087#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100
-        DataBinding.FieldName = 'PersonalTradeName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = PersonalTradeChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clPersonalCollationName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082#1080' ('#1089#1074#1077#1088#1082#1072')'
-        DataBinding.FieldName = 'PersonalCollationName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = PersonalCollationChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clBankAccountName: TcxGridDBColumn
-        Caption = #1056'.'#1089#1095#1077#1090'('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084')'
-        DataBinding.FieldName = 'BankAccountName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = BankAccountChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
-      object clContractTagName: TcxGridDBColumn
-        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
-        DataBinding.FieldName = 'ContractTagName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = ContractTagChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = False
-        HeaderAlignmentVert = vaCenter
-        Width = 60
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -501,7 +506,7 @@ object ContractForm: TContractForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = InfoMoneyChoiceForm1
+            Action = InfoMoneyChoiceForm_ContractCondition
             Default = True
             Kind = bkEllipsis
           end>
@@ -596,8 +601,8 @@ object ContractForm: TContractForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -891,7 +896,7 @@ object ContractForm: TContractForm
         end>
       isShowModal = True
     end
-    object InfoMoneyChoiceForm1: TOpenChoiceForm
+    object InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'InfoMoneyChoiceForm'
@@ -1159,9 +1164,6 @@ object ContractForm: TContractForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
-        end
-        item
-          StoredProc = dsdStoredProc
         end>
       Caption = 'actUpdateDataSet'
       DataSource = DataSource

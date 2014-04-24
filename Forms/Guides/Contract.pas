@@ -110,7 +110,7 @@ type
     clUpdateDate: TcxGridDBColumn;
     clisDefault: TcxGridDBColumn;
     clccInfoMoneyName: TcxGridDBColumn;
-    InfoMoneyChoiceForm1: TOpenChoiceForm;
+    InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
     clisStandart: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
     clPersonalCollationName: TcxGridDBColumn;
