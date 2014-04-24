@@ -12,15 +12,15 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxSplitter, cxContainer, cxTextEdit, cxMaskEdit, cxButtonEdit,
   dsdGuides, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
-  dxSkinsdxBarPainter, DataModul, cxLabel;
+  dxSkinsdxBarPainter, DataModul, cxLabel, cxImageComboBox;
 
 type
   TPartner1CLinkForm = class(TAncestorDBGridForm)
+    colPartnerCode: TcxGridDBColumn;
+    colPartnerName: TcxGridDBColumn;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
-    colDetailCode: TcxGridDBColumn;
-    colDetailName: TcxGridDBColumn;
-    colDetailBranch: TcxGridDBColumn;
+    colBranchName: TcxGridDBColumn;
     dxBarControlContainerItem: TdxBarControlContainerItem;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
@@ -29,7 +29,7 @@ type
     actChoiceBranchForm: TOpenChoiceForm;
     actInsertRecord: TInsertRecord;
     bbAddRecord: TdxBarButton;
-    colDetailContract: TcxGridDBColumn;
+    colContractNumber: TcxGridDBColumn;
     actChoiceContractForm: TOpenChoiceForm;
     actInsertPartner: TInsertUpdateChoiceAction;
     bbInsertPartner: TdxBarButton;

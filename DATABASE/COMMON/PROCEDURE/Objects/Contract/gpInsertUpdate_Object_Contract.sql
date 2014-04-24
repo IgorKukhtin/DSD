@@ -118,6 +118,11 @@ BEGIN
    THEN
       RAISE EXCEPTION 'Ошибка.У <Юридическое лицо> не установлен <ОКПО>.';
    END IF;
+   -- проверка для 
+   IF inInfoMoneyId = zc_Enum_InfoMoney_30101() AND COALESCE (inContractTagId, 0) = 0
+   THEN
+       RAISE EXCEPTION 'Ошибка.Для <%> необходимо установить <Признак договора>.', lfGet_Object_ValueData (inInfoMoneyId);
+   END IF;
 
 
    -- определили <Признак>

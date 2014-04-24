@@ -18,6 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TaxKindId Integer, TaxKindName TVarChar
              , DocumentMasterId Integer, DocumentMasterName TVarChar
              , DocumentChildId Integer, DocumentChildName TVarChar
+             , InvNumberBranch TVarChar
               )
 AS
 $BODY$
@@ -59,6 +60,7 @@ BEGIN
              , CAST ('' as TVarChar) 				AS DocumentMasterName
              , 0                     				AS DocumentChildId
              , CAST ('' as TVarChar) 				AS DocumentChildName
+             , CAST ('' as TVarChar) 				AS InvNumberBranch
 
           FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
@@ -98,6 +100,7 @@ BEGIN
            , CAST(Movement_DocumentMaster.InvNumber as TVarChar)            AS DocumentMasterName
            , Movement_DocumentChild.Id                                      AS DocumentChildId
            , CAST(MS_DocumentChild_InvNumberPartner.ValueData as TVarChar)  AS DocumentChildName
+           , MovementString_InvNumberBranch.ValueData                       AS InvNumberBranch
 
 
        FROM Movement
@@ -186,8 +189,9 @@ BEGIN
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
-
-
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TaxCorrective();
@@ -201,7 +205,8 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar) OWNER
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                                        * add zc_MovementString_InvNumberBranch
  15.04.14                                                        *   + Partner
  27.02.14                                                        *
  17.02.14                                                        *   fix is default is null

@@ -684,6 +684,7 @@
       isShowModal = False
       DataSource = ContractDS
       DataSetRefresh = actContractRefresh
+      IdFieldName = 'Id'
     end
     object actContractUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -717,6 +718,7 @@
       ActionType = acUpdate
       DataSource = ContractDS
       DataSetRefresh = actContractRefresh
+      IdFieldName = 'Id'
     end
     object actPartnerInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -724,8 +726,8 @@
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TPartnerJuridicalEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -737,16 +739,11 @@
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-        end
-        item
-          Name = 'JuridicalName'
-          Value = ''
-          Component = edName
-          DataType = ftString
         end>
       isShowModal = False
       DataSource = PartnerDS
       DataSetRefresh = actPartnerRefresh
+      IdFieldName = 'Id'
     end
     object actPartnerUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -754,8 +751,8 @@
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TPartnerJuridicalEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TPartnerEditForm'
+      FormNameParam.Value = 'TPartnerEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -769,17 +766,12 @@
           Value = Null
           Component = FormParams
           ComponentItem = 'Id'
-        end
-        item
-          Name = 'JuridicalName'
-          Value = ''
-          Component = edName
-          DataType = ftString
         end>
       isShowModal = False
       ActionType = acUpdate
       DataSource = PartnerDS
       DataSetRefresh = actPartnerRefresh
+      IdFieldName = 'Id'
     end
     object actPartnerRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -1444,6 +1436,8 @@
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 184
     Top = 48
   end
@@ -1463,6 +1457,8 @@
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 392
     Top = 248
   end
@@ -1475,6 +1471,8 @@
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 480
     Top = 296
   end

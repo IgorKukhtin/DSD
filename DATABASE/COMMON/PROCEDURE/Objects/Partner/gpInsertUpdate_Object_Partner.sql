@@ -1,11 +1,11 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
+   OUT outPartnerName        TVarChar  ,    -- ключ объекта <Контрагент> 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inAddress             TVarChar  ,    -- Адрес точки доставки
     IN inGLNCode             TVarChar  ,    -- Код GLN
@@ -23,11 +23,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     
     IN inSession             TVarChar       -- сессия пользователя
 )
-  RETURNS integer AS
+  RETURNS RECORD AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
-   DECLARE vbName TVarChar;   
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -45,19 +44,19 @@ BEGIN
    
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
-   SELECT ValueData INTO vbName FROM Object WHERE Id = inJuridicalId;
+   SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
    -- !!!в название добавляем <Адрес точки доставки>!!!
-   vbName:= vbName || ' ' || inAddress;
+   outPartnerName:= outPartnerName || ' ' || inAddress;
 
 
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), vbName);
+   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), outPartnerName);
    -- проверка уникальности <Код>
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, vbName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, outPartnerName);
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <Адрес точки доставки>
@@ -98,6 +97,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarCh
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.04.14                                        * add outPartnerName
  12.01.14         * add PriceList,
                         PriceListPromo,
                         StartPromo,

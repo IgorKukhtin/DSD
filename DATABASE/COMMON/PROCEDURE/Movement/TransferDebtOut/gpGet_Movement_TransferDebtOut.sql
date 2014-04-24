@@ -9,12 +9,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , PriceWithVAT Boolean, VATPercent TFloat
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
              , InvNumber_Master TVarChar
               )
 AS
@@ -36,6 +37,7 @@ BEGIN
 
              , CAST (False as Boolean)          AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
+             , CAST (0 AS TFloat)               AS ChangePercent
 
              , CAST (0 as TFloat)                   AS TotalCountKg
              , CAST (0 as TFloat)                   AS TotalCountSh
@@ -57,13 +59,18 @@ BEGIN
              , 0                     	AS PaidKindFromId
              , CAST ('' as TVarChar) 	AS PaidKindFromName             
              , 0                     	AS PaidKindToId
-             , CAST ('' as TVarChar) 	AS PaidKindToName       
+             , CAST ('' as TVarChar) 	AS PaidKindToName  
+             
+             , Object_PriceList.Id                                  AS PriceListId
+             , Object_PriceList.ValueData                           AS PriceListName     
+             
              , CAST ('' as TVarChar) 	AS InvNumber_Master
              
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
+          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
+          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
 
      ELSE
 
@@ -76,6 +83,7 @@ BEGIN
            , Object_Status.ValueData     		AS StatusName
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
 
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
@@ -100,7 +108,10 @@ BEGIN
            , Object_PaidKindTo.Id                 AS PaidKindToId
            , Object_PaidKindTo.ValueData          AS PaidKindToName
 
-           , Movement_DocumentMaster.InvNumber    AS InvNumber_Master
+           , Object_PriceList.id                    AS PriceListId
+           , Object_PriceList.valuedata             AS PriceListName
+
+           , COALESCE (Movement_DocumentMaster.InvNumber, '')::TVarChar    AS InvNumber_Master
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -111,6 +122,10 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                    AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
@@ -170,6 +185,10 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()    
+            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransferDebtOut();
      END IF;

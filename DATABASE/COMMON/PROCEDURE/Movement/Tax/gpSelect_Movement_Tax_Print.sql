@@ -112,8 +112,12 @@ BEGIN
            , CASE WHEN ((MovementFloat_TotalSummPVAT.ValueData
                         -MovementFloat_TotalSummMVAT.ValueData)>10000)
                   THEN 'X' ELSE '' END                  AS ERPN
-
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
        FROM Movement
+
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
@@ -552,6 +556,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                                       * add zc_MovementString_InvNumberBranch
  11.04.14                                                       *
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
  01.04.14                                                       *  MIFloat_Price.ValueData <> 0

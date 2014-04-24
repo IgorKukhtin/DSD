@@ -23,6 +23,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , DocumentChildId Integer, OperDate_Child TDateTime, InvNumberPartner_Child TVarChar
              , isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , InvNumberBranch TVarChar
               )
 AS
 $BODY$
@@ -41,36 +42,36 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
      SELECT
-             Movement.Id				 AS Id
-           , Movement.InvNumber				 AS InvNumber
-           , Movement.OperDate				 AS OperDate
-           , Object_Status.ObjectCode    		 AS StatusCode
-           , Object_Status.ValueData     		 AS StatusName
-           , MovementBoolean_Checked.ValueData           AS Checked
-           , MovementBoolean_Document.ValueData          AS Document
-           , MovementBoolean_Registered.ValueData        AS Registered
-           , MovementDate_DateRegistered.ValueData       AS DateRegistered
-           , MovementBoolean_PriceWithVAT.ValueData      AS PriceWithVAT
-           , MovementFloat_VATPercent.ValueData          AS VATPercent
-           , MovementFloat_TotalCount.ValueData          AS TotalCount
+             Movement.Id				                AS Id
+           , Movement.InvNumber				            AS InvNumber
+           , Movement.OperDate				            AS OperDate
+           , Object_Status.ObjectCode    		        AS StatusCode
+           , Object_Status.ValueData     		        AS StatusName
+           , MovementBoolean_Checked.ValueData          AS Checked
+           , MovementBoolean_Document.ValueData         AS Document
+           , MovementBoolean_Registered.ValueData       AS Registered
+           , MovementDate_DateRegistered.ValueData      AS DateRegistered
+           , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
-           , MovementFloat_TotalSummMVAT.ValueData       AS TotalSummMVAT
-           , MovementFloat_TotalSummPVAT.ValueData       AS TotalSummPVAT
-           , MovementFloat_TotalSumm.ValueData           AS TotalSumm
-           , MovementString_InvNumberPartner.ValueData   AS InvNumberPartner
-           , Object_From.Id                    		 AS FromId
-           , Object_From.ValueData             		 AS FromName
-           , ObjectHistory_JuridicalDetails_View.OKPO    AS OKPO_From
-           , Object_To.Id                      		 AS ToId
-           , Object_To.ValueData               		 AS ToName
-           , Object_Partner.ObjectCode                   AS PartnerCode
-           , Object_Partner.ValueData               	 AS PartnerName
-           , View_Contract_InvNumber.ContractId        	 AS ContractId
-           , View_Contract_InvNumber.invnumber         	 AS ContractName
-           , Object_TaxKind.Id                		 AS TaxKindId
-           , Object_TaxKind.ValueData         		 AS TaxKindName
-           , Movement_DocumentMaster.Id                  AS DocumentMasterId
-           , Movement_DocumentMaster.InvNumber           AS InvNumber_Master
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , Object_From.Id                    		    AS FromId
+           , Object_From.ValueData             		    AS FromName
+           , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
+           , Object_To.Id                      		    AS ToId
+           , Object_To.ValueData               		    AS ToName
+           , Object_Partner.ObjectCode                  AS PartnerCode
+           , Object_Partner.ValueData               	AS PartnerName
+           , View_Contract_InvNumber.ContractId        	AS ContractId
+           , View_Contract_InvNumber.invnumber         	AS ContractName
+           , Object_TaxKind.Id                		    AS TaxKindId
+           , Object_TaxKind.ValueData         		    AS TaxKindName
+           , Movement_DocumentMaster.Id                 AS DocumentMasterId
+           , Movement_DocumentMaster.InvNumber          AS InvNumber_Master
            , MS_InvNumberPartner_DocumentMaster.ValueData AS InvNumberPartner_Master
            , Movement_DocumentChild.Id                   AS DocumentChildId
            , Movement_DocumentChild.OperDate             AS OperDate_Child
@@ -100,6 +101,7 @@ BEGIN
            , View_InfoMoney.InfoMoneyDestinationName
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
+           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
 
        FROM (SELECT Movement.id FROM  tmpStatus
                JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TaxCorrective() AND Movement.StatusId = tmpStatus.StatusId
@@ -224,6 +226,10 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Child
                                          ON MovementLinkObject_Contract_Child.MovementId = MovementLinkMovement_Child.MovementId
                                         AND MovementLinkObject_Contract_Child.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+
            ;
 
 END;
@@ -234,6 +240,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective (TDateTime, TDateTime, Boolean, B
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.04.14                                                        * add zc_MovementString_InvNumberBranch
  12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()
  28.03.14                                        * add TotalSummVAT
  23.03.14                                        * add Object_InfoMoney_View

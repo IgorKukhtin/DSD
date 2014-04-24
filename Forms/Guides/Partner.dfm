@@ -24,7 +24,7 @@ object PartnerForm: TPartnerForm
     Width = 834
     Height = 438
     Align = alClient
-    TabOrder = 4
+    TabOrder = 2
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -175,8 +175,8 @@ object PartnerForm: TPartnerForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -339,6 +339,12 @@ object PartnerForm: TPartnerForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'JuridicalId'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'Key'
         end>
       isShowModal = False
       DataSource = DataSource

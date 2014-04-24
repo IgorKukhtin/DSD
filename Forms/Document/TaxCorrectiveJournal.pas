@@ -67,6 +67,7 @@ type
     spSelectPrintTaxCorrective_Reest: TdsdStoredProc;
     actPrint_TaxCorrective_Reestr: TdsdPrintAction;
     bbPrintTaxCorrective_Reestr: TdxBarButton;
+    colInvNumberBranch: TcxGridDBColumn;
   private
     { Private declarations }
   public

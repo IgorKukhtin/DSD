@@ -17,6 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractId Integer, ContractName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
+             , InvNumberBranch TVarChar
               )
 AS
 $BODY$
@@ -48,12 +49,13 @@ BEGIN
              , Object_Juridical_Basis.ValueData		AS FromName
              , 0                     				AS ToId
              , CAST ('' as TVarChar) 				AS ToName
-             , 0                                 		AS PartnerId
-             , CAST ('' as TVarChar)               		AS PartnerName
+             , 0                               		AS PartnerId
+             , CAST ('' as TVarChar)           		AS PartnerName
              , 0                     				AS ContractId
              , CAST ('' as TVarChar) 				AS ContractName
              , 0                     				AS TaxKindId
              , CAST ('' as TVarChar) 				AS TaxKindName
+             , CAST ('' as TVarChar) 				AS InvNumberBranch
 
           FROM (SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
@@ -72,7 +74,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
            , COALESCE (MovementBoolean_Registered.ValueData, FALSE)     AS Registered
-           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
+           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
@@ -83,12 +85,13 @@ BEGIN
            , Object_From.ValueData             			AS FromName
            , Object_To.Id                      			AS ToId
            , Object_To.ValueData               			AS ToName
-           , Object_Partner.Id                      		AS PartnerId
-           , Object_Partner.ValueData               		AS PartnerName
+           , Object_Partner.Id                     		AS PartnerId
+           , Object_Partner.ValueData              		AS PartnerName
            , Object_Contract.ContractId        			AS ContractId
            , Object_Contract.invnumber         			AS ContractName
            , Object_TaxKind.Id                			AS TaxKindId
            , Object_TaxKind.ValueData         			AS TaxKindName
+           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
 
 
        FROM Movement
@@ -161,6 +164,11 @@ BEGIN
 
             LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
+
+
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Tax();
@@ -175,6 +183,7 @@ ALTER FUNCTION gpGet_Movement_Tax (Integer, TDateTime, TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.04.14                                                        * add zc_MovementString_InvNumberBranch
  09.04.14                                        * add PartnerId
  27.02.14                                                        *
  09.02.14                                                        *

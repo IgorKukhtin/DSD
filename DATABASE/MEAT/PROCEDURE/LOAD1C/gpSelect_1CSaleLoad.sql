@@ -82,6 +82,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad (TDateTime, TDateTime, Integer, TVarChar) OWN
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  24.04.14                         * 
+ 24.04.14                                        * add Contract...
  11.04.14                         * 
  09.04.14                         * 
  17.02.14                         * 
