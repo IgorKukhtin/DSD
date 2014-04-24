@@ -87,7 +87,7 @@ object TestForm: TTestForm
     Top = 118
     Width = 520
     Height = 648
-    ActivePage = CertAndCRLTabSheet
+    ActivePage = EnvelopeTabSheet
     TabOrder = 4
     OnChange = FunctionsPageControlChange
     object CertAndCRLTabSheet: TTabSheet
@@ -105,8 +105,6 @@ object TestForm: TTestForm
         TabOrder = 0
         inherited ShowCertAndCRLPanel: TPanel
           Height = 90
-          ExplicitLeft = 56
-          ExplicitTop = -6
           ExplicitHeight = 90
           inherited ShowCertAndCRLUnderlineImage: TImage
             Top = 89
@@ -266,7 +264,6 @@ object TestForm: TTestForm
         Height = 620
         TabOrder = 0
         inherited EncryptDataPanel: TPanel
-          ExplicitTop = 101
           inherited DataLabel: TLabel
             Width = 113
             ExplicitWidth = 113
@@ -277,7 +274,6 @@ object TestForm: TTestForm
           end
         end
         inherited EncryptFilePanel: TPanel
-          ExplicitTop = 339
           inherited EncryptFileLabel: TLabel
             Width = 131
             ExplicitWidth = 131
@@ -286,9 +282,9 @@ object TestForm: TTestForm
             Width = 115
             ExplicitWidth = 115
           end
-        end
-        inherited TestPanel: TPanel
-          ExplicitTop = 559
+          inherited EncryptFileButton: TButton
+            OnClick = EnvelopeFunctionsFrameEncryptFileButtonClick
+          end
         end
       end
     end

@@ -40,6 +40,7 @@ type
     procedure FunctionsPageControlChange(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure SignFunctionsFrameFullFileTestButtonClick(Sender: TObject);
+    procedure EnvelopeFunctionsFrameEncryptFileButtonClick(Sender: TObject);
 
   public
     CPInitialized: Boolean;
@@ -77,6 +78,13 @@ destructor TTestForm.Destroy;
 begin
   inherited;
   OleUninitialize;
+end;
+
+procedure TTestForm.EnvelopeFunctionsFrameEncryptFileButtonClick(
+  Sender: TObject);
+begin
+  EnvelopeFunctionsFrame.EncryptFileButtonClick(Sender);
+
 end;
 
 { ------------------------------------------------------------------------------ }

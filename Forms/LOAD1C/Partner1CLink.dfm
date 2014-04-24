@@ -154,22 +154,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       View = cxGridDBTableView
       Params = <
         item
-          Name = 'PartnerId'
-          Component = MasterCDS
-          ComponentItem = 'PartnerId'
-        end
-        item
-          Name = 'PartnerName'
-          Component = MasterCDS
-          ComponentItem = 'PartnerName'
-          DataType = ftString
-        end
-        item
-          Name = 'PartnerCode'
-          Component = MasterCDS
-          ComponentItem = 'PartnerCode'
-        end
-        item
           Name = 'JuridicalId'
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
