@@ -444,6 +444,9 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
     end
+    inherited actSimpleCompleteList: TMultiAction
+      View = cxGridDBTableView
+    end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>

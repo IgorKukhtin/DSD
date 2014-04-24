@@ -323,7 +323,7 @@ BEGIN
           END IF;
 
           -- сохранили Документ
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
+          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
                                                           , inContractId := vbContractId, inUserId := vbUserId);
@@ -391,6 +391,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.04.14                                        * add inInvNumberMark
  18.04.14                        *  	Задваивал возвраты
  07.04.14                        * 
  31.03.14                        * 

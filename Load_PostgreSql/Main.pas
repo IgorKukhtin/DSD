@@ -10916,7 +10916,7 @@ begin
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
                   fOpenSqToQuery ('select ValueData AS InvNumberMark from MovementString where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementString_InvNumberMark()');
-                  InvNumberMark:=toSqlQuery.FieldByName('PriceListId').AsString;
+                  InvNumberMark:=toSqlQuery.FieldByName('InvNumberMark').AsString;
              end
              else InvNumberMark:='';
 

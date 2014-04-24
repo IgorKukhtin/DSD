@@ -24,7 +24,7 @@ BEGIN
                                          ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
       WHERE Movement.Id = ioId
-        AND Movement.DescId = zc_Movement_TaxCorrective()
+        AND Movement.DescId = zc_Movement_TaxCorrective();
 
 END;
 $BODY$
