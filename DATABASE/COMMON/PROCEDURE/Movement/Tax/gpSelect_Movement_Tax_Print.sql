@@ -112,7 +112,7 @@ BEGIN
            , CASE WHEN ((MovementFloat_TotalSummPVAT.ValueData
                         -MovementFloat_TotalSummMVAT.ValueData)>10000)
                   THEN 'X' ELSE '' END                  AS ERPN
-           , MovementString_InvNumberBranch.ValueData   AS InvNumberBranch
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
        FROM Movement
 
             LEFT JOIN MovementString AS MovementString_InvNumberBranch

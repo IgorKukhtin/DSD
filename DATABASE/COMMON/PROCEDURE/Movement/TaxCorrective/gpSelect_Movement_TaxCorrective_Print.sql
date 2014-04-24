@@ -125,8 +125,12 @@ BEGIN
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                                           AS AmountSumm
-           , MovementString_InvNumberBranch.ValueData                       AS InvNumberBranch
-           , MovementString_InvNumberBranch_Child.ValueData                 AS InvNumberBranch_Child
+
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch_Child.ValueData)) || MovementString_InvNumberBranch_Child.ValueData AS TVarChar) AS InvNumberBranch_Child
+
+
+
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
                                    AND MovementItem.DescId     = zc_MI_Master()
