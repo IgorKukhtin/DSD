@@ -126,6 +126,10 @@ BEGIN
                            ELSE CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                    END AS TFloat)                                           AS AmountSumm
 
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
+           , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch_Child.ValueData)) || MovementString_InvNumberBranch_Child.ValueData AS TVarChar) AS InvNumberBranch_Child
+
+
 
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
@@ -157,6 +161,9 @@ BEGIN
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
 -- MOVEMENT
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch
+                                     ON MovementString_InvNumberBranch.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementDate AS MovementDate_DateRegistered
                                    ON MovementDate_DateRegistered.MovementId =  Movement.Id
@@ -228,6 +235,10 @@ BEGIN
                                           AND MovementLinkMovement_DocumentChild.DescId = zc_MovementLinkMovement_Child()
 
             LEFT JOIN Movement AS Movement_DocumentChild ON Movement_DocumentChild.Id = MovementLinkMovement_DocumentChild.MovementChildId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberBranch_Child
+                                     ON MovementString_InvNumberBranch_Child.MovementId =  MovementLinkMovement_DocumentChild.MovementChildId
+                                    AND MovementString_InvNumberBranch_Child.DescId = zc_MovementString_InvNumberBranch()
 
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
@@ -370,6 +381,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                                       * add zc_MovementString_InvNumberBranch
  23.04.14                                        * add печатаем всегда все корректировки
  14.04.14                                                       *
  10.04.14                                                       *

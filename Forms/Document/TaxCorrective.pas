@@ -82,6 +82,8 @@ type
     GuidesFrom: TdsdGuides;
     HeaderSaverIsDocument: THeaderSaver;
     spInsertUpdateMovement_IsDocument: TdsdStoredProc;
+    cxLabel13: TcxLabel;
+    edInvNumberBranch: TcxTextEdit;
   private
     { Private declarations }
   public

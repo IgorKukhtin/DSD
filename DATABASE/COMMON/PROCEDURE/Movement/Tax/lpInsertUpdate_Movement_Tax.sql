@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
     IN inInvNumber           TVarChar  , -- Номер документа
  INOUT ioInvNumberPartner    TVarChar  , -- Номер налогового документа
+    IN inInvNumberBranch     TVarChar  , -- Номер филиала
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inDocument            Boolean   , -- Есть ли подписанный документ
@@ -40,14 +42,14 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.Не установлен договор.';
      END IF;
 
-     IF COALESCE (ioInvNumberPartner, '') = '' 
+     IF COALESCE (ioInvNumberPartner, '') = ''
      THEN
-        SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar) 
+        SELECT CAST (NEXTVAL ('movement_tax_seq') AS TVarChar)
         INTO ioInvNumberPartner;
-    
+
      END IF;
 
-     
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -56,6 +58,9 @@ BEGIN
 
      -- сохранили свойство <Номер налогового документа>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, ioInvNumberPartner);
+
+     -- сохранили свойство <Номер филиала>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberBranch(), ioId, inInvNumberBranch);
 
      -- сохранили свойство <Проверен>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
@@ -93,9 +98,10 @@ $BODY$
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                                       * add inInvNumberBranch
  16.04.14                                        * add lpInsert_MovementProtocol
- 29.03.14         * add  INOUT ioInvNumberPartner 
+ 29.03.14         * add  INOUT ioInvNumberPartner
  16.03.14                                        * add inPartnerId
  12.02.14                                                       * change to inDocumentTaxKindId
  11.02.14                                                       *  - registred
@@ -104,6 +110,3 @@ $BODY$
 
 -- тест
 -- SELECT * FROM lpInsertUpdate_Movement_Tax (ioId:= 0, inInvNumber:= '-1',inInvNumberPartner:= '-1', inOperDate:= '01.01.2013', inChecked:= FALSE, inDocument:=FALSE, inPriceWithVAT:= true, inVATPercent:= 20, inFromId:= 1, inToId:= 2, inContractId:= 0, inDocumentTaxKind:= 0, inUserId:=24)
-
-
-
