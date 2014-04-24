@@ -51,6 +51,7 @@ BEGIN
                            JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                            ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                                          AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                  WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink() AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -70,7 +71,7 @@ BEGIN
 
      -- Проверка
      IF vbSaleCount <> vbCount THEN 
-        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен.'; 
+        RAISE EXCEPTION 'Ошибка.Найдены не все данные справочников. Перенос не возможен.'; 
      END IF;
 
 

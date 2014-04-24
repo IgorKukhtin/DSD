@@ -8,13 +8,29 @@ AS
        , Object_Contract.ObjectCode                  AS ContractCode  
        , CAST(CASE WHEN Object_Contract.ValueData <> '' THEN Object_Contract.ValueData ELSE '**ÛÔ' || CAST (Object_InfoMoney.ObjectCode AS TVarChar) END AS TVarChar) AS InvNumber
        , ObjectLink_Contract_InfoMoney.ChildObjectId AS InfoMoneyId
+       , Object_ContractTag.Id                       AS ContractTagId
+       , Object_ContractTag.ObjectCode               AS ContractTagCode
+       , Object_ContractTag.ValueData                AS ContractTagName
+       , COALESCE (Object_ContractStateKind.Id, 0)   AS ContractStateKindId
+       , Object_ContractStateKind.ObjectCode         AS ContractStateKindCode
+       , Object_ContractStateKind.ValueData          AS ContractStateKindName
        , Object_Contract.isErased                    AS isErased
   FROM Object AS Object_Contract
        LEFT JOIN ObjectLink AS ObjectLink_Contract_InfoMoney
-                            ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id 
+                            ON ObjectLink_Contract_InfoMoney.ObjectId = Object_Contract.Id
                            AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
-                           
        LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_Contract_InfoMoney.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractTag
+                            ON ObjectLink_Contract_ContractTag.ObjectId = Object_Contract.Id
+                           AND ObjectLink_Contract_ContractTag.DescId = zc_ObjectLink_Contract_ContractTag()
+       LEFT JOIN Object AS Object_ContractTag ON Object_ContractTag.Id = ObjectLink_Contract_ContractTag.ChildObjectId
+
+       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
+                            ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract.Id
+                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
+       LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
+
   WHERE Object_Contract.DescId = zc_Object_Contract();
 
 
@@ -25,6 +41,7 @@ ALTER TABLE Object_Contract_InvNumber_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.04.14                                        * all
  14.01.14                                        * 
 */
 

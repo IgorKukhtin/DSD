@@ -132,7 +132,7 @@
       Height = 446
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = PartnerTS
+      Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 446
       ClientRectRight = 841

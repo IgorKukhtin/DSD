@@ -72,7 +72,7 @@ BEGIN
            , COALESCE (MovementBoolean_Checked.ValueData, FALSE)        AS Checked
            , COALESCE (MovementBoolean_Document.ValueData, FALSE)       AS Document
            , COALESCE (MovementBoolean_Registered.ValueData, FALSE)     AS Registered
-           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('MINUTE', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
+           , COALESCE (MovementDate_DateRegistered.ValueData,CAST (DATE_TRUNC ('DAY', CURRENT_TIMESTAMP) AS TDateTime))AS DateRegistered
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_TotalCount.ValueData         AS TotalCount
