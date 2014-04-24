@@ -1213,12 +1213,12 @@
 				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
-				<Form>SaleJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
+				<Form>TransferDebtOutJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Sale.pas">
-				<Form>SaleForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOut.pas">
+				<Form>TransferDebtOutForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\City.pas">
@@ -1239,6 +1239,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\AreaEdit.pas">
 				<Form>AreaEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SaleJournal.pas">
+				<Form>SaleJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Sale.pas">
+				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

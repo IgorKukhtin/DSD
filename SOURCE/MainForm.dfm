@@ -370,6 +370,14 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbSaveTaxDocument'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTransferDebtOut'
         end>
     end
     object bbTaxDocuments_Separator: TdxBarSeparator
@@ -1507,6 +1515,10 @@ object MainForm: TMainForm
     end
     object bbReport_CheckContractInMovement: TdxBarButton
       Action = actReport_CheckContractInMovement
+      Category = 0
+    end
+    object bbTransferDebtOut: TdxBarButton
+      Action = actTransferDebtOut
       Category = 0
     end
   end
@@ -3058,6 +3070,17 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actTransferDebtOut: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
+      FormName = 'TTransferDebtOutJournalForm'
+      FormNameParam.Name = 'TTransferDebtOutJournalForm'
+      FormNameParam.Value = 'TTransferDebtOutJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -3146,8 +3169,6 @@ object MainForm: TMainForm
     Top = 88
     Datasets = <
       item
-        DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-        DataSetName = 'frxDBDataset'
       end>
     Variables = <
       item
@@ -3177,8 +3198,6 @@ object MainForm: TMainForm
         Top = 243.000000000000000000
         Visible = False
         Width = 1046.920361175000000000
-        DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-        DataSetName = 'frxDBDataset'
         RowCount = 0
       end
       object Header1: TfrxHeader
@@ -3207,8 +3226,6 @@ object MainForm: TMainForm
           Width = 217.000000000000000000
           Height = 32.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3226,8 +3243,6 @@ object MainForm: TMainForm
           Width = 156.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3246,8 +3261,6 @@ object MainForm: TMainForm
           Width = 156.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3266,8 +3279,6 @@ object MainForm: TMainForm
           Width = 85.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3286,8 +3297,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3306,8 +3315,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3326,8 +3333,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3346,8 +3351,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3366,8 +3369,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3386,8 +3387,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3406,8 +3405,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3426,8 +3423,6 @@ object MainForm: TMainForm
           Width = 241.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3446,8 +3441,6 @@ object MainForm: TMainForm
           Width = 78.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3466,8 +3459,6 @@ object MainForm: TMainForm
           Width = 156.000000000000000000
           Height = 16.000000000000000000
           ShowHint = False
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3560,8 +3551,6 @@ object MainForm: TMainForm
           ShowHint = False
           StretchMode = smMaxHeight
           DataField = 'juridicalname'
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           Font.Charset = DEFAULT_CHARSET
           Font.Color = clBlack
           Font.Height = -11
@@ -3580,8 +3569,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3603,8 +3590,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3626,8 +3611,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3649,8 +3632,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3672,8 +3653,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3695,8 +3674,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3718,8 +3695,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3743,8 +3718,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3768,8 +3741,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3798,8 +3769,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3820,8 +3789,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3842,8 +3809,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3864,8 +3829,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3886,8 +3849,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3908,8 +3869,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3930,8 +3889,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3954,8 +3911,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET
@@ -3978,8 +3933,6 @@ object MainForm: TMainForm
           Height = 16.000000000000000000
           ShowHint = False
           StretchMode = smMaxHeight
-          DataSet = Report_JuridicalDefermentPayment.frxDBDataset
-          DataSetName = 'frxDBDataset'
           DisplayFormat.FormatStr = '%2.2n'
           DisplayFormat.Kind = fkNumeric
           Font.Charset = DEFAULT_CHARSET

@@ -91,6 +91,7 @@ type
     procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
     procedure LoadTransportServiceFormTest;
+    procedure LoadTransferDebtOutFormTest;
     procedure LoadTradeMarkFormTest;
     procedure LoadUnionFormTest;
     procedure LoadUnitFormTest;
@@ -593,6 +594,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransportServiceJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransportServiceJournalForm');
+end;
+
+procedure TLoadFormTest.LoadTransferDebtOutFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOutForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOutForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtOutJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TTransferDebtOutJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;
