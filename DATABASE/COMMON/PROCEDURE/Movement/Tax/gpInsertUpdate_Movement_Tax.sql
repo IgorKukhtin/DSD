@@ -3,11 +3,13 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Tax (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inInvNumberPartner    TVarChar  , -- Номер налогового документа
+    IN inInvNumberBranch     TVarChar  , -- Номер филиала
     IN inOperDate            TDateTime , -- Дата документа
     IN inChecked             Boolean   , -- Проверен
     IN inDocument            Boolean   , -- Есть ли подписанный документ
@@ -31,7 +33,7 @@ BEGIN
      SELECT tmp.ioId
           , tmp.ioInvNumberPartner
             INTO ioId, inInvNumberPartner
-     FROM lpInsertUpdate_Movement_Tax (ioId, inInvNumber, inInvNumberPartner, inOperDate
+     FROM lpInsertUpdate_Movement_Tax (ioId, inInvNumber, inInvNumberPartner, inInvNumberBranch, inOperDate
                                      , inChecked, inDocument, inPriceWithVAT, inVATPercent
                                      , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId
                                       ) AS tmp;
@@ -43,6 +45,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                                       * add inInvNumberBranch
  30.03.14                                        * add ioInvNumberPartner
  16.03.14                                        * add inPartnerId
  11.02.14                                                         *  - registred

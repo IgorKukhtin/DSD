@@ -81,6 +81,8 @@ type
     GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
     PrintItemsSverkaCDS: TClientDataSet;
+    cxLabel8: TcxLabel;
+    edInvNumberBranch: TcxTextEdit;
   private
     { Private declarations }
   public
