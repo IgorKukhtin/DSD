@@ -74,42 +74,6 @@ begin
   result := ZDecompressStr(result)
 end;
 
-
-
-{function ANSIToXML(S: String): String;
-var i: integer;
-begin
-  result := '';
-  for I := 1 to Length(S) do
-    if (s[i] < #32) or (s[i] = #$0098) then
-      result := result + '&amp;#' + IntToHex(byte(s[i]),2) + ';'
-    else
-      result := result + gfStrToXmlStr(s[i]);
-end;
-
-function ANSIToXMLFile(S: String): String;
-var i: integer;
-begin
-  result := '';
-  for I := 1 to Length(S) do
-      result := result + '999999999';//'&amp;#' + IntToHex(byte(s[i]),2) + ';'
-end;
-
-function XMLToAnsi(S: String): String;
-var i: integer;
-begin
-  i := 1;
-  while i <= Length(S) do begin
-      if (s[i] = '&') and (s[i+1] = '#') and (s[i+4] = ';') then begin
-         result := result + char(StrToInt('$' + s[i+2] + s[i+3]));
-         i := i + 4;
-      end
-      else
-        result := result + s[i];
-      i := i + 1;
-  end;
-end;
- }
 function StreamToString(Stream: TStream): String;
 begin
     with TStringStream.Create('') do

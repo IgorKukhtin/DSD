@@ -2,10 +2,13 @@
 
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpLoadSaleFrom1C (TDateTime, TDateTime, TDateTime, TVarChar, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpLoadSaleFrom1C(
     IN inStartDate           TDateTime  , -- Начальная дата переноса
     IN inEndDate             TDateTime  , -- Конечная дата переноса
+    IN inOperDate            TDateTime  ,
+    IN inInvNumber           TVarChar   ,
     IN inBranchId            Integer    , -- Филиал
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -32,73 +35,7 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
-
-     -- Определяем итого записей (для проверка что все для переноса установлено)
-     SELECT COUNT(*) INTO vbSaleCount 
-       FROM Sale1C 
-      WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-        AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
-
-     -- Определяем итого связанных записей (для проверка что все для переноса установлено)
-     SELECT COUNT(*) INTO vbCount
-      FROM Sale1C
-           JOIN (SELECT Object_Partner1CLink.ObjectCode
-                      , ObjectLink_Partner1CLink_Branch.ChildObjectId  AS BranchId
-                 FROM Object AS Object_Partner1CLink
-                      LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                           ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-                           JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
-                                           ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
-                                          AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
-                 WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink() AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
-                ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
-                                     AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
-
-           JOIN (SELECT Object_GoodsByGoodsKind1CLink.ObjectCode
-                      , ObjectLink_GoodsByGoodsKind1CLink_Branch.ChildObjectId AS BranchId
-                 FROM Object AS Object_GoodsByGoodsKind1CLink
-                      LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Branch
-                                           ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
-                                          AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
-                 WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
-                ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
-                                              AND tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
-
-     WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
-
-
-     -- Проверка
-     IF vbSaleCount <> vbCount THEN 
-        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен.'; 
-     END IF;
-
-
      -- !!!Продажи!!!
-
-     -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер
-     PERFORM gpSetErased_Movement (Movement.Id, inSession) 
-     FROM Movement  
-          JOIN MovementLinkObject AS MLO_From
-                                  ON MLO_From.MovementId = Movement.Id
-                                 AND MLO_From.DescId = zc_MovementLinkObject_From() 
-          JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_From.ObjectId 
-                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
-                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          JOIN MovementBoolean AS MovementBoolean_isLoad 
-                               ON MovementBoolean_isLoad.MovementId = Movement.Id
-                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-                              AND MovementBoolean_isLoad.ValueData = TRUE
-     WHERE Movement.DescId = zc_Movement_Sale()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
-                        , Sale1C.OperDate
-           FROM Sale1C             
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
-
 
      -- Создание Документов                                   
 
@@ -150,6 +87,7 @@ BEGIN
                           ON Sale.InvNumber = Sale1C.InvNumber AND Sale.OperDate = Sale1C.OperDate
             
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+            AND Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate
             AND Sale1C.VIDDOC = '1' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
@@ -229,30 +167,6 @@ BEGIN
 
      -- !!!Возвраты!!!
 
-     -- Удаление Документов только тех, которых нет в переносе. Ключ дата, филиал, номер.
-     PERFORM gpSetErased_Movement(Movement.Id, inSession) 
-     FROM Movement  
-          JOIN MovementLinkObject AS MLO_To
-                                  ON MLO_To.MovementId = Movement.Id
-                                 AND MLO_To.DescId = zc_MovementLinkObject_To() 
-          JOIN ObjectLink AS ObjectLink_Unit_Branch 
-                          ON ObjectLink_Unit_Branch.ObjectId = MLO_To.ObjectId 
-                         AND ObjectLink_Unit_Branch.ChildObjectId = inBranchId
-                         AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-          JOIN MovementBoolean AS MovementBoolean_isLoad 
-                               ON MovementBoolean_isLoad.MovementId = Movement.Id
-                              AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
-                              AND MovementBoolean_isLoad.valuedata = TRUE 
-     WHERE Movement.DescId = zc_Movement_ReturnIn()
-       AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-       AND Movement.StatusId <> zc_Enum_Status_Erased()
-       AND NOT ((Movement.InvNumber, Movement.OperDate) IN (SELECT DISTINCT Sale1C.InvNumber
-                        , Sale1C.OperDate
-           FROM Sale1C             
-          WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
-            AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)));
-
-
      -- Создание Документов
 
      -- открыли курсор
@@ -305,6 +219,7 @@ BEGIN
 
 
           WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate
+            AND Sale1C.InvNumber = inInvNumber AND Sale1C.OperDate = inOperDate
             AND Sale1C.VIDDOC = '4' AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId);
 
      -- начало цикла по курсору
@@ -391,6 +306,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.04.14                        * по одной записи
  24.04.14                                        * add inInvNumberMark
  18.04.14                        *  	Задваивал возвраты
  07.04.14                        * 

@@ -39,6 +39,8 @@ type
     bbBranchLabel: TdxBarControlContainerItem;
     spGetPointName: TdsdStoredProc;
     actGetPointName: TdsdExecStoredProc;
+    actInsertRecordEmpty: TInsertRecord;
+    bbInsertEmptyRecord: TdxBarButton;
   private
     { Private declarations }
   public

@@ -31,7 +31,7 @@ end;
 procedure TUpdaterTest.SaveFile(FilePath: string);
 var Stream: TStream;
 begin
-  Stream := TStringStream.Create(ConvertConvert(ZCompressStr(FileReadString(FilePath))));
+  Stream := TStringStream.Create(ConvertConvert(FileReadString(FilePath)));
   with TZStoredProc.Create(nil), UnilWin.GetFileVersion(FilePath) do begin
     try
       Connection := ZConnection;

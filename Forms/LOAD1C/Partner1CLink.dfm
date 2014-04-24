@@ -168,6 +168,16 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       ShortCut = 45
       ImageIndex = 0
     end
+    object actInsertRecordEmpty: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1091#1089#1090#1091#1102' '#1079#1072#1087#1080#1089#1090#1100
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1091#1089#1090#1091#1102' '#1079#1072#1087#1080#1089#1090#1100
+      ShortCut = 16429
+      ImageIndex = 54
+    end
     object actChoiceContractForm: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
@@ -310,6 +320,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertEmptyRecord'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -362,6 +376,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
+    end
+    object bbInsertEmptyRecord: TdxBarButton
+      Action = actInsertRecordEmpty
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

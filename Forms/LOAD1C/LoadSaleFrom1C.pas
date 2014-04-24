@@ -12,7 +12,8 @@ uses
   dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, DataModul,
-  ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit, cxCurrencyEdit;
+  ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit, cxCurrencyEdit,
+  cxSplitter;
 
 type
   TLoadSaleFrom1CForm = class(TAncestorReportForm)
@@ -43,6 +44,19 @@ type
     BranchGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     colContract: TcxGridDBColumn;
+    cxMasterGrid: TcxGrid;
+    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridLevel1: TcxGridLevel;
+    cxSplitter1: TcxSplitter;
+    ChildCDS: TClientDataSet;
+    ChildDS: TDataSource;
+    spMasterSelect: TdsdStoredProc;
+    colisSync: TcxGridDBColumn;
+    spErased: TdsdStoredProc;
+    spCheckLoad: TdsdStoredProc;
+    actMoveDoc: TMultiAction;
+    actMoveAllDoc: TMultiAction;
+    actBeforeMove: TdsdExecStoredProc;
   private
     { Private declarations }
   public

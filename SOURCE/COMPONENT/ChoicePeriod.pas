@@ -200,7 +200,7 @@ begin
          FUpdateDateEdit := true;
          try
            DateStart.Date := cxDateStart.Date;
-           DateEnd.Date := cxDateEnd.Date;
+           DateEnd.Date := trunc(cxDateEnd.Date);
            if Assigned(onChange) then
               onChange(Self);
          finally
