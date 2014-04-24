@@ -66,6 +66,7 @@ type
     colInvNumberPartner_Master: TcxGridDBColumn;
     colIsError: TcxGridDBColumn;
     colRegistered: TcxGridDBColumn;
+    colInvNumberBranch: TcxGridDBColumn;
   private
     { Private declarations }
   public
