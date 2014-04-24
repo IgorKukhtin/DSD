@@ -14,8 +14,9 @@ RETURNS TABLE (UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                InvNalog TVarChar, 
                BranchName TVarChar, DocType TVarChar, 
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
-               ContractId Integer, ContractNumber TVarChar,
-               Synchronize Boolean)
+               ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
+             , ContractTagName TVarChar, ContractStateKindCode Integer
+             , Synchronize Boolean)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -43,9 +44,12 @@ BEGIN
       Object_Partner.ObjectCode,
       Object_Partner.ValueData,
       Object_Contract_View.ContractId, 
-      Object_Contract_View.InvNumber AS ContactNumber,
-      (Count(tmpGoodsByGoodsKind1CLink.ObjectId) <> Count(*)) AS Synchronize      
-
+      Object_Contract_View.InvNumber AS ContactNumber           
+            , Object_Contract_View.EndDate
+            , Object_Contract_View.ContractTagName
+            , Object_Contract_View.ContractStateKindCode 
+            , (Count(tmpGoodsByGoodsKind1CLink.ObjectId) <> Count(*)) AS Synchronize      
+      
       FROM Sale1C
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
            LEFT JOIN (SELECT Object_Partner1CLink.Id AS ObjectId
@@ -82,16 +86,6 @@ BEGIN
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 
-/*           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_Goods
-                                ON ObjectLink_GoodsByGoodsKind1CLink_Goods.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
-                               AND ObjectLink_GoodsByGoodsKind1CLink_Goods.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Goods()
-           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsByGoodsKind1CLink_Goods.ChildObjectId
-
-           LEFT JOIN ObjectLink AS ObjectLink_GoodsByGoodsKind1CLink_GoodsKind
-                                ON ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ObjectId = tmpGoodsByGoodsKind1CLink.ObjectId
-                               AND ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_GoodsKind()
-           LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = ObjectLink_GoodsByGoodsKind1CLink_GoodsKind.ChildObjectId
-*/  
    WHERE Sale1C.OperDate BETWEEN inStartDate AND inEndDate AND inBranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
    GROUP BY       Sale1C.UnitId      ,
       Sale1C.VidDoc      ,
@@ -111,6 +105,9 @@ BEGIN
       Object_Partner.ValueData,
       Object_Contract_View.ContractId, 
       Object_Contract_View.InvNumber
+            , Object_Contract_View.EndDate
+            , Object_Contract_View.ContractTagName
+            , Object_Contract_View.ContractStateKindCode 
 ;
 
 END;
