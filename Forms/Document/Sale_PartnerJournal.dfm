@@ -2,8 +2,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1118
-  ExplicitHeight = 562
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -444,20 +444,8 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
     end
-    inherited actUnCompleteList: TMultiAction
-      DataSource = nil
-    end
-    inherited actSetErasedList: TMultiAction
-      DataSource = nil
-    end
     inherited actSimpleCompleteList: TMultiAction
-      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
-    end
-    inherited actSimpleUncompleteList: TMultiAction
-      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
-    end
-    inherited actSimpleErased: TMultiAction
-      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      View = cxGridDBTableView
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -872,11 +860,11 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Us'
+          ItemName = 'bbPrintTax_Client'
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax_Client'
+          ItemName = 'bbPrintTax_Us'
         end
         item
           Visible = True

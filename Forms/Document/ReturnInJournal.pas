@@ -75,6 +75,10 @@ type
     actCorrective: TdsdExecStoredProc;
     bbCorrective: TdxBarButton;
     spCorrective: TdsdStoredProc;
+    colInvNumberMark: TcxGridDBColumn;
+    spGetReportName: TdsdStoredProc;
+    actSPPrintProcName: TdsdExecStoredProc;
+    mactPrint: TMultiAction;
   private
     { Private declarations }
   public

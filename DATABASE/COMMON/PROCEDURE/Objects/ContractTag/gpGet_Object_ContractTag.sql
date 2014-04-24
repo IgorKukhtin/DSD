@@ -1,16 +1,16 @@
-п»ї-- Function: gpGet_Object_ContractTag()
+-- Function: gpGet_Object_ContractTag()
 
 DROP FUNCTION IF EXISTS gpGet_Object_ContractTag (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Object_ContractTag(
-    IN inId          Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° <Р’РёРґС‹ Р±РѕРЅСѓСЃРѕРІ>
-    IN inSession     TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+    IN inId          Integer,       -- ключ объекта <Виды бонусов>
+    IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
 $BODY$
 BEGIN
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
+   -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_ContractTag());
 
    IF COALESCE (inId, 0) = 0
@@ -40,10 +40,10 @@ ALTER FUNCTION gpGet_Object_ContractTag(integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  21.04.14         *
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpGet_Object_ContractTag (0, '2')

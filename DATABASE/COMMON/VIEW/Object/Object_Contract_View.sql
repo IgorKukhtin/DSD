@@ -15,9 +15,13 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , ObjectLink_Contract_PaidKind.ChildObjectId          AS PaidKindId
        , Object_Contract_InvNumber_View.InfoMoneyId
 
-       , COALESCE (ObjectLink_Contract_ContractStateKind.ChildObjectId, 0) AS ContractStateKindId
-       , Object_ContractStateKind.ObjectCode   AS ContractStateKindCode
-       , Object_ContractStateKind.ValueData    AS ContractStateKindName
+       , Object_Contract_InvNumber_View.ContractStateKindId
+       , Object_Contract_InvNumber_View.ContractStateKindCode
+       , Object_Contract_InvNumber_View.ContractStateKindName
+
+       , Object_Contract_InvNumber_View.ContractTagId
+       , Object_Contract_InvNumber_View.ContractTagCode
+       , Object_Contract_InvNumber_View.ContractTagName
 
          -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
        , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
@@ -27,7 +31,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        LEFT JOIN ObjectDate AS ObjectDate_Start
                             ON ObjectDate_Start.ObjectId = Object_Contract_InvNumber_View.ContractId
                            AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
-      
        LEFT JOIN ObjectDate AS ObjectDate_End
                             ON ObjectDate_End.ObjectId = Object_Contract_InvNumber_View.ContractId
                            AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
@@ -35,7 +38,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
                             ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract_InvNumber_View.ContractId 
                            AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
-
        LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                             ON ObjectLink_Contract_JuridicalBasis.ObjectId = Object_Contract_InvNumber_View.ContractId 
                            AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
@@ -43,12 +45,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        LEFT JOIN ObjectLink AS ObjectLink_Contract_PaidKind
                             ON ObjectLink_Contract_PaidKind.ObjectId = Object_Contract_InvNumber_View.ContractId 
                            AND ObjectLink_Contract_PaidKind.DescId = zc_ObjectLink_Contract_PaidKind()
-
-       LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                            ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_InvNumber_View.ContractId
-                           AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-       LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
-
 
        -- !!!¬–≈Ã≈ÕÕŒ ¬Œ——“¿ÕŒ¬»À!!!
        LEFT JOIN ObjectFloat AS ObjectFloat_ChangePercent
@@ -67,6 +63,7 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.04.14                                        * all
  13.02.14                                        * add Object_ContractStateKind...
  14.01.14                                        * add Object_Contract_InvNumber_View_InvNumber_View
  08.01.14                        * 

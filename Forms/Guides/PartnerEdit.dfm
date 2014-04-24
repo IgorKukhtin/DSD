@@ -3,7 +3,7 @@
   ClientHeight = 443
   ClientWidth = 384
   ExplicitWidth = 390
-  ExplicitHeight = 475
+  ExplicitHeight = 468
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -238,14 +238,23 @@
       item
         Name = 'JuridicalId'
         Value = ''
-        Component = dsdJuridicalGuides
-        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
-        Name = 'JuridicalName'
+        Name = 'Key'
+        Value = '0'
+        Component = FormParams
+        ComponentItem = 'Id'
+      end
+      item
+        Name = 'TextValue'
         Value = ''
-        Component = dsdJuridicalGuides
-        ComponentItem = 'TextValue'
+        Component = edAddress
+        DataType = ftString
+      end
+      item
+        Name = 'PartnerName'
+        Value = Null
         DataType = ftString
       end>
     Left = 8
@@ -260,6 +269,13 @@
         Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'outPartnerName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'PartnerName'
+        DataType = ftString
       end
       item
         Name = 'inCode'
@@ -353,10 +369,17 @@
     StoredProcName = 'gpGet_Object_Partner'
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
@@ -487,6 +510,8 @@
   object dsdJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridicalForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -512,6 +537,8 @@
   object dsdPersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalTake
+    FormNameParam.Value = 'TPersonal_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonal_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -537,6 +564,8 @@
   object dsdRouteSortingGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -562,6 +591,8 @@
   object dsdRouteGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRoute
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -587,6 +618,8 @@
   object dsdPriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceList
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -612,6 +645,8 @@
   object dsdPriceListPromoGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePriceListPromo
+    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPriceListForm'
     PositionDataSet = 'ClientDataSet'
     Params = <

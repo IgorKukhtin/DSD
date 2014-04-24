@@ -4,26 +4,26 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
   ClientWidth = 1110
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1118
-  ExplicitHeight = 569
+  ExplicitWidth = 1126
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
-    Height = 476
+    Height = 478
     TabOrder = 3
     ExplicitWidth = 1110
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1106
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1104
-      ExplicitHeight = 470
+      ExplicitWidth = 1110
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1104
-        Height = 470
-        ExplicitWidth = 1104
-        ExplicitHeight = 470
+        Width = 1110
+        Height = 478
+        ExplicitWidth = 1110
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -89,7 +89,6 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
               Kind = skSum
               Column = colTotalSummPVAT
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -319,12 +318,6 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
   inherited Panel: TPanel
     Width = 1110
     ExplicitWidth = 1110
-    inherited deStart: TcxDateEdit
-      EditValue = 41609d
-    end
-    inherited deEnd: TcxDateEdit
-      EditValue = 41639d
-    end
     object edIsRegisterDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -346,44 +339,10 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TTaxForm'
       FormNameParam.Value = nil
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = MasterCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41639d
-          Component = deEnd
-          DataType = ftDateTime
-        end>
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
@@ -419,14 +378,14 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     Params = <
       item
         Name = 'instartdate'
-        Value = 41609d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inenddate'
-        Value = 41639d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -446,6 +405,13 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         ParamType = ptInput
       end
       item
+        Name = 'inJuridicalId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
         Name = 'inPartnerId'
         Value = Null
         Component = FormParams
@@ -461,7 +427,7 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -638,6 +604,11 @@ inherited TaxJournalSelectForm: TTaxJournalSelectForm
         Value = False
         DataType = ftBoolean
         ParamType = ptInputOutput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = Null
+        ParamType = ptInput
       end
       item
         Name = 'PartnerId'

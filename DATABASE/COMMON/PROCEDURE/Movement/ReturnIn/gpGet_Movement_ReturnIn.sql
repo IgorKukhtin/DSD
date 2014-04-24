@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_ReturnIn(
     IN inOperDate          TDateTime, -- дата Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, InvNumberMark TVarChar, OperDate TDateTime
              , StatusId Integer, StatusCode Integer, StatusName TVarChar, Checked Boolean
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
@@ -30,13 +30,14 @@ BEGIN
          SELECT
                0 AS Id
              , CAST (NEXTVAL ('movement_returnin_seq') AS TVarChar) AS InvNumber
-             , ''::TVarChar AS InvNumberPartner
-             , inOperDate						        AS OperDate
+             , '' :: TVarChar                           AS InvNumberPartner
+             , '' :: TVarChar                           AS InvNumberMark
+             , inOperDate				AS OperDate
              , zc_Enum_Status_UnComplete()              AS StatusId
              , Object_Status.Code                       AS StatusCode
              , Object_Status.Name                       AS StatusName
              , CAST (False as Boolean)                  AS Checked
-             , inOperDate				      		    AS OperDatePartner
+             , inOperDate				AS OperDatePartner
              , CAST (False as Boolean)                  AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                       AS ChangePercent
@@ -70,6 +71,7 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , MovementString_InvNumberPartner.ValueData AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData AS InvNumberMark
            , Movement.OperDate
            , Movement.StatusId
            , Object_Status.ObjectCode          	    AS StatusCode
@@ -100,8 +102,11 @@ BEGIN
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
            
             LEFT JOIN MovementString AS MovementString_InvNumberPartner
-                                   ON MovementString_InvNumberPartner.MovementId =  Movement.Id
-                                  AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
             
             LEFT JOIN MovementBoolean AS MovementBoolean_Checked
                                       ON MovementBoolean_Checked.MovementId =  Movement.Id
@@ -226,6 +231,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.     Манько Д.А.
+ 23.04.14                                        * add InvNumberMark
  02.04.14                         * add InvNumberPartner
  13.02.14                                                            * add PriceList
  10.02.14                                                            * add TaxKind
@@ -235,4 +241,4 @@ ALTER FUNCTION gpGet_Movement_ReturnIn (Integer, TDateTime, TVarChar) OWNER TO p
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inSession:= '2')
+-- SELECT * FROM gpGet_Movement_ReturnIn (inMovementId:= 1, inSession:= zfCalc_UserAdmin())

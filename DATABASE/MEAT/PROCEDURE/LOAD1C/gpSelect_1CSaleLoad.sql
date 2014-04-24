@@ -18,7 +18,8 @@ RETURNS TABLE (Id Integer, UnitId Integer, VidDoc TVarChar, InvNumber TVarChar,
                BranchName TVarChar, DocType TVarChar, 
                DeliveryPointCode Integer, DeliveryPointName TVarChar,
                GoodsGoodsKindCode Integer, GoodsGoodsKindName TVarChar,
-               ContractId Integer, ContractNumber TVarChar
+               ContractId Integer, ContractNumber TVarChar, EndDate TDateTime
+             , ContractTagName TVarChar, ContractStateKindCode Integer
 )
 AS
 $BODY$
@@ -67,6 +68,9 @@ BEGIN
       Object_Contract_View.ContractId, 
       Object_Contract_View.InvNumber AS ContactNumber
       
+            , Object_Contract_View.EndDate
+            , Object_Contract_View.ContractTagName
+            , Object_Contract_View.ContractStateKindCode
 
       FROM Sale1C
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -124,6 +128,7 @@ ALTER FUNCTION gpSelect_1CSaleLoad (TDateTime, TDateTime, Integer, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.04.14                                        * add Contract...
  11.04.14                         * 
  09.04.14                         * 
  17.02.14                         * 

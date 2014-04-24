@@ -2,27 +2,29 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitWidth = 1075
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 1067
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 1067
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 1067
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 1063
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1067
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1061
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 1067
-        Height = 518
-        ExplicitWidth = 1067
-        ExplicitHeight = 518
+        Width = 1061
+        Height = 514
+        ExplicitWidth = 1061
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -70,7 +72,6 @@ inherited TaxForm: TTaxForm
               Format = ',0.####'
               Kind = skSum
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -154,14 +155,15 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1067
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1061
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 1067
-        Height = 518
-        ExplicitWidth = 1067
-        ExplicitHeight = 518
+        Width = 1061
+        Height = 514
+        ExplicitWidth = 1061
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -218,7 +220,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -368,6 +370,17 @@ inherited TaxForm: TTaxForm
       Left = 885
       Top = 5
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object cxLabel8: TcxLabel
+      Left = 885
+      Top = 45
+      Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+    end
+    object edInvNumberBranch: TcxTextEdit
+      Left = 885
+      Top = 63
+      TabOrder = 27
+      Width = 73
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -659,7 +672,7 @@ inherited TaxForm: TTaxForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -702,11 +715,11 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Us'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_Us'
         end
         item
           Visible = True
@@ -727,9 +740,17 @@ inherited TaxForm: TTaxForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
+    SummaryItemList = <
+      item
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = -1
+      end>
     Left = 830
     Top = 265
   end
@@ -959,6 +980,12 @@ inherited TaxForm: TTaxForm
         Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = ''
+        Component = edInvNumberBranch
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -984,6 +1011,13 @@ inherited TaxForm: TTaxForm
         Name = 'inInvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberBranch'
+        Value = ''
+        Component = edInvNumberBranch
         DataType = ftString
         ParamType = ptInput
       end
@@ -1078,10 +1112,10 @@ inherited TaxForm: TTaxForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
-        Control = edOperDate
+        Control = edInvNumberPartner
       end
       item
-        Control = edDocumentTaxKind
+        Control = edOperDate
       end
       item
         Control = edFrom
@@ -1090,15 +1124,13 @@ inherited TaxForm: TTaxForm
         Control = edTo
       end
       item
-        Control = edInvNumberPartner
-      end
-      item
-      end
-      item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edContract
       end
       item
         Control = edDocumentTaxKind
@@ -1111,6 +1143,9 @@ inherited TaxForm: TTaxForm
       end
       item
         Control = edPartner
+      end
+      item
+        Control = edInvNumberBranch
       end>
     Left = 232
     Top = 193
@@ -1220,6 +1255,22 @@ inherited TaxForm: TTaxForm
   inherited EntryViewAddOn: TdsdDBViewAddOn
     Left = 912
     Top = 262
+  end
+  inherited spGetTotalSumm: TdsdStoredProc
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1624,8 +1675,8 @@ inherited TaxForm: TTaxForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 928
-    Top = 16
+    Left = 984
+    Top = 8
   end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>

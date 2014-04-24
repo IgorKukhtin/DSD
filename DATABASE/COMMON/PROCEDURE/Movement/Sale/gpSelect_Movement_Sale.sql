@@ -91,7 +91,7 @@ BEGIN
            , Object_TaxKind_Master.ValueData         		    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-           , CAST (CASE WHEN MovementLinkMovement_Master.MovementChildId IS NOT NULL
+           , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
                                 AND MovementLinkObject_DocumentTaxKind_Master.ObjectId IN (zc_Enum_DocumentTaxKind_Tax())
@@ -216,7 +216,8 @@ BEGIN
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
             LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                         AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = Movement_DocumentMaster.Id -- MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To_Master
                                          ON MovementLinkObject_To_Master.MovementId = MovementLinkMovement_Master.MovementChildId
@@ -228,7 +229,7 @@ BEGIN
                                          ON MovementLinkObject_Partner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_Partner_Master.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
-                                         ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                         ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id -- MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
             ;
@@ -241,6 +242,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.04.14                                        * ... Movement_DocumentMaster.Id
  12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()
  31.03.14                                        * add TotalCount...
  28.03.14                                        * add TotalSummVAT

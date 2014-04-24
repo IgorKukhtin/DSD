@@ -11,19 +11,19 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1113
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 986
+    ExplicitWidth = 1113
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 1109
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 980
+      ExplicitWidth = 1107
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1107
         Height = 514
-        ExplicitWidth = 980
+        ExplicitWidth = 1107
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -72,7 +72,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
               Format = ',0.####'
               Kind = skSum
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -189,7 +188,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Width = 1113
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 986
+    ExplicitWidth = 1113
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -399,6 +398,17 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       TabOrder = 29
       Text = ' '
       Width = 125
+    end
+    object cxLabel13: TcxLabel
+      Left = 984
+      Top = 45
+      Caption = #1053#1086#1084#1077#1088' '#1092#1080#1083#1080#1072#1083#1072
+    end
+    object edInvNumberBranch: TcxTextEdit
+      Left = 984
+      Top = 63
+      TabOrder = 31
+      Width = 73
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -650,11 +660,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'bbPrint_TaxCorrective_Client'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_TaxCorrective_Client'
+          ItemName = 'bbPrint'
         end
         item
           Visible = True
@@ -936,6 +946,12 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'InvNumberBranch'
+        Value = ''
+        Component = edInvNumberBranch
+        DataType = ftString
       end>
     Left = 208
     Top = 240
@@ -961,6 +977,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Name = 'inInvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberBranch'
+        Value = ''
+        Component = edInvNumberBranch
         DataType = ftString
         ParamType = ptInput
       end
@@ -1033,11 +1056,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = '44'
-        Value = 0d
-        DataType = ftDateTime
-      end
-      item
         Name = '11'
         Value = ''
         DataType = ftString
@@ -1066,10 +1084,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   inherited HeaderSaver: THeaderSaver
     ControlList = <
       item
-        Control = edOperDate
+        Control = edInvNumberPartner
       end
       item
-        Control = edDocumentTaxKind
+        Control = edOperDate
       end
       item
         Control = edFrom
@@ -1078,15 +1096,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edTo
       end
       item
-        Control = edInvNumberPartner
-      end
-      item
-      end
-      item
         Control = edPriceWithVAT
       end
       item
         Control = edVATPercent
+      end
+      item
+        Control = edContract
       end
       item
         Control = edDocumentTaxKind
@@ -1095,7 +1111,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsChecked
       end
       item
-        Control = edIsDocument
+        Control = edPartner
+      end
+      item
+        Control = edDocumentTax
+      end
+      item
+        Control = edInvNumberBranch
       end>
     Left = 232
     Top = 193
@@ -1367,7 +1389,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 476
     Top = 246
   end
-  object HeaderSaver2: THeaderSaver
+  object HeaderSaverParams: THeaderSaver
     IdParam.Value = Null
     IdParam.Component = FormParams
     IdParam.ComponentItem = 'Id'
@@ -1380,8 +1402,8 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edIsRegistered
       end>
     GetStoredProc = spGet
-    Left = 552
-    Top = 553
+    Left = 296
+    Top = 177
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_Params'
@@ -1485,8 +1507,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ParamType = ptInput
       end
       item
-        Name = 'PartnerId'
+        Name = 'JuridicalId'
         Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 912
@@ -1596,8 +1626,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 1024
-    Top = 16
+    Left = 1048
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1654,5 +1683,40 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end>
     Left = 344
     Top = 8
+  end
+  object HeaderSaverIsDocument: THeaderSaver
+    IdParam.Value = Null
+    IdParam.Component = FormParams
+    IdParam.ComponentItem = 'Id'
+    StoredProc = spInsertUpdateMovement_IsDocument
+    ControlList = <
+      item
+        Control = edIsDocument
+      end>
+    GetStoredProc = spGet
+    Left = 384
+    Top = 209
+  end
+  object spInsertUpdateMovement_IsDocument: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_IsDocument'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inIsDocument'
+        Value = 'False'
+        Component = edIsDocument
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 497
+    Top = 512
   end
 end

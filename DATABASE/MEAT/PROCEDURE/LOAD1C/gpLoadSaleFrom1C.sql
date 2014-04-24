@@ -51,6 +51,7 @@ BEGIN
                            JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
                                            ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
                                           AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
+                                          AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                  WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink() AND ObjectLink_Partner1CLink_Contract.ChildObjectId <> 0
                 ) AS tmpPartner1CLink ON tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
                                      AND tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -70,7 +71,7 @@ BEGIN
 
      -- Проверка
      IF vbSaleCount <> vbCount THEN 
-        RAISE EXCEPTION 'Ошибка.Не все записи засинхронизированы. Перенос не возможен.'; 
+        RAISE EXCEPTION 'Ошибка.Найдены не все данные справочников. Перенос не возможен.'; 
      END IF;
 
 
@@ -323,7 +324,7 @@ BEGIN
           END IF;
 
           -- сохранили Документ
-          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber
+          vbMovementId := lpInsertUpdate_Movement_ReturnIn (ioId := vbMovementId, inInvNumber := vbInvNumber, inInvNumberPartner := vbInvNumber, inInvNumberMark := (SELECT ValueData FROM MovementString WHERE MovementId = vbMovementId AND DescId = zc_MovementString_InvNumberMark())
                                                           , inOperDate := vbOperDate, inOperDatePartner := vbOperDate, inChecked := FALSE, inPriceWithVAT := FALSE, inVATPercent := 20
                                                           , inChangePercent := 0, inFromId := vbPartnerId, inToId := vbUnitId, inPaidKindId := zc_Enum_PaidKind_FirstForm()
                                                           , inContractId := vbContractId, inUserId := vbUserId);
@@ -391,6 +392,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.04.14                                        * add inInvNumberMark
  18.04.14                        *  	Задваивал возвраты
  07.04.14                        * 
  31.03.14                        * 
