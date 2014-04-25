@@ -1,0 +1,204 @@
+-- Function: gpGet_Movement_TransferDebtIn()
+
+DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar);
+
+
+CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtIn(
+    IN inMovementId        Integer  , -- ключ Документа
+    IN inOperDate          TDateTime, -- ключ Документа
+    IN inSession           TVarChar   -- сессия пользователя
+)
+RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
+             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
+             , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
+             , PriceListId Integer, PriceListName TVarChar
+              )
+AS
+$BODY$
+BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransferDebtIn());
+
+     IF COALESCE (inMovementId, 0) = 0
+     THEN
+         RETURN QUERY
+         SELECT
+               0 	     	                AS Id
+             , tmpInvNum.InvNumber              AS InvNumber
+             , inOperDate			AS OperDate
+             , Object_Status.Code               AS StatusCode
+             , Object_Status.Name              	AS StatusName
+
+             , CAST (False as Boolean)          AS PriceWithVAT
+             , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
+             , CAST (0 AS TFloat)               AS ChangePercent
+
+             , CAST (0 as TFloat)       AS TotalCountKg
+             , CAST (0 as TFloat)       AS TotalCountSh
+             , CAST (0 as TFloat)       AS TotalCount
+             , CAST (0 as TFloat)       AS TotalSummMVAT
+             , CAST (0 as TFloat)       AS TotalSummPVAT
+             , CAST (0 as TFloat)       AS TotalSumm
+             
+             , 0	 AS FromId
+             , CAST ('' as TVarChar)	AS FromName
+             , 0                     	AS ToId
+             , CAST ('' as TVarChar)    AS ToName
+             
+             , 0                     	AS ContractFromId
+             , CAST ('' as TVarChar) 	AS ContractFromName
+             , 0                     	AS ContractToId
+             , CAST ('' as TVarChar) 	AS ContractToName
+
+             , 0                     	AS PaidKindFromId
+             , CAST ('' as TVarChar) 	AS PaidKindFromName             
+             , 0                     	AS PaidKindToId
+             , CAST ('' as TVarChar) 	AS PaidKindToName  
+             
+             , Object_PriceList.Id          AS PriceListId
+             , Object_PriceList.ValueData   AS PriceListName     
+             
+             , CAST ('' as TVarChar) 	AS InvNumber_Master
+             
+          FROM (SELECT CAST (NEXTVAL ('movement_TransferDebtIn_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
+          LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
+          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+        --  LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
+          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
+
+     ELSE
+
+     RETURN QUERY
+       SELECT
+             Movement.Id				AS Id
+           , Movement.InvNumber				AS InvNumber
+           , Movement.OperDate				AS OperDate
+           , Object_Status.ObjectCode    		AS StatusCode
+           , Object_Status.ValueData     		AS StatusName
+           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
+           , MovementFloat_VATPercent.ValueData         AS VATPercent
+           , MovementFloat_ChangePercent.ValueData      AS ChangePercent
+
+           , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
+           , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
+           , MovementFloat_TotalCount.ValueData         AS TotalCount
+ 
+           , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
+           , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           , MovementFloat_TotalSumm.ValueData          AS TotalSumm
+    
+           , Object_From.Id                    		AS FromId
+           , Object_From.ValueData             		AS FromName
+           , Object_To.Id                      		AS ToId
+           , Object_To.ValueData               		AS ToName
+           
+           , View_ContractFrom.ContractId     	  AS ContractFromId
+           , View_ContractFrom.InvNumber          AS ContractFromName
+           , View_ContractTo.ContractId           AS ContractToId
+           , View_ContractTo.InvNumber            AS ContractToName
+
+           , Object_PaidKindFrom.Id           	  AS PaidKindFromId
+           , Object_PaidKindFrom.ValueData        AS PaidKindFromName
+           , Object_PaidKindTo.Id                 AS PaidKindToId
+           , Object_PaidKindTo.ValueData          AS PaidKindToName
+
+           , Object_PriceList.id                    AS PriceListId
+           , Object_PriceList.valuedata             AS PriceListName
+
+       FROM Movement
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                      ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                     AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
+            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId =  Movement.Id
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
+                                    ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
+            
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
+                                    ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalCount
+                                    ON MovementFloat_TotalCount.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                                   
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                         ON MovementLinkObject_From.MovementId = Movement.Id
+                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+            LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                         ON MovementLinkObject_To.MovementId = Movement.Id
+                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+            LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
+                                         ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractFrom()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractFrom ON View_ContractFrom.ContractId = MovementLinkObject_ContractFrom.ObjectId
+            --LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractTo
+                                         ON MovementLinkObject_ContractTo.MovementId = Movement.Id
+                                        AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo ON View_ContractTo.ContractId = MovementLinkObject_ContractTo.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindFrom
+                                         ON MovementLinkObject_PaidKindFrom.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKindFrom.DescId = zc_MovementLinkObject_PaidKindFrom()
+            LEFT JOIN Object AS Object_PaidKindFrom ON Object_PaidKindFrom.Id = MovementLinkObject_PaidKindFrom.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindTo
+                                         ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
+                                        AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
+            LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
+
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
+
+       WHERE Movement.Id =  inMovementId
+         AND Movement.DescId = zc_Movement_TransferDebtIn();
+     END IF;
+
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNER TO postgres;
+
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.04.14  		  *
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Movement_TransferDebtIn (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TransferDebtIn(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
