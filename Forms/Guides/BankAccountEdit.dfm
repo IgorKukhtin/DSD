@@ -115,6 +115,7 @@
     Top = 72
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -129,6 +130,7 @@
     end
     object dsdExecStoredProc: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -137,6 +139,7 @@
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -192,7 +195,7 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 240
+    Left = 232
     Top = 8
   end
   object spGet: TdsdStoredProc

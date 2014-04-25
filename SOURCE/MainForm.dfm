@@ -1084,6 +1084,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbBankAccountContract'
+        end
+        item
+          Visible = True
           ItemName = 'bbCurrency'
         end
         item
@@ -1529,6 +1533,10 @@ object MainForm: TMainForm
       Action = actTransferDebtIn
       Category = 0
     end
+    object bbBankAccountContract: TdxBarButton
+      Action = actBankAccountContract
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1572,6 +1580,17 @@ object MainForm: TMainForm
       Caption = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
       FormName = 'TReport_JuridicalSoldForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actBankAccountContract: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' ('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084')'
+      Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072'('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084' '#1087#1086' '#1083#1102#1073#1086#1084#1091' '#1076#1086#1075#1086#1074#1086#1088#1091')'
+      FormName = 'TBankAccountContractForm'
+      FormNameParam.Value = 'TBankAccountContractForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

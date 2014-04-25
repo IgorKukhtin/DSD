@@ -1,7 +1,7 @@
-object BankAccountForm: TBankAccountForm
+object BankAccountContractForm: TBankAccountContractForm
   Left = 0
   Top = 0
-  Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072
+  Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' ('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084' '#1087#1086' '#1083#1102#1073#1086#1084#1091' '#1076#1086#1075#1086#1074#1086#1088#1091')'
   ClientHeight = 376
   ClientWidth = 588
   Color = clBtnFace
@@ -24,6 +24,8 @@ object BankAccountForm: TBankAccountForm
     Height = 350
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 40
+    ExplicitTop = -6
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -32,7 +34,6 @@ object BankAccountForm: TBankAccountForm
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
       OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
       OptionsCustomize.ColumnHiding = True
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
@@ -45,35 +46,17 @@ object BankAccountForm: TBankAccountForm
       OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentVert = vaCenter
-        Width = 47
-      end
-      object clName: TcxGridDBColumn
+      object clBankAccountName: TcxGridDBColumn
         Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 134
-      end
-      object clJuridicalName: TcxGridDBColumn
-        Caption = #1070#1088'. '#1083#1080#1094#1086
-        DataBinding.FieldName = 'JuridicalName'
+        DataBinding.FieldName = 'BankAccountName'
         HeaderAlignmentVert = vaCenter
         Width = 124
       end
-      object clBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
-        DataBinding.FieldName = 'BankName'
+      object clInfoMoneyName: TcxGridDBColumn
+        Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+        DataBinding.FieldName = 'InfoMoneyName'
         HeaderAlignmentVert = vaCenter
         Width = 96
-      end
-      object clCurrency: TcxGridDBColumn
-        Caption = #1042#1072#1083#1102#1090#1072
-        DataBinding.FieldName = 'CurrencyName'
-        HeaderAlignmentVert = vaCenter
-        Width = 97
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -88,8 +71,8 @@ object BankAccountForm: TBankAccountForm
   end
   object DataSource: TDataSource
     DataSet = MasterCDS
-    Left = 96
-    Top = 96
+    Left = 40
+    Top = 64
   end
   object MasterCDS: TClientDataSet
     Aggregates = <>
@@ -108,8 +91,8 @@ object BankAccountForm: TBankAccountForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 232
-    Top = 96
+    Left = 336
+    Top = 80
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -227,10 +210,11 @@ object BankAccountForm: TBankAccountForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 232
+    Left = 320
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -244,11 +228,12 @@ object BankAccountForm: TBankAccountForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TBankAccountEditForm'
-      FormNameParam.Value = 'TBankAccountEditForm'
+      FormName = 'TBankAccountContractEditForm'
+      FormNameParam.Value = 'TBankAccountContractEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -258,14 +243,16 @@ object BankAccountForm: TBankAccountForm
       isShowModal = True
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TBankAccountEditForm'
-      FormNameParam.Value = ''
+      FormName = 'TBankAccountContractEditForm'
+      FormNameParam.Value = 'TBankAccountContractEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -278,9 +265,11 @@ object BankAccountForm: TBankAccountForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -291,6 +280,7 @@ object BankAccountForm: TBankAccountForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -302,6 +292,7 @@ object BankAccountForm: TBankAccountForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -310,6 +301,7 @@ object BankAccountForm: TBankAccountForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -342,19 +334,19 @@ object BankAccountForm: TBankAccountForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_BankAccount'
+    StoredProcName = 'gpSelect_Object_BankAccountContract'
     DataSet = MasterCDS
     DataSets = <
       item
         DataSet = MasterCDS
       end>
     Params = <>
-    Left = 152
+    Left = 176
     Top = 152
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 208
-    Top = 192
+    Left = 440
+    Top = 176
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -377,6 +369,10 @@ object BankAccountForm: TBankAccountForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 216
     Top = 240
   end

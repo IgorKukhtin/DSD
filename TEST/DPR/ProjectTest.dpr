@@ -69,8 +69,8 @@ uses
   ContractKindEdit in '..\..\Forms\Guides\ContractKindEdit.pas' {ContractKindEditForm},
   ContractKind in '..\..\Forms\Guides\ContractKind.pas' {ContractKindForm},
   GoodsPropertyValueEdit in '..\..\Forms\Guides\GoodsPropertyValueEdit.pas' {GoodsPropertyValueEditForm},
-  BankAccount in '..\..\Forms\BankAccount.pas' {BankAccountForm},
-  BankAccountEdit in '..\..\Forms\BankAccountEdit.pas' {BankAccountEditForm},
+  BankAccountContract in '..\..\Forms\Guides\BankAccountContract.pas' {BankAccountContractForm},
+  BankAccountContractEdit in '..\..\Forms\Guides\BankAccountContractEdit.pas' {BankAccountContractEditForm},
   BusinessEdit in '..\..\Forms\Guides\BusinessEdit.pas' {BusinessEditForm},
   Business_Object in '..\..\Forms\Guides\Business_Object.pas' {Business_ObjectForm},
   Juridical_Object in '..\..\Forms\Guides\Juridical_Object.pas' {Juridical_ObjectForm},
@@ -412,7 +412,9 @@ uses
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
   Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
-  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm};
+  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
 
 {$R *.RES}
 
