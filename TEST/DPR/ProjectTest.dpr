@@ -69,8 +69,8 @@ uses
   ContractKindEdit in '..\..\Forms\Guides\ContractKindEdit.pas' {ContractKindEditForm},
   ContractKind in '..\..\Forms\Guides\ContractKind.pas' {ContractKindForm},
   GoodsPropertyValueEdit in '..\..\Forms\Guides\GoodsPropertyValueEdit.pas' {GoodsPropertyValueEditForm},
-  BankAccount in '..\..\Forms\BankAccount.pas' {BankAccountForm},
-  BankAccountEdit in '..\..\Forms\BankAccountEdit.pas' {BankAccountEditForm},
+  BankAccountContract in '..\..\Forms\Guides\BankAccountContract.pas' {BankAccountContractForm},
+  BankAccountContractEdit in '..\..\Forms\Guides\BankAccountContractEdit.pas' {BankAccountContractEditForm},
   BusinessEdit in '..\..\Forms\Guides\BusinessEdit.pas' {BusinessEditForm},
   Business_Object in '..\..\Forms\Guides\Business_Object.pas' {Business_ObjectForm},
   Juridical_Object in '..\..\Forms\Guides\Juridical_Object.pas' {Juridical_ObjectForm},
@@ -402,15 +402,19 @@ uses
   MovementTaxChoice in '..\..\Forms\Guides\MovementTaxChoice.pas' {MovementTaxChoiceForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
-  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
-  TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
+  TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
+  TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm},
   Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
+  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
+  BankAccount in '..\..\Forms\Guides\BankAccount.pas' {BankAccountForm: TParentForm},
+  BankAccountEdit in '..\..\Forms\Guides\BankAccountEdit.pas' {BankAccountEditForm: TParentForm};
 
 {$R *.RES}
 

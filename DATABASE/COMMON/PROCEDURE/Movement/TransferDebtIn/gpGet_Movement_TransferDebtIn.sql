@@ -63,7 +63,6 @@ BEGIN
              , Object_PriceList.Id          AS PriceListId
              , Object_PriceList.ValueData   AS PriceListName     
              
-             , CAST ('' as TVarChar) 	AS InvNumber_Master
              
           FROM (SELECT CAST (NEXTVAL ('movement_TransferDebtIn_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1

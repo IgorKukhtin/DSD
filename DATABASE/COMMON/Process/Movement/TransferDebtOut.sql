@@ -1,9 +1,3 @@
---select * from gpInsertUpdate_Movement_TransferDebtOut(ioId := 0 , inInvNumber := '26' , inOperDate := ('11.12.2014')::TDateTime , inPriceWithVAT := 'False' , inVATPercent := 20 , inChangePercent := 0 , inFromId := 0 , inToId := 0 , inContractFromId := 0 , inContractToId := 0 , inPaidKindFromId := 0 , inPaidKindToId := 0 , inMasterId := 80793 , ioPriceListId := 18840 ,  inSession := '5');
-
-
-
-
-
 -- Документ <Перевод долга (расход)>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- строки

@@ -89,21 +89,31 @@ from (
              , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm2
              , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm3
              , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
-             , ContractKind.ContractConditionKindId
-             , ContractKind.DayCount
+             , ContractCondition_DefermentPayment.ContractConditionKindId
+             , ContractCondition_DefermentPayment.DayCount
+             , ContractCondition_CreditLimit.DelayCreditLimit
              , ContractDate
          FROM ContainerLinkObject AS CLO_Juridical 
          JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
     LEFT JOIN ContainerLinkObject AS CLO_Contract
            ON CLO_Contract.ContainerId = Container.Id AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
                                 
-    LEFT JOIN (SELECT Object_Contract_DefermentPaymentView.ContractId
+    LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
                     , zfCalc_DetermentPaymentDate(COALESCE(ContractConditionKindId, 0), DayCount, inOperDate)::Date AS ContractDate
                     , ContractConditionKindId
-                    , DayCount
-                 FROM Object_Contract_DefermentPaymentView
-                       ) AS ContractKind
-            ON ContractKind.contractid = CLO_Contract.objectid
+                    , Value::Integer AS DayCount
+                 FROM Object_ContractCondition_View
+                 JOIN Object_ContractCondition_DefermentPaymentView 
+                   ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
+                       ) AS ContractCondition_DefermentPayment
+            ON ContractCondition_DefermentPayment.contractid = CLO_Contract.objectid
+
+    LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
+                    , Value AS DelayCreditLimit
+                 FROM Object_ContractCondition_View
+                WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
+                       ) AS ContractCondition_CreditLimit
+            ON ContractCondition_CreditLimit.contractid = CLO_Contract.objectid
                               
      LEFT JOIN MovementItemContainer AS MIContainer 
             ON MIContainer.Containerid = Container.Id
@@ -118,6 +128,7 @@ from (
              , Container.Id
              , ContractConditionKindId
              , DayCount
+             , DelayCreditLimit
              , ContractDate) AS RESULT
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId

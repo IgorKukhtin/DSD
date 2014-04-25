@@ -179,11 +179,11 @@
 			<DCCReference Include="..\..\Forms\Guides\GoodsPropertyValueEdit.pas">
 				<Form>GoodsPropertyValueEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BankAccount.pas">
-				<Form>BankAccountForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountContract.pas">
+				<Form>BankAccountContractForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\BankAccountEdit.pas">
-				<Form>BankAccountEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountContractEdit.pas">
+				<Form>BankAccountContractEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BusinessEdit.pas">
 				<Form>BusinessEditForm</Form>
@@ -1213,12 +1213,12 @@
 				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
-				<Form>TransferDebtOutJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtInJournal.pas">
+				<Form>TransferDebtInJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtOut.pas">
-				<Form>TransferDebtOutForm</Form>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtIn.pas">
+				<Form>TransferDebtInForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\City.pas">
@@ -1247,6 +1247,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale.pas">
 				<Form>SaleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOut.pas">
+				<Form>TransferDebtOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
+				<Form>TransferDebtOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
+				<Form>BankAccountForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\BankAccountEdit.pas">
+				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

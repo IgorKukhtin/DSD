@@ -184,6 +184,7 @@ begin
 end;
 
 procedure TPeriodChoice.Execute;
+var ddd: TDateTime;
 begin
    with TPeriodChoiceForm.Create(nil) do
    begin
@@ -200,7 +201,7 @@ begin
          FUpdateDateEdit := true;
          try
            DateStart.Date := cxDateStart.Date;
-           DateEnd.Date := cxDateEnd.Date;
+           DateEnd.Date := trunc(cxDateEnd.Date);
            if Assigned(onChange) then
               onChange(Self);
          finally

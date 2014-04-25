@@ -1,16 +1,15 @@
--- View: Object_Contract_PercentView
+-- View: Object_ContractCondition_View
 
-DROP VIEW IF EXISTS Object_Contract_DefermentPaymentView;
+DROP VIEW IF EXISTS Object_ContractCondition_View;
 
-CREATE OR REPLACE VIEW Object_Contract_DefermentPaymentView AS
+CREATE OR REPLACE VIEW Object_ContractCondition_View AS
         SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
                     , ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindId
-                    , CAST(ObjectFloat_Value.ValueData AS Integer) AS DayCount
+                    , ObjectFloat_Value.ValueData AS Value
                  FROM ObjectLink AS ObjectLink_ContractCondition_Contract
                  JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                    ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                   AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
-                  AND ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId IN (SELECT ConditionKindId FROM Object_ContractCondition_DefermentPaymentView)
                  JOIN ObjectFloat AS ObjectFloat_Value 
                    ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                   AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
@@ -20,13 +19,14 @@ CREATE OR REPLACE VIEW Object_Contract_DefermentPaymentView AS
                   AND ContractCondition.iserased = false;
 
 
-ALTER TABLE Object_Contract_DefermentPaymentView  OWNER TO postgres;
+ALTER TABLE Object_ContractCondition_View  OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 24.04.14                         *
  10.04.14                         *
 */
 

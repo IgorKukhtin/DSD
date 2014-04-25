@@ -1,0 +1,80 @@
+﻿-- Function: gpGet_Object_BankAccountContract(integer, TVarChar)
+
+DROP FUNCTION IF EXISTS gpGet_Object_BankAccountContract(integer, TVarChar);
+
+CREATE OR REPLACE FUNCTION gpGet_Object_BankAccountContract(
+    IN inId          Integer,       -- Расчетные счета(оплата нам по любому договору)
+    IN inSession     TVarChar       -- сессия пользователя
+)
+RETURNS TABLE (Id INTEGER
+             , BankAccountId Integer, BankAccountName TVarChar
+             , InfoMoneyId Integer, InfoMoneyName TVarChar
+             , isErased boolean
+               ) AS
+$BODY$
+BEGIN
+
+     -- проверка прав пользователя на вызов процедуры
+     -- PERFORM lpCheckRight(inSession, zc_Enum_Process_Get_Object_BankAccountContract());
+  
+   IF COALESCE (inId, 0) = 0
+   THEN
+       RETURN QUERY 
+       SELECT
+             CAST (0 as Integer)   AS Id
+          
+           , CAST (0 as Integer)   AS BankAccountId
+           , CAST ('' as TVarChar) AS BankAccountName
+
+           , CAST (0 as Integer)   AS InfoMoneyId
+           , CAST ('' as TVarChar) AS InfoMoneyName
+
+           , CAST (NULL AS Boolean) AS isErased
+           
+       FROM Object 
+       WHERE Object.DescId = zc_Object_BankAccountContract();
+   ELSE
+     RETURN QUERY 
+     SELECT 
+           Object_BankAccountContract.Id      AS Id
+          
+         , Object_BankAccount.Id         AS BankAccountId
+         , Object_BankAccount.ValueData  AS BankAccountName
+
+         , Object_InfoMoney.Id          AS InfoMoneyId
+         , Object_InfoMoney.ValueData   AS InfoMoneyName
+
+         , Object_BankAccountContract.isErased AS isErased
+         
+     FROM OBJECT AS Object_BankAccountContract
+          LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                               ON ObjectLink_BankAccountContract_BankAccount.ObjectId = Object_BankAccountContract.Id
+                              AND ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
+          LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_BankAccountContract_BankAccount.ChildObjectId
+           
+          LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
+                               ON ObjectLink_BankAccountContract_InfoMoney.ObjectId = Object_BankAccountContract.Id
+                              AND ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
+          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_BankAccountContract_InfoMoney.ChildObjectId
+                                         
+     WHERE Object_BankAccountContract.Id = inId;
+     
+  END IF;
+  
+END;
+$BODY$
+
+LANGUAGE plpgsql VOLATILE;
+ALTER FUNCTION gpGet_Object_BankAccountContract(integer, TVarChar) OWNER TO postgres;
+
+
+
+/*-------------------------------------------------------------------------------
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.04.14         *              
+
+*/
+
+-- тест
+-- SELECT * FROM gpGet_Object_BankAccountContract (100, '2')

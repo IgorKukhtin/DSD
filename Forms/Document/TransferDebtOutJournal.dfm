@@ -2,7 +2,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitLeft = -2
   ExplicitWidth = 1081
   ExplicitHeight = 569
   PixelsPerInch = 96
@@ -11,17 +10,17 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Width = 1073
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 1073
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1073
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1073
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1073
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 1073
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -260,7 +259,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colRouteSortingName: TcxGridDBColumn
+          object colInvNumber_Master: TcxGridDBColumn
             Caption = #8470' '#1053#1053
             DataBinding.FieldName = 'InvNumber_Master'
             HeaderAlignmentHorz = taCenter
@@ -273,7 +272,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited Panel: TPanel
     Width = 1073
-    ExplicitWidth = 1110
+    ExplicitWidth = 1073
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179

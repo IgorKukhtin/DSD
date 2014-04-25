@@ -29,7 +29,7 @@ type
     colTotalSummPVAT: TcxGridDBColumn;
     colPaidKindFromName: TcxGridDBColumn;
     colContractFromName: TcxGridDBColumn;
-    colRouteSortingName: TcxGridDBColumn;
+    colInvNumber_Master: TcxGridDBColumn;
     spTax: TdsdStoredProc;
     actTax: TdsdExecStoredProc;
     bbTax: TdxBarButton;
