@@ -297,7 +297,11 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -305,7 +309,11 @@ object JuridicalForm: TJuridicalForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -384,6 +392,7 @@ object JuridicalForm: TJuridicalForm
       isShowModal = True
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -405,6 +414,7 @@ object JuridicalForm: TJuridicalForm
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -595,6 +605,8 @@ object JuridicalForm: TJuridicalForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 208
     Top = 184
   end

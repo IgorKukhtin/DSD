@@ -114,7 +114,7 @@ type
     clContractConditionComment: TcxGridDBColumn;
     clBonusKindName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
-    clBankAccount: TcxGridDBColumn;
+    clBankAccountExternal: TcxGridDBColumn;
     clisDefault: TcxGridDBColumn;
     clisStandart: TcxGridDBColumn;
   private

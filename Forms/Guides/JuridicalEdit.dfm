@@ -284,7 +284,7 @@
         object cxLabel13: TcxLabel
           Left = 248
           Top = 182
-          Caption = #1057#1095#1077#1090
+          Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
         end
         object cxLabel18: TcxLabel
           Left = 248
@@ -301,7 +301,7 @@
         end
       end
       object PartnerTS: TcxTabSheet
-        Caption = #1058#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
         object PartnerDockControl: TdxBarDockControl
           Left = 0
@@ -338,7 +338,7 @@
               Options.Editing = False
             end
             object colPartnerAddress: TcxGridDBColumn
-              Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+              Caption = #1040#1076#1088#1077#1089
               DataBinding.FieldName = 'Address'
               Options.Editing = False
               Width = 423
@@ -432,19 +432,26 @@
               Width = 40
             end
             object clInvNumberArchive: TcxGridDBColumn
-              Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
+              Caption = #1055#1086#1088#1103#1076#1082'. '#8470
               DataBinding.FieldName = 'InvNumberArchive'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
-              Width = 55
+              Width = 50
             end
             object clInvNumber: TcxGridDBColumn
-              Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+              Caption = #8470' '#1076#1086#1075'.'
               DataBinding.FieldName = 'InvNumber'
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
               Width = 55
+            end
+            object clContractTagName: TcxGridDBColumn
+              Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+              DataBinding.FieldName = 'ContractTagName'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 80
             end
             object clStartDate: TcxGridDBColumn
               Caption = #1044#1077#1081#1089#1090#1074'. '#1089
@@ -472,7 +479,7 @@
               Width = 70
             end
             object clPaidKindName: TcxGridDBColumn
-              Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083'.'
+              Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
               DataBinding.FieldName = 'PaidKindName'
               Visible = False
               HeaderAlignmentHorz = taCenter
@@ -483,6 +490,7 @@
             object clInfoMoneyCode: TcxGridDBColumn
               Caption = #1050#1086#1076' '#1059#1055
               DataBinding.FieldName = 'InfoMoneyCode'
+              Visible = False
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
@@ -494,7 +502,7 @@
               HeaderAlignmentHorz = taCenter
               HeaderAlignmentVert = vaCenter
               Options.Editing = False
-              Width = 90
+              Width = 80
             end
             object clPersonalName: TcxGridDBColumn
               Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
@@ -1218,8 +1226,8 @@
     ImageOptions.Images = dmMain.ImageList
     PopupMenuLinks = <>
     UseSystemFont = True
-    Left = 104
-    Top = 32
+    Left = 608
+    Top = 104
     DockControlHeights = (
       0
       0
@@ -1252,6 +1260,10 @@
         item
           Visible = True
           ItemName = 'bbPartnerRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
@@ -1286,6 +1298,10 @@
         item
           Visible = True
           ItemName = 'bbContractRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0

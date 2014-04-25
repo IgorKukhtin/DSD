@@ -10,7 +10,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
              , Comment TVarChar 
              , StartDate TDateTime, EndDate TDateTime
-             , ContractKindName TVarChar
+             , ContractTagName TVarChar, ContractKindName TVarChar
              , PaidKindName TVarChar
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalName TVarChar
@@ -38,6 +38,7 @@ BEGIN
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
        
+       , Object_Contract_View.ContractTagName
        , Object_ContractKind.ValueData      AS ContractKindName
        , Object_PaidKind.ValueData          AS PaidKindName
 
@@ -48,7 +49,7 @@ BEGIN
        , Object_Area.ValueData              AS AreaName
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
+       , Object_Contract_View.ContractStateKindCode
 
        , Object_Contract_View.isErased
        
@@ -69,8 +70,8 @@ BEGIN
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                            ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
-                           AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
         LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
@@ -83,11 +84,6 @@ BEGIN
                             AND ObjectLink_Contract_ContractArticle.DescId = zc_ObjectLink_Contract_ContractArticle()
         LEFT JOIN Object AS Object_ContractArticle ON Object_ContractArticle.Id = ObjectLink_Contract_ContractArticle.ChildObjectId                               
       
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
-                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId
-
    WHERE Object_Contract_View.JuridicalId = inJuridicalId
 --     AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
      AND Object_Contract_View.isErased = FALSE
@@ -103,6 +99,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.04.14                                        * add ContractTagName
  13.02.14                                        * del zc_Enum_ContractStateKind_Close, здесь надо показывать все договора :)
  13.02.14                                        * add zc_Enum_ContractStateKind_Close
  12.02.14                         * add KindColor

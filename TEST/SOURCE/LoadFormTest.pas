@@ -198,6 +198,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoiceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractChoiceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractConditionValueForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractConditionValueForm');
 
@@ -644,9 +646,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractChoicePartnerForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TContractChoicePartnerForm');
 
 end;
 

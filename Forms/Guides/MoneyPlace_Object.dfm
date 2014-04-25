@@ -24,7 +24,7 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
           Styles.Footer = nil
           Styles.Header = nil
           object clContractStateKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Images = dmMain.ImageList
@@ -59,8 +59,15 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
             Options.Editing = False
             Width = 70
           end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object clContractKindName: TcxGridDBColumn
-            Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1058#1080#1087' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractKindName'
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -213,5 +220,36 @@ inherited MoneyPlace_ObjectForm: TMoneyPlace_ObjectForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
 end

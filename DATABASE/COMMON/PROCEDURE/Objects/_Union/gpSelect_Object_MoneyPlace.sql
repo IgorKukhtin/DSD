@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, ItemName TVarChar, isEra
              , InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractNumber TVarChar, ContractStateKindCode Integer, StartDate TDateTime, EndDate TDateTime
-             , ContractKindName TVarChar
+             , ContractTagName TVarChar, ContractKindName TVarChar
              , OKPO TVarChar
               )
 AS
@@ -40,6 +40,7 @@ BEGIN
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
           , ''::TVarChar AS OKPO
      FROM Object AS Object_Cash
@@ -63,6 +64,7 @@ BEGIN
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
           , ''::TVarChar    AS OKPO
      FROM Object_BankAccount_View, ObjectDesc 
@@ -85,6 +87,7 @@ BEGIN
           , NULL::Integer AS ContractStateKindCode
           , NULL::TDateTime AS StartDate
           , NULL::TDateTime AS EndDate
+          , ''::TVarChar AS ContractTagName
           , ''::TVarChar AS ContractKindName
           , ''::TVarChar AS OKPO
      FROM Object AS Object_Member
@@ -109,6 +112,7 @@ BEGIN
           , View_Contract.ContractStateKindCode
           , View_Contract.StartDate
           , View_Contract.EndDate
+          , View_Contract.ContractTagName
           , Object_ContractKind.ValueData AS ContractKindName
           , ObjectHistory_JuridicalDetails_View.OKPO
      FROM Object AS Object_Juridical
@@ -142,6 +146,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 25.04.14                                        * add ContractTagName
  18.04.14                                        * rem View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
  18.03.14                                        * add all
  13.02.14                                        * add ObjectHistory_JuridicalDetails_View and ContractStateKindCode and InfoMoney...

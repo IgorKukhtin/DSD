@@ -24,7 +24,7 @@ object PartnerForm: TPartnerForm
     Width = 834
     Height = 438
     Align = alClient
-    TabOrder = 2
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -48,21 +48,21 @@ object PartnerForm: TPartnerForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 35
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 113
+        Width = 150
       end
       object ceAddress: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+        Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 154
+        Width = 150
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -89,6 +89,7 @@ object PartnerForm: TPartnerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
@@ -103,17 +104,20 @@ object PartnerForm: TPartnerForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
+        Visible = False
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
+        Visible = False
         Width = 88
       end
       object ceisErased: TcxGridDBColumn
@@ -235,7 +239,7 @@ object PartnerForm: TPartnerForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExel'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
@@ -252,6 +256,18 @@ object PartnerForm: TPartnerForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -663,8 +679,8 @@ object PartnerForm: TPartnerForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 352
+    Top = 160
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -672,8 +688,8 @@ object PartnerForm: TPartnerForm
       item
         Component = JuridicalGuides
       end>
-    Left = 304
-    Top = 88
+    Left = 288
+    Top = 184
   end
   object FormParams: TdsdFormParams
     Params = <

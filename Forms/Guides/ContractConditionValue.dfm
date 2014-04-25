@@ -47,7 +47,7 @@ object ContractConditionValueForm: TContractConditionValueForm
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object clContractStateKindName: TcxGridDBColumn
-        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractStateKindCode'
         PropertiesClassName = 'TcxImageComboBoxProperties'
         Properties.Alignment.Horz = taLeftJustify
@@ -88,7 +88,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Width = 35
       end
       object clInvNumberArchive: TcxGridDBColumn
-        Caption = #1055#1086#1088#1103#1076#1082#1086#1074#1099#1081' '#8470
+        Caption = #1055#1086#1088#1103#1076#1082'. '#8470
         DataBinding.FieldName = 'InvNumberArchive'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -97,12 +97,19 @@ object ContractConditionValueForm: TContractConditionValueForm
         Width = 51
       end
       object clInvNumber: TcxGridDBColumn
-        Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #8470' '#1076#1086#1075'.'
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 51
+      end
+      object clContractTagName: TcxGridDBColumn
+        Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+        DataBinding.FieldName = 'ContractTagName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 80
       end
       object clJuridicalCode: TcxGridDBColumn
         Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
@@ -162,10 +169,10 @@ object ContractConditionValueForm: TContractConditionValueForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 40
+        Width = 30
       end
       object clContractKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #1042#1080#1076' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractKindName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -278,7 +285,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Width = 70
       end
       object clContractConditionKindName: TcxGridDBColumn
-        Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #1059#1089#1083#1086#1074#1080#1077' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractConditionKindName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -380,7 +387,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Width = 55
       end
       object clContractArticleName: TcxGridDBColumn
-        Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075#1086#1074#1086#1088#1072
+        Caption = #1055#1088#1077#1076#1084#1077#1090' '#1076#1086#1075'.'
         DataBinding.FieldName = 'ContractArticleName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -397,9 +404,9 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 70
       end
-      object clBankAccount: TcxGridDBColumn
-        Caption = #1056'.'#1089#1095#1077#1090
-        DataBinding.FieldName = 'BankAccount'
+      object clBankAccountExternal: TcxGridDBColumn
+        Caption = #1056'.'#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
+        DataBinding.FieldName = 'BankAccountExternal'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
@@ -407,7 +414,7 @@ object ContractConditionValueForm: TContractConditionValueForm
         Width = 46
       end
       object clBankName: TcxGridDBColumn
-        Caption = #1041#1072#1085#1082
+        Caption = #1041#1072#1085#1082' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
         DataBinding.FieldName = 'BankName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -483,8 +490,8 @@ object ContractConditionValueForm: TContractConditionValueForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 248
-    Top = 72
+    Left = 288
+    Top = 144
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -583,7 +590,11 @@ object ContractConditionValueForm: TContractConditionValueForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -591,7 +602,11 @@ object ContractConditionValueForm: TContractConditionValueForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0

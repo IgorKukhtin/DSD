@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ContractConditionValue(
 )
 RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
-             , Comment TVarChar , BankAccount TVarChar 
+             , Comment TVarChar , BankAccountExternal TVarChar 
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
              , ContractKindId Integer, ContractKindName TVarChar
@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , PersonalId Integer, PersonalCode Integer, PersonalName TVarChar
              , AreaId Integer, AreaName TVarChar
              , ContractArticleId Integer, ContractArticleName TVarChar
+             , ContractTagName TVarChar
              , ContractStateKindCode Integer 
              , OKPO TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar  
@@ -49,7 +50,7 @@ BEGIN
        
        , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
        , ObjectString_Comment.ValueData   AS Comment 
-       , ObjectString_BankAccount.ValueData        AS BankAccount
+       , ObjectString_BankAccount.ValueData        AS BankAccountExternal
 
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
@@ -85,7 +86,8 @@ BEGIN
        , Object_ContractArticle.Id          AS ContractArticleId
        , Object_ContractArticle.ValueData   AS ContractArticleName
 
-       , Object_ContractStateKind.ObjectCode AS ContractStateKindCode
+       , Object_Contract_View.ContractTagName
+       , Object_Contract_View.ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
 
@@ -164,11 +166,6 @@ BEGIN
                             AND ObjectLink_Contract_ContractArticle.DescId = zc_ObjectLink_Contract_ContractArticle()
         LEFT JOIN Object AS Object_ContractArticle ON Object_ContractArticle.Id = ObjectLink_Contract_ContractArticle.ChildObjectId                               
       
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractStateKind
-                             ON ObjectLink_Contract_ContractStateKind.ObjectId = Object_Contract_View.ContractId 
-                            AND ObjectLink_Contract_ContractStateKind.DescId = zc_ObjectLink_Contract_ContractStateKind() 
-        LEFT JOIN Object AS Object_ContractStateKind ON Object_ContractStateKind.Id = ObjectLink_Contract_ContractStateKind.ChildObjectId 
-
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Bank
                              ON ObjectLink_Contract_Bank.ObjectId = Object_Contract_View.ContractId 
                             AND ObjectLink_Contract_Bank.DescId = zc_ObjectLink_Contract_Bank()
@@ -217,6 +214,8 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 25.04.14                                        * rename BankAccountExternal
+ 25.04.14                                        * add ContractTagName
  17.04.14                                        * add InfoMoney..._ch
  14.03.14         * add isStandart
  14.03.14         * add isDefault

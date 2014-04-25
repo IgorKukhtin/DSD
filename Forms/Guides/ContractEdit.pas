@@ -109,7 +109,7 @@ type
     actGetStateKindUnSigned: TdsdExecStoredProc;
     actGetStateKindSigned: TdsdExecStoredProc;
     actGetStateKindClose: TdsdExecStoredProc;
-    spGetStateKindPartner: TdsdStoredProc;
+    spGetStateKind_Partner: TdsdStoredProc;
     actGetStateKindPartner: TdsdExecStoredProc;
     clBonusKindName: TcxGridDBColumn;
     colComment: TcxGridDBColumn;

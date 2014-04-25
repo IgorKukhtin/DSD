@@ -3,28 +3,25 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientHeight = 496
   ClientWidth = 853
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 861
-  ExplicitHeight = 530
+  ExplicitWidth = 869
+  ExplicitHeight = 531
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 853
-    Height = 468
-    ExplicitTop = 28
+    Height = 470
     ExplicitWidth = 853
-    ExplicitHeight = 468
-    ClientRectBottom = 464
-    ClientRectRight = 849
+    ExplicitHeight = 470
+    ClientRectBottom = 470
+    ClientRectRight = 853
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 847
-      ExplicitHeight = 462
+      ExplicitWidth = 853
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 847
-        Height = 462
-        ExplicitWidth = 847
-        ExplicitHeight = 462
+        Width = 853
+        Height = 470
+        ExplicitWidth = 853
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -35,7 +32,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           Styles.Footer = nil
           Styles.Header = nil
           object clContractStateKindName: TcxGridDBColumn
-            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075#1086#1074#1086#1088#1072
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
             PropertiesClassName = 'TcxImageComboBoxProperties'
             Properties.Alignment.Horz = taLeftJustify
@@ -74,6 +71,13 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 100
           end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 80
+          end
           object colContractKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractKindName'
@@ -91,6 +95,7 @@ inherited ContractChoiceForm: TContractChoiceForm
           object clEndDate: TcxGridDBColumn
             Caption = #1044#1077#1081#1089#1090#1074'. '#1076#1086
             DataBinding.FieldName = 'EndDate'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -150,9 +155,10 @@ inherited ContractChoiceForm: TContractChoiceForm
           object colPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 55
+            Width = 30
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
@@ -300,29 +306,21 @@ inherited ContractChoiceForm: TContractChoiceForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbChoice'
-        end
         item
           Visible = True
           ItemName = 'dxBarStatic'
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
           ItemName = 'bbShowAll'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -335,6 +333,22 @@ inherited ContractChoiceForm: TContractChoiceForm
         item
           Visible = True
           ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoice'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
         end
         item
           Visible = True
@@ -404,8 +418,8 @@ inherited ContractChoiceForm: TContractChoiceForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 360
+    Top = 88
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh

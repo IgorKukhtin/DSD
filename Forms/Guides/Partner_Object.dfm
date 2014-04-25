@@ -19,9 +19,9 @@ object Partner_ObjectForm: TPartner_ObjectForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 28
+    Top = 26
     Width = 834
-    Height = 436
+    Height = 438
     Align = alClient
     TabOrder = 4
     object cxGridDBTableView: TcxGridDBTableView
@@ -47,19 +47,19 @@ object Partner_ObjectForm: TPartner_ObjectForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 43
+        Width = 30
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 113
+        Width = 150
       end
       object ceAddress: TcxGridDBColumn
-        Caption = #1040#1076#1088#1077#1089' '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+        Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
-        Width = 154
+        Width = 150
       end
       object ceJuridicalName: TcxGridDBColumn
         Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
@@ -86,6 +86,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 84
       end
@@ -100,17 +101,20 @@ object Partner_ObjectForm: TPartner_ObjectForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
+        Visible = False
         HeaderAlignmentVert = vaCenter
         Width = 86
       end
       object clStartPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'StartPromo'
+        Visible = False
         Width = 85
       end
       object clEndPromo: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
         DataBinding.FieldName = 'EndPromo'
+        Visible = False
         Width = 88
       end
       object ceisErased: TcxGridDBColumn
@@ -156,8 +160,8 @@ object Partner_ObjectForm: TPartner_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -175,7 +179,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -191,11 +195,11 @@ object Partner_ObjectForm: TPartner_ObjectForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExel'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -204,6 +208,18 @@ object Partner_ObjectForm: TPartner_ObjectForm
         item
           Visible = True
           ItemName = 'bbChoiceGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -236,6 +252,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -249,8 +266,11 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object PriceListPromoChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -267,8 +287,11 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object PriceListChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PriceListChoiceForm'
       FormName = 'TPriceListForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Key'
@@ -285,6 +308,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -305,6 +329,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -312,6 +337,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -365,6 +391,10 @@ object Partner_ObjectForm: TPartner_ObjectForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 464
     Top = 288
   end
