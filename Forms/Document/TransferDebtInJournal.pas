@@ -1,4 +1,4 @@
-unit TransferDebtOutJournal;
+unit TransferDebtInJournal;
 
 interface
 
@@ -17,7 +17,7 @@ uses
   dxSkinsDefaultPainters, dxSkinscxPCPainter;
 
 type
-  TTransferDebtOutJournalForm = class(TAncestorJournalForm)
+  TTransferDebtInJournalForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
@@ -29,7 +29,6 @@ type
     colTotalSummPVAT: TcxGridDBColumn;
     colPaidKindFromName: TcxGridDBColumn;
     colContractFromName: TcxGridDBColumn;
-    colInvNumber_Master: TcxGridDBColumn;
     spTax: TdsdStoredProc;
     actTax: TdsdExecStoredProc;
     bbTax: TdxBarButton;
@@ -71,5 +70,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TTransferDebtOutJournalForm);
+  RegisterClass(TTransferDebtInJournalForm);
 end.

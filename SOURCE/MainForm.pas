@@ -340,6 +340,8 @@ type
     bbReport_CheckContractInMovement: TdxBarButton;
     actTransferDebtOut: TdsdOpenForm;
     bbTransferDebtOut: TdxBarButton;
+    actTransferDebtIn: TdsdOpenForm;
+    bbTransferDebtIn: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

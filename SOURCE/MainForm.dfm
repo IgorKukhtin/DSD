@@ -377,6 +377,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbTransferDebtIn'
+        end
+        item
+          Visible = True
           ItemName = 'bbTransferDebtOut'
         end>
     end
@@ -1519,6 +1523,10 @@ object MainForm: TMainForm
     end
     object bbTransferDebtOut: TdxBarButton
       Action = actTransferDebtOut
+      Category = 0
+    end
+    object bbTransferDebtIn: TdxBarButton
+      Action = actTransferDebtIn
       Category = 0
     end
   end
@@ -3077,6 +3085,17 @@ object MainForm: TMainForm
       FormName = 'TTransferDebtOutJournalForm'
       FormNameParam.Name = 'TTransferDebtOutJournalForm'
       FormNameParam.Value = 'TTransferDebtOutJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actTransferDebtIn: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')'
+      FormName = 'TTransferDebtInJournalForm'
+      FormNameParam.Name = 'TTransferDebtOutJournalForm'
+      FormNameParam.Value = 'TTransferDebtInJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

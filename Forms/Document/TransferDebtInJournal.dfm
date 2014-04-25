@@ -1,7 +1,8 @@
-inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
+inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1073
+  ExplicitLeft = -123
   ExplicitWidth = 1081
   ExplicitHeight = 569
   PixelsPerInch = 96
@@ -259,13 +260,6 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
-          object colInvNumber_Master: TcxGridDBColumn
-            Caption = #8470' '#1053#1053
-            DataBinding.FieldName = 'InvNumber_Master'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
         end
       end
     end
@@ -284,12 +278,12 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TTransferDebtOutForm'
-      FormNameParam.Value = 'TTransferDebtOutForm'
+      FormName = 'TTransferDebtInForm'
+      FormNameParam.Value = 'TTransferDebtInForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TTransferDebtOutForm'
-      FormNameParam.Value = 'TTransferDebtOutForm'
+      FormName = 'TTransferDebtInForm'
+      FormNameParam.Value = 'TTransferDebtInForm'
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -585,7 +579,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransferDebtOut'
+    StoredProcName = 'gpSelect_Movement_TransferDebtIn'
     Params = <
       item
         Name = 'instartdate'
@@ -740,7 +734,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_TransferDebtOut'
+    StoredProcName = 'gpComplete_Movement_TransferDebtIn'
     Params = <
       item
         Name = 'inmovementid'
@@ -758,7 +752,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_TransferDebtOut'
+    StoredProcName = 'gpUnComplete_Movement_TransferDebtIn'
     Params = <
       item
         Name = 'inmovementid'
@@ -770,7 +764,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_TransferDebtOut'
+    StoredProcName = 'gpSetErased_Movement_TransferDebtIn'
     Params = <
       item
         Name = 'inmovementid'

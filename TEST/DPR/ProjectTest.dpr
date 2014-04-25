@@ -402,15 +402,17 @@ uses
   MovementTaxChoice in '..\..\Forms\Guides\MovementTaxChoice.pas' {MovementTaxChoiceForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
-  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
-  TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
+  TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
+  TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm},
   Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
   AreaEdit in '..\..\Forms\Guides\AreaEdit.pas' {AreaEditForm: TParentForm},
   SaleJournal in '..\..\Forms\Document\SaleJournal.pas' {SaleJournalForm: TParentForm},
-  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm};
+  Sale in '..\..\Forms\Document\Sale.pas' {SaleForm: TParentForm},
+  TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
+  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm};
 
 {$R *.RES}
 
