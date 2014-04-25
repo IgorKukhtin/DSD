@@ -150,7 +150,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
           end
           object colPaidKindFromName: TcxGridDBColumn
             Caption = #1060#1054' ('#1086#1090' '#1082#1086#1075#1086')'
-            DataBinding.FieldName = 'PaidKindName'
+            DataBinding.FieldName = 'PaidKindFromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 77

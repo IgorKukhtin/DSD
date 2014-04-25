@@ -46,8 +46,11 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalSummPVAT
              , CAST (0 as TFloat)                   AS TotalSumm
              
-             , Object_Juridical_Basis.Id	 AS FromId
-             , Object_Juridical_Basis.ValueData	 AS FromName
+ --            , Object_Juridical_Basis.Id	 AS FromId
+ --            , Object_Juridical_Basis.ValueData	 AS FromName
+
+             , 0	 AS FromId
+             , CAST ('' as TVarChar)	 AS FromName
              , 0                     	         AS ToId
              , CAST ('' as TVarChar)             AS ToName
              
@@ -69,7 +72,7 @@ BEGIN
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-          LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
+        --  LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
           LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
 
      ELSE
