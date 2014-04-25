@@ -1,9 +1,9 @@
--- Function: gpInsertUpdate_MovementItem_TransferDebtOut()
+-- Function: gpInsertUpdate_MovementItem_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TransferDebtOut (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TransferDebtIn (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TransferDebtOut(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
@@ -20,7 +20,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransferDebtOut());
+     --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransferDebtIn());
      vbUserId:= lpGetUserBySession (inSession);
 
      -- проверка - удаленный элемент документа не может корректироваться
@@ -31,7 +31,7 @@ BEGIN
 
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
-     FROM lpInsertUpdate_MovementItem_TransferDebtOut (ioId      := ioId
+     FROM lpInsertUpdate_MovementItem_TransferDebtIn (ioId      := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
                                           , inAmount             := inAmount
@@ -52,4 +52,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MovementItem_TransferDebtOut (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPrice:= 1, ioCountForPrice:= 1, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_MovementItem_TransferDebtIn (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inPrice:= 1, ioCountForPrice:= 1, inGoodsKindId:= 0, inSession:= '2')

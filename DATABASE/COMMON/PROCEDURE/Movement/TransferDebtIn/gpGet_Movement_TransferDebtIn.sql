@@ -1,9 +1,9 @@
--- Function: gpGet_Movement_TransferDebtOut()
+-- Function: gpGet_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
+CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtIn(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
@@ -16,14 +16,13 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , InvNumber_Master TVarChar
               )
 AS
 $BODY$
 BEGIN
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransferDebtOut());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransferDebtIn());
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
@@ -39,20 +38,17 @@ BEGIN
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 AS TFloat)               AS ChangePercent
 
-             , CAST (0 as TFloat)                   AS TotalCountKg
-             , CAST (0 as TFloat)                   AS TotalCountSh
-             , CAST (0 as TFloat)                   AS TotalCount
-             , CAST (0 as TFloat)                   AS TotalSummMVAT
-             , CAST (0 as TFloat)                   AS TotalSummPVAT
-             , CAST (0 as TFloat)                   AS TotalSumm
+             , CAST (0 as TFloat)       AS TotalCountKg
+             , CAST (0 as TFloat)       AS TotalCountSh
+             , CAST (0 as TFloat)       AS TotalCount
+             , CAST (0 as TFloat)       AS TotalSummMVAT
+             , CAST (0 as TFloat)       AS TotalSummPVAT
+             , CAST (0 as TFloat)       AS TotalSumm
              
- --            , Object_Juridical_Basis.Id	 AS FromId
- --            , Object_Juridical_Basis.ValueData	 AS FromName
-
              , 0	 AS FromId
-             , CAST ('' as TVarChar)	 AS FromName
-             , 0                     	         AS ToId
-             , CAST ('' as TVarChar)             AS ToName
+             , CAST ('' as TVarChar)	AS FromName
+             , 0                     	AS ToId
+             , CAST ('' as TVarChar)    AS ToName
              
              , 0                     	AS ContractFromId
              , CAST ('' as TVarChar) 	AS ContractFromName
@@ -64,12 +60,12 @@ BEGIN
              , 0                     	AS PaidKindToId
              , CAST ('' as TVarChar) 	AS PaidKindToName  
              
-             , Object_PriceList.Id                                  AS PriceListId
-             , Object_PriceList.ValueData                           AS PriceListName     
+             , Object_PriceList.Id          AS PriceListId
+             , Object_PriceList.ValueData   AS PriceListName     
              
              , CAST ('' as TVarChar) 	AS InvNumber_Master
              
-          FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
+          FROM (SELECT CAST (NEXTVAL ('movement_TransferDebtIn_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
         --  LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
@@ -114,7 +110,6 @@ BEGIN
            , Object_PriceList.id                    AS PriceListId
            , Object_PriceList.valuedata             AS PriceListName
 
-           , COALESCE (Movement_DocumentMaster.InvNumber, '')::TVarChar    AS InvNumber_Master
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -185,30 +180,25 @@ BEGIN
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                           ON MovementLinkMovement_Master.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()    
-            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
-
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_TransferDebtOut();
+         AND Movement.DescId = zc_Movement_TransferDebtIn();
      END IF;
 
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 22.04.14  		  *
+ 25.04.14  		  *
 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransferDebtOut (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
--- SELECT * FROM gpGet_Movement_TransferDebtOut(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');
+-- SELECT * FROM gpGet_Movement_TransferDebtIn (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
+-- SELECT * FROM gpGet_Movement_TransferDebtIn(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');

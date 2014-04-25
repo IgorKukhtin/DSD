@@ -1,10 +1,9 @@
--- Function: gpSelect_MovementItem_TransferDebtOut()
+-- Function: gpSelect_MovementItem_TransferDebtIn()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_TransferDebtOut (Integer, Boolean, Boolean, TVarChar);
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TransferDebtOut(
+CREATE OR REPLACE FUNCTION gpSelect_MovementItem_TransferDebtIn(
     IN inMovementId  Integer      , -- ключ Документа
     IN inPriceListId Integer      , -- ключ Прайс листа
     IN inOperDate    TDateTime    , -- Дата документа
@@ -21,7 +20,7 @@ AS
 $BODY$
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TransferDebtOut());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_TransferDebtIn());
 
      --
      IF inShowAll THEN
@@ -171,7 +170,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_TransferDebtIn (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -180,4 +179,4 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTim
 */
 
 -- тест
---SELECT * FROM gpSelect_MovementItem_TransferDebtOut (inMovementId:= 25173, inPriceListId:= 18840, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
+--SELECT * FROM gpSelect_MovementItem_TransferDebtIn (inMovementId:= 25173, inPriceListId:= 18840, inOperDate:='01.01.2014'::TDateTime, inShowAll:= TRUE, inisErased:= TRUE, inSession:= '2')
