@@ -217,6 +217,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
     end
     inherited deEnd: TcxDateEdit
       EditValue = 41640d
+      Properties.SaveTime = False
     end
     object edBranch: TcxButtonEdit
       Left = 467
@@ -363,7 +364,7 @@ inherited LoadSaleFrom1CForm: TLoadSaleFrom1CForm
           StoredProc = spCheckLoad
         end
         item
-          StoredProc = spDelete1CLoad
+          StoredProc = spErased
         end>
       Caption = 'actBeforeMove'
     end

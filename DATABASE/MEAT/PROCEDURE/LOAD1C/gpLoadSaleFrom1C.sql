@@ -160,6 +160,10 @@ BEGIN
 
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
+          -- Провели существующий документ
+          PERFORM gpComplete_Movement_Sale (inMovementId := vbMovementId
+                                          , inIsLastComplete := FALSE
+                                          , inUserId     := vbUserId);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
@@ -292,6 +296,11 @@ BEGIN
 
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
+
+          -- Провели существующий документ
+          PERFORM gpComplete_Movement_ReturnIn (inMovementId := vbMovementId
+                                              , inIsLastComplete := FALSE
+                                              , inUserId     := vbUserId);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор

@@ -184,6 +184,7 @@ begin
 end;
 
 procedure TPeriodChoice.Execute;
+var ddd: TDateTime;
 begin
    with TPeriodChoiceForm.Create(nil) do
    begin
