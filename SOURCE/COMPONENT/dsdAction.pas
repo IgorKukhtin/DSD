@@ -1222,7 +1222,17 @@ function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
     FReport: TfrxReport;
+    ActiveControl: TWinControl;
 begin
+  // Перед вызовом печати попробуем у формы поменять фокус, что бы вызвалась процеура сохранения
+
+  if Assigned(Owner) then
+     if Owner is TForm then begin
+        ActiveControl := TForm(Owner).ActiveControl;
+        TForm(Owner).ActiveControl := nil;
+        TForm(Owner).ActiveControl := ActiveControl;
+     end;
+
   inherited;
   result := true;
   FDataSetList := TList.Create;
@@ -1243,10 +1253,7 @@ begin
     with FReport do
     try
       if ShiftDown then begin
-         try
-           LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
-         except
-         end;
+         LoadFromStream(TdsdFormStorageFactory.GetStorage.LoadReport(ReportName));
          for i := 0 to Params.Count - 1 do begin
              if Params[i].DataType in [ftString, ftDate, ftDateTime] then
                 Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39)

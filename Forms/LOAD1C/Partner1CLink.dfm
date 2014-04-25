@@ -456,6 +456,10 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end
         item
           Visible = True
+          ItemName = 'bbInsertEmptyRecord'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item

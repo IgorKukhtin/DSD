@@ -36,7 +36,8 @@ uses
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
-  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas';
 
 {$R *.res}
 

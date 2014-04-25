@@ -21,7 +21,7 @@ type
     LoadProgramVersionProc: TdsdStoredProc;
     SaveUserFormSettingsStoredProc: TdsdStoredProc;
     LoadUserFormSettingsStoredProc: TdsdStoredProc;
-    function StringToXML(S: String): String;
+//    function StringToXML(S: String): String;
     procedure SaveToFormData(DataKey: string);
   public
     function LoadFile(FileName: string): AnsiString;
@@ -39,15 +39,12 @@ type
   TdsdFormStorageFactory = class
      class function GetStorage: TdsdFormStorage;
   end;
-  function StreamToString(Stream: TStream): String;
-  function ANSIToXML(S: String): String;
-  function ANSIToXMLFile(S: String): String;
-  function XMLToAnsi(S: String): String;
 
+  function StreamToString(Stream: TStream): String;
   // Процедура по символьно переводит строку в набор цифр
-function ReConvertConvert(S: Ansistring): AnsiString;
-// Процедура по символьно переводит строку в набор цифр
-function ConvertConvert(S: RawByteString): String;
+  function ReConvertConvert(S: Ansistring): AnsiString;
+  // Процедура по символьно переводит строку в набор цифр
+  function ConvertConvert(S: RawByteString): String;
 
 implementation
 
@@ -56,10 +53,12 @@ uses UtilConvert, DB, SysUtils, ZLibEx, Dialogs, dsdAddOn;
 // Процедура по символьно переводит строку в набор цифр
 function ConvertConvert(S: RawByteString): String;
 var i: integer;
+    ArcS: Ansistring;
 begin
+  ArcS := ZCompressStr(S);
   result := '';
-  for I := 1 to Length(S) do
-      result := result + IntToHex(byte(s[i]),2);
+  for I := 1 to Length(ArcS) do
+      result := result + IntToHex(byte(ArcS[i]),2);
 end;
 
   // Процедура по символьно переводит строку в набор цифр
@@ -72,42 +71,7 @@ begin
     result := result + Ansichar(StrToInt('$' + s[i] + s[i+1]));
     i := i + 2;
   end;
-end;
-
-
-
-function ANSIToXML(S: String): String;
-var i: integer;
-begin
-  result := '';
-  for I := 1 to Length(S) do
-    if (s[i] < #32) or (s[i] = #$0098) then
-      result := result + '&amp;#' + IntToHex(byte(s[i]),2) + ';'
-    else
-      result := result + gfStrToXmlStr(s[i]);
-end;
-
-function ANSIToXMLFile(S: String): String;
-var i: integer;
-begin
-  result := '';
-  for I := 1 to Length(S) do
-      result := result + '999999999';//'&amp;#' + IntToHex(byte(s[i]),2) + ';'
-end;
-
-function XMLToAnsi(S: String): String;
-var i: integer;
-begin
-  i := 1;
-  while i <= Length(S) do begin
-      if (s[i] = '&') and (s[i+1] = '#') and (s[i+4] = ';') then begin
-         result := result + char(StrToInt('$' + s[i+2] + s[i+3]));
-         i := i + 4;
-      end
-      else
-        result := result + s[i];
-      i := i + 1;
-  end;
+  result := ZDecompressStr(result)
 end;
 
 function StreamToString(Stream: TStream): String;
@@ -210,10 +174,8 @@ begin
   LoadStoredProc.ParamByName('FormName').Value := FormName;
   try
     try
-      FormStr := gfStrXmlToStr(LoadStoredProc.Execute);
+      FormStr := ReConvertConvert(LoadStoredProc.Execute);
       StringStream.WriteString(FormStr);
-      // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!!
-      //StringStream.WriteString(ReConvertConvert(LoadStoredProc.Execute));
       if StringStream.Size = 0 then
          raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
       StringStream.Position := 0;
@@ -245,7 +207,7 @@ end;
 function TdsdFormStorage.LoadFile(FileName: string): AnsiString;
 begin
   LoadProgramProc.ParamByName('inProgramName').Value := FileName;
-  result := ZDeCompressStr(ReConvertConvert(LoadProgramProc.Execute));
+  result := ReConvertConvert(LoadProgramProc.Execute);
 end;
 
 function TdsdFormStorage.LoadFileVersion(FileName: string): TVersionInfo;
@@ -260,7 +222,7 @@ function TdsdFormStorage.LoadReport(ReportName: String): TStream;
 begin
   LoadStoredProc.ParamByName('FormName').Value := ReportName;
   StringStream.Clear;
-  StringStream.WriteString(StringReplace(LoadStoredProc.Execute, '&#98;',char(StrToInt('$98')), [rfReplaceAll]));
+  StringStream.WriteString( ReConvertConvert(LoadStoredProc.Execute));
   if StringStream.Size = 0 then
      raise Exception.Create('Форма "' + ReportName + '" не загружена из базы данных');
   StringStream.Position := 0;
@@ -272,14 +234,6 @@ function TdsdFormStorage.LoadUserFormSettings(FormName: String): String;
 begin
   LoadUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
   Result := LoadUserFormSettingsStoredProc.Execute;
-end;
-
-function TdsdFormStorage.StringToXML(S: String): String;
-begin
-  // Оборачиваем символы #13 и #10
-  XMLDocument.LoadFromXML('<xml Data="' + gfStrToXmlStr(S) + ' "/>');
-  XMLDocument.SaveToXML(Result);
-  Result := gfStrToXmlStr(copy(Result, 12, length(Result) - 16))
 end;
 
 procedure TdsdFormStorage.Save(Form: TComponent);
@@ -300,15 +254,14 @@ begin
   StringStream.Position := 0;
 
   SaveStoredProc.ParamByName('FormName').Value := ReportName;
-  SaveStoredProc.ParamByName('FormData').Value := AnsiToXML(StringStream.DataString);
+  SaveStoredProc.ParamByName('FormData').Value := ConvertConvert(StringStream.DataString);
   SaveStoredProc.Execute;
 end;
 
 procedure TdsdFormStorage.SaveToFormData(DataKey: string);
 begin
   SaveStoredProc.ParamByName('FormName').Value := DataKey;
-    // ПОКА ОСТАВЛЯЕМ ПО СТАРОМУ!!! ConvertConvert(StringStream.DataString);//
-  SaveStoredProc.ParamByName('FormData').Value := StringToXML(StringStream.DataString);
+  SaveStoredProc.ParamByName('FormData').Value := ConvertConvert(StringStream.DataString);
   SaveStoredProc.Execute;
 end;
 
@@ -316,7 +269,6 @@ procedure TdsdFormStorage.SaveUserFormSettings(FormName: String; Data: String);
 begin
   SaveUserFormSettingsStoredProc.ParamByName('inFormName').Value := FormName;
   SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := Data;
-  //SaveUserFormSettingsStoredProc.ParamByName('inUserFormSettingsData').Value := ANSIToXML(Data);
   SaveUserFormSettingsStoredProc.Execute;
 end;
 
