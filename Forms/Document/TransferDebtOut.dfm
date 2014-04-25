@@ -1686,7 +1686,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 336
+    Left = 344
     Top = 48
   end
   object spSelectPrint: TdsdStoredProc
@@ -1736,29 +1736,27 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'FromId'
+        Name = 'JuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
         DataType = ftString
-        ParamType = ptInput
       end
       item
-        Name = 'FromName'
+        Name = 'JuridicalName'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
       end
       item
-        Name = 'PaidKinId'
+        Name = 'PaidKindId'
         Value = ''
         Component = PaidKindFromGuides
         ComponentItem = 'Key'
@@ -1783,25 +1781,25 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 264
-    Top = 16
+    Left = 296
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TContractChoiceForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'ToId'
+        Name = 'JuridicalId'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
-        Name = 'ToName'
+        Name = 'JuridicalName'
         Value = ''
         Component = GuidesTo
         ComponentItem = 'TextValue'
@@ -1840,6 +1838,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftFloat
       end>
     Left = 536
+    Top = 16
   end
   object PaidKindToGuides: TdsdGuides
     KeyField = 'Id'

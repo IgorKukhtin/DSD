@@ -1,8 +1,8 @@
--- Function: gpInsertUpdate_Movement_TransferDebtOut()
+-- Function: gpInsertUpdate_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
@@ -15,7 +15,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
-    IN inMasterId            Integer   , -- Налоговая накладная
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inSession             TVarChar    -- сессия пользователя
@@ -25,12 +24,12 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn());
 
      -- сохранили <Документ>
      SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
             INTO ioId, ioPriceListId, outPriceListName
-     FROM lpInsertUpdate_Movement_TransferDebtOut (ioId    := ioId
+     FROM lpInsertUpdate_Movement_TransferDebtIn (ioId    := ioId
                                       , inInvNumber        := inInvNumber
                                       , inOperDate         := inOperDate
                                       , inPriceWithVAT     := inPriceWithVAT
@@ -42,7 +41,6 @@ BEGIN
                                       , inPaidKindToId     := inPaidKindToId
                                       , inContractFromId   := inContractFromId
                                       , inContractToId     := inContractToId
-                                      , inMasterId         := inMasterId
                                       , ioPriceListId      := ioPriceListId
                                       , inUserId           := vbUserId
                                        ) AS tmp;
@@ -54,9 +52,9 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 24.04.14         *
+ 25.04.14         *
 
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_TransferDebtOut (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_TransferDebtIn (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inCarId:= 0, inPaidKindId:= 1, inContractId:= 0, inPersonalDriverId:= 0, inRouteId:= 0, inRouteSortingId:= 0, inSession:= '2')
