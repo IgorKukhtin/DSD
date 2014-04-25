@@ -169,7 +169,6 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -190,7 +189,7 @@ inherited ContractChoicePartnerForm: TContractChoicePartnerForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 50
+            Width = 40
           end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085

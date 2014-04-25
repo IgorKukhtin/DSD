@@ -1,61 +1,141 @@
--- Function: lpInsertFind_Object_PartionGoods (TDateTime)
+-- Function: lpInsertFind_Object_ContractKey (Integer, Integer, Integer, Integer, Integer, Integer)
 
--- DROP FUNCTION lpInsertFind_Object_PartionGoods (TDateTime);
+-- DROP FUNCTION lpInsertFind_Object_ContractKey (Integer, Integer, Integer, Integer, Integer, Integer);
 
-CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
-    IN inOperDate  TDateTime -- Дата партии
+CREATE OR REPLACE FUNCTION lpInsertFind_Object_ContractKey(
+    IN inJuridicalId_basis       Integer  , -- Главное юридическое лицо
+    IN inJuridicalId             Integer  , -- Юридические лица
+    IN inInfoMoneyId             Integer  , -- УП статья назначения
+    IN inPaidKindId              Integer  , -- Вид форм оплаты
+    IN inContractTagId           Integer  , -- Признак договора
+    IN inContractId_begin        Integer    -- Договор(!!!Обработка!!!)
 )
   RETURNS Integer AS
 $BODY$
-   DECLARE vbPartionGoodsId Integer;
-   DECLARE vbOperDate_str   TVarChar;
+   DECLARE vbContractKeyId_old Integer;
+   DECLARE vbContractKeyId_new Integer;
 BEGIN
 
-     IF inOperDate = zc_DateEnd()
+     -- проверка
+     IF COALESCE (inJuridicalId_basis, 0) = 0
      THEN
-         vbOperDate_str:= '';
-         inOperDate:= NULL;
-     ELSE
-         -- форматируем в строчку
-         vbOperDate_str:= COALESCE (TO_CHAR (inOperDate, 'DD.MM.YYYY'), '');
+         RAISE EXCEPTION 'Ошибка.<Главное юридическое лицо> не выбрано.';
+     END IF;
+     -- проверка
+     IF COALESCE (inJuridicalId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Юридическое лицо> не выбрано.';
+     END IF;
+     -- проверка
+     IF COALESCE (inInfoMoneyId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.<УП статья назначения> не выбрана.';
+     END IF;
+     -- проверка
+     IF COALESCE (inPaidKindId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Вид формы оплаты> не выбран.';
+     END IF;
+     -- проверка
+     IF COALESCE (inContractId_begin, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.<Договор(!!!Обработка!!!)> не определен.';
      END IF;
 
-     -- Находим 
-     vbPartionGoodsId:= (SELECT Id FROM Object WHERE ValueData = vbOperDate_str AND DescId = zc_Object_PartionGoods());
 
-     -- Если не нашли
-     IF COALESCE (vbPartionGoodsId, 0) = 0
+     -- определяем "предыдущий" ключ
+     vbContractKeyId_old:= (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Contract_ContractKey() AND ObjectId = inContractId_begin);
+
+
+     -- !!!обработка будет только для "некоторых" <УП статья назначения>!!!
+     IF EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId
+                                                                AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                                                             , zc_Enum_InfoMoneyDestination_30200() -- Мясное сырье
+                                                                                              )
+               )
      THEN
-         -- сохранили <Объект>
-         vbPartionGoodsId := lpInsertUpdate_Object (vbPartionGoodsId, zc_Object_PartionGoods(), 0, vbOperDate_str);
-
-         IF vbOperDate_str <> ''
+         -- проверка
+         IF COALESCE (inContractTagId, 0) = 0
          THEN
-             -- сохранили
-              PERFORM lpInsertUpdate_ObjectDate (zc_ObjectDate_PartionGoods_Value(), vbPartionGoodsId, inOperDate);
+             RAISE EXCEPTION 'Ошибка.<Признак договора> не выбран.';
+         END IF;
+
+         -- поиск ключа
+         vbContractKeyId_new := (SELECT ObjectLink_1.ObjectId
+                                 FROM ObjectLink AS ObjectLink_1
+                                      INNER JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_2.ObjectId      = ObjectLink_1.ObjectId
+                                                                           AND ObjectLink_2.ChildObjectId = inContractTagId
+                                                                           AND ObjectLink_2.DescId        = zc_ObjectLink_ContractKey_ContractTag()
+                                      INNER JOIN ObjectLink AS ObjectLink_3 ON ObjectLink_3.ObjectId      = ObjectLink_1.ObjectId
+                                                                           AND ObjectLink_3.ChildObjectId = inInfoMoneyId
+                                                                           AND ObjectLink_3.DescId        = zc_ObjectLink_ContractKey_InfoMoney()
+                                      INNER JOIN ObjectLink AS ObjectLink_4 ON ObjectLink_4.ObjectId      = ObjectLink_1.ObjectId
+                                                                           AND ObjectLink_4.ChildObjectId = inPaidKindId
+                                                                           AND ObjectLink_4.DescId        = zc_ObjectLink_ContractKey_PaidKind()
+                                      INNER JOIN ObjectLink AS ObjectLink_5 ON ObjectLink_5.ObjectId      = ObjectLink_1.ObjectId
+                                                                           AND ObjectLink_5.ChildObjectId = inJuridicalId_basis
+                                                                           AND ObjectLink_5.DescId        = zc_ObjectLink_ContractKey_JuridicalBasis()
+                                 WHERE ObjectLink_1.ChildObjectId = inJuridicalId
+                                   AND ObjectLink_1.DescId = zc_ObjectLink_ContractKey_Juridical()
+                                );
+         -- Если не нашли, добавляем
+         IF COALESCE (vbContractKeyId_new, 0) = 0
+         THEN
+             -- сохранили "пустой" <Объект>
+             vbContractKeyId_new := lpInsertUpdate_Object (vbContractKeyId_new, zc_Object_ContractKey(), 0, '');
+             -- сохранили связь с <Юридическое лицо>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_Juridical(), vbContractKeyId_new, inJuridicalId);
+             -- сохранили связь с <Признак договора>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_ContractTag(), vbContractKeyId_new, inContractTagId);
+             -- сохранили связь с <УП статья назначения>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_InfoMoney(), vbContractKeyId_new, inInfoMoneyId);
+             -- сохранили связь с <Вид формы оплаты>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_PaidKind(), vbContractKeyId_new, inPaidKindId);
+             -- сохранили связь с <Главное юридическое лицо>
+             PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_JuridicalBasis(), vbContractKeyId_new, inJuridicalId_basis);
          END IF;
 
      END IF;
 
-     -- Возвращаем значение
-     RETURN (vbPartionGoodsId);
+
+     -- !!!обязательно!!! сохранили ключ у <Договор(!!!Обработка!!!)>
+     PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_ContractKey(), inContractId_begin, vbContractKeyId_new);
+
+
+     -- обновили у "предыдущего" <Ключ договора> связь с !!!"последним" договором!!!
+     IF vbContractKeyId_old <> 0
+     THEN 
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_Contract(), vbContractKeyId_old, lfGet_Contract_ContractKey (vbContractKeyId_old));
+     END IF;
+
+     -- обновили у "нового" <Ключ договора> связь с !!!"последним" договором!!!
+     IF vbContractKeyId_new <> 0
+     THEN 
+         PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_ContractKey_Contract(), vbContractKeyId_new, lfGet_Contract_ContractKey (vbContractKeyId_new));
+     END IF;
+
+     -- Возвращаем значение, хотя не понятно зачем...
+     RETURN (vbContractKeyId_new);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION lpInsertFind_Object_PartionGoods (TDateTime) OWNER TO postgres;
-
+  LANGUAGE PLPGSQL VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 20.07.13                                        * vbOperDate_str
- 19.07.13         * rename zc_ObjectDate_            
- 12.07.13                                        * разделил на 2 проц-ки
- 02.07.13                                        * сначала Find, потом если надо Insert
- 02.07.13         *
+ 25.04.14                                        *
+*/
+/*
+SELECT lpInsertFind_Object_ContractKey (inJuridicalId_basis:= Object_Contract_View.JuridicalBasisId
+                                      , inJuridicalId      := Object_Contract_View.JuridicalId
+                                      , inInfoMoneyId      := Object_Contract_View.InfoMoneyId 
+                                      , inPaidKindId       := Object_Contract_View.PaidKindId
+                                      , inContractTagId    := Object_Contract_View.ContractTagId
+                                      , inContractId_begin := Object_Contract_View.ContractId
+                                       )
+FROM Object_Contract_View
 */
 
 -- тест
--- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= '31.01.2013');
--- SELECT * FROM lpInsertFind_Object_PartionGoods (inOperDate:= NULL);
+-- SELECT * FROM lpInsertFind_Object_ContractKey (inOperDate:= '31.01.2013');

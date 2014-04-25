@@ -442,6 +442,13 @@ object ContractForm: TContractForm
         Options.Editing = False
         Width = 30
       end
+      object clContractKeyId: TcxGridDBColumn
+        DataBinding.FieldName = 'ContractKeyId'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'

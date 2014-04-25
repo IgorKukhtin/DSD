@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer
+RETURNS TABLE (Id Integer, ContractKeyId Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
              , Comment TVarChar, BankAccountExternal TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
@@ -45,6 +45,7 @@ BEGIN
    RETURN QUERY 
    SELECT
          Object_Contract_View.ContractId AS Id
+       , Object_Contract_View.ContractKeyId
        , Object_Contract_View.ContractCode AS Code
        , Object_Contract_View.InvNumber
        
@@ -217,6 +218,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.04.14                                        * add ContractKeyId
  25.04.14                                        * по другому ContractTag... and ContractStateKind...
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
                         zc_ObjectLink_Contract_PersonalCollation

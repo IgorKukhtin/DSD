@@ -14,29 +14,29 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inCode                Integer,       -- Код
     IN inInvNumber           TVarChar,      -- Номер договора
     IN inInvNumberArchive    TVarChar,      -- Номер архивирования
-    IN inComment             TVarChar,      -- Комментарий
-    IN inBankAccountExternal TVarChar,      -- р.счет
+    IN inComment             TVarChar,      -- Примечание
+    IN inBankAccountExternal TVarChar,      -- р.счет (исх.платеж)
     
-    IN inSigningDate         TDateTime,     -- свойство Дата заключения договора
-    IN inStartDate           TDateTime,     -- свойство Дата с которой действует договор
-    IN inEndDate             TDateTime,     -- свойство Дата до которой действует договор    
+    IN inSigningDate         TDateTime,     -- Дата заключения договора
+    IN inStartDate           TDateTime,     -- Дата с которой действует договор
+    IN inEndDate             TDateTime,     -- Дата до которой действует договор    
     
     IN inJuridicalId         Integer  ,     -- Юридическое лицо
     IN inJuridicalBasisId    Integer  ,     -- Главное юридическое лицо
-    IN inInfoMoneyId         Integer  ,     -- Статьи назначения
-    IN inContractKindId      Integer  ,     -- Виды договоров
-    IN inPaidKindId          Integer  ,     -- Виды форм оплаты
+    IN inInfoMoneyId         Integer  ,     -- УП статья назначения
+    IN inContractKindId      Integer  ,     -- Вид договора
+    IN inPaidKindId          Integer  ,     -- Вид формы оплаты
     
-    IN inPersonalId          Integer  ,     -- Сотрудники (отвественное лицо)
-    IN inPersonalTradeId     Integer  ,     -- Сотрудники (торговый)
-    IN inPersonalCollationId Integer  ,     -- Сотрудники (сверка)
-    IN inBankAccountId       Integer  ,     -- Расчетные счета(оплата нам)
+    IN inPersonalId          Integer  ,     -- Сотрудник (отвественное лицо)
+    IN inPersonalTradeId     Integer  ,     -- Сотрудник (торговый)
+    IN inPersonalCollationId Integer  ,     -- Сотрудник (сверка)
+    IN inBankAccountId       Integer  ,     -- Расчетный счет (вх.платеж)
     IN inContractTagId       Integer  ,     -- Признак договора
     
     IN inAreaId              Integer  ,     -- Регион
     IN inContractArticleId   Integer  ,     -- Предмет договора
     IN inContractStateKindId Integer  ,     -- Состояние договора
-    IN inBankId              Integer  ,     -- Банк
+    IN inBankId              Integer  ,     -- Банк (исх.платеж)
     IN inisDefault           Boolean  ,     -- по умолчанию
     IN inisStandart          Boolean  ,     -- Типовой
     IN inSession             TVarChar       -- сессия пользователя
@@ -119,7 +119,11 @@ BEGIN
       RAISE EXCEPTION 'Ошибка.У <Юридическое лицо> не установлен <ОКПО>.';
    END IF;
    -- проверка для 
-   IF inInfoMoneyId = zc_Enum_InfoMoney_30101() AND COALESCE (inContractTagId, 0) = 0
+   IF COALESCE (inContractTagId, 0) = 0
+      AND EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId
+                                                                  AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_30100() -- Продукция
+                                                                                               , zc_Enum_InfoMoneyDestination_30200() -- Мясное сырье
+                                                                                                ))
    THEN
        RAISE EXCEPTION 'Ошибка.Для <%> необходимо установить <Признак договора>.', lfGet_Object_ValueData (inInfoMoneyId);
    END IF;

@@ -120,6 +120,7 @@ type
     PersonalCollationChoiceForm: TOpenChoiceForm;
     BankAccountChoiceForm: TOpenChoiceForm;
     ContractTagChoiceForm: TOpenChoiceForm;
+    clContractKeyId: TcxGridDBColumn;
   private
     { Private declarations }
   public
