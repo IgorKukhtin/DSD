@@ -443,6 +443,7 @@ begin
     OutputType := otDataSet;
     FParams.Clear;
     SetDataSetParam;
+    if FspSelect='gpSelect_Object_Partner' then FParams.AddParam('inJuridicalId', ftInteger, ptInput, 0);
     Params.Assign(FParams);
     Execute;
     result := DataSets[0].DataSet;
@@ -464,6 +465,7 @@ begin
     OutputType := otDataSet;
     Params.Clear;
     Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
+    if spGet='gpGet_Object_Partner' then Params.AddParam('inJuridicalId', ftInteger, ptInput, 0);
     Execute;
     result := DataSets[0].DataSet;
   end;
@@ -1020,7 +1022,7 @@ begin
     SigningDate:=date; StartDate:=date; EndDate:=date;
     JuridicalId:=TJuridical.Create.GetDefault;
     JuridicalBasisId:=9399;//ООО АЛАН
-    InfoMoneyId:=8962;//(30101) Доходы Продукция Готовая продукция
+    InfoMoneyId:=8913;//10203;"Упаковка"
     ContractKindId:=0;
     PaidKindId:=3;//БН
     PersonalId:=0;

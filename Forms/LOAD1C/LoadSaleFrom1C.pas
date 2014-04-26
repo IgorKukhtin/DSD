@@ -13,7 +13,8 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC, DataModul,
   ExternalLoad, ExternalDocumentLoad, dsdGuides, cxButtonEdit, cxCurrencyEdit,
-  cxSplitter;
+  cxSplitter, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter, cxImageComboBox;
 
 type
   TLoadSaleFrom1CForm = class(TAncestorReportForm)

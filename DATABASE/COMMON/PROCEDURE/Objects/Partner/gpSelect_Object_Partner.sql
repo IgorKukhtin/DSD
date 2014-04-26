@@ -4,8 +4,8 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Partner (TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner(
-    IN inJuridicalId       Integer , 
-    IN inSession           TVarChar            -- сессия пользователя
+    IN inJuridicalId       Integer  , 
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, Address TVarChar,
                GLNCode TVarChar,  PrepareDayCount TFloat, DocumentDayCount TFloat,

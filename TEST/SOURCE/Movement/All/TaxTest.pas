@@ -15,7 +15,7 @@ type
   private
     function InsertDefault: integer; override;
   public
-    function InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+    function InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner,InvNumberBranch: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
              FromId, ToId, PartnerId, ContractId, DocumentTaxKindId: Integer
@@ -39,7 +39,7 @@ end;
 
 function TTax.InsertDefault: integer;
 var Id: Integer;
-    InvNumber,InvNumberPartner: String;
+    InvNumber,InvNumberPartner,InvNumberBranch: String;
     OperDate: TDateTime;
     Checked, Document, PriceWithVAT: Boolean;
     VATPercent: double;
@@ -48,6 +48,7 @@ begin
   Id:=0;
   InvNumber:='1';
   InvNumberPartner:='123';
+  InvNumberBranch:='456';
   OperDate:= Date;
   Checked:=true;
   Document:=true;
@@ -60,13 +61,13 @@ begin
   DocumentTaxKindId:=TDocumentTaxKind.Create.GetDefault;
   ContractId:=TContractTest.Create.GetDefault;
 
-  result := InsertUpdateTax(Id, InvNumber, InvNumberPartner, OperDate,
+  result := InsertUpdateTax(Id, InvNumber, InvNumberPartner,InvNumberBranch, OperDate,
              Checked, Document, PriceWithVAT,
              VATPercent,
              FromId, ToId,  PartnerId, ContractId, DocumentTaxKindId);
 end;
 
-function TTax.InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner: String; OperDate: TDateTime;
+function TTax.InsertUpdateTax(Id: Integer; InvNumber, InvNumberPartner,InvNumberBranch: String; OperDate: TDateTime;
              Checked, Document, PriceWithVAT: Boolean;
              VATPercent: double;
              FromId, ToId, PartnerId, ContractId, DocumentTaxKindId: Integer
@@ -76,6 +77,7 @@ begin
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inInvNumber', ftString, ptInput, InvNumber);
   FParams.AddParam('inInvNumberPartner', ftString, ptInput, InvNumber);
+  FParams.AddParam('inInvNumberBranch', ftString, ptInput, InvNumberBranch);
   FParams.AddParam('inOperDate', ftDateTime, ptInput, OperDate);
   FParams.AddParam('inChecked', ftBoolean, ptInput, Checked);
   FParams.AddParam('inDocument', ftBoolean, ptInput, Document);

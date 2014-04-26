@@ -194,6 +194,15 @@ BEGIN
    -- сохранили связь с <Банк>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Bank(), ioId, inBankId);
    
+     -- !!!обязательно!!! сформировали ключ
+    PERFORM lpInsertFind_Object_ContractKey (inJuridicalId_basis:= inJuridicalBasisId
+                                           , inJuridicalId      := inJuridicalId
+                                           , inInfoMoneyId      := inInfoMoneyId
+                                           , inPaidKindId       := inPaidKindId
+                                           , inContractTagId    := inContractTagId
+                                           , inContractId_begin := ioId
+                                            );
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (inObjectId:= ioId, inUserId:= vbUserId, inIsUpdate:= vbIsUpdate, inIsErased:= NULL);
 
@@ -205,6 +214,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.14                                        * add lpInsertFind_Object_ContractKey
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
                         zc_ObjectLink_Contract_PersonalCollation
                         zc_ObjectLink_Contract_BankAccount

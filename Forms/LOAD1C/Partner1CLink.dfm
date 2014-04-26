@@ -9,17 +9,17 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   inherited PageControl: TcxPageControl
     Width = 1038
     Height = 375
-    ExplicitWidth = 1032
+    ExplicitWidth = 1038
     ExplicitHeight = 375
     ClientRectBottom = 375
     ClientRectRight = 1038
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1032
+      ExplicitWidth = 1038
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
         Width = 1038
         Height = 375
-        ExplicitWidth = 1032
+        ExplicitWidth = 1038
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
@@ -456,10 +456,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end
         item
           Visible = True
-          ItemName = 'bbInsertEmptyRecord'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -476,10 +472,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -489,33 +481,49 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
         item
           Visible = True
           ItemName = 'dxBarControlContainerItem'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
-    object dxBarControlContainerItem: TdxBarControlContainerItem
+    inherited dxBarStatic: TdxBarStatic [1]
+    end
+    object bbInsertEmptyRecord: TdxBarButton [2]
+      Action = actInsertRecordEmpty
+      Category = 0
+    end
+    object bbAddRecord: TdxBarButton [3]
+      Action = actInsertRecord
+      Category = 0
+    end
+    object bbInsertPartner: TdxBarButton [4]
+      Action = actInsertPartner
+      Category = 0
+    end
+    inherited bbRefresh: TdxBarButton [5]
+    end
+    object dxBarControlContainerItem: TdxBarControlContainerItem [6]
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = edBranch
     end
-    object bbAddRecord: TdxBarButton
-      Action = actInsertRecord
-      Category = 0
-    end
-    object bbInsertPartner: TdxBarButton
-      Action = actInsertPartner
-      Category = 0
-    end
-    object bbBranchLabel: TdxBarControlContainerItem
+    object bbBranchLabel: TdxBarControlContainerItem [7]
       Caption = 'New Item'
       Category = 0
       Hint = 'New Item'
       Visible = ivAlways
       Control = cxLabel1
-    end
-    object bbInsertEmptyRecord: TdxBarButton
-      Action = actInsertRecordEmpty
-      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
