@@ -193,7 +193,11 @@ begin
       // Загрузить пользователские дефотлы!!!
       for i := 0 to Result.ComponentCount - 1 do
         if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+        try
               TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+        except
+
+        end;
     except
       on E: Exception do
         raise Exception.Create('TdsdFormStorage.Load ' + E.Message + chr(13) + chr(10) + FormStr);
