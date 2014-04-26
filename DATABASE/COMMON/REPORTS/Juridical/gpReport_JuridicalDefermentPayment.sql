@@ -214,6 +214,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.14                                        * add Object_Contract_ContractKey_View
  15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
  09.04.14                                        * add !!!

@@ -7,7 +7,7 @@ DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPaymentByDocument (TDateTime,
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPaymentByDocument(
     IN inOperDate         TDateTime , -- 
     IN inContractDate     TDateTime , -- 
-    IN inJuridicalId      INTEGER   ,
+    IN inJuridicalId      Integer   ,
     IN inAccountId        Integer   , --
     IN inContractId       Integer   , --
     IN inPeriodCount      Integer   , --
@@ -30,6 +30,15 @@ BEGIN
      -- Так же выбираем продажи и возвраты за период 
   vbLenght := 7;
 
+  -- !!!Отчет строим не по договору а по "ключу"!!!
+  CREATE TEMP TABLE _tmpContract (ContractId Integer) ON COMMIT DROP; 
+  INSERT INTO _tmpContract (ContractId)
+      SELECT COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
+      FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
+           LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
+      WHERE View_Contract_ContractKey.ContractId = inContractId;
+
+
   IF inPeriodCount < 5 THEN
 
     RETURN QUERY  
@@ -41,31 +50,32 @@ BEGIN
             , Object_From.ValueData AS FromName
             , Object_To.ValueData   AS ToName
          FROM Movement 
-              JOIN MovementLinkObject AS MovementLinkObject_To
-                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              JOIN MovementLinkObject AS MovementLinkObject_From
-                                      ON MovementLinkObject_From.MovementId = Movement.Id
-                                     AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-              JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-         LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                 ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-         LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-             LEFT JOIN Object AS Object_From 
-                   ON Object_From.Id = MovementLinkObject_From.ObjectId
-             LEFT JOIN Object AS Object_To
-                    ON Object_To.Id = MovementLinkObject_To.ObjectId
+              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+              INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+              INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                         ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                        AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+              -- !!!Группируем Договора!!!
+              LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
+
+              LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+              LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
         WHERE Movement.DescId = zc_Movement_Sale()
           AND Movement.StatusId = zc_enum_status_complete()
-          AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
+          AND (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND Movement.OperDate >= (inContractDate::date - vbLenght * inPeriodCount) 
           AND Movement.OperDate < (inContractDate::date - vbLenght * (inPeriodCount - 1))
-          AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId 
+          AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId
     ORDER BY OperDate;
     
     ELSE
@@ -73,46 +83,53 @@ BEGIN
       vbNextOperDate := vbOperDate;
       vbOperSumm := 0;
       
-      CREATE TEMP TABLE _tempMovement(Id INTEGER, Summ TFloat) ON COMMIT DROP; 
+      CREATE TEMP TABLE _tempMovement(Id Integer, Summ TFloat) ON COMMIT DROP; 
       
       WHILE (vbOperSumm < inSumm) AND NOT (vbNextOperDate IS NULL) LOOP
-      	SELECT max(movement.OperDate) INTO vbNextOperDate 
-      	  FROM movement 
-              JOIN MovementLinkObject AS MovementLinkObject_To
-                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-      	 WHERE movement.OperDate < vbOperDate  AND movement.DescId = zc_movement_sale() AND StatusId = zc_enum_status_complete()
-           AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
+      	SELECT max(Movement.OperDate) INTO vbNextOperDate 
+      	  FROM Movement 
+              INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                            ON MovementLinkObject_To.MovementId = Movement.Id
+                                           AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+              INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+              -- !!!Группируем Договора!!!
+              LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
+
+      	 WHERE Movement.OperDate < vbOperDate  AND Movement.DescId = zc_Movement_sale() AND StatusId = zc_enum_status_complete()
+           AND (_tmpContract.ContractId > 0 OR inContractId = 0)
       	   AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId;
       	 
      -- 	raise EXCEPTION 'vbNextOperDate %, % ', vbNextOperDate, vbOperDate   	 ;
       	 
-      	 IF NOT (vbNextOperDate IS NULL) THEN
-      	    
-      	    INSERT INTO _tempMovement(Id, Summ)
-      	      SELECT Movement.Id, MovementFloat_TotalSumm.ValueData
+         --
+      	 IF NOT (vbNextOperDate IS NULL)
+         THEN
+              INSERT INTO _tempMovement(Id, Summ)
+      	        SELECT Movement.Id, MovementFloat_TotalSumm.ValueData
       	        FROM Movement 
-           LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                   ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                  AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                JOIN MovementLinkObject AS MovementLinkObject_To
-                                      ON MovementLinkObject_To.MovementId = Movement.Id
-                                     AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
-                                      ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                     AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-      	      WHERE Movement.OperDate < vbOperDate AND Movement.OperDate >= vbNextOperDate AND Movement.DescId = zc_movement_sale() 
-                AND (MovementLinkObject_Contract.ObjectId = inContractId OR inContractId = 0)
-      	        AND Movement.StatusId = zc_enum_status_complete() AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId;
+                     LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                             ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                            AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                   ON MovementLinkObject_To.MovementId = Movement.Id
+                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                     INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                           ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     -- !!!Группируем Договора!!!
+                     LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
+
+                WHERE Movement.OperDate < vbOperDate AND Movement.OperDate >= vbNextOperDate AND Movement.DescId = zc_Movement_sale() 
+                  AND (_tmpContract.ContractId > 0 OR inContractId = 0)
+                  AND Movement.StatusId = zc_enum_status_complete() AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId;
 
 
       	    vbOperDate := vbNextOperDate;
@@ -165,6 +182,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTim
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.14                                        * add Object_Contract_ContractKey_View
  01.04.14                          * 
  27.03.14                          * 
  21.02.14                          * 
