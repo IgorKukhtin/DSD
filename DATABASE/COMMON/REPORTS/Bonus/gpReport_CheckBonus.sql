@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inSessiON             TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ContractId_master Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
+             , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
              , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalName TVarChar
              , PaidKindName TVarChar
@@ -27,6 +28,8 @@ BEGIN
     WITH tmpContractConditionKind AS (SELECT ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindID
                                            , View_Contract.JuridicalId
                                            , View_Contract.InvNumber   AS InvNumber_master
+                                           , View_Contract.ContractTagName       AS ContractTagName_master
+                                           , View_Contract.ContractStateKindCode AS ContractStateKindCode_master
                                            , View_Contract.ContractId  AS ContractId_master
                                            , View_Contract.InfoMoneyId AS InfoMoneyId_master
                                            , CASE WHEN View_Contract.InfoMoneyId = zc_Enum_InfoMoney_21501() -- Маркетинг + Бонусы за продукцию
@@ -107,9 +110,11 @@ BEGIN
       -- для всех юр лиц, у кого есть "Бонусы" формируется список всех других договоров (по ним будем делать расчет "базы")
     , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master
-                           , tmpContractConditionKind.InvNumber_master AS InvNumber_child
+                           , tmpContractConditionKind.InvNumber_master  AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
                            , tmpContractConditionKind.ContractId_master AS ContractId_child
+                           , tmpContractConditionKind.ContractTagName_master       AS ContractTagName_child
+                           , tmpContractConditionKind.ContractStateKindCode_master AS ContractStateKindCode_child
                            , tmpContractConditionKind.InfoMoneyId_master
                            , tmpContractConditionKind.InfoMoneyId_child
                            , tmpContractConditionKind.InfoMoneyId_Condition
@@ -122,9 +127,11 @@ BEGIN
                     UNION ALL
                       SELECT tmpContractConditionKind.JuridicalId
                            , tmpContractConditionKind.InvNumber_master
-                           , View_Contract_child.InvNumber AS InvNumber_child
+                           , View_Contract_child.InvNumber  AS InvNumber_child
                            , tmpContractConditionKind.ContractId_master
                            , View_Contract_child.ContractId AS ContractId_child
+                           , View_Contract_child.ContractTagName       AS ContractTagName_child
+                           , View_Contract_child.ContractStateKindCode AS ContractStateKindCode_child
                            , tmpContractConditionKind.InfoMoneyId_master
                            , tmpContractConditionKind.InfoMoneyId_child
                            , tmpContractConditionKind.InfoMoneyId_Condition
@@ -217,6 +224,9 @@ BEGIN
             , tmpAll.InvNumber_child
             , tmpAll.InvNumber_find
 
+            , tmpAll.ContractTagName_child
+            , tmpAll.ContractStateKindCode_child
+
             , Object_InfoMoney_master.ValueData             AS InfoMoneyName_master
             , Object_InfoMoney_child.ValueData              AS InfoMoneyName_child
             , Object_InfoMoney_find.ValueData               AS InfoMoneyName_find
@@ -237,6 +247,9 @@ BEGIN
                             THEN tmpContractBonus.InvNumber_find
                        ELSE tmpContract.InvNumber_master
                   END AS InvNumber_find
+
+                , tmpContract.ContractTagName_child
+                , tmpContract.ContractStateKindCode_child
 
                 , tmpContract.ContractId_master
                 , tmpContract.ContractId_child 
@@ -283,6 +296,9 @@ BEGIN
            SELECT '' :: TVarChar AS InvNumber_master
                 , '' :: TVarChar AS InvNumber_child
                 , View_Contract_InvNumber_find.InvNumber AS InvNumber_find
+
+                , '' :: TVarChar                                 AS ContractTagName_child
+                , 0                                              AS ContractStateKindCode_child
 
                 , 0                                              AS ContractId_master  
                 , 0                                              AS ContractId_child            
@@ -360,6 +376,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.04.14                                        * add ContractTagName_child and ContractStateKindCode_child
  17.04.14                                        * all
  10.04.14         *
 */

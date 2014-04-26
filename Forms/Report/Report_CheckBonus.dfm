@@ -61,6 +61,47 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clContractStateKindName_child: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractStateKindCode_child'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 12
+                Value = 1
+              end
+              item
+                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 11
+                Value = 2
+              end
+              item
+                Description = #1047#1072#1074#1077#1088#1096#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+                ImageIndex = 66
+                Value = 4
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clContractTagName_child: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'. ('#1073#1072#1079#1072')'
+            DataBinding.FieldName = 'ContractTagName_child'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object clInvNumber_master: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'InvNumber_master'
@@ -133,13 +174,14 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
             Width = 100
           end
           object clPaidKindName: TcxGridDBColumn
-            Caption = #1053#1072#1083'/'#1041#1085
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 30
+            Width = 55
           end
           object clSum_CheckBonus: TcxGridDBColumn
             Caption = #1056#1072#1089#1095#1077#1090#1085#1072#1103' '#1073#1072#1079#1072

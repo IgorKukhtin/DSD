@@ -103,7 +103,23 @@ from (
 
       , Object_Area.ValueData AS AreaName
 
-  FROM (SELECT Container.Id
+  FROM (SELECT RESULT_all.AccountId
+             , RESULT_all.ContractId
+             , RESULT_all.JuridicalId 
+             , SUM (RESULT_all.Remains)   AS Remains
+             , SUM (RESULT_all.SaleSumm)  AS SaleSumm
+             , SUM (RESULT_all.SaleSumm1) AS SaleSumm1
+             , SUM (RESULT_all.SaleSumm2) AS SaleSumm2
+             , SUM (RESULT_all.SaleSumm3) AS SaleSumm3
+             , SUM (RESULT_all.SaleSumm4) AS SaleSumm4
+             , RESULT_all.ContractConditionKindId
+             , RESULT_all.DayCount
+             , RESULT_all.DelayCreditLimit
+             , RESULT_all.ContractDate
+             , CLO_InfoMoney.ObjectId AS InfoMoneyId
+             , CLO_PaidKind.ObjectId  AS PaidKindId
+        FROM
+       (SELECT Container.Id
              , Container.ObjectId     AS AccountId
              , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
              , CLO_Juridical.ObjectId AS JuridicalId 
@@ -116,7 +132,7 @@ from (
              , ContractCondition_DefermentPayment.ContractConditionKindId
              , ContractCondition_DefermentPayment.DayCount
              , ContractCondition_CreditLimit.DelayCreditLimit
-             , ContractDate
+             , ContractCondition_DefermentPayment.ContractDate
          FROM ContainerLinkObject AS CLO_Juridical
               INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId AND Container.DescId = zc_Container_Summ()
               LEFT JOIN ContainerLinkObject AS CLO_Contract
@@ -126,37 +142,55 @@ from (
               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
               LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
-                              , zfCalc_DetermentPaymentDate(COALESCE(ContractConditionKindId, 0), Value::Integer, inOperDate)::Date AS ContractDate
+                              , zfCalc_DetermentPaymentDate (COALESCE (ContractConditionKindId, 0), Value::Integer, inOperDate) :: Date AS ContractDate
                               , ContractConditionKindId
-                              , Value::Integer AS DayCount
+                              , Value :: Integer AS DayCount
                            FROM Object_ContractCondition_View
                                 INNER JOIN Object_ContractCondition_DefermentPaymentView 
                                         ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
                         ) AS ContractCondition_DefermentPayment
-                          ON ContractCondition_DefermentPayment.contractid = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
+                          ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
 
               LEFT JOIN (SELECT Object_ContractCondition_View.ContractId
                               , Value AS DelayCreditLimit
                          FROM Object_ContractCondition_View
                          WHERE Object_ContractCondition_View.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
                         ) AS ContractCondition_CreditLimit
-                          ON ContractCondition_CreditLimit.contractid = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
+                          ON ContractCondition_CreditLimit.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
                               
               LEFT JOIN MovementItemContainer AS MIContainer 
                                               ON MIContainer.Containerid = Container.Id
-                                             AND MIContainer.OperDate >= COALESCE(ContractCondition_DefermentPayment.ContractDate::Date - 4 * vbLenght, inOperDate)
+                                             AND MIContainer.OperDate >= COALESCE (ContractCondition_DefermentPayment.ContractDate :: Date - 4 * vbLenght, inOperDate)
              LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
          WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-         GROUP BY Container.amount
+         GROUP BY Container.Id
+                , Container.ObjectId
+                , Container.amount
                 , View_Contract_ContractKey.ContractId_Key
                 , CLO_Juridical.ObjectId  
-                , Container.ObjectId
-                , Container.Id
                 , ContractConditionKindId
                 , DayCount
                 , DelayCreditLimit
                 , ContractDate
+       ) AS RESULT_all
+
+           LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                         ON CLO_InfoMoney.ContainerId = RESULT_all.Id
+                                        AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
+           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                         ON CLO_PaidKind.ContainerId = RESULT_all.Id
+                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
+
+         GROUP BY RESULT_all.AccountId
+                , RESULT_all.ContractId
+                , RESULT_all.JuridicalId 
+                , RESULT_all.ContractConditionKindId
+                , RESULT_all.DayCount
+                , RESULT_all.DelayCreditLimit
+                , RESULT_all.ContractDate
+                , CLO_InfoMoney.ObjectId
+                , CLO_PaidKind.ObjectId
        ) AS RESULT
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
@@ -182,15 +216,9 @@ from (
 
            LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
 
-           LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                  ON CLO_InfoMoney.ContainerId = RESULT.Id
-                 AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
+           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = RESULT.InfoMoneyId
 
-           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
-                  ON CLO_PaidKind.ContainerId = RESULT.Id
-                 AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = RESULT.PaidKindId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
                                 ON ObjectLink_Contract_Area.ObjectId = RESULT.ContractId
