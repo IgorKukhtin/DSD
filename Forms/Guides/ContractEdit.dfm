@@ -175,7 +175,7 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel7: TcxLabel [24]
     Left = 16
     Top = 298
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1086#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081')'
+    Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object edPersonal: TcxButtonEdit [25]
     Left = 16
@@ -370,7 +370,6 @@ inherited ContractEditForm: TContractEditForm
       Height = 26
       Align = dalTop
       BarManager = BarManager
-      ExplicitWidth = 433
     end
     object dxBarDockControl2: TdxBarDockControl
       Left = 0
@@ -379,8 +378,6 @@ inherited ContractEditForm: TContractEditForm
       Height = 26
       Align = dalTop
       BarManager = BarManager
-      ExplicitTop = 198
-      ExplicitWidth = 433
     end
     object cxDBVerticalGrid: TcxDBVerticalGrid
       Left = 0
@@ -402,8 +399,6 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitTop = 252
-      ExplicitHeight = 289
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -475,7 +470,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 129
     Top = 23
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
-    TabOrder = 40
+    TabOrder = 39
     Width = 111
   end
   object ceisStandart: TcxCheckBox [40]
@@ -488,12 +483,12 @@ inherited ContractEditForm: TContractEditForm
   object cxLabel18: TcxLabel [41]
     Left = 184
     Top = 342
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1090#1086#1088#1075#1086#1074#1099#1081')'
+    Caption = #1058#1055' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object cxLabel19: TcxLabel [42]
     Left = 16
     Top = 342
-    Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1073#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072')'
+    Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
   end
   object edPersonalTrade: TcxButtonEdit [43]
     Left = 184
@@ -504,7 +499,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 44
+    TabOrder = 43
     Width = 162
   end
   object edPersonalCollation: TcxButtonEdit [44]
@@ -550,7 +545,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 50
+    TabOrder = 49
     Width = 162
   end
   object ceBankAccount: TcxButtonEdit [49]
@@ -1790,7 +1785,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'incontractdocumentdata'
-        Value = '789C535018D10000F1E01FE1'
+        Value = '789CAB98131C20719181E1E303F9870020680572'
         Component = Document
         ComponentItem = 'Data'
         DataType = ftBlob

@@ -12,7 +12,12 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inSession          TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
-             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar, StartDate TDateTime, EndDate TDateTime, PaidKindName TVarChar, AccountName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
+             , ContractTagName TVarChar, ContractStateKindCode Integer
+             , PersonalName TVarChar
+             , PersonalCollationName TVarChar
+             , StartDate TDateTime, EndDate TDateTime
+             , PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -37,6 +42,10 @@ BEGIN
         View_Contract_InvNumber.ContractId,
         View_Contract_InvNumber.ContractCode,
         View_Contract_InvNumber.InvNumber AS ContractNumber,
+        View_Contract_InvNumber.ContractTagName,
+        View_Contract_InvNumber.ContractStateKindCode,
+        Object_Personal_View.PersonalName      AS PersonalName,
+        Object_PersonalCollation.PersonalName  AS PersonalCollationName,
         ObjectDate_Start.ValueData        AS StartDate,
         ObjectDate_End.ValueData          AS EndDate,
         Object_PaidKind.ValueData AS PaidKindName,
@@ -70,6 +79,23 @@ BEGIN
         CASE WHEN Operation.EndAmount < 0 THEN -1 * Operation.EndAmount ELSE 0 END :: TFloat AS EndAmount_K
 
      FROM
+         (SELECT Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
+                , CLO_PaidKind.ObjectId AS PaidKindId
+                , View_Contract_ContractKey.ContractId_Key AS ContractId,
+                     SUM (Operation_all.StartAmount) AS StartAmount,
+                     SUM (Operation_all.DebetSumm)   AS DebetSumm,
+                     SUM (Operation_all.KreditSumm)  AS KreditSumm,
+
+                     SUM (Operation_all.IncomeSumm)    AS IncomeSumm,
+                     SUM (Operation_all.ReturnOutSumm) AS ReturnOutSumm,
+                     SUM (Operation_all.SaleSumm)      AS SaleSumm,
+                     SUM (Operation_all.ReturnInSumm)  AS ReturnInSumm,
+                     SUM (Operation_all.MoneySumm)     AS MoneySumm,
+                     SUM (Operation_all.ServiceSumm)   AS ServiceSumm,
+                     SUM (Operation_all.SendDebtSumm)  AS SendDebtSumm,
+                     SUM (Operation_all.OtherSumm)     AS OtherSumm,
+                     SUM (Operation_all.EndAmount)     AS EndAmount
+          FROM
           (SELECT Container.Id AS ContainerId, Container.ObjectId, CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId,
                      Container.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm,
@@ -105,26 +131,45 @@ BEGIN
                  AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                  AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
                  AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId) AS Operation
+            GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId
+           ) AS Operation_all
 
+           LEFT JOIN ContainerLinkObject AS CLO_PaidKind 
+                                         ON CLO_PaidKind.ContainerId = Operation_all.ContainerId
+                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
            LEFT JOIN ContainerLinkObject AS CLO_Contract
-                  ON CLO_Contract.ContainerId = Operation.ContainerId AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = CLO_Contract.ObjectId
+                                         ON CLO_Contract.ContainerId = Operation_all.ContainerId
+                                        AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+           LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
+
+          GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, CLO_PaidKind.ObjectId
+                 , View_Contract_ContractKey.ContractId_Key
+
+           ) AS Operation
+
+           LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Operation.ContractId
            LEFT JOIN ObjectDate AS ObjectDate_Start
-                                ON ObjectDate_Start.ObjectId = CLO_Contract.ObjectId
+                                ON ObjectDate_Start.ObjectId = Operation.ContractId
                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
            LEFT JOIN ObjectDate AS ObjectDate_End
-                                ON ObjectDate_End.ObjectId = CLO_Contract.ObjectId
+                                ON ObjectDate_End.ObjectId = Operation.ContractId
                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
-
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Area
-                                ON ObjectLink_Contract_Area.ObjectId = CLO_Contract.ObjectId
+                                ON ObjectLink_Contract_Area.ObjectId = Operation.ContractId
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
 
-           LEFT JOIN ContainerLinkObject AS CLO_PaidKind 
-                  ON CLO_PaidKind.ContainerId = Operation.ContainerId AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CLO_PaidKind.ObjectId         
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
+                               ON ObjectLink_Contract_Personal.ObjectId = Operation.ContractId
+                              AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+           LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
+
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalCollation
+                                ON ObjectLink_Contract_PersonalCollation.ObjectId = Operation.ContractId
+                               AND ObjectLink_Contract_PersonalCollation.DescId = zc_ObjectLink_Contract_PersonalCollation()
+           LEFT JOIN Object_Personal_View AS Object_PersonalCollation ON Object_PersonalCollation.PersonalId = ObjectLink_Contract_PersonalCollation.ChildObjectId        
+
+           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
 
            LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = Operation.ObjectId
            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Operation.JuridicalId   
@@ -144,6 +189,7 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 26.04.14                                        * add Object_Contract_ContractKey_View
  15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
  10.03.14                                        * add zc_Movement_ProfitLossService

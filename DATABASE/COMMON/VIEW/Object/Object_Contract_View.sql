@@ -23,8 +23,6 @@ CREATE OR REPLACE VIEW Object_Contract_View AS
        , Object_Contract_InvNumber_View.ContractTagCode
        , Object_Contract_InvNumber_View.ContractTagName
 
-       , Object_Contract_InvNumber_View.ContractKeyId
-
          -- !!!ÂĞÅÌÅÍÍÎ ÂÎÑÑÒÀÍÎÂÈË!!!
        , ObjectFloat_ChangePercent.ValueData         AS ChangePercent
        , ObjectFloat_ChangePrice.ValueData           AS ChangePrice
@@ -65,6 +63,7 @@ ALTER TABLE Object_Contract_View  OWNER TO postgres;
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 26.04.14                                        * del ContractKeyId
  25.04.14                                        * add ContractKeyId
  24.04.14                                        * all
  13.02.14                                        * add Object_ContractStateKind...

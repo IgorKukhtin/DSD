@@ -25,7 +25,7 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('day', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('day', inOperDatePartner) 
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;

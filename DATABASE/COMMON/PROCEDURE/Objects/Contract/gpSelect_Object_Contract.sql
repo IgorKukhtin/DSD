@@ -5,8 +5,12 @@ DROP FUNCTION IF EXISTS gpSelect_Object_Contract (TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_Contract(
     IN inSession        TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, ContractKeyId Integer, Code Integer
+RETURNS TABLE (Id Integer, Code Integer
              , InvNumber TVarChar, InvNumberArchive TVarChar
+
+             , ContractKeyId Integer, ContractId_Key Integer, Code_Key Integer
+             , InvNumber_Key TVarChar, ContractStateKindCode_Key Integer
+
              , Comment TVarChar, BankAccountExternal TVarChar
              , SigningDate TDateTime, StartDate TDateTime, EndDate TDateTime
                          
@@ -44,15 +48,20 @@ BEGIN
 
    RETURN QUERY 
    SELECT
-         Object_Contract_View.ContractId AS Id
-       , Object_Contract_View.ContractKeyId
+         Object_Contract_View.ContractId   AS Id
        , Object_Contract_View.ContractCode AS Code
        , Object_Contract_View.InvNumber
-       
        , ObjectString_InvNumberArchive.ValueData   AS InvNumberArchive
+
+       , View_Contract_InvNumber_Key.ContractKeyId
+       , View_Contract_InvNumber_Key.ContractId_Key        AS ContractId_Key
+       , View_Contract_InvNumber_Key.ContractCode          AS Code_Key
+       , View_Contract_InvNumber_Key.InvNumber             AS InvNumber_Key
+       , View_Contract_InvNumber_Key.ContractStateKindCode AS ContractStateKindCode_Key
+
        , ObjectString_Comment.ValueData            AS Comment 
        , ObjectString_BankAccount.ValueData        AS BankAccountExternal
-      
+
        , ObjectDate_Signing.ValueData AS SigningDate
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
@@ -207,6 +216,8 @@ BEGIN
         LEFT JOIN Object AS Object_Update ON Object_Update.Id = ObjectLink_Update.ChildObjectId   
 
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
+        LEFT JOIN Object_Contract_InvNumber_Key_View AS View_Contract_InvNumber_Key ON View_Contract_InvNumber_Key.ContractId = Object_Contract_View.ContractId
+
    ;
   
 END;
@@ -218,6 +229,7 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.04.14                                        * add View_Contract_InvNumber_Key
  25.04.14                                        * add ContractKeyId
  25.04.14                                        * по другому ContractTag... and ContractStateKind...
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade

@@ -282,7 +282,7 @@ object ContractForm: TContractForm
         Width = 70
       end
       object clPersonalName: TcxGridDBColumn
-        Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
+        Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalName'
         Visible = False
         HeaderAlignmentHorz = taCenter
@@ -291,7 +291,7 @@ object ContractForm: TContractForm
         Width = 55
       end
       object clPersonalTradeName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1099#1081' '#1087#1088#1077#1076#1089#1090#1072#1074#1080#1090#1077#1083#1100
+        Caption = #1058#1055' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalTradeName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -307,7 +307,7 @@ object ContractForm: TContractForm
         Width = 60
       end
       object clPersonalCollationName: TcxGridDBColumn
-        Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082' ('#1089#1074#1077#1088#1082#1072')'
+        Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
         DataBinding.FieldName = 'PersonalCollationName'
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
@@ -443,11 +443,63 @@ object ContractForm: TContractForm
         Width = 30
       end
       object clContractKeyId: TcxGridDBColumn
+        Caption = #1050#1083#1102#1095' ('#1075#1083#1072#1074#1085#1099#1081')'
         DataBinding.FieldName = 'ContractKeyId'
         Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 50
+      end
+      object clContractStateKindName_Key: TcxGridDBColumn
+        Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'. ('#1075#1083#1072#1074#1085#1099#1081')'
+        DataBinding.FieldName = 'ContractStateKindCode_Key'
+        PropertiesClassName = 'TcxImageComboBoxProperties'
+        Properties.Alignment.Horz = taLeftJustify
+        Properties.Alignment.Vert = taVCenter
+        Properties.Images = dmMain.ImageList
+        Properties.Items = <
+          item
+            Description = #1055#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 12
+            Value = 1
+          end
+          item
+            Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+            ImageIndex = 11
+            Value = 2
+          end
+          item
+            Description = #1047#1072#1074#1077#1088#1096#1077#1085
+            ImageIndex = 13
+            Value = 3
+          end
+          item
+            Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            ImageIndex = 66
+            Value = 4
+          end>
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 67
+      end
+      object clCode_Key: TcxGridDBColumn
+        Caption = #1050#1086#1076' ('#1075#1083#1072#1074#1085#1099#1081')'
+        DataBinding.FieldName = 'Code_Key'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
+      end
+      object clInvNumber_Key: TcxGridDBColumn
+        Caption = #8470' '#1076#1086#1075'. ('#1075#1083#1072#1074#1085#1099#1081')'
+        DataBinding.FieldName = 'InvNumber_Key'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 70
       end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085

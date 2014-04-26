@@ -1,25 +1,26 @@
 inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   Caption = #1054#1090#1095#1077#1090' <'#1044#1086#1083#1075#1080' '#1089' '#1086#1090#1089#1088#1086#1095#1082#1086#1081'>'
   ClientHeight = 394
-  ClientWidth = 1194
+  ClientWidth = 1218
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1202
-  ExplicitHeight = 421
+  ExplicitLeft = -197
+  ExplicitWidth = 1234
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1194
+    Width = 1218
     Height = 337
     TabOrder = 3
     ExplicitWidth = 1194
     ExplicitHeight = 337
     ClientRectBottom = 337
-    ClientRectRight = 1194
+    ClientRectRight = 1218
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1194
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
-        Width = 1194
+        Width = 1218
         Height = 337
         ExplicitWidth = 1194
         ExplicitHeight = 337
@@ -137,19 +138,52 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             DataBinding.FieldName = 'AreaName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 70
+            Width = 60
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 95
+            Width = 80
           end
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clContractStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractStateKindCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 12
+                Value = 1
+              end
+              item
+                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 11
+                Value = 2
+              end
+              item
+                Description = #1047#1072#1074#1077#1088#1096#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+                ImageIndex = 66
+                Value = 4
+              end>
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -169,9 +203,18 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 60
           end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colStartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -180,6 +223,24 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           object colEndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object clPersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clPersonalCollationName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalCollationName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -210,11 +271,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Width = 70
           end
           object colPaidKindName: TcxGridDBColumn
-            Caption = #1053#1072#1083'/'#1041#1085
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 50
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -337,7 +399,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
   end
   inherited Panel: TPanel
-    Width = 1194
+    Width = 1218
     ExplicitWidth = 1194
     inherited deStart: TcxDateEdit
       Left = 59
@@ -350,7 +412,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 48
+      ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
       Visible = False
@@ -783,12 +845,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
   end
   inherited MasterDS: TDataSource
-    Top = 112
+    Top = 155
   end
   inherited MasterCDS: TClientDataSet
     IndexFieldNames = 'JuridicalName'
     StoreDefs = True
-    Top = 112
+    Top = 155
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalDefermentPayment'
@@ -814,10 +876,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Top = 112
+    Top = 155
   end
   inherited BarManager: TdxBarManager
-    Top = 112
+    Top = 155
     DockControlHeights = (
       0
       0
@@ -825,6 +887,18 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       0)
     inherited Bar: TdxBar
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
         item
           Visible = True
           ItemName = 'bbPribt'
@@ -867,10 +941,6 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -910,7 +980,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Top = 128
+    Top = 171
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
@@ -920,7 +990,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       item
         Component = AccountGuides
       end>
-    Top = 136
+    Top = 179
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'

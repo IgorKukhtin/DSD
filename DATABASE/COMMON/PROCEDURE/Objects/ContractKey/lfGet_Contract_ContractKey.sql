@@ -13,26 +13,54 @@ BEGIN
      -- !!!пока нет обработки "удаленных" и "закрытых" договоров!!!
 
 
-     -- выбираем максимальную <Дата с которой действует договор>
+     -- выбираем максимальную <Дата с которой действует договор> + не удаленный
      vbDateStart:= (SELECT MAX (ObjectDate_Start.ValueData) AS DateStart
                     FROM ObjectLink AS ObjectLink_Contract_ContractKey
                          INNER JOIN ObjectDate AS ObjectDate_Start
                                                ON ObjectDate_Start.ObjectId = ObjectLink_Contract_ContractKey.ObjectId
                                               AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                         INNER JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract_ContractKey.ObjectId
+                                                             AND Object_Contract.isErased = FALSE
                     WHERE ObjectLink_Contract_ContractKey.ChildObjectId = inContractKeyId
                       AND ObjectLink_Contract_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
                    );
 
-     -- выбираем "любой" договор с максимальной <Дата с которой действует договор>
-     RETURN (SELECT MAX (ObjectLink_Contract_ContractKey.ObjectId)
-             FROM ObjectLink AS ObjectLink_Contract_ContractKey
-                  INNER JOIN ObjectDate AS ObjectDate_Start
-                                        ON ObjectDate_Start.ObjectId = ObjectLink_Contract_ContractKey.ObjectId
-                                       AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
-                                       AND ObjectDate_Start.ValueData = vbDateStart
-             WHERE ObjectLink_Contract_ContractKey.ChildObjectId = inContractKeyId
-               AND ObjectLink_Contract_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
-            );
+     IF vbDateStart IS NULL
+     THEN
+         -- еще раз выбираем максимальную <Дата с которой действует договор>
+         vbDateStart:= (SELECT MAX (ObjectDate_Start.ValueData) AS DateStart
+                        FROM ObjectLink AS ObjectLink_Contract_ContractKey
+                             INNER JOIN ObjectDate AS ObjectDate_Start
+                                                   ON ObjectDate_Start.ObjectId = ObjectLink_Contract_ContractKey.ObjectId
+                                                  AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                        WHERE ObjectLink_Contract_ContractKey.ChildObjectId = inContractKeyId
+                          AND ObjectLink_Contract_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
+                       );
+         -- выбираем "любой" договор с максимальной <Дата с которой действует договор>
+         RETURN (SELECT MAX (ObjectLink_Contract_ContractKey.ObjectId)
+                 FROM ObjectLink AS ObjectLink_Contract_ContractKey
+                      INNER JOIN ObjectDate AS ObjectDate_Start
+                                            ON ObjectDate_Start.ObjectId = ObjectLink_Contract_ContractKey.ObjectId
+                                           AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                           AND ObjectDate_Start.ValueData = vbDateStart
+                 WHERE ObjectLink_Contract_ContractKey.ChildObjectId = inContractKeyId
+                   AND ObjectLink_Contract_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
+                );
+     ELSE
+         -- выбираем "любой" договор с максимальной <Дата с которой действует договор> + не удаленный
+         RETURN (SELECT MAX (ObjectLink_Contract_ContractKey.ObjectId)
+                 FROM ObjectLink AS ObjectLink_Contract_ContractKey
+                      INNER JOIN ObjectDate AS ObjectDate_Start
+                                            ON ObjectDate_Start.ObjectId = ObjectLink_Contract_ContractKey.ObjectId
+                                           AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+                                           AND ObjectDate_Start.ValueData = vbDateStart
+                      INNER JOIN Object AS Object_Contract ON Object_Contract.Id = ObjectLink_Contract_ContractKey.ObjectId
+                                                          AND Object_Contract.isErased = FALSE
+                 WHERE ObjectLink_Contract_ContractKey.ChildObjectId = inContractKeyId
+                   AND ObjectLink_Contract_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
+                );
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;

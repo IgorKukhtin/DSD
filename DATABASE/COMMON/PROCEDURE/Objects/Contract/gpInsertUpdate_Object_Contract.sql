@@ -128,6 +128,12 @@ BEGIN
        RAISE EXCEPTION 'Ошибка.Для <%> необходимо установить <Признак договора>.', lfGet_Object_ValueData (inInfoMoneyId);
    END IF;
 
+   -- проверка
+   IF inSigningDate <> DATE_TRUNC ('DAY', inSigningDate) OR inStartDate <> DATE_TRUNC ('DAY', inStartDate) OR inEndDate <> DATE_TRUNC ('DAY', inEndDate) 
+   THEN
+       RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+   END IF;
+
 
    -- определили <Признак>
    vbIsUpdate:= COALESCE (ioId, 0) > 0;

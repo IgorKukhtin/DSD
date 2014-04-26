@@ -505,7 +505,7 @@
               Width = 80
             end
             object clPersonalName: TcxGridDBColumn
-              Caption = #1054#1090#1074'.'#1089#1086#1090#1088#1091#1076#1085#1080#1082
+              Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
               DataBinding.FieldName = 'PersonalName'
               Visible = False
               HeaderAlignmentHorz = taCenter

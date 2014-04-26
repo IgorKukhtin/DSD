@@ -218,6 +218,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colAreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'AreaName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -226,6 +227,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1050#1086#1076' '#1102#1088'.'#1083'.'
             DataBinding.FieldName = 'JuridicalCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -233,6 +235,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 142
@@ -240,20 +243,58 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
           end
           object colPaidKindName: TcxGridDBColumn
-            Caption = #1053#1072#1083'/'#1041#1085
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 30
+            Width = 55
+          end
+          object clContractStateKindName: TcxGridDBColumn
+            Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractStateKindCode'
+            PropertiesClassName = 'TcxImageComboBoxProperties'
+            Properties.Alignment.Horz = taLeftJustify
+            Properties.Alignment.Vert = taVCenter
+            Properties.Images = dmMain.ImageList
+            Properties.Items = <
+              item
+                Description = #1055#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 12
+                Value = 1
+              end
+              item
+                Description = #1053#1077' '#1087#1086#1076#1087#1080#1089#1072#1085
+                ImageIndex = 11
+                Value = 2
+              end
+              item
+                Description = #1047#1072#1074#1077#1088#1096#1077#1085
+                ImageIndex = 13
+                Value = 3
+              end
+              item
+                Description = #1059' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+                ImageIndex = 66
+                Value = 4
+              end>
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -261,9 +302,18 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colContractNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
+          end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object colStartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
@@ -283,10 +333,28 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Options.Editing = False
             Width = 60
           end
+          object clPersonalName: TcxGridDBColumn
+            Caption = #1054#1090#1074#1077#1090#1089#1090#1074#1077#1085#1085#1099#1081' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clPersonalCollationName: TcxGridDBColumn
+            Caption = #1041#1091#1093#1075'.'#1089#1074#1077#1088#1082#1072' ('#1089#1086#1090#1088#1091#1076#1085#1080#1082')'
+            DataBinding.FieldName = 'PersonalCollationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
@@ -295,6 +363,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -303,6 +372,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
@@ -310,17 +380,10 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object colAccountName: TcxGridDBColumn
-            Caption = #1057#1095#1077#1090
-            DataBinding.FieldName = 'AccountName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 55
           end
           object colStartAmount_A: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -329,7 +392,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -342,7 +405,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -355,7 +418,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -368,7 +431,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -381,7 +444,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -393,7 +456,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -405,7 +468,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -417,7 +480,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
@@ -429,7 +492,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -441,7 +504,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
@@ -453,7 +516,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
           end
@@ -465,7 +528,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Properties.ReadOnly = True
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 45
           end
@@ -477,7 +540,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
@@ -490,7 +553,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
@@ -502,7 +565,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -515,7 +578,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -528,7 +591,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -541,7 +604,16 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
             Properties.DisplayFormat = ',0.00##;-,0.00##'
             Properties.EditFormat = ',0.00##;-,0.00##'
             Visible = False
-            HeaderAlignmentHorz = taRightJustify
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object colAccountName: TcxGridDBColumn
+            Caption = #1057#1095#1077#1090
+            DataBinding.FieldName = 'AccountName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 55
@@ -1031,11 +1103,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
   end
   inherited MasterDS: TDataSource
-    Top = 48
+    Top = 184
   end
   inherited MasterCDS: TClientDataSet
     IndexFieldNames = 'JuridicalName'
-    Top = 48
+    Top = 184
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalSold'
@@ -1082,11 +1154,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Top = 48
+    Top = 184
   end
   inherited BarManager: TdxBarManager
     Left = 112
-    Top = 48
+    Top = 184
     DockControlHeights = (
       0
       0
@@ -1096,7 +1168,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbPrint'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -1104,7 +1180,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -1171,6 +1251,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         onExitColumn.AfterEmptyValue = False
       end>
   end
+  inherited PeriodChoice: TPeriodChoice
+    Top = 224
+  end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
       item
@@ -1188,6 +1271,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       item
         Component = InfoMoneyGuides
       end>
+    Top = 228
   end
   object frxDBDataset: TfrxDBDataset
     UserName = 'frxDBDataset'

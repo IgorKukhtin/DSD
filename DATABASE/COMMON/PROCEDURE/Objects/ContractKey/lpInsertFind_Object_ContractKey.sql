@@ -78,6 +78,9 @@ BEGIN
                                  WHERE ObjectLink_1.ChildObjectId = inJuridicalId
                                    AND ObjectLink_1.DescId = zc_ObjectLink_ContractKey_Juridical()
                                 );
+
+         -- RAISE EXCEPTION 'Ошибка.<%> <%> <%> <%> <%> <%> : <%> <%>', inJuridicalId_basis, inJuridicalId, inInfoMoneyId, inPaidKindId, inContractTagId, inContractId_begin, vbContractKeyId_old, vbContractKeyId_new;
+
          -- Если не нашли, добавляем
          IF COALESCE (vbContractKeyId_new, 0) = 0
          THEN
