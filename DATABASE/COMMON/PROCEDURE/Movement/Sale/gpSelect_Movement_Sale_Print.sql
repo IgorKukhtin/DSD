@@ -182,7 +182,7 @@ BEGIN
 
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
@@ -195,8 +195,8 @@ BEGIN
 
 
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Sale();
+       WHERE Movement.Id =  inMovementId;
+--         AND Movement.DescId = zc_Movement_Sale();
     RETURN NEXT Cursor1;
 
 
@@ -447,6 +447,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.04.14                                                       *
  09.04.14                                        * add JOIN MIFloat_AmountPartner
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
  01.04.14                                                       *  MIFloat_Price.ValueData <> 0

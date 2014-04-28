@@ -7,22 +7,24 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 1127
-    Height = 537
-    ExplicitTop = 131
+    Height = 535
+    ExplicitTop = 133
     ExplicitWidth = 1127
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 1127
+    ExplicitHeight = 535
+    ClientRectBottom = 531
+    ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1127
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1121
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
-        Width = 1127
-        Height = 513
-        ExplicitWidth = 1127
-        ExplicitHeight = 513
+        Width = 1121
+        Height = 509
+        ExplicitWidth = 1121
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -171,14 +173,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1127
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1121
+      ExplicitHeight = 509
       inherited cxGridEntry: TcxGrid
-        Width = 1127
-        Height = 513
-        ExplicitWidth = 1127
-        ExplicitHeight = 513
+        Width = 1121
+        Height = 509
+        ExplicitWidth = 1121
+        ExplicitHeight = 509
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -235,7 +238,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 197
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 197
     end
     object cxLabel3: TcxLabel
@@ -416,34 +419,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     TabOrder = 7
     Width = 89
-  end
-  object spGetReporNameBill: TdsdStoredProc [4]
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameBill'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleBill'
-        DataType = ftString
-      end>
-    Left = 536
-    Top = 448
-  end
-  object PrintItemsSverkaCDS: TClientDataSet [5]
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -834,7 +809,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -906,6 +881,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax'
         end
         item
           Visible = True
@@ -1456,6 +1439,34 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Left = 396
     Top = 228
   end
+  object spGetReporNameBill: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportNameBill'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSaleBill'
+        DataType = ftString
+      end>
+    Left = 536
+    Top = 448
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 644
+    Top = 334
+  end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edDocumentTaxKind
@@ -1528,8 +1539,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 1024
-    Top = 488
+    Left = 848
+    Top = 496
   end
   object spSelectTax_Client: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1590,8 +1601,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftBoolean
         ParamType = ptInput
       end>
-    Left = 1015
-    Top = 424
+    Left = 847
+    Top = 448
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -1626,8 +1637,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         ComponentItem = 'ReportNameSaleTax'
         DataType = ftString
       end>
-    Left = 1016
-    Top = 336
+    Left = 856
+    Top = 400
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1690,7 +1701,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Top = 48
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransferDebtOut_Print'
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

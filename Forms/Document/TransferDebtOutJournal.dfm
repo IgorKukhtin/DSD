@@ -8,20 +8,23 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1073
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1073
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1067
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1073
-        Height = 478
-        ExplicitWidth = 1073
-        ExplicitHeight = 478
+        Width = 1067
+        Height = 470
+        ExplicitWidth = 1067
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -617,7 +620,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -677,7 +680,19 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Bill'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTax_Us'
         end
         item
           Visible = True
@@ -696,25 +711,16 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
       Category = 0
     end
     object bbPrintTax_Us: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Action = mactPrint_Tax_Us
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
     end
     object bbPrintTax_Client: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Action = mactPrint_Tax_Client
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
     end
     object bbPrint_Bill: TdxBarButton
-      Caption = #1057#1095#1077#1090
+      Action = mactPrint_Bill
       Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -870,7 +876,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransferDebtOut_Print'
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -976,7 +982,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 256
   end
   object spGetReportName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TransferDebtOut_ReportName'
+    StoredProcName = 'gpGet_Movement_Sale_ReportName'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -998,7 +1004,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     Top = 416
   end
   object spGetReporNameBill: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_TransferDebtOut_ReportNameBill'
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
     DataSets = <>
     OutputType = otResult
     Params = <
