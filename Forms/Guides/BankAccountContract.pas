@@ -44,6 +44,7 @@ type
     dxBarStatic: TdxBarStatic;
     bbChoice: TdxBarButton;
     bbGridToExcel: TdxBarButton;
+    spErasedUnErased: TdsdStoredProc;
   private
     { Private declarations }
   public
