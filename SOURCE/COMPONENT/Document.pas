@@ -95,7 +95,7 @@ end;
 
 function TDocument.GetData: string;
 begin
-  result := ConvertConvert(ZCompressStr(PADR(ExtractFileName(FFileName), 255) + FileReadString(FFileName)));
+  result := ConvertConvert(PADR(ExtractFileName(FFileName), 255) + FileReadString(FFileName));
   FisOpen := false;
 end;
 
@@ -135,7 +135,7 @@ begin
      TempDir := EnvironmentStrings.Values['TEMP'];
      if TempDir <> '' then
         TempDir := TempDir + '\';
-     Data := ZDeCompressStr(ReConvertConvert(FBlobProcedure.Execute));
+     Data := ReConvertConvert(FBlobProcedure.Execute);
      FileName := trim(TempDir + Copy(Data, 1, 255));
      FileWriteString(FileName, Copy(Data, 256, maxint));
      ShellExecute(Application.Handle, 'open', PWideChar(FileName), nil, nil, SW_SHOWNORMAl);
