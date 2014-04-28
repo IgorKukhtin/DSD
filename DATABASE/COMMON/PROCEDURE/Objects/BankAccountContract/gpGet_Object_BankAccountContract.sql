@@ -31,8 +31,7 @@ BEGIN
 
            , CAST (NULL AS Boolean) AS isErased
            
-       FROM Object 
-       WHERE Object.DescId = zc_Object_BankAccountContract();
+           ;
    ELSE
      RETURN QUERY 
      SELECT 
@@ -41,8 +40,8 @@ BEGIN
          , Object_BankAccount.Id         AS BankAccountId
          , Object_BankAccount.ValueData  AS BankAccountName
 
-         , Object_InfoMoney.Id          AS InfoMoneyId
-         , Object_InfoMoney.ValueData   AS InfoMoneyName
+         , Object_InfoMoney_View.InfoMoneyId        AS InfoMoneyId
+         , Object_InfoMoney_View.InfoMoneyName_all  AS InfoMoneyName
 
          , Object_BankAccountContract.isErased AS isErased
          
@@ -55,7 +54,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
                                ON ObjectLink_BankAccountContract_InfoMoney.ObjectId = Object_BankAccountContract.Id
                               AND ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
-          LEFT JOIN Object AS Object_InfoMoney ON Object_InfoMoney.Id = ObjectLink_BankAccountContract_InfoMoney.ChildObjectId
+          LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = ObjectLink_BankAccountContract_InfoMoney.ChildObjectId
                                          
      WHERE Object_BankAccountContract.Id = inId;
      

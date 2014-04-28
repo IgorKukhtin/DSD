@@ -118,6 +118,10 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\BankAccount\gpSelect_Object_BankAccount.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\BankAccount\gpGet_Object_BankAccount.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'OBJECTS\BankAccountContract\gpInsertUpdate_Object_BankAccountContract.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\BankAccountContract\gpSelect_Object_BankAccountContract.sql', ZQuery);
+  ExecFile(ProcedurePath + 'OBJECTS\BankAccountContract\gpGet_Object_BankAccountContract.sql', ZQuery);
+
   ExecFile(ProcedurePath + 'OBJECTS\Branch\gpInsertUpdate_Object_Branch.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Branch\gpSelect_Object_Branch.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Branch\gpGet_Object_Branch.sql', ZQuery);
