@@ -1171,6 +1171,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Value = ''
         Component = edTax
         DataType = ftString
+      end
+      item
+        Name = 'DocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'DocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1608,6 +1621,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = GuidesPricelist
       end>
     Left = 528
     Top = 320
