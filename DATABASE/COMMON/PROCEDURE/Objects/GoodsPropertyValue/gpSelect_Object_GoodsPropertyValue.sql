@@ -6,11 +6,11 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             ,  Amount TFloat
+             , Amount TFloat
              , BarCode TVarChar, Article TVarChar, BarCodeGLN TVarChar, ArticleGLN TVarChar
              , GoodsPropertyId Integer, GoodsPropertyName TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
-             , GoodsId Integer, GoodsName TVarChar
+             , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , isErased boolean) AS
 $BODY$BEGIN
 
@@ -36,7 +36,9 @@ $BODY$BEGIN
        , Object_GoodsKind.ValueData           AS GoodsKindName
  
        , Object_Goods.Id                      AS GoodsId
+       , Object_Goods.ObjectCode              AS GoodsCode
        , Object_Goods.ValueData               AS GoodsName
+       , Object_Measure.ValueData             AS MeasureName
               
        , Object_GoodsPropertyValue.isErased   AS isErased
        
@@ -76,8 +78,11 @@ $BODY$BEGIN
                             AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                             ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
 
-        
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue();
   
 END;$BODY$
@@ -92,6 +97,7 @@ ALTER FUNCTION gpSelect_Object_GoodsPropertyValue(TVarChar)
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 28.04.14                                        * add GoodsCode and MeasureName
  14.03.14         * add все свойства              
  12.06.13         *
 */

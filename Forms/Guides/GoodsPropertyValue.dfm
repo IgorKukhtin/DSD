@@ -3,7 +3,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1047#1085#1072#1095#1077#1085#1080#1103' '#1076#1083#1103' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 464
-  ClientWidth = 927
+  ClientWidth = 986
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -20,11 +20,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 927
+    Width = 986
     Height = 438
     Align = alClient
     TabOrder = 4
-    ExplicitWidth = 834
+    ExplicitWidth = 927
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -42,41 +42,26 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       OptionsView.HeaderHeight = 40
       OptionsView.Indicator = True
       Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object ceName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
+      object clGoodsPropertyName: TcxGridDBColumn
+        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088
+        DataBinding.FieldName = 'GoodsPropertyName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = GoodsPropertyChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 168
+        Width = 100
       end
-      object ceAmount: TcxGridDBColumn
-        Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1096#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
-        DataBinding.FieldName = 'Amount'
+      object colCode: TcxGridDBColumn
+        Caption = #1050#1086#1076
+        DataBinding.FieldName = 'GoodsCode'
         HeaderAlignmentVert = vaCenter
-        Width = 109
-      end
-      object ceBarCode: TcxGridDBColumn
-        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
-        DataBinding.FieldName = 'BarCode'
-        HeaderAlignmentVert = vaCenter
-        Width = 87
-      end
-      object clArticle: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083
-        DataBinding.FieldName = 'Article'
-        HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object clBarCodeGLN: TcxGridDBColumn
-        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
-        DataBinding.FieldName = 'BarCodeGLN'
-        HeaderAlignmentVert = vaCenter
-        Width = 86
-      end
-      object clArticleGLN: TcxGridDBColumn
-        Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
-        DataBinding.FieldName = 'ArticleGLN'
-        HeaderAlignmentVert = vaCenter
-        Width = 87
+        Options.Editing = False
+        Width = 45
       end
       object clGoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
@@ -90,21 +75,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
           end>
         Properties.ReadOnly = True
         HeaderAlignmentVert = vaCenter
-        Width = 96
-      end
-      object clGoodsPropertyName: TcxGridDBColumn
-        Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1086#1074
-        DataBinding.FieldName = 'GoodsPropertyName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = GoodsPropertyChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        Properties.ReadOnly = True
-        HeaderAlignmentVert = vaCenter
-        Width = 83
+        Width = 100
       end
       object clGoodsKindName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
@@ -117,14 +88,57 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = True
-        Width = 68
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object colMeasureName: TcxGridDBColumn
+        Caption = #1045#1076'. '#1080#1079#1084'.'
+        DataBinding.FieldName = 'MeasureName'
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 30
+      end
+      object ceName: TcxGridDBColumn
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1091' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+        DataBinding.FieldName = 'Name'
+        HeaderAlignmentVert = vaCenter
+        Width = 100
+      end
+      object ceAmount: TcxGridDBColumn
+        Caption = #1050#1086#1083'-'#1074#1086' '#1096#1090#1091#1082' '#1074' '#1091#1087#1072#1082#1086#1074#1082#1077
+        DataBinding.FieldName = 'Amount'
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object ceBarCode: TcxGridDBColumn
+        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076
+        DataBinding.FieldName = 'BarCode'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clArticle: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083
+        DataBinding.FieldName = 'Article'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clBarCodeGLN: TcxGridDBColumn
+        Caption = #1064#1090#1088#1080#1093' '#1082#1086#1076' GLN'
+        DataBinding.FieldName = 'BarCodeGLN'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
+      end
+      object clArticleGLN: TcxGridDBColumn
+        Caption = #1040#1088#1090#1080#1082#1091#1083' GLN'
+        DataBinding.FieldName = 'ArticleGLN'
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object ceisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         PropertiesClassName = 'TcxCheckBoxProperties'
         Visible = False
-        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 50
@@ -162,8 +176,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -279,6 +293,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -292,6 +307,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -306,9 +322,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -326,9 +344,11 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -339,6 +359,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -350,6 +371,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object GoodsPropertyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PriceListPromoChoiceForm'
       FormName = 'TGoodsPropertyForm'
       FormNameParam.Value = 'TGoodsPropertyForm'
@@ -370,6 +392,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = 'TGoods_ObjectForm'
@@ -390,6 +413,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object GoodsKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsKindChoiceForm'
       FormName = 'TGoodsKindForm'
       FormNameParam.Value = 'TGoodsKindForm'
@@ -410,6 +434,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -430,6 +455,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -437,6 +463,7 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -494,6 +521,8 @@ object GoodsPropertyValueForm: TGoodsPropertyValueForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 464
     Top = 288
   end

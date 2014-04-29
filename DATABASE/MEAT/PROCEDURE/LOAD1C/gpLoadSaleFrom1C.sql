@@ -161,9 +161,9 @@ BEGIN
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
           -- Провели существующий документ
-          PERFORM gpComplete_Movement_Sale (inMovementId := vbMovementId
+          PERFORM gpComplete_Movement_Sale (inMovementId     := vbMovementId
                                           , inIsLastComplete := FALSE
-                                          , inUserId     := vbUserId);
+                                          , inSession        := inSession);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
@@ -298,9 +298,9 @@ BEGIN
           CLOSE curMovementItem; -- закрыли курсор
 
           -- Провели существующий документ
-          PERFORM gpComplete_Movement_ReturnIn (inMovementId := vbMovementId
+          PERFORM gpComplete_Movement_ReturnIn (inMovementId     := vbMovementId
                                               , inIsLastComplete := FALSE
-                                              , inUserId     := vbUserId);
+                                              , inSession        := inSession);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
@@ -315,6 +315,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 28.04.14                                        * err 
  24.04.14                        * по одной записи
  24.04.14                                        * add inInvNumberMark
  18.04.14                        *  	Задваивал возвраты

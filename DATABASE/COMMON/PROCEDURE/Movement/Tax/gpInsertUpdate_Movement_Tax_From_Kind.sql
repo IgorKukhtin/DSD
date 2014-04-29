@@ -97,6 +97,7 @@ BEGIN
                 FROM lpInsertUpdate_Movement_Tax (ioId := COALESCE (vbTaxId,0)
                                                 , inInvNumber := vbInvNumber
                                                 , ioInvNumberPartner := vbInvNumberPartner                    
+                                                , inInvNumberBranch  := (SELECT ValueData FROM MovementString WHERE MovementId = vbTaxId AND DescId = zc_MovementString_InvNumberBranch())
                                                 , inOperDate := vbOperDate
                                                 , inChecked := FALSE
                                                 , inDocument := FALSE
@@ -277,6 +278,7 @@ BEGIN
                        ioId := COALESCE (vbTaxId,0)
                      , inInvNumber := vbInvNumber
                      , ioInvNumberPartner := vbInvNumberPartner                    
+                     , inInvNumberBranch  := (SELECT ValueData FROM MovementString WHERE MovementId = vbTaxId AND DescId = zc_MovementString_InvNumberBranch())
                      , inOperDate := vbEndDate
                      , inChecked := FALSE
                      , inDocument := FALSE
@@ -556,6 +558,7 @@ BEGIN
                        ioId := COALESCE (vbTaxId,0)
                      , inInvNumber := vbInvNumber
                      , ioInvNumberPartner := vbInvNumberPartner                    
+                     , inInvNumberBranch  := (SELECT ValueData FROM MovementString WHERE MovementId = vbTaxId AND DescId = zc_MovementString_InvNumberBranch())
                      , inOperDate := vbEndDate
                      , inChecked := FALSE
                      , inDocument := FALSE

@@ -11076,6 +11076,7 @@ end;
 //!!!!FLOAT
 function TMainForm.pLoadDocument_ReturnIn_Fl:Integer;
 var ContractId_pg:Integer;
+    InvNumberMark:String;
 begin
      Result:=0;
      if (not cbReturnInFl.Checked)or(not cbReturnInFl.Enabled) then exit;
@@ -11230,6 +11231,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberMark',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDatePartner',ftDateTime,ptInput, '');
 
@@ -11251,6 +11253,13 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Номер "перекресленої зеленої марки зi складу" не должен измениться
+             if FieldByName('Id_Postgres').AsInteger<>0 then
+             begin
+                  fOpenSqToQuery ('select ValueData AS InvNumberMark from MovementString where MovementId='+FieldByName('Id_Postgres').AsString + ' and DescId = zc_MovementString_InvNumberMark()');
+                  InvNumberMark:=toSqlQuery.FieldByName('InvNumberMark').AsString;
+             end
+             else InvNumberMark:='';
              //Определяем Договор
              ContractId_pg:=fFind_ContractId_pg(FieldByName('FromId_Postgres').AsInteger,FieldByName('CodeIM').AsInteger,30101,FieldByName('ContractNumber').AsString);
              //
@@ -11259,6 +11268,7 @@ begin
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString;
              toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberMark').Value:=InvNumberMark;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('OperDate').AsDateTime;
              toStoredProc.Params.ParamByName('inOperDatePartner').Value:=FieldByName('OperDatePartner').AsDateTime;
 
@@ -11491,6 +11501,7 @@ end;
 //!!!!Integer
 function TMainForm.pLoadDocument_Tax_Int:Integer;
 var ContractId_pg,ToId_pg:Integer;
+    InvNumberBranch:String;
     zc_Enum_DocumentTaxKind_Tax:String;
 begin
      Result:=0;
@@ -11646,6 +11657,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberBranch',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
 
         toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
@@ -11673,6 +11685,13 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Номер филиала не должен измениться
+                  fOpenSqToQuery (' select ValueData as InvNumberBranch'
+                                 +' from MovementString'
+                                 +' where MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and DescId = zc_MovementString_InvNumberBranch()'
+                                 );
+                  InvNumberBranch:=toSqlQuery.FieldByName('InvNumberBranch').AsString;
              // Пытаемся найти <Юр.Лицо>
                   fOpenSqToQuery (' select ObjectLink_Partner_Juridical.childobjectid as JuridicalId'
                                  +' from ObjectLink AS ObjectLink_Partner_Juridical'
@@ -11688,6 +11707,7 @@ begin
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
              toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberBranch').Value:=InvNumberBranch;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
@@ -11926,6 +11946,7 @@ function TMainForm.pLoadDocument_Tax_Fl:Integer;
 var ContractId_pg,ToId_pg:Integer;
     zc_Enum_DocumentTaxKind_Tax,zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS,zc_Enum_DocumentTaxKind_TaxSummaryPartnerS:String;
     zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR:String;
+    InvNumberBranch:String;
 begin
      Result:=0;
      if (not cbTaxFl.Checked)or(not cbTaxFl.Enabled) then exit;
@@ -12142,6 +12163,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberBranch',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
 
         toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
@@ -12169,6 +12191,13 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Номер филиала не должен измениться
+                  fOpenSqToQuery (' select ValueData as InvNumberBranch'
+                                 +' from MovementString'
+                                 +' where MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and DescId = zc_MovementString_InvNumberBranch()'
+                                 );
+                  InvNumberBranch:=toSqlQuery.FieldByName('InvNumberBranch').AsString;
              // Пытаемся найти <Юр.Лицо>
                   fOpenSqToQuery (' select ObjectLink_Partner_Juridical.childobjectid as JuridicalId'
                                  +' from ObjectLink AS ObjectLink_Partner_Juridical'
@@ -12184,6 +12213,7 @@ begin
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
              toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberBranch').Value:=InvNumberBranch;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=FieldByName('zc_rvYes').AsInteger then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
@@ -12456,6 +12486,7 @@ var ContractId_pg,FromId_pg:Integer;
     zc_Enum_DocumentTaxKind_Corrective:String;
     zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR,zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR:String;
     zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR,zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR:String;
+    InvNumberBranch:String;
 begin
      Result:=0;
      if (not cbTaxCorrective.Checked)or(not cbTaxCorrective.Enabled) then exit;
@@ -12846,6 +12877,7 @@ begin
         toStoredProc.Params.AddParam ('ioId',ftInteger,ptInputOutput, 0);
         toStoredProc.Params.AddParam ('inInvNumber',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inInvNumberPartner',ftString,ptInput, '');
+        toStoredProc.Params.AddParam ('inInvNumberBranch',ftString,ptInput, '');
         toStoredProc.Params.AddParam ('inOperDate',ftDateTime,ptInput, '');
 
         toStoredProc.Params.AddParam ('inChecked',ftBoolean,ptInput, false);
@@ -12874,6 +12906,13 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //Номер филиала не должен измениться
+                  fOpenSqToQuery (' select ValueData as InvNumberBranch'
+                                 +' from MovementString'
+                                 +' where MovementId='+IntToStr(FieldByName('Id_Postgres').AsInteger)
+                                 +'   and DescId = zc_MovementString_InvNumberBranch()'
+                                 );
+                  InvNumberBranch:=toSqlQuery.FieldByName('InvNumberBranch').AsString;
              // Пытаемся найти <Юр.Лицо>
                   fOpenSqToQuery (' select ObjectLink_Partner_Juridical.childobjectid as JuridicalId'
                                  +' from ObjectLink AS ObjectLink_Partner_Juridical'
@@ -12889,6 +12928,7 @@ begin
              then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString+'-ошибка договор:???'
              else toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('inInvNumber').AsString;
              toStoredProc.Params.ParamByName('inInvNumberPartner').Value:=FieldByName('inInvNumberPartner').AsString;
+             toStoredProc.Params.ParamByName('inInvNumberBranch').Value:=InvNumberBranch;
              toStoredProc.Params.ParamByName('inOperDate').Value:=FieldByName('inOperDate').AsDateTime;
 
              if FieldByName('StatusId').AsInteger=zc_rvYes then toStoredProc.Params.ParamByName('inChecked').Value:=true else toStoredProc.Params.ParamByName('inChecked').Value:=false;
