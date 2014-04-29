@@ -7,22 +7,24 @@ inherited TransferDebtInForm: TTransferDebtInForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 1127
-    Height = 537
-    ExplicitTop = 131
+    Height = 535
+    ExplicitTop = 133
     ExplicitWidth = 1127
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 1127
+    ExplicitHeight = 535
+    ClientRectBottom = 531
+    ClientRectRight = 1123
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1127
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1121
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
-        Width = 1127
-        Height = 513
-        ExplicitWidth = 1127
-        ExplicitHeight = 513
+        Width = 1121
+        Height = 509
+        ExplicitWidth = 1121
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -171,14 +173,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1127
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1121
+      ExplicitHeight = 509
       inherited cxGridEntry: TcxGrid
-        Width = 1127
-        Height = 513
-        ExplicitWidth = 1127
-        ExplicitHeight = 513
+        Width = 1121
+        Height = 509
+        ExplicitWidth = 1121
+        ExplicitHeight = 509
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -235,7 +238,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 197
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 197
     end
     object cxLabel3: TcxLabel
@@ -778,7 +781,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1504,6 +1507,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
+        Component = GuidesPricelist
       end>
     Left = 528
     Top = 320
