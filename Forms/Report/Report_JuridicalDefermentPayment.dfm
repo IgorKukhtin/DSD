@@ -3,26 +3,25 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1218
   AddOnFormData.Params = FormParams
-  ExplicitLeft = -197
-  ExplicitWidth = 1234
-  ExplicitHeight = 429
+  ExplicitWidth = 1226
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1218
     Height = 337
     TabOrder = 3
-    ExplicitWidth = 1194
+    ExplicitWidth = 1218
     ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1218
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1194
+      ExplicitWidth = 1218
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1218
         Height = 337
-        ExplicitWidth = 1194
+        ExplicitWidth = 1218
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -400,7 +399,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   end
   inherited Panel: TPanel
     Width = 1218
-    ExplicitWidth = 1194
+    ExplicitWidth = 1218
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 41640d
@@ -412,7 +411,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Visible = False
@@ -462,6 +461,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+        end
+        item
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm1'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -532,6 +540,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+        end
+        item
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm2'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -602,6 +619,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+        end
+        item
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm3'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -672,6 +698,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+        end
+        item
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm4'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -742,6 +777,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'PeriodNumber'
+        end
+        item
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'SaleSumm5'
+          FromParam.DataType = ftFloat
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'SaleSumm'
+          ToParam.DataType = ftFloat
         end>
       StoredProc = spReport
       StoredProcList = <
@@ -1068,8 +1112,9 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Name = 'inSaleSumm'
-        Component = MasterCDS
-        ComponentItem = 'SaleSumm5'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'SaleSumm'
         DataType = ftFloat
         ParamType = ptInput
       end>
@@ -1087,6 +1132,11 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       item
         Name = 'PeriodNumber'
         Value = Null
+      end
+      item
+        Name = 'SaleSumm'
+        Value = Null
+        DataType = ftFloat
       end>
     Left = 344
     Top = 112

@@ -30,24 +30,24 @@ BEGIN
 
        LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
               ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-             AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+             AND MovementLinkObject_PaidKind.DescId IN ( zc_MovementLinkObject_PaidKind(), zc_MovementLinkObject_PaidKindTo())
 
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
              AND PrintForms_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
              AND PrintForms_View.ReportType = 'Sale'
-             AND PrintForms_View.DescId = zc_Movement_Sale()
+--             AND PrintForms_View.DescId = zc_Movement_Sale()
 
        LEFT JOIN PrintForms_View AS PrintForms_View_Default
               ON Movement.OperDate BETWEEN PrintForms_View_Default.StartDate AND PrintForms_View_Default.EndDate
              AND PrintForms_View_Default.JuridicalId = 0
              AND PrintForms_View_Default.ReportType = 'Sale'
              AND PrintForms_View_Default.PaidKindId = MovementLinkObject_PaidKind.ObjectId
-             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
+--             AND PrintForms_View_Default.DescId = zc_Movement_Sale()
 
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_Sale();
+       WHERE Movement.Id =  inMovementId;
+--         AND Movement.DescId = zc_Movement_Sale();
 
      RETURN (vbPrintFormName);
 

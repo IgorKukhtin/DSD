@@ -1,9 +1,9 @@
 object BankAccountContractEditForm: TBankAccountContractEditForm
   Left = 0
   Top = 0
-  Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090'('#1086#1087#1083#1072#1090#1072' '#1085#1072#1084' '#1087#1086' '#1083#1102#1073#1086#1084#1091' '#1076#1086#1075#1086#1074#1086#1088#1091')'
-  ClientHeight = 182
-  ClientWidth = 348
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1074#1089#1077#1093' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
+  ClientHeight = 179
+  ClientWidth = 459
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -17,7 +17,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   PixelsPerInch = 96
   TextHeight = 13
   object cxButton1: TcxButton
-    Left = 64
+    Left = 128
     Top = 137
     Width = 75
     Height = 25
@@ -27,7 +27,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
     TabOrder = 0
   end
   object cxButton2: TcxButton
-    Left = 192
+    Left = 256
     Top = 137
     Width = 75
     Height = 25
@@ -45,7 +45,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
   object cxLabel4: TcxLabel
     Left = 24
     Top = 79
-    Caption = #1057#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object edInfoMoney: TcxButtonEdit
     Left = 24
@@ -56,7 +56,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 4
-    Width = 305
+    Width = 427
   end
   object ceBankAccount: TcxButtonEdit
     Left = 24
@@ -67,7 +67,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Kind = bkEllipsis
       end>
     TabOrder = 5
-    Width = 305
+    Width = 427
   end
   object ActionList: TActionList
     Left = 312
@@ -116,6 +116,8 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
       item
         Name = 'inBankAccountId'
         Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -144,7 +146,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
     OutputType = otResult
     Params = <
       item
-        Name = 'Id'
+        Name = 'inId'
         Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
@@ -153,10 +155,14 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
       item
         Name = 'BankAccountId'
         Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'BankAccountName'
         Value = ''
+        Component = BankAccountGuides
+        ComponentItem = 'TextValue'
       end
       item
         Name = 'InfoMoneyId'
@@ -170,7 +176,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
       end>
-    Left = 320
+    Left = 296
     Top = 72
   end
   object InfoMoneyGuides: TdsdGuides
@@ -198,8 +204,8 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
     Top = 77
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 320
-    Top = 144
+    Left = 376
+    Top = 136
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -212,7 +218,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
           'Width')
       end>
     StorageName = 'cxPropertiesStore'
-    Left = 152
+    Left = 80
     Top = 136
   end
   object BankAccountGuides: TdsdGuides
@@ -226,11 +232,13 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
       item
         Name = 'Key'
         Value = ''
+        Component = BankAccountGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = BankAccountGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -245,7 +253,7 @@ object BankAccountContractEditForm: TBankAccountContractEditForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 176
+    Left = 160
     Top = 24
   end
 end
