@@ -2,29 +2,27 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 668
   ClientWidth = 1113
-  ExplicitWidth = 1121
-  ExplicitHeight = 702
+  ExplicitWidth = 1129
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1113
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1113
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1109
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1113
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1107
-      ExplicitHeight = 514
+      ExplicitWidth = 1113
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1107
-        Height = 514
-        ExplicitWidth = 1107
-        ExplicitHeight = 514
+        Width = 1113
+        Height = 518
+        ExplicitWidth = 1113
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -79,10 +77,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -155,15 +149,14 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1107
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1113
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1107
-        Height = 514
-        ExplicitWidth = 1107
-        ExplicitHeight = 514
+        Width = 1113
+        Height = 518
+        ExplicitWidth = 1113
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -220,7 +213,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -423,19 +416,16 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
+      RefreshOnTabSetChanges = True
+    end
+    inherited actInsertUpdateMovement: TdsdExecStoredProc
       StoredProcList = <
         item
-          StoredProc = spGet
+          StoredProc = spInsertUpdateMovement
         end
         item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end
-        item
+          StoredProc = spInsertUpdateMovement_DocChild
         end>
-      RefreshOnTabSetChanges = True
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrintTaxCorrective_Us
@@ -617,7 +607,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -865,7 +855,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'FromId'
-        Value = ''
+        Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
       end
@@ -1024,7 +1014,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'inFromId'
-        Value = ''
+        Value = '0'
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -1054,20 +1046,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
-      end
-      item
-        Name = '11'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = '22'
-        Value = ''
-      end
-      item
-        Name = '33'
-        Value = ''
-        DataType = ftString
       end>
     Left = 162
     Top = 312
@@ -1075,8 +1053,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
+        Guides = GuidesPartner
       end
       item
+        Guides = DocumentTaxKindGuides
       end>
     Left = 160
     Top = 192
@@ -1085,6 +1065,9 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     ControlList = <
       item
         Control = edInvNumberPartner
+      end
+      item
+        Control = edInvNumberBranch
       end
       item
         Control = edOperDate
@@ -1105,19 +1088,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Control = edContract
       end
       item
-        Control = edDocumentTaxKind
-      end
-      item
         Control = edIsChecked
       end
       item
+        Control = edDocumentTaxKind
+      end
+      item
         Control = edPartner
-      end
-      item
-        Control = edDocumentTax
-      end
-      item
-        Control = edInvNumberBranch
       end>
     Left = 232
     Top = 193
@@ -1496,7 +1473,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Value = ''
         Component = DocumentTaxGuides
         ComponentItem = 'Key'
-        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -1504,13 +1480,13 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = DocumentTaxGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
       end
       item
         Name = 'JuridicalId'
-        Value = ''
+        Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'PartnerId'
@@ -1595,12 +1571,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         DataType = ftString
       end
       item
-        Name = 'PaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = ContractGuides
@@ -1615,7 +1585,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
       item
         Name = 'JuridicalId'
-        Value = ''
+        Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
       end
@@ -1631,6 +1601,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    Key = '0'
     FormNameParam.Value = 'TContractChoiceForm'
     FormNameParam.DataType = ftString
     FormName = 'TContractChoiceForm'
@@ -1638,7 +1609,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Params = <
       item
         Name = 'JuridicalId'
-        Value = ''
+        Value = '0'
         Component = GuidesFrom
         ComponentItem = 'Key'
       end
@@ -1661,12 +1632,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
       end
       item
         Name = 'PartnerId'
