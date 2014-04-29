@@ -76,7 +76,49 @@ BEGIN
 
             LEFT JOIN ObjectDate AS ObjectDate_End
                                  ON ObjectDate_End.ObjectId = View_Contract_InvNumber.ContractId
-                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
+      UNION ALL
+       SELECT 0               AS PartnerId
+            , 0               AS PartnerCode
+            , '' :: TVarChar  AS PartnerName
+            , Object_Partner1CLink.Id               AS Id
+            , Object_Partner1CLink.ObjectCode       AS Code
+            , Object_Partner1CLink.ValueData        AS Name
+            , Object_Branch.Id                      AS BranchId
+            , Object_Branch.ValueData               AS BranchName
+            , View_Contract_InvNumber.ContractId 
+            , View_Contract_InvNumber.InvNumber     AS ContractNumber
+            , ObjectDate_End.ValueData              AS EndDate
+            , View_Contract_InvNumber.ContractTagName
+            , View_Contract_InvNumber.ContractStateKindCode
+            , 0               AS JuridicalId
+            , '' :: TVarChar  AS JuridicalName
+            , '' :: TVarChar  AS OKPO
+            , View_InfoMoney.InfoMoneyGroupName
+            , View_InfoMoney.InfoMoneyDestinationName
+            , View_InfoMoney.InfoMoneyCode
+            , View_InfoMoney.InfoMoneyName
+       FROM Object AS Object_Partner1CLink
+            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Partner1CLink_Branch.ChildObjectId 
+
+            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Contract
+                                 ON ObjectLink_Partner1CLink_Contract.ObjectId = Object_Partner1CLink.Id
+                                AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = ObjectLink_Partner1CLink_Contract.ChildObjectId   
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+
+            LEFT JOIN ObjectDate AS ObjectDate_End
+                                 ON ObjectDate_End.ObjectId = View_Contract_InvNumber.ContractId
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()
+       WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()
+         AND ObjectLink_Partner1CLink_Partner.ChildObjectId IS NULL
        ;
 
 END;
@@ -88,6 +130,7 @@ ALTER FUNCTION gpSelect_Object_Partner1CLink (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 29.04.14                                        * add UNION ALL 
  24.04.14                                        * all
  07.04.14                        * 
  17.02.14                        * 

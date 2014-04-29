@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbMovementDescId   Integer;
    DECLARE vbTaxId            Integer;
    DECLARE vbUserId           Integer;
    DECLARE vbOperDate         TDateTime;
@@ -44,7 +45,7 @@ BEGIN
 
 
      -- 
-     IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax()
+     IF inDocumentTaxKindId <> zc_Enum_DocumentTaxKind_Tax() -- AND inMovementId <> 0
      THEN
          RAISE EXCEPTION 'Ошибка.Неверно указан тип налоговой.';
      END IF;
@@ -53,29 +54,53 @@ BEGIN
             IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
             THEN
                 -- выбираем реквизиты для обновления/создания шапки НН
-                SELECT MovementLinkMovement.MovementChildId 
-                     , MovementSale.InvNumber
-                     , MovementSale.InvNumberPartner_Master                     
-                     , MovementSale.OperDate
-                     , MovementSale.PriceWithVAT
-                     , MovementSale.VATPercent
-                     , ObjectLink_Contract_JuridicalBasis.ChildObjectId  -- от кого
-                     , ObjectLink_Partner_Juridical.ChildObjectId          -- кому
-                     , MovementSale.ToId           	             -- контрагент 
-                     , MovementSale.ContractId 
-                       INTO vbTaxId, vbInvNumber, vbInvNumberPartner, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
-                FROM gpGet_Movement_Sale (inMovementId, CURRENT_DATE , inSession) AS MovementSale
+                SELECT MovementLinkMovement.MovementChildId AS TaxId
+                     , Movement.DescId AS MovementDescId
+                     , Movement.InvNumber
+                     , MS_InvNumberPartner_Master.ValueData AS InvNumberPartner
+                     , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate
+                     , MovementBoolean_PriceWithVAT.ValueData AS PriceWithVAT
+                     , MovementFloat_VATPercent.ValueData AS VATPercent
+                     , ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
+                     , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_To.ObjectId ELSE ObjectLink_Partner_Juridical.ChildObjectId END AS ToId
+                     , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN NULL ELSE MovementLinkObject_To.ObjectId END AS PartnerId
+                     , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
+                       INTO vbTaxId, vbMovementDescId, vbInvNumber, vbInvNumberPartner, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+                FROM Movement
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractTo
+                                                  ON MovementLinkObject_ContractTo.MovementId = Movement.Id
+                                                 AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
+                     LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                                  ON MovementLinkObject_To.MovementId = Movement.Id
+                                                 AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+
+                     LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                            ON MovementDate_OperDatePartner.MovementId =  Movement.Id
+                                           AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+
                      LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementSale.ToId
+                                          ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                          AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
                      LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
-                                          ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementSale.ContractId
+                                          ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId)
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
-                     LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = MovementSale.Id
-                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master();
+                     LEFT JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = Movement.Id
+                                                   AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+                     LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement.MovementChildId
+                                                                           AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
+                WHERE Movement.Id = inMovementId;
 
      -- 
-     IF  COALESCE (vbFromId, 0) = 0 OR COALESCE (vbToId, 0) = 0 OR COALESCE (vbPartnerId, 0) = 0 
+     IF  COALESCE (vbFromId, 0) = 0 OR COALESCE (vbToId, 0) = 0 OR (COALESCE (vbPartnerId, 0) = 0 AND vbMovementDescId = zc_Movement_Sale())
      THEN
          RAISE EXCEPTION 'Ошибка.Документ не определен.';
      END IF;
@@ -95,7 +120,7 @@ BEGIN
                      , tmp.ioId                   
                        INTO outInvNumberPartner_Master, outDocumentTaxKindName, vbTaxId
                 FROM lpInsertUpdate_Movement_Tax (ioId := COALESCE (vbTaxId,0)
-                                                , inInvNumber := vbInvNumber
+                                                , inInvNumber := vbInvNumber -- номер налоговой совпадает с номером документа inMovementId
                                                 , ioInvNumberPartner := vbInvNumberPartner                    
                                                 , inInvNumberBranch  := (SELECT ValueData FROM MovementString WHERE MovementId = vbTaxId AND DescId = zc_MovementString_InvNumberBranch())
                                                 , inOperDate := vbOperDate
