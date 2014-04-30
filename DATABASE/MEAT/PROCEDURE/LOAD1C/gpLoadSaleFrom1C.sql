@@ -35,6 +35,32 @@ BEGIN
      -- vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_LoadSaleFrom1C());
      vbUserId := lpGetUserBySession (inSession);
 
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
+     -- таблица - Аналитики остатка
+     -- CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - Аналитики <элемент с/с>
+     -- CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
+     -- таблица - Аналитики <Проводки для отчета>
+     -- CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
+     -- таблица - 
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+
+     -- !!!продажи!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10500 Integer, ContainerId_ProfitLoss_10400 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_ChangePercent TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+
+     -- !!!продажи!!! таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCount_ChangePercent TFloat, OperCount_Partner TFloat, tmpOperSumm_PriceList TFloat, OperSumm_PriceList TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat, OperSumm_Partner_ChangePercent TFloat
+                               , ContainerId_ProfitLoss_10100 Integer, ContainerId_ProfitLoss_10200 Integer, ContainerId_ProfitLoss_10300 Integer
+                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId_From Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
+                               , PartionGoodsId Integer) ON COMMIT DROP;
+
+
      -- !!!Продажи!!!
 
      -- Создание Документов                                   
@@ -161,12 +187,29 @@ BEGIN
           END LOOP; -- финиш цикла по курсору
           CLOSE curMovementItem; -- закрыли курсор
           -- Провели существующий документ
-          PERFORM gpComplete_Movement_Sale (inMovementId     := vbMovementId
-                                          , inIsLastComplete := FALSE
-                                          , inSession        := inSession);
+          PERFORM lpComplete_Movement_Sale (inMovementId     := vbMovementId
+                                          , inUserId         := vbUserId
+                                          , inIsLastComplete := FALSE);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
+
+
+     -- !!!удаление!!!
+     DROP TABLE _tmpItemSumm;
+     DROP TABLE _tmpItem;
+     -- !!!возвраты!!! таблица - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItemSumm (MovementItemId Integer, ContainerId_ProfitLoss_40208 Integer, ContainerId_ProfitLoss_10800 Integer, ContainerId Integer, AccountId Integer, OperSumm TFloat, OperSumm_Partner TFloat) ON COMMIT DROP;
+     -- !!!возвраты!!!таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (MovementItemId Integer
+                               , ContainerId_Goods Integer, ContainerId_GoodsPartner Integer, GoodsId Integer, GoodsKindId Integer, AssetId Integer, PartionGoods TVarChar, PartionGoodsDate TDateTime
+                               , OperCount TFloat, OperCount_Partner TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
+                               , ContainerId_ProfitLoss_10700 Integer
+                               , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId_To Integer
+                               , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
+                               , PartionGoodsId Integer) ON COMMIT DROP;
+
 
 
      -- !!!Возвраты!!!
@@ -298,9 +341,9 @@ BEGIN
           CLOSE curMovementItem; -- закрыли курсор
 
           -- Провели существующий документ
-          PERFORM gpComplete_Movement_ReturnIn (inMovementId     := vbMovementId
-                                              , inIsLastComplete := FALSE
-                                              , inSession        := inSession);
+          PERFORM lpComplete_Movement_ReturnIn (inMovementId     := vbMovementId
+                                              , inUserId         := vbUserId
+                                              , inIsLastComplete := FALSE);
         
      END LOOP; -- финиш цикла по курсору
      CLOSE curMovement; -- закрыли курсор
@@ -315,6 +358,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 30.04.14                                        * lpComplete_Movement_ReturnIn
  28.04.14                                        * err 
  24.04.14                        * по одной записи
  24.04.14                                        * add inInvNumberMark

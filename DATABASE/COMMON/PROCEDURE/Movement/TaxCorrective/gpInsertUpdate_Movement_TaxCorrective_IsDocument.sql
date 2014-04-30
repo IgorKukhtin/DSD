@@ -12,7 +12,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TaxCorrective_IsDocument());
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Update_Movement_TaxCorrective_IsDocument());
 
      -- сохранили свойство <Есть ли подписанный документ>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id), inIsDocument)
@@ -33,6 +33,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.04.14                                        * zc_Enum_Process_Update_Movement_TaxCorrective_IsDocument
  23.04.14                                        *
 */
 

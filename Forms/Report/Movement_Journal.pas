@@ -12,13 +12,13 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGridCustomView,
-  cxGrid, cxPC, cxCurrencyEdit;
+  cxGrid, cxPC, cxCurrencyEdit, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TMovementJournalForm = class(TAncestorJournalForm)
     colDescName: TcxGridDBColumn;
     colTotalSumm: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
     colJuridicalName: TcxGridDBColumn;
     actOpenDocument: TMultiAction;
     actOpenForm: TdsdOpenForm;

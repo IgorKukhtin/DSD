@@ -3,8 +3,8 @@ inherited MovementJournalForm: TMovementJournalForm
   ClientHeight = 396
   ClientWidth = 828
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 836
-  ExplicitHeight = 423
+  ExplicitWidth = 844
+  ExplicitHeight = 431
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -85,6 +85,7 @@ inherited MovementJournalForm: TMovementJournalForm
   inherited ActionList: TActionList
     object actOpenDocument: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = actMovementForm
@@ -99,9 +100,9 @@ inherited MovementJournalForm: TMovementJournalForm
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actOpenForm'
       FormName = 'NULL'
-      FormNameParam.Value = Null
       FormNameParam.Component = FormParams
       FormNameParam.ComponentItem = 'FormName'
       FormNameParam.DataType = ftString
@@ -120,6 +121,7 @@ inherited MovementJournalForm: TMovementJournalForm
     end
     object actMovementForm: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = getMovementForm
       StoredProcList = <
         item
@@ -133,35 +135,34 @@ inherited MovementJournalForm: TMovementJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInputOutput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
-        Value = Null
+        Value = '0'
         Component = FormParams
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inContractId'
-        Value = Null
+        Value = '0'
         Component = FormParams
         ComponentItem = 'ContractId'
         ParamType = ptInput
       end
       item
         Name = 'inDescSet'
-        Value = Null
         Component = FormParams
         ComponentItem = 'DescSet'
         DataType = ftString
@@ -217,41 +218,6 @@ inherited MovementJournalForm: TMovementJournalForm
         ShortCut = 13
       end>
   end
-  object FormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'StartDate'
-        Value = 41579d
-        Component = deStart
-        DataType = ftDateTime
-      end
-      item
-        Name = 'EndDate'
-        Value = 41608d
-        Component = deEnd
-        DataType = ftDateTime
-      end
-      item
-        Name = 'JuridicalId'
-        Value = Null
-      end
-      item
-        Name = 'DescSet'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'FormName'
-        Value = Null
-        DataType = ftString
-      end
-      item
-        Name = 'ContractId'
-        Value = Null
-      end>
-    Left = 264
-    Top = 72
-  end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
     DataSets = <>
@@ -265,7 +231,6 @@ inherited MovementJournalForm: TMovementJournalForm
       end
       item
         Name = 'FormName'
-        Value = Null
         Component = FormParams
         ComponentItem = 'FormName'
         DataType = ftString

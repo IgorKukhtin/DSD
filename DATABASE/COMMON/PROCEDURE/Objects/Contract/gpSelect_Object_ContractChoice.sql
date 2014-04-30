@@ -34,10 +34,10 @@ BEGIN
    IF COALESCE (inPaidKindId,0) <> 0 
    THEN 
        INSERT INTO _tmpPaidKind (PaidKindId, PaidKindName)
-          SELECT Object.Id, Object.ValueData FROM Object WHERE Id = inPaidKindId;
+          SELECT Object.Id, Object.ValueData FROM Object WHERE Object.Id = inPaidKindId;
    ELSE 
        INSERT INTO _tmpPaidKind (PaidKindId, PaidKindName)
-          SELECT Object.Id, Object.ValueData FROM Object WHERE DescId = zc_Object_PaidKind();
+          SELECT Object.Id, Object.ValueData FROM Object WHERE Object.DescId = zc_Object_PaidKind();
    END IF;
 
 
