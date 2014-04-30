@@ -113,13 +113,31 @@ BEGIN
            , Object_Goods.Id                                                AS GoodsId
            , Object_Goods.ObjectCode                                        AS GoodsCode
            , Object_Goods.ValueData                                         AS GoodsName
-           , MovementItem.Amount                                            AS Amount
-           , MIFloat_Price.ValueData                                        AS Price
+
+           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_Corrective'
+                  THEN MovementItem.Amount
+                  ELSE NULL  END                                            AS Amount
+
+           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_Corrective'
+                  THEN MIFloat_Price.ValueData
+                  ELSE NULL  END                                            AS Price
+
+           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_CorrectivePrice'
+                  THEN MovementItem.Amount
+                  ELSE NULL  END                                            AS Amount_for_PriceCor
+
+           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_CorrectivePrice'
+                  THEN MIFloat_Price.ValueData
+                  ELSE NULL  END                                            AS Price_for_PriceCor
+
+
+
            , MIFloat_CountForPrice.ValueData                                AS CountForPrice
            , Object_GoodsKind.Id                                            AS GoodsKindId
            , Object_GoodsKind.ValueData                                     AS GoodsKindName
            , Object_Measure.Id                                              AS MeasureId
            , Object_Measure.ValueData                                       AS MeasureName
+           , ObjectString_Enum.ValueData                                    AS TaxKindFN
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -216,6 +234,11 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+
+            LEFT JOIN ObjectString AS ObjectString_Enum
+                                   ON ObjectString_Enum.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
+                                  AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
+
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
@@ -381,6 +404,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.04.14                                                       *
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  23.04.14                                        * add печатаем всегда все корректировки
  14.04.14                                                       *
@@ -393,6 +417,6 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 -- тест
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 114784, inisClientCopy:=FALSE ,inSession:= '2'); -- возврат № 35953
+ SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:=FALSE ,inSession:= '2');
 COMMIT;
 */
