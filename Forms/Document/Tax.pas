@@ -83,6 +83,7 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel8: TcxLabel;
     edInvNumberBranch: TcxTextEdit;
+    spTax: TdsdStoredProc;
   private
     { Private declarations }
   public
