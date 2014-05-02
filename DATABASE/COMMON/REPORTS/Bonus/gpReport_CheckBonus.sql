@@ -1,3 +1,5 @@
+
+
 -- FunctiON: gpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
@@ -9,11 +11,11 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
 )
 RETURNS TABLE (ContractId_master Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
-             , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
-             , JuridicalName TVarChar
-             , PaidKindName TVarChar
-             , ConditionKindName TVarChar
-             , BonusKindName TVarChar
+             , InfoMoneyId_master Integer, InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar
+             , ConditionKindId Integer, ConditionKindName TVarChar
+             , BonusKindId Integer, BonusKindName TVarChar
              , Value TFloat
              , Sum_CheckBonus TFloat
              , Sum_Bonus TFloat
@@ -147,15 +149,15 @@ BEGIN
                      )
         
       -- группируем договора, т.к. "базу" будем формировать по 4-м ключам
-    ,tmpContractGroup AS (SELECT JuridicalId
-                               , ContractId_child
-                               , InfoMoneyId_child
-                               , PaidKindId
+    ,tmpContractGroup AS (SELECT tmpContract.JuridicalId
+                               , tmpContract.ContractId_child
+                               , tmpContract.InfoMoneyId_child
+                               , tmpContract.PaidKindId
                            FROM tmpContract
-                           GROUP BY JuridicalId
-                                  , ContractId_child
-                                  , InfoMoneyId_child
-                                  , PaidKindId
+                           GROUP BY tmpContract.JuridicalId
+                                  , tmpContract.ContractId_child
+                                  , tmpContract.InfoMoneyId_child
+                                  , tmpContract.PaidKindId
                           )
                           
       -- список ContractId по которым будет расчет "базы"
@@ -227,14 +229,23 @@ BEGIN
             , tmpAll.ContractTagName_child
             , tmpAll.ContractStateKindCode_child
 
+            , Object_InfoMoney_master.Id                    AS InfoMoneyId_master
             , Object_InfoMoney_master.ValueData             AS InfoMoneyName_master
             , Object_InfoMoney_child.ValueData              AS InfoMoneyName_child
             , Object_InfoMoney_find.ValueData               AS InfoMoneyName_find
 
+            , Object_Juridical.Id                           AS JuridicalId
             , Object_Juridical.ValueData                    AS JuridicalName
+
+            , Object_PaidKind.Id                            AS PaidKindId
             , Object_PaidKind.ValueData                     AS PaidKindName
+
+            , Object_ContractConditionKind.Id               AS ConditionKindId
             , Object_ContractConditionKind.ValueData        AS ConditionKindName
+
+            , Object_BonusKind.Id                           AS BonusKindId
             , Object_BonusKind.ValueData                    AS BonusKindName
+
             , CAST (tmpAll.Value AS TFloat)                 AS Value
 
             , CAST ( (tmpAll.Sum_CheckBonus) AS TFloat)     AS Sum_CheckBonus
@@ -376,6 +387,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.05.14         * 
  26.04.14                                        * add ContractTagName_child and ContractStateKindCode_child
  17.04.14                                        * all
  10.04.14         *
