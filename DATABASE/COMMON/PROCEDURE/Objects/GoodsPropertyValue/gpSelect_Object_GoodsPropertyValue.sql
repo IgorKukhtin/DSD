@@ -1,6 +1,6 @@
 -- Function: gpSelect_Object_GoodsPropertyValue()
 
-DROP FUNCTION IF EXISTS gpSelect_Object_GoodsPropertyValue(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_GoodsPropertyValue (TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_GoodsPropertyValue(
     IN inSession     TVarChar       -- сессия пользователя
@@ -12,7 +12,8 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , GoodsKindId Integer, GoodsKindName TVarChar
              , GoodsId Integer, GoodsCode Integer, GoodsName TVarChar, MeasureName TVarChar
              , isErased boolean) AS
-$BODY$BEGIN
+$BODY$
+BEGIN
 
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsPropertyValue());
@@ -79,18 +80,14 @@ $BODY$BEGIN
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                             ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
+                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_GoodsPropertyValue_Goods.ChildObjectId
 
    WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue();
   
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
-ALTER FUNCTION gpSelect_Object_GoodsPropertyValue(TVarChar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
 
 
 /*-------------------------------------------------------------------------------*/

@@ -585,6 +585,20 @@ inherited TaxForm: TTaxForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actTax: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spTax
+      StoredProcList = <
+        item
+          StoredProc = spTax
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      ImageIndex = 41
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+    end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -692,6 +706,14 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -738,6 +760,10 @@ inherited TaxForm: TTaxForm
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    object bbTax: TdxBarButton
+      Action = actTax
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -998,18 +1024,18 @@ inherited TaxForm: TTaxForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inInvNumber'
+        Name = 'ioInvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inInvNumberPartner'
+        Name = 'ioInvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumberBranch'
@@ -1670,5 +1696,53 @@ inherited TaxForm: TTaxForm
     Params = <>
     Left = 484
     Top = 326
+  end
+  object spTax: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outInvNumberPartner_Master'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 392
+    Top = 232
   end
 end

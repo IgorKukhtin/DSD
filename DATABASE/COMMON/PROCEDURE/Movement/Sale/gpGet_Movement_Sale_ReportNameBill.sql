@@ -65,5 +65,5 @@ ALTER FUNCTION gpGet_Movement_Sale_ReportNameBill (Integer, TVarChar) OWNER TO p
 -- тест
 -- SELECT gpGet_Movement_Sale_ReportNameBill FROM gpGet_Movement_Sale_ReportNameBill(inMovementId := 159646,  inSession := zfCalc_UserAdmin()); -- все
 -- SELECT gpGet_Movement_Sale_ReportNameBill FROM gpGet_Movement_Sale_ReportNameBill(inMovementId := 123642,  inSession := zfCalc_UserAdmin()); -- ж/д
-select * from gpGet_Movement_Sale_ReportNameBill(inMovementId := 185631 ,  inSession := '5');
+-- select * from gpGet_Movement_Sale_ReportNameBill(inMovementId := 185631 ,  inSession := '5');
 
