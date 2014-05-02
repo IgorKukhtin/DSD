@@ -30,14 +30,14 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('day', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('day', inOperDatePartner) 
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
      -- определяем ключ доступа

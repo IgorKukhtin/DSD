@@ -29,6 +29,13 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
+     END IF;
+
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ReturnIn());
 

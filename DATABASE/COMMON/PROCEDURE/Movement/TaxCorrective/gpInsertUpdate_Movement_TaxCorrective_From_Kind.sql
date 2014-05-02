@@ -296,7 +296,7 @@ BEGIN
      UPDATE _tmpResult SET MovementId_Corrective = tmpResult_insert.MovementId_Corrective
      FROM (SELECT lpInsertUpdate_Movement_TaxCorrective (ioId               :=0
                                                        , inInvNumber        := tmpResult_insert.InvNumber :: TVarChar
-                                                       , inInvNumberPartner := tmpResult_insert.InvNumber :: TVarChar
+                                                       , inInvNumberPartner := tmpResult_insert.InvNumberPartner :: TVarChar
                                                        , inOperDate         := vbOperDate
                                                        , inChecked          := FALSE
                                                        , inDocument         := FALSE
@@ -311,6 +311,7 @@ BEGIN
                                                       ) AS MovementId_Corrective
                 , tmpResult_insert.MovementId_Tax
            FROM (SELECT NEXTVAL ('movement_taxcorrective_seq') AS InvNumber
+                      , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate) AS InvNumberPartner
                       , tmpResult_insert.MovementId_Tax
                  FROM (SELECT MovementId_Tax
                        FROM _tmpResult
@@ -391,6 +392,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  10.04.14                                        * ALL
  13.02.14                                                        *
 */
