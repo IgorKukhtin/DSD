@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_TaxCorrective_Print (Integer, Boolean,
 CREATE OR REPLACE FUNCTION gpSelect_Movement_TaxCorrective_Print(
     IN inMovementId        Integer  , -- ключ Документа
     IN inisClientCopy      Boolean  , -- копия для клиента
-    IN inSession           TVarChar    -- сессия пользователя
+    IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS SETOF refcursor
 AS
@@ -114,19 +114,19 @@ BEGIN
            , Object_Goods.ObjectCode                                        AS GoodsCode
            , Object_Goods.ValueData                                         AS GoodsName
 
-           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_Corrective'
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MovementItem.Amount
                   ELSE NULL  END                                            AS Amount
 
-           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_Corrective'
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MIFloat_Price.ValueData
                   ELSE NULL  END                                            AS Price
 
-           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_CorrectivePrice'
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MovementItem.Amount
                   ELSE NULL  END                                            AS Amount_for_PriceCor
 
-           , CASE WHEN ObjectString_Enum.ValueData = 'zc_Enum_DocumentTaxKind_CorrectivePrice'
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MIFloat_Price.ValueData
                   ELSE NULL  END                                            AS Price_for_PriceCor
 
@@ -137,7 +137,6 @@ BEGIN
            , Object_GoodsKind.ValueData                                     AS GoodsKindName
            , Object_Measure.Id                                              AS MeasureId
            , Object_Measure.ValueData                                       AS MeasureName
-           , ObjectString_Enum.ValueData                                    AS TaxKindFN
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST ( (COALESCE (MovementItem.Amount, 0)) * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -154,13 +153,13 @@ BEGIN
                                    AND MovementItem.DescId     = zc_MI_Master()
                                    AND MovementItem.isErased   = FALSE
                                    AND MovementItem.Amount <> 0
-            JOIN MovementItemFloat AS MIFloat_Price
-                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  AND MIFloat_Price.ValueData <> 0
+            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                        AND MIFloat_Price.ValueData <> 0
 
-            JOIN Movement ON Movement.Id = MovementItem.MovementId
-                         AND Movement.StatusId <> zc_Enum_Status_Erased()
+            INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+                               AND Movement.StatusId <> zc_Enum_Status_Erased()
 
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
@@ -234,11 +233,6 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
-            LEFT JOIN ObjectString AS ObjectString_Enum
-                                   ON ObjectString_Enum.ObjectId = MovementLinkObject_DocumentTaxKind.ObjectId
-                                  AND ObjectString_Enum.DescId = zc_ObjectString_Enum()
-
 
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
 
@@ -404,6 +398,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.05.14                                        * add zc_Enum_DocumentTaxKind_CorrectivePrice()
  30.04.14                                                       *
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  23.04.14                                        * add печатаем всегда все корректировки

@@ -11,18 +11,17 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 918
     Height = 553
     ExplicitTop = 115
-    ExplicitWidth = 1015
+    ExplicitWidth = 918
     ExplicitHeight = 553
     ClientRectBottom = 553
     ClientRectRight = 918
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1015
+      ExplicitWidth = 918
       ExplicitHeight = 529
       inherited cxGrid: TcxGrid
         Width = 918
         Height = 529
-        ExplicitLeft = -128
-        ExplicitWidth = 955
+        ExplicitWidth = 918
         ExplicitHeight = 529
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -204,12 +203,12 @@ inherited ReturnOutForm: TReturnOutForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1015
+      ExplicitWidth = 918
       ExplicitHeight = 529
       inherited cxGridEntry: TcxGrid
         Width = 918
         Height = 529
-        ExplicitWidth = 1015
+        ExplicitWidth = 918
         ExplicitHeight = 529
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -235,7 +234,7 @@ inherited ReturnOutForm: TReturnOutForm
     Width = 918
     Height = 89
     TabOrder = 3
-    ExplicitWidth = 1015
+    ExplicitWidth = 918
     ExplicitHeight = 89
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -267,7 +266,6 @@ inherited ReturnOutForm: TReturnOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 109
-      ExplicitHeight = 22
       Width = 109
     end
     object cxLabel3: TcxLabel
@@ -430,7 +428,8 @@ inherited ReturnOutForm: TReturnOutForm
         item
           Action = actPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
     object mactPrint_ReturnOutTax: TMultiAction [10]
@@ -576,6 +575,227 @@ inherited ReturnOutForm: TReturnOutForm
     Left = 88
     Top = 512
   end
+  object GuidesFrom: TdsdGuides [7]
+    KeyField = 'Id'
+    LookupControl = edFrom
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TUnit_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 312
+    Top = 8
+  end
+  object GuidesTo: TdsdGuides [8]
+    KeyField = 'Id'
+    LookupControl = edTo
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'ChangePercent'
+        Value = 0.000000000000000000
+        Component = edChangePercent
+        DataType = ftFloat
+      end>
+    Left = 416
+    Top = 8
+  end
+  object PaidKindGuides: TdsdGuides [9]
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 584
+    Top = 32
+  end
+  object ContractGuides: TdsdGuides [10]
+    KeyField = 'Id'
+    LookupControl = edContract
+    FormNameParam.Value = 'TContractForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 712
+    Top = 32
+  end
+  object spSelectPrint: TdsdStoredProc [11]
+    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 319
+    Top = 208
+  end
+  object spGetReportName: TdsdStoredProc [12]
+    StoredProcName = 'gpGet_Movement_ReturnOut_ReportName'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnOut_ReportName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameReturnOut'
+        DataType = ftString
+      end>
+    Left = 312
+    Top = 392
+  end
+  object RefreshDispatcher: TRefreshDispatcher [13]
+    RefreshAction = actRefreshPrice
+    ComponentList = <>
+    Left = 528
+    Top = 320
+  end
+  object PrintHeaderCDS: TClientDataSet [14]
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 193
+  end
+  object spGetReporNameTax: TdsdStoredProc [15]
+    StoredProcName = 'gpGet_Movement_ReturnOut_ReportNameTax'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_ReturnOut_ReportNameTax'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameReturnOutTax'
+        DataType = ftString
+      end>
+    Left = 416
+    Top = 384
+  end
+  object PrintItemsCDS: TClientDataSet [16]
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 246
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementItem_ReturnOut'
     Params = <
@@ -652,11 +872,15 @@ inherited ReturnOutForm: TReturnOutForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
           Visible = True
-          ItemName = 'bbPrintTax'
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -665,6 +889,10 @@ inherited ReturnOutForm: TReturnOutForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbPrint: TdxBarButton
@@ -695,227 +923,6 @@ inherited ReturnOutForm: TReturnOutForm
     object N3: TMenuItem
       Action = actMISetUnErased
     end
-  end
-  object GuidesFrom: TdsdGuides [11]
-    KeyField = 'Id'
-    LookupControl = edFrom
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 312
-    Top = 8
-  end
-  object GuidesTo: TdsdGuides [12]
-    KeyField = 'Id'
-    LookupControl = edTo
-    FormNameParam.Value = 'TContractChoicePartnerForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        Component = edChangePercent
-        DataType = ftFloat
-      end>
-    Left = 416
-    Top = 8
-  end
-  object PaidKindGuides: TdsdGuides [13]
-    KeyField = 'Id'
-    LookupControl = edPaidKind
-    FormNameParam.Value = 'TPaidKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPaidKindForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 584
-    Top = 32
-  end
-  object ContractGuides: TdsdGuides [14]
-    KeyField = 'Id'
-    LookupControl = edContract
-    FormNameParam.Value = 'TContractForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 712
-    Top = 32
-  end
-  object spSelectPrint: TdsdStoredProc [15]
-    StoredProcName = 'gpSelect_Movement_ReturnOut_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 319
-    Top = 208
-  end
-  object spGetReportName: TdsdStoredProc [16]
-    StoredProcName = 'gpGet_Movement_ReturnOut_ReportName'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_ReturnOut_ReportName'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameReturnOut'
-        DataType = ftString
-      end>
-    Left = 312
-    Top = 392
-  end
-  object RefreshDispatcher: TRefreshDispatcher [17]
-    RefreshAction = actRefreshPrice
-    ComponentList = <>
-    Left = 528
-    Top = 320
-  end
-  object PrintHeaderCDS: TClientDataSet [18]
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 193
-  end
-  object spGetReporNameTax: TdsdStoredProc [19]
-    StoredProcName = 'gpGet_Movement_ReturnOut_ReportNameTax'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_ReturnOut_ReportNameTax'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameReturnOutTax'
-        DataType = ftString
-      end>
-    Left = 416
-    Top = 384
-  end
-  object PrintItemsCDS: TClientDataSet [20]
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 246
   end
   inherited EntryCDS: TClientDataSet
     Left = 693
@@ -973,13 +980,13 @@ inherited ReturnOutForm: TReturnOutForm
     Top = 552
   end
   inherited StatusGuides: TdsdGuides
-    Left = 16
-    Top = 64
+    Left = 32
+    Top = 24
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ReturnOut'
-    Left = 48
-    Top = 64
+    Left = 72
+    Top = 24
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ReturnOut'

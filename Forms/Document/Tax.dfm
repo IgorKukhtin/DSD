@@ -2,6 +2,7 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
+  ExplicitLeft = -102
   ExplicitWidth = 1083
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -593,11 +594,11 @@ inherited TaxForm: TTaxForm
         item
           StoredProc = spTax
         end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 41
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'DSDLib'
@@ -751,6 +752,10 @@ inherited TaxForm: TTaxForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint_Us: TdxBarButton [4]
@@ -1120,7 +1125,7 @@ inherited TaxForm: TTaxForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesPartner
+        Guides = GuidesTo
       end
       item
         Guides = DocumentTaxKindGuides
@@ -1638,40 +1643,21 @@ inherited TaxForm: TTaxForm
     LookupControl = edPartner
     Key = '0'
     TextValue = ' '
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
-        Value = '0'
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ' '
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
-      end
-      item
         Name = 'Key'
-        Value = ''
-        Component = ContractGuides
+        Value = '0'
+        Component = GuidesPartner
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
+        Value = ' '
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1680,6 +1666,7 @@ inherited TaxForm: TTaxForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
@@ -1687,6 +1674,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 984
     Top = 8

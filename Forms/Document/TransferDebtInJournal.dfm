@@ -2,8 +2,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitWidth = 1081
-  ExplicitHeight = 569
+  ExplicitWidth = 1089
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -317,8 +317,8 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         item
           Action = actPrint
         end>
-      Caption = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
-      Hint = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
     object mactPrint_Bill: TMultiAction
@@ -646,11 +646,11 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -675,6 +675,10 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTax: TdxBarButton

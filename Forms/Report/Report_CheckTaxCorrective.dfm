@@ -2,8 +2,8 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1056#1077#1077#1089#1090#1088#1072' '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1086#1082' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1099#1084' '#1085#1072#1082#1083#1072#1076#1085#1099#1084'>'
   ClientHeight = 319
   ClientWidth = 990
-  ExplicitWidth = 998
-  ExplicitHeight = 353
+  ExplicitWidth = 1006
+  ExplicitHeight = 354
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -51,34 +51,21 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object clOperDate_ReturnIn: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1074#1086#1079#1074#1088#1072#1090#1072
-            DataBinding.FieldName = 'OperDate_ReturnIn'
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 55
-          end
           object clInvNumber_ReturnIn: TcxGridDBColumn
-            Caption = #8470' '#1042#1086#1079#1074#1088#1072#1090#1072
+            Caption = #8470' '#1076#1086#1082'.'#1074#1086#1079#1074#1088'.'
             DataBinding.FieldName = 'InvNumber_ReturnIn'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 47
-          end
-          object clOperDate_TaxCorrective: TcxGridDBColumn
-            Caption = #1044#1072#1090#1072' '#1082#1086#1088#1088'.'
-            DataBinding.FieldName = 'OperDate_TaxCorrective'
-            HeaderAlignmentVert = vaCenter
-            Width = 56
+            Width = 60
           end
           object clInvNumber_TaxCorrective: TcxGridDBColumn
-            Caption = #8470' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1080
+            Caption = #8470' '#1076#1086#1082'. '#1082#1086#1088#1088'.'
             DataBinding.FieldName = 'InvNumber_TaxCorrective'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 66
+            Width = 55
           end
           object clDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
@@ -87,18 +74,50 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
+          object clContractName: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clPartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
           object clFromCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1086#1090' '#1082#1086#1075#1086')'
             DataBinding.FieldName = 'FromCode'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Options.Editing = False
-            Width = 98
+            Width = 35
           end
           object clFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 58
@@ -106,27 +125,22 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
           object clToCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1082#1086#1084#1091')'
             DataBinding.FieldName = 'ToCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 61
+            Width = 35
           end
           object clToName: TcxGridDBColumn
             Caption = #1050#1086#1084#1091
             DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
             Width = 60
           end
-          object clGoodsKindName: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            HeaderGlyphAlignmentHorz = taCenter
-            Width = 45
-          end
           object clGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            Caption = #1050#1086#1076' '#1090#1086#1074'.'
             DataBinding.FieldName = 'GoodsCode'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -143,22 +157,24 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Options.Editing = False
             Width = 61
           end
-          object clPrice_ReturnIn: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'Price_ReturnIn'
+          object clGoodsKindName: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 62
+            Width = 45
           end
-          object clPrice_TaxCorrective: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' ('#1050#1086#1088#1088')'
-            DataBinding.FieldName = 'Price_TaxCorrective'
+          object clPrice: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072
+            DataBinding.FieldName = 'Price'
+            HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
-            Width = 56
+            Width = 45
           end
           object clAmount_ReturnIn: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1074#1086#1079#1074#1088#1072#1090')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1074#1086#1079#1074#1088#1072#1090')'
             DataBinding.FieldName = 'Amount_ReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -170,7 +186,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Width = 60
           end
           object clAmount_TaxCorrective: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' ('#1050#1086#1088#1088')'
+            Caption = #1050#1086#1083'-'#1074#1086' ('#1082#1086#1088#1088'.)'
             DataBinding.FieldName = 'Amount_TaxCorrective'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -182,7 +198,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Width = 53
           end
           object clDifference: TcxGridDBColumn
-            Caption = #1054#1090#1083#1080#1095#1080#1077
+            Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'Difference'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
@@ -207,7 +223,7 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
     object cxLabel3: TcxLabel
       Left = 432
       Top = 6
-      Caption = #1042#1080#1076' '#1085#1072#1083#1086#1075#1086#1074#1086#1075#1086' '#1076#1086#1082'.:'
+      Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075#1086#1074#1086#1075#1086' '#1076#1086#1082'.:'
     end
     object edDocumentTaxKind: TcxButtonEdit
       Left = 549

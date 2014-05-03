@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -15,12 +15,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
-    IN inMasterId            Integer   , -- Налоговая накладная
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -28,24 +25,20 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut());
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
-            INTO ioId, ioPriceListId, outPriceListName
-     FROM lpInsertUpdate_Movement_TransferDebtOut (ioId    := ioId
-                                      , inInvNumber        := inInvNumber
-                                      , inOperDate         := inOperDate
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inVATPercent       := inVATPercent
-                                      , inChangePercent    := inChangePercent
-                                      , inFromId           := inFromId
-                                      , inToId             := inToId
-                                      , inPaidKindFromId   := inPaidKindFromId
-                                      , inPaidKindToId     := inPaidKindToId
-                                      , inContractFromId   := inContractFromId
-                                      , inContractToId     := inContractToId
-                                      , inMasterId         := inMasterId
-                                      , ioPriceListId      := ioPriceListId
-                                      , inUserId           := vbUserId
-                                       ) AS tmp;
+     ioId:= lpInsertUpdate_Movement_TransferDebtOut (ioId               := ioId
+                                                   , inInvNumber        := inInvNumber
+                                                   , inOperDate         := inOperDate
+                                                   , inPriceWithVAT     := inPriceWithVAT
+                                                   , inVATPercent       := inVATPercent
+                                                   , inChangePercent    := inChangePercent
+                                                   , inFromId           := inFromId
+                                                   , inToId             := inToId
+                                                   , inPaidKindFromId   := inPaidKindFromId
+                                                   , inPaidKindToId     := inPaidKindToId
+                                                   , inContractFromId   := inContractFromId
+                                                   , inContractToId     := inContractToId
+                                                   , inUserId           := vbUserId
+                                                    );
 
 END;
 $BODY$
@@ -54,8 +47,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 03.05.14                                        * del inMasterId, ioPriceListId, outPriceListName
  24.04.14         *
-
 */
 
 -- тест

@@ -30,6 +30,7 @@ $BODY$
    DECLARE vbToId             Integer;
    DECLARE vbPartnerId        Integer;
    DECLARE vbContractId       Integer;
+   DECLARE vbDocumentTaxKindId_TaxCorrective Integer;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
@@ -42,6 +43,17 @@ BEGIN
       THEN inDocumentTaxKindId:= zc_Enum_DocumentTaxKind_Tax();
       END IF;
 
+
+      -- определется тип формирования для корректировки
+      vbDocumentTaxKindId_TaxCorrective:= CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
+                                               WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
+                                                    THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
+                                          END;
 
       -- определяются параметры для <Налогового документа>
       SELECT CASE WHEN Movement.DescId = zc_Movement_Tax() THEN inMovementId ELSE MovementLinkMovement.MovementChildId END AS MovementId_Tax
@@ -113,40 +125,91 @@ BEGIN
                                    AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
       WHERE Movement.Id = inMovementId;
 
+
+      -- если надо, находим существующий <Налоговый документ>
+      IF COALESCE (vbMovementId_Tax, 0) = 0 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+      THEN 
+           -- поиск по Юр.лицу + Договор + период
+           vbMovementId_Tax:= (SELECT (Movement.Id)
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                                  ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                 AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
+                                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+                                                                 AND MovementLinkObject.ObjectId = vbToId
+                               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                 AND Movement.DescId = zc_Movement_Tax()
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased());
+      ELSE
+      IF COALESCE (vbMovementId_Tax, 0) = 0 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+      THEN 
+           -- поиск по Контрагенту + Договор + период
+           vbMovementId_Tax:= (SELECT (Movement.Id)
+                               FROM Movement
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
+                                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                    INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                                  ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                                 AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                 AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
+                                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
+                                                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_Partner()
+                                                                 AND MovementLinkObject.ObjectId = vbPartnerId
+                               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                 AND Movement.DescId = zc_Movement_Tax()
+                                 AND Movement.StatusId <> zc_Enum_Status_Erased());
+      END IF;
+      END IF;
+
       -- если надо, находим существующий <Налоговый документ-корректировку>
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
       THEN 
-           -- поиск по Юр.лицу + Договор + дата налоговой
-           vbMovementId_TaxCorrective:= (SELECT Movement.Id
+           -- поиск по Юр.лицу + Договор + период
+           vbMovementId_TaxCorrective:= (SELECT (Movement.Id)
                                          FROM Movement
                                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                                            AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                              INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                                            ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                                           AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                           AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR())
                                               INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                                                            AND MovementLinkObject.DescId = zc_MovementLinkObject_From()
                                                                            AND MovementLinkObject.ObjectId = vbToId
-                                         WHERE Movement.OperDate = vbOperDate
+                                         WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                                            AND Movement.DescId = zc_Movement_TaxCorrective()
                                            AND Movement.StatusId <> zc_Enum_Status_Erased());
 
       ELSE
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
       THEN 
-           -- поиск по Контрагенту + Договор + дата налоговой
-           vbMovementId_TaxCorrective:= (SELECT Movement.Id
+           -- поиск по Контрагенту + Договор + период
+           vbMovementId_TaxCorrective:= (SELECT (Movement.Id)
                                          FROM Movement
                                               INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                                             ON MovementLinkObject_Contract.MovementId = Movement.Id
                                                                            AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
                                                                            AND MovementLinkObject_Contract.ObjectId = vbContractId
+                                              INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                                                            ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                                                           AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                           AND MovementLinkObject_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR(), zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR())
                                               INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                                                            AND MovementLinkObject.DescId = zc_MovementLinkObject_Partner()
                                                                            AND MovementLinkObject.ObjectId = vbPartnerId
-                                         WHERE Movement.OperDate = vbOperDate
+                                         WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                                            AND Movement.DescId = zc_Movement_TaxCorrective()
                                            AND Movement.StatusId <> zc_Enum_Status_Erased());
-
       END IF;
       END IF;
 
@@ -209,15 +272,7 @@ BEGIN
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
                                THEN inDocumentTaxKindId
-                          ELSE CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
-                                END
+                          ELSE vbDocumentTaxKindId_TaxCorrective
                      END AS DocumentTaxKindId
               FROM MovementDate AS MovementDate_OperDatePartner
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -265,15 +320,7 @@ BEGIN
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
                                THEN inDocumentTaxKindId
-                          ELSE CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
-                                END
+                          ELSE vbDocumentTaxKindId_TaxCorrective
                      END AS DocumentTaxKindId
               FROM MovementDate AS MovementDate_OperDatePartner
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -305,15 +352,7 @@ BEGIN
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
                                THEN inDocumentTaxKindId
-                          ELSE CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
-                                END
+                          ELSE vbDocumentTaxKindId_TaxCorrective
                      END AS DocumentTaxKindId
               FROM MovementDate AS MovementDate_OperDatePartner
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -359,15 +398,7 @@ BEGIN
                    , Movement.DescId
                    , CASE WHEN Movement.DescId <> zc_Movement_ReturnIn()
                                THEN inDocumentTaxKindId
-                          ELSE CASE WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalR()
-                                    WHEN inDocumentTaxKindId = zc_Enum_DocumentTaxKind_TaxSummaryPartnerS()
-                                         THEN zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerR()
-                                END
+                          ELSE vbDocumentTaxKindId_TaxCorrective
                      END AS DocumentTaxKindId
               FROM MovementDate AS MovementDate_OperDatePartner
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
@@ -439,16 +470,25 @@ BEGIN
       FROM _tmpMovement
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkMovement.MovementChildId <> vbMovementId_Tax
+                                          AND MovementLinkMovement.MovementChildId <> COALESCE (vbMovementId_Tax, 0)
       WHERE _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut());
+
       -- удаляем все "лишние" корректировки у "базы"
-      PERFORM lpSetErased_Movement (inMovementId:= MovementLinkMovement.MovementChildId
+      PERFORM lpSetErased_Movement (inMovementId:= MovementLinkMovement.MovementId
                                   , inUserId    := vbUserId)
       FROM _tmpMovement
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
-                                          AND MovementLinkMovement.MovementId <> vbMovementId_TaxCorrective
+                                          AND MovementLinkMovement.MovementId <> COALESCE (vbMovementId_TaxCorrective, 0)
       WHERE _tmpMovement.DescId = zc_Movement_ReturnIn();
+
+      -- удаляем для НЕ "база" связь с Налоговым документом
+      PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), MovementLinkMovement.MovementId, 0)
+      FROM MovementLinkMovement
+           LEFT JOIN _tmpMovement ON _tmpMovement.MovementId = MovementLinkMovement.MovementId
+      WHERE MovementLinkMovement.MovementChildId = vbMovementId_Tax
+        AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
+        AND _tmpMovement.MovementId IS NULL;
 
 
       -- распроводим налоговую и корректировку
@@ -496,7 +536,7 @@ BEGIN
                                                      , inToId             := vbFromId
                                                      , inPartnerId        := CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN vbPartnerId ELSE NULL END
                                                      , inContractId       := vbContractId
-                                                     , inDocumentTaxKindId:= (SELECT MAX (DocumentTaxKindId) AS DocumentTaxKindId FROM _tmpMovement WHERE _tmpMovement.DescId = zc_Movement_ReturnIn())
+                                                     , inDocumentTaxKindId:= vbDocumentTaxKindId_TaxCorrective
                                                      , inUserId           := vbUserId
                                                       ) AS tmp;
       END IF;
@@ -656,7 +696,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 01.05.14                                        * all
+ 03.05.14                                        * all
  10.04.14                                        * all
  29.03.14         *
  23.03.14                                        * all
@@ -664,13 +704,4 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5'); -- все
--- SELECT gpInsertUpdate_Movement_Tax_From_Kind FROM gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 21838, inDocumentTaxKindId:=80770, inSession := '5'); -- все
-
---select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 153051 , inDocumentTaxKindId := 80789 ,  inSession := '5');
-
---select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 156101 , inDocumentTaxKindId := 80790 ,  inSession := '5');
---select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 26025 , inDocumentTaxKindId := 80790 ,  inSession := '5');
---select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 24702 , inDocumentTaxKindId := 80790 ,  inSession := '5');
--- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 123778 , inDocumentTaxKindId := 80788 ,  inSession := '5');     
---select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 16759 , inDocumentTaxKindId := zc_Enum_DocumentTaxKind_Tax() ,  inSession := '5');
+-- SELECT * FROM gpInsertUpdate_Movement_Tax_From_Kind (inMovementId:= 21838, inDocumentTaxKindId:= 80770, inSession:= '5');

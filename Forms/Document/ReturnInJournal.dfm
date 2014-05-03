@@ -1,30 +1,27 @@
 inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
-  ClientWidth = 1029
-  ExplicitWidth = 1037
-  ExplicitHeight = 569
+  ClientWidth = 1106
+  ExplicitWidth = 1122
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1029
-    Height = 476
+    Width = 1106
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
-    ExplicitWidth = 1029
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1025
+    ExplicitWidth = 1106
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1023
-      ExplicitHeight = 470
+      ExplicitWidth = 1106
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1023
-        Height = 470
-        ExplicitWidth = 1023
-        ExplicitHeight = 470
+        Width = 1106
+        Height = 478
+        ExplicitWidth = 1106
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -340,6 +337,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 46
           end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -383,8 +388,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1029
-    ExplicitWidth = 1029
+    Width = 1106
+    ExplicitWidth = 1106
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -394,7 +399,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Width = 270
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 895
+      Left = 875
       Top = 5
       Properties.Buttons = <
         item
@@ -402,12 +407,12 @@ inherited ReturnInJournalForm: TReturnInJournalForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 122
+      Width = 200
     end
     object cxLabel14: TcxLabel
-      Left = 702
+      Left = 690
       Top = 6
-      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -641,7 +646,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         item
           Action = actPrint
         end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
   end
@@ -692,7 +698,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -785,6 +791,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTaxCorrective: TdxBarButton

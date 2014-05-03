@@ -17,7 +17,7 @@ RETURNS TABLE (Id Integer, InvNumber Integer, OperDate TDateTime, StatusCode Int
              , InvNumberPartner Integer
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, OKPO_To TVarChar
              , UnitCode Integer, UnitName TVarChar, PartnerCode Integer, PartnerName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , TaxKindId Integer, TaxKindName TVarChar
              , InvNumber_Master TVarChar, isError Boolean
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
@@ -70,13 +70,15 @@ BEGIN
 
            , View_Contract_InvNumber.ContractId        	AS ContractId
            , View_Contract_InvNumber.InvNumber         	AS ContractName
+           , View_Contract_InvNumber.ContractTagName
            , Object_TaxKind.Id                		    AS TaxKindId
            , Object_TaxKind.ValueData         		    AS TaxKindName
            , Movement_DocumentMaster.InvNumber          AS InvNumberPartner_Master
            , CAST (CASE WHEN MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR MovementDate_OperDatePartner_Master.ValueData <> Movement.OperDate
-                                OR COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_To_Master.ObjectId, -2)
+                                OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_To_Master.ObjectId, -2)
+                                    AND Movement_DocumentMaster.DescId <> zc_Movement_TransferDebtOut())
                                 OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2)
                                   )
                               THEN TRUE
@@ -187,7 +189,7 @@ BEGIN
                                         AND MovementLinkObject_To_Master.DescId = zc_MovementLinkObject_To()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Master
                                          ON MovementLinkObject_Contract_Master.MovementId = MovementLinkMovement_Master.MovementId
-                                        AND MovementLinkObject_Contract_Master.DescId = zc_MovementLinkObject_Contract()
+                                        AND MovementLinkObject_Contract_Master.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
                                    ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementId
                                   AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
@@ -205,6 +207,7 @@ ALTER FUNCTION gpSelect_Movement_Tax (TDateTime, TDateTime, Boolean, Boolean, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.05.14                                        * add ContractTagName
  01.05.14                                        * InvNumber, InvNumberPartner is Integer
  24.04.14                                                        * add zc_MovementString_InvNumberBranch
  12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()

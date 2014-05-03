@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_MovementFloat_TotalSumm (Integer)
 
--- DROP FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementFloat_TotalSumm (Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementFloat_TotalSumm(
     IN inMovementId Integer -- Ключ объекта <Документ>
@@ -143,7 +143,10 @@ BEGIN
                , SUM (CASE WHEN MovementItem.DescId = zc_MI_Child() THEN MovementItem.Amount ELSE 0 END) AS tmpOperCount_Child
                , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS tmpOperCount_Partner
                , SUM (CASE WHEN COALESCE (Object_InfoMoney_View.InfoMoneyDestinationId, 0) = zc_Enum_InfoMoneyDestination_20500() -- Оборотная тара
-                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                          THEN COALESCE (MovementItem.Amount, 0)
+                                          ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                     END
                            ELSE 0
                       END
                      ) AS tmpOperCount_Tare
@@ -151,7 +154,10 @@ BEGIN
                                 THEN 0
                            WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                             AND COALESCE (MIFloat_Price.ValueData, 0) <> 0
-                                THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                          THEN COALESCE (MovementItem.Amount, 0)
+                                          ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                     END
                            ELSE 0
                       END
                      ) AS tmpOperCount_Sh
@@ -160,16 +166,31 @@ BEGIN
                            WHEN ObjectLink_Goods_Measure.ChildObjectId = zc_Measure_Sh()
                             -- AND COALESCE (MIFloat_Price.ValueData, 0) <> 0
                                 THEN 0 -- COALESCE (MIFloat_AmountPartner.ValueData, 0) * COALESCE (ObjectFloat_Weight.ValueData, 0)
-                           ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                           ELSE CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                          THEN COALESCE (MovementItem.Amount, 0)
+                                          ELSE COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                     END
                       END
                      ) AS tmpOperCount_Kg
                  -- сумма по Контрагенту - с округлением до 2-х знаков
-               , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                                   ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+               , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                                                                             THEN COALESCE (CAST (MovementItem.Amount             * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                             ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                        END
+                                                                                   ELSE CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                                                                             THEN COALESCE (CAST (MovementItem.Amount             * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                             ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                        END
                       END) AS tmpOperSumm_Partner
                  -- сумма по Контрагенту с учетом скидки в цене - с округлением до 2-х знаков
-               , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                                   ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
+               , SUM (CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                                                                             THEN COALESCE (CAST (MovementItem.Amount             * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                             ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
+                                                                                        END
+                                                                                   ELSE CASE WHEN Movement.DescId IN (zc_Movement_TransferDebtIn(), zc_Movement_TransferDebtOut())
+                                                                                             THEN COALESCE (CAST (MovementItem.Amount             * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
+                                                                                             ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * (MIFloat_Price.ValueData - vbChangePrice) AS NUMERIC (16, 2)), 0)
+                                                                                        END
                       END) AS tmpOperSumm_Partner_ChangePrice
 
                , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0)) AS tmpOperCount_Packer
@@ -253,14 +274,14 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgres;
 
-  
 /*-------------------------------------------------------------------------------*/
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.14                                        * add zc_Movement_TransferDebtIn and zc_Movement_TransferDebtOut
  31.03.14                                        * add TotalCount...
  20.10.13                                        * add vbChangePrice
  03.10.13                                        * add zc_Movement_PersonalSendCash

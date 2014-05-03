@@ -87,7 +87,6 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
               Kind = skSum
               Column = colTotalSummPVAT
             end>
-          Images = dmMain.SortImageList
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -353,6 +352,67 @@ inherited ReturnOutJournalForm: TReturnOutJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320

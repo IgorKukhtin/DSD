@@ -77,6 +77,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
           OptionsData.Deleting = False
           OptionsData.DeletingConfirmation = False
           OptionsView.GroupSummaryLayout = gslStandard
+          Styles.Inactive = nil
+          Styles.Selection = nil
+          Styles.Footer = nil
+          Styles.Header = nil
           object colCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'GoodsCode'
@@ -149,7 +153,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1113
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -213,7 +216,6 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 175
-      ExplicitHeight = 22
       Width = 175
     end
     object cxLabel3: TcxLabel
@@ -667,6 +669,10 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     inherited bbPrint: TdxBarButton

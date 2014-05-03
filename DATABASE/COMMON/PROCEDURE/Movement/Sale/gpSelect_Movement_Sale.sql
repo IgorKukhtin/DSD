@@ -1,7 +1,5 @@
 -- Function: gpSelect_Movement_Sale()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, TVarChar);
-DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Sale(
@@ -21,7 +19,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , InvNumberOrder TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_To TVarChar, OKPO_To TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , RouteSortingId Integer, RouteSortingName TVarChar
@@ -79,6 +77,7 @@ BEGIN
            , Object_PaidKind.ValueData                      AS PaidKindName
            , View_Contract_InvNumber.ContractId             AS ContractId
            , View_Contract_InvNumber.InvNumber              AS ContractName
+           , View_Contract_InvNumber.ContractTagName
            , Object_JuridicalTo.ValueData                   AS JuridicalName_To
            , ObjectHistory_JuridicalDetails_View.OKPO       AS OKPO_To
            , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
@@ -87,8 +86,8 @@ BEGIN
            , View_InfoMoney.InfoMoneyName                   AS InfoMoneyName
            , Object_RouteSorting.Id                         AS RouteSortingId
            , Object_RouteSorting.ValueData                  AS RouteSortingName
-           , Object_TaxKind_Master.Id                		    AS DocumentTaxKindId
-           , Object_TaxKind_Master.ValueData         		    AS DocumentTaxKindName
+           , Object_TaxKind_Master.Id                	    AS DocumentTaxKindId
+           , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
@@ -242,6 +241,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.05.14                                        * add ContractTagName
  24.04.14                                        * ... Movement_DocumentMaster.Id
  12.04.14                                        * add CASE WHEN ...StatusId = zc_Enum_Status_Erased()
  31.03.14                                        * add TotalCount...

@@ -26,7 +26,6 @@ object IncomeFuelForm: TIncomeFuelForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 892
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -250,14 +249,12 @@ object IncomeFuelForm: TIncomeFuelForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 892
     ClientRectBottom = 270
     ClientRectRight = 876
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 892
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -265,7 +262,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 892
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -433,7 +429,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 892
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -441,7 +436,6 @@ object IncomeFuelForm: TIncomeFuelForm
         Height = 246
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 892
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -809,7 +803,15 @@ object IncomeFuelForm: TIncomeFuelForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -818,12 +820,21 @@ object IncomeFuelForm: TIncomeFuelForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
       WholeRow = False
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -852,11 +863,6 @@ object IncomeFuelForm: TIncomeFuelForm
     object bbEntryToGrid: TdxBarButton
       Action = EntryToExcel
       Category = 0
-    end
-    object bbStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Visible = ivAlways
     end
     object bbErased: TdxBarButton
       Action = SetErased
@@ -974,8 +980,8 @@ object IncomeFuelForm: TIncomeFuelForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <>

@@ -359,13 +359,26 @@ object TransportJournalForm: TTransportJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBarStatic'
         end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
       WholeRow = False
+    end
+    object bbBarStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
     end
     object bbRefresh: TdxBarButton
       Action = actRefresh
@@ -391,11 +404,6 @@ object TransportJournalForm: TTransportJournalForm
       Action = actSetErased
       Category = 0
     end
-    object bbBarStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Visible = ivAlways
-    end
     object bbGridToExcel: TdxBarButton
       Action = dsdGridToExcel
       Category = 0
@@ -411,6 +419,7 @@ object TransportJournalForm: TTransportJournalForm
     Top = 56
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -424,6 +433,7 @@ object TransportJournalForm: TTransportJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ShortCut = 45
@@ -439,9 +449,11 @@ object TransportJournalForm: TTransportJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ShortCut = 115
@@ -460,9 +472,11 @@ object TransportJournalForm: TTransportJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -476,6 +490,7 @@ object TransportJournalForm: TTransportJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -489,6 +504,7 @@ object TransportJournalForm: TTransportJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -502,6 +518,7 @@ object TransportJournalForm: TTransportJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -510,6 +527,7 @@ object TransportJournalForm: TTransportJournalForm
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -622,6 +640,10 @@ object TransportJournalForm: TTransportJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 160
     Top = 200
   end
