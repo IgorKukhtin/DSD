@@ -34,6 +34,9 @@ type
     clInvNumber_find: TcxGridDBColumn;
     clInfoMoneyName_child: TcxGridDBColumn;
     clInfoMoneyName_find: TcxGridDBColumn;
+    dxBarButton1: TdxBarButton;
+    actDocBonus: TdsdExecStoredProc;
+    spInsertUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
