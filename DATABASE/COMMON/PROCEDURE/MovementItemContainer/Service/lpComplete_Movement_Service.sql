@@ -13,6 +13,12 @@ $BODY$
   DECLARE vbMovementDescId Integer;
   DECLARE vbIsAccount_50401 Boolean;
 BEGIN
+     -- !!!обязательно!!! очистили таблицу проводок
+     DELETE FROM _tmpMIContainer_insert;
+     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     DELETE FROM _tmpItem;
+
+
      -- нужен тип документа, т.к. проведение для двух разных видов документов
      SELECT Movement.DescId
           , CASE WHEN Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Маркетинг
@@ -28,11 +34,6 @@ BEGIN
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
      WHERE Movement.Id = inMovementId;
 
-
-     -- !!!обязательно!!! очистили таблицу проводок
-     DELETE FROM _tmpMIContainer_insert;
-     -- !!!обязательно!!! очистили таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
-     DELETE FROM _tmpItem;
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
      INSERT INTO _tmpItem (OperDate, ObjectId, ObjectDescId, OperSumm
@@ -108,11 +109,29 @@ BEGIN
 
 
      -- проверка
-     IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0)
+     IF EXISTS (SELECT _tmpItem.ObjectId FROM _tmpItem WHERE _tmpItem.ObjectId = 0 OR _tmpItem.ObjectDescId <> zc_Object_Juridical())
      THEN
          RAISE EXCEPTION 'Ошибка.В документе не определено <Юридическое лицо>.Проведение невозможно.';
      END IF;
-   
+
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.ContractId FROM _tmpItem WHERE _tmpItem.ContractId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определен <Договор>.Проведение невозможно.';
+     END IF;
+
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.InfoMoneyId FROM _tmpItem WHERE _tmpItem.InfoMoneyId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.В документе не определена <УП статья назначения>.Проведение невозможно.';
+     END IF;
+
+     -- проверка
+     IF EXISTS (SELECT _tmpItem.PaidKindId FROM _tmpItem WHERE _tmpItem.PaidKindId = 0)
+     THEN
+         RAISE EXCEPTION 'Ошибка.У <Договора> не установлена <Форма оплаты>.Проведение невозможно.';
+     END IF;
+
      -- проверка
      IF EXISTS (SELECT _tmpItem.JuridicalId_Basis FROM _tmpItem WHERE _tmpItem.JuridicalId_Basis = 0)
      THEN

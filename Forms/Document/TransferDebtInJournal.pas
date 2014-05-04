@@ -18,22 +18,9 @@ uses
 
 type
   TTransferDebtInJournalForm = class(TAncestorJournalForm)
-    colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
-    colTotalCount: TcxGridDBColumn;
-    colTotalSumm: TcxGridDBColumn;
-    colChangePercent: TcxGridDBColumn;
-    colPriceWithVAT: TcxGridDBColumn;
-    colVATPercent: TcxGridDBColumn;
-    colTotalSummMVAT: TcxGridDBColumn;
-    colTotalSummPVAT: TcxGridDBColumn;
-    colPaidKindFromName: TcxGridDBColumn;
-    colContractFromName: TcxGridDBColumn;
     spTax: TdsdStoredProc;
     actTax: TdsdExecStoredProc;
     bbTax: TdxBarButton;
-    colTotalCountSh: TcxGridDBColumn;
-    colTotalCountKg: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     spSelectPrint: TdsdStoredProc;
@@ -58,8 +45,6 @@ type
     mactPrint_Bill: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colPaidKindToName: TcxGridDBColumn;
-    colContractToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

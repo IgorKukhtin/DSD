@@ -1,6 +1,5 @@
 -- Function: gpReport_JuridicalCollation()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
@@ -24,6 +23,7 @@ RETURNS TABLE (MovementSumm TFloat,
                ContractName TVarChar,
                ContractTagName TVarChar,
                ContractStateKindCode Integer,
+               PaidKindName TVarChar,
                InfoMoneyGroupCode Integer,
                InfoMoneyGroupName TVarChar,
                InfoMoneyDestinationCode Integer,
@@ -33,8 +33,7 @@ RETURNS TABLE (MovementSumm TFloat,
                MovementId Integer, 
                ItemName TVarChar,
                OperationSort Integer, 
-               FromName TVarChar,
-               ToName TVarChar)
+               ByObjectName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -50,26 +49,24 @@ BEGIN
                             LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                        WHERE View_Contract_ContractKey.ContractId = inContractId)
   SELECT 
-          CASE Operation.OperationSort 
-               WHEN 0 THEN Operation.MovementSumm
+          CASE WHEN Operation.OperationSort = 0
+                     THEN Operation.MovementSumm
                ELSE 0
-          END::TFloat                   AS MovementSumm,
-          CASE Operation.OperationSort 
-               WHEN -1 THEN Operation.MovementSumm
-               ELSE 0 
-          END::TFloat                  AS StartRemains,     
-          CASE Operation.OperationSort 
-               WHEN  1 THEN Operation.MovementSumm
-               ELSE 0
-          END::TFloat                   AS EndRemains,     
-          CASE Operation.OperationSort 
-               WHEN 0 THEN (CASE WHEN Operation.MovementSumm > 0 THEN Operation.MovementSumm ELSE 0 END)
+          END::TFloat AS MovementSumm,
+
+          Operation.StartSumm :: TFloat AS StartRemains,
+          Operation.EndSumm :: TFloat AS EndRemains,     
+
+          CASE WHEN Operation.OperationSort = 0 AND Operation.MovementSumm > 0
+                    THEN Operation.MovementSumm
                ELSE 0
           END::TFloat AS Debet,
-          CASE Operation.OperationSort 
-               WHEN 0 THEN (CASE WHEN Operation.MovementSumm > 0 THEN 0 ELSE - Operation.MovementSumm END)
+
+          CASE WHEN Operation.OperationSort = 0 AND Operation.MovementSumm < 0
+                    THEN -1 * Operation.MovementSumm
                ELSE 0
           END::TFloat AS Kredit,
+
           Movement.OperDate,
           Movement.InvNumber, 
           Object_Account_View.AccountCode,
@@ -78,6 +75,7 @@ BEGIN
           View_Contract_InvNumber.InvNumber AS ContractName,
           View_Contract_InvNumber.ContractTagName,
           View_Contract_InvNumber.ContractStateKindCode,
+          Object_PaidKind.ValueData AS PaidKindName,
           Object_InfoMoney_View.InfoMoneyGroupCode,
           Object_InfoMoney_View.InfoMoneyGroupName,
           Object_InfoMoney_View.InfoMoneyDestinationCode,
@@ -85,20 +83,23 @@ BEGIN
           Object_InfoMoney_View.InfoMoneyCode,
           Object_InfoMoney_View.InfoMoneyName,
           Movement.Id               AS MovementId, 
-          CASE Operation.OperationSort 
-               WHEN -1 THEN 'Начальный остаток'
-               WHEN 0  THEN MovementDesc.ItemName
-               WHEN 1 THEN  'Конечный остаток'
+          CASE WHEN Operation.OperationSort = -1
+                    THEN '0.Долг'
+               ELSE MovementDesc.ItemName
           END::TVarChar  AS ItemName,     
           Operation.OperationSort, 
-          Object_From.ValueData AS FromName,
-          Object_To.ValueData AS ToName
+          Object_by.ValueData AS ByObjectName
+          --, Operation.MovementItemId :: Integer AS MovementItemId
           
-    FROM (SELECT CLO_Contract.ObjectId AS ContractId, 
+    FROM (SELECT Container.ObjectId     AS AccountId, 
                  CLO_InfoMoney.ObjectId AS InfoMoneyId, 
-                 MIContainer.MovementId, 
-                 Container.ObjectId AS AccountId, 
+                 CLO_Contract.ObjectId  AS ContractId, 
+                 CLO_PaidKind.ObjectId  AS PaidKindId, 
+                 MIContainer.MovementId,
+                 MAX (MIContainer.MovementItemId) AS MovementItemId,
                  SUM (MIContainer.Amount) AS MovementSumm,
+                 0 AS StartSumm,
+                 0 AS EndSumm,
                  0 AS OperationSort
           FROM ContainerLinkObject AS CLO_Juridical 
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
@@ -111,62 +112,91 @@ BEGIN
                LEFT JOIN ContainerLinkObject AS CLO_Contract
                                              ON CLO_Contract.ContainerId = Container.Id
                                             AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()  
+               LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                             ON CLO_PaidKind.ContainerId = Container.Id
+                                            AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                LEFT JOIN tmpContract ON tmpContract.ContractId = CLO_Contract.ObjectId
+
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
-          GROUP BY CLO_Contract.ObjectId, Container.ObjectId, MIContainer.MovementId, InfoMoneyId
+          GROUP BY Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId, MIContainer.MovementId
           HAVING SUM (MIContainer.Amount) <> 0
 
-         UNION 
-          SELECT CLO_Contract.ObjectId AS ContractId, 
+         UNION ALL
+          SELECT tmpRemains.AccountId, 
+                 tmpRemains.InfoMoneyId, 
+                 tmpRemains.ContractId, 
+                 tmpRemains.PaidKindId, 
+                 0 AS MovementId, 
+                 0 AS MovementItemId,
+                 0 AS MovementSumm,
+                 SUM (tmpRemains.StartSumm) AS StartSumm,
+                 SUM (tmpRemains.EndSumm) AS EndSumm,
+                 -1 AS OperationSort
+          FROM
+         (SELECT Container.Id           AS ContainerId, 
+                 Container.ObjectId     AS AccountId, 
                  CLO_InfoMoney.ObjectId AS InfoMoneyId, 
-                 0, 
-                  Container.ObjectId AS AccountId, 
-                  Container.Amount - SUM(MIContainer.Amount) AS Amount,
-                  -1 AS OperationSort
+                 CLO_Contract.ObjectId  AS ContractId, 
+                 CLO_PaidKind.ObjectId  AS PaidKindId, 
+                 Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartSumm,
+                 0 AS EndSumm
           FROM ContainerLinkObject AS CLO_Juridical 
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
+               LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
+                                             ON CLO_InfoMoney.ContainerId = Container.Id
+                                            AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
                LEFT JOIN ContainerLinkObject AS CLO_Contract
                                              ON CLO_Contract.ContainerId = Container.Id
                                             AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-               INNER JOIN MovementItemContainer AS MIContainer 
-                                                ON MIContainer.ContainerId = Container.Id
-                                               AND MIContainer.OperDate >= inStartDate
-               LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
-                                             ON CLO_InfoMoney.ContainerId = Container.Id
-                                            AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
+               LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                             ON CLO_PaidKind.ContainerId = Container.Id
+                                            AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                LEFT JOIN tmpContract ON tmpContract.ContractId = CLO_Contract.ObjectId
+
+               LEFT JOIN MovementItemContainer AS MIContainer 
+                                               ON MIContainer.ContainerId = Container.Id
+                                              AND MIContainer.OperDate >= inStartDate
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
-          GROUP BY Container.Amount, Container.Id, CLO_Contract.ObjectId, CLO_InfoMoney.ObjectId, Container.ObjectId 
+          GROUP BY Container.Id, Container.Amount, Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId
 
-         UNION 
-          SELECT CLO_Contract.ObjectId AS ContractId, 
+         UNION ALL
+          SELECT Container.Id           AS ContainerId, 
+                 Container.ObjectId     AS AccountId, 
                  CLO_InfoMoney.ObjectId AS InfoMoneyId, 
-                 0, 
-                 Container.ObjectId AS AccountId, 
-                 Container.Amount - SUM(MIContainer.Amount) AS Amount,
-                 1 AS OperationSort
+                 CLO_Contract.ObjectId  AS ContractId, 
+                 CLO_PaidKind.ObjectId  AS PaidKindId, 
+                 0 AS StartSumm,
+                 Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS EndSumm
           FROM ContainerLinkObject AS CLO_Juridical 
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
-               LEFT JOIN ContainerLinkObject AS CLO_Contract ON CLO_Contract.ContainerId = Container.Id
-                                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
-               INNER JOIN MovementItemContainer AS MIContainer 
-                                                ON MIContainer.ContainerId = Container.Id
-                                               AND MIContainer.OperDate >= inEndDate
                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                              ON CLO_InfoMoney.ContainerId = Container.Id
                                             AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()  
+               LEFT JOIN ContainerLinkObject AS CLO_Contract
+                                             ON CLO_Contract.ContainerId = Container.Id
+                                            AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+               LEFT JOIN ContainerLinkObject AS CLO_PaidKind
+                                             ON CLO_PaidKind.ContainerId = Container.Id
+                                            AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                LEFT JOIN tmpContract ON tmpContract.ContractId = CLO_Contract.ObjectId
+
+               LEFT JOIN MovementItemContainer AS MIContainer 
+                                               ON MIContainer.ContainerId = Container.Id
+                                              AND MIContainer.OperDate >= inEndDate
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
-            AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
+            AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
-          GROUP BY Container.Amount, Container.Id, CLO_Contract.ObjectId, CLO_InfoMoney.ObjectId, Container.ObjectId 
+          GROUP BY Container.Id, Container.Amount, Container.ObjectId , CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId
+        ) AS tmpRemains
+        GROUP BY tmpRemains.ContainerId, tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId
+        HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
         ) AS Operation
 
       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = Operation.ContractId
@@ -176,21 +206,33 @@ BEGIN
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
       LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
-                                   ON MovementLinkObject_From.MovementId = Movement.Id
-                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-      LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+      LEFT JOIN MovementItem AS MovementItem_by ON MovementItem_by.Id = Operation.MovementItemId
+                                               AND MovementItem_by.DescId IN (zc_MI_Master())
+                                               AND Movement.DescId IN (zc_Movement_BankAccount(), zc_Movement_Cash())
+      LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
+                                       ON MILinkObject_Unit.MovementItemId = Operation.MovementItemId
+                                      AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                   ON MovementLinkObject_To.MovementId = Movement.Id
-                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-      LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_by
+                                   ON MovementLinkObject_by.MovementId = Movement.Id 
+                                  AND MovementLinkObject_by.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
+                                                                               THEN zc_MovementLinkObject_UnitForwarding()
+                                                                          WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
+                                                                               THEN zc_MovementLinkObject_Personal()
+                                                                          WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
+                                                                               THEN zc_MovementLinkObject_From()
+                                                                          WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
+                                                                               THEN zc_MovementLinkObject_To()
+                                                                     END
+      LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                           ON ObjectLink_BankAccount_Bank.ObjectId = MovementItem_by.ObjectId
+                          AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+      LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (MovementLinkObject_by.ObjectId, COALESCE (ObjectLink_BankAccount_Bank.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, MovementItem_by.ObjectId)))
+
+      LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       
   ORDER BY Operation.OperationSort;
                                   
-    -- Конец. Добавили строковые данные. 
-    -- КОНЕЦ ЗАПРОСА
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -199,6 +241,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.05.14                                        * add PaidKindName
  26.04.14                                        * add Object_Contract_ContractKey_View
  17.04.14                        * 
  26.03.14                        * 
@@ -208,4 +251,4 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_Fuel (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inFuelId:= null, inCarId:= null, inBranchId:= null,inSession:= '2'); 
+-- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inJuridicalId:= null, inContractId:= null, inAccountId:= null, inSession:= zfCalc_UserAdmin()); 

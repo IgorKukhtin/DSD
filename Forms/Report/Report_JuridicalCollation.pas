@@ -58,8 +58,8 @@ type
     ContractGuides: TdsdGuides;
     colStartRemains: TcxGridDBColumn;
     colEndRemains: TcxGridDBColumn;
-    colFrom: TcxGridDBColumn;
-    colTo: TcxGridDBColumn;
+    colByObjectName: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -61,6 +61,15 @@ $BODY$BEGIN
                                     SELECT 70900 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm  -- ++ НМА
                                    UNION
                                     SELECT 71000 AS AccountDirectionCode, TRUE AS isFirstForm, FALSE AS isSecondForm -- +- векселя выданные
+
+                                   UNION
+                                    SELECT 80100 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ Кредиты банков
+                                   UNION
+                                    SELECT 80200 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ Прочие кредиты
+                                   UNION
+                                    SELECT 80300 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ ???
+                                   UNION
+                                    SELECT 80400 AS AccountDirectionCode, TRUE AS isFirstForm, TRUE AS isSecondForm -- ++ проценты по кредитам
                                    )
           , tmpAccount_two AS (SELECT tmpAccount.*, COALESCE (tmpAccountDirection.AccountDirectionCode, 0) AS AccountDirectionCode_find, isFirstForm, isSecondForm
                                FROM tmpAccount
@@ -91,7 +100,7 @@ $BODY$BEGIN
            , Object_InfoMoney_View_Detail.InfoMoneyName AS InfoMoneyName_Detail
 
            --, Object_by.ObjectCode         AS ByObjectCode
-           , Object_by.ValueData          AS ByObjectName
+           , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_by.ValueData) :: TVarChar AS ByObjectName
            --, Object_Goods.ObjectCode      AS GoodsCode
            , Object_Goods.ValueData       AS GoodsName
 
@@ -119,8 +128,10 @@ $BODY$BEGIN
            (SELECT tmpReportOperation_two.AccountId
                  , tmpReportOperation_two.InfoMoneyId
                  , tmpReportOperation_two.InfoMoneyId_Detail
-                 , tmpReportOperation_two.MemberId
+                 , tmpReportOperation_two.CashId
+                 , tmpReportOperation_two.BankAccountId
                  , tmpReportOperation_two.JuridicalId
+                 , tmpReportOperation_two.MemberId
                  , tmpReportOperation_two.UnitId
                  , tmpReportOperation_two.CarId
                  , tmpReportOperation_two.GoodsId
@@ -142,8 +153,10 @@ $BODY$BEGIN
            (SELECT tmpMIContainer_Remains.AccountId
                  , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                  , ContainerLinkObject_InfoMoneyDetail.ObjectId AS InfoMoneyId_Detail
-                 , ContainerLinkObject_Member.ObjectId AS MemberId
+                 , ContainerLinkObject_Cash.ObjectId AS CashId
+                 , ContainerLinkObject_BankAccount.ObjectId AS BankAccountId
                  , ContainerLinkObject_Juridical.ObjectId AS JuridicalId
+                 , ContainerLinkObject_Member.ObjectId AS MemberId
                  , ContainerLinkObject_Unit.ObjectId AS UnitId
                  , ContainerLinkObject_Car.ObjectId  AS CarId
                  , ContainerLinkObject_Goods.ObjectId AS GoodsId
@@ -204,6 +217,12 @@ $BODY$BEGIN
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_InfoMoneyDetail
                                               ON ContainerLinkObject_InfoMoneyDetail.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_InfoMoneyDetail.DescId = zc_ContainerLinkObject_InfoMoneyDetail()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Cash
+                                              ON ContainerLinkObject_Cash.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_Cash.DescId = zc_ContainerLinkObject_Cash()
+                LEFT JOIN ContainerLinkObject AS ContainerLinkObject_BankAccount
+                                              ON ContainerLinkObject_BankAccount.ContainerId = tmpMIContainer_Remains.ContainerId
+                                             AND ContainerLinkObject_BankAccount.DescId = zc_ContainerLinkObject_BankAccount()
                 LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                               ON ContainerLinkObject_Juridical.ContainerId = tmpMIContainer_Remains.ContainerId
                                              AND ContainerLinkObject_Juridical.DescId = zc_ContainerLinkObject_Juridical()
@@ -231,8 +250,10 @@ $BODY$BEGIN
             GROUP BY tmpMIContainer_Remains.AccountId
                    , ContainerLinkObject_InfoMoney.ObjectId
                    , ContainerLinkObject_InfoMoneyDetail.ObjectId
-                   , ContainerLinkObject_Member.ObjectId
+                   , ContainerLinkObject_Cash.ObjectId
+                   , ContainerLinkObject_BankAccount.ObjectId
                    , ContainerLinkObject_Juridical.ObjectId
+                   , ContainerLinkObject_Member.ObjectId
                    , ContainerLinkObject_Unit.ObjectId
                    , ContainerLinkObject_Car.ObjectId
                    , ContainerLinkObject_Goods.ObjectId
@@ -244,15 +265,27 @@ $BODY$BEGIN
            LEFT JOIN tmpAccountFind ON tmpAccountFind.AccountId = tmpReportOperation_two.AccountId
 
            ) AS tmpReportOperation ON tmpReportOperation.AccountId = Object_Account_View.AccountId
-                                  AND tmpReportOperation.PaidKindId = Object_Account_View.PaidKindId
+                                  AND (tmpReportOperation.PaidKindId = Object_Account_View.PaidKindId
+                                       OR (tmpReportOperation.PaidKindId = 0
+                                           AND ((Object_Account_View.PaidKindId = zc_Enum_PaidKind_FirstForm() AND Object_Account_View.isFirstForm = TRUE)
+                                                OR (Object_Account_View.PaidKindId = zc_Enum_PaidKind_SecondForm() AND Object_Account_View.isFirstForm = FALSE)
+                                               )
+                                          )
+                                      )
 
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = tmpReportOperation.InfoMoneyId
            LEFT JOIN Object_InfoMoney_View AS Object_InfoMoney_View_Detail ON Object_InfoMoney_View_Detail.InfoMoneyId = CASE WHEN COALESCE (tmpReportOperation.InfoMoneyId_Detail, 0) = 0 THEN tmpReportOperation.InfoMoneyId ELSE tmpReportOperation.InfoMoneyId_Detail END
-           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))
+           LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (BankAccountId, COALESCE (CashId, COALESCE (JuridicalId, COALESCE (CarId, COALESCE (MemberId, UnitId)))))
            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = GoodsId
            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = JuridicalBasisId
            LEFT JOIN Object AS Object_Business ON Object_Business.Id = BusinessId
            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Account_View.PaidKindId
+
+           LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
+                                ON ObjectLink_BankAccount_Bank.ObjectId = BankAccountId
+                               AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
+           LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+
           ;
   
 END;
@@ -263,6 +296,7 @@ ALTER FUNCTION gpReport_Balance (TDateTime, TDateTime, TVarChar) OWNER TO postgr
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.14                                        * add BankAccountId and CashId
  29.03.14                                        * add PaidKindName
  27.01.14                                        * add zc_ContainerLinkObject_JuridicalBasis and zc_ContainerLinkObject_Business
  21.01.14                                        * add CarId

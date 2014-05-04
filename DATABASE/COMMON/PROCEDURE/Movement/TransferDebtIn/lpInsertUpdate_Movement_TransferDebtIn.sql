@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer,Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtIn (Integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (приход)>
@@ -15,17 +15,32 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtIn(
     IN inPaidKindToId        Integer   , -- Виды форм оплаты
     IN inContractFromId      Integer   , -- Договора
     IN inContractToId        Integer   , -- Договора
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inUserId              Integer     -- пользователь
 )
-RETURNS RECORD
+RETURNS Integer
 AS
 $BODY$
    DECLARE vbAccessKeyId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-     
+     -- проверка
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate)
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inContractFromId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор (от кого)>.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inContractToId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор (кому)>.';
+     END IF;
+
      -- определяем ключ доступа
      --vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn());
 
@@ -56,26 +71,11 @@ BEGIN
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), ioId, inContractToId);
      
-     -- определяем инфу для Прайса
-     IF COALESCE (ioPriceListId, 0) = 0
-     THEN
-         SELECT Object.valuedata INTO outPriceListName FROM Object WHERE Object.Id = zc_PriceList_Basis();
-     ELSE
-         -- иначе прайс из документа, надо вернуть только его название
-         SELECT Object.valuedata INTO outPriceListName FROM Object WHERE Object.Id = ioPriceListId;
-     END IF;
-
-     -- сохранили связь с <Прайс лист>
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PriceList(), ioId, ioPriceListId);
-
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
-     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
-     THEN
-         -- сохранили протокол
-         PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
-     END IF;
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -84,8 +84,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.14                                        * del ioPriceListId, outPriceListName
  25.04.14         *
-
 */
 
 -- тест

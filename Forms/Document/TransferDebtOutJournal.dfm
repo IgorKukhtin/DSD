@@ -778,6 +778,14 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbShowErased'
         end
         item
@@ -881,43 +889,16 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_TransferDebtOut'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inislastcomplete'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
     Left = 80
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
     StoredProcName = 'gpUnComplete_Movement_TransferDebtOut'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 80
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_TransferDebtOut'
-    Params = <
-      item
-        Name = 'inmovementid'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
     Left = 208
     Top = 376
   end

@@ -1,6 +1,5 @@
 -- Function: gpComplete_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpComplete_Movement_ReturnIn (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ReturnIn(
@@ -733,7 +732,8 @@ BEGIN
                                                                     , zc_Enum_InfoMoneyDestination_30100()  -- Продукция    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                                                     , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
                                   THEN zc_Enum_AccountDirection_30100() -- покупатели -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30100())
-                            ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30400())
+                         -- ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30400())
+                            ELSE zc_Enum_AccountDirection_30100() -- покупатели -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30100())
                         END AS AccountDirectionId
 
                      , CASE WHEN vbInfoMoneyDestinationId_From <> 0
@@ -1142,6 +1142,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.05.14                                        * rem zc_Enum_AccountDirection_30400
  16.04.14                                        * err vbInfoMoneyDestinationId_To on 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица (недостачи, порча)
  08.04.14                                        * add Constant_InfoMoney_isCorporate_View
  08.04.14                                        * изменился алгоритм для vbIsCorporate_From

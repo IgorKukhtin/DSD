@@ -1,27 +1,27 @@
 inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
-  ClientWidth = 1127
-  ExplicitWidth = 1143
+  ClientWidth = 1084
+  ExplicitWidth = 1100
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
-    Width = 1127
+    Width = 1084
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 1127
+    ExplicitWidth = 1084
     ExplicitHeight = 537
     ClientRectBottom = 537
-    ClientRectRight = 1127
+    ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1127
+      ExplicitWidth = 1084
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 1127
+        Width = 1084
         Height = 513
-        ExplicitWidth = 1127
+        ExplicitWidth = 1084
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -153,6 +153,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           object colCountForPrice: TcxGridDBColumn
             Caption = #1050#1086#1083'. '#1074' '#1094#1077#1085#1077
             DataBinding.FieldName = 'CountForPrice'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -171,10 +172,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1127
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 1127
+        Width = 1084
         Height = 513
         ExplicitWidth = 1127
         ExplicitHeight = 513
@@ -199,10 +201,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1127
+    Width = 1084
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1127
+    ExplicitWidth = 1084
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -248,10 +250,10 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 211
+      Width = 200
     end
     object edTo: TcxButtonEdit
-      Left = 426
+      Left = 409
       Top = 23
       Properties.Buttons = <
         item
@@ -259,15 +261,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 224
+      Width = 200
     end
     object cxLabel4: TcxLabel
-      Left = 427
+      Left = 410
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edContractFrom: TcxButtonEdit
-      Left = 297
+      Left = 286
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -279,7 +281,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Width = 114
     end
     object cxLabel9: TcxLabel
-      Left = 297
+      Left = 286
       Top = 47
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
@@ -297,17 +299,17 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 89
+      Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 662
+      Left = 618
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 796
+      Left = 752
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -315,12 +317,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 796
+      Left = 752
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 851
+      Left = 807
       Top = 63
       Enabled = False
       Properties.DecimalPlaces = 3
@@ -329,12 +331,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Width = 144
     end
     object cxLabel8: TcxLabel
-      Left = 851
+      Left = 807
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 1007
+      Left = 962
       Top = 63
       Properties.Buttons = <
         item
@@ -345,29 +347,29 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Width = 114
     end
     object cxLabel14: TcxLabel
-      Left = 1007
+      Left = 962
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object cxLabel16: TcxLabel
-      Left = 1007
+      Left = 962
       Top = 5
       Caption = #8470' '#1085#1072#1083#1086#1075#1086#1074#1086#1081
     end
     object edTax: TcxTextEdit
-      Left = 1007
+      Left = 962
       Top = 23
       Enabled = False
       TabOrder = 22
       Width = 114
     end
     object cxLabel10: TcxLabel
-      Left = 427
+      Left = 410
       Top = 47
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKindTo: TcxButtonEdit
-      Left = 427
+      Left = 410
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -376,15 +378,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 24
-      Width = 88
+      Width = 77
     end
     object cxLabel11: TcxLabel
-      Left = 522
+      Left = 495
       Top = 47
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContractTo: TcxButtonEdit
-      Left = 522
+      Left = 495
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -393,16 +395,16 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
           Kind = bkEllipsis
         end>
       TabOrder = 26
-      Width = 128
+      Width = 114
     end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 662
+    Left = 618
     Top = 5
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object edPriceList: TcxButtonEdit [3]
-    Left = 662
+    Left = 618
     Top = 23
     Properties.Buttons = <
       item
@@ -1400,6 +1402,60 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Left = 912
     Top = 262
   end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_TransferDebtOut'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end>
+  end
   inherited spGetTotalSumm: TdsdStoredProc
     Params = <
       item
@@ -1650,7 +1706,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 256
+    Left = 232
     Top = 48
   end
   object ContractFromGuides: TdsdGuides
@@ -1853,8 +1909,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 464
-    Top = 56
+    Left = 440
+    Top = 64
   end
   object ContractToGuides: TdsdGuides
     KeyField = 'Id'

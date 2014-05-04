@@ -11,12 +11,14 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransferDebtIn(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
-             , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
-             , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
-             , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
-             
+             , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , FromId Integer, FromName TVarChar, OKPO_From TVarChar
+             , ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , ContractFromId Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
+             , ContractToId Integer, ContractToName TVarChar, ContractTagToName TVarChar
+             , PaidKindFromName TVarChar, PaidKindToName TVarChar
+             , InfoMoneyGroupName_from TVarChar, InfoMoneyDestinationName_from TVarChar, InfoMoneyCode_from Integer, InfoMoneyName_from TVarChar
+             , InfoMoneyGroupName_to TVarChar, InfoMoneyDestinationName_to TVarChar, InfoMoneyCode_to Integer, InfoMoneyName_to TVarChar
              )
 AS
 $BODY$
@@ -35,9 +37,9 @@ BEGIN
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
      SELECT
-             Movement.Id			    	    AS Id
-           , Movement.InvNumber				    AS InvNumber
-           , Movement.OperDate				    AS OperDate
+             Movement.Id	                        AS Id
+           , Movement.InvNumber		                AS InvNumber
+           , Movement.OperDate		                AS OperDate
            , Object_Status.ObjectCode    		AS StatusCode
            , Object_Status.ValueData     		AS StatusName
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
@@ -46,25 +48,37 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           --, CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
+           , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
            , Object_From.Id                    		AS FromId
            , Object_From.ValueData             		AS FromName
+           , View_JuridicalDetails_From.OKPO            AS OKPO_From
            , Object_To.Id                      		AS ToId
            , Object_To.ValueData               		AS ToName
+           , View_JuridicalDetails_To.OKPO              AS OKPO_To
 
-           , View_ContractFrom.ContractId     	  AS ContractFromId
-           , View_ContractFrom.InvNumber          AS ContractFromName
-           , View_ContractTo.ContractId           AS ContractToId
-           , View_ContractTo.InvNumber            AS ContractToName
+           , View_Contract_InvNumberFrom.ContractId      AS ContractFromId
+           , View_Contract_InvNumberFrom.InvNumber       AS ContractFromName
+           , View_Contract_InvNumberFrom.ContractTagName AS ContractTagFromName
+           , View_Contract_InvNumberTo.ContractId        AS ContractToId
+           , View_Contract_InvNumberTo.InvNumber         AS ContractToName
+           , View_Contract_InvNumberTo.ContractTagName   AS ContractTagToName
 
-           , Object_PaidKindFrom.Id           	  AS PaidKindFromId
            , Object_PaidKindFrom.ValueData        AS PaidKindFromName
-           , Object_PaidKindTo.Id                 AS PaidKindToId
            , Object_PaidKindTo.ValueData          AS PaidKindToName
+      
+           , View_InfoMoneyFrom.InfoMoneyGroupName            AS InfoMoneyGroupName_from
+           , View_InfoMoneyFrom.InfoMoneyDestinationName      AS InfoMoneyDestinationName_from
+           , View_InfoMoneyFrom.InfoMoneyCode                 AS InfoMoneyCode_from
+           , View_InfoMoneyFrom.InfoMoneyName                 AS InfoMoneyName_from
+
+           , View_InfoMoneyTo.InfoMoneyGroupName              AS InfoMoneyGroupName_to
+           , View_InfoMoneyTo.InfoMoneyDestinationName        AS InfoMoneyDestinationName_to
+           , View_InfoMoneyTo.InfoMoneyCode                   AS InfoMoneyCode_to
+           , View_InfoMoneyTo.InfoMoneyName                   AS InfoMoneyName_to
 
        FROM Movement 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -105,23 +119,25 @@ BEGIN
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_From ON View_JuridicalDetails_From.JuridicalId = Object_From.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-           -- LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_To.Id
+            LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_To ON View_JuridicalDetails_To.JuridicalId = Object_To.Id
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                          ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
                                         AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractFrom()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractFrom ON View_ContractFrom.ContractId = MovementLinkObject_ContractFrom.ObjectId
-            --LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumberFrom ON View_Contract_InvNumberFrom.ContractId = MovementLinkObject_ContractFrom.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyFrom ON View_InfoMoneyFrom.InfoMoneyId = View_Contract_InvNumberFrom.InfoMoneyId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractTo
                                          ON MovementLinkObject_ContractTo.MovementId = Movement.Id
                                         AND MovementLinkObject_ContractTo.DescId = zc_MovementLinkObject_ContractTo()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_ContractTo ON View_ContractTo.ContractId = MovementLinkObject_ContractTo.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumberTo ON View_Contract_InvNumberTo.ContractId = MovementLinkObject_ContractTo.ObjectId
+            LEFT JOIN Object_InfoMoney_View AS View_InfoMoneyTo ON View_InfoMoneyTo.InfoMoneyId = View_Contract_InvNumberTo.InfoMoneyId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKindFrom
                                          ON MovementLinkObject_PaidKindFrom.MovementId = Movement.Id
@@ -135,7 +151,7 @@ BEGIN
      
        WHERE Movement.DescId = zc_Movement_TransferDebtIn()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-           ;
+     ;
 
 END;
 $BODY$
@@ -145,9 +161,9 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 03.05.14                                        * all
  25.04.14  		  *
- 
  */
 
 -- ÚÂÒÚ
---SELECT * FROM gpSelect_Movement_TransferDebtIn (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Movement_TransferDebtIn (inStartDate:= '01.02.2014', inEndDate:= '01.02.2014', inIsErased:= TRUE, inSession:= zfCalc_UserAdmin())

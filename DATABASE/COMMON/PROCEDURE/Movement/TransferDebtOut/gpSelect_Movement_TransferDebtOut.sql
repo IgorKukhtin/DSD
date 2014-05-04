@@ -199,7 +199,7 @@ BEGIN
 
        WHERE Movement.DescId = zc_Movement_TransferDebtOut()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-           ;
+      ;
 
 END;
 $BODY$

@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtIn()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -15,11 +15,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
- INOUT ioPriceListId         Integer   , -- Прайс лист
-   OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS RECORD AS
+RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
@@ -27,23 +25,20 @@ BEGIN
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn());
 
      -- сохранили <Документ>
-     SELECT tmp.ioId, tmp.ioPriceListId, tmp.outPriceListName
-            INTO ioId, ioPriceListId, outPriceListName
-     FROM lpInsertUpdate_Movement_TransferDebtIn (ioId    := ioId
-                                      , inInvNumber        := inInvNumber
-                                      , inOperDate         := inOperDate
-                                      , inPriceWithVAT     := inPriceWithVAT
-                                      , inVATPercent       := inVATPercent
-                                      , inChangePercent    := inChangePercent
-                                      , inFromId           := inFromId
-                                      , inToId             := inToId
-                                      , inPaidKindFromId   := inPaidKindFromId
-                                      , inPaidKindToId     := inPaidKindToId
-                                      , inContractFromId   := inContractFromId
-                                      , inContractToId     := inContractToId
-                                      , ioPriceListId      := ioPriceListId
-                                      , inUserId           := vbUserId
-                                       ) AS tmp;
+     ioId:= lpInsertUpdate_Movement_TransferDebtIn (ioId    := ioId
+                                                  , inInvNumber        := inInvNumber
+                                                  , inOperDate         := inOperDate
+                                                  , inPriceWithVAT     := inPriceWithVAT
+                                                  , inVATPercent       := inVATPercent
+                                                  , inChangePercent    := inChangePercent
+                                                  , inFromId           := inFromId
+                                                  , inToId             := inToId
+                                                  , inPaidKindFromId   := inPaidKindFromId
+                                                  , inPaidKindToId     := inPaidKindToId
+                                                  , inContractFromId   := inContractFromId
+                                                  , inContractToId     := inContractToId
+                                                  , inUserId           := vbUserId
+                                                   ) AS tmp;
 
 END;
 $BODY$
@@ -52,8 +47,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.14                                        * del ioPriceListId, outPriceListName
  25.04.14         *
-
 */
 
 -- тест

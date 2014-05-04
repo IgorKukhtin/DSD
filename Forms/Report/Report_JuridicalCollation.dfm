@@ -1,26 +1,26 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 935
-  ExplicitWidth = 951
+  ClientWidth = 973
+  ExplicitWidth = 989
   ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 935
+    Width = 973
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 935
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 935
+    ClientRectRight = 973
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 935
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 935
+        Width = 973
         Height = 309
         ExplicitWidth = 935
         ExplicitHeight = 309
@@ -114,7 +114,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 93
+            Width = 70
+          end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colStartRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -123,7 +130,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 80
           end
           object colDebet: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
@@ -133,7 +140,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 107
+            Width = 80
           end
           object colKredit: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
@@ -143,7 +150,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 99
+            Width = 80
           end
           object colEndRemains: TcxGridDBColumn
             Caption = #1050#1086#1085'. '#1076#1086#1083#1075' ('#1040#1082#1090#1080#1074')'
@@ -152,20 +159,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             Properties.DisplayFormat = ',0.00;-,0.00; '
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
+            Width = 80
           end
-          object colFrom: TcxGridDBColumn
-            Caption = #1054#1090' '#1082#1086#1075#1086
-            DataBinding.FieldName = 'FromName'
+          object colByObjectName: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+            DataBinding.FieldName = 'ByObjectName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 65
-          end
-          object colTo: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 65
+            Width = 100
           end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
@@ -285,7 +286,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 935
+    Width = 973
     Height = 54
     ExplicitWidth = 935
     ExplicitHeight = 54

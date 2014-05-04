@@ -222,6 +222,7 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1115
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -490,65 +491,6 @@ inherited SaleForm: TSaleForm
       TabOrder = 33
       Width = 114
     end
-  end
-  object spSelectTax_Us: TdsdStoredProc [2]
-    StoredProcName = 'gpSelect_Movement_Tax_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsSverkaCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisClientCopy'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    Left = 319
-    Top = 360
-  end
-  object spGetReporNameBill: TdsdStoredProc [3]
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameBill'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleBill'
-        DataType = ftString
-      end>
-    Left = 536
-    Top = 448
-  end
-  object PrintItemsSverkaCDS: TClientDataSet [4]
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1634,6 +1576,98 @@ inherited SaleForm: TSaleForm
     Left = 912
     Top = 262
   end
+  inherited spInsertMaskMIMaster: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MovementItem_Sale'
+    Params = <
+      item
+        Name = 'ioId'
+        Value = 0
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountChangePercent'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChangePercentAmount'
+        Value = 0.000000000000000000
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPrice'
+        Component = MasterCDS
+        ComponentItem = 'Price'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'ioCountForPrice'
+        Component = MasterCDS
+        ComponentItem = 'CountForPrice'
+        DataType = ftFloat
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'outAmountSumm'
+        Component = MasterCDS
+        ComponentItem = 'AmountSumm'
+        DataType = ftFloat
+      end
+      item
+        Name = 'inHeadCount'
+        Component = MasterCDS
+        ComponentItem = 'HeadCount'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPartionGoods'
+        Component = MasterCDS
+        ComponentItem = 'PartionGoods'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsKindId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end>
+  end
   inherited spGetTotalSumm: TdsdStoredProc
     Params = <
       item
@@ -1649,6 +1683,65 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+  end
+  object spSelectTax_Us: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintItemsSverkaCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 319
+    Top = 360
+  end
+  object spGetReporNameBill: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'gpGet_Movement_Sale_ReportNameBill'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'ReportNameSaleBill'
+        DataType = ftString
+      end>
+    Left = 536
+    Top = 448
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 644
+    Top = 334
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>

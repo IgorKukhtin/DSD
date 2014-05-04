@@ -38,7 +38,7 @@ BEGIN
      -- проверка
      IF COALESCE (inContractToId, 0) = 0
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор (ком)>.';
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор (кому)>.';
      END IF;
 
      -- определяем ключ доступа

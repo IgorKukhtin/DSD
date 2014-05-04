@@ -2,7 +2,6 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitLeft = -102
   ExplicitWidth = 1083
   ExplicitHeight = 703
   PixelsPerInch = 96
@@ -218,7 +217,6 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -1523,8 +1521,8 @@ inherited TaxForm: TTaxForm
         Control = edIsRegistered
       end>
     GetStoredProc = spGet
-    Left = 552
-    Top = 553
+    Left = 280
+    Top = 177
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_Params'
