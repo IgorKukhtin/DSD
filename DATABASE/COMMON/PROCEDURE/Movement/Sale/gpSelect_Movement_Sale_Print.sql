@@ -263,28 +263,6 @@ BEGIN
 
 
         WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
-      ),
-      tmpAmount AS
-      (
-       SELECT
-             MovementItem.Id                        AS Id
-           , CASE WHEN Movement.DescId = zc_Movement_Sale()
-                  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                  ELSE MovementItem.Amount END      AS AmountPartner
-       FROM MovementItem
-            JOIN MovementItemFloat AS MIFloat_Price
-                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  AND MIFloat_Price.ValueData <> 0
-            JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                  AND MIFloat_AmountPartner.ValueData <> 0
-            LEFT JOIN Movement ON Movement.Id =  MovementItem.MovementId
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = FALSE
-
       )
 
        SELECT
@@ -295,9 +273,9 @@ BEGIN
            , MovementItem.Amount                    AS Amount
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
 --           , MIFloat_AmountPartner.ValueData        AS AmountPartner
-           , tmpAmount.AmountPartner                AS AmountPartner
+           , MovementItem.AmountPartner                AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData  AS ChangePercentAmount
-           , MIFloat_Price.ValueData                AS Price
+           , MovementItem.Price                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
            , MIFloat_HeadCount.ValueData            AS HeadCount
            , MIString_PartionGoods.ValueData        AS PartionGoods
@@ -328,64 +306,76 @@ BEGIN
                                                    AS BarCodeGLN_Juridical
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                           THEN CAST ( tmpAmount.AmountPartner * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
-                        ELSE CAST ( tmpAmount.AmountPartner  * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                           THEN CAST ( MovementItem.AmountPartner * MovementItem.Price / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
+                        ELSE CAST ( MovementItem.AmountPartner  * MovementItem.Price AS NUMERIC (16, 2))
                    END AS TFloat) AS AmountSumm
 
            , CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
-                  THEN CAST (MIFloat_Price.ValueData +
-                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)AS NUMERIC (16, 2))
-                  ELSE MIFloat_Price.ValueData  END
+                  THEN CAST (MovementItem.Price +
+                        (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)AS NUMERIC (16, 2))
+                  ELSE MovementItem.Price  END
                                                     AS PriceWVAT
 
            , CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
-                  THEN CAST (MIFloat_Price.ValueData -
-                        (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 2))
-                   ELSE MIFloat_Price.ValueData  END
+                  THEN CAST (MovementItem.Price -
+                        (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 2))
+                   ELSE MovementItem.Price  END
                                                     AS PriceNoVAT
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                        THEN  tmpAmount.AmountPartner  *
+                        THEN  MovementItem.AmountPartner  *
                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
-                             THEN CAST ( MIFloat_Price.ValueData -
-                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 3))
-                        ELSE MIFloat_Price.ValueData  END
+                             THEN CAST ( MovementItem.Price -
+                             (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 3))
+                        ELSE MovementItem.Price  END
                         / MIFloat_CountForPrice.ValueData
 
-                        ELSE  tmpAmount.AmountPartner *
+                        ELSE  MovementItem.AmountPartner *
                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData = TRUE
-                             THEN CAST (MIFloat_Price.ValueData -
-                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 3))
-                        ELSE MIFloat_Price.ValueData  END
+                             THEN CAST (MovementItem.Price -
+                             (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0) AS NUMERIC (16, 3))
+                        ELSE MovementItem.Price  END
 
                    END AS NUMERIC (16, 3))                   AS AmountSummNoVAT
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
-                        THEN CAST ( tmpAmount.AmountPartner  *
+                        THEN CAST ( MovementItem.AmountPartner  *
                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
-                             THEN MIFloat_Price.ValueData +
-                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
-                        ELSE MIFloat_Price.ValueData  END
+                             THEN MovementItem.Price +
+                             (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MovementItem.Price  END
                         / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 3))
 
-                        ELSE CAST ( tmpAmount.AmountPartner  *
+                        ELSE CAST ( MovementItem.AmountPartner  *
                         CASE WHEN MovementBoolean_PriceWithVAT.ValueData <> TRUE
-                             THEN MIFloat_Price.ValueData +
-                             (MIFloat_Price.ValueData / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
-                        ELSE MIFloat_Price.ValueData  END
+                             THEN MovementItem.Price +
+                             (MovementItem.Price / 100) * COALESCE (MovementFloat_VATPercent.ValueData,0)
+                        ELSE MovementItem.Price  END
                         AS NUMERIC (16, 3))
                    END AS NUMERIC (16, 3))                   AS AmountSummWVAT
 
-       FROM MovementItem
-            JOIN MovementItemFloat AS MIFloat_Price
-                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  AND MIFloat_Price.ValueData <> 0
-            JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                  AND MIFloat_AmountPartner.ValueData <> 0
-            LEFT JOIN tmpAmount ON tmpAmount.Id = MovementItem.Id
+       FROM (SELECT MovementItem.Id
+                  , MovementItem.MovementId
+                  , MovementItem.ObjectId
+                  , MovementItem.Amount
+                  , CASE WHEN Movement.DescId = zc_Movement_Sale()
+                         THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                         ELSE MovementItem.Amount
+                    END AS AmountPartner
+                  , MIFloat_Price.ValueData AS Price
+             FROM MovementItem
+                  INNER JOIN MovementItemFloat AS MIFloat_Price
+                                               ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                              AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                              AND MIFloat_Price.ValueData <> 0
+                  LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                              ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                  LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
+             WHERE MovementItem.MovementId = inMovementId
+               AND MovementItem.DescId     = zc_MI_Master()
+               AND MovementItem.isErased   = FALSE
+            ) AS MovementItem
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  MovementItem.MovementId
@@ -451,9 +441,7 @@ BEGIN
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = MILinkObject_GoodsKind.ObjectId
 
 
-       WHERE MovementItem.MovementId = inMovementId
-         AND MovementItem.DescId     = zc_MI_Master()
-         AND MovementItem.isErased   = FALSE
+       WHERE MovementItem.AmountPartner <> 0
        ORDER BY MovementItem.Id
        ;
 
@@ -475,7 +463,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
  28.04.14                                                       *
  09.04.14                                        * add JOIN MIFloat_AmountPartner
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
- 01.04.14                                                       *  MIFloat_Price.ValueData <> 0
+ 01.04.14                                                       *  MovementItem.Price <> 0
  27.03.14                                                       *
  24.02.14                                                       *  add PriceNoVAT, PriceWVAT, AmountSummNoVAT, AmountSummWVAT
  19.02.14                                                       *  add by juridical
