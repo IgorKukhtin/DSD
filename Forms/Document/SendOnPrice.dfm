@@ -446,9 +446,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale1'
+      ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale1'
+      ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus

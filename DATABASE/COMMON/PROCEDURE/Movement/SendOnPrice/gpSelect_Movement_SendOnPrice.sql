@@ -71,7 +71,7 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = tmpStatus.StatusId
---                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId // закоментил для отладки!!!
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId // закоментил для отладки!!!
              WHERE inIsPartnerDate = FALSE
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId  AS Id

@@ -25,7 +25,7 @@ $BODY$
    DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
---     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice());
+     vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_SendOnPrice());
 
      -- сохранили
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
