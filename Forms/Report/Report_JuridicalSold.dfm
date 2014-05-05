@@ -654,7 +654,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel3: TcxLabel
       Left = 365
       Top = 7
-      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoneyGroup: TcxButtonEdit
       Left = 365
@@ -681,7 +681,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel4: TcxLabel
       Left = 531
       Top = 7
-      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+      Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
       Left = 697
@@ -697,7 +697,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     object cxLabel5: TcxLabel
       Left = 697
       Top = 7
-      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
       Left = 209
@@ -715,11 +715,33 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       TabOrder = 11
       Width = 150
     end
+    object cxLabel7: TcxLabel
+      Left = 869
+      Top = 6
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 869
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 13
+      Width = 81
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -1153,6 +1175,13 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = InfoMoneyDestinationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Top = 184
   end
@@ -1270,6 +1299,9 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Component = InfoMoneyGuides
+      end
+      item
+        Component = PaidKindGuides
       end>
     Top = 228
   end
@@ -1493,5 +1525,32 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end>
     Left = 240
     Top = 232
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 896
+    Top = 56
   end
 end

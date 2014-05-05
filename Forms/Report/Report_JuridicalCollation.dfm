@@ -1,28 +1,28 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 973
-  ExplicitWidth = 989
+  ClientWidth = 1042
+  ExplicitWidth = 1058
   ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 973
+    Width = 1042
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 973
+    ExplicitWidth = 1042
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 973
+    ClientRectRight = 1042
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
+      ExplicitWidth = 1042
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 973
+        Width = 1042
         Height = 309
-        ExplicitWidth = 973
+        ExplicitWidth = 1042
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -293,9 +293,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 973
+    Width = 1042
     Height = 54
-    ExplicitWidth = 973
+    ExplicitWidth = 1042
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -371,7 +371,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 240
+      Width = 314
     end
     object cxLabel8: TcxLabel
       Left = 631
@@ -387,8 +387,69 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 240
+      Width = 132
     end
+    object cxLabel5: TcxLabel
+      Left = 825
+      Top = 30
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 908
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 13
+      Width = 89
+    end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ContractGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = MainJuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+    Left = 208
+    Top = 272
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -470,6 +531,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Name = 'AccountName'
           Value = ''
           Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end
@@ -605,6 +673,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Component = AccountGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
@@ -653,6 +728,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -738,6 +820,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Component = AccountGuides
+      end
+      item
+        Component = PaidKindGuides
       end>
     Left = 408
     Top = 72
@@ -829,6 +914,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -952,8 +1044,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 768
-    Top = 48
+    Left = 736
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1006,7 +1097,34 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = FormParams
         ComponentItem = 'inPaidKindId'
       end>
-    Left = 728
-    Top = 65534
+    Left = 680
+    Top = 110
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 928
+    Top = 40
   end
 end

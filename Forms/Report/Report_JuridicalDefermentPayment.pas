@@ -60,6 +60,9 @@ type
     actPrintSale: TdsdPrintAction;
     spReport_JuridicalSaleDocument: TdsdStoredProc;
     bbSale: TdxBarButton;
+    cxLabel6: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

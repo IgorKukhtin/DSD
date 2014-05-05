@@ -1,14 +1,15 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inOperDate         TDateTime , -- 
     IN inEmptyParam       TDateTime , -- 
     IN inAccountId        Integer   , --
+    IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindName TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
@@ -35,7 +36,7 @@ BEGIN
 
   RETURN QUERY  
 
- select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindName
+ select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagName TVarChar, a.ContractStateKindCode
              , a.PersonalName
@@ -53,6 +54,7 @@ from (
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
    , ObjectHistory_JuridicalDetails_View.OKPO
+   , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
    , View_Contract_InvNumber.ContractId
    , View_Contract_InvNumber.ContractCode
@@ -82,12 +84,12 @@ from (
    , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat AS SaleSumm5
    , (RESULT.DayCount||' '|| CASE WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
                                        THEN 'К.дн.'
-                                  WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendarSale()
-                                       THEN 'К.Р.дн.'
+                                  -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendarSale()
+                                  --      THEN 'К.Р.дн.'
                                   WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBank()
                                        THEN 'Б.дн.'
-                                  WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBankSale()
-                                       THEN 'Б.Р.дн.'
+                                  -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBankSale()
+                                  --     THEN 'Б.Р.дн.'
                                   WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
                                        THEN 'грн.'
                                   ELSE '???'
@@ -175,13 +177,13 @@ from (
                 , ContractDate
        ) AS RESULT_all
 
+           INNER JOIN ContainerLinkObject AS CLO_PaidKind
+                                          ON CLO_PaidKind.ContainerId = RESULT_all.Id
+                                         AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
            LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                          ON CLO_InfoMoney.ContainerId = RESULT_all.Id
                                         AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
-           LEFT JOIN ContainerLinkObject AS CLO_PaidKind
-                                         ON CLO_PaidKind.ContainerId = RESULT_all.Id
-                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
-
+         WHERE (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
          GROUP BY RESULT_all.AccountId
                 , RESULT_all.ContractId
                 , RESULT_all.JuridicalId 
@@ -237,11 +239,12 @@ where a.DebetRemains <> 0 or a.KreditRemains <> 0
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
  15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
@@ -252,4 +255,4 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalDefermentPayment ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, inSession:= '2'::TVarChar); 
+-- SELECT * FROM gpReport_JuridicalDefermentPayment ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, inAccountId:= 0, inPaidKindId:= 0, inSession:= '2'::TVarChar); 

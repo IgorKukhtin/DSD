@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalSold()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inStartDate        TDateTime , -- 
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalSold(
     IN inInfoMoneyId      Integer,    -- Управленческая статья  
     IN inInfoMoneyGroupId Integer,    -- Группа управленческих статей
     IN inInfoMoneyDestinationId   Integer,    --
+    IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar, OKPO TVarChar
@@ -17,7 +19,7 @@ RETURNS TABLE (JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarCha
              , PersonalName TVarChar
              , PersonalCollationName TVarChar
              , StartDate TDateTime, EndDate TDateTime
-             , PaidKindName TVarChar, AccountName TVarChar
+             , PaidKindId Integer, PaidKindName TVarChar, AccountName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , AreaName TVarChar
              , StartAmount_A TFloat, StartAmount_P TFloat, StartAmountD TFloat, StartAmountK TFloat
@@ -48,6 +50,7 @@ BEGIN
         Object_PersonalCollation.PersonalName  AS PersonalCollationName,
         ObjectDate_Start.ValueData        AS StartDate,
         ObjectDate_End.ValueData          AS EndDate,
+        Object_PaidKind.Id AS PaidKindId,
         Object_PaidKind.ValueData AS PaidKindName,
         Object_Account_View.AccountName_all AS AccountName,
         Object_InfoMoney_View.InfoMoneyGroupName,
@@ -80,7 +83,7 @@ BEGIN
 
      FROM
          (SELECT Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId
-                , CLO_PaidKind.ObjectId AS PaidKindId
+                , Operation_all.PaidKindId
                 , View_Contract_ContractKey.ContractId_Key AS ContractId,
                      SUM (Operation_all.StartAmount) AS StartAmount,
                      SUM (Operation_all.DebetSumm)   AS DebetSumm,
@@ -96,7 +99,7 @@ BEGIN
                      SUM (Operation_all.OtherSumm)     AS OtherSumm,
                      SUM (Operation_all.EndAmount)     AS EndAmount
           FROM
-          (SELECT Container.Id AS ContainerId, Container.ObjectId, CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId,
+          (SELECT Container.Id AS ContainerId, Container.ObjectId, CLO_Juridical.ObjectId AS JuridicalId, CLO_InfoMoney.ObjectId AS InfoMoneyId, CLO_PaidKind.ObjectId AS PaidKindId,
                      Container.Amount - COALESCE(SUM (MIContainer.Amount), 0) AS StartAmount,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount > 0 THEN MIContainer.Amount ELSE 0 END ELSE 0 END) AS DebetSumm,
                      SUM (CASE WHEN MIContainer.OperDate <= inEndDate THEN CASE WHEN MIContainer.Amount < 0 THEN -1 * MIContainer.Amount ELSE 0 END ELSE 0 END) AS KreditSumm,
@@ -121,28 +124,28 @@ BEGIN
                      LEFT JOIN ContainerLinkObject AS CLO_InfoMoney 
                                                    ON CLO_InfoMoney.ContainerId = Container.Id AND CLO_InfoMoney.DescId = zc_ContainerLinkObject_InfoMoney()
                      LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = CLO_InfoMoney.ObjectId
-                                  
+                     LEFT JOIN ContainerLinkObject AS CLO_PaidKind 
+                                                   ON CLO_PaidKind.ContainerId = Container.Id
+                                                  AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                      LEFT JOIN MovementItemContainer AS MIContainer 
                                                      ON MIContainer.Containerid = Container.Id
                                                     AND MIContainer.OperDate >= inStartDate
                      LEFT JOIN Movement ON Movement.Id = MIContainer.MovementId
                WHERE CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
+                 AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
                  AND (Object_InfoMoney_View.InfoMoneyDestinationId = inInfoMoneyDestinationId OR inInfoMoneyDestinationId = 0)
                  AND (Object_InfoMoney_View.InfoMoneyId = inInfoMoneyId OR inInfoMoneyId = 0)
                  AND (Object_InfoMoney_View.InfoMoneyGroupId = inInfoMoneyGroupId OR inInfoMoneyGroupId = 0)
                  AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId
+            GROUP BY Container.Id, MIContainer.Containerid, Container.ObjectId, JuridicalId, CLO_InfoMoney.ObjectId, CLO_PaidKind.ObjectId
            ) AS Operation_all
 
-           LEFT JOIN ContainerLinkObject AS CLO_PaidKind 
-                                         ON CLO_PaidKind.ContainerId = Operation_all.ContainerId
-                                        AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
            LEFT JOIN ContainerLinkObject AS CLO_Contract
                                          ON CLO_Contract.ContainerId = Operation_all.ContainerId
                                         AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
            LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
 
-          GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, CLO_PaidKind.ObjectId
+          GROUP BY Operation_all.ObjectId, Operation_all.JuridicalId, Operation_all.InfoMoneyId, Operation_all.PaidKindId
                  , View_Contract_ContractKey.ContractId_Key
 
            ) AS Operation
@@ -184,11 +187,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
  15.04.14                                        * add StartDate and EndDate
  10.04.14                                        * add AreaName
@@ -199,4 +203,4 @@ ALTER FUNCTION gpReport_JuridicalSold (TDateTime, TDateTime, Integer, Integer, I
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inSession:= '2'); 
+-- SELECT * FROM gpReport_JuridicalSold (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inAccountId:= null, inInfoMoneyId:= null, inInfoMoneyGroupId:= null, inInfoMoneyDestinationId:= null, inPaidKindId:= null, inSession:= '2'); 

@@ -1,16 +1,17 @@
 -- Function: gpReport_JuridicalSold()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalSaleDocument(
     IN inStartDate        TDateTime , -- 
     IN inEndDate          TDateTime , -- 
-    IN inJuridicalId      INTEGER   ,
+    IN inJuridicalId      Integer   ,
     IN inAccountId        Integer   , --
     IN inContractId       Integer   , --
+    IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
-RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar)
+RETURNS TABLE (Id Integer, OperDate TDateTime, InvNumber TVarChar, TotalSumm TFloat, FromName TVarChar, ToName TVarChar, ContractNumber TVarChar, ContractTagName TVarChar, PaidKindName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -37,31 +38,43 @@ BEGIN
             , MovementFloat_TotalSumm.ValueData  AS TotalSumm
             , Object_From.ValueData AS FromName
             , Object_To.ValueData   AS ToName
+            , View_Contract_InvNumber.InvNumber AS ContractNumber
+            , View_Contract_InvNumber.ContractTagName
+            , Object_PaidKind.ValueData  AS PaidKindName
          FROM Movement 
               INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              INNER JOIN MovementLinkObject AS MovementLinkObject_From
-                                            ON MovementLinkObject_From.MovementId = Movement.Id
-                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+              LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
               INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                     ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
                                    AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
-                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
-                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+              INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+              LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
+
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
                                           AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
               -- !!!Ãðóïïèðóåì Äîãîâîðà!!!
               LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
+              LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
               LEFT JOIN Object AS Object_From  ON Object_From.Id = MovementLinkObject_From.ObjectId
-              LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+              LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                      ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                     AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
         WHERE Movement.DescId = zc_Movement_Sale()
           AND Movement.StatusId = zc_enum_status_complete()
           AND (_tmpContract.ContractId > 0 OR inContractId = 0)
+          AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
           AND Movement.OperDate >= inStartDate 
           AND Movement.OperDate < inEndDate
           AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId 
@@ -75,14 +88,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalDefermentPaymentByDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
  17.04.14                          * 
 */
 
 -- òåñò
--- SELECT * FROM gpReport_JuridicalDefermentPayment ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, inSession:= '2'::TVarChar); 
+-- SELECT * FROM gpReport_JuridicalSaleDocument ('01.01.2014'::TDateTime, '01.02.2013'::TDateTime, 0, 0, 0, 0, inSession:= '2' :: TVarChar); 

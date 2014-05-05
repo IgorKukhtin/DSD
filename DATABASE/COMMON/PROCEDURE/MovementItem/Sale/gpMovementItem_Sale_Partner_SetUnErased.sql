@@ -1,6 +1,5 @@
 -- Function: gpMovementItem_Sale_Partner_SetUnErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_Sale_Partner_SetUnErased (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpMovementItem_Sale_Partner_SetUnErased (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpMovementItem_Sale_Partner_SetUnErased(

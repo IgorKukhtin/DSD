@@ -73,6 +73,9 @@ type
     spGetDescSets: TdsdStoredProc;
     FormParams: TdsdFormParams;
     colAreaName: TcxGridDBColumn;
+    cxLabel7: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -3,8 +3,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1218
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1226
-  ExplicitHeight = 421
+  ExplicitWidth = 1234
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -154,6 +154,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 55
           end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 50
+          end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractStateKindCode'
@@ -268,14 +275,6 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
-          end
-          object colPaidKindName: TcxGridDBColumn
-            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
-            DataBinding.FieldName = 'PaidKindName'
-            Visible = False
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 50
           end
           object colInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -411,13 +410,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 48
+      ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
       Visible = False
     end
     object edAccount: TcxButtonEdit
-      Left = 178
+      Left = 180
       Top = 5
       Properties.Buttons = <
         item
@@ -432,11 +431,33 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Top = 6
       Caption = #1057#1095#1077#1090':'
     end
+    object cxLabel6: TcxLabel
+      Left = 604
+      Top = 6
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 687
+      Top = 5
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 7
+      Width = 89
+    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
         Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -527,6 +548,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = AccountGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -604,6 +632,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Name = 'AccountName'
           Value = ''
           Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
@@ -685,6 +720,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = AccountGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -762,6 +804,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Name = 'AccountName'
           Value = ''
           Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
           ComponentItem = 'TextValue'
           DataType = ftString
         end>
@@ -843,6 +892,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Component = AccountGuides
           ComponentItem = 'TextValue'
           DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077')'
@@ -860,7 +916,57 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           DataSet = MasterCDS
           UserName = 'frDataSet'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm1'
+          DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081')'
       ReportNameParam.DataType = ftString
@@ -873,8 +979,8 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         item
           StoredProc = spReport_JuridicalSaleDocument
         end>
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
-      Hint = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103
+      Caption = #1055#1088#1086#1076#1072#1078#1072
+      Hint = #1055#1088#1086#1076#1072#1078#1072
       ImageIndex = 3
       DataSets = <
         item
@@ -882,7 +988,57 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           UserName = 'frxDBDataset'
           IndexFieldNames = 'OperDate'
         end>
-      Params = <>
+      Params = <
+        item
+          Name = 'OperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end
+        item
+          Name = 'StartContractDate'
+          Component = MasterCDS
+          ComponentItem = 'StartContractDate'
+          DataType = ftDateTime
+        end
+        item
+          Name = 'PeriodNumber'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'PeriodNumber'
+        end
+        item
+          Name = 'Summ'
+          Component = MasterCDS
+          ComponentItem = 'SaleSumm1'
+          DataType = ftFloat
+        end
+        item
+          Name = 'ContractNumber'
+          Component = MasterCDS
+          ComponentItem = 'ContractNumber'
+          DataType = ftString
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.DataType = ftString
@@ -917,6 +1073,13 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Name = 'inAccountId'
         Value = ''
         Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -1033,8 +1196,10 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       end
       item
         Component = AccountGuides
+      end
+      item
+        Component = PaidKindGuides
       end>
-    Top = 179
   end
   object AccountGuides: TdsdGuides
     KeyField = 'Id'
@@ -1101,6 +1266,12 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Name = 'inContractId'
         Component = MasterCDS
         ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
         ParamType = ptInput
       end
       item
@@ -1181,8 +1352,40 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         Component = MasterCDS
         ComponentItem = 'ContractId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
       end>
     Left = 200
     Top = 248
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 712
   end
 end

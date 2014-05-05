@@ -61,6 +61,9 @@ type
     colFromName: TcxGridDBColumn;
     colPaidKindName: TcxGridDBColumn;
     colToName: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
