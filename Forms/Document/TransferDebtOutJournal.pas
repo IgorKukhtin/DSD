@@ -29,7 +29,7 @@ type
     colTotalSummPVAT: TcxGridDBColumn;
     colPaidKindFromName: TcxGridDBColumn;
     colContractFromName: TcxGridDBColumn;
-    colInvNumber_Master: TcxGridDBColumn;
+    colInvNumberPartner_Master: TcxGridDBColumn;
     spTax: TdsdStoredProc;
     actTax: TdsdExecStoredProc;
     bbTax: TdxBarButton;
@@ -61,6 +61,9 @@ type
     PrintItemsSverkaCDS: TClientDataSet;
     colPaidKindToName: TcxGridDBColumn;
     colContractToName: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

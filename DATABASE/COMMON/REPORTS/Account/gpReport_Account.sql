@@ -113,7 +113,7 @@ BEGIN
          , '' :: TVarChar AS CarName -- Object_Car.ValueData
 
          , Object_Direction.ObjectCode     AS ObjectCode_Direction
-         , (Object_Direction.ValueData || COALESCE (' * '|| Object_Bank.ValueData, '')) :: TVarChar AS ObjectName_Direction
+         , (COALESCE (Object_Bank.ValueData || ' * ', '') || Object_Direction.ValueData) :: TVarChar AS ObjectName_Direction
          , Object_Destination.ObjectCode   AS ObjectCode_Destination
          , Object_Destination.ValueData    AS ObjectName_Destination
          , ObjectDesc_Direction.ItemName   AS DescName_Direction
@@ -459,6 +459,7 @@ ALTER FUNCTION gpReport_Account (TDateTime, TDateTime, Integer, Integer, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.14                                        * add BankAccountId and CashId
  25.03.14                                        * !!!ONLY!!! inAccountId OR inAccountGroupId OR inAccountDirectionId
  20.03.14                          * add Params                          
  17.03.14                          * add MovementId                          

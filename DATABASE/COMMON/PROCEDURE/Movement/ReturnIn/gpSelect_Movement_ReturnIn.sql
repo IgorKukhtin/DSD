@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_ReturnIn()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_ReturnIn(
@@ -19,7 +18,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
-             , ContractId Integer, ContractName TVarChar
+             , ContractId Integer, ContractName TVarChar, ContractTagName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -73,6 +72,7 @@ BEGIN
            , Object_PaidKind.ValueData                  AS PaidKindName
            , View_Contract_InvNumber.ContractId         AS ContractId
            , View_Contract_InvNumber.InvNumber          AS ContractName
+           , View_Contract_InvNumber.ContractTagName
            , Object_JuridicalFrom.ValueData             AS JuridicalName_From
            , ObjectHistory_JuridicalDetails_View.OKPO   AS OKPO_From
            , View_InfoMoney.InfoMoneyGroupName          AS InfoMoneyGroupName
@@ -245,6 +245,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn (TDateTime, TDateTime, Boolean, Boolea
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.05.14                                        * add ContractTagName
  23.04.14                                        * add InvNumberMark
  31.03.14                                        * add TotalCount...
  28.03.14                                        * add TotalSummVAT

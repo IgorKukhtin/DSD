@@ -23,7 +23,8 @@ uses
   cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView, cxGridTableView,
-  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit;
+  cxGridDBTableView, cxGridCustomView, cxGrid, cxPC, cxCheckBox, cxCurrencyEdit,
+  dsdGuides, cxButtonEdit;
 
 type
   TTaxJournalForm = class(TAncestorJournalForm)
@@ -63,10 +64,14 @@ type
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colInvNumberPartner_Master: TcxGridDBColumn;
+    colInvNumber_Master: TcxGridDBColumn;
     colIsError: TcxGridDBColumn;
     colRegistered: TcxGridDBColumn;
     colInvNumberBranch: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
+    spTax: TdsdStoredProc;
   private
     { Private declarations }
   public

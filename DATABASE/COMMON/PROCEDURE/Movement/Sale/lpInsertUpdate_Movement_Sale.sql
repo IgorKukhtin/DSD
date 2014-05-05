@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_Sale (Integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
@@ -30,14 +29,14 @@ $BODY$
    DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
-     IF inOperDate <> DATE_TRUNC ('day', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('day', inOperDatePartner) 
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
      THEN
          RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
      END IF;
      -- проверка
      IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
-         RAISE EXCEPTION 'Ошибка.Не установлен договор.';
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
      END IF;
 
      -- определяем ключ доступа

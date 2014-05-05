@@ -217,7 +217,6 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -585,6 +584,20 @@ inherited TaxForm: TTaxForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
+    object actTax: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spTax
+      StoredProcList = <
+        item
+          StoredProc = spTax
+        end>
+      Caption = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Hint = #1055#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      ImageIndex = 41
+      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1089#1095#1080#1090#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
+      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1089#1095#1077#1090' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+    end
     object mactPrint_Tax_Us: TMultiAction
       Category = 'DSDLib'
       MoveParams = <>
@@ -692,6 +705,14 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbTax'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -729,6 +750,10 @@ inherited TaxForm: TTaxForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint_Us: TdxBarButton [4]
@@ -738,6 +763,10 @@ inherited TaxForm: TTaxForm
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Tax_Client
       Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+    end
+    object bbTax: TdxBarButton
+      Action = actTax
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -998,18 +1027,18 @@ inherited TaxForm: TTaxForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inInvNumber'
+        Name = 'ioInvNumber'
         Value = ''
         Component = edInvNumber
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
-        Name = 'inInvNumberPartner'
+        Name = 'ioInvNumberPartner'
         Value = ''
         Component = edInvNumberPartner
         DataType = ftString
-        ParamType = ptInput
+        ParamType = ptInputOutput
       end
       item
         Name = 'inInvNumberBranch'
@@ -1094,7 +1123,7 @@ inherited TaxForm: TTaxForm
   inherited GuidesFiller: TGuidesFiller
     GuidesList = <
       item
-        Guides = GuidesPartner
+        Guides = GuidesTo
       end
       item
         Guides = DocumentTaxKindGuides
@@ -1492,8 +1521,8 @@ inherited TaxForm: TTaxForm
         Control = edIsRegistered
       end>
     GetStoredProc = spGet
-    Left = 552
-    Top = 553
+    Left = 280
+    Top = 177
   end
   object spInsertUpdateMovement_Params: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_Tax_Params'
@@ -1612,40 +1641,21 @@ inherited TaxForm: TTaxForm
     LookupControl = edPartner
     Key = '0'
     TextValue = ' '
-    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.Value = 'TPartnerForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoicePartnerForm'
+    FormName = 'TPartnerForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'PartnerId'
-        Value = '0'
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ' '
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
-      end
-      item
         Name = 'Key'
-        Value = ''
-        Component = ContractGuides
+        Value = '0'
+        Component = GuidesPartner
         ComponentItem = 'Key'
       end
       item
         Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
+        Value = ' '
+        Component = GuidesPartner
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1654,6 +1664,7 @@ inherited TaxForm: TTaxForm
         Value = ''
         Component = GuidesTo
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
@@ -1661,6 +1672,7 @@ inherited TaxForm: TTaxForm
         Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
     Left = 984
     Top = 8
@@ -1670,5 +1682,53 @@ inherited TaxForm: TTaxForm
     Params = <>
     Left = 484
     Top = 326
+  end
+  object spTax: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'outInvNumberPartner_Master'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 392
+    Top = 232
   end
 end

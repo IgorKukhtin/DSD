@@ -1,7 +1,5 @@
 -- Function: lpInsertUpdate_Movement_IncomeFuel()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TVarChar, TDateTime, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_IncomeFuel (Integer, Integer, TVarChar, TDateTime, TDateTime, TVarChar, boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_IncomeFuel(
@@ -27,6 +25,18 @@ RETURNS Integer
 AS
 $BODY$
 BEGIN
+     -- проверка
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
+     END IF;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, inParentId, inAccessKeyId);
 

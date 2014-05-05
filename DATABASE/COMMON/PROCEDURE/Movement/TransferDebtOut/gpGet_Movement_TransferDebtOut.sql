@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inMovementId        Integer  , -- ключ Документа
     IN inOperDate          TDateTime, -- ключ Документа
@@ -16,8 +15,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
              , PriceListId Integer, PriceListName TVarChar
-             , InvNumber_Master TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
+             , MovementId_Master Integer, InvNumberPartner_Master TVarChar
               )
 AS
 $BODY$
@@ -68,9 +67,10 @@ BEGIN
              , Object_PriceList.Id                  AS PriceListId
              , Object_PriceList.ValueData           AS PriceListName
 
-             , CAST ('' as TVarChar) 	            AS InvNumber_Master
-             , 0                     				AS DocumentTaxKindId
-             , CAST ('' as TVarChar) 				AS DocumentTaxKindName
+             , 0                     				        AS DocumentTaxKindId
+             , CAST ('' AS TVarChar) 				        AS DocumentTaxKindName
+             , 0                     				        AS MovementId_Master
+             , CAST ('' AS TVarChar) 				        AS InvNumberPartner_Master
 
 
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
@@ -118,9 +118,10 @@ BEGIN
            , Object_PriceList.id                        AS PriceListId
            , Object_PriceList.valuedata                 AS PriceListName
 
-           , COALESCE (Movement_DocumentMaster.InvNumber, '')::TVarChar    AS InvNumber_Master
-           , Object_TaxKind.Id                	        AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         	        AS DocumentTaxKindName
+           , Object_TaxKind.Id                		    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+           , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
+           , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -192,22 +193,22 @@ BEGIN
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
 
-            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                           ON MovementLinkMovement_Master.MovementChildId = Movement.Id
-                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
 
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
---add Tax
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                           ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+            LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                                                  AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
-                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
-
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
-
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransferDebtOut();
+
      END IF;
 
 END;
@@ -219,11 +220,10 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 29.04.14  		                                                *
+ 03.05.14                                        * all
+ 29.04.14  		                                         *
  22.04.14  		  *
-
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_TransferDebtOut (inMovementId:= 0, inOperDate:=CURRENT_DATE,inSession:= '2')
 -- SELECT * FROM gpGet_Movement_TransferDebtOut(inMovementId := 40859 , inOperDate := '25.01.2014',  inSession := '5');

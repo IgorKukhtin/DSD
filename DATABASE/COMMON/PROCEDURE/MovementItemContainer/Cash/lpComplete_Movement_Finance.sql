@@ -19,6 +19,8 @@ BEGIN
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
 
+                                                      WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() AND _tmpItem.ObjectId = 76977 -- 26009000250571 ПУАТ "ФІДОБАНК"
+                                                           THEN zc_Enum_AccountDirection_40500() -- овердрафт
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
@@ -41,8 +43,6 @@ BEGIN
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30400() -- услуги предоставленные
                                                            THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_40700() -- Лиол
-                                                           THEN zc_Enum_AccountDirection_30300() -- Дебиторы по услугам
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
                                                            THEN zc_Enum_AccountDirection_30400() -- Прочие дебиторы
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Juridical() AND _tmpItem.InfoMoneyGroupId = zc_Enum_InfoMoneyGroup_30000() -- Доходы
                                                            THEN zc_Enum_AccountDirection_30100() -- покупатели
@@ -110,7 +110,7 @@ BEGIN
                                           WHEN _tmpItem.ObjectDescId = 0
                                                THEN zc_Enum_Account_100301() -- прибыль текущего периода
                                           WHEN _tmpItem.ObjectDescId IN (zc_Object_BankAccount(), zc_Object_Cash()) AND IsMaster = FALSE
-                                               THEN zc_Enum_Account_110301() -- Транзит + расчетный счет
+                                               THEN zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
 
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_30200() -- наши компании
                                                THEN CASE WHEN zc_Enum_InfoMoney_20801() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
@@ -124,6 +124,8 @@ BEGIN
                                                          WHEN zc_Enum_InfoMoney_21151() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40500() -- овердрафт
+                                               THEN zc_Enum_Account_40501() -- овердрафт
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов
@@ -215,7 +217,7 @@ BEGIN
     ;
 
      -- 2. определяется ContainerId для проводок суммового учета
-     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет
+     UPDATE _tmpItem SET ContainerId = CASE WHEN _tmpItem.AccountId = zc_Enum_Account_110301() -- Транзит + расчетный счет + касса
                                                  THEN lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                                             , inParentId          := NULL
                                                                             , inObjectId          := _tmpItem.AccountId
@@ -234,7 +236,7 @@ BEGIN
                                                                             , inBusinessId        := _tmpItem.BusinessId
                                                                             , inObjectCostDescId  := NULL
                                                                             , inObjectCostId      := NULL
-                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountId = zc_Enum_AccountDirection_40300() THEN zc_ContainerLinkObject_BankAccount() ELSE zc_ContainerLinkObject_Cash() END
+                                                                            , inDescId_1          := CASE WHEN _tmpItem.AccountDirectionId IN (zc_Enum_AccountDirection_40100(), zc_Enum_AccountDirection_40200()) THEN zc_ContainerLinkObject_Cash() ELSE zc_ContainerLinkObject_BankAccount() END
                                                                             , inObjectId_1        := _tmpItem.ObjectId
                                                                              )
                                             WHEN _tmpItem.AccountId = zc_Enum_Account_100301() -- прибыль текущего периода
@@ -371,6 +373,8 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 04.05.14                                        * add zc_Enum_AccountDirection_40500
+ 04.05.14                                        * change zc_Enum_AccountDirection_30100
  19.04.14                                        * del zc_Enum_InfoMoneyDestination_40900
  04.04.14                                        * add ЕКСПЕРТ-АГРОТРЕЙД
  10.03.14                                        * add no calc AccountId

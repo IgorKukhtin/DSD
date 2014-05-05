@@ -1,8 +1,5 @@
 -- Function: lpInsertUpdate_Movement_TaxCorrective()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TaxCorrective (Integer, TVarChar, TVarChar, TVarChar, TDateTime, Boolean, Boolean, Boolean, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TaxCorrective(
@@ -42,6 +39,18 @@ BEGIN
      END IF;
 
 
+     -- если надо, создаем <Номер документа>
+     IF COALESCE (inInvNumber, '') = ''
+     THEN
+         inInvNumber:= NEXTVAL ('movement_taxcorrective_seq') ::TVarChar;
+     END IF;
+     -- если надо, создаем <Номер налогового документа>
+     IF COALESCE (inInvNumberPartner, '') = ''
+     THEN
+         inInvNumberPartner:= lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate) ::TVarChar;
+     END IF;
+
+
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
 
@@ -58,7 +67,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, inChecked);
 
      -- сохранили свойство <Есть ли подписанный документ>
-     -- PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), ioId, inDocument);
+     IF vbIsInsert THEN PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Document(), ioId, FALSE); END IF; -- inDocument
 
      -- сохранили свойство <Цена с НДС (да/нет)>
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
@@ -93,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.05.14                                                       * add если надо, создаем <Номер...
  24.04.14                                                       * add inInvNumberBranch
  23.04.14                                        * del <Есть ли подписанный документ>
  16.04.14                                        * add lpInsert_MovementProtocol

@@ -24,19 +24,18 @@ type
     clAmount_TaxCorrective: TcxGridDBColumn;
     clFromCode: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
-    clOperDate_ReturnIn: TcxGridDBColumn;
     clFromName: TcxGridDBColumn;
     clToCode: TcxGridDBColumn;
     clToName: TcxGridDBColumn;
-    clPrice_ReturnIn: TcxGridDBColumn;
-    clPrice_TaxCorrective: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
     clInvNumber_TaxCorrective: TcxGridDBColumn;
-    clOperDate_TaxCorrective: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
+    clPartnerCode: TcxGridDBColumn;
+    clPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

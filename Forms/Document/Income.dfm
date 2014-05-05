@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 971
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -234,14 +233,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 971
     ClientRectBottom = 336
     ClientRectRight = 928
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 971
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -249,7 +246,6 @@ object IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 971
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -514,7 +510,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 971
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -522,7 +517,6 @@ object IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 971
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -885,7 +879,15 @@ object IncomeForm: TIncomeForm
         end
         item
           Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end
         item
           Visible = True
@@ -894,12 +896,21 @@ object IncomeForm: TIncomeForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
         end>
       OneOnRow = True
       Row = 0
       UseOwnFont = False
       Visible = True
       WholeRow = False
+    end
+    object bbStatic: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Visible = ivAlways
     end
     object bbInsertUpdateMovement: TdxBarButton
       Action = actInsertUpdateMovement
@@ -928,11 +939,6 @@ object IncomeForm: TIncomeForm
     object bbEntryToGrid: TdxBarButton
       Action = EntryToExcel
       Category = 0
-    end
-    object bbStatic: TdxBarStatic
-      Caption = '     '
-      Category = 0
-      Visible = ivAlways
     end
     object bbErased: TdxBarButton
       Action = SetErased
@@ -1050,8 +1056,8 @@ object IncomeForm: TIncomeForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <>
@@ -1827,7 +1833,7 @@ object IncomeForm: TIncomeForm
     PositionDataSet = 'ClientDataSet'
     Params = <>
     Left = 39
-    Top = 72
+    Top = 40
   end
   object spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_Income'
@@ -1848,8 +1854,8 @@ object IncomeForm: TIncomeForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 84
-    Top = 88
+    Left = 76
+    Top = 48
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

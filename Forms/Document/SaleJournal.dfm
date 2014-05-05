@@ -351,6 +351,14 @@ inherited SaleJournalForm: TSaleJournalForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
+          object colContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object colInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
@@ -413,12 +421,12 @@ inherited SaleJournalForm: TSaleJournalForm
       Width = 262
     end
     object cxLabel14: TcxLabel
-      Left = 713
+      Left = 690
       Top = 6
-      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+      Caption = #1058#1080#1087' '#1076#1083#1103'  '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1103' '#1085#1072#1083#1086#1075'.'#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 905
+      Left = 875
       Top = 5
       Properties.Buttons = <
         item
@@ -426,7 +434,7 @@ inherited SaleJournalForm: TSaleJournalForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 91
+      Width = 200
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -477,8 +485,8 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Action = actPrint
         end>
-      Caption = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
     object mactPrint_Bill: TMultiAction
@@ -821,11 +829,11 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbRefresh'
+          ItemName = 'bbShowErased'
         end
         item
           Visible = True
-          ItemName = 'bbShowErased'
+          ItemName = 'bbRefresh'
         end
         item
           Visible = True
@@ -870,6 +878,10 @@ inherited SaleJournalForm: TSaleJournalForm
         item
           Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbTax: TdxBarButton

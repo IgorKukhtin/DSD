@@ -25,15 +25,12 @@ type
     clAmount_Tax: TcxGridDBColumn;
     clFromCode: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
-    clOperDate_Sale: TcxGridDBColumn;
-    clOperDate_Tax: TcxGridDBColumn;
     clFromName: TcxGridDBColumn;
     clToCode: TcxGridDBColumn;
     clToName: TcxGridDBColumn;
-    clPrice_Sale: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
     clDifference: TcxGridDBColumn;
     clDocumentTaxKindName: TcxGridDBColumn;
-    clContract_InvNumber: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;

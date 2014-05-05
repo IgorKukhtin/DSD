@@ -2,8 +2,9 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
   Caption = #1054#1090#1095#1077#1090' <'#1055#1088#1086#1074#1077#1088#1082#1072' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1073#1086#1085#1091#1089#1086#1074'>'
   ClientHeight = 324
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 359
+  ExplicitLeft = -396
+  ExplicitWidth = 1118
+  ExplicitHeight = 358
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -253,6 +254,21 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       Width = 200
     end
   end
+  inherited ActionList: TActionList
+    object actDocBonus: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'actDocBonus'
+    end
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
@@ -289,6 +305,30 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarButton1'
+        end>
+    end
+    object dxBarButton1: TdxBarButton
+      Action = actDocBonus
+      Category = 0
+      ImageIndex = 28
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 368
@@ -334,5 +374,66 @@ inherited Report_CheckBonusForm: TReport_CheckBonusForm
       end>
     Left = 640
     Top = 65528
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_ProfitLossService_From_Report'
+    DataSet = MasterCDS
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end>
+    Params = <
+      item
+        Name = 'inOperDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmount'
+        Component = MasterCDS
+        ComponentItem = 'Sum_Bonus'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId_master'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId '
+        Component = MasterCDS
+        ComponentItem = 'InfoMoneyId_master'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalId'
+        Component = MasterCDS
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Component = MasterCDS
+        ComponentItem = 'PaidKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractConditionKindId'
+        Component = MasterCDS
+        ComponentItem = 'ConditionKindId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBonusKindId'
+        Component = MasterCDS
+        ComponentItem = 'BonusKindId'
+        ParamType = ptInput
+      end>
+    Left = 368
+    Top = 176
   end
 end

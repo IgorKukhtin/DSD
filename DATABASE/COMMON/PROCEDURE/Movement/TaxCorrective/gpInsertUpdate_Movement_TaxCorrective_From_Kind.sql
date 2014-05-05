@@ -1,8 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TaxCorrective_From_Kind()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer, Integer, Boolean, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (
     IN inMovementId            Integer  , -- ключ Документа
@@ -55,13 +53,13 @@ BEGIN
      END IF;
 
 
-     -- выбираем реквизиты для обновления/создания шапки НН
+     -- определяются параметры для <Налогового документа>
      SELECT Movement.OperDate
           , Movement.PriceWithVAT
           , Movement.VATPercent
-          , ObjectLink_Partner_Juridical.ChildObjectId        -- от кого
-          , ObjectLink_Contract_JuridicalBasis.ChildObjectId  -- кому
-          , Movement.FromId           	                 -- контрагент
+          , ObjectLink_Partner_Juridical.ChildObjectId        AS FromId
+          , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
+          , Movement.FromId           	                      AS PartnerId
           , Movement.ContractId 
             INTO vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
      FROM gpGet_Movement_ReturnIn (inMovementId, CURRENT_DATE, inSession) AS Movement
@@ -271,10 +269,11 @@ BEGIN
      -- меняем заголовок для существующих корректировок 
      PERFORM lpInsertUpdate_Movement_TaxCorrective (ioId               := tmpResult_update.MovementId_Corrective
                                                   , inInvNumber        := Movement.InvNumber
-                                                  , inInvNumberPartner := Movement.InvNumber
+                                                  , inInvNumberPartner := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementString_InvNumberPartner()), '')
+                                                  , inInvNumberBranch  := COALESCE ((SELECT ValueData FROM MovementString WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementString_InvNumberBranch()), '')
                                                   , inOperDate         := vbOperDate
-                                                  , inChecked          := FALSE
-                                                  , inDocument         := FALSE
+                                                  , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementBoolean_Checked()), FALSE)
+                                                  , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementBoolean_Document()), FALSE)
                                                   , inPriceWithVAT     := vbPriceWithVAT
                                                   , inVATPercent       := vbVATPercent
                                                   , inFromId           := vbFromId
@@ -296,7 +295,8 @@ BEGIN
      UPDATE _tmpResult SET MovementId_Corrective = tmpResult_insert.MovementId_Corrective
      FROM (SELECT lpInsertUpdate_Movement_TaxCorrective (ioId               :=0
                                                        , inInvNumber        := tmpResult_insert.InvNumber :: TVarChar
-                                                       , inInvNumberPartner := tmpResult_insert.InvNumber :: TVarChar
+                                                       , inInvNumberPartner := tmpResult_insert.InvNumberPartner :: TVarChar
+                                                       , inInvNumberBranch  := ''
                                                        , inOperDate         := vbOperDate
                                                        , inChecked          := FALSE
                                                        , inDocument         := FALSE
@@ -311,6 +311,7 @@ BEGIN
                                                       ) AS MovementId_Corrective
                 , tmpResult_insert.MovementId_Tax
            FROM (SELECT NEXTVAL ('movement_taxcorrective_seq') AS InvNumber
+                      , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), vbOperDate) AS InvNumberPartner
                       , tmpResult_insert.MovementId_Tax
                  FROM (SELECT MovementId_Tax
                        FROM _tmpResult
@@ -391,6 +392,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  10.04.14                                        * ALL
  13.02.14                                                        *
 */

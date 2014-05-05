@@ -100,9 +100,9 @@ BEGIN
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
-           , Object_TaxKind.Id                		        AS DocumentTaxKindId
-           , Object_TaxKind.ValueData         		        AS DocumentTaxKindName
-           , Movement_Master.Id                             AS MovementId_Master
+           , Object_TaxKind.Id                		    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
+           , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
 
        FROM Movement
@@ -189,7 +189,6 @@ BEGIN
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-            LEFT JOIN Movement AS Movement_Master ON Movement_Master.Id = MovementLinkMovement_Master.MovementChildId
             LEFT JOIN MovementString AS MS_InvNumberPartner_Master ON MS_InvNumberPartner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                                                   AND MS_InvNumberPartner_Master.DescId = zc_MovementString_InvNumberPartner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind

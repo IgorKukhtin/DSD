@@ -1,6 +1,6 @@
 inherited AncestorDBGridForm: TAncestorDBGridForm
-  ExplicitWidth = 583
-  ExplicitHeight = 335
+  ExplicitWidth = 591
+  ExplicitHeight = 343
   PixelsPerInch = 96
   TextHeight = 13
   object PageControl: TcxPageControl [0]
@@ -80,7 +80,15 @@ inherited AncestorDBGridForm: TAncestorDBGridForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

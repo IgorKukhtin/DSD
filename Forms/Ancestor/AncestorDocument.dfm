@@ -3,8 +3,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 837
-  ExplicitHeight = 443
+  ExplicitWidth = 845
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -402,8 +402,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <>
@@ -498,6 +498,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
           StoredProc = spSelect
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
   end
@@ -569,6 +570,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbErased'
         end
         item
@@ -585,7 +590,15 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
@@ -594,6 +607,10 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         item
           Visible = True
           ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrint: TdxBarButton

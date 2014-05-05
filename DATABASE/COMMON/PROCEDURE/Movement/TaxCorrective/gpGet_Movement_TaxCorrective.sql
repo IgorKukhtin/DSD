@@ -31,21 +31,21 @@ BEGIN
      THEN
          RETURN QUERY
          SELECT
-               0 									AS Id
-             , tmpInvNum.InvNumber                  AS InvNumber
-             , inOperDate						 	AS OperDate
-             , Object_Status.Code               	AS StatusCode
-             , Object_Status.Name              		AS StatusName
-             , CAST (False as Boolean)         		AS Checked
-             , CAST (False as Boolean)         		AS Document
-             , CAST (False as Boolean)        		AS Registered
-             , inOperDate         	            	AS DateRegistered
+               0 				    AS Id
+             , tmpInvNumber.InvNumber               AS InvNumber
+             , inOperDate                           AS OperDate
+             , Object_Status.Code                   AS StatusCode
+             , Object_Status.Name              	    AS StatusName
+             , CAST (False as Boolean)         	    AS Checked
+             , CAST (False as Boolean)         	    AS Document
+             , CAST (False as Boolean)        	    AS Registered
+             , inOperDate         	            AS DateRegistered
              , CAST (False as Boolean)              AS PriceWithVAT
              , CAST (TaxPercent_View.Percent as TFloat) AS VATPercent
              , CAST (0 as TFloat)                   AS TotalCount
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
-             , tmpInvNum.InvNumber                  AS InvNumberPartner
+             , lpInsertFind_Object_InvNumberTax (zc_Movement_TaxCorrective(), inOperDate) ::TVarChar AS InvNumberPartner
              , 0                     				AS FromId
              , CAST ('' as TVarChar) 				AS FromName
              , 0                                    AS PartnerId
@@ -62,7 +62,7 @@ BEGIN
              , CAST ('' as TVarChar) 				AS DocumentChildName
              , CAST ('' as TVarChar) 				AS InvNumberBranch
 
-          FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
+          FROM (SELECT CAST (NEXTVAL ('movement_taxcorrective_seq') AS TVarChar) AS InvNumber) AS tmpInvNumber
           LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
           LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
           LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis();
@@ -206,6 +206,7 @@ ALTER FUNCTION gpGet_Movement_TaxCorrective (Integer, TDateTime, TVarChar) OWNER
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  24.04.14                                                        * add zc_MovementString_InvNumberBranch
  15.04.14                                                        *   + Partner
  27.02.14                                                        *

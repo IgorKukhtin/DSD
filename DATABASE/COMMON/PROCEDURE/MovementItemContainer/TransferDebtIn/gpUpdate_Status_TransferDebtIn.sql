@@ -14,7 +14,7 @@ BEGIN
          WHEN zc_Enum_StatusCode_UnComplete() THEN
             PERFORM gpUnComplete_Movement_TransferDebtIn (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Complete() THEN
-            PERFORM gpComplete_Movement_TransferDebtIn (inMovementId, FALSE,inSession);
+            PERFORM gpComplete_Movement_TransferDebtIn (inMovementId, inSession);
          WHEN zc_Enum_StatusCode_Erased() THEN
             PERFORM gpSetErased_Movement_TransferDebtIn (inMovementId, inSession);
          ELSE
@@ -28,8 +28,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.05.14                                        * del isLastComplete
  25.04.14         *
-
 */
 
 -- тест

@@ -737,7 +737,7 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
                                         THEN zc_Enum_ProfitLossDirection_10400() -- 10400; "Себестоимость реализации"
                                    WHEN vbMemberId_To <> 0
-                                        THEN zc_Enum_ProfitLossDirection_70300() -- 70300; "сотрудники (недостачи, порча)"
+                                        THEN zc_Enum_ProfitLossDirection_70300() -- 70300; "Физ.лица (возмещение ущерба)"
                                    ELSE zc_Enum_ProfitLossDirection_70200() -- 70200; "Прочее"
                               END AS ProfitLossDirectionId
 
@@ -806,7 +806,7 @@ BEGIN
        ;
 
 
-     -- 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица (недостачи, порча)
+     -- 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица (возмещение ущерба)
      UPDATE _tmpItem SET AccountId_Partner = _tmpItem_byAccount.AccountId
                        , AccountId_Transit = CASE WHEN vbOperDate <> vbOperDatePartner AND vbMemberId_From = 0 AND vbMemberId_To = 0 THEN zc_Enum_Account_110101() ELSE 0 END -- Транзит
      FROM (SELECT CASE WHEN vbIsCorporate_To = TRUE
@@ -820,7 +820,7 @@ BEGIN
                    END AS AccountId
                 , _tmpItem_group.InfoMoneyDestinationId
            FROM (SELECT CASE WHEN vbMemberId_To <> 0
-                                  THEN zc_Enum_AccountDirection_30600() -- сотрудники (недостачи, порча)  -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30600())
+                                  THEN zc_Enum_AccountDirection_30600() -- Физ.лица (возмещение ущерба)  -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30600())
                              WHEN vbIsCorporate_To = TRUE
                                   THEN zc_Enum_AccountDirection_30200() -- наши компании -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30200())
                              WHEN vbInfoMoneyDestinationId_To IN (zc_Enum_InfoMoneyDestination_10100()  -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
@@ -835,7 +835,8 @@ BEGIN
                                                                     , zc_Enum_InfoMoneyDestination_30100()  -- Продукция    -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
                                                                     , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
                                   THEN zc_Enum_AccountDirection_30100() -- покупатели -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30100())
-                             ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30400())
+                          -- ELSE zc_Enum_AccountDirection_30400() -- Прочие дебиторы select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30400())
+                             ELSE zc_Enum_AccountDirection_30100() -- покупатели -- select * from gpSelect_Object_AccountDirection ('2') where Id in (zc_Enum_AccountDirection_30100())
                         END AS AccountDirectionId
 
                       , CASE WHEN vbIsCorporate_To = TRUE
@@ -1084,7 +1085,7 @@ BEGIN
                                                                           , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
                                         THEN zc_Enum_ProfitLossDirection_10100() -- 10100; "Сумма реализации"
                                    WHEN vbMemberId_To <> 0
-                                        THEN zc_Enum_ProfitLossDirection_70300() -- 70300; "сотрудники (недостачи, порча)"
+                                        THEN zc_Enum_ProfitLossDirection_70300() -- 70300; "Физ.лица (возмещение ущерба)"
                                    ELSE zc_Enum_ProfitLossDirection_70200() -- 70200; "Прочее"
                               END AS ProfitLossDirectionId
 
@@ -1508,6 +1509,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.05.14                                        * rem zc_Enum_AccountDirection_30400
  30.04.14                                        * set lp
  26.04.14                                        * !!!RESTORE!!!
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___

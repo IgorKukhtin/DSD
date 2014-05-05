@@ -1,69 +1,39 @@
 -- Function: gpComplete_Movement_TransferDebtOut()
 
-DROP FUNCTION IF EXISTS gpComplete_Movement_TransferDebtOut (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_TransferDebtOut (Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_TransferDebtOut(
-    IN inMovementId        Integer               , -- ключ Документа
-    IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
-    IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
+    IN inMovementId        Integer              , -- ключ Документа
+    IN inSession           TVarChar               -- сессия пользователя
 )                              
  RETURNS VOID
 
 AS
 $BODY$
   DECLARE vbUserId Integer;
-
-  DECLARE vbOperSumm_PriceList_byItem TFloat;
-  DECLARE vbOperSumm_PriceList TFloat;
-  DECLARE vbOperSumm_Partner_byItem TFloat;
-  DECLARE vbOperSumm_Partner TFloat;
-  DECLARE vbOperSumm_Partner_ChangePercent_byItem TFloat;
-  DECLARE vbOperSumm_Partner_ChangePercent TFloat;
-
-  DECLARE vbPriceWithVAT_PriceList Boolean;
-  DECLARE vbVATPercent_PriceList TFloat;
-
-  DECLARE vbPriceWithVAT Boolean;
-  DECLARE vbVATPercent TFloat;
-  DECLARE vbDiscountPercent TFloat;
-  DECLARE vbExtraChargesPercent TFloat;
-
-  DECLARE vbOperDate TDateTime;
-  DECLARE vbOperDatePartner TDateTime;
-
-  DECLARE vbUnitId_From Integer;
-  DECLARE vbMemberId_From Integer;
-  DECLARE vbBranchId_From Integer;
-  DECLARE vbAccountDirectionId_From Integer;
-  DECLARE vbIsPartionDate_Unit Boolean;
-
-  DECLARE vbJuridicalId_To Integer;
-  DECLARE vbIsCorporate_To Boolean;
-  DECLARE vbInfoMoneyId_CorporateTo Integer;
-  DECLARE vbPartnerId_To Integer;
-  DECLARE vbMemberId_To Integer;
-  DECLARE vbInfoMoneyDestinationId_To Integer;
-  DECLARE vbInfoMoneyId_To Integer;
-
-  DECLARE vbPaidKindId Integer;
-  DECLARE vbContractId Integer;
-  DECLARE vbJuridicalId_Basis_From Integer;
-  DECLARE vbBusinessId_From Integer;
-
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_TransferDebtOut());
 
-     -- Эти параметры нужны для 
-     SELECT lfObject_PriceList.PriceWithVAT, lfObject_PriceList.VATPercent
-       INTO vbPriceWithVAT_PriceList, vbVATPercent_PriceList
-     FROM lfGet_Object_PriceList (zc_PriceList_Basis()) AS lfObject_PriceList;
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
+     -- таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean, IsMaster Boolean
+                                ) ON COMMIT DROP;
 
-
- 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_TransferDebtOut() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
+     -- проводим Документ
+     PERFORM lpComplete_Movement_TransferDebt_all (inMovementId := inMovementId
+                                                 , inUserId     := vbUserId);
 
 END;
 $BODY$
@@ -72,11 +42,11 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.05.14                                        * all
  25.04.14         *
-
 */
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 10154, inSession:= '2')
--- SELECT * FROM gpComplete_Movement_TransferDebtOut (inMovementId:= 10154, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM gpComplete_Movement_TransferDebtOut (inMovementId:= 10154, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')

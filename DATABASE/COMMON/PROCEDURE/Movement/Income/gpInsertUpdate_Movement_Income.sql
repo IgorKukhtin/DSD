@@ -34,6 +34,18 @@ BEGIN
      -- проверка - связанные документы Изменять нельзя
      PERFORM lfCheck_Movement_Parent (inMovementId:= ioId, inComment:= 'изменение');
 
+     -- проверка
+     IF inOperDate <> DATE_TRUNC ('DAY', inOperDate) OR inOperDatePartner <> DATE_TRUNC ('DAY', inOperDatePartner) 
+     THEN
+         RAISE EXCEPTION 'Ошибка.Неверный формат даты.';
+     END IF;
+
+     -- проверка
+     IF COALESCE (inContractId, 0) = 0 AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         RAISE EXCEPTION 'Ошибка.Не установлено значение <Договор>.';
+     END IF;
+
 
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_Income(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
