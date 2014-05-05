@@ -186,7 +186,7 @@ BEGIN
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
-                                                                ON OH_JuridicalDetails_From.JuridicalId = ObjectLink_Unit_Juridical.ChildObjectId
+                                                                ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Unit_Juridical.ChildObjectId, Object_From.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
 
            LEFT JOIN ObjectString AS ObjectString_ToAddress
@@ -263,6 +263,8 @@ BEGIN
 
 
         WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+--         AND tmpObject_GoodsPropertyValue.GoodsPropertyId = ObjectLink_Juridical_GoodsProperty.ChildObjectId
+--         COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
       )
 
        SELECT
@@ -396,7 +398,7 @@ BEGIN
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
             LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                                 ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                 ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                                 AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
 
 --            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId -- Классификаторы свойств товаров
