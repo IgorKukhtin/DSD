@@ -201,6 +201,14 @@
     TabOrder = 25
     Width = 272
   end
+  object cbisLoad: TcxCheckBox [26]
+    Left = 486
+    Top = 262
+    Caption = #1040#1074#1090#1086#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077
+    Properties.ReadOnly = True
+    TabOrder = 26
+    Width = 111
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 179
     Top = 26
@@ -326,6 +334,13 @@
         Value = ''
         Component = BonusKindGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisLoad'
+        Value = 'False'
+        Component = cbisLoad
+        DataType = ftBoolean
         ParamType = ptInput
       end>
     Left = 472
@@ -497,6 +512,12 @@
         Component = BonusKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'isLoad'
+        Value = 'False'
+        Component = cbisLoad
+        DataType = ftBoolean
       end>
     Left = 536
     Top = 160

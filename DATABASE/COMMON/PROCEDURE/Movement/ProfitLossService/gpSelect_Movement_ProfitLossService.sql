@@ -22,7 +22,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindName TVarChar
              , ContractConditionKindId Integer, ContractConditionKindName TVarChar
              , BonusKindId Integer, BonusKindName TVarChar
-              )
+             , isLoad Boolean
+               )
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -69,6 +70,8 @@ BEGIN
            , Object_BonusKind.Id                            AS BonusKindId
            , Object_BonusKind.ValueData                     AS BonusKindName
 
+           , MovementBoolean_isLoad.ValueData       AS isLoad
+
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -113,6 +116,10 @@ BEGIN
                                              ON MILinkObject_BonusKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_BonusKind.DescId = zc_MILinkObject_BonusKind()
             LEFT JOIN Object AS Object_BonusKind ON Object_BonusKind.Id = MILinkObject_BonusKind.ObjectId
+
+            LEFT JOIN MovementBoolean AS MovementBoolean_isLoad
+                                      ON MovementBoolean_isLoad.MovementId =  Movement.Id
+                                     AND MovementBoolean_isLoad.DescId = zc_MovementBoolean_isLoad()
 
       ;
 

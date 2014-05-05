@@ -71,7 +71,7 @@ BEGIN
        FROM (SELECT Movement.id
              FROM tmpStatus
                   JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_SendOnPrice() AND Movement.StatusId = tmpStatus.StatusId
-                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
+                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId // закоментил для отладки!!!
              WHERE inIsPartnerDate = FALSE
             UNION ALL
              SELECT MovementDate_OperDatePartner.MovementId  AS Id
@@ -156,6 +156,7 @@ ALTER FUNCTION gpSelect_Movement_SendOnPrice (TDateTime, TDateTime, Boolean, Boo
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.05.14                                                        * надо раскоментить права после отладки
  18.04.14                                                        * all new
  05.09.13                                        * add TotalCountPartner
  12.07.13          *

@@ -11,19 +11,19 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 1064
     Height = 540
     ExplicitTop = 128
-    ExplicitWidth = 1115
+    ExplicitWidth = 1064
     ExplicitHeight = 540
     ClientRectBottom = 536
     ClientRectRight = 1060
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 1109
+      ExplicitWidth = 1058
       ExplicitHeight = 514
       inherited cxGrid: TcxGrid
         Width = 1058
         Height = 514
-        ExplicitWidth = 1109
+        ExplicitWidth = 1058
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -50,7 +50,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -76,7 +75,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colHeadCount
             end
             item
               Kind = skSum
@@ -204,34 +202,18 @@ inherited SendOnPriceForm: TSendOnPriceForm
             Options.Editing = False
             Width = 80
           end
-          object colHeadCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'. '#1075#1086#1083#1086#1074
-            DataBinding.FieldName = 'HeadCount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-          end
-          object colAssetName: TcxGridDBColumn
-            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072' '
-            DataBinding.FieldName = 'AssetName'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 65
-          end
         end
       end
     end
     inherited tsEntry: TcxTabSheet
       ExplicitLeft = 2
       ExplicitTop = 22
-      ExplicitWidth = 1109
+      ExplicitWidth = 1058
       ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
         Width = 1058
         Height = 514
-        ExplicitWidth = 1109
+        ExplicitWidth = 1058
         ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -257,7 +239,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Width = 1064
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1115
+    ExplicitWidth = 1064
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -366,7 +348,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
     object edRouteSorting: TcxButtonEdit
       Left = 748
       Top = 23
-      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -388,13 +369,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Top = 5
       Caption = #1044#1072#1090#1072' '#1076#1086#1082'. '#1091' '#1087#1086#1082#1091#1087'.'
     end
-    object edIsChecked: TcxCheckBox
-      Left = 626
-      Top = 63
-      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
-      TabOrder = 19
-      Width = 118
-    end
     object cxLabel11: TcxLabel
       Left = 752
       Top = 45
@@ -408,36 +382,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 21
+      TabOrder = 20
       Width = 89
     end
-  end
-  object RefreshDispatcher: TRefreshDispatcher [2]
-    RefreshAction = actRefreshPrice
-    ComponentList = <
-      item
-        Component = GuidesPricelist
-      end>
-    Left = 528
-    Top = 320
-  end
-  object PrintHeaderCDS: TClientDataSet [3]
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 193
-  end
-  object PrintItemsCDS: TClientDataSet [4]
-    Aggregates = <>
-    Params = <>
-    Left = 476
-    Top = 246
-  end
-  object PrintItemsSverkaCDS: TClientDataSet [5]
-    Aggregates = <>
-    Params = <>
-    Left = 644
-    Top = 334
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -499,9 +446,9 @@ inherited SendOnPriceForm: TSendOnPriceForm
           Component = FormParams
           ComponentItem = 'Id'
         end>
-      ReportName = 'PrintMovement_Sale1'
+      ReportName = 'PrintMovement_Sale2'
       ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = 'PrintMovement_Sale1'
+      ReportNameParam.Value = 'PrintMovement_Sale2'
       ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
@@ -825,16 +772,16 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
+        Name = 'InvNumber'
+        Value = ''
+        Component = edInvNumber
+      end
+      item
         Name = 'inOperDate'
         Component = FormParams
         ComponentItem = 'inOperDate'
         DataType = ftDateTime
         ParamType = ptInput
-      end
-      item
-        Name = 'InvNumber'
-        Value = ''
-        Component = edInvNumber
       end
       item
         Name = 'OperDate'
@@ -857,21 +804,10 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
-        Name = 'Checked'
-        Value = 'False'
-        Component = edIsChecked
-        DataType = ftBoolean
-      end
-      item
         Name = 'OperDatePartner'
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
-      end
-      item
-        Name = 'InvNumberPartner'
-        Value = ''
-        DataType = ftString
       end
       item
         Name = 'PriceWithVAT'
@@ -918,24 +854,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
-        Name = 'PaidKindId'
-        Value = ''
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
-      end
-      item
-        Name = 'ContractId'
-        Value = ''
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        DataType = ftString
-      end
-      item
         Name = 'RouteSortingId'
         Value = ''
         Component = GuidesRouteSorting
@@ -946,11 +864,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = ''
         Component = GuidesRouteSorting
         ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InvNumberOrder'
-        Value = ''
         DataType = ftString
       end
       item
@@ -967,18 +880,51 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftString
       end
       item
-        Name = 'DocumentTaxKindId'
         Value = ''
+        ParamType = ptUnknown
       end
       item
-        Name = 'DocumentTaxKindName'
         Value = ''
         DataType = ftString
+        ParamType = ptUnknown
       end
       item
-        Name = 'InvNumberPartner_Master'
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+      end
+      item
         Value = ''
         DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
       end>
     Left = 216
     Top = 248
@@ -1001,18 +947,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'inInvNumberPartner'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInvNumberOrder'
-        Value = ''
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
         Name = 'inOperDate'
         Value = 0d
         Component = edOperDate
@@ -1024,13 +958,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Value = 0d
         Component = edOperDatePartner
         DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inChecked'
-        Value = 'False'
-        Component = edIsChecked
-        DataType = ftBoolean
         ParamType = ptInput
       end
       item
@@ -1069,16 +996,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
         Name = 'inRouteSortingId'
         Value = ''
         Component = GuidesRouteSorting
@@ -1098,6 +1015,29 @@ inherited SendOnPriceForm: TSendOnPriceForm
         Component = GuidesPricelist
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = 'False'
+        DataType = ftBoolean
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = ''
+        DataType = ftString
+        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -1143,7 +1083,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
       end
       item
-        Control = edIsChecked
       end
       item
       end
@@ -1246,13 +1185,6 @@ inherited SendOnPriceForm: TSendOnPriceForm
         DataType = ftFloat
       end
       item
-        Name = 'inHeadCount'
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
         Name = 'inPartionGoods'
         Component = MasterCDS
         ComponentItem = 'PartionGoods'
@@ -1266,10 +1198,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
         ParamType = ptInput
       end
       item
-        Name = 'inAssetId'
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 160
     Top = 368
@@ -1299,6 +1234,33 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end>
     Left = 420
     Top = 188
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefreshPrice
+    ComponentList = <
+      item
+        Component = GuidesPricelist
+      end>
+    Left = 528
+    Top = 320
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 193
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 476
+    Top = 246
+  end
+  object PrintItemsSverkaCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 644
+    Top = 334
   end
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'

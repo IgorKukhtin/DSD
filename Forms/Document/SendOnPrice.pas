@@ -33,7 +33,6 @@ type
     GuidesTo: TdsdGuides;
     edOperDatePartner: TcxDateEdit;
     cxLabel10: TcxLabel;
-    edIsChecked: TcxCheckBox;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
@@ -45,8 +44,6 @@ type
     colPrice: TcxGridDBColumn;
     colCountForPrice: TcxGridDBColumn;
     colAmountSumm: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;

@@ -32,6 +32,7 @@ type
     spMovementReCompleteAll: TdsdStoredProc;
     bbReCompleteAll: TdxBarButton;
     clBonusKindName: TcxGridDBColumn;
+    clisLoad: TcxGridDBColumn;
   private
     { Private declarations }
   public
