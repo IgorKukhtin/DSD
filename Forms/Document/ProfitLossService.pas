@@ -8,7 +8,7 @@ uses
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
   Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
-  dxSkinsCore, dxSkinsDefaultPainters;
+  dxSkinsCore, dxSkinsDefaultPainters, cxCheckBox;
 
 type
   TProfitLossServiceForm = class(TAncestorEditDialogForm)
@@ -44,6 +44,7 @@ type
     cxLabel11: TcxLabel;
     ceBonusKind: TcxButtonEdit;
     ContractConditionKindGuides: TdsdGuides;
+    cbisLoad: TcxCheckBox;
   private
     { Private declarations }
   public

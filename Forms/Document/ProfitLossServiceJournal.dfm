@@ -2,20 +2,25 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   Caption = 
     #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1095#1080#1089#1083#1077#1085#1080#1103' '#1087#1086' '#1073#1086#1085#1091#1089#1072#1084' ('#1088#1072#1089#1093#1086#1076#1099' '#1073#1091#1076#1091#1097#1080#1093' '#1087#1077#1088#1080#1086#1076 +
     #1086#1074')>'
-  ClientWidth = 982
-  ExplicitWidth = 990
-  ExplicitHeight = 363
+  ClientHeight = 302
+  ClientWidth = 990
+  ExplicitLeft = -139
+  ExplicitWidth = 998
+  ExplicitHeight = 336
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 982
+    Width = 990
+    Height = 245
     TabOrder = 3
     ExplicitWidth = 982
-    ClientRectRight = 982
+    ClientRectBottom = 245
+    ClientRectRight = 990
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 982
       inherited cxGrid: TcxGrid
-        Width = 982
+        Width = 990
+        Height = 245
         ExplicitWidth = 982
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -51,7 +56,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           Styles.Header = nil
           inherited colStatus: TcxGridDBColumn
             Options.Editing = False
-            Width = 70
+            Width = 75
           end
           inherited colInvNumber: TcxGridDBColumn
             Visible = False
@@ -60,7 +65,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           end
           inherited colOperDate: TcxGridDBColumn
             Options.Editing = False
-            Width = 60
+            Width = 64
           end
           object clAmountIn: TcxGridDBColumn
             Caption = #1044#1077#1073#1077#1090
@@ -70,7 +75,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 64
           end
           object colAmountOut: TcxGridDBColumn
             Caption = #1050#1088#1077#1076#1080#1090
@@ -79,7 +84,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Properties.DisplayFormat = ',0.00'
             HeaderAlignmentHorz = taRightJustify
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 65
           end
           object clJuridicalCode: TcxGridDBColumn
             Caption = #1050#1086#1076' ('#1102#1088'.'#1083'.)'
@@ -93,7 +98,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 85
           end
           object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -101,19 +106,19 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 45
+            Width = 49
           end
           object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 48
           end
           object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             HeaderAlignmentVert = vaCenter
-            Width = 80
+            Width = 85
           end
           object clInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
@@ -128,7 +133,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 80
+            Width = 86
           end
           object clUnitName: TcxGridDBColumn
             Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
@@ -136,39 +141,44 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             FooterAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 89
+            Width = 97
           end
           object clContractInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1075'.'
             DataBinding.FieldName = 'ContractInvNumber'
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 46
           end
           object clContractConditionKindName: TcxGridDBColumn
             Caption = #1059#1089#1083#1086#1074#1080#1103' '#1076#1086#1075#1086#1074#1086#1088#1072
             DataBinding.FieldName = 'ContractConditionKindName'
             HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 65
           end
           object clBonusKindName: TcxGridDBColumn
             Caption = #1042#1080#1076#1099' '#1073#1086#1085#1091#1089#1086#1074
             DataBinding.FieldName = 'BonusKindName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 65
           end
           object clComment: TcxGridDBColumn
             Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
             DataBinding.FieldName = 'Comment'
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 41
+          end
+          object clisLoad: TcxGridDBColumn
+            Caption = #1040#1074#1090#1086#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077
+            DataBinding.FieldName = 'isLoad'
+            Width = 41
           end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 982
+    Width = 990
     ExplicitWidth = 982
   end
   inherited ActionList: TActionList
@@ -191,13 +201,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41579d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end>
     end
     object actInsertMask: TdsdInsertUpdateAction [3]
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ShortCut = 16429
@@ -222,13 +233,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41579d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = MasterDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -252,13 +264,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
         end
         item
           Name = 'inOperDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
         end>
     end
     object actReCompleteAll: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementReCompleteAll
       StoredProcList = <
         item
@@ -397,14 +410,14 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndtDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput

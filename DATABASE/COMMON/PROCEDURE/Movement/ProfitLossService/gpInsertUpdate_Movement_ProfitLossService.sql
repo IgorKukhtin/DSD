@@ -6,6 +6,8 @@ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvar
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, Boolean, tvarchar);
+
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -21,6 +23,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inUnitId                   Integer   , -- Подразделение
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
     IN inBonusKindId              Integer   , -- Виды бонусов
+    IN inisLoad                   Boolean   , -- Сформирован автоматически (по отчету)
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -81,7 +84,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_ContractConditionKind(), vbMovementItemId, inContractConditionKindId);
      -- сохранили связь с <Виды бонусов>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BonusKind(), vbMovementItemId, inBonusKindId);
-
+     
+     -- сохранили свойство <сформирован автоматически да/нет>
+     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), ioId, inisLoad);
 
      -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
      CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
