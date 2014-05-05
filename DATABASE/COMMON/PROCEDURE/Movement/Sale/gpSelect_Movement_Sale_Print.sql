@@ -44,7 +44,7 @@ BEGIN
            , Object_PaidKind.Id                			AS PaidKindId
            , Object_PaidKind.ValueData         			AS PaidKindName
            , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
+           , Object_Contract.InvNumber         			AS ContractName
            , Object_RouteSorting.Id        				AS RouteSortingId
            , Object_RouteSorting.ValueData 				AS RouteSortingName
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
@@ -263,6 +263,28 @@ BEGIN
 
 
         WHERE Object_GoodsPropertyValue.DescId = zc_Object_GoodsPropertyValue()
+      ),
+      tmpAmount AS
+      (
+       SELECT
+             MovementItem.Id                        AS Id
+           , CASE WHEN Movement.DescId = zc_Movement_Sale()
+                  THEN MIFloat_AmountPartner.ValueData
+                  ELSE MovementItem.Amount END      AS AmountPartner
+       FROM MovementItem
+            JOIN MovementItemFloat AS MIFloat_Price
+                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                  AND MIFloat_Price.ValueData <> 0
+            JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                  AND MIFloat_AmountPartner.ValueData <> 0
+            LEFT JOIN Movement ON Movement.Id =  MovementItem.MovementId
+       WHERE MovementItem.MovementId = inMovementId
+         AND MovementItem.DescId     = zc_MI_Master()
+         AND MovementItem.isErased   = FALSE
+
       )
 
        SELECT
@@ -272,7 +294,8 @@ BEGIN
            , Object_Goods.ValueData                 AS GoodsName
            , MovementItem.Amount                    AS Amount
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
-           , MIFloat_AmountPartner.ValueData        AS AmountPartner
+--           , MIFloat_AmountPartner.ValueData        AS AmountPartner
+           , tmpAmount.AmountPartner                AS AmountPartner
            , MIFloat_ChangePercentAmount.ValueData  AS ChangePercentAmount
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
@@ -362,6 +385,7 @@ BEGIN
                                    ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                   AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                                   AND MIFloat_AmountPartner.ValueData <> 0
+            LEFT JOIN tmpAmount ON tmpAmount.Id = MovementItem.Id
 
             LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                     ON MovementFloat_VATPercent.MovementId =  MovementItem.MovementId
@@ -447,6 +471,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 05.05.14                                                       *
  28.04.14                                                       *
  09.04.14                                        * add JOIN MIFloat_AmountPartner
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign
