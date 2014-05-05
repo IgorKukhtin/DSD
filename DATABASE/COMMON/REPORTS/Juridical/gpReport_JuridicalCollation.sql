@@ -32,8 +32,9 @@ RETURNS TABLE (MovementSumm TFloat,
                InfoMoneyName TVarChar,
                MovementId Integer, 
                ItemName TVarChar,
-               OperationSort Integer, 
-               ByObjectName TVarChar)
+               OperationSort Integer,
+               FromName TVarChar,
+               ToName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -48,7 +49,7 @@ BEGIN
                        FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
                             LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
                        WHERE View_Contract_ContractKey.ContractId = inContractId)
-  SELECT 
+   SELECT 
           CASE WHEN Operation.OperationSort = 0
                      THEN Operation.MovementSumm
                ELSE 0
@@ -84,11 +85,12 @@ BEGIN
           Object_InfoMoney_View.InfoMoneyName,
           Movement.Id               AS MovementId, 
           CASE WHEN Operation.OperationSort = -1
-                    THEN '0.Долг'
+                    THEN ' Долг:'
                ELSE MovementDesc.ItemName
           END::TVarChar  AS ItemName,     
           Operation.OperationSort, 
-          Object_by.ValueData AS ByObjectName
+          Object_From.ValueData AS FromName, 
+          Object_To.ValueData AS ToName
           --, Operation.MovementItemId :: Integer AS MovementItemId
           
     FROM (SELECT Container.ObjectId     AS AccountId, 
@@ -143,7 +145,7 @@ BEGIN
                  CLO_PaidKind.ObjectId  AS PaidKindId, 
                  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartSumm,
                  0 AS EndSumm
-          FROM ContainerLinkObject AS CLO_Juridical 
+          FROM ContainerLinkObject AS CLO_Juridical
                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
                LEFT JOIN ContainerLinkObject AS CLO_InfoMoney
                                              ON CLO_InfoMoney.ContainerId = Container.Id
@@ -159,7 +161,7 @@ BEGIN
                LEFT JOIN MovementItemContainer AS MIContainer 
                                                ON MIContainer.ContainerId = Container.Id
                                               AND MIContainer.OperDate >= inStartDate
-          WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
+          WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
@@ -213,21 +215,32 @@ BEGIN
                                        ON MILinkObject_Unit.MovementItemId = Operation.MovementItemId
                                       AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
 
-      LEFT JOIN MovementLinkObject AS MovementLinkObject_by
-                                   ON MovementLinkObject_by.MovementId = Movement.Id 
-                                  AND MovementLinkObject_by.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                   ON MovementLinkObject_From.MovementId = Movement.Id 
+                                  AND MovementLinkObject_From.DescId = CASE WHEN Movement.DescId IN (zc_Movement_TransportService())
                                                                                THEN zc_MovementLinkObject_UnitForwarding()
-                                                                          WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
-                                                                               THEN zc_MovementLinkObject_Personal()
-                                                                          WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
-                                                                               THEN zc_MovementLinkObject_From()
+                                                                            WHEN Movement.DescId IN (zc_Movement_PersonalAccount())
+                                                                                 THEN zc_MovementLinkObject_Personal()
+                                                                            WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
+                                                                                 THEN zc_MovementLinkObject_From()
+                                                                            WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
+                                                                                 THEN zc_MovementLinkObject_From()
+                                                                       END
+
+      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                   ON MovementLinkObject_To.MovementId = Movement.Id 
+                                  AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
+                                                                               THEN zc_MovementLinkObject_To()
                                                                           WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
                                                                                THEN zc_MovementLinkObject_To()
                                                                      END
+                                                                          
       LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                            ON ObjectLink_BankAccount_Bank.ObjectId = MovementItem_by.ObjectId
                           AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-      LEFT JOIN Object AS Object_by ON Object_by.Id = COALESCE (MovementLinkObject_by.ObjectId, COALESCE (ObjectLink_BankAccount_Bank.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, MovementItem_by.ObjectId)))
+
+      LEFT JOIN Object AS Object_From ON Object_From.Id = COALESCE (MovementLinkObject_From.ObjectId, 0) -- COALESCE (ObjectLink_BankAccount_Bank.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, MovementItem_by.ObjectId)))
+      LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_To.ObjectId, 0) -- COALESCE (ObjectLink_BankAccount_Bank.ChildObjectId, COALESCE (MILinkObject_Unit.ObjectId, MovementItem_by.ObjectId)))
 
       LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Operation.PaidKindId
       
