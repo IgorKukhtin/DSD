@@ -12,17 +12,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 935
+    ExplicitWidth = 973
     ExplicitHeight = 309
     ClientRectBottom = 309
     ClientRectRight = 973
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 935
+      ExplicitWidth = 973
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
         Width = 973
         Height = 309
-        ExplicitWidth = 935
+        ExplicitWidth = 973
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -161,12 +161,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentVert = vaCenter
             Width = 80
           end
-          object colByObjectName: TcxGridDBColumn
-            Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
-            DataBinding.FieldName = 'ByObjectName'
+          object colFromName: TcxGridDBColumn
+            Caption = #1054#1090' '#1050#1086#1075#1086
+            DataBinding.FieldName = 'FromName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 100
+            Width = 90
+          end
+          object colToName: TcxGridDBColumn
+            Caption = #1050#1086#1084#1091
+            DataBinding.FieldName = 'ToName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
           end
           object clContractStateKindName: TcxGridDBColumn
             Caption = #1057#1086#1089#1090#1086#1103#1085#1080#1077' '#1076#1086#1075'.'
@@ -288,7 +295,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 973
     Height = 54
-    ExplicitWidth = 935
+    ExplicitWidth = 973
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -416,6 +423,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       Params = <
         item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
           Name = 'EndDate'
           Value = 41640d
           Component = deEnd
@@ -541,6 +555,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           IndexFieldNames = 'ItemName;OperDate'
         end>
       Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
         item
           Name = 'EndDate'
           Value = 41640d

@@ -1,6 +1,5 @@
 -- Function: gpReport_JuridicalCollation()
 
-DROP FUNCTION IF EXISTS gpReport_JuridicalBalance (TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_JuridicalBalance (TDateTime, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalBalance(
@@ -20,26 +19,31 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Report_Fuel());
 
-     -- Один запрос, который считает остаток и движение. 
-  SELECT SUM(Amount) INTO StartBalance
-    FROM  (SELECT  Container.Amount - SUM(MIContainer.Amount) AS Amount
-             FROM ContainerLinkObject AS CLO_Juridical 
-                  JOIN Container ON Container.Id = CLO_Juridical.ContainerId
-             LEFT JOIN ContainerLinkObject AS CLO_Contract 
-                    ON CLO_Contract.containerid = Container.Id AND CLO_Contract.descid = zc_containerlinkobject_Contract()
-
-                  JOIN MovementItemContainer AS MIContainer 
-                    ON MIContainer.Containerid = Container.Id
-                   AND MIContainer.OperDate > inOperDate
-            WHERE CLO_Juridical.ObjectId = inJuridicalId AND CLO_Juridical.DescId = zc_containerlinkobject_juridical()
+     -- Один запрос, который считает остаток
+     WITH tmpContract AS (SELECT COALESCE (View_Contract_ContractKey_find.ContractId, View_Contract_ContractKey.ContractId) AS ContractId
+                          FROM Object_Contract_ContractKey_View AS View_Contract_ContractKey
+                               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey_find ON View_Contract_ContractKey_find.ContractKeyId = View_Contract_ContractKey.ContractKeyId
+                          WHERE View_Contract_ContractKey.ContractId = inContractId)
+     SELECT SUM (Amount) INTO StartBalance
+     FROM (SELECT  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS Amount
+           FROM ContainerLinkObject AS CLO_Juridical
+                INNER JOIN Container ON Container.Id = CLO_Juridical.ContainerId
+                LEFT JOIN ContainerLinkObject AS CLO_Contract 
+                                              ON CLO_Contract.containerid = Container.Id
+                                             AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+                LEFT JOIN MovementItemContainer AS MIContainer
+                                                ON MIContainer.Containerid = Container.Id
+                                               AND MIContainer.OperDate >= inOperDate
+                LEFT JOIN tmpContract ON tmpContract.ContractId = CLO_Contract.ObjectId
+            WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
+              AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
               AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-              AND (CLO_Contract.ObjectId = inContractId OR inContractId = 0)
-            GROUP BY Container.Amount, Container.Id) AS Balance;
+              AND (tmpContract.ContractId > 0 OR inContractId = 0)
+            GROUP BY Container.Amount, Container.Id
+           ) AS Balance;
             
-   OurFirm  := '"ООО" Алан';        
-                                  
-    -- Конец. Добавили строковые данные. 
-    -- КОНЕЦ ЗАПРОСА
+     -- захардкодил
+     OurFirm  := '"ООО" Алан';        
 
 END;
 $BODY$
@@ -49,6 +53,7 @@ ALTER FUNCTION gpReport_JuridicalBalance (TDateTime, Integer, Integer, Integer, 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 05.05.14                                        * all
  26.03.14                        * 
  18.02.14                        * 
 */
