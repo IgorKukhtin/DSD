@@ -1290,7 +1290,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Top = 64
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_SendOnPrice_Print'
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
