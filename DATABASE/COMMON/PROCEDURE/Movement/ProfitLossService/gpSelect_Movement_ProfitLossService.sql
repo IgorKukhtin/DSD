@@ -70,7 +70,7 @@ BEGIN
            , Object_BonusKind.Id                            AS BonusKindId
            , Object_BonusKind.ValueData                     AS BonusKindName
 
-           , MovementBoolean_isLoad.ValueData       AS isLoad
+           , COALESCE (MovementBoolean_isLoad.ValueData, FALSE) AS isLoad
 
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_ProfitLossService()
