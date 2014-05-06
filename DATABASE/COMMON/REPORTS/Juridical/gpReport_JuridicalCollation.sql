@@ -141,10 +141,10 @@ BEGIN
                  SUM (tmpRemains.EndSumm) AS EndSumm,
                  -1 AS OperationSort
           FROM
-         (SELECT Container.Id           AS ContainerId, 
+         (SELECT -- Container.Id           AS ContainerId, 
                  Container.ObjectId     AS AccountId, 
                  CLO_InfoMoney.ObjectId AS InfoMoneyId, 
-                 CLO_Contract.ObjectId  AS ContractId, 
+                 View_Contract_ContractKey.ContractId_Key AS ContractId, -- CLO_Contract.ObjectId 
                  CLO_PaidKind.ObjectId  AS PaidKindId, 
                  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS StartSumm,
                  0 AS EndSumm
@@ -156,6 +156,8 @@ BEGIN
                LEFT JOIN ContainerLinkObject AS CLO_Contract
                                              ON CLO_Contract.ContainerId = Container.Id
                                             AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
+
                LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                              ON CLO_PaidKind.ContainerId = Container.Id
                                             AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -169,13 +171,13 @@ BEGIN
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
-          GROUP BY Container.Id, Container.Amount, Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId
+          GROUP BY Container.Amount, Container.ObjectId, CLO_InfoMoney.ObjectId, View_Contract_ContractKey.ContractId_Key, CLO_PaidKind.ObjectId -- Container.Id, 
 
          UNION ALL
-          SELECT Container.Id           AS ContainerId, 
+          SELECT -- Container.Id           AS ContainerId, 
                  Container.ObjectId     AS AccountId, 
                  CLO_InfoMoney.ObjectId AS InfoMoneyId, 
-                 CLO_Contract.ObjectId  AS ContractId, 
+                 View_Contract_ContractKey.ContractId_Key AS ContractId, -- CLO_Contract.ObjectId 
                  CLO_PaidKind.ObjectId  AS PaidKindId, 
                  0 AS StartSumm,
                  Container.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS EndSumm
@@ -187,6 +189,8 @@ BEGIN
                LEFT JOIN ContainerLinkObject AS CLO_Contract
                                              ON CLO_Contract.ContainerId = Container.Id
                                             AND CLO_Contract.DescId = zc_ContainerLinkObject_Contract()
+               LEFT JOIN Object_Contract_ContractKey_View AS View_Contract_ContractKey ON View_Contract_ContractKey.ContractId = CLO_Contract.ObjectId
+
                LEFT JOIN ContainerLinkObject AS CLO_PaidKind
                                              ON CLO_PaidKind.ContainerId = Container.Id
                                             AND CLO_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
@@ -194,15 +198,15 @@ BEGIN
 
                LEFT JOIN MovementItemContainer AS MIContainer 
                                                ON MIContainer.ContainerId = Container.Id
-                                              AND MIContainer.OperDate >= inEndDate
+                                              AND MIContainer.OperDate > inEndDate
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
             AND (Container.ObjectId = inAccountId OR inAccountId = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
             AND (tmpContract.ContractId > 0 OR inContractId = 0)
-          GROUP BY Container.Id, Container.Amount, Container.ObjectId , CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId
+          GROUP BY Container.Amount, Container.ObjectId , CLO_InfoMoney.ObjectId, View_Contract_ContractKey.ContractId_Key, CLO_PaidKind.ObjectId -- Container.Id, 
         ) AS tmpRemains
-        GROUP BY tmpRemains.ContainerId, tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId
+        GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId -- tmpRemains.ContainerId, 
         HAVING SUM (tmpRemains.StartSumm) <> 0 OR SUM (tmpRemains.EndSumm) <> 0
         ) AS Operation
 

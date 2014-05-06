@@ -217,6 +217,7 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
+      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -1636,47 +1637,6 @@ inherited TaxForm: TTaxForm
     Left = 311
     Top = 280
   end
-  object GuidesPartner: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edPartner
-    Key = '0'
-    TextValue = ' '
-    FormNameParam.Value = 'TPartnerForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TPartnerForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = '0'
-        Component = GuidesPartner
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ' '
-        Component = GuidesPartner
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 984
-    Top = 8
-  end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -1730,5 +1690,57 @@ inherited TaxForm: TTaxForm
       end>
     Left = 392
     Top = 232
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TContractChoicePartnerForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TContractChoicePartnerForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'Key'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 960
+    Top = 24
   end
 end

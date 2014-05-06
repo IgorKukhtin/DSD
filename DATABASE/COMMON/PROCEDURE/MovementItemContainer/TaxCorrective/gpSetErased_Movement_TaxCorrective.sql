@@ -14,15 +14,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_TaxCorrective());
 
-     -- проверка - если <Master> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
-
-     -- проверка - если есть <Child> Проведен, то <Ошибка>
-     PERFORM lfCheck_Movement_ChildStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Erased(), inComment:= 'удалить');
-
      -- Удаляем Документ
-     PERFORM lpSetErased_Movement (inMovementId := inMovementId
-                                 , inUserId     := vbUserId);
+     PERFORM lpSetErased_Movement_TaxCorrective (inMovementId := inMovementId
+                                               , inUserId     := vbUserId);
 
 END;
 $BODY$
@@ -31,6 +25,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.  Манько Д.А.
+ 06.05.14                                        * add lpSetErased_Movement_TaxCorrective
  14.02.14                                                       *
 */
 
