@@ -24,7 +24,7 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementBoolean_Checked.ValueData          AS Checked
-           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate)     AS OperDatePartner
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -461,6 +461,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.05.14                                        * OperDatePartner
  05.05.14                                                       *
  28.04.14                                                       *
  09.04.14                                        * add JOIN MIFloat_AmountPartner

@@ -1,24 +1,24 @@
 inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 535
-  ClientWidth = 1110
-  ExplicitWidth = 1126
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1110
+    Width = 1020
     Height = 478
     TabOrder = 3
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
-    ClientRectRight = 1110
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1110
+        Width = 1020
         Height = 478
         ExplicitWidth = 1110
         ExplicitHeight = 478
@@ -410,7 +410,7 @@ inherited SaleJournalForm: TSaleJournalForm
     end
   end
   inherited Panel: TPanel
-    Width = 1110
+    Width = 1020
     ExplicitWidth = 1110
     object edIsPartnerDate: TcxCheckBox
       Left = 427

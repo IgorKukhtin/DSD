@@ -160,6 +160,15 @@ inherited ContractChoiceForm: TContractChoiceForm
             Options.Editing = False
             Width = 30
           end
+          object colChangePercent: TcxGridDBColumn
+            Caption = '(-)% '#1089#1082'. (+)% '#1085#1072#1094
+            DataBinding.FieldName = 'ChangePercent'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
           object colisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
@@ -240,13 +249,10 @@ inherited ContractChoiceForm: TContractChoiceForm
           ComponentItem = 'InfoMoneyName'
         end
         item
-          Name = 'PartnerId'
-          Value = 0
-        end
-        item
-          Name = 'PartnerName'
-          Value = ''
-          DataType = ftString
+          Name = 'ChangePercent'
+          Component = MasterCDS
+          ComponentItem = 'ChangePercent'
+          DataType = ftFloat
         end>
     end
     object actShowAll: TBooleanStoredProcAction

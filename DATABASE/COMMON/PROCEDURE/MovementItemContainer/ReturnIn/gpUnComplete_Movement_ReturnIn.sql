@@ -11,10 +11,8 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
-     vbUserId:=2;
+     vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
 
 
      -- проверка - если <Master> Удален, то <Ошибка>

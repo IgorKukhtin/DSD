@@ -70,6 +70,8 @@ BEGIN
              END AS InvNumberPartner_Tax 
            , CASE WHEN Movement.DescId = zc_Movement_Tax()
                        THEN Movement.OperDate  -- остается та что была
+                  WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                       THEN Movement.OperDate  -- совпадает с номером документа inMovementId
                   WHEN inDocumentTaxKindId= zc_Enum_DocumentTaxKind_Tax()
                        THEN MovementDate_OperDatePartner.ValueData -- совпадает с номером документа inMovementId
                   ELSE DATE_TRUNC ('MONTH', Movement.OperDate) + INTERVAL '1 MONTH' - INTERVAL '1 DAY' -- будет последним днем месяца

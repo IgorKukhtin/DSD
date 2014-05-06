@@ -1,26 +1,26 @@
 inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
-  ClientWidth = 1042
-  ExplicitWidth = 1058
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 424
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1042
+    Width = 1020
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1042
     ExplicitHeight = 309
     ClientRectBottom = 309
-    ClientRectRight = 1042
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1042
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
-        Width = 1042
+        Width = 1020
         Height = 309
         ExplicitWidth = 1042
         ExplicitHeight = 309
@@ -293,7 +293,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited Panel: TPanel
-    Width = 1042
+    Width = 1020
     Height = 54
     ExplicitWidth = 1042
     ExplicitHeight = 54

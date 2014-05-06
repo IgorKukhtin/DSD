@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyCode Integer, InfoMoneyName TVarChar
              , ContractStateKindCode Integer
              , OKPO TVarChar
+             , ChangePercent TFloat
              , isErased Boolean 
               )
 AS
@@ -69,6 +70,7 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
+       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
        , Object_Contract_View.isErased
        
@@ -86,6 +88,22 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
               
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+
+ 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                        , ObjectFloat_Value.ValueData AS ChangePercent
+                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                              AND ObjectFloat_Value.ValueData <> 0
+                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                     AND Object_ContractCondition.isErased = FALSE
+                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
    ;
 
    ELSE
@@ -116,6 +134,7 @@ BEGIN
        , Object_Contract_View.ContractStateKindCode
 
        , ObjectHistory_JuridicalDetails_View.OKPO
+       , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
        , Object_Contract_View.isErased
        
@@ -134,6 +153,22 @@ BEGIN
         LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id 
               
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
+
+ 	LEFT JOIN (SELECT ObjectLink_ContractCondition_Contract.ChildObjectId AS ContractId
+                        , ObjectFloat_Value.ValueData AS ChangePercent
+                   FROM ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
+                        INNER JOIN ObjectFloat AS ObjectFloat_Value
+                                               ON ObjectFloat_Value.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                              AND ObjectFloat_Value.DescId = zc_ObjectFloat_ContractCondition_Value()
+                                              AND ObjectFloat_Value.ValueData <> 0
+                        INNER JOIN Object AS Object_ContractCondition ON Object_ContractCondition.Id = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                                                     AND Object_ContractCondition.isErased = FALSE
+                        LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
+                                              ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_ContractConditionKind.ObjectId
+                                             AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
+                   WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
+                     AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
+                  ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
    ;
    END IF;
 
@@ -146,6 +181,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 06.05.14                                        * add ChangePercent TFloat
  25.04.14                                        * add ContractTagName
  27.03.14                         * add inJuridicalId
  27.02.14         * add inPaidKindId,inShowAll

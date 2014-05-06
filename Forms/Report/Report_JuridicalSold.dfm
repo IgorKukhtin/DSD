@@ -1,26 +1,26 @@
 inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
-  ClientWidth = 1127
-  ExplicitWidth = 1143
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 590
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 83
-    Width = 1127
+    Width = 1020
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
     ExplicitWidth = 1127
     ExplicitHeight = 472
     ClientRectBottom = 472
-    ClientRectRight = 1127
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1127
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
-        Width = 1127
+        Width = 1020
         Height = 472
         ExplicitWidth = 1127
         ExplicitHeight = 472
@@ -623,7 +623,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
   end
   inherited Panel: TPanel
-    Width = 1127
+    Width = 1020
     Height = 57
     ExplicitWidth = 1127
     ExplicitHeight = 57
