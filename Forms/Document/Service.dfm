@@ -5,7 +5,7 @@
   ClientWidth = 605
   AddOnFormData.isSingle = False
   ExplicitWidth = 611
-  ExplicitHeight = 319
+  ExplicitHeight = 312
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -218,7 +218,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
+        Name = 'inMovementId_Value'
         Value = '0'
         ParamType = ptInput
       end>

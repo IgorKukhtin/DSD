@@ -3,7 +3,7 @@
   ClientHeight = 270
   ClientWidth = 542
   ExplicitWidth = 548
-  ExplicitHeight = 302
+  ExplicitHeight = 295
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -198,8 +198,7 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = '3'
+        Name = 'inMovementId_Value'
         ParamType = ptInput
       end>
     Left = 88
@@ -303,6 +302,12 @@
         Value = '0'
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inMovementId_Value'
+        Component = FormParams
+        ComponentItem = 'inMovementId_Value'
         ParamType = ptInput
       end
       item
@@ -583,7 +588,7 @@
       end
       item
         Name = 'inPaidKindId'
-        Value = '3'
+        Value = '0'
         Component = FormParams
         ComponentItem = 'inPaidKindId'
       end>

@@ -56,7 +56,10 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50200() -- Налоговые платежи
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
-                                                                                                                                 ))
+                                                                                                                                 )
+                                                                                                         OR InfoMoneyId = zc_Enum_InfoMoney_21419() -- Штрафы за недовоз
+                                                                                                        )
+                    )
         -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
         AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)
         AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inJuridicalId AND DescId = zc_ObjectLink_Juridical_InfoMoney() AND ChildObjectId IN (zc_Enum_InfoMoney_20801(), zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_21101())) -- Алан + Ирна + Чапли + Дворкин
@@ -85,6 +88,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.03.14                                        * add zc_Enum_InfoMoney_21419
  18.03.14                                        * lpInsertUpdate_Movement
  13.03.14                                        * add Проверка установки значений
  03.12.13                        *

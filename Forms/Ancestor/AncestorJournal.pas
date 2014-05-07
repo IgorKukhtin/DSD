@@ -72,6 +72,7 @@ type
     actSimpleCompleteList: TMultiAction;
     actSimpleUncompleteList: TMultiAction;
     actSimpleErased: TMultiAction;
+    bbInsertMask: TdxBarButton;
   private
     { Private declarations }
   public
