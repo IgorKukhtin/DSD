@@ -103,7 +103,9 @@ BEGIN
                         ELSE FALSE
                    END AS Boolean) AS isError
 
-       FROM Movement 
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtOut() AND Movement.StatusId = tmpStatus.StatusId
+
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -197,8 +199,6 @@ BEGIN
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
 
-       WHERE Movement.DescId = zc_Movement_TransferDebtOut()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
       ;
 
 END;

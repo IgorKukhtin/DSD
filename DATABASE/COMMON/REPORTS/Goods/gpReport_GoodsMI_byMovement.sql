@@ -14,7 +14,8 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_byMovement (
 RETURNS TABLE (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime
 
              , JuridicalCode Integer, JuridicalName TVarChar
-             , PartnerCode Integer, PartnerName TVarChar
+             , FromCode Integer, FromName TVarChar
+             , ToCode Integer, ToName TVarChar
              , PaidKindName TVarChar
 
              , GoodsGroupName TVarChar
@@ -63,8 +64,11 @@ BEGIN
                                                                  AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                               JOIN Movement ON Movement.Id = MIReport.MovementId
                                            AND Movement.DescId  = inDescId 
+                              JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
+                                               AND MovementItem.DescId =  zc_MI_Master()
+                              JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
                          WHERE ContainerLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-                           AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR DATE_TRUNC ('day', inStartDate) = DATE_TRUNC ('day', inEndDate))
+                           AND (ContainerLO_Juridical.ObjectId = inJuridicalId OR DATE_TRUNC ('day', inStartDate) = DATE_TRUNC ('day', inEndDate) OR COALESCE (inJuridicalId, 0) = 0)
 
                          GROUP BY Movement.Id 
                                 , Movement.InvNumber
@@ -76,8 +80,10 @@ BEGIN
 
          , Object_Juridical.ObjectCode AS JuridicalCode
          , Object_Juridical.ValueData  AS JuridicalName
-         , Object_Partner.ObjectCode   AS PartnerCode
-         , Object_Partner.ValueData    AS PartnerName
+         , Object_From.ObjectCode   AS FromCode
+         , Object_From.ValueData    AS FromName
+         , Object_To.ObjectCode     AS ToCode
+         , Object_To.ValueData      AS ToName
          , Object_PaidKind.ValueData   AS PaidKindName
           
          , Object_GoodsGroup.ValueData AS GoodsGroupName 
@@ -157,7 +163,7 @@ BEGIN
                       JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
                                        AND MovementItem.DescId =  zc_MI_Master()
                       JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
-           
+
                       LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                        ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                       AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
@@ -242,10 +248,15 @@ BEGIN
                               AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
           LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
 
-          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                       ON MovementLinkObject_Partner.MovementId = tmpOperationGroup.MovementId
-                                      AND MovementLinkObject_Partner.DescId = CASE WHEN inDescId = zc_Movement_Sale() THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END
-          LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                       ON MovementLinkObject_From.MovementId = tmpOperationGroup.MovementId
+                                      AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = tmpOperationGroup.MovementId
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
           LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Juridical
                                         ON ContainerLinkObject_Juridical.ContainerId = tmpOperationGroup.ContainerId
@@ -280,6 +291,7 @@ ALTER FUNCTION gpReport_GoodsMI_byMovement (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 06.05.14                                        * add From... and To...
  13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
  05.04.14         * add SummChangePercent , AmountChangePercent

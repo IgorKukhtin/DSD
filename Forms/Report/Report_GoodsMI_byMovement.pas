@@ -30,7 +30,7 @@ type
     clAmountPartner_Weight: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
+    clFromName: TcxGridDBColumn;
     clPaidKindName: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
@@ -42,6 +42,7 @@ type
     clAmountChangePercent_Weight: TcxGridDBColumn;
     clAmountChangePercent_Sh: TcxGridDBColumn;
     clSummChangePercent: TcxGridDBColumn;
+    clToName: TcxGridDBColumn;
   private
     { Private declarations }
   public

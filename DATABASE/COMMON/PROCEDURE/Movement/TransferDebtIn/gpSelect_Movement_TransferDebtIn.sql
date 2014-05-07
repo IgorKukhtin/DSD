@@ -80,7 +80,8 @@ BEGIN
            , View_InfoMoneyTo.InfoMoneyCode                   AS InfoMoneyCode_to
            , View_InfoMoneyTo.InfoMoneyName                   AS InfoMoneyName_to
 
-       FROM Movement 
+       FROM tmpStatus
+            INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtIn() AND Movement.StatusId = tmpStatus.StatusId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
@@ -148,9 +149,6 @@ BEGIN
                                          ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
-     
-       WHERE Movement.DescId = zc_Movement_TransferDebtIn()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
      ;
 
 END;

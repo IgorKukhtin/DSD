@@ -36,7 +36,7 @@ BEGIN
      -- проверили
      IF 1 <> (SELECT COUNT(*) FROM ObjectDate WHERE ValueData = vbOperDate AND DescId = zc_ObjectDate_InvNumberTax_Value())
      THEN
-         RAISE EXCEPTION 'Ошибка.Системная блокировка <Налоговый номер>.';
+         RAISE EXCEPTION 'Ошибка.Системная блокировка <Налоговый номер>, <%>.', vbOperDate;
      END IF;
 
 

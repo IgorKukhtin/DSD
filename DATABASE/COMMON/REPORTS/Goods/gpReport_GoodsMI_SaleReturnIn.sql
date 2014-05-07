@@ -1,7 +1,5 @@
 -- Function: gpReport_Goods_Movement ()
 
-DROP FUNCTION IF EXISTS gpReport_Goods_Movement (TDateTime, TDateTime, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
@@ -12,16 +10,16 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inGoodsGroupId Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (GoodsGroupName TVarChar
-              , GoodsCode Integer, GoodsName TVarChar
-              , GoodsKindName TVarChar
-              , TradeMarkName TVarChar
-              , JuridicalCode Integer, JuridicalName TVarChar
-              , PartnerCode Integer, PartnerName TVarChar
-              , PaidKindName TVarChar
-              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
-              , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
-              , Return_Summ TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat 
+RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
+             , GoodsCode Integer, GoodsName TVarChar
+             , GoodsKindName TVarChar
+             , TradeMarkName TVarChar
+             , JuridicalCode Integer, JuridicalName TVarChar
+             , PartnerCode Integer, PartnerName TVarChar
+             , PaidKindName TVarChar
+             , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
+             , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
+             , Return_Summ TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat 
               )   
 AS
 $BODY$
@@ -119,6 +117,7 @@ BEGIN
                         , tmpListContainer.MovementDescId
                          )
      SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
+          , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
           , Object_Goods.ObjectCode AS GoodsCode
           , Object_Goods.ValueData AS GoodsName
           , Object_GoodsKind.ValueData AS GoodsKindName
@@ -252,6 +251,9 @@ BEGIN
 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = tmpOperationGroup.PaidKindId 
 
+          LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
+                                 ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
+                                AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
@@ -268,9 +270,10 @@ ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Int
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 06.05.14                                        * add GoodsGroupNameFull
  28.03.14                                        * all
  06.02.14         *
 */
 
 -- тест
--- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.12.2013', inENDDate:= '31.12.2014',   inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());-- юр лицо 15616
+-- SELECT * FROM gpReport_GoodsMI_SaleReturnIn (inStartDate:= '01.01.2014', inENDDate:= '01.01.2014',   inJuridicalId:= 0, inGoodsGroupId:= 0, inSession:= zfCalc_UserAdmin());

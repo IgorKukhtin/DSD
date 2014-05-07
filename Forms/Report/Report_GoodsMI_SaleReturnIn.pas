@@ -43,6 +43,7 @@ type
     edJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
     clReturnPercent: TcxGridDBColumn;
+    clGoodsGroupNameFull: TcxGridDBColumn;
   private
     { Private declarations }
   public

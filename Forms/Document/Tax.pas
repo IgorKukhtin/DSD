@@ -78,12 +78,12 @@ type
     mactPrint_Tax_Client: TMultiAction;
     bbPrint_Us: TdxBarButton;
     edPartner: TcxButtonEdit;
-    GuidesPartner: TdsdGuides;
     cxLabel5: TcxLabel;
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel8: TcxLabel;
     edInvNumberBranch: TcxTextEdit;
     spTax: TdsdStoredProc;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public
