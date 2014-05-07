@@ -2,25 +2,25 @@ inherited SaleJournalForm: TSaleJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1074#1089#1077')>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1028
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
     Height = 478
     TabOrder = 3
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1110
+      ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 478
-        ExplicitWidth = 1110
+        ExplicitWidth = 1020
         ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
@@ -411,7 +411,7 @@ inherited SaleJournalForm: TSaleJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1110
+    ExplicitWidth = 1020
     object edIsPartnerDate: TcxCheckBox
       Left = 427
       Top = 5
@@ -451,6 +451,24 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
+    end
+    object actMovementCheck: TdsdOpenForm [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 30
+      FormName = 'TMovementCheckForm'
+      FormNameParam.Value = 'TMovementCheckForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
     end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -849,6 +867,14 @@ inherited SaleJournalForm: TSaleJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -902,6 +928,10 @@ inherited SaleJournalForm: TSaleJournalForm
     end
     object bbPrint_Bill: TdxBarButton
       Action = mactPrint_Bill
+      Category = 0
+    end
+    object bbMovementCheck: TdxBarButton
+      Action = actMovementCheck
       Category = 0
     end
   end

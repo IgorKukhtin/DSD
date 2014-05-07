@@ -111,6 +111,7 @@
 			<DCCReference Include="VclSmp.dcp"/>
 			<DCCReference Include="cxVerticalGridRS16.dcp"/>
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
+			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>

@@ -464,6 +464,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSale_PartnerJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSale_PartnerJournalForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementCheckForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementCheckForm');
 end;
 
 procedure TLoadFormTest.LoadTaxFormTest;
