@@ -71,7 +71,6 @@ type
     actUpdateMasterDS: TdsdUpdateDataSet;
     spInsertUpdateMIMaster: TdsdStoredProc;
     actPrintFrom: TdsdPrintAction;
-    frxDBDHeader: TfrxDBDataset;
     colDebetAccountGroupName: TcxGridDBColumn;
     colDebetAccountDirectionName: TcxGridDBColumn;
     colAccountCode: TcxGridDBColumn;
@@ -252,7 +251,6 @@ type
     colOperDate: TcxGridDBColumn;
     PrintHeaderCDS: TClientDataSet;
     spSelectPrintHeader: TdsdStoredProc;
-    frxDBDMaster: TfrxDBDataset;
     actPrintTo: TdsdPrintAction;
     actPrintAdmin: TdsdPrintAction;
     bbPrintTo: TdxBarButton;

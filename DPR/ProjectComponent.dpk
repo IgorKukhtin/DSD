@@ -56,8 +56,7 @@ requires
   cxPivotGridRS16,
   VclSmp,
   cxVerticalGridRS16,
-  dxSkinsCoreRS16,
-  ZLibEx;
+  dxSkinsCoreRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -83,6 +82,13 @@ contains
   ExternalDocumentLoad in '..\SOURCE\COMPONENT\ExternalDocumentLoad.pas',
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
-  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
 
 end.

@@ -3,7 +3,7 @@ unit dsdAction;
 interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
-     {cxGrid, }cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
+     cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
      cxGridDBTableView, frxClass;
 
 type

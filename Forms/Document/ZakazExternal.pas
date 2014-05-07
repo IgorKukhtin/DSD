@@ -52,7 +52,6 @@ type
     spInsertUpdateMovementItem: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    frxDBDataset: TfrxDBDataset;
     cxLabel14: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     cxLabel4: TcxLabel;

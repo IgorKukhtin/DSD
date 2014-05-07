@@ -111,7 +111,6 @@
 			<DCCReference Include="VclSmp.dcp"/>
 			<DCCReference Include="cxVerticalGridRS16.dcp"/>
 			<DCCReference Include="dxSkinsCoreRS16.dcp"/>
-			<DCCReference Include="ZLibEx.dcp"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\CommonData.pas"/>
@@ -144,6 +143,13 @@
 			<DCCReference Include="..\SOURCE\Log.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

@@ -51,6 +51,9 @@ BEGIN
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
            , MovementBoolean_Checked.ValueData          AS Checked
+           , 'J1201005'::TVarChar                       AS CHARCODE  
+           , 'Неграш О.В.'::TVarChar                    AS N10 
+           , 'оплата з поточного рахунка'::TVarChar     AS N9
 --           , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
            , MovementDate_DateRegistered.ValueData      AS DateRegistered
            , CAST (REPEAT (' ', 7 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
@@ -556,6 +559,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.14                       * add CHARCODE
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  11.04.14                                                       *
  02.04.14                                                       *  PriceWVAT PriceNoVAT round to 2 sign

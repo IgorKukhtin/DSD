@@ -755,6 +755,7 @@ object PersonalAccountForm: TPersonalAccountForm
     Top = 168
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -768,6 +769,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -786,6 +788,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -796,6 +799,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -815,12 +819,17 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -851,6 +860,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -860,6 +870,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
+      MoveParams = <>
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -869,6 +880,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       View = cxGridDBTableView
       Action = ContractChoiceForm
       Params = <>
@@ -880,6 +892,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -895,6 +908,7 @@ object PersonalAccountForm: TPersonalAccountForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -910,6 +924,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object InfoMoneyChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TInfoMoneyForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -929,6 +944,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object ContractChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -976,6 +992,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1001,6 +1018,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -1020,6 +1038,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1036,6 +1055,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1052,6 +1072,7 @@ object PersonalAccountForm: TPersonalAccountForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1200,14 +1221,6 @@ object PersonalAccountForm: TPersonalAccountForm
     Left = 86
     Top = 224
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 192
-    Top = 224
-  end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -1218,6 +1231,9 @@ object PersonalAccountForm: TPersonalAccountForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 328
     Top = 312
   end
@@ -1233,6 +1249,9 @@ object PersonalAccountForm: TPersonalAccountForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 368
     Top = 272
   end

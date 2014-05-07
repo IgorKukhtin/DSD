@@ -467,8 +467,8 @@ object Report_FuelForm: TReport_FuelForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -576,7 +576,12 @@ object Report_FuelForm: TReport_FuelForm
       StoredProcList = <>
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDataset'
+          IndexFieldNames = 'CarName'
+        end>
       Params = <
         item
           Name = 'PeriodStart'
@@ -723,14 +728,6 @@ object Report_FuelForm: TReport_FuelForm
         Component = BranchGuides
       end>
     Left = 256
-  end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSource = DataSource
-    BCDToCurrency = False
-    Left = 264
-    Top = 200
   end
   object FuelGuides: TdsdGuides
     KeyField = 'Id'

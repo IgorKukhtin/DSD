@@ -136,17 +136,25 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Name = 'Id'
           Value = Null
-        end
+        end>
+      isShowModal = False
+      DataSource = MasterDS
+      DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object actInsertMask: TdsdInsertUpdateAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
+      ShortCut = 16429
+      ImageIndex = 54
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
-          Name = 'inOperDate'
-          Value = 41640d
-          Component = deEnd
-          DataType = ftDateTime
+          Name = 'Id'
+          Value = Null
         end>
       isShowModal = False
       DataSource = MasterDS
@@ -465,6 +473,10 @@ inherited AncestorJournalForm: TAncestorJournalForm
     end
     object bbInsert: TdxBarButton
       Action = actInsert
+      Category = 0
+    end
+    object bbInsertMask: TdxBarButton
+      Action = actInsertMask
       Category = 0
     end
     object bbEdit: TdxBarButton

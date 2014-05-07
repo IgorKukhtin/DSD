@@ -359,6 +359,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Top = 231
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMI
       StoredProcList = <
         item
@@ -369,12 +370,17 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -401,6 +407,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -409,6 +416,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object OpenWorkTimeKindForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TWorkTimeKind_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -422,6 +430,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -435,6 +444,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object MultiAction: TMultiAction
       Category = 'DSDLib'
+      MoveParams = <>
       ActionList = <
         item
           Action = OpenWorkTimeKindForm
@@ -445,6 +455,7 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     end
     object InsertAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
@@ -482,9 +493,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
         end>
       isShowModal = True
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object UpdateAction: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
@@ -527,9 +540,11 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
       isShowModal = True
       ActionType = acUpdate
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actInsertUpdate_SheetWorkTime_FromTransport: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate_SheetWorkTime_FromTransport
       StoredProcList = <
         item
@@ -641,14 +656,6 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     Left = 374
     Top = 183
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 445
-    Top = 192
-  end
   object CrossDBViewAddOn: TCrossDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBBandedTableView
@@ -657,6 +664,9 @@ object SheetWorkTimeForm: TSheetWorkTimeForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     HeaderDataSet = HeaderCDS
     HeaderColumnName = 'ValueField'
     TemplateColumn = TemplateColumn

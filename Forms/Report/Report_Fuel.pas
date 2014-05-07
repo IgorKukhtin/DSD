@@ -65,7 +65,6 @@ type
     cxLabel2: TcxLabel;
     CarGuides: TdsdGuides;
     dsdPrintAction: TdsdPrintAction;
-    frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
     cxLabel4: TcxLabel;
     FuelGuides: TdsdGuides;

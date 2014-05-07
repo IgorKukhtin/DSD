@@ -1576,6 +1576,7 @@
     Top = 182
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -1588,6 +1589,7 @@
     end
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -1609,6 +1611,7 @@
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -1635,6 +1638,7 @@
     end
     object actPrintFrom: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -1647,7 +1651,15 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1054#1090' '#1082#1086#1075#1086
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
       Params = <
         item
           Name = 'isFrom'
@@ -1660,6 +1672,7 @@
     end
     object actPrintTo: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -1672,7 +1685,15 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1052#1072#1088#1096#1088#1091#1090'-'#1050#1086#1084#1091
       ImageIndex = 16
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
       Params = <
         item
           Name = 'isFrom'
@@ -1685,6 +1706,7 @@
     end
     object actPrintAdmin: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectPrintHeader
       StoredProcList = <
         item
@@ -1694,7 +1716,15 @@
       Hint = #1055#1077#1095#1072#1090#1100' '#1076#1083#1103' '#1040#1076#1084#1080#1085
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
       Params = <>
       ReportName = #1055#1091#1090#1077#1074#1086#1081' '#1083#1080#1089#1090' - '#1040#1076#1084#1080#1085
       ReportNameParam.Value = ''
@@ -1702,6 +1732,7 @@
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       ImageIndex = 6
@@ -1709,6 +1740,7 @@
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -1722,6 +1754,7 @@
     end
     object actUpdateChildDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIChild
       StoredProcList = <
         item
@@ -1732,6 +1765,7 @@
     end
     object actUpdateIncomeDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIIncome
       StoredProcList = <
         item
@@ -1743,6 +1777,7 @@
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       View = cxGridDBTableView
       Action = RouteChoiceForm
       Params = <>
@@ -1754,6 +1789,7 @@
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1769,6 +1805,7 @@
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1784,6 +1821,7 @@
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
@@ -1842,6 +1880,7 @@
     end
     object FreightChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'FreightChoiceForm'
       FormName = 'TFreightForm'
       FormNameParam.Value = ''
@@ -1861,6 +1900,7 @@
     end
     object RouteKindFreightChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'RouteKindFreightChoiceForm'
       FormName = 'TRouteKindForm'
       FormNameParam.Value = ''
@@ -1882,6 +1922,7 @@
     object InsertRecordIncome: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       View = cxGridIncomeDBTableView
       Action = SourceFuel_ObjectChoiceForm
       Params = <>
@@ -1893,6 +1934,7 @@
     object SetErasedIncome: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       StoredProc = spErasedMIIncome
       StoredProcList = <
         item
@@ -1908,6 +1950,7 @@
     object SetUnErasedIncome: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       StoredProc = spUnErasedMIIncome
       StoredProcList = <
         item
@@ -1923,6 +1966,7 @@
     end
     object SourceFuel_ObjectChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'ObjectFrom_byIncomeFuelChoiceForm'
       FormName = 'TSourceFuel_ObjectForm'
       FormNameParam.Value = ''
@@ -2004,6 +2048,7 @@
     end
     object PaidKindChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'PaidKindChoiceForm'
       FormName = 'TPaidKindForm'
       FormNameParam.Value = ''
@@ -2024,6 +2069,7 @@
     end
     object GoodsChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'GoodsChoiceForm'
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = ''
@@ -2055,6 +2101,7 @@
     end
     object RouteIncomeChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'RouteChoiceForm'
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
@@ -2076,6 +2123,7 @@
     object actUnCompleteIncome: TdsdChangeMovementStatus
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       StoredProc = spMovementUnCompleteIncome
       StoredProcList = <
         item
@@ -2099,6 +2147,7 @@
     object actCompleteIncome: TdsdChangeMovementStatus
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       StoredProc = spMovementCompleteIncome
       StoredProcList = <
         item
@@ -2122,6 +2171,7 @@
     object actSetErasedIncome: TdsdChangeMovementStatus
       Category = 'DSDLib'
       TabSheet = cxTabSheetIncome
+      MoveParams = <>
       StoredProc = spMovementSetErasedIncome
       StoredProcList = <
         item
@@ -2144,6 +2194,7 @@
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -2163,6 +2214,7 @@
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -2182,6 +2234,7 @@
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -2202,6 +2255,7 @@
     object TotalRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = cxTabSheetReport
+      MoveParams = <>
       StoredProc = spSelectMiReport
       StoredProcList = <
         item
@@ -2541,14 +2595,6 @@
       end>
     Left = 75
     Top = 226
-  end
-  object frxDBDHeader: TfrxDBDataset
-    UserName = 'frxDBDHeader'
-    CloseDataSource = False
-    DataSet = PrintHeaderCDS
-    BCDToCurrency = False
-    Left = 510
-    Top = 210
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
@@ -2994,8 +3040,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -3211,6 +3257,9 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 261
     Top = 320
   end
@@ -3222,6 +3271,9 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 320
     Top = 304
   end
@@ -3549,6 +3601,9 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 263
     Top = 364
   end
@@ -3560,6 +3615,9 @@
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 379
     Top = 282
   end
@@ -3708,14 +3766,6 @@
       end>
     Left = 466
     Top = 194
-  end
-  object frxDBDMaster: TfrxDBDataset
-    UserName = 'frxDBDMaster'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 494
-    Top = 237
   end
   object GuidesPersonal: TdsdGuides
     KeyField = 'Id'

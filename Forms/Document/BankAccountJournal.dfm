@@ -180,13 +180,6 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited Panel: TPanel
     Width = 1056
     ExplicitWidth = 1056
-    inherited deStart: TcxDateEdit
-      Properties.SaveTime = False
-      Properties.ShowTime = False
-    end
-    inherited deEnd: TcxDateEdit
-      Properties.SaveTime = False
-    end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -212,9 +205,62 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
+          Value = Null
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+    end
+    inherited actInsertMask: TdsdInsertUpdateAction
+      FormName = 'TBankAccountMovementForm'
+      FormNameParam.Value = 'TBankAccountMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = Null
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end>
     end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TBankAccountMovementForm'
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -226,6 +272,71 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsert'
+        end
+        item
+          Visible = True
+          ItemName = 'bbInsertMask'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEdit'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnComplete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDelete'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_BankAccount'

@@ -26,7 +26,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 971
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -216,14 +215,12 @@ object WeighingProductionForm: TWeighingProductionForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 971
     ClientRectBottom = 336
     ClientRectRight = 969
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 971
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -231,7 +228,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 971
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -450,7 +446,6 @@ object WeighingProductionForm: TWeighingProductionForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 971
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -458,7 +453,6 @@ object WeighingProductionForm: TWeighingProductionForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 971
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -902,6 +896,7 @@ object WeighingProductionForm: TWeighingProductionForm
     Top = 231
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <
         item
         end>
@@ -913,6 +908,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -932,6 +928,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object actShowAll: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -950,6 +947,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <
         item
         end>
@@ -958,6 +956,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -977,12 +976,17 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -1013,6 +1017,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1022,6 +1027,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
+      MoveParams = <>
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -1031,6 +1037,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -1046,6 +1053,7 @@ object WeighingProductionForm: TWeighingProductionForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -1061,6 +1069,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1078,6 +1087,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1095,6 +1105,7 @@ object WeighingProductionForm: TWeighingProductionForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1212,14 +1223,6 @@ object WeighingProductionForm: TWeighingProductionForm
     Left = 61
     Top = 384
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 477
-    Top = 336
-  end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -1233,6 +1236,8 @@ object WeighingProductionForm: TWeighingProductionForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 347
     Top = 337
   end
@@ -1249,6 +1254,8 @@ object WeighingProductionForm: TWeighingProductionForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 180
     Top = 360
   end

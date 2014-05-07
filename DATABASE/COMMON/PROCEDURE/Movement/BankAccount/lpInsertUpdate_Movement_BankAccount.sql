@@ -1,7 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -31,7 +31,7 @@ BEGIN
      END IF;
 
      -- Проверка установки значений
-     IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
+     IF NOT EXISTS (SELECT InfoMoneyId FROM Object_InfoMoney_View WHERE InfoMoneyId = inInfoMoneyId AND (InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500() -- Маркетинг
 
                                                                                                                                  , zc_Enum_InfoMoneyDestination_30500() -- Прочие доходы
 
@@ -49,7 +49,10 @@ BEGIN
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50200() -- Налоговые платежи
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50300() -- Налоговые платежи (прочие)
                                                                                                                                  , zc_Enum_InfoMoneyDestination_50400() -- штрафы в бюджет
-                                                                                                                                 ))
+                                                                                                                                  )
+                                                                                                         OR InfoMoneyId = zc_Enum_InfoMoney_21419() -- Штрафы за недовоз
+                                                                                                        )
+                    )
         -- AND EXISTS (SELECT Id FROM gpGet_Movement_BankStatementItem (inMovementId:= ioId, inSession:= inSession) WHERE ContractId = inContractId)
         AND NOT EXISTS (SELECT ContractId FROM Object_Contract_View WHERE ContractId = inContractId AND InfoMoneyId = inInfoMoneyId)
         AND NOT EXISTS (SELECT ChildObjectId FROM ObjectLink WHERE ObjectId = inMoneyPlaceId AND DescId = zc_ObjectLink_Juridical_InfoMoney() AND ChildObjectId IN (zc_Enum_InfoMoney_20801(), zc_Enum_InfoMoney_20901(), zc_Enum_InfoMoney_21001(), zc_Enum_InfoMoney_21101())) -- Алан + Ирна + Чапли + Дворкин
@@ -98,6 +101,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.03.14                                        * add zc_Enum_InfoMoney_21419
  13.03.14                                        * add lpInsert_MovementProtocol
  13.03.14                                        * err inParentId NOT NULL
  13.03.14                                        * add Проверка установки значений

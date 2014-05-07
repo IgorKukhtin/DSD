@@ -2,8 +2,8 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitWidth = 1083
-  ExplicitHeight = 703
+  ExplicitWidth = 1075
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -637,6 +637,37 @@ inherited TaxForm: TTaxForm
         end>
       Caption = 'actSPPrintTaxProcName'
     end
+    object MedocAction: TMedocAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      HeaderDataSet = PrintHeaderCDS
+      ItemsDataSet = PrintItemsCDS
+    end
+    object mactMeDoc: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMedocProcedure
+        end
+        item
+          Action = MedocAction
+        end>
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      ImageIndex = 30
+    end
+    object actMedocProcedure: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectTax_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Client
+        end>
+      Caption = 'actMedocProcedure'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -734,6 +765,10 @@ inherited TaxForm: TTaxForm
         end
         item
           Visible = True
+          ItemName = 'bbMeDoc'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -767,6 +802,10 @@ inherited TaxForm: TTaxForm
     end
     object bbTax: TdxBarButton
       Action = actTax
+      Category = 0
+    end
+    object bbMeDoc: TdxBarButton
+      Action = mactMeDoc
       Category = 0
     end
   end

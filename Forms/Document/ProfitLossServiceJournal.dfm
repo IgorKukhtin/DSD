@@ -4,24 +4,26 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
     #1086#1074')>'
   ClientHeight = 302
   ClientWidth = 990
-  ExplicitLeft = -139
-  ExplicitWidth = 998
-  ExplicitHeight = 336
+  ExplicitWidth = 1006
+  ExplicitHeight = 337
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 990
     Height = 245
     TabOrder = 3
-    ExplicitWidth = 982
+    ExplicitWidth = 990
+    ExplicitHeight = 245
     ClientRectBottom = 245
     ClientRectRight = 990
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 982
+      ExplicitWidth = 990
+      ExplicitHeight = 245
       inherited cxGrid: TcxGrid
         Width = 990
         Height = 245
-        ExplicitWidth = 982
+        ExplicitWidth = 990
+        ExplicitHeight = 245
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -179,7 +181,7 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   end
   inherited Panel: TPanel
     Width = 990
-    ExplicitWidth = 982
+    ExplicitWidth = 990
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
@@ -195,27 +197,15 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           Value = Null
         end
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end>
     end
-    object actInsertMask: TdsdInsertUpdateAction [3]
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
-      ShortCut = 16429
-      ImageIndex = 54
+    inherited actInsertMask: TdsdInsertUpdateAction
       FormName = 'TProfitLossServiceForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
+      FormNameParam.Value = 'TProfitLossServiceForm'
       GuiParams = <
         item
           Name = 'Id'
@@ -227,20 +217,11 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           ComponentItem = 'Id'
         end
         item
-          Name = 'ShowAll'
-          Value = True
-          DataType = ftBoolean
-        end
-        item
           Name = 'inOperDate'
           Value = 41640d
           Component = deStart
           DataType = ftDateTime
         end>
-      isShowModal = False
-      DataSource = MasterDS
-      DataSetRefresh = actRefresh
-      IdFieldName = 'Id'
     end
     inherited actUpdate: TdsdInsertUpdateAction
       Hint = #1048#1079#1084#1077#1085#1080#1090#1100
@@ -258,14 +239,9 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           ComponentItem = 'Id'
         end
         item
-          Name = 'ShowAll'
-          Value = False
-          DataType = ftBoolean
-        end
-        item
           Name = 'inOperDate'
           Value = 41640d
-          Component = deEnd
+          Component = deStart
           DataType = ftDateTime
         end>
     end
@@ -362,10 +338,6 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
           ItemName = 'bbGridToExcel'
         end>
     end
-    object bbInsertMask: TdxBarButton [5]
-      Action = actInsertMask
-      Category = 0
-    end
     object bbReCompleteAll: TdxBarButton
       Action = actReCompleteAll
       Category = 0
@@ -377,7 +349,6 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
   end
   inherited PopupMenu: TPopupMenu
     object N13: TMenuItem [1]
-      Action = actInsertMask
     end
   end
   inherited PeriodChoice: TPeriodChoice
