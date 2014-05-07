@@ -476,8 +476,8 @@ BEGIN
       WHERE _tmpMovement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut());
 
       -- удаляем все "лишние" корректировки у "базы"
-      PERFORM lpSetErased_Movement (inMovementId:= MovementLinkMovement.MovementId
-                                  , inUserId    := vbUserId)
+      PERFORM lpSetErased_Movement_TaxCorrective (inMovementId:= MovementLinkMovement.MovementId
+                                                , inUserId    := vbUserId)
       FROM _tmpMovement
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()

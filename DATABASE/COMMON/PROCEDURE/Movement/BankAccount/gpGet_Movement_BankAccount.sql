@@ -2,9 +2,11 @@
 
 DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankAccount(
     IN inMovementId        Integer  , -- êëþ÷ Äîêóìåíòà
+    IN inMovementId_Value  Integer   ,
     IN inOperDate          TDateTime , -- 
     IN inSession           TVarChar   -- ñåññèÿ ïîëüçîâàòåëÿ
 )
@@ -28,7 +30,7 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_Cash());
      vbUserId := lpGetUserBySession (inSession);
 
-     IF COALESCE (inMovementId, 0) = 0
+     IF COALESCE (inMovementId_Value, 0) = 0
      THEN
 
      RETURN QUERY 
@@ -64,17 +66,21 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , Movement.InvNumber
-           , Movement.OperDate
+           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
                       
-           , CASE WHEN MovementItem.Amount > 0 THEN
+           , CASE WHEN inMovementId = 0 
+                       THEN 0
+                  WHEN MovementItem.Amount > 0 THEN
                        MovementItem.Amount
                   ELSE
                       0
                   END::TFloat AS AmountIn
-           , CASE WHEN MovementItem.Amount < 0 THEN
+           , CASE WHEN inMovementId = 0 
+                       THEN 0
+                  WHEN MovementItem.Amount < 0 THEN
                        - MovementItem.Amount
                   ELSE
                       0
@@ -95,7 +101,7 @@ BEGIN
            , Object_Currency.Id                AS CurrencyId
            , Object_Currency.ValueData         AS CurrencyName
        FROM Movement
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
 
@@ -129,18 +135,19 @@ BEGIN
                                              ON MILinkObject_Currency.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
-       WHERE Movement.Id =  inMovementId;
+       WHERE Movement.Id =  inMovementId_Value;
 
    END IF;  
   
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpGet_Movement_BankAccount (Integer, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar) OWNER TO postgres;
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 25.01.14                                        * add inMovementId_Value
  25.01.14                                        * add inOperDate
  17.01.14                                        *
 */

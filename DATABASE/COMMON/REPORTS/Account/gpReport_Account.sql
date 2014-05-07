@@ -259,7 +259,7 @@ BEGIN
                                       ELSE 0
                                  END) AS SummOut
                           , Movement.DescId   AS MovementDescId
-                          , Movement.Id       AS MovementId
+                          , CASE WHEN vbIsMovement THEN Movement.Id        ELSE 0    END :: Integer   AS MovementId
                           , CASE WHEN vbIsMovement THEN Movement.InvNumber ELSE ''   END :: TVarChar  AS InvNumber
                           , CASE WHEN vbIsMovement THEN MIReport.OperDate  ELSE NULL END :: TDateTime AS OperDate
 
@@ -297,7 +297,7 @@ BEGIN
                             , MIReport.PassiveAccountId
                             , MIReport.ActiveAccountId
                             , Movement.DescId
-                            , Movement.Id  
+                            , CASE WHEN vbIsMovement THEN Movement.Id        ELSE 0    END
                             , CASE WHEN vbIsMovement THEN Movement.InvNumber ELSE ''   END
                             , CASE WHEN vbIsMovement THEN MIReport.OperDate  ELSE NULL END
 

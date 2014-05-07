@@ -233,17 +233,17 @@ BEGIN
             vbInfoMoneyId:= zc_Enum_InfoMoney_21501(); -- Бонусы за продукцию
         END IF;
 
-
-        IF COALESCE (vbContractId, 0) <> 0 THEN
-           -- сохранили связь с <Договор>
-           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);     
-        END IF;
-        IF COALESCE (vbInfoMoneyId, 0) <> 0 THEN
-           -- сохранили связь с <УП статья назначения>
-           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
-        END IF;
-
     END IF;  
+
+    IF COALESCE (vbContractId, 0) <> 0 THEN
+       -- сохранили связь с <Договор>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), vbMovementItemId, vbContractId);     
+    END IF;
+    IF COALESCE (vbInfoMoneyId, 0) <> 0 THEN
+       -- сохранили связь с <УП статья назначения>
+       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_InfoMoney(), vbMovementItemId, vbInfoMoneyId);
+    END IF;
+
    
 /*
     IF (COALESCE(vbInfoMoneyId, 0) = 0) AND (COALESCE(vbJuridicalId, 0) <> 0) THEN 
@@ -269,6 +269,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.05.14                                        * error
  17.03.14                                        * находим свойство <Договор> "по умолчанию"
  13.02.14                                        * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора
  03.12.13                                        *
