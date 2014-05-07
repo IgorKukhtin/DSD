@@ -267,9 +267,6 @@ initialization
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
 
-  // FastReport
-  RegisterClass (TfrxDBDataset);
-
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);
   RegisterClass (TChangeStatus);

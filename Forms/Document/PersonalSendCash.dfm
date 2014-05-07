@@ -588,8 +588,8 @@ object PersonalSendCashForm: TPersonalSendCashForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -736,6 +736,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     Top = 168
     object actInsertUpdateMovement: TdsdExecStoredProc
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovement
       StoredProcList = <
         item
@@ -749,6 +750,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object actShowErased: TBooleanStoredProcAction
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spSelectMI
       StoredProcList = <
         item
@@ -767,6 +769,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object actUpdateMasterDS: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMIMaster
       StoredProcList = <
         item
@@ -777,6 +780,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -796,11 +800,17 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -825,10 +835,13 @@ object PersonalSendCashForm: TPersonalSendCashForm
           ParamType = ptInput
         end>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -838,6 +851,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object EntryToExcel: TdsdGridToExcel
       Category = 'DSDLib'
       TabSheet = cxTabSheetEntry
+      MoveParams = <>
       Grid = cxGridEntry
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -847,8 +861,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object InsertRecord: TInsertRecord
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       View = cxGridDBTableView
       Action = CarChoiceForm
+      Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1040#1074#1090#1086#1084#1086#1073#1080#1083#1100'>'
       ShortCut = 45
@@ -857,6 +873,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object SetErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spErasedMIMaster
       StoredProcList = <
         item
@@ -872,6 +889,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     object SetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
       TabSheet = cxTabSheetMain
+      MoveParams = <>
       StoredProc = spUnErasedMIMaster
       StoredProcList = <
         item
@@ -887,6 +905,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object PersonalChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TPersonal_ObjectForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -911,6 +930,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object CarChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TCarForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -936,6 +956,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object RouteChoiceForm: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       FormName = 'TRouteForm'
       FormNameParam.Value = ''
       FormNameParam.DataType = ftString
@@ -955,6 +976,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object UnCompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -971,6 +993,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object CompleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -987,6 +1010,7 @@ object PersonalSendCashForm: TPersonalSendCashForm
     end
     object DeleteMovement: TChangeGuidesStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spChangeStatus
       StoredProcList = <
         item
@@ -1143,14 +1167,6 @@ object PersonalSendCashForm: TPersonalSendCashForm
     Left = 86
     Top = 224
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 192
-    Top = 224
-  end
   object MasterViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
@@ -1160,6 +1176,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = True
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 304
     Top = 288
   end
@@ -1174,6 +1194,10 @@ object PersonalSendCashForm: TPersonalSendCashForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 368
     Top = 272
   end

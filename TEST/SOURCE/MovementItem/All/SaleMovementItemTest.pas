@@ -18,7 +18,7 @@ type
   end;
 
   TSaleMovementItem = class(TMovementItemTest)
-  private
+  public
     function InsertDefault: integer; override;
   public
     function InsertUpdateSaleMovementItem
@@ -33,7 +33,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants,SaleTest;
+     Variants, SaleTest;
 
 { TSaleMovementItemTest }
 
@@ -54,20 +54,6 @@ end;
 procedure TSaleMovementItemTest.TearDown;
 begin
   inherited;
-  if Assigned(InsertedIdMovementItemList) then
-     with TMovementItemTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementItemList[0]));
-
-  if Assigned(InsertedIdMovementList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementList[0]));
-
-  if Assigned(InsertedIdObjectList) then
-     with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do
-          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 function TSaleMovementItem.InsertDefault: integer;
@@ -111,8 +97,6 @@ begin
   finally
     SaleMovementItem.Delete(Id);
   end;
-
-
 end;
 
 { TSaleMovementItem }

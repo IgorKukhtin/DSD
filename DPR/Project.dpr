@@ -37,7 +37,9 @@ uses
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
-  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas';
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas';
 
 {$R *.res}
 
@@ -50,7 +52,7 @@ begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
-       Application.CreateForm(TMainForm, MainFormInstance);
+       Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;

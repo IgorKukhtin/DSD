@@ -2,8 +2,8 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084'>'
   ClientHeight = 555
   ClientWidth = 1127
-  ExplicitWidth = 1143
-  ExplicitHeight = 590
+  ExplicitWidth = 1135
+  ExplicitHeight = 582
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -794,7 +794,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'StartDate'
@@ -1304,14 +1308,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = PaidKindGuides
       end>
     Top = 228
-  end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSource = MasterDS
-    BCDToCurrency = False
-    Left = 184
-    Top = 264
   end
   object InfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'

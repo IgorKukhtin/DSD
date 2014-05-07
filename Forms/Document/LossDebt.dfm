@@ -732,8 +732,8 @@ object LossDebtForm: TLossDebtForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -978,7 +978,11 @@ object LossDebtForm: TLossDebtForm
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'InvNumber'
@@ -1370,14 +1374,6 @@ object LossDebtForm: TLossDebtForm
         ParamType = ptInput
       end>
     Left = 86
-    Top = 224
-  end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = MasterCDS
-    BCDToCurrency = False
-    Left = 192
     Top = 224
   end
   object MasterViewAddOn: TdsdDBViewAddOn

@@ -301,8 +301,8 @@ object ZakazExternalForm: TZakazExternalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -402,6 +402,7 @@ object ZakazExternalForm: TZakazExternalForm
     Top = 96
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -421,6 +422,7 @@ object ZakazExternalForm: TZakazExternalForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdateMovementItem
       StoredProcList = <
         item
@@ -431,16 +433,25 @@ object ZakazExternalForm: TZakazExternalForm
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1055#1077#1095#1072#1090#1100
       Hint = #1055#1077#1095#1072#1090#1100
       ImageIndex = 3
       ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = ClientDataSet
+          UserName = 'frxDBDataset'
+        end>
       Params = <>
       ReportName = #1055#1088#1080#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      ReportNameParam.Value = ''
+      ReportNameParam.DataType = ftString
     end
     object GridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -449,6 +460,7 @@ object ZakazExternalForm: TZakazExternalForm
     end
     object BooleanStoredProcAction: TBooleanStoredProcAction
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spSelectMovementItem
       StoredProcList = <
         item
@@ -480,6 +492,8 @@ object ZakazExternalForm: TZakazExternalForm
   object dsdGuidesFrom: TdsdGuides
     KeyField = 'Id'
     LookupControl = edFrom
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPartner_ObjectForm'
     PositionDataSet = 'GridDataSet'
     Params = <>
@@ -625,17 +639,11 @@ object ZakazExternalForm: TZakazExternalForm
     Left = 112
     Top = 304
   end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSet = ClientDataSet
-    BCDToCurrency = False
-    Left = 240
-    Top = 232
-  end
   object RouteGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRoute
+    FormNameParam.Value = 'TRouteForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -645,6 +653,8 @@ object ZakazExternalForm: TZakazExternalForm
   object dsdGuidesRouteSorting: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceRouteSorting
+    FormNameParam.Value = 'TRouteSortingForm'
+    FormNameParam.DataType = ftString
     FormName = 'TRouteSortingForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -654,6 +664,8 @@ object ZakazExternalForm: TZakazExternalForm
   object PersonalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonal
+    FormNameParam.Value = 'TPersonalForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonalForm'
     PositionDataSet = 'ClientDataSet'
     Params = <>
@@ -662,6 +674,8 @@ object ZakazExternalForm: TZakazExternalForm
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
+    FormNameParam.Value = 'TInfoMoneyForm'
+    FormNameParam.DataType = ftString
     FormName = 'TInfoMoneyForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -671,6 +685,8 @@ object ZakazExternalForm: TZakazExternalForm
   end
   object JuridicalGroupGuides: TdsdGuides
     KeyField = 'Id'
+    FormNameParam.Value = 'TJuridicalGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TJuridicalGroupForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'TreeDataSet'
@@ -698,6 +714,10 @@ object ZakazExternalForm: TZakazExternalForm
     ActionItemList = <>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 416
     Top = 248
   end

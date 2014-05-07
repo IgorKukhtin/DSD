@@ -375,14 +375,7 @@ type
     constructor Create; override;
   end;
 
-  var
-    // Список добавленных Id
-    InsertedIdObjectList: TStringList;
-    // Список добавленных дефолтов
-    DefaultValueList: TStringList;
-
-
- implementation
+implementation
 
 uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
      UtilConvert, ZLibEx, zLibUtil,
@@ -2446,9 +2439,6 @@ begin
 end;
 
 initialization
-  InsertedIdObjectList := TStringList.Create;
-  InsertedIdObjectList.Sorted := true;
-  DefaultValueList := TStringList.Create;
 
   TestFramework.RegisterTest('Объекты', TdbObjectTest.Suite);
 

@@ -59,7 +59,6 @@ type
     spInsertUpdateMovementItem: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    frxDBDataset: TfrxDBDataset;
     colAmountSecond: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
     cxLabel4: TcxLabel;
