@@ -53,7 +53,7 @@ uses
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit, cxDBVGrid, Document, Defaults, ExternalSave;
+  cxDBEdit, cxDBVGrid, Document, Defaults, ExternalSave, MeDOC;
 
 {$R *.dfm}
 
@@ -300,6 +300,7 @@ initialization
   RegisterClass (THeaderSaver);
   RegisterClass (TInsertRecord);
   RegisterClass (TInsertUpdateChoiceAction);
+  RegisterClass (TMedocAction);
   RegisterClass (TMultiAction);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);

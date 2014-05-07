@@ -39,7 +39,9 @@ uses
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
   ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
-  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas';
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
 
 {$R *.res}
 
@@ -52,7 +54,7 @@ begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
-       Application.CreateForm(TMainFormInstance, MainFormInstance);
+       Application.CreateForm(TMainForm, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;
