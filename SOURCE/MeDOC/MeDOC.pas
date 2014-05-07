@@ -167,6 +167,8 @@ begin
   with TSaveDialog.Create(nil) do
   try
     DefaultExt := '*.xml';
+    FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
+                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
     Filter := 'Файлы МеДок (.xml)|*.xml|';
     if Execute then begin
        with TMedoc.Create do

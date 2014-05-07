@@ -23,7 +23,8 @@ uses
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxButtonEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, cxLabel, cxTextEdit, Vcl.ExtCtrls,
   cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet;
+  cxGridCustomView, cxGrid, cxPC, cxCurrencyEdit, cxCheckBox, frxClass, frxDBSet,
+  MeDOC;
 
 type
   TTaxForm = class(TAncestorDocumentForm)
@@ -84,6 +85,7 @@ type
     edInvNumberBranch: TcxTextEdit;
     spTax: TdsdStoredProc;
     GuidesPartner: TdsdGuides;
+    bbMeDoc: TdxBarButton;
   private
     { Private declarations }
   public
