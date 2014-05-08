@@ -422,7 +422,8 @@ uses
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas';
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.RES}
 
