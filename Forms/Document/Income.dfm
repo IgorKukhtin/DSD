@@ -1205,7 +1205,7 @@ object IncomeForm: TIncomeForm
     Left = 16
     Top = 303
   end
-  object dsdGuidesTo: TdsdGuides
+  object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
     FormNameParam.Value = 'TUnit_ObjectForm'
@@ -1216,7 +1216,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'Key'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1224,7 +1224,7 @@ object IncomeForm: TIncomeForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -1462,12 +1462,14 @@ object IncomeForm: TIncomeForm
       item
         Name = 'inFromId'
         Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inToId'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1475,12 +1477,14 @@ object IncomeForm: TIncomeForm
         Name = 'inPaidKindId'
         Value = ''
         Component = PaidKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'inContractId'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -1503,13 +1507,13 @@ object IncomeForm: TIncomeForm
         Control = edInvNumber
       end
       item
+        Control = edInvNumberPartner
+      end
+      item
         Control = edOperDate
       end
       item
         Control = edOperDatePartner
-      end
-      item
-        Control = edInvNumberPartner
       end
       item
         Control = edFrom
@@ -1589,20 +1593,20 @@ object IncomeForm: TIncomeForm
       item
         Name = 'ToId'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'Key'
       end
       item
         Name = 'ToName'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'TextValue'
         DataType = ftString
       end
       item
         Name = 'ToParentId'
         Value = ''
-        Component = dsdGuidesTo
+        Component = GuidesTo
         ComponentItem = 'ParentId'
         DataType = ftString
       end
@@ -1693,9 +1697,10 @@ object IncomeForm: TIncomeForm
     IdParam.ComponentItem = 'Id'
     GuidesList = <
       item
+        Guides = GuidesFrom
       end
       item
-        Guides = dsdGuidesTo
+        Guides = GuidesTo
       end>
     ActionItemList = <
       item

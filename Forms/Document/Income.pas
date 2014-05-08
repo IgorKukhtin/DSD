@@ -46,7 +46,7 @@ type
     edTo: TcxButtonEdit;
     cxLabel3: TcxLabel;
     cxLabel4: TcxLabel;
-    dsdGuidesTo: TdsdGuides;
+    GuidesTo: TdsdGuides;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     cxPageControl: TcxPageControl;
