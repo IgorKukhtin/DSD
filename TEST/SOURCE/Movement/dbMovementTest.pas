@@ -22,8 +22,6 @@ type
   TdbMovementTestNew = class (TdbTest)
   protected
     procedure SetUp; override;
-      // возвращаем данные для тестирования
-    procedure TearDown; override;
   end;
 
   TdbMovementTest = class (TdbMovementTestNew)
@@ -144,10 +142,6 @@ type
              FromId, ToId: Integer): integer;
     constructor Create; override;
   end;
-
-  var
-      // Список добавленных Id
-    InsertedIdMovementList: TStringList;
 
 implementation
 
@@ -889,28 +883,8 @@ begin
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 end;
 
-procedure TdbMovementTestNew.TearDown;
-begin
-  inherited;
-  if Assigned(InsertedIdMovementItemList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementItemList[0]));
-
-  if Assigned(InsertedIdMovementList) then
-   with TMovementTest.Create do
-     while InsertedIdMovementList.Count > 0 do
-        Delete(StrToInt(InsertedIdMovementList[0]));
-
-  if Assigned(InsertedIdObjectList) then
-     with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do
-          Delete(StrToInt(InsertedIdObjectList[0]));
-end;
 
 initialization
-  InsertedIdMovementList := TStringList.Create;
-  InsertedIdMovementList.Sorted := true;
 
   TestFramework.RegisterTest('Документы', TdbMovementTest.Suite);
 

@@ -286,7 +286,7 @@ uses
   SendDebt in '..\..\Forms\Document\SendDebt.pas' {SendDebtForm: TParentForm},
   TransportServiceJournal in '..\..\Forms\Document\TransportServiceJournal.pas' {TransportServiceJournalForm: TParentForm},
   UserKey in '..\..\Forms\Guides\UserKey.pas' {UserKeyForm: TParentForm},
-  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  MovementCheck in '..\..\Forms\System\MovementCheck.pas' {MovementCheckForm: TParentForm},
   InfoMoney in '..\..\Forms\Guides\InfoMoney.pas' {InfoMoneyForm: TParentForm},
   SalaryCalculation in '..\SOURCE\Calculation\SalaryCalculation.pas',
   Juridical in '..\..\Forms\Guides\Juridical.pas' {JuridicalForm: TParentForm},
@@ -415,6 +415,12 @@ uses
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
   TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm};
+  EdiTest in '..\SOURCE\EDI\EdiTest.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 
 {$R *.RES}
 

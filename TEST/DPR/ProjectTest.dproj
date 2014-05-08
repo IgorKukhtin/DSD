@@ -815,8 +815,8 @@
 				<Form>UserKeyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
-				<Form>MovementItemContainerForm</Form>
+			<DCCReference Include="..\..\Forms\System\MovementCheck.pas">
+				<Form>MovementCheckForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoney.pas">
@@ -1264,6 +1264,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
 				<Form>TransferDebtOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\EDI\EdiTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
+				<Form>MovementItemContainerForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

@@ -2,19 +2,14 @@ unit dbMovementCompleteTest;
 
 interface
 
-uses TestFramework, DB;
+uses TestFramework, DB, dbTest;
 
 type
 
-  TdbMovementCompleteTest = class (TTestCase)
+  TdbMovementCompleteTest = class (TdbTest)
   private
     // Распроведение документа
     procedure UnCompleteMovement(Id: integer);
-  protected
-    // подготавливаем данные для тестирования
-    procedure SetUp; override;
-    // возвращаем данные для тестирования
-    procedure TearDown; override;
   published
     procedure CompleteMovementIncomeTest;
   end;
@@ -53,31 +48,6 @@ begin
   finally
 
   end;
-end;
-
-procedure TdbMovementCompleteTest.SetUp;
-begin
-  inherited;
-  TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
-end;
-
-procedure TdbMovementCompleteTest.TearDown;
-begin
-  inherited;
-  if Assigned(InsertedIdMovementItemList) then
-     with TMovementItemTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementItemList[0]));
-
-  if Assigned(InsertedIdMovementList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementList[0]));
-
-  if Assigned(InsertedIdObjectList) then
-     with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do
-          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 procedure TdbMovementCompleteTest.UnCompleteMovement(Id: integer);

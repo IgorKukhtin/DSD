@@ -81,11 +81,11 @@
 			<DCC_RemoteDebug>true</DCC_RemoteDebug>
 		</PropertyGroup>
 		<PropertyGroup Condition="'$(Cfg_1_Win32)'!=''">
-			<VerInfo_Build>2</VerInfo_Build>
+			<VerInfo_Build>4</VerInfo_Build>
 			<Debugger_DebugSourcePath>D:\WORK\ExtLib\Components\FastReport 4.12\Source\ExportPack\;$(Debugger_DebugSourcePath)</Debugger_DebugSourcePath>
 			<VerInfo_MinorVer>2</VerInfo_MinorVer>
 			<VerInfo_Release>30</VerInfo_Release>
-			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.30.2;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
+			<VerInfo_Keys>CompanyName=;FileDescription=Управленческий учет - &quot;Project&quot;;FileVersion=1.2.30.4;InternalName=;LegalCopyright=;LegalTrademarks=;OriginalFilename=;ProductName=;ProductVersion=1.0.1;Comments=</VerInfo_Keys>
 			<Manifest_File>$(BDS)\bin\default_app.manifest</Manifest_File>
 			<VerInfo_Locale>1033</VerInfo_Locale>
 			<DCC_DcuOutput>..\DCU</DCC_DcuOutput>
@@ -153,6 +153,10 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

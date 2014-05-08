@@ -50,7 +50,6 @@ type
     spInsertUpdateMI: TdsdStoredProc;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
-    frxDBDataset: TfrxDBDataset;
     bbStatic: TdxBarStatic;
     GridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;

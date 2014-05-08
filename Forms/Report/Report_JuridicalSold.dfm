@@ -794,7 +794,11 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       Hint = #1055#1077#1095#1072#1090#1100' '#1086#1090#1095#1077#1090#1072
       ImageIndex = 3
       ShortCut = 16464
-      DataSets = <>
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDataset'
+        end>
       Params = <
         item
           Name = 'StartDate'
@@ -1304,14 +1308,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
         Component = PaidKindGuides
       end>
     Top = 228
-  end
-  object frxDBDataset: TfrxDBDataset
-    UserName = 'frxDBDataset'
-    CloseDataSource = False
-    DataSource = MasterDS
-    BCDToCurrency = False
-    Left = 184
-    Top = 264
   end
   object InfoMoneyGroupGuides: TdsdGuides
     KeyField = 'Id'

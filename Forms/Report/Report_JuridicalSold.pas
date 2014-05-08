@@ -32,7 +32,6 @@ type
     colEndAmount_A: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
     dsdPrintAction: TdsdPrintAction;
-    frxDBDataset: TfrxDBDataset;
     bbPrint: TdxBarButton;
     cxLabel3: TcxLabel;
     ceInfoMoneyGroup: TcxButtonEdit;

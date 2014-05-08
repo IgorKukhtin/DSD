@@ -23,10 +23,20 @@ type
     procedure Test; virtual;
   end;
 
+  var
+    // Список добавленных Id
+    InsertedIdObjectList: TStringList;
+    // Список добавленных дефолтов
+    DefaultValueList: TStringList;
+      // Список добавленных Id
+    InsertedIdMovementItemList: TStringList;
+      // Список добавленных Id
+    InsertedIdMovementList: TStringList;
+
 
 implementation
 
-uses zLibUtil, SysUtils;
+uses zLibUtil, SysUtils, dbObjectTest, dbMovementItemTest, dbMovementTest;
 { TdbTest }
 
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
@@ -78,6 +88,21 @@ end;
 procedure TdbTest.TearDown;
 begin
   inherited;
+  if Assigned(InsertedIdMovementItemList) then
+     with TMovementItemTest.Create do
+       while InsertedIdMovementItemList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementItemList[0]));
+
+  if Assigned(InsertedIdMovementList) then
+     with TMovementTest.Create do
+       while InsertedIdMovementList.Count > 0 do
+          Delete(StrToInt(InsertedIdMovementList[0]));
+
+  if Assigned(InsertedIdObjectList) then
+     with TObjectTest.Create do
+       while InsertedIdObjectList.Count > 0 do
+          Delete(StrToInt(InsertedIdObjectList[0]));
+
   ZConnection.Free;
   ZQuery.Free;
 end;
@@ -109,5 +134,18 @@ procedure TdbTest.Test;
 begin
 
 end;
+
+initialization
+
+  InsertedIdObjectList := TStringList.Create;
+  InsertedIdObjectList.Sorted := true;
+
+  DefaultValueList := TStringList.Create;
+
+  InsertedIdMovementItemList := TStringList.Create;
+  InsertedIdMovementItemList.Sorted := true;;
+
+  InsertedIdMovementList := TStringList.Create;
+  InsertedIdMovementList.Sorted := true;
 
 end.
