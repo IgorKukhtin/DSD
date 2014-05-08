@@ -708,6 +708,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.14                                        * add zc_MovementFloat_ChangePercent
  03.05.14                                        * all
  10.04.14                                        * all
  29.03.14         *

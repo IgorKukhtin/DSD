@@ -27,8 +27,6 @@ $BODY$
    DECLARE vbBranchId Integer;
    DECLARE vbIsInsert Boolean;
 BEGIN
-     -- проверка прав пользователя на вызов процедуры
-     inUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
      -- определяем ключ доступа
      vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
 
@@ -51,7 +49,8 @@ BEGIN
      END IF;
 
      -- 1. Распроводим Документ
-     PERFORM gpUnComplete_Movement_ProfitLossService (inMovementId := ioId, inSession := inSession);
+     PERFORM lpUnComplete_Movement (inMovementId := ioId
+                                  , inUserId     := inUserId);
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -89,11 +88,8 @@ BEGIN
 
 
      -- 5.3. проводим Документ
-     IF inUserId = lpCheckRight (inSession, zc_Enum_Process_Complete_Service())
-     THEN
-          PERFORM lpComplete_Movement_Service (inMovementId := ioId
-                                             , inUserId     := inUserId);
-     END IF;
+     PERFORM lpComplete_Movement_Service (inMovementId := ioId
+                                        , inUserId     := inUserId);
 
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
@@ -114,4 +110,4 @@ $BODY$
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_ProfitLossService (ioId := 0 , inInvNumber := '-1' , inOperDate := '01.01.2013', inAmountIn:= 20 , inAmountOut := 0 , inComment := '' , inContractId :=1 ,      inInfoMoneyId := 0,     inJuridicalId:= 1,       inPaidKindId:= 1,   inUnitId:= 0,   inContractConditionKindId:=0,     inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_Movement_ProfitLossService (ioId := 0 , inInvNumber := '-1' , inOperDate := '01.01.2013', inAmountIn:= 20 , inAmountOut := 0 , inComment := '' , inContractId :=1 ,      inInfoMoneyId := 0,     inJuridicalId:= 1,       inPaidKindId:= 1,   inUnitId:= 0,   inContractConditionKindId:=0,     inUserId:= zfCalc_UserAdmin())

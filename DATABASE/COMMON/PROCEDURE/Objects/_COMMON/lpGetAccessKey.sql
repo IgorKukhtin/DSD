@@ -64,7 +64,7 @@ BEGIN
   END IF;
 
   -- проверка - должен быть только "один" процесс (доступ просмотра)
-  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
+  IF EXISTS (SELECT 1 FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
                                                                                                    , zc_Enum_Process_AccessKey_GuideAll()
                                                                                                     )
                                                                              AND RoleCode NOT IN (22 -- Транспорт-просмотр ВСЕХ документов
@@ -74,7 +74,7 @@ BEGIN
                                                                                                 , 52 -- Касса-просмотр ВСЕХ документов
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
-                                                                                                , 1101 -- Бухг
+--                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND ((RoleCode BETWEEN 40 and 49
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -94,6 +94,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                  )
+             GROUP BY AccessKeyId) AS tmp
              HAVING Count(*) = 1)
   THEN
       vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
@@ -106,7 +107,7 @@ BEGIN
                                                                                                 , 52 -- Касса-просмотр ВСЕХ документов
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
-                                                                                                , 1101 -- Бухг
+--                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND ((RoleCode BETWEEN 40 and 49
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -126,7 +127,8 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                  )
-                   );
+             GROUP BY AccessKeyId
+            );
   ELSE
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
   END IF;  
