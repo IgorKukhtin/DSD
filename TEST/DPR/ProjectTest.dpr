@@ -414,13 +414,15 @@ uses
   TransferDebtIn in '..\..\Forms\Document\TransferDebtIn.pas' {TransferDebtInForm: TParentForm},
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
-  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm};
-  EdiTest in '..\SOURCE\EDI\EdiTest.pas',
-  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
-  EDI in '..\..\SOURCE\EDI\EDI.pas',
-  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
   MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
-  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  EdiTest in '..\SOURCE\EDI\EdiTest.pas',
+  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas';
 
 {$R *.RES}
 
