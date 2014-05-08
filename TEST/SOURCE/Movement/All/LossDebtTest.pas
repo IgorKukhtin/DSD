@@ -2,7 +2,7 @@ unit LossDebtTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TLossDebtTest = class (TdbMovementTestNew)

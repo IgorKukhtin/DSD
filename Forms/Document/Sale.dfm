@@ -2,8 +2,9 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitTop = -59
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -286,6 +287,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -825,6 +827,38 @@ inherited SaleForm: TSaleForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
+    object EDIActionDesadv: TEDIActionDesadv
+      Category = 'EDI'
+      MoveParams = <>
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactDECLAR: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = EDIActionDesadv
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' EDI?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1099#1075#1088#1091#1078#1077#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' DECLAR'
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' DECLAR'
+      ImageIndex = 67
+    end
+    object actExecPrintStoredProc: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spSelectEDI
+      StoredProcList = <
+        item
+          StoredProc = spSelectEDI
+        end>
+      Caption = 'actExecPrintStoredProc'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 32
@@ -968,6 +1002,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbDECLAR'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -997,6 +1035,10 @@ inherited SaleForm: TSaleForm
     end
     object bbTax: TdxBarButton
       Action = actTax
+      Category = 0
+    end
+    object bbDECLAR: TdxBarButton
+      Action = mactDECLAR
       Category = 0
     end
   end
@@ -2123,5 +2165,27 @@ inherited SaleForm: TSaleForm
         DataType = ftFloat
       end>
     Left = 616
+  end
+  object spSelectEDI: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_EDI'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 319
+    Top = 248
   end
 end

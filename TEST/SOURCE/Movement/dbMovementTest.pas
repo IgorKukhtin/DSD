@@ -1,23 +1,9 @@
 unit dbMovementTest;
 
 interface
-uses TestFramework, dbObjectTest, Classes, dbTest;
+uses TestFramework, dbObjectTest, Classes, dbTest, ObjectTest;
 
 type
-
-  TMovementTest = class(TObjectTest)
-  protected
-    spCompleteProcedure: string;
-    spUnCompleteProcedure: string;
-    procedure InsertUpdateInList(Id: integer); override;
-    procedure DocumentComplete(Id: integer);
-    procedure DocumentUncomplete(Id: integer);
-    procedure DeleteRecord(Id: Integer); override;
-    procedure SetDataSetParam; override;
-  public
-    constructor Create; override;
-    procedure Delete(Id: Integer); override;
-  end;
 
   TdbMovementTestNew = class (TdbTest)
   protected
@@ -801,78 +787,6 @@ begin
   FParams.AddParam('inToId', ftInteger, ptInput, ToId);
 
   result := InsertUpdate(FParams);
-end;
-
-{ TMovementTest }
-
-constructor TMovementTest.Create;
-begin
-  inherited;
-  spUnCompleteProcedure := 'gpUnComplete_Movement';
-end;
-
-procedure TMovementTest.Delete(Id: Integer);
-var Index: Integer;
-begin
-  if InsertedIdMovementList.Find(IntToStr(Id), Index) then begin
-     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-     DeleteRecord(Id);
-     InsertedIdMovementList.Delete(Index);
-  end
-  else
-     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
-end;
-
-procedure TMovementTest.DeleteRecord(Id: Integer);
-const
-  pXML =
-  '<xml Session = "">' +
-    '<lpDelete_Movement OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_Movement>' +
-  '</xml>';
-var i: integer;
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
-  for i := 0 to DefaultValueList.Count - 1 do
-      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
-         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
-         break;
-      end;
-end;
-
-procedure TMovementTest.DocumentComplete(Id: integer);
-begin
-  with FdsdStoredProc do begin
-    StoredProcName := spCompleteProcedure;
-    OutputType := otResult;
-    Params.Clear;
-    Params.AddParam('inMovementId', ftInteger, ptInput, Id);
-    Execute;
-  end;
-end;
-
-procedure TMovementTest.DocumentUncomplete(Id: integer);
-begin
-  with FdsdStoredProc do begin
-    StoredProcName := spUnCompleteProcedure;
-    OutputType := otResult;
-    Params.Clear;
-    Params.AddParam('inMovementId', ftInteger, ptInput, Id);
-    Execute;
-  end;
-end;
-
-procedure TMovementTest.InsertUpdateInList(Id: integer);
-begin
-  InsertedIdMovementList.Add(IntToStr(Id));
-end;
-
-procedure TMovementTest.SetDataSetParam;
-begin
-  inherited;
-  FParams.AddParam('inStartDate', ftDateTime, ptInput, FloatToDateTime(Date - 1));
-  FParams.AddParam('inEndDate', ftDateTime, ptInput, Date);
 end;
 
 { TdbMovementTestNew }

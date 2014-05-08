@@ -1,35 +1,9 @@
 unit dbObjectTest;
 
 interface
-uses Classes, TestFramework, Authentication, Db, XMLIntf, dsdDB, dbTest;
+uses Classes, TestFramework, Authentication, Db, XMLIntf, dsdDB, dbTest, ObjectTest;
 
 type
-
-  TObjectTest = class
-  private
-    FspInsertUpdate: string;
-    FspSelect: string;
-    FspGet: string;
-    FIdentity: integer;
-  protected
-    FdsdStoredProc: TdsdStoredProc;
-    FParams: TdsdParams;
-    property spGet: string read FspGet write FspGet;
-    property spSelect: string read FspSelect write FspSelect;
-    property spInsertUpdate: string read FspInsertUpdate write FspInsertUpdate;
-    function InsertUpdate(dsdParams: TdsdParams): Integer;
-    procedure InsertUpdateInList(Id: integer); virtual;
-    function InsertDefault: integer; virtual;
-    procedure SetDataSetParam; virtual;
-  public
-    procedure DeleteRecord(Id: Integer); virtual;
-    function GetDefault: integer;
-    function GetDataSet: TDataSet; virtual;
-    function GetRecord(Id: integer): TDataSet; virtual;
-    procedure Delete(Id: Integer); virtual;
-    constructor Create; virtual;
-    destructor Destoy;
-  end;
 
   TdbObjectTestNew = class (TdbTest)
   protected
@@ -382,117 +356,6 @@ uses ZDbcIntfs, SysUtils, Storage, DBClient, XMLDoc, CommonData, Forms,
 
      UnitsTest, JuridicalTest, BusinessTest;
 
-
-{ TObjectTest }
-
-constructor TObjectTest.Create;
-begin
-  FdsdStoredProc := TdsdStoredProc.Create(nil);
-  FParams := TdsdParams.Create(nil, TdsdParam);
-end;
-
-procedure TObjectTest.DeleteRecord(Id: Integer);
-const
-   pXML =
-  '<xml Session = "">' +
-    '<lpDelete_Object OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_Object>' +
-  '</xml>';
-var i: integer;
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
-  for i := 0 to DefaultValueList.Count - 1 do
-      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
-         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
-         break;
-      end;
-end;
-
-procedure TObjectTest.Delete(Id: Integer);
-var Index: Integer;
-begin
-  if InsertedIdObjectList.Find(IntToStr(Id), Index) then begin
-     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-     DeleteRecord(Id);
-     InsertedIdObjectList.Delete(Index);
-  end
-  else
-     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
-end;
-
-destructor TObjectTest.Destoy;
-var i: integer;
-begin
-  FdsdStoredProc.Free;
-end;
-
-function TObjectTest.GetDataSet: TDataSet;
-begin
-  with FdsdStoredProc do begin
-    if (DataSets.Count = 0) or not Assigned(DataSets[0].DataSet) then
-       DataSets.Add.DataSet := TClientDataSet.Create(nil);
-    StoredProcName := FspSelect;
-    OutputType := otDataSet;
-    FParams.Clear;
-    SetDataSetParam;
-    if FspSelect='gpSelect_Object_Partner' then FParams.AddParam('inJuridicalId', ftInteger, ptInput, 0);
-    Params.Assign(FParams);
-    Execute;
-    result := DataSets[0].DataSet;
-  end;
-end;
-
-function TObjectTest.GetDefault: integer;
-begin
-   if DefaultValueList.Values[ClassName] = '' then
-      DefaultValueList.Values[ClassName] := IntToStr(InsertDefault);
-   result := StrToInt(DefaultValueList.Values[ClassName]);
-end;
-
-function TObjectTest.GetRecord(Id: integer): TDataSet;
-begin
-  with FdsdStoredProc do begin
-    DataSets.Add.DataSet := TClientDataSet.Create(nil);
-    StoredProcName := spGet;
-    OutputType := otDataSet;
-    Params.Clear;
-    Params.AddParam('ioId', ftInteger, ptInputOutput, Id);
-    if spGet='gpGet_Object_Partner' then Params.AddParam('inJuridicalId', ftInteger, ptInput, 0);
-    Execute;
-    result := DataSets[0].DataSet;
-  end;
-end;
-
-function TObjectTest.InsertDefault: integer;
-begin
-  DefaultValueList.Values[ClassName] := IntToStr(FIdentity);
-end;
-
-function TObjectTest.InsertUpdate(dsdParams: TdsdParams): Integer;
-var OldId: integer;
-begin
-  with FdsdStoredProc do begin
-    StoredProcName := FspInsertUpdate;
-    OutputType := otResult;
-    Params.Assign(dsdParams);
-    Execute;
-    Result := StrToInt(ParamByName('ioId').Value);
-    FIdentity := Result;
-    if OldId <> Result then
-       InsertUpdateInList(Result)
-  end;
-end;
-
-procedure TObjectTest.InsertUpdateInList(Id: integer);
-begin
-  InsertedIdObjectList.Add(IntToStr(Id));
-end;
-
-procedure TObjectTest.SetDataSetParam;
-begin
-  FdsdStoredProc.Params.Clear;
-end;
 
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}

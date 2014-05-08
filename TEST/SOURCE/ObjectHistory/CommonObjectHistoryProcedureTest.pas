@@ -1,7 +1,7 @@
 unit CommonObjectHistoryProcedureTest;
 
 interface
-uses dbTest, dbObjectTest;
+uses dbTest, dbObjectTest, ObjectTest;
 
 type
 

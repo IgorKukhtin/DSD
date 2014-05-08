@@ -2,27 +2,27 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitWidth = 1028
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
     Width = 1020
     Height = 542
-    ExplicitTop = 126
-    ExplicitWidth = 1115
-    ExplicitHeight = 542
+    ExplicitTop = 100
+    ExplicitWidth = 1020
+    ExplicitHeight = 568
     ClientRectBottom = 542
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1115
-      ExplicitHeight = 518
+      ExplicitWidth = 1020
+      ExplicitHeight = 544
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1115
-        ExplicitHeight = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 544
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -226,13 +226,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 1115
-      ExplicitHeight = 518
+      ExplicitTop = 24
+      ExplicitWidth = 1020
+      ExplicitHeight = 544
       inherited cxGridEntry: TcxGrid
         Width = 1020
         Height = 518
-        ExplicitWidth = 1115
-        ExplicitHeight = 518
+        ExplicitWidth = 1020
+        ExplicitHeight = 544
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -257,7 +258,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1020
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1115
+    ExplicitWidth = 1020
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -289,7 +290,6 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -982,6 +982,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+      Visible = True
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale

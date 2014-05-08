@@ -37,11 +37,13 @@ uses
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
-  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
-  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
-  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
 
 {$R *.res}
 

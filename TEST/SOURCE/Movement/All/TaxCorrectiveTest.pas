@@ -2,7 +2,7 @@ unit TaxCorrectiveTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TTaxCorrectiveTest = class (TdbMovementTestNew)

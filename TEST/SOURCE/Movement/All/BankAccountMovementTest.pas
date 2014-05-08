@@ -2,7 +2,7 @@ unit BankAccountMovementTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TBankAccountMovementTest = class (TdbMovementTestNew)

@@ -2,15 +2,13 @@ unit SheetWorkTimeMovementItemTest;
 
 interface
 
-uses dbMovementItemTest, dbTest;
+uses dbMovementItemTest, dbTest, ObjectTest;
 
 type
 
   TSheetWorkTimeMovementItemTest = class(TdbTest)
   protected
     procedure SetUp; override;
-    // возвращаем данные для тестирования
-    procedure TearDown; override;
   published
     // загрузка процедура из определенной директории
     procedure ProcedureLoad; virtual;
@@ -45,25 +43,6 @@ procedure TSheetWorkTimeMovementItemTest.SetUp;
 begin
   inherited;
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
-end;
-
-procedure TSheetWorkTimeMovementItemTest.TearDown;
-begin
-  inherited;
-  if Assigned(InsertedIdMovementItemList) then
-     with TMovementItemTest.Create do
-       while InsertedIdMovementItemList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementItemList[0]));
-
-  if Assigned(InsertedIdMovementList) then
-     with TMovementTest.Create do
-       while InsertedIdMovementList.Count > 0 do
-          Delete(StrToInt(InsertedIdMovementList[0]));
-
-  if Assigned(InsertedIdObjectList) then
-     with TObjectTest.Create do
-       while InsertedIdObjectList.Count > 0 do
-          Delete(StrToInt(InsertedIdObjectList[0]));
 end;
 
 procedure TSheetWorkTimeMovementItemTest.Test;

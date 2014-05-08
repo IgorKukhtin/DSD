@@ -2,7 +2,7 @@ unit ReturnOutTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TReturnOutTest = class (TdbMovementTestNew)

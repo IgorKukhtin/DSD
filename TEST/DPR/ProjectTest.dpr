@@ -419,7 +419,9 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   EDI in '..\..\SOURCE\EDI\EDI.pas',
   MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
-  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas';
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  ObjectTest in '..\SOURCE\Objects\ObjectTest.pas';
 
 {$R *.RES}
 

@@ -2,7 +2,7 @@ unit PriceListItemTest;
 
 interface
 
-uses dbTest, dbObjectTest, SysUtils, Classes;
+uses dbTest, dbObjectTest, SysUtils, Classes, ObjectTest;
 
 type
 
