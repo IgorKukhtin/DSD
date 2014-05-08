@@ -34,6 +34,8 @@ BEGIN
                        , zc_Enum_Process_InsertUpdate_Movement_ReturnOut()
                        , zc_Enum_Process_InsertUpdate_Movement_Sale()
                        , zc_Enum_Process_InsertUpdate_Movement_ReturnIn()
+                       , zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn()
+                       , zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut()
                         )
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)

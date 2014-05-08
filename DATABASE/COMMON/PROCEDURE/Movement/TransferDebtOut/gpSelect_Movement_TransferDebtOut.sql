@@ -14,6 +14,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar, OKPO_From TVarChar
              , ToId Integer, ToName TVarChar, OKPO_To TVarChar
+             , PartnerCode Integer, PartnerName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar, ContractTagFromName TVarChar
              , ContractToId Integer, ContractToName TVarChar, ContractTagToName TVarChar
              , PaidKindFromName TVarChar, PaidKindToName TVarChar
@@ -39,6 +40,10 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
+        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+                              )
      SELECT
              Movement.Id	                        AS Id
            , Movement.InvNumber		                AS InvNumber
@@ -62,6 +67,9 @@ BEGIN
            , Object_To.Id                      		AS ToId
            , Object_To.ValueData               		AS ToName
            , View_JuridicalDetails_To.OKPO              AS OKPO_To
+
+           , Object_Partner.ObjectCode                  AS PartnerCode
+           , Object_Partner.ValueData               	AS PartnerName
 
            , View_Contract_InvNumberFrom.ContractId      AS ContractFromId
            , View_Contract_InvNumberFrom.InvNumber       AS ContractFromName
@@ -105,6 +113,7 @@ BEGIN
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtOut() AND Movement.StatusId = tmpStatus.StatusId
+            INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -140,10 +149,6 @@ BEGIN
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
 
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -155,6 +160,11 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectHistory_JuridicalDetails_View AS View_JuridicalDetails_To ON View_JuridicalDetails_To.JuridicalId = Object_To.Id
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                          ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
@@ -209,6 +219,8 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtOut (TDateTime, TDateTime, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 07.05.14                                        * add tmpRoleAccessKey
+ 07.05.14                                        * add Partner...
  03.05.14                                        * all
  22.04.14         *
  */

@@ -173,12 +173,12 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1127
+      ExplicitWidth = 1084
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
         Width = 1084
         Height = 513
-        ExplicitWidth = 1127
+        ExplicitWidth = 1084
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -234,6 +234,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -397,14 +398,31 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       TabOrder = 26
       Width = 114
     end
+    object cxLabel12: TcxLabel
+      Left = 618
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
+    object edPartner: TcxButtonEdit
+      Left = 618
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 28
+      Text = ' '
+      Width = 174
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 618
+    Left = 807
     Top = 5
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object edPriceList: TcxButtonEdit [3]
-    Left = 618
+    Left = 807
     Top = 23
     Properties.Buttons = <
       item
@@ -412,7 +430,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 333
+    Width = 144
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1165,6 +1183,19 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         DataType = ftString
       end
       item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
         Name = 'DocumentTaxKindId'
         Value = ''
         Component = DocumentTaxKindGuides
@@ -1272,6 +1303,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = PaidKindToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1312,6 +1350,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Control = edContractTo
+      end
+      item
+        Control = edPartner
       end
       item
         Control = edPriceWithVAT
@@ -1789,37 +1830,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'Key'
-        DataType = ftString
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesFrom
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindFromGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindFromGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = ContractFromGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -1827,9 +1842,34 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = ContractFromGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = 0
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        DataType = ftString
       end>
-    Left = 296
-    Top = 8
+    Left = 280
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1840,36 +1880,11 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = ContractToGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -1877,12 +1892,53 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = ContractToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindToGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindToGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = 0
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        DataType = ftString
       end>
     Left = 544
   end
@@ -1965,5 +2021,46 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end>
     Left = 924
     Top = 32
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 704
+    Top = 16
   end
 end

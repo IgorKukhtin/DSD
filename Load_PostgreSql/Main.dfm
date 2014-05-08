@@ -1063,6 +1063,21 @@ object MainForm: TMainForm
       WordWrap = True
       OnClick = cbReturnInFlClick
     end
+    object cbBill_List: TCheckBox
+      Left = 3
+      Top = 598
+      Width = 235
+      Height = 17
+      Caption = #1054#1075#1088#1072#1085#1080#1095#1077#1085#1080#1077' '#1087#1086' '#1089#1087#1080#1089#1082#1091' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 32
+      OnClick = cbReturnInFlClick
+    end
   end
   object CompleteDocumentPanel: TPanel
     Left = 1028

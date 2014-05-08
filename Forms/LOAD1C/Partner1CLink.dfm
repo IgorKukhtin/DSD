@@ -2,6 +2,7 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
   ClientWidth = 1038
+  ExplicitLeft = -56
   ExplicitWidth = 1054
   ExplicitHeight = 436
   PixelsPerInch = 96
@@ -334,12 +335,12 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           DataType = ftString
         end
         item
-          Name = 'JuridicalId'
+          Name = 'MasterJuridicalId'
           Component = MasterCDS
           ComponentItem = 'JuridicalId'
         end
         item
-          Name = 'JuridicalName'
+          Name = 'MasterJuridicalName'
           Component = MasterCDS
           ComponentItem = 'JuridicalName'
           DataType = ftString
@@ -392,17 +393,6 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
       FormNameParam.DataType = ftString
       GuiParams = <
         item
-          Name = 'JuridicalId'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalId'
-        end
-        item
-          Name = 'JuridicalName'
-          Component = MasterCDS
-          ComponentItem = 'JuridicalName'
-          DataType = ftString
-        end
-        item
           Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'PartnerId'
@@ -412,6 +402,31 @@ inherited Partner1CLinkForm: TPartner1CLinkForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'PartnerName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+          ParamType = ptInput
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'MasterJuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'MasterJuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
           DataType = ftString
         end>
       isShowModal = False

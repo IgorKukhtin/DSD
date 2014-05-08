@@ -1272,7 +1272,7 @@ object ContractForm: TContractForm
     Top = 208
   end
   object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_Contract'
     DataSets = <>
     OutputType = otResult
     Params = <

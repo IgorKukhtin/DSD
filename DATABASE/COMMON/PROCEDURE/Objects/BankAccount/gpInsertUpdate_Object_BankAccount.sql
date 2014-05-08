@@ -1,27 +1,26 @@
-п»ї-- Function: gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
+-- Function: gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar)
 
 -- DROP FUNCTION gpInsertUpdate_Object_BankAccount(Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_BankAccount(
- INOUT ioId	                 Integer,       -- РєР»СЋС‡ РѕР±СЉРµРєС‚Р° < РЎС‡РµС‚>
-    IN inCode                Integer,       -- РљРѕРґ РѕР±СЉРµРєС‚Р° <РЎС‡РµС‚>
-    IN inName                TVarChar,      -- РќР°Р·РІР°РЅРёРµ РѕР±СЉРµРєС‚Р° <РЎС‡РµС‚>
-    IN inJuridicalId         Integer,       -- Р®СЂ. Р»РёС†Рѕ
-    IN inBankId              Integer,       -- Р‘Р°РЅРє
-    IN inCurrencyId          Integer,       -- Р’Р°Р»СЋС‚Р°
-    IN inSession             TVarChar       -- СЃРµСЃСЃРёСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ
+ INOUT ioId	             Integer,       -- ключ объекта < Счет>
+    IN inCode                Integer,       -- Код объекта <Счет>
+    IN inName                TVarChar,      -- Название объекта <Счет>
+    IN inJuridicalId         Integer,       -- Юр. лицо
+    IN inBankId              Integer,       -- Банк
+    IN inCurrencyId          Integer,       -- Валюта
+    IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS integer AS
 $BODY$
-   DECLARE UserId Integer;
+   DECLARE vbUserId Integer;
    DECLARE Code_max Integer;   
 BEGIN
+   -- проверка прав пользователя на вызов процедуры
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankAccount());
 
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ РЅР° РІС‹Р·РѕРІ РїСЂРѕС†РµРґСѓСЂС‹
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_BankAccount());
-   UserId := inSession;
   
-   -- Р•СЃР»Рё РєРѕРґ РЅРµ СѓСЃС‚Р°РЅРѕРІР»РµРЅ, РѕРїСЂРµРґРµР»СЏРµРј РµРіРѕ РєР°Рё РїРѕСЃР»РµРґРЅРёР№+1
+   -- Если код не установлен, определяем его каи последний+1
    IF COALESCE (inCode, 0) = 0
    THEN 
        SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_BankAccount();
@@ -29,35 +28,32 @@ BEGIN
        Code_max := inCode;
    END IF;  
    
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РќР°РёРјРµРЅРѕРІР°РЅРёРµ РЎС‡РµС‚Р°>
+   -- проверка прав уникальности для свойства <Наименование Счета>
    PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_BankAccount(), inName);
-   -- РїСЂРѕРІРµСЂРєР° РїСЂР°РІ СѓРЅРёРєР°Р»СЊРЅРѕСЃС‚Рё РґР»СЏ СЃРІРѕР№СЃС‚РІР° <РљРѕРґ РЎС‡РµС‚Р°>
+   -- проверка прав уникальности для свойства <Код Счета>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_BankAccount(), Code_max);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё <РћР±СЉРµРєС‚>
+   -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_BankAccount(), Code_max, inName);
 
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), ioId, inJuridicalId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), ioId, inBankId);
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Currency(), ioId, inCurrencyId);
 
-   -- СЃРѕС…СЂР°РЅРёР»Рё РїСЂРѕС‚РѕРєРѕР»
-   PERFORM lpInsert_ObjectProtocol (ioId, UserId);
+   -- сохранили протокол
+   PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 
 END;$BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_BankAccount (Integer,Integer,TVarChar,Integer,Integer,Integer,TVarChar) OWNER TO postgres;  
-
 
 /*-------------------------------------------------------------------------------*/
 /*
- РРЎРўРћР РРЇ Р РђР—Р РђР‘РћРўРљР: Р”РђРўРђ, РђР’РўРћР 
-               Р¤РµР»РѕРЅСЋРє Р.Р’.   РљСѓС…С‚РёРЅ Р.Р’.   РљР»РёРјРµРЅС‚СЊРµРІ Рљ.Р.
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.14                                        * add lpCheckRight
  10.06.13          *
- 05.06.13          
-
 */
 
--- С‚РµСЃС‚
+-- тест
 -- SELECT * FROM gpInsertUpdate_Object_BankAccount(1,1,'',1,1,1,'2')

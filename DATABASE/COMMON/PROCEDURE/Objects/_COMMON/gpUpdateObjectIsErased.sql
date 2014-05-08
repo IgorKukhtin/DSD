@@ -6,18 +6,15 @@ CREATE OR REPLACE FUNCTION gpUpdateObjectIsErased(
     IN inObjectId Integer, 
     IN Session    TVarChar
 )
-RETURNS void AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
-   -- проверка прав пользователя на вызов процедуры
+   -- НЕТ проверки прав пользователя на вызов процедуры
    vbUserId:= lpGetUserBySession (Session);
 
-   UPDATE Object SET isErased = NOT isErased WHERE Id = inObjectId;
-
-   -- сохранили протокол
-   PERFORM lpInsert_ObjectProtocol (inObjectId:= inObjectId, inUserId:= vbUserId, inIsUpdate:= TRUE, inIsErased:= TRUE);
+   -- изменили
+   PERFORM lpUpdate_Object_isErased (inObjectId:= inObjectId, inUserId:= vbUserId);
 
 END;
 $BODY$
@@ -28,5 +25,6 @@ ALTER FUNCTION gpUpdateObjectIsErased (Integer, TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.05.14                                        * add lpUpdate_Object_isErased
  25.02.14                                        *
 */

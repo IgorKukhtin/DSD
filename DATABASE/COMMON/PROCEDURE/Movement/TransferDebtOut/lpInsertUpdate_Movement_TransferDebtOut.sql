@@ -1,6 +1,6 @@
 -- Function: lpInsertUpdate_Movement_TransferDebtOut()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_TransferDebtOut (Integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TransferDebtOut(
     IN inPaidKindToId        Integer   , -- Виды форм оплаты
     IN inContractFromId      Integer   , -- Договора
     IN inContractToId        Integer   , -- Договора
+    IN inPartnerId           Integer   , -- Контрагент
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer
@@ -42,7 +43,7 @@ BEGIN
      END IF;
 
      -- определяем ключ доступа
-     -- vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut());
+     vbAccessKeyId:= lpGetAccessKey (inUserId, zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut());
 
      -- определяем признак Создание/Корректировка
      vbIsInsert:= COALESCE (ioId, 0) = 0;
@@ -70,6 +71,8 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKindTo(), ioId, inPaidKindToId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_ContractTo(), ioId, inContractToId);
+     -- сохранили связь с <Контрагент>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), ioId, inPartnerId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -84,6 +87,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.05.14                                        * add vbAccessKeyId
+ 07.05.14                                        * add inPartnerId
  03.05.14                                        * del inMasterId, ioPriceListId, outPriceListName
  24.04.14         *
 */

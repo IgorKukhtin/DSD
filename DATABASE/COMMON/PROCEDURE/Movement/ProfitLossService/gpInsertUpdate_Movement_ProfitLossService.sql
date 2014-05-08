@@ -1,13 +1,6 @@
 -- Function: gpInsertUpdate_Movement_ProfitLossService()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, tvarchar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, tvarchar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProfitLossService (integer, tvarchar, tdatetime, tfloat, tfloat, tvarchar, integer, integer, integer, integer, integer, integer, integer, Boolean, tvarchar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
  INOUT ioId                       Integer   , -- Ключ объекта <Документ>
@@ -23,7 +16,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProfitLossService(
     IN inUnitId                   Integer   , -- Подразделение
     IN inContractConditionKindId  Integer   , -- Типы условий договоров
     IN inBonusKindId              Integer   , -- Виды бонусов
-    IN inisLoad                   Boolean   , -- Сформирован автоматически (по отчету)
+    IN inIsLoad                   Boolean   , -- Сформирован автоматически (по отчету)
     IN inSession                  TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -33,6 +26,7 @@ $BODY$
    DECLARE vbMovementItemId Integer;
    DECLARE vbAmount TFloat;
    DECLARE vbBranchId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_ProfitLossService());
@@ -60,6 +54,9 @@ BEGIN
      -- 1. Распроводим Документ
      PERFORM gpUnComplete_Movement_ProfitLossService (inMovementId := ioId, inSession := inSession);
 
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Документ>
      ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProfitLossService(), inInvNumber, inOperDate, NULL, vbAccessKeyId);
 
@@ -85,8 +82,12 @@ BEGIN
      -- сохранили связь с <Виды бонусов>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BonusKind(), vbMovementItemId, inBonusKindId);
      
-     -- сохранили свойство <сформирован автоматически да/нет>
-     PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), ioId, inisLoad);
+     IF vbIsInsert = TRUE
+     THEN
+         -- сохранили свойство <сформирован автоматически да/нет>
+         PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), ioId, inIsLoad);
+     END IF;
+
 
      -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
      CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
@@ -111,7 +112,7 @@ BEGIN
      END IF;
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
 
 END;
 $BODY$

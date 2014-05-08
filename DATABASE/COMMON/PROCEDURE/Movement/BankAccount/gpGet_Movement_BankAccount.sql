@@ -1,7 +1,5 @@
 -- Function: gpGet_Movement_Cash()
 
-DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_BankAccount(
@@ -36,7 +34,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              0 AS Id
-           , CAST (NEXTVAL ('Movement_Cash_seq') AS TVarChar)  AS InvNumber
+           , CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar)  AS InvNumber
 --           , CAST (CURRENT_DATE AS TDateTime)                  AS OperDate
            , inOperDate AS OperDate
            , lfObject_Status.Code                              AS StatusCode
@@ -66,7 +64,7 @@ BEGIN
      RETURN QUERY 
        SELECT
              Movement.Id
-           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('Movement_Service_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
+           , CASE WHEN inMovementId = 0 THEN CAST (NEXTVAL ('movement_bankaccount_seq') AS TVarChar) ELSE Movement.InvNumber END AS InvNumber
            , CASE WHEN inMovementId = 0 THEN inOperDate ELSE Movement.OperDate END AS OperDate
            , Object_Status.ObjectCode   AS StatusCode
            , Object_Status.ValueData    AS StatusName
@@ -103,7 +101,7 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = CASE WHEN inMovementId = 0 THEN zc_Enum_Status_UnComplete() ELSE Movement.StatusId END
 
-            LEFT JOIN MovementItem ON MovementItem.MovementId = inMovementId AND MovementItem.DescId = zc_MI_Master()
+            LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
             LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = MovementItem.ObjectId
  
@@ -147,10 +145,10 @@ ALTER FUNCTION gpGet_Movement_BankAccount (Integer, Integer, TDateTime, TVarChar
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
- 25.01.14                                        * add inMovementId_Value
+ 07.05.14                                        * add inMovementId_Value
  25.01.14                                        * add inOperDate
  17.01.14                                        *
 */
 
 -- ÚÂÒÚ
--- SELECT * FROM gpGet_Movement_Cash (inMovementId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpGet_Movement_BankAccount (inMovementId:= 0, inMovementId_Value: = 258394, null :: TDateTime, inSession:= zfCalc_UserAdmin());

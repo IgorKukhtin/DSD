@@ -545,7 +545,7 @@ inherited ContractEditForm: TContractEditForm
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 49
+    TabOrder = 48
     Width = 162
   end
   object ceBankAccount: TcxButtonEdit [49]
@@ -1785,7 +1785,7 @@ inherited ContractEditForm: TContractEditForm
       end
       item
         Name = 'incontractdocumentdata'
-        Value = '789CAB98131C20719181E1E303F9870020680572'
+        Value = '789C535018D10000F1E01FE1'
         Component = Document
         ComponentItem = 'Data'
         DataType = ftBlob
@@ -1836,7 +1836,7 @@ inherited ContractEditForm: TContractEditForm
     Top = 162
   end
   object spErasedUnErasedCondition: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
+    StoredProcName = 'gpUpdate_Object_isErased_ContractCondition'
     DataSets = <>
     OutputType = otResult
     Params = <

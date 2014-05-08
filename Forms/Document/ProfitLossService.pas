@@ -44,7 +44,6 @@ type
     cxLabel11: TcxLabel;
     ceBonusKind: TcxButtonEdit;
     ContractConditionKindGuides: TdsdGuides;
-    cbisLoad: TcxCheckBox;
   private
     { Private declarations }
   public

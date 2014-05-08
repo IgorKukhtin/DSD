@@ -1,6 +1,5 @@
 -- Function: gpInsertUpdate_MovementItem_ReturnIn()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
 DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_ReturnIn(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, tfloat, tvarchar, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
@@ -20,7 +19,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_ReturnIn(
 )
 RETURNS RECORD AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -57,8 +59,11 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     --
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, inUserId);
+     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -67,6 +72,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 07.05.14                                        * add lpInsert_MovementItemProtocol
  08.04.14                                        * rem создали объект <Связи Товары и Виды товаров>
  14.02.14                                                         * add ioCountForPrice
  13.02.14                         *

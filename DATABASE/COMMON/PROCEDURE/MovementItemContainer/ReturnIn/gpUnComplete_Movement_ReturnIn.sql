@@ -12,7 +12,7 @@ $BODY$
   DECLARE vbUserId Integer;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
+     vbUserId:= lpCheckRight(inSession, zc_Enum_Process_UnComplete_ReturnIn());
 
 
      -- проверка - если <Master> Удален, то <Ошибка>
@@ -26,7 +26,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

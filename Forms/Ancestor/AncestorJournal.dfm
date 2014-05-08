@@ -136,6 +136,17 @@ inherited AncestorJournalForm: TAncestorJournalForm
         item
           Name = 'Id'
           Value = Null
+        end
+        item
+          Name = 'ShowAll'
+          Value = True
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
         end>
       isShowModal = False
       DataSource = MasterDS

@@ -386,13 +386,13 @@ inherited ContractChoiceForm: TContractChoiceForm
         ParamType = ptInput
       end
       item
-        Name = 'JuridicalId'
+        Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicalName'
+        Name = 'MasterJuridicalName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'

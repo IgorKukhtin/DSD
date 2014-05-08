@@ -1,45 +1,50 @@
-п»ї-- Function: lpInsert_MovementProtocol(integer, integer)
+-- Function: lpInsert_MovementItemProtocol (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpInsert_MovementProtocol(integer, integer, boolean);
+DROP FUNCTION IF EXISTS lpInsert_MovementItemProtocol (Integer, Integer, Boolean);
 
-CREATE OR REPLACE FUNCTION lpInsert_MovementProtocol(inMovementId integer, inUserId integer, inisInsert boolean)
+CREATE OR REPLACE FUNCTION lpInsert_MovementItemProtocol (inMovementItemId Integer, inUserId Integer, inIsInsert Boolean)
   RETURNS void AS
 $BODY$
  DECLARE 
-   ProtocolXML TBlob;
+   vbProtocolXML TBlob;
 BEGIN
-  -- РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј XML РґР»СЏ Р·Р°РїРёСЃРё РІ РїСЂРѕС‚РѕРєРѕР»
-  SELECT '<XML>' || STRING_AGG(FieldXML, '') || '</XML>' INTO ProtocolXML FROM
+  -- Подготавливаем XML для записи в протокол
+  SELECT '<XML>' || STRING_AGG(FieldXML, '') || '</XML>' INTO vbProtocolXML FROM
   (
-  SELECT '<Field FieldName = "InvNumber" FieldValue = "' || Movement.InvNumber || '"/>'||
-         '<Field FieldName = "OperDate" FieldValue = "' || Movement.OperDate || '"/>' AS FieldXML 
-    FROM Movement
-   WHERE Movement.Id = inMovementId    
-  UNION SELECT '<Field FieldName = "' || MovementStringDesc.ItemName || '" FieldValue = "' || MovementString.ValueData || '"/>' AS FieldXML 
-    FROM MovementString
-    JOIN MovementStringDesc ON MovementStringDesc.Id = MovementString.DescId
-   WHERE MovementString.MovementId = inMovementId
-  UNION SELECT '<Field FieldName = "' || MovementFloatDesc.ItemName || '" FieldValue = "' || MovementFloat.ValueData || '"/>' AS FieldXML 
-    FROM MovementFloat
-    JOIN MovementFloatDesc ON MovementFloatDesc.Id = MovementFloat.DescId
-   WHERE MovementFloat.MovementId = inMovementId
-  UNION SELECT '<Field FieldName = "' || MovementDateDesc.ItemName || '" FieldValue = "' || MovementDate.ValueData || '"/>' AS FieldXML 
-    FROM MovementDate
-    JOIN MovementDateDesc ON MovementDateDesc.Id = MovementDate.DescId
-   WHERE MovementDate.MovementId = inMovementId
-  UNION SELECT '<Field FieldName = "' || MovementLinkObjectDesc.ItemName || '" FieldValue = "' || Object.ValueData || '"/>' AS FieldXML 
-    FROM MovementLinkObject
-    JOIN Object ON Object.Id = MovementLinkObject.ObjectId 
-    JOIN MovementLinkObjectDesc ON MovementLinkObjectDesc.Id = MovementLinkObject.DescId
-   WHERE MovementLinkObject.MovementId = inMovementId
+  SELECT '<Field FieldName = "ObjectId" FieldValue = "' || MovementItem.ObjectId || '"/>'||
+         '<Field FieldName = "ValueData" FieldValue = "' || Object.ValueData || '"/>' AS FieldXML 
+    FROM MovementItem
+         INNER JOIN Object ON Object.Id = MovementItem.ObjectId
+   WHERE MovementItem.Id = inMovementItemId    
+  UNION SELECT '<Field FieldName = "' || MovementItemStringDesc.ItemName || '" FieldValue = "' || MovementItemString.ValueData || '"/>' AS FieldXML 
+    FROM MovementItemString
+    JOIN MovementItemStringDesc ON MovementItemStringDesc.Id = MovementItemString.DescId
+   WHERE MovementItemString.MovementItemId = inMovementItemId
+  UNION SELECT '<Field FieldName = "' || MovementItemFloatDesc.ItemName || '" FieldValue = "' || MovementItemFloat.ValueData || '"/>' AS FieldXML 
+    FROM MovementItemFloat
+    JOIN MovementItemFloatDesc ON MovementItemFloatDesc.Id = MovementItemFloat.DescId
+   WHERE MovementItemFloat.MovementItemId = inMovementItemId
+  UNION SELECT '<Field FieldName = "' || MovementItemDateDesc.ItemName || '" FieldValue = "' || MovementItemDate.ValueData || '"/>' AS FieldXML 
+    FROM MovementItemDate
+    JOIN MovementItemDateDesc ON MovementItemDateDesc.Id = MovementItemDate.DescId
+   WHERE MovementItemDate.MovementItemId = inMovementItemId
+  UNION SELECT '<Field FieldName = "' || MovementItemLinkObjectDesc.ItemName || '" FieldValue = "' || Object.ValueData || '"/>' AS FieldXML 
+    FROM MovementItemLinkObject
+    JOIN Object ON Object.Id = MovementItemLinkObject.ObjectId 
+    JOIN MovementItemLinkObjectDesc ON MovementItemLinkObjectDesc.Id = MovementItemLinkObject.DescId
+   WHERE MovementItemLinkObject.MovementItemId = inMovementItemId
   ) AS D;
 
-  INSERT INTO MovementProtocol (MovementId, OperDate, UserId, ProtocolData, isInsert)
-                       VALUES (inMovementId, current_timestamp, inUserId, ProtocolXML, inisInsert);
+  -- Сохранили
+  INSERT INTO MovementItemProtocol (MovementItemId, OperDate, UserId, ProtocolData, isInsert)
+                       VALUES (inMovementItemId, current_timestamp, inUserId, vbProtocolXML, inIsInsert);
   
 END;           
 $BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpInsert_MovementProtocol(integer, integer, boolean)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.14                                        *
+*/

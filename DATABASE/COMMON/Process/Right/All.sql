@@ -12,6 +12,7 @@ CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_ServiceKiev() RETURNS Integ
 
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentDnepr() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentDnepr' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentKiev() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentKiev' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_AccessKey_DocumentBread() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_AccessKey_DocumentBread' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 
 DO $$
 BEGIN
@@ -73,9 +74,16 @@ BEGIN
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentDnepr');
 
  -- по Филиалу ограничиваются Документы для товаров
- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentKiev()
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentBread()
                                    , inDescId:= zc_Object_Process()
                                    , inCode:= 42
+                                   , inName:= 'Документы товарные Хлеб (доступ просмотра)'
+                                   , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentBread');
+
+ -- по Филиалу ограничиваются Документы для товаров
+ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_AccessKey_DocumentKiev()
+                                   , inDescId:= zc_Object_Process()
+                                   , inCode:= 43
                                    , inName:= 'Документы товарные Киев (доступ просмотра)'
                                    , inEnumName:= 'zc_Enum_Process_AccessKey_DocumentKiev');
 
@@ -117,6 +125,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.04.14                                        * add zc_Enum_Process_AccessKey_DocumentBread
  10.02.14                                        * add zc_Enum_Process_AccessKey_Document...
  28.12.13                                        * add zc_Enum_Process_AccessKey_Service...
  26.12.13                                        * add zc_Enum_Process_AccessKey_Cash...

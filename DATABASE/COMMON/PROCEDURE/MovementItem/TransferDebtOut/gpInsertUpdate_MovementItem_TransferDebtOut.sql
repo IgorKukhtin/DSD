@@ -23,12 +23,7 @@ BEGIN
      --vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TransferDebtOut());
      vbUserId:= lpGetUserBySession (inSession);
 
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
-     THEN
-         RAISE EXCEPTION 'ќшибка.Ёлемент не может корректироватьс€ т.к. он <”дален>.';
-     END IF;
-
+     -- сохранили <Ёлемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_TransferDebtOut (ioId      := ioId

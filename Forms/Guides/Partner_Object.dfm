@@ -15,6 +15,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
   AddOnFormData.isAlwaysRefresh = False
   AddOnFormData.RefreshAction = actRefresh
   AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = FormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid
@@ -23,7 +24,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
     Width = 834
     Height = 438
     Align = alClient
-    TabOrder = 4
+    TabOrder = 1
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -47,18 +48,20 @@ object Partner_ObjectForm: TPartner_ObjectForm
         HeaderAlignmentHorz = taRightJustify
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
-        Width = 30
+        Width = 35
       end
       object ceName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object ceAddress: TcxGridDBColumn
         Caption = #1040#1076#1088#1077#1089
         DataBinding.FieldName = 'Address'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 150
       end
       object ceJuridicalName: TcxGridDBColumn
@@ -81,7 +84,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListChoiceForm
+            Caption = 'PriceListChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
@@ -96,7 +99,7 @@ object Partner_ObjectForm: TPartner_ObjectForm
         PropertiesClassName = 'TcxButtonEditProperties'
         Properties.Buttons = <
           item
-            Action = PriceListPromoChoiceForm
+            Caption = 'PriceListPromoChoiceForm'
             Default = True
             Kind = bkEllipsis
           end>
@@ -132,12 +135,28 @@ object Partner_ObjectForm: TPartner_ObjectForm
       GridView = cxGridDBTableView
     end
   end
+  object cxLabel6: TcxLabel
+    Left = 172
+    Top = 78
+    Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+  end
+  object edJuridical: TcxButtonEdit
+    Left = 279
+    Top = 76
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 6
+    Width = 245
+  end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 40
     Top = 120
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 152
@@ -207,6 +226,18 @@ object Partner_ObjectForm: TPartner_ObjectForm
         end
         item
           Visible = True
+          ItemName = 'bbJuridicalLabel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridicalGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
           ItemName = 'bbChoiceGuides'
         end
         item
@@ -245,6 +276,20 @@ object Partner_ObjectForm: TPartner_ObjectForm
       Hint = '     '
       Visible = ivAlways
     end
+    object bbJuridicalLabel: TdxBarControlContainerItem
+      Caption = 'JuridicalLabel'
+      Category = 0
+      Hint = 'JuridicalLabel'
+      Visible = ivAlways
+      Control = cxLabel6
+    end
+    object bbJuridicalGuides: TdxBarControlContainerItem
+      Caption = 'JuridicalGuides'
+      Category = 0
+      Hint = 'JuridicalGuides'
+      Visible = ivAlways
+      Control = edJuridical
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -264,62 +309,31 @@ object Partner_ObjectForm: TPartner_ObjectForm
       ShortCut = 116
       RefreshOnTabSetChanges = False
     end
-    object PriceListPromoChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PriceListPromoChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'PriceListPromoId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'PriceListPromoName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
-    object PriceListChoiceForm: TOpenChoiceForm
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = 'PriceListChoiceForm'
-      FormName = 'TPriceListForm'
-      FormNameParam.Value = ''
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Key'
-          Component = ClientDataSet
-          ComponentItem = 'PriceListId'
-        end
-        item
-          Name = 'TextValue'
-          Component = ClientDataSet
-          ComponentItem = 'PriceListName'
-          DataType = ftString
-        end>
-      isShowModal = True
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -335,41 +349,23 @@ object Partner_ObjectForm: TPartner_ObjectForm
       ImageIndex = 6
       ShortCut = 16472
     end
-    object actUpdateDataSet: TdsdUpdateDataSet
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = 'actUpdateDataSet'
-      DataSource = DataSource
-    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
-    Params = <>
-    Left = 80
-    Top = 216
-  end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSets = <>
-    OutputType = otResult
     Params = <
       item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
+        Name = 'inJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 424
+    Left = 80
     Top = 216
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
@@ -402,101 +398,57 @@ object Partner_ObjectForm: TPartner_ObjectForm
     Left = 424
     Top = 152
   end
-  object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Partner'
-    DataSets = <>
-    OutputType = otResult
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
     Params = <
       item
-        Name = 'ioId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'inCode'
-        Component = ClientDataSet
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAddress'
-        Component = ClientDataSet
-        ComponentItem = 'Address'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGLNCode'
+        Name = 'Key'
         Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrepareDayCount'
-        Component = ClientDataSet
-        ComponentItem = 'PrepareDayCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentDayCount'
-        Component = ClientDataSet
-        ComponentItem = 'DocumentDayCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalId'
-        Component = ClientDataSet
-        ComponentItem = 'JuridicalId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRouteId'
-        Component = ClientDataSet
-        ComponentItem = 'RouteId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inRouteSortingId'
-        Component = ClientDataSet
-        ComponentItem = 'RouteSortingId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPersonalTakeId'
-        Component = ClientDataSet
-        ComponentItem = 'PersonalTakeId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListId'
-        Component = ClientDataSet
-        ComponentItem = 'PriceListId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPriceListPromoId'
-        Component = ClientDataSet
-        ComponentItem = 'PriceListPromoId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inStartPromo'
-        Component = ClientDataSet
-        ComponentItem = 'StartPromo'
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inEndPromo'
-        Component = ClientDataSet
-        ComponentItem = 'EndPromo'
-        DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 88
-    Top = 344
+    Left = 352
+    Top = 160
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = JuridicalGuides
+      end>
+    Left = 288
+    Top = 184
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 384
+    Top = 112
   end
 end
