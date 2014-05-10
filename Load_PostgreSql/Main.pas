@@ -149,6 +149,7 @@ type
     cbCompleteTaxInt: TCheckBox;
     cblTaxPF: TCheckBox;
     cbUpdateConrtact: TCheckBox;
+    cbBill_List: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -8987,6 +8988,13 @@ begin
         Close;
         Clear;
         Add('select * from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))+') as tmpSelect');
+
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=tmpSelect.InvNumber'
+                +'                           and _pgBillLoad.FromId=tmpSelect.FromId')
+        else
+
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add('     left outer join dba.Unit as Client on Client.ID = tmpSelect.ClientID');
@@ -9052,6 +9060,12 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
+             //!!!”ƒ¿Àﬂ≈Ã ¬—≈ ›À≈Ã≈Õ“€!!!
+             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             then
+                  fExecSqToQuery ('select gpMovementItem_Sale_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
+             //!!!!!!!!!!!!!!!!!!
+
              //œ‡ÈÒ-ÎËÒÚ ÌÂ ‰ÓÎÊÂÌ ËÁÏÂÌËÚ¸Òˇ
              if FieldByName('Id_Postgres').AsInteger<>0 then
              begin
@@ -9162,6 +9176,11 @@ begin
 
         Add('     , BillItems.Id_Postgres as Id_Postgres');
         Add('from dba.Bill');
+
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.BillNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId');
 
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
 
@@ -9293,6 +9312,11 @@ begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
              //
+             //!!!¬Œ——“¿Õ¿¬À»¬¿≈Ã 1 ›À≈Ã≈Õ“!!
+             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             then
+                  fExecSqToQuery ('select * from gpMovementItem_Sale_SetUnErased ('+FieldByName('Id_Postgres').AsString+', zfCalc_UserAdmin())');
+             //!!!!!!!!!!!!!!!!!!
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;
              toStoredProc.Params.ParamByName('inGoodsId').Value:=FieldByName('GoodsId_Postgres').AsInteger;
@@ -11439,6 +11463,10 @@ begin
         Add('     , zc_mkBN() as zc_mkBN');
         Add('     , Bill.NalogId_PG as Id_Postgres');
         Add('from dba.Bill');
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.BillNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId');
         Add('     left outer join dba.Unit as Client on Client.ID = Bill.ToId');
         Add('     left outer join dba.ClientInformation as Information1 on Information1.ClientID = Client.InformationFromUnitID'
            +'                                                          and Information1.OKPO <> '+FormatToVarCharServer_notNULL(''));
@@ -11600,6 +11628,11 @@ begin
            +'      ) as Bill_find');
 
         Add('     left outer join dba.Bill on Bill.Id = Bill_find.BillId');
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.BillNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId');
+
         {Add('          left outer join (SELECT max (isnull (find1.Id, isnull (find2.Id,0))) as Id, Unit.Id as ClientId'
            +'                           from dba.Unit'
            +'                            left outer join dba.ContractKind_byHistory as find1'
@@ -11684,6 +11717,12 @@ begin
              //!!!
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
+             //
+             //!!!”ƒ¿Àﬂ≈Ã ¬—≈ ›À≈Ã≈Õ“€!!!
+             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             then
+                  fExecSqToQuery ('select gpMovementItem_Tax_SetErased (MovementItem.Id, zfCalc_UserAdmin()) from MovementItem where MovementId = '+FieldByName('Id_Postgres').AsString);
+             //!!!!!!!!!!!!!!!!!!
              //
              //ÕÓÏÂ ÙËÎË‡Î‡ ÌÂ ‰ÓÎÊÂÌ ËÁÏÂÌËÚ¸Òˇ
                   fOpenSqToQuery (' select ValueData as InvNumberBranch'
@@ -11777,6 +11816,11 @@ begin
 
         Add('     , BillItems.NalogId_PG as Id_Postgres');
         Add('from dba.Bill');
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.BillNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId');
+
         Add('     left outer join dba.BillItems on BillItems.BillId = Bill.Id');
         Add('     left outer join dba.GoodsProperty as GoodsProperty_f on GoodsProperty_f.Id = BillItems.GoodsPropertyId');
         Add('     left outer join dba.KindPackage as KindPackage_f on KindPackage_f.Id = BillItems.KindPackageId');
@@ -11832,6 +11876,12 @@ begin
         begin
              //!!!
              if fStop then begin {EnableControls;}exit;end;
+             //
+             //!!!¬Œ——“¿Õ¿¬À»¬¿≈Ã 1 ›À≈Ã≈Õ“!!
+             if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
+             then
+                  fExecSqToQuery ('select * from gpMovementItem_Tax_SetUnErased ('+FieldByName('Id_Postgres').AsString+', zfCalc_UserAdmin())');
+             //!!!!!!!!!!!!!!!!!!
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('MovementId_Postgres').AsString;

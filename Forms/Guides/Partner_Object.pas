@@ -22,12 +22,13 @@ uses
   dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
   dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
   dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinsdxBarPainter, dxBarExtItems,
-  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit;
+  dsdAddOn, cxCheckBox, dxSkinscxPCPainter, cxButtonEdit, cxContainer,
+  cxTextEdit, dsdGuides, cxLabel;
 
 type
   TPartner_ObjectForm = class(TParentForm)
     DataSource: TDataSource;
-    ClientDataSet: TClientDataSet;
+    MasterCDS: TClientDataSet;
     cxPropertiesStore: TcxPropertiesStore;
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
@@ -35,7 +36,6 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    spErasedUnErased: TdsdStoredProc;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExel: TdxBarButton;
@@ -52,14 +52,17 @@ type
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     ceAddress: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
-    spInsertUpdate: TdsdStoredProc;
-    actUpdateDataSet: TdsdUpdateDataSet;
     clPriceListName: TcxGridDBColumn;
     clPriceListPromoName: TcxGridDBColumn;
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
-    PriceListChoiceForm: TOpenChoiceForm;
-    PriceListPromoChoiceForm: TOpenChoiceForm;
+    cxLabel6: TcxLabel;
+    JuridicalGuides: TdsdGuides;
+    edJuridical: TcxButtonEdit;
+    RefreshDispatcher: TRefreshDispatcher;
+    FormParams: TdsdFormParams;
+    bbJuridicalLabel: TdxBarControlContainerItem;
+    bbJuridicalGuides: TdxBarControlContainerItem;
   private
     { Private declarations }
   public

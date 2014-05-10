@@ -13,10 +13,8 @@ $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode_calc Integer;  
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- vbUserId := PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractTag());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ContractTag());
 
    -- пытаемся найти код
    IF ioId <> 0 AND COALESCE (inCode, 0) = 0 THEN inCode := (SELECT ObjectCode FROM Object WHERE Id = ioId); END IF;
@@ -34,18 +32,18 @@ BEGIN
    
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
+
 END;
 $BODY$
-
-LANGUAGE plpgsql VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_ContractTag (Integer,Integer,TVarChar,TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.14                                        * add lpCheckRight
  21.04.14         *
-      
 */
 
 -- тест

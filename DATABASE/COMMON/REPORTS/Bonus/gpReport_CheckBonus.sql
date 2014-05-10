@@ -1,5 +1,3 @@
-
-
 -- FunctiON: gpReport_CheckBonus ()
 
 DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
@@ -9,9 +7,10 @@ CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
     IN inEndDate             TDateTime ,
     IN inSessiON             TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (ContractId_master Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
+RETURNS TABLE (ContractId_master Integer, ContractId_find Integer, InvNumber_master TVarChar, InvNumber_child TVarChar, InvNumber_find TVarChar
              , ContractTagName_child TVarChar, ContractStateKindCode_child Integer
-             , InfoMoneyId_master Integer, InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
+             , InfoMoneyId_master Integer, InfoMoneyId_find Integer
+             , InfoMoneyName_master TVarChar, InfoMoneyName_child TVarChar, InfoMoneyName_find TVarChar
              , JuridicalId Integer, JuridicalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ConditionKindId Integer, ConditionKindName TVarChar
@@ -222,6 +221,7 @@ BEGIN
 
 
       SELECT  tmpAll.ContractId_master
+            , tmpAll.ContractId_find
             , tmpAll.InvNumber_master
             , tmpAll.InvNumber_child
             , tmpAll.InvNumber_find
@@ -230,6 +230,8 @@ BEGIN
             , tmpAll.ContractStateKindCode_child
 
             , Object_InfoMoney_master.Id                    AS InfoMoneyId_master
+            , Object_InfoMoney_find.Id                      AS InfoMoneyId_find
+
             , Object_InfoMoney_master.ValueData             AS InfoMoneyName_master
             , Object_InfoMoney_child.ValueData              AS InfoMoneyName_child
             , Object_InfoMoney_find.ValueData               AS InfoMoneyName_find
@@ -364,6 +366,9 @@ BEGIN
             LEFT JOIN Object AS Object_InfoMoney_child ON Object_InfoMoney_child.Id = tmpAll.InfoMoneyId_child
             LEFT JOIN Object AS Object_InfoMoney_find ON Object_InfoMoney_find.Id = tmpAll.InfoMoneyId_find
 
+      WHERE tmpAll.Sum_CheckBonus > 0
+         OR tmpAll.Sum_Bonus > 0
+         OR tmpAll.Sum_BonusFact <> 0
       /*GROUP BY  View_Contract_InvNumber.ContractId                    
               , View_Contract_InvNumber.InvNumber   
               , View_Contract_2.InvNumber           
@@ -387,12 +392,46 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 08.05.14                                        * add <> 0
  01.05.14         * 
  26.04.14                                        * add ContractTagName_child and ContractStateKindCode_child
  17.04.14                                        * all
  10.04.14         *
 */
-
+/*
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
+     -- 5.1. таблица - Проводки
+     CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
+     -- 5.2. таблица - элементы документа, со всеми свойствами для формирования Аналитик в проводках
+     CREATE TEMP TABLE _tmpItem (OperDate TDateTime, ObjectId Integer, ObjectDescId Integer, OperSumm TFloat
+                               , MovementItemId Integer, ContainerId Integer
+                               , AccountGroupId Integer, AccountDirectionId Integer, AccountId Integer
+                               , ProfitLossGroupId Integer, ProfitLossDirectionId Integer
+                               , InfoMoneyGroupId Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
+                               , BusinessId Integer, JuridicalId_Basis Integer
+                               , UnitId Integer, BranchId Integer, ContractId Integer, PaidKindId Integer
+                               , IsActive Boolean, IsMaster Boolean
+                                ) ON COMMIT DROP;
+   select lpInsertUpdate_Movement_ProfitLossService (ioId              := 0
+                                                    , inInvNumber       := CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar) 
+                                                    , inOperDate        := '30.04.2014'
+                                                    , inAmountIn        := 0
+                                                    , inAmountOut       := Sum_Bonus
+                                                    , inComment         := ''
+                                                    , inContractId      := ContractId_find
+                                                    , inInfoMoneyId     := InfoMoneyId_find
+                                                    , inJuridicalId     := JuridicalId
+                                                    , inPaidKindId      := zc_Enum_PaidKind_FirstForm()
+                                                    , inUnitId          := 0
+                                                    , inContractConditionKindId   := ConditionKindId
+                                                    , inBonusKindId     := BonusKindId
+                                                    , inisLoad          := TRUE
+                                                    , inUserId          := zfCalc_UserAdmin() :: Integer
+                                                     )
+   from gpReport_CheckBonus (inStartDate:= '01.04.2014', inEndDate:= '30.04.2014', inSession:= '5') as a
+   where Sum_Bonus > 0 and Sum_Bonus =30
+*/
 -- тест
--- select * from gpReport_CheckBonus (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inSession:= '5');
--- select * from gpReport_CheckBonus (inStartDate:= '03.01.2014', inEndDate:= '31.03.2014', inSession:= '5');
+-- select * from gpReport_CheckBonus (inStartDate:= '03.01.2014', inEndDate:= '31.03.2014', inSession:= zfCalc_UserAdmin());

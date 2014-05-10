@@ -13,10 +13,8 @@ RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
 BEGIN
-
    -- проверка прав пользователя на вызов процедуры
-   -- PERFORM lpCheckRight(inSession, zc_Enum_Process_InsertUpdate_Object_ContractCondition()());
-   vbUserId := inSession;
+   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Contract());
    
     -- проверка
    IF COALESCE (inContractId, 0) = 0
@@ -38,16 +36,15 @@ BEGIN
 
 END;
 $BODY$
-
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpInsertUpdate_Object_ContractDocument (Integer, TVarChar, Integer, TBlob, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.14                                        * add lpCheckRight
  10.12.13                        *
 */
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_ContractDocument (ioId:=0, inValue:=100, inContractId:=5, inContractConditionKindId:=6, inSession:='2')
-    

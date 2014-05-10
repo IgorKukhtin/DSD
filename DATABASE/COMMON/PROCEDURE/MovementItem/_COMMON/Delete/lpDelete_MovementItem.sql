@@ -1,4 +1,4 @@
-п»ї-- Function: lpDelete_MovementItem(integer, tvarchar)
+-- Function: lpDelete_MovementItem(integer, tvarchar)
 
 -- DROP FUNCTION lpDelete_MovementItem(integer, tvarchar);
 
@@ -14,12 +14,15 @@ $BODY$BEGIN
   DELETE FROM MovementItemString WHERE MovementItemId = inId;
   DELETE FROM MovementItemDate WHERE MovementItemId = inId;
   DELETE FROM MovementItemFloat WHERE MovementItemId = inId;
---  DELETE FROM MovementItemProtocol WHERE MovementItemId = inId;
+  DELETE FROM MovementItemProtocol WHERE MovementItemId = inId;
   DELETE FROM MovementItemBoolean WHERE MovementItemId = inId;
   DELETE FROM MovementItem WHERE Id = inId;
 
 END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100;
-ALTER FUNCTION lpDelete_MovementItem(integer, tvarchar)
-  OWNER TO postgres;
+  LANGUAGE plpgsql VOLATILE;
+
+/*
+ ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.14                                        * add MovementItemProtocol
+*/

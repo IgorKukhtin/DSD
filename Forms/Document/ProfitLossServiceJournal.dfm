@@ -171,8 +171,9 @@ inherited ProfitLossServiceJournalForm: TProfitLossServiceJournalForm
             Width = 41
           end
           object clisLoad: TcxGridDBColumn
-            Caption = #1040#1074#1090#1086#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077
+            Caption = #1040#1074#1090#1086
             DataBinding.FieldName = 'isLoad'
+            HeaderAlignmentVert = vaCenter
             Width = 41
           end
         end

@@ -12,7 +12,7 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure DESADV(HeaderDataSet, ListDataSet: TDataSet);
+    procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
   end;
 
   TEDIActionDesadv = class(TdsdCustomAction)
@@ -45,11 +45,12 @@ begin
   inherited;
 end;
 
-procedure TEDI.DESADV(HeaderDataSet, ListDataSet: TDataSet);
+procedure TEDI.DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   DESADV: IXMLDESADVType;
   IdFTP:  TIdFTP;
   Stream: TStream;
+  i: integer;
 begin
   DESADV := NewDESADV;
   // Создать XML
@@ -67,6 +68,28 @@ begin
   DESADV.HEAD.RECIPIENT := DESADV.HEAD.BUYER;
 
   DESADV.HEAD.PACKINGSEQUENCE.HIERARCHICALID := '1';
+
+  with ItemsDataSet do begin
+     First;
+     i := 1;
+     while not EOF do begin
+         with DESADV.HEAD.PACKINGSEQUENCE.POSITION.Add do begin
+           POSITIONNUMBER := i;
+           PRODUCT := ItemsDataSet.FieldByName('BarCodeGLN_Juridical').AsString;
+           PRODUCTIDSUPPLIER := ItemsDataSet.FieldByName('Id').AsString;
+           PRODUCTIDBUYER := ItemsDataSet.FieldByName('ArticleGLN_Juridical').AsString;
+           DELIVEREDQUANTITY := FormatFloat('0.00', ItemsDataSet.FieldByName('Amount').asFloat);
+           DELIVEREDUNIT := ItemsDataSet.FieldByName('DELIVEREDUNIT').AsString;
+           ORDEREDQUANTITY := DELIVEREDQUANTITY;
+           COUNTRYORIGIN := 'UA';
+           PRICE := FormatFloat('0.00', ItemsDataSet.FieldByName('Price').asFloat);
+         end;
+         inc(i);
+         Next;
+     end;
+     Close;
+     Free;
+  end;
 
 
 

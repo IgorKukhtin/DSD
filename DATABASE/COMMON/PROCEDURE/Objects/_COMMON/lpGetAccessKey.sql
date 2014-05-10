@@ -33,7 +33,10 @@ BEGIN
       IF inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Income()
                        , zc_Enum_Process_InsertUpdate_Movement_ReturnOut()
                        , zc_Enum_Process_InsertUpdate_Movement_Sale()
+                       , zc_Enum_Process_InsertUpdate_Movement_Sale_Partner()
                        , zc_Enum_Process_InsertUpdate_Movement_ReturnIn()
+                       , zc_Enum_Process_InsertUpdate_Movement_TransferDebtIn()
+                       , zc_Enum_Process_InsertUpdate_Movement_TransferDebtOut()
                         )
       THEN
            inUserId := (SELECT MAX (UserId) FROM ObjectLink_UserRole_View WHERE RoleId IN (SELECT Id FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 104)); -- Документы товарные Днепр (доступ просмотра)
@@ -61,7 +64,7 @@ BEGIN
   END IF;
 
   -- проверка - должен быть только "один" процесс (доступ просмотра)
-  IF EXISTS (SELECT 1 FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
+  IF EXISTS (SELECT 1 FROM (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
                                                                                                    , zc_Enum_Process_AccessKey_GuideAll()
                                                                                                     )
                                                                              AND RoleCode NOT IN (22 -- Транспорт-просмотр ВСЕХ документов
@@ -71,6 +74,7 @@ BEGIN
                                                                                                 , 52 -- Касса-просмотр ВСЕХ документов
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
+--                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND ((RoleCode BETWEEN 40 and 49
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -90,6 +94,7 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                  )
+             GROUP BY AccessKeyId) AS tmp
              HAVING Count(*) = 1)
   THEN
       vbValueId := (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = inUserId AND AccessKeyId NOT IN (zc_Enum_Process_AccessKey_TrasportAll()
@@ -102,6 +107,7 @@ BEGIN
                                                                                                 , 52 -- Касса-просмотр ВСЕХ документов
                                                                                                 , 102 -- Приход/Возврат поставщик-просмотр ВСЕХ документов
                                                                                                 , 122 -- Продажа/Возврат покупатель-просмотр ВСЕХ документов
+--                                                                                                , 1101 -- Бухг
                                                                                                  )
                                                                              AND ((RoleCode BETWEEN 40 and 49
                                                                                AND inProcessId IN (zc_Enum_Process_InsertUpdate_Movement_Service()
@@ -121,7 +127,8 @@ BEGIN
                                                                                                          , zc_Enum_Process_Get_Movement_Cash())
                                                                                   )
                                                                                  )
-                   );
+             GROUP BY AccessKeyId
+            );
   ELSE
       RAISE EXCEPTION 'Ошибка.У пользователя <%> нельзя определить значение для доступа просмотра.', lfGet_Object_ValueData (inUserId);
   END IF;  
@@ -143,6 +150,7 @@ ALTER FUNCTION lpGetAccessKey (Integer, Integer)  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 08.05.14                                        * add 1101 -- Бухг
  06.03.14                                        * add RoleCode
  10.02.14                                        * add Document...
  13.01.14                                        * возвращаем права админу :-)

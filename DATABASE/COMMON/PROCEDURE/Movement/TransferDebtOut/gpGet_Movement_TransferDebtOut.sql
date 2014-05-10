@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
-             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
+             , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, PartnerId Integer, PartnerName TVarChar
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
              , PriceListId Integer, PriceListName TVarChar
@@ -20,18 +20,23 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
               )
 AS
 $BODY$
+  DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Get_Movement_TransferDebtOut());
+     vbUserId:= lpGetUserBySession (inSession);
 
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
+           WITH tmpParams AS (SELECT 131931 AS FromId -- Дворкин 
+                                   , (SELECT MAX (ContractId) FROM Object_Contract_View WHERE JuridicalId = 131931 AND InfoMoneyId = zc_Enum_InfoMoney_30103()) AS ContractFromId
+                                   , zc_PriceList_Bread() AS PriceListId
+                              WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
+                             )
          SELECT
-               0 	     	                        AS Id
+               0 	     	                    AS Id
              , tmpInvNum.InvNumber                  AS InvNumber
-             , inOperDate			                AS OperDate
+             , inOperDate			    AS OperDate
              , Object_Status.Code                   AS StatusCode
              , Object_Status.Name              	    AS StatusName
 
@@ -46,42 +51,48 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalSummPVAT
              , CAST (0 as TFloat)                   AS TotalSumm
 
- --            , Object_Juridical_Basis.Id	 AS FromId
- --            , Object_Juridical_Basis.ValueData	 AS FromName
-
-             , 0	 AS FromId
-             , CAST ('' as TVarChar)	            AS FromName
+             , Object_From.Id                       AS FromId
+             , Object_From.ValueData                AS FromName
              , 0                     	            AS ToId
              , CAST ('' as TVarChar)                AS ToName
+             , 0                               	    AS PartnerId
+             , CAST ('' as TVarChar)           	    AS PartnerName
 
-             , 0                     	            AS ContractFromId
-             , CAST ('' as TVarChar) 	            AS ContractFromName
+             , View_Contract_InvNumber.ContractId   AS ContractFromId
+             , View_Contract_InvNumber.InvNumber    AS ContractFromName
              , 0                     	            AS ContractToId
              , CAST ('' as TVarChar) 	            AS ContractToName
 
-             , 0                     	            AS PaidKindFromId
-             , CAST ('' as TVarChar) 	            AS PaidKindFromName
+             , Object_PaidKindFrom.Id 	            AS PaidKindFromId
+             , Object_PaidKindFrom.ValueData        AS PaidKindFromName  
              , 0                     	            AS PaidKindToId
              , CAST ('' as TVarChar) 	            AS PaidKindToName
 
              , Object_PriceList.Id                  AS PriceListId
              , Object_PriceList.ValueData           AS PriceListName
 
-             , 0                     				        AS DocumentTaxKindId
-             , CAST ('' AS TVarChar) 				        AS DocumentTaxKindName
-             , 0                     				        AS MovementId_Master
-             , CAST ('' AS TVarChar) 				        AS InvNumberPartner_Master
+             , 0                     	    	    AS DocumentTaxKindId
+             , CAST ('' AS TVarChar) 		    AS DocumentTaxKindName
+             , 0                     		    AS MovementId_Master
+             , CAST ('' AS TVarChar) 		    AS InvNumberPartner_Master
 
 
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtout_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
-          LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1=1
-          LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
-        --  LEFT JOIN Object AS Object_Juridical_Basis ON Object_Juridical_Basis.Id = zc_Juridical_Basis()
-          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis();
+               LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
+               LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
+               LEFT JOIN tmpParams ON 1 = 1
+               LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (tmpParams.PriceListId, zc_PriceList_Basis())
+               LEFT JOIN Object AS Object_From ON Object_From.Id = tmpParams.FromId
+               LEFT JOIN Object AS Object_PaidKindFrom ON Object_PaidKindFrom.Id = zc_Enum_PaidKind_SecondForm()
+               LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpParams.ContractFromId
+         ;
 
      ELSE
 
      RETURN QUERY
+           WITH tmpParams AS (SELECT zc_PriceList_Bread() AS PriceListId
+                              WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
+                             )
        SELECT
              Movement.Id				                AS Id
            , Movement.InvNumber				            AS InvNumber
@@ -100,10 +111,12 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_From.Id                    		    AS FromId
-           , Object_From.ValueData             		    AS FromName
-           , Object_To.Id                      		    AS ToId
-           , Object_To.ValueData               		    AS ToName
+           , Object_From.Id                    		AS FromId
+           , Object_From.ValueData             		AS FromName
+           , Object_To.Id                      		AS ToId
+           , Object_To.ValueData               		AS ToName
+           , Object_Partner.Id                     	AS PartnerId
+           , Object_Partner.ValueData              	AS PartnerName
 
            , View_ContractFrom.ContractId     	        AS ContractFromId
            , View_ContractFrom.InvNumber                AS ContractFromName
@@ -172,6 +185,11 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                          ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
                                         AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractFrom()
@@ -193,9 +211,6 @@ BEGIN
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
 
-
-            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = zc_PriceList_Basis()
-
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
@@ -205,6 +220,9 @@ BEGIN
                                          ON MovementLinkObject_DocumentTaxKind.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
+            LEFT JOIN tmpParams ON 1 = 1
+            LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (tmpParams.PriceListId, zc_PriceList_Basis())
 
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransferDebtOut();
@@ -220,6 +238,8 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.14                                        * add tmpParams
+ 07.05.14                                        * add Partner...
  03.05.14                                        * all
  29.04.14  		                                         *
  22.04.14  		  *

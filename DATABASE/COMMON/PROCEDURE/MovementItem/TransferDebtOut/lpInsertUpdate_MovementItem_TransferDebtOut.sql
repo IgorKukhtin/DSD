@@ -17,7 +17,11 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TransferDebtOut(
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
@@ -47,7 +51,7 @@ BEGIN
                       END;
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -56,6 +60,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.05.14                                        * add lpInsert_MovementItemProtocol
  05.05.14                                        * del zc_MIFloat_AmountPartner
  22.04.14         *
 */

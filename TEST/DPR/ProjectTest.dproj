@@ -158,9 +158,6 @@
 			<DCCReference Include="..\..\Forms\Status.pas">
 				<Form>StatusForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\Partner_Object.pas">
-				<Form>Partner_ObjectForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Currency.pas">
 				<Form>CurrencyForm</Form>
 			</DCCReference>
@@ -818,8 +815,8 @@
 				<Form>UserKeyForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
-				<Form>MovementItemContainerForm</Form>
+			<DCCReference Include="..\..\Forms\System\MovementCheck.pas">
+				<Form>MovementCheckForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\InfoMoney.pas">
@@ -1137,8 +1134,8 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalData.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
-				<Form>PartnerForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\Partner_Object.pas">
+				<Form>Partner_ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\WeighingProductionJournal.pas">
@@ -1213,14 +1210,6 @@
 				<Form>Report_GoodsMI_byMovementForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtInJournal.pas">
-				<Form>TransferDebtInJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtIn.pas">
-				<Form>TransferDebtInForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\City.pas">
 				<Form>CityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1249,14 +1238,6 @@
 				<Form>SaleForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtOut.pas">
-				<Form>TransferDebtOutForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
-				<Form>TransferDebtOutJournalForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\BankAccount.pas">
 				<Form>BankAccountForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1265,13 +1246,42 @@
 				<Form>BankAccountEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Partner.pas">
+				<Form>PartnerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtIn.pas">
+				<Form>TransferDebtInForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtInJournal.pas">
+				<Form>TransferDebtInJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOut.pas">
+				<Form>TransferDebtOutForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\TransferDebtOutJournal.pas">
+				<Form>TransferDebtOutJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\SOURCE\EDI\EdiTest.pas"/>
-			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
 			<DCCReference Include="..\SOURCE\Objects\ObjectTest.pas"/>
+			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\Forms\System\MovementItemContainer.pas">
+				<Form>MovementItemContainerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

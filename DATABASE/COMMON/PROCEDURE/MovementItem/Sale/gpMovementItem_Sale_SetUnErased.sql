@@ -1,9 +1,9 @@
--- Function: gpMovementItem_Sale_Partner_SetUnErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Sale_SetUnErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_Sale_Partner_SetUnErased (Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpMovementItem_Sale_Partner_SetUnErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Sale_SetUnErased (Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Sale_SetUnErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_Sale_Partner_SetUnErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Sale_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -27,12 +27,6 @@ BEGIN
   -- проверка - связанные документы Изменять нельзя
   -- PERFORM lfCheck_Movement_Parent (inMovementId:= vbMovementId, inComment:= 'изменение');
 
-  -- Проверка, т.к. в этом случае восстанавливать нельзя
-  IF EXISTS (SELECT Id FROM MovementItem WHERE Id = inMovementItemId AND Amount <> 0)
-  THEN
-      RAISE EXCEPTION 'Ошибка.Нет прав восстановить <Элемент>.';
-  END IF;
-
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
@@ -50,7 +44,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_Sale_Partner_SetUnErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovementItem_Sale_SetUnErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -59,4 +53,4 @@ ALTER FUNCTION gpMovementItem_Sale_Partner_SetUnErased (Integer, TVarChar) OWNER
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_Sale_Partner_SetUnErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_Sale_SetUnErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

@@ -33,19 +33,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,19 +44,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Kind = skSum
@@ -234,15 +210,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
-      Left = 200
+      Left = 408
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 200
+      Left = 408
       Top = 23
       Properties.Buttons = <
         item
@@ -250,10 +227,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 200
+      Width = 174
     end
     object edTo: TcxButtonEdit
-      Left = 410
+      Left = 594
       Top = 23
       Properties.Buttons = <
         item
@@ -264,7 +241,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 200
     end
     object cxLabel4: TcxLabel
-      Left = 410
+      Left = 594
       Top = 5
       Caption = #1050#1086#1084#1091
     end
@@ -303,14 +280,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 618
+      Left = 408
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 752
+      Left = 542
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -318,7 +295,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 752
+      Left = 542
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -337,12 +314,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
     object cxLabel10: TcxLabel
-      Left = 410
-      Top = 47
+      Left = 594
+      Top = 44
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKindTo: TcxButtonEdit
-      Left = 410
+      Left = 594
       Top = 63
       Properties.Buttons = <
         item
@@ -353,12 +330,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 77
     end
     object cxLabel11: TcxLabel
-      Left = 496
-      Top = 47
+      Left = 680
+      Top = 45
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContractTo: TcxButtonEdit
-      Left = 496
+      Left = 680
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -369,14 +346,31 @@ inherited TransferDebtInForm: TTransferDebtInForm
       TabOrder = 22
       Width = 114
     end
+    object edPartner: TcxButtonEdit
+      Left = 200
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 23
+      Text = ' '
+      Width = 200
+    end
+    object cxLabel12: TcxLabel
+      Left = 200
+      Top = 5
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 618
+    Left = 807
     Top = 5
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object edPriceList: TcxButtonEdit [3]
-    Left = 618
+    Left = 807
     Top = 23
     Properties.Buttons = <
       item
@@ -384,7 +378,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 333
+    Width = 144
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1039,6 +1033,19 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesPricelist
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'PartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'PartnerName'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 216
     Top = 248
@@ -1129,6 +1136,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = PaidKindToGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inPartnerId'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1169,6 +1183,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
       item
         Control = edContractTo
+      end
+      item
+        Control = edPartner
       end
       item
         Control = edPriceWithVAT
@@ -1515,8 +1532,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 232
-    Top = 48
+    Left = 240
+    Top = 56
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -1542,8 +1559,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 344
-    Top = 48
+    Left = 352
+    Top = 56
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TransferDebtIn_Print'
@@ -1598,11 +1615,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
+        Name = 'Key'
+        Value = ''
+        Component = ContractFromGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = ContractFromGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'JuridicalId'
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
@@ -1610,6 +1643,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'PaidKindId'
@@ -1625,25 +1659,21 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
       end
       item
-        Name = 'Key'
-        Value = ''
-        Component = ContractFromGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractFromGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'ChangePercent'
         Value = 0.000000000000000000
         Component = edChangePercent
         DataType = ftFloat
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = 0
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        DataType = ftString
       end>
-    Left = 280
+    Left = 504
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1654,36 +1684,11 @@ inherited TransferDebtInForm: TTransferDebtInForm
     PositionDataSet = 'MasterCDS'
     Params = <
       item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindToGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'Key'
         Value = ''
         Component = ContractToGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -1691,8 +1696,33 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Component = ContractToGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = 0
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        DataType = ftString
       end>
-    Left = 480
+    Left = 632
   end
   object PaidKindToGuides: TdsdGuides
     KeyField = 'Id'
@@ -1717,7 +1747,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
+    Left = 616
     Top = 56
   end
   object ContractToGuides: TdsdGuides
@@ -1744,7 +1774,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 552
+    Left = 728
     Top = 64
   end
   object GuidesPricelist: TdsdGuides
@@ -1771,6 +1801,46 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 740
+    Left = 876
+  end
+  object GuidesPartner: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPartner
+    Key = '0'
+    TextValue = ' '
+    FormNameParam.Value = 'TPartner_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPartner_ObjectForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = '0'
+        Component = GuidesPartner
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ' '
+        Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 296
   end
 end

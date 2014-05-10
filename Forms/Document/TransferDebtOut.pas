@@ -87,6 +87,9 @@ type
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
     GuidesPricelist: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edPartner: TcxButtonEdit;
+    GuidesPartner: TdsdGuides;
   private
     { Private declarations }
   public

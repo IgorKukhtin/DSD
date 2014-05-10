@@ -22,7 +22,10 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_Sale(
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -69,8 +72,12 @@ BEGIN
                            ELSE CAST (inAmountPartner * inPrice AS NUMERIC (16, 2))
                       END;
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -79,6 +86,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.05.14                                        * add lpInsert_MovementItemProtocol
  08.02.14                                        *
  04.02.14                         *
 */

@@ -199,6 +199,7 @@
       end
       item
         Name = 'inMovementId_Value'
+        Value = Null
         ParamType = ptInput
       end>
     Left = 88
@@ -306,6 +307,7 @@
       end
       item
         Name = 'inMovementId_Value'
+        Value = Null
         Component = FormParams
         ComponentItem = 'inMovementId_Value'
         ParamType = ptInput

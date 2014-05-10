@@ -31,6 +31,9 @@ $BODY$
    DECLARE vbPartnerId        Integer;
    DECLARE vbContractId       Integer;
    DECLARE vbDocumentTaxKindId_TaxCorrective Integer;
+
+   DECLARE vbDiscountPercent TFloat;
+   DECLARE vbExtraChargesPercent TFloat;
 BEGIN
       -- проверка прав пользователя на вызов процедуры
       vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind());
@@ -82,9 +85,12 @@ BEGIN
            , MovementFloat_VATPercent.ValueData AS VATPercent
            , ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId -- От кого - всегда главное юр.лицо из договора
            , CASE WHEN Movement.DescId = zc_Movement_Sale() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE MovementLinkObject_To.ObjectId END AS ToId
-           , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN NULL WHEN Movement.DescId = zc_Movement_Tax() THEN MovementLinkObject_Partner.ObjectId ELSE MovementLinkObject_To.ObjectId END AS PartnerId
+           , CASE WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementLinkObject_Partner.ObjectId WHEN Movement.DescId = zc_Movement_Tax() THEN MovementLinkObject_Partner.ObjectId ELSE MovementLinkObject_To.ObjectId END AS PartnerId
            , COALESCE (MovementLinkObject_ContractTo.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
+           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
              INTO vbMovementId_Tax, vbMovementDescId, vbInvNumber_Tax, vbInvNumberPartner_Tax, vbOperDate, vbStartDate, vbEndDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+                , vbDiscountPercent, vbExtraChargesPercent
       FROM Movement
            LEFT JOIN MovementString AS MS_InvNumberPartner
                                     ON MS_InvNumberPartner.MovementId = Movement.Id
@@ -107,6 +113,10 @@ BEGIN
            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id
                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+                                  AND inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Tax()
            LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId =  Movement.Id
                                   AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
@@ -435,7 +445,7 @@ BEGIN
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN 0 ELSE tmpMI_all.Amount_ReturnIn END AS Amount_ReturnIn
                FROM (SELECT MovementItem.ObjectId AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                          , MIFloat_Price.ValueData AS Price
+                          , CASE WHEN vbDiscountPercent <> 0 THEN CAST ( (1 - vbDiscountPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2)) ELSE MIFloat_Price.ValueData END AS Price
                           , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Amount_ReturnIn
@@ -698,6 +708,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 08.05.14                                        * add zc_MovementFloat_ChangePercent
  03.05.14                                        * all
  10.04.14                                        * all
  29.03.14         *

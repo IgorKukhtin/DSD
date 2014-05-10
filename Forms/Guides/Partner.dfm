@@ -152,11 +152,11 @@ object PartnerForm: TPartnerForm
     Width = 245
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     Left = 40
     Top = 120
   end
-  object ClientDataSet: TClientDataSet
+  object MasterCDS: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 152
@@ -379,7 +379,7 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Id'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           ParamType = ptInput
         end>
@@ -422,12 +422,12 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListPromoId'
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListPromoName'
           DataType = ftString
         end>
@@ -443,12 +443,12 @@ object PartnerForm: TPartnerForm
       GuiParams = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListId'
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'PriceListName'
           DataType = ftString
         end>
@@ -460,14 +460,25 @@ object PartnerForm: TPartnerForm
       Params = <
         item
           Name = 'Key'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Id'
           DataType = ftString
         end
         item
           Name = 'TextValue'
-          Component = ClientDataSet
+          Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'JuridicalId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'JuridicalName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
           DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -497,10 +508,10 @@ object PartnerForm: TPartnerForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Partner'
-    DataSet = ClientDataSet
+    DataSet = MasterCDS
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = MasterCDS
       end>
     Params = <
       item
@@ -520,7 +531,7 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'inObjectId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
@@ -566,19 +577,19 @@ object PartnerForm: TPartnerForm
     Params = <
       item
         Name = 'ioId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
       item
         Name = 'inCode'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Code'
         ParamType = ptInput
       end
       item
         Name = 'inAddress'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'Address'
         DataType = ftString
         ParamType = ptInput
@@ -591,64 +602,64 @@ object PartnerForm: TPartnerForm
       end
       item
         Name = 'inPrepareDayCount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PrepareDayCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inDocumentDayCount'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'DocumentDayCount'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
         Name = 'inJuridicalId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'JuridicalId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'RouteId'
         ParamType = ptInput
       end
       item
         Name = 'inRouteSortingId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'RouteSortingId'
         ParamType = ptInput
       end
       item
         Name = 'inPersonalTakeId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PersonalTakeId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PriceListId'
         ParamType = ptInput
       end
       item
         Name = 'inPriceListPromoId'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'PriceListPromoId'
         ParamType = ptInput
       end
       item
         Name = 'inStartPromo'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'StartPromo'
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndPromo'
-        Component = ClientDataSet
+        Component = MasterCDS
         ComponentItem = 'EndPromo'
         DataType = ftDateTime
         ParamType = ptInput
@@ -694,13 +705,13 @@ object PartnerForm: TPartnerForm
   object FormParams: TdsdFormParams
     Params = <
       item
-        Name = 'JuridicalId'
+        Name = 'MasterJuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
       end
       item
-        Name = 'JuridicalName'
+        Name = 'MasterJuridicalName'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'TextValue'

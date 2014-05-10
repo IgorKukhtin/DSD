@@ -1,4 +1,4 @@
-п»ї-- Function: lpInsert_MovementProtocol(integer, integer)
+-- Function: lpInsert_MovementProtocol(integer, integer)
 
 DROP FUNCTION IF EXISTS lpInsert_MovementProtocol(integer, integer, boolean);
 
@@ -8,7 +8,7 @@ $BODY$
  DECLARE 
    ProtocolXML TBlob;
 BEGIN
-  -- РџРѕРґРіРѕС‚Р°РІР»РёРІР°РµРј XML РґР»СЏ Р·Р°РїРёСЃРё РІ РїСЂРѕС‚РѕРєРѕР»
+  -- Подготавливаем XML для записи в протокол
   SELECT '<XML>' || STRING_AGG(FieldXML, '') || '</XML>' INTO ProtocolXML FROM
   (
   SELECT '<Field FieldName = "InvNumber" FieldValue = "' || Movement.InvNumber || '"/>'||

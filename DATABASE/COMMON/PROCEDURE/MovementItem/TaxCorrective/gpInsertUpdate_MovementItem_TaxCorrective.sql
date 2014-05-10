@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TaxCorrective()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TaxCorrective (integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_TaxCorrective (integer, integer, integer, tfloat, tfloat, tfloat, integer, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_TaxCorrective(
@@ -22,12 +22,7 @@ BEGIN
      -- проверка прав пользовател€ на вызов процедуры
      vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MI_TaxCorrective());
 
-     -- проверка - удаленный элемент документа не может корректироватьс€
-     IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE Id = ioId AND isErased = TRUE)
-     THEN
-         RAISE EXCEPTION 'ќшибка.Ёлемент не может корректироватьс€ т.к. он <”дален>.';
-     END IF;
-
+     -- сохранили <Ёлемент документа>
      SELECT tmp.ioId, tmp.ioCountForPrice, tmp.outAmountSumm
             INTO ioId, ioCountForPrice, outAmountSumm
      FROM lpInsertUpdate_MovementItem_TaxCorrective (ioId        := ioId

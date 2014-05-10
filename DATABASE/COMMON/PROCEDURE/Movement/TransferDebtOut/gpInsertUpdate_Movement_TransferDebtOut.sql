@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtOut()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
@@ -15,6 +15,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
     IN inContractToId        Integer   , -- Договор (кому)
     IN inPaidKindFromId      Integer   , -- Виды форм оплаты (от кого)
     IN inPaidKindToId        Integer   , -- Виды форм оплаты (кому)
+    IN inPartnerId           Integer   , -- Контрагент
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -37,6 +38,7 @@ BEGIN
                                                    , inPaidKindToId     := inPaidKindToId
                                                    , inContractFromId   := inContractFromId
                                                    , inContractToId     := inContractToId
+                                                   , inPartnerId        := inPartnerId
                                                    , inUserId           := vbUserId
                                                     );
 
@@ -47,6 +49,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 07.05.14                                        * add inPartnerId
  03.05.14                                        * del inMasterId, ioPriceListId, outPriceListName
  24.04.14         *
 */

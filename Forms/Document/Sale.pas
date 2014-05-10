@@ -100,7 +100,6 @@ type
     mactDECLAR: TMultiAction;
     bbDECLAR: TdxBarButton;
     actExecPrintStoredProc: TdsdExecStoredProc;
-    spSelectEDI: TdsdStoredProc;
   private
     { Private declarations }
   public

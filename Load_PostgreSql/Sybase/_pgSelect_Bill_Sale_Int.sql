@@ -1,7 +1,7 @@
 -- Int
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm
-     , FromId_Postgres Integer, ToId_Postgres Integer, ClientId Integer
+     , FromId_Postgres Integer, ToId_Postgres Integer, FromId Integer, ClientId Integer
      , MoneyKindId Integer, PaidKindId_Postgres Integer, CodeIM Integer, ContractNumber TVarCharMedium, CarId Integer, PersonalDriverId Integer, RouteId Integer, RouteSortingId_Postgres Integer, PersonalId_Postgres Integer
      , isOnlyUpdateInt smallint, zc_rvYes smallint, Id_Postgres integer)
 begin
@@ -25,7 +25,9 @@ begin
 
      , FromId_Postgres Integer
      , ToId_Postgres Integer
+     , FromId Integer
      , ClientId Integer
+
      , MoneyKindId Integer
      , PaidKindId_Postgres Integer
      , CodeIM Integer
@@ -95,7 +97,7 @@ begin
 
    //
    --
-   insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId
+   insert into _tmpList (ObjectId, InvNumber_all, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId
                        , MoneyKindId, PaidKindId_Postgres, CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, isOnlyUpdateInt, Id_Postgres)
    select Bill.Id as ObjectId
 
@@ -118,6 +120,7 @@ begin
 
      , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
      , _pgPartner.PartnerId_pg as ToId_Postgres
+     , Bill.FromId
      , Bill.ToId as ClientId
 
      , Bill.MoneyKindId
@@ -270,6 +273,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- ћ€сное сырье
         , isnull(_tmpList2.ChangePercent, _tmpList.ChangePercent)as ChangePercent
         , isnull(_tmpList2.FromId_Postgres, _tmpList.FromId_Postgres)as FromId_Postgres
         , isnull(_tmpList2.ToId_Postgres, _tmpList.ToId_Postgres)as ToId_Postgres
+        , _tmpList.FromId as FromId
         , _tmpList.ClientId as ClientId
         , _tmpList.MoneyKindId as MoneyKindId
         , isnull(_tmpList2.PaidKindId_Postgres, _tmpList.PaidKindId_Postgres)as PaidKindId_Postgres
@@ -284,7 +288,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- ћ€сное сырье
         , zc_rvYes() as zc_rvYes
         , isnull(_tmpList2.Id_Postgres, _tmpList.Id_Postgres) as Id_Postgres
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
-   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, ClientId, MoneyKindId, PaidKindId_Postgres
+   group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
    order by 3, 4, 1
    ;
