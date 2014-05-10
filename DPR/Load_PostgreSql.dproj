@@ -118,6 +118,8 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>

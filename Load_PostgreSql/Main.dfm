@@ -74,8 +74,8 @@ object MainForm: TMainForm
       OnClick = CloseButtonClick
     end
     object cbSetNull_Id_Postgres: TCheckBox
-      Left = 754
-      Top = 20
+      Left = 915
+      Top = 38
       Width = 292
       Height = 17
       Caption = #1044#1083#1103' '#1087#1077#1088#1074#1086#1075#1086' '#1088#1072#1079#1072' set Sybase.'#1042#1057#1045#1052'.Id_Postgres = null'
@@ -84,7 +84,7 @@ object MainForm: TMainForm
     end
     object cbOnlyOpen: TCheckBox
       Left = 754
-      Top = 39
+      Top = 21
       Width = 264
       Height = 17
       Caption = #1054#1090#1082#1083#1102#1095#1080#1090#1100' '#1076#1077#1081#1089#1090#1074#1080#1077' ('#1090#1086#1083#1100#1082#1086' '#1087#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077')'
@@ -109,8 +109,8 @@ object MainForm: TMainForm
       OnClick = OKCompleteDocumentButtonClick
     end
     object cbOnlyOpenMI: TCheckBox
-      Left = 1024
-      Top = 39
+      Left = 754
+      Top = 38
       Width = 132
       Height = 17
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1072#1085#1085#1099#1077' MI'

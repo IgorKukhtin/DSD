@@ -89,6 +89,8 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colIsError: TcxGridDBColumn;
+    actMovementCheck: TdsdOpenForm;
+    bbMovementCheck: TdxBarButton;
   private
     { Private declarations }
   public

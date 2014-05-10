@@ -68,6 +68,8 @@ type
     actPrint_TaxCorrective_Reestr: TdsdPrintAction;
     bbPrintTaxCorrective_Reestr: TdxBarButton;
     colInvNumberBranch: TcxGridDBColumn;
+    actMovementCheck: TdsdOpenForm;
+    bbMovementCheck: TdxBarButton;
   private
     { Private declarations }
   public

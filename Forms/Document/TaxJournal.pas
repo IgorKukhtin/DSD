@@ -12,7 +12,8 @@ uses
   Vcl.ActnList, cxPropertiesStore, cxLabel, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxPC,
-  Vcl.Controls, MeDOC;
+  Vcl.Controls, MeDOC, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TTaxJournalForm = class(TAncestorJournalForm)
@@ -64,6 +65,8 @@ type
     bbMeDoc: TdxBarButton;
     mactMeDoc: TMultiAction;
     actMedocProcedure: TdsdExecStoredProc;
+    actMovementCheck: TdsdOpenForm;
+    bbMovementCheck: TdxBarButton;
   private
     { Private declarations }
   public

@@ -25,7 +25,9 @@ uses
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
-  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
 
 {$R *.res}
 

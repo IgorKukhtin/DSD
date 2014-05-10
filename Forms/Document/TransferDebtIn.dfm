@@ -302,7 +302,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object edChangePercent: TcxCurrencyEdit
       Left = 807
       Top = 63
-      Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 17

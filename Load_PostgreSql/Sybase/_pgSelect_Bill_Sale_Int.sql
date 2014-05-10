@@ -156,7 +156,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
                          and Bill.BillDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
       where Bill.BillDate between @inStartDate and @inEndDate
-        and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())
+        and Bill.FromId in (zc_UnitId_StoreMaterialBasis(), zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())
         and Bill.BillKind in (zc_bkSaleToClient())
         and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
         and Bill.FromId not in (3830, 3304) -- КРОТОН ООО (хранение) + КРОТОН ООО
@@ -167,7 +167,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
      union
       select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
            , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
-           , zc_rvNo() as isOnlyUpdateInt
+           , zc_rvYes() as isOnlyUpdateInt
       from dba.Bill
            join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0 and BillItems.GoodsPropertyId = 5510 -- РУЛЬКА ВАРЕНАЯ в пакете для запекания
                       left outer join dba.Unit on Unit.Id = Bill.ToId
@@ -202,6 +202,28 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
                          and Bill.BillDate between find2.StartDate and find2.EndDate
                          and find2.ContractNumber <> ''
       group by BillId_union
+     union
+      select Bill.Id, 0 as Id_Postgres, 30101 as CodeIM -- Готовая продукция
+           , max (isnull (find1.Id, isnull (find2.Id,0))) as ContractId_find
+           , zc_rvNo() as isOnlyUpdateInt
+      from dba.Bill
+           left join dba.isUnit on isUnit.UnitId = Bill.ToId
+           join dba.BillItems on BillItems.BillId = Bill.Id and BillItems.OperCount<>0
+                      left outer join dba.Unit on Unit.Id = Bill.ToId
+                      left outer join dba.ContractKind_byHistory as find1
+                           on find1.ClientId = Unit.DolgByUnitID
+                         and Bill.BillDate between find1.StartDate and find1.EndDate
+                         and find1.ContractNumber <> ''
+                      left outer join dba.ContractKind_byHistory as find2
+                          on find2.ClientId = Unit.Id
+                         and Bill.BillDate between find2.StartDate and find2.EndDate
+                         and find2.ContractNumber <> ''
+      where Bill.BillDate between @inStartDate and @inEndDate
+        and Bill.FromId in (zc_UnitId_StoreSale())
+        and Bill.BillKind in (zc_bkSendUnitToUnit())
+        and (Bill.MoneyKindId = zc_mkBN() or isnull(Bill.Id_Postgres,0) <> 0)
+        and isUnit.UnitId is null
+      group by Bill.Id
      ) as Bill_find
 
      left outer join dba.Bill on Bill.Id = Bill_find.Id
@@ -290,7 +312,7 @@ from (select Bill.Id, 0 as Id_Postgres, 30201 as CodeIM -- Мясное сырье
    from _tmpList left outer join _tmpList as _tmpList2 on 1=0  --_tmpList2.ObjectId = _tmpList.BillId_pg
    group by ObjectId, BillId, InvNumber, BillNumberClient1, OperDate, OperDatePartner, PriceWithVAT, VATPercent, ChangePercent, FromId_Postgres, ToId_Postgres, FromId, ClientId, MoneyKindId, PaidKindId_Postgres
           , CodeIM, ContractNumber, CarId, PersonalDriverId, RouteId, RouteSortingId_Postgres, PersonalId_Postgres, _tmpList.isOnlyUpdateInt, Id_Postgres
-   order by 3, 4, 1
+   order by 3, 4, CodeIM, 1
    ;
 
 end
