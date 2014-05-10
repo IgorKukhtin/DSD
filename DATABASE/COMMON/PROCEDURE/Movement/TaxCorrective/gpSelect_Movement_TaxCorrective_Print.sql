@@ -47,6 +47,9 @@ BEGIN
            , Movement.InvNumber				                    AS InvNumber
            , Movement.OperDate				                    AS OperDate
            , MovementDate_DateRegistered.ValueData                          AS DateRegistered
+           , 'J1201005'::TVarChar                       AS CHARCODE  
+           , 'Неграш О.В.'::TVarChar                    AS N10 
+           , 'оплата з поточного рахунка'::TVarChar     AS N9
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , MovementFloat_TotalCount.ValueData                             AS TotalCount
