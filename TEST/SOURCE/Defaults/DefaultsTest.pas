@@ -22,7 +22,7 @@ type
 implementation
 
 uses UtilConst, TestFramework, Defaults, Forms, DB, Authentication, Storage,
-     CommonData, UtilConvert, RoleTest, dbObjectTest, SysUtils;
+     CommonData, UtilConvert, RoleTest, dbObjectTest, SysUtils, ObjectTest;
 
 { TDefaults }
 

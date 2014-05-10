@@ -2,7 +2,7 @@ unit SaleMovementItemTest;
 
 interface
 
-uses dbMovementItemTest, dbTest;
+uses dbMovementItemTest, dbTest, ObjectTest;
 
 type
 

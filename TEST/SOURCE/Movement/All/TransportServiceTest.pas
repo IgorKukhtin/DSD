@@ -2,7 +2,7 @@ unit TransportServiceTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TTransportServiceTest = class (TdbMovementTestNew)

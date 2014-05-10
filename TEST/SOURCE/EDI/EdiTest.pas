@@ -34,7 +34,7 @@ begin
   // создание документа
   try
      Id := SaleMovementItem.InsertDefault;
-     EDI.DESADV(Id);
+   //  EDI.DESADV(Id);
      { запускаем процедуру выгрузки документа DESADV}
   finally
     EDI.Free;

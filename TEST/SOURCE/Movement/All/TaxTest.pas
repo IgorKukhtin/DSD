@@ -2,7 +2,7 @@ unit TaxTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TTaxTest = class (TdbMovementTestNew)

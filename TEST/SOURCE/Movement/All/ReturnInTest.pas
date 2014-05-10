@@ -2,7 +2,7 @@ unit ReturnInTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TReturnInTest = class (TdbMovementTestNew)

@@ -415,13 +415,14 @@ uses
   TransferDebtInJournal in '..\..\Forms\Document\TransferDebtInJournal.pas' {TransferDebtInJournalForm: TParentForm},
   TransferDebtOut in '..\..\Forms\Document\TransferDebtOut.pas' {TransferDebtOutForm: TParentForm},
   TransferDebtOutJournal in '..\..\Forms\Document\TransferDebtOutJournal.pas' {TransferDebtOutJournalForm: TParentForm},
-  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
   EdiTest in '..\SOURCE\EDI\EdiTest.pas',
   ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
-  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\..\SOURCE\EDI\EDI.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  ObjectTest in '..\SOURCE\Objects\ObjectTest.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
 

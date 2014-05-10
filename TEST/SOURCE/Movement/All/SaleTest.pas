@@ -2,7 +2,7 @@ unit SaleTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TSaleTest = class (TdbMovementTestNew)

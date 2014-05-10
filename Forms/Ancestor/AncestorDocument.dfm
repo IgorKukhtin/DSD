@@ -3,8 +3,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 845
-  ExplicitHeight = 451
+  ExplicitWidth = 837
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -30,10 +30,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
         ExplicitWidth = 829
         ExplicitHeight = 306
         inherited cxGridDBTableView: TcxGridDBTableView
-          Styles.Inactive = nil
-          Styles.Selection = nil
-          Styles.Footer = nil
-          Styles.Header = nil
           object colIsErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'isErased'

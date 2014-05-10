@@ -2,7 +2,7 @@ unit ProfitLossServiceTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TProfitLossServiceTest = class (TdbMovementTestNew)

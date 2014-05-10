@@ -2,7 +2,7 @@ unit CashOperationTest;
 
 interface
 
-uses dbTest, dbMovementTest, DB;
+uses dbTest, dbMovementTest, DB, ObjectTest;
 
 type
   TCashOperationTest = class (TdbMovementTestNew)

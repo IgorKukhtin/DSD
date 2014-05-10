@@ -163,6 +163,9 @@ BEGIN
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
+           , ObjectString_DELIVERYPLACEGLNCode.ValueData AS DELIVERYPLACEGLNCode
+
 
            , OH_JuridicalDetails_From.JuridicalId       AS JuridicalId_From
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
@@ -175,6 +178,7 @@ BEGIN
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
+           , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
        FROM Movement
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
@@ -253,15 +257,28 @@ BEGIN
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
                                 AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+
+            LEFT JOIN ObjectString AS ObjectString_DELIVERYPLACEGLNCode 
+                                   ON ObjectString_DELIVERYPLACEGLNCode.ObjectId = Object_To.Id
+                                  AND ObjectString_DELIVERYPLACEGLNCode.DescId = zc_ObjectString_Partner_GLNCode()
+
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, Object_To.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
+            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode 
+                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId 
+                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, Object_From.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+
+            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode 
+                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId 
+                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
+
        WHERE Movement.Id =  inMovementId;
---         AND Movement.DescId = zc_Movement_Sale();
     RETURN NEXT Cursor1;
 
 
@@ -305,10 +322,15 @@ BEGIN
           AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
        )
        SELECT
-             Object_Goods.ObjectCode         AS GoodsCode
+             Object_GoodsByGoodsKind_View.Id AS Id
+           , Object_Goods.ObjectCode         AS GoodsCode
            , Object_Goods.ValueData          AS GoodsName
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
+           , CASE Object_Measure.Id 
+                  WHEN zc_Measure_Sh() THEN 'PCE'
+                  ELSE 'KGM'
+             END::TVarChar AS DELIVEREDUNIT  
            , tmpMI.Amount                    AS Amount
            , tmpMI.AmountPartner             AS AmountPartner
            , tmpMI.Price                     AS Price
@@ -396,6 +418,9 @@ BEGIN
 
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMI.GoodsKindId
 
+            LEFT JOIN Object_GoodsByGoodsKind_View ON Object_GoodsByGoodsKind_View.GoodsId = tmpMI.GoodsId 
+                                                  AND Object_GoodsByGoodsKind_View.GoodsKindId = tmpMI.GoodsKindId
+
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = tmpMI.GoodsId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = tmpMI.GoodsKindId
 
@@ -413,6 +438,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 08.05.14                        * add GLN code
  08.05.14                                        * all
  06.05.14                                        * add Object_Partner
  06.05.14                                                       * zc_Movement_SendOnPrice

@@ -2,7 +2,7 @@ unit ServiceTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TServiceTest = class (TdbMovementTestNew)

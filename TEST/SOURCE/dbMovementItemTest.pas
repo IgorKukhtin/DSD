@@ -1,17 +1,9 @@
 unit dbMovementItemTest;
 
 interface
-uses TestFramework, dbObjectTest, DB, dbTest, Classes;
+uses TestFramework, dbObjectTest, DB, dbTest, Classes, ObjectTest;
 
 type
-
-  TMovementItemTest = class (TObjectTest)
-  protected
-    procedure InsertUpdateInList(Id: integer); override;
-    procedure DeleteRecord(Id: Integer); override;
-  public
-    procedure Delete(Id: Integer); override;
-  end;
 
   TdbMovementItemTest = class (TdbTest)
   protected
@@ -627,44 +619,6 @@ begin
   inherited;
   //FParams.AddParam('inMovementId', ftInteger, ptInput, TMovementZakazInternalTest.Create.GetDefault);
   FParams.AddParam('inShowAll', ftBoolean, ptInput, true);
-end;
-
-
-{ TMovementItemTest }
-
-procedure TMovementItemTest.Delete(Id: Integer);
-var Index: Integer;
-begin
-  if InsertedIdMovementItemList.Find(IntToStr(Id), Index) then begin
-     // здесь мы разрешаем удалять ТОЛЬКО вставленные в момент теста данные
-     DeleteRecord(Id);
-     InsertedIdMovementItemList.Delete(Index);
-  end
-  else
-     raise Exception.Create('Попытка удалить запись, вставленную вне теста!!!');
-end;
-
-procedure TMovementItemTest.DeleteRecord(Id: Integer);
-const
-   pXML =
-  '<xml Session = "">' +
-    '<lpDelete_MovementItem OutputType="otResult">' +
-       '<inId DataType="ftInteger" Value="%d"/>' +
-    '</lpDelete_MovementItem>' +
-  '</xml>';
-var i: integer;
-begin
-  TStorageFactory.GetStorage.ExecuteProc(Format(pXML, [Id]));
-  for i := 0 to DefaultValueList.Count - 1 do
-      if DefaultValueList.Values[DefaultValueList.Names[i]] = IntToStr(Id) then begin
-         DefaultValueList.Values[DefaultValueList.Names[i]] := '';
-         break;
-      end;
-end;
-
-procedure TMovementItemTest.InsertUpdateInList(Id: integer);
-begin
-  InsertedIdMovementItemList.Add(IntToStr(Id));
 end;
 
 initialization

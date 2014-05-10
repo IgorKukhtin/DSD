@@ -2,7 +2,7 @@ unit SendDebtTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TSendDebtTest = class (TdbMovementTestNew)

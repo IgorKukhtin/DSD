@@ -2,7 +2,7 @@ unit JuridicalTest;
 
 interface
 
-uses DB, dbTest, dbObjectTest;
+uses DB, dbTest, dbObjectTest, ObjectTest;
 
 type
 

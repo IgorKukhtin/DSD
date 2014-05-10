@@ -452,12 +452,12 @@ inherited SaleJournalForm: TSaleJournalForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSaleForm'
     end
-    object actMovementCheck: TdsdOpenForm [11]
+    object actMovementCheck: TdsdOpenForm [12]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
-      ImageIndex = 30
+      ImageIndex = 43
       FormName = 'TMovementCheckForm'
       FormNameParam.Value = 'TMovementCheckForm'
       FormNameParam.DataType = ftString

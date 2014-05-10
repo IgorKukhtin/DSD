@@ -2,7 +2,7 @@ unit PersonalSendCashTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TPersonalSendCashTest = class (TdbMovementTestNew)

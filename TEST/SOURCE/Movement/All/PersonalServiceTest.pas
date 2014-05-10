@@ -2,7 +2,7 @@ unit PersonalServiceTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TPersonalServiceTest = class (TdbMovementTestNew)

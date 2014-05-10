@@ -2,8 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitWidth = 1126
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -380,6 +380,24 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
+    object actMovementCheck: TdsdOpenForm [7]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 30
+      FormName = 'TMovementCheckForm'
+      FormNameParam.Value = 'TMovementCheckForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object actPrint_TaxCorrective_Us: TdsdPrintAction
       Category = 'DSDLib'
       MoveParams = <
@@ -599,6 +617,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTaxCorrective_Client'
         end
         item
@@ -633,6 +659,11 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     object bbPrintTaxCorrective_Reestr: TdxBarButton
       Action = actPrint_TaxCorrective_Reestr
       Category = 0
+    end
+    object bbMovementCheck: TdxBarButton
+      Action = actMovementCheck
+      Category = 0
+      ImageIndex = 43
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

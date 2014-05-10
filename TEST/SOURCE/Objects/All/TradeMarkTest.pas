@@ -2,7 +2,7 @@ unit TradeMarkTest;
 
 interface
 
-uses dbTest, dbObjectTest;
+uses dbTest, dbObjectTest, ObjectTest;
 
 type
 

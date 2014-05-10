@@ -2,7 +2,7 @@ unit SheetWorkTimeTest;
 
 interface
 
-uses dbTest, dbMovementTest;
+uses dbTest, dbMovementTest, ObjectTest;
 
 type
   TSheetWorkTimeTest = class (TdbMovementTestNew)

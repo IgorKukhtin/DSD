@@ -36,7 +36,7 @@ type
 
 implementation
 
-uses zLibUtil, SysUtils, dbObjectTest, dbMovementItemTest, dbMovementTest;
+uses zLibUtil, SysUtils, ObjectTest;
 { TdbTest }
 
 function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
