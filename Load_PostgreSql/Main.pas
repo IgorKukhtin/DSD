@@ -9175,7 +9175,21 @@ begin
            +'       end as isOnlyUpdateInt');
 
         Add('     , BillItems.Id_Postgres as Id_Postgres');
-        Add('from dba.Bill');
+        Add('from (select Bill.*'
+           +'      from dba.Bill'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind in (zc_bkSaleToClient())'
+           +'        and Bill.Id_Postgres>0'
+           +'     union all'
+           +'      select Bill.*'
+           +'      from dba.Bill'
+           +'           left join dba.isUnit on isUnit.UnitId = Bill.ToId'
+           +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
+           +'        and Bill.BillKind in (zc_bkSendUnitToUnit())'
+           +'        and Bill.FromId=zc_UnitId_StoreSale()'
+           +'        and Bill.Id_Postgres>0'
+           +'        and isUnit.UnitId is null'
+           +'     ) as Bill');
 
         if (cbBill_List.Checked)
         then
@@ -9193,10 +9207,6 @@ begin
            +'                                                                           and Bill.BillDate between tmpBI_byDiscountWeight.StartDate and tmpBI_byDiscountWeight.EndDate'
            +'                                                                           and tmpBI_byDiscountWeight.ToId = Bill.ToId'
            +'                                                                           and 1=1');
-        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
-           +'  and Bill.BillKind in (zc_bkSaleToClient())'
-           +'  and Bill.Id_Postgres>0'
-           );
 {        Add('where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'  and Bill.BillKind in (zc_bkSendUnitToUnit(),zc_bkSaleToClient())'
            +'  and Bill.FromId<>1022' // ÂÈÇÀÐÄ 1

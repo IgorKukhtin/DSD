@@ -842,11 +842,8 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end>
     end
     object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
+      Action = actTax
       Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Visible = ivAlways
-      ImageIndex = 41
     end
     object bbPrint: TdxBarButton
       Action = mactPrint_TransferDebtOut
