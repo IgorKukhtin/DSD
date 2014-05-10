@@ -1137,6 +1137,8 @@ BEGIN
      -- 5.2. ÔÈÍÈØ - Îáÿçàòåëüíî ìåíÿåì ñòàòóñ äîêóìåíòà
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- ñîõğàíèëè ïğîòîêîë
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
@@ -1145,6 +1147,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  08.04.14                                        * add Constant_InfoMoney_isCorporate_View
  04.04.14                                        * add zc_Enum_InfoMoney_21151
  21.12.13                                        * Personal -> Member

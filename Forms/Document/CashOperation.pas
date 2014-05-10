@@ -14,7 +14,6 @@ type
   TCashOperationForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
-    ceInvNumber: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
@@ -38,6 +37,7 @@ type
     ContractGuides: TdsdGuides;
     cxLabel3: TcxLabel;
     ceAmountOut: TcxCurrencyEdit;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public

@@ -1,6 +1,5 @@
 -- Function: lpComplete_Movement_PersonalSendCash (Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalSendCash (Integer, Integer, Boolean);
 DROP FUNCTION IF EXISTS lpComplete_Movement_PersonalSendCash (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_PersonalSendCash(
@@ -461,6 +460,8 @@ BEGIN
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_PersonalSendCash() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
@@ -469,6 +470,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  26.01.14                                        * правильные проводки по филиалу
  21.12.13                                        * Personal -> Member
  14.11.13                                        * add calc ActiveContainerId and PassiveContainerId

@@ -14,7 +14,6 @@ uses
 type
   TBankAccountMovementForm = class(TAncestorEditDialogForm)
     Код: TcxLabel;
-    ceInvNumber: TcxCurrencyEdit;
     cxLabel1: TcxLabel;
     ceOperDate: TcxDateEdit;
     cxLabel2: TcxLabel;
@@ -41,6 +40,7 @@ type
     cxLabel9: TcxLabel;
     ceCurrency: TcxButtonEdit;
     CurrencyGuides: TdsdGuides;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public

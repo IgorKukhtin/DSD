@@ -5,7 +5,7 @@
   ClientWidth = 562
   AddOnFormData.isSingle = False
   ExplicitWidth = 568
-  ExplicitHeight = 268
+  ExplicitHeight = 261
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -30,31 +30,22 @@
     Top = 5
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object ceInvNumber: TcxCurrencyEdit [4]
-    Left = 8
-    Top = 23
-    Enabled = False
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 2
-    Width = 120
-  end
-  object cxLabel2: TcxLabel [5]
+  object cxLabel2: TcxLabel [4]
     Left = 288
     Top = 5
     Caption = #1050#1072#1089#1089#1072
   end
-  object cxLabel4: TcxLabel [6]
+  object cxLabel4: TcxLabel [5]
     Left = 288
     Top = 142
     Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
   end
-  object cxLabel5: TcxLabel [7]
+  object cxLabel5: TcxLabel [6]
     Left = 8
     Top = 95
     Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
-  object ceCash: TcxButtonEdit [8]
+  object ceCash: TcxButtonEdit [7]
     Left = 288
     Top = 23
     Properties.Buttons = <
@@ -62,12 +53,23 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 4
+    TabOrder = 3
     Width = 260
   end
-  object ceUnit: TcxButtonEdit [9]
+  object ceUnit: TcxButtonEdit [8]
     Left = 288
     Top = 158
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 8
+    Width = 260
+  end
+  object ceInfoMoney: TcxButtonEdit [9]
+    Left = 8
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -76,73 +78,30 @@
     TabOrder = 9
     Width = 260
   end
-  object ceInfoMoney: TcxButtonEdit [10]
-    Left = 8
-    Top = 113
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 10
-    Width = 260
-  end
-  object ceOperDate: TcxDateEdit [11]
+  object ceOperDate: TcxDateEdit [10]
     Left = 148
     Top = 23
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 3
+    TabOrder = 2
     Width = 120
   end
-  object ceAmountIn: TcxCurrencyEdit [12]
+  object ceAmountIn: TcxCurrencyEdit [11]
     Left = 8
     Top = 68
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 7
+    TabOrder = 6
     Width = 120
   end
-  object cxLabel7: TcxLabel [13]
+  object cxLabel7: TcxLabel [12]
     Left = 8
     Top = 50
     Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
-  object ceObject: TcxButtonEdit [14]
+  object ceObject: TcxButtonEdit [13]
     Left = 288
     Top = 68
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 6
-    Width = 260
-  end
-  object cxLabel6: TcxLabel [15]
-    Left = 288
-    Top = 50
-    Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
-  end
-  object cxLabel10: TcxLabel [16]
-    Left = 10
-    Top = 140
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-  end
-  object ceComment: TcxTextEdit [17]
-    Left = 10
-    Top = 158
-    TabOrder = 11
-    Width = 258
-  end
-  object cxLabel8: TcxLabel [18]
-    Left = 288
-    Top = 95
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object ceContract: TcxButtonEdit [19]
-    Left = 288
-    Top = 115
     Properties.Buttons = <
       item
         Default = True
@@ -151,18 +110,59 @@
     TabOrder = 5
     Width = 260
   end
-  object cxLabel3: TcxLabel [20]
+  object cxLabel6: TcxLabel [14]
+    Left = 288
+    Top = 50
+    Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
+  end
+  object cxLabel10: TcxLabel [15]
+    Left = 10
+    Top = 140
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [16]
+    Left = 10
+    Top = 158
+    TabOrder = 10
+    Width = 258
+  end
+  object cxLabel8: TcxLabel [17]
+    Left = 288
+    Top = 95
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object ceContract: TcxButtonEdit [18]
+    Left = 288
+    Top = 115
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 4
+    Width = 260
+  end
+  object cxLabel3: TcxLabel [19]
     Left = 148
     Top = 50
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
-  object ceAmountOut: TcxCurrencyEdit [21]
+  object ceAmountOut: TcxCurrencyEdit [20]
     Left = 148
     Top = 68
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
-    TabOrder = 8
+    TabOrder = 7
     Width = 120
+  end
+  object edInvNumber: TcxTextEdit [21]
+    Left = 8
+    Top = 23
+    Enabled = False
+    Properties.ReadOnly = True
+    TabOrder = 21
+    Text = '0'
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
@@ -209,8 +209,8 @@
       end
       item
         Name = 'ininvnumber'
-        Value = 0.000000000000000000
-        Component = ceInvNumber
+        Value = '0'
+        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
@@ -299,8 +299,8 @@
       end
       item
         Name = 'invnumber'
-        Value = 0.000000000000000000
-        Component = ceInvNumber
+        Value = '0'
+        Component = edInvNumber
         DataType = ftString
       end
       item

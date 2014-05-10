@@ -291,9 +291,11 @@ BEGIN
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
 
-
      -- 5. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
@@ -302,6 +304,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        *
 */
 

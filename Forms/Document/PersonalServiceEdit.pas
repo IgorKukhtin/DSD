@@ -7,13 +7,13 @@ uses
   Vcl.Menus, cxControls, cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils,
   dsdGuides, cxDropDownEdit, cxCalendar, cxMaskEdit, cxButtonEdit, cxTextEdit,
   cxCurrencyEdit, Vcl.Controls, cxLabel, dsdDB, dsdAction, System.Classes,
-  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons;
+  Vcl.ActnList, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons,
+  dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TPersonalServiceEditForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
-    ceInvNumber: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
@@ -39,6 +39,7 @@ type
     cxLabel8: TcxLabel;
     ceContract: TcxButtonEdit;
     ContractGuides: TdsdGuides;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public

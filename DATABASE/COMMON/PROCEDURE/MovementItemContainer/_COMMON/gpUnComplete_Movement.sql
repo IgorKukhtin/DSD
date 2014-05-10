@@ -1,7 +1,6 @@
 -- Function: gpUnComplete_Movement (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpUnComplete_Movement (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpUnComplete_Movement (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpUnComplete_Movement(
     IN inMovementId Integer               , -- ключ объекта <Документ>
@@ -13,15 +12,12 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UnComplete_Movement());
      vbUserId:=2; -- CAST (inSession AS Integer);
 
-
      -- проверка - если <Master> Удален, то <Ошибка>
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_UnComplete(), inComment:= 'распровести');
-
 
      -- Распроводим Документ
      PERFORM lpUnComplete_Movement (inMovementId := inMovementId

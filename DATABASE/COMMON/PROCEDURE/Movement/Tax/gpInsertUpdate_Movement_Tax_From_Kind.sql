@@ -446,7 +446,7 @@ BEGIN
                FROM (SELECT MovementItem.ObjectId AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                           , CASE WHEN vbDiscountPercent <> 0 THEN CAST ( (1 - vbDiscountPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2)) ELSE MIFloat_Price.ValueData END AS Price
-                          , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+                          , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Amount_ReturnIn
                      FROM _tmpMovement2 AS _tmpMovement
@@ -468,7 +468,7 @@ BEGIN
                      GROUP BY MovementItem.ObjectId
                             , MILinkObject_GoodsKind.ObjectId
                             , MIFloat_Price.ValueData 
-                            , MIFloat_CountForPrice.ValueData
+                            , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END
                     ) AS tmpMI_all
                WHERE tmpMI_all.Amount_Sale <> 0 OR tmpMI_all.Amount_ReturnIn <> 0
               ) AS tmpMI
@@ -565,70 +565,7 @@ BEGIN
       WHERE _tmpMovement.DescId = zc_Movement_ReturnIn();
 
 
-      -- сохранили строчную часть заново у Налоговой
-      PERFORM lpInsertUpdate_MovementItem_Tax (ioId           := tmpMI_Tax.MovementItemId
-                                             , inMovementId   := vbMovementId_Tax
-                                             , inGoodsId      := _tmpMI.GoodsId
-                                             , inAmount       := _tmpMI.Amount_Tax
-                                             , inPrice        := _tmpMI.Price
-                                             , ioCountForPrice:= _tmpMI.CountForPrice
-                                             , inGoodsKindId  := _tmpMI.GoodsKindId
-                                             , inUserId       := vbUserId)
-      FROM _tmpMI
-           LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
-                           , MovementItem.ObjectId   AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , MIFloat_Price.ValueData AS Price
-                      FROM MovementItem
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      WHERE MovementItem.MovementId = vbMovementId_Tax
-                        AND MovementItem.isErased = FALSE 
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
-                             , MIFloat_Price.ValueData
-                     ) AS tmpMI_Tax ON tmpMI_Tax.GoodsId     = _tmpMI.GoodsId
-                                   AND tmpMI_Tax.GoodsKindId = _tmpMI.GoodsKindId
-                                   AND tmpMI_Tax.Price       = _tmpMI.Price
-      WHERE _tmpMI.Amount_Tax <> 0;
-
-      -- сохранили строчную часть заново у Корректировки
-      PERFORM lpInsertUpdate_MovementItem_TaxCorrective (ioId           := tmpMI_TaxCorrective.MovementItemId
-                                                       , inMovementId   := vbMovementId_TaxCorrective
-                                                       , inGoodsId      := _tmpMI.GoodsId
-                                                       , inAmount       := _tmpMI.Amount_TaxCorrective
-                                                       , inPrice        := _tmpMI.Price
-                                                       , ioCountForPrice:= _tmpMI.CountForPrice
-                                                       , inGoodsKindId  := _tmpMI.GoodsKindId
-                                                       , inUserId       := vbUserId)
-      FROM _tmpMI
-           LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
-                           , MovementItem.ObjectId   AS GoodsId
-                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                           , MIFloat_Price.ValueData AS Price
-                      FROM MovementItem
-                           LEFT JOIN MovementItemFloat AS MIFloat_Price
-                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
-                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                      WHERE MovementItem.MovementId = vbMovementId_TaxCorrective
-                        AND MovementItem.isErased = FALSE 
-                      GROUP BY MovementItem.ObjectId
-                             , MILinkObject_GoodsKind.ObjectId
-                             , MIFloat_Price.ValueData
-                     ) AS tmpMI_TaxCorrective ON tmpMI_TaxCorrective.GoodsId     = _tmpMI.GoodsId
-                                             AND tmpMI_TaxCorrective.GoodsKindId = _tmpMI.GoodsKindId
-                                             AND tmpMI_TaxCorrective.Price       = _tmpMI.Price
-      WHERE _tmpMI.Amount_TaxCorrective <> 0;
-
-
-      -- удаляем лишние строки из Налоговой
+      -- удаляем !!!все!!! строки из Налоговой
       PERFORM gpMovementItem_Tax_SetErased (inMovementItemId := tmpMI_Tax.MovementItemId
                                           , inSession := inSession)
       FROM 
@@ -646,13 +583,13 @@ BEGIN
             WHERE MovementItem.MovementId = vbMovementId_Tax
               AND MovementItem.isErased = FALSE
            ) AS tmpMI_Tax 
-           LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_Tax.GoodsId
+           /*LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_Tax.GoodsId
                            AND _tmpMI.GoodsKindId = tmpMI_Tax.GoodsKindId
                            AND _tmpMI.Price       = tmpMI_Tax.Price 
                            AND _tmpMI.Amount_Tax  <> 0
-     WHERE _tmpMI.GoodsId IS NULL ;
+     WHERE _tmpMI.GoodsId IS NULL */;
 
-      -- удаляем лишние строки из Корректировки
+      -- удаляем !!!все!!! строки из Корректировки
       PERFORM gpMovementItem_TaxCorrective_SetErased (inMovementItemId := tmpMI_TaxCorrective.MovementItemId
                                                     , inSession := inSession)
       FROM 
@@ -670,17 +607,86 @@ BEGIN
             WHERE MovementItem.MovementId = vbMovementId_TaxCorrective
               AND MovementItem.isErased = FALSE
            ) AS tmpMI_TaxCorrective
-           LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_TaxCorrective.GoodsId
+           /*LEFT JOIN _tmpMI ON _tmpMI.GoodsId     = tmpMI_TaxCorrective.GoodsId
                            AND _tmpMI.GoodsKindId = tmpMI_TaxCorrective.GoodsKindId
                            AND _tmpMI.Price       = tmpMI_TaxCorrective.Price 
                            AND _tmpMI.Amount_TaxCorrective  <> 0
-     WHERE _tmpMI.GoodsId IS NULL ;
+     WHERE _tmpMI.GoodsId IS NULL */;
 
 
-     -- ФИНИШ - Обязательно меняем статус у Налоговой
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = vbMovementId_Tax;
-     -- ФИНИШ - Обязательно меняем статус у Корректировки
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Movement.Id = vbMovementId_TaxCorrective;
+      -- сохранили строчную часть заново у Налоговой
+      PERFORM lpInsertUpdate_MovementItem_Tax (ioId           := 0 -- tmpMI_Tax.MovementItemId
+                                             , inMovementId   := vbMovementId_Tax
+                                             , inGoodsId      := _tmpMI.GoodsId
+                                             , inAmount       := _tmpMI.Amount_Tax
+                                             , inPrice        := _tmpMI.Price
+                                             , ioCountForPrice:= _tmpMI.CountForPrice
+                                             , inGoodsKindId  := _tmpMI.GoodsKindId
+                                             , inUserId       := vbUserId)
+      FROM _tmpMI
+           /*LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
+                           , MovementItem.ObjectId   AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , MIFloat_Price.ValueData AS Price
+                      FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      WHERE MovementItem.MovementId = vbMovementId_Tax
+                        AND MovementItem.isErased = FALSE 
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                             , MIFloat_Price.ValueData
+                     ) AS tmpMI_Tax ON tmpMI_Tax.GoodsId     = _tmpMI.GoodsId
+                                   AND tmpMI_Tax.GoodsKindId = _tmpMI.GoodsKindId
+                                   AND tmpMI_Tax.Price       = _tmpMI.Price*/
+      WHERE _tmpMI.Amount_Tax <> 0;
+
+      -- сохранили строчную часть заново у Корректировки
+      PERFORM lpInsertUpdate_MovementItem_TaxCorrective (ioId           := 0 -- tmpMI_TaxCorrective.MovementItemId
+                                                       , inMovementId   := vbMovementId_TaxCorrective
+                                                       , inGoodsId      := _tmpMI.GoodsId
+                                                       , inAmount       := _tmpMI.Amount_TaxCorrective
+                                                       , inPrice        := _tmpMI.Price
+                                                       , ioCountForPrice:= _tmpMI.CountForPrice
+                                                       , inGoodsKindId  := _tmpMI.GoodsKindId
+                                                       , inUserId       := vbUserId)
+      FROM _tmpMI
+           /*LEFT JOIN (SELECT MAX (MovementItem.Id)   AS MovementItemId
+                           , MovementItem.ObjectId   AS GoodsId
+                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                           , MIFloat_Price.ValueData AS Price
+                      FROM MovementItem
+                           LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                       ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                      AND MIFloat_Price.DescId = zc_MIFloat_Price() 
+                           LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                            ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                           AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                      WHERE MovementItem.MovementId = vbMovementId_TaxCorrective
+                        AND MovementItem.isErased = FALSE 
+                      GROUP BY MovementItem.ObjectId
+                             , MILinkObject_GoodsKind.ObjectId
+                             , MIFloat_Price.ValueData
+                     ) AS tmpMI_TaxCorrective ON tmpMI_TaxCorrective.GoodsId     = _tmpMI.GoodsId
+                                             AND tmpMI_TaxCorrective.GoodsKindId = _tmpMI.GoodsKindId
+                                             AND tmpMI_TaxCorrective.Price       = _tmpMI.Price*/
+      WHERE _tmpMI.Amount_TaxCorrective <> 0;
+
+
+     -- ФИНИШ - Проводим Налоговую
+     PERFORM lpComplete_Movement_Tax (inMovementId := vbMovementId_Tax
+                                    , inUserId     := vbUserId);
+     -- ФИНИШ - Проводим Корректировку
+     IF vbMovementId_TaxCorrective <> 0
+     THEN
+         PERFORM lpComplete_Movement_TaxCorrective (inMovementId := vbMovementId_TaxCorrective
+                                                  , inUserId     := vbUserId);
+     END IF;
+
 
      -- результат
      SELECT MS_InvNumberPartner_Master.ValueData
@@ -708,6 +714,9 @@ ALTER FUNCTION gpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.14                                        * add lpComplete_Movement_Tax and lpComplete_Movement_TaxCorrective
+ 10.05.14                                        * add удаляем !!!все!!! + сохранили строчную часть заново
+ 10.05.14                                        * add CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END
  08.05.14                                        * add zc_MovementFloat_ChangePercent
  03.05.14                                        * all
  10.04.14                                        * all

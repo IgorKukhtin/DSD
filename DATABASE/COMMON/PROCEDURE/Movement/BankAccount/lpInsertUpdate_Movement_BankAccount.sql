@@ -1,7 +1,6 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, Integer, Integer, Integer, Integer, Integer);
-DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -22,6 +21,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
 RETURNS Integer AS
 $BODY$
    DECLARE vbMovementItemId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
 
      -- проверка (для юр.лица только)
@@ -73,6 +73,9 @@ BEGIN
      -- определяем <Элемент документа>
      SELECT MovementItem.Id INTO vbMovementItemId FROM MovementItem WHERE MovementItem.MovementId = ioId AND MovementItem.DescId = zc_MI_Master();
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementItemId, 0) = 0;
+
      -- сохранили <Элемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inBankAccountId, ioId, inAmount, NULL);
 
@@ -92,7 +95,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, inUserId);
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -101,6 +104,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.05.14                                        * add lpInsert_MovementItemProtocol
  07.03.14                                        * add zc_Enum_InfoMoney_21419
  13.03.14                                        * add lpInsert_MovementProtocol
  13.03.14                                        * err inParentId NOT NULL

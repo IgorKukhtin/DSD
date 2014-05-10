@@ -125,15 +125,14 @@ BEGIN
      END IF;
 
      -- Ставим статус у документа выписки
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-     WHERE Id = inMovementId AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inUserId     := vbUserId);
      -- Ставим статус у элементов документа выписки
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() 
-     WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     PERFORM lpComplete_Movement (inMovementId := Movement.Id
+                                , inUserId     := vbUserId)
+     FROM Movement
+     WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
 
-
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
 END;
 $BODY$
@@ -142,6 +141,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 10.05.14                                        * add lpComplete_Movement
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
  18.03.14                                        * add Ставим статус у элементов документа выписки

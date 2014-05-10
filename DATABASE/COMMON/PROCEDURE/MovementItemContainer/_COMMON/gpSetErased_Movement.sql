@@ -1,7 +1,6 @@
 -- Function: gpSetErased_Movement (Integer, TVarChar)
 
 DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpSetErased_Movement (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSetErased_Movement(
     IN inMovementId Integer               , -- ключ объекта <Документ>
@@ -13,7 +12,6 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight(inSession, zc_Enum_Process_SetErased_Movement());
      vbUserId:= lpGetUserBySession (inSession);
@@ -47,7 +45,7 @@ ALTER FUNCTION gpSetErased_Movement (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 13.04.13                                        * add !!!Для Админа отключаем эти проверки, иначе из Sybase не загрузить!!!
+ 13.04.14                                        * add !!!Для Админа отключаем эти проверки, иначе из Sybase не загрузить!!!
  12.10.13                                        * del Удаляем подчиненные Документы
  12.10.13                                        * add lfCheck_Movement_ParentStatus and lfCheck_Movement_ChildStatus
  06.10.13                                        *

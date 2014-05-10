@@ -192,12 +192,16 @@ BEGIN
      -- 5. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  21.03.14                                        * add zc_Enum_InfoMoneyDestination_21500
  10.03.14                                        * add zc_Movement_ProfitLossService
  22.01.14                                        * add IsMaster

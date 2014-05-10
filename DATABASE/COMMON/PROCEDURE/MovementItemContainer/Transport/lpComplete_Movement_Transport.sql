@@ -440,6 +440,8 @@ BEGIN
      -- 5.2. ÔÈÍÈØ - Îáÿçàòåëüíî ìåíÿåì ñòàòóñ äîêóìåíòà
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Transport() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- ñîõğàíèëè ïğîòîêîë
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
@@ -448,6 +450,7 @@ $BODY$
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  11.03.14                                        * err on zc_MIFloat_StartAmountFuel
  26.01.14                                        * ïğàâèëüíûå ïğîâîäêè ïî ôèëèàëó
  21.12.13                                        * Personal -> Member

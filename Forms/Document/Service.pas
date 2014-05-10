@@ -14,7 +14,6 @@ type
   TServiceForm = class(TAncestorEditDialogForm)
     cxLabel1: TcxLabel;
     Код: TcxLabel;
-    ceInvNumber: TcxCurrencyEdit;
     cxLabel2: TcxLabel;
     cxLabel4: TcxLabel;
     cxLabel5: TcxLabel;
@@ -42,6 +41,7 @@ type
     ceOperDatePartner: TcxDateEdit;
     edInvNumberPartner: TcxTextEdit;
     cxLabel11: TcxLabel;
+    edInvNumber: TcxTextEdit;
   private
     { Private declarations }
   public

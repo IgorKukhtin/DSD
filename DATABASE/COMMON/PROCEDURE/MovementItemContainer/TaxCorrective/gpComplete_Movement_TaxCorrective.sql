@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpComplete_Movement_TaxCorrective(
     IN inIsLastComplete    Boolean  DEFAULT FALSE, -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
     IN inSession           TVarChar DEFAULT ''     -- сессия пользователя
 )
- RETURNS VOID
+ RETURNS void
 AS
 $BODY$
   DECLARE vbUserId Integer;

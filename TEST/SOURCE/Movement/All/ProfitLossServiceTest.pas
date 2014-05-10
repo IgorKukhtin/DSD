@@ -17,7 +17,7 @@ type
   public
     function InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer): integer;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer; IsLoad:Boolean): integer;
     constructor Create; override;
   end;
 
@@ -42,6 +42,7 @@ var Id: Integer;
     AmountIn, AmountOut: Double;
     Comment:String;
     ContractId, ContractConditionKindId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,BonusKindId: Integer;
+    isLoad:Boolean;
 begin
   Id:=0;
   InvNumber:='1';
@@ -60,14 +61,15 @@ begin
   UnitId := 0;
   PaidKindId:=0;
   BonusKindId:=0;
+  isLoad:=false;
 
   result := InsertUpdateProfitLossService(Id, InvNumber, OperDate, AmountIn, AmountOut, Comment,
-              ContractId,InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId);
+              ContractId,InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId,isLoad);
 end;
 
 function TProfitLossService.InsertUpdateProfitLossService(const Id: integer; InvNumber: String;
         OperDate: TDateTime; AmountIn, AmountOut: Double;Comment:String;
-        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer): integer;
+        ContractId, InfoMoneyId, JuridicalId, PaidKindId, UnitId,ContractConditionKindId,BonusKindId: integer; IsLoad:Boolean): integer;
 begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
@@ -83,6 +85,8 @@ begin
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
   FParams.AddParam('inContractConditionKindId', ftInteger, ptInput, ContractConditionKindId);
   FParams.AddParam('inBonusKindId', ftInteger, ptInput, BonusKindId);
+  FParams.AddParam('inIsLoad', ftBoolean, ptInput, IsLoad);
+
 
   result := InsertUpdate(FParams);
 

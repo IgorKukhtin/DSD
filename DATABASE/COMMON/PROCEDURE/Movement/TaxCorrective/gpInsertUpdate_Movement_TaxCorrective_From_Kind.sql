@@ -362,13 +362,13 @@ BEGIN
           ) AS tmpResult_update;
 
 
-     -- ФИНИШ - Обязательно меняем статус у всех корректировок
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete()
+     -- ФИНИШ - Проводим все Корректировки
+     PERFORM lpComplete_Movement_TaxCorrective (inMovementId := tmpResult_complete.MovementId_Corrective
+                                              , inUserId     := vbUserId)
      FROM (SELECT MovementId_Corrective
            FROM _tmpResult
            GROUP BY MovementId_Corrective
-          ) AS tmpResult_complete
-     WHERE Movement.Id = tmpResult_complete.MovementId_Corrective;
+          ) AS tmpResult_complete;
 
 
      -- результат
@@ -392,6 +392,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.14                                        * add lpComplete_Movement_TaxCorrective
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax
  10.04.14                                        * ALL
  13.02.14                                                        *

@@ -86,13 +86,14 @@ BEGIN
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_isLoad(), ioId, inIsLoad);
      END IF;
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
+     -- сохранили протокол
+     PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 
      -- 5.3. проводим Документ
      PERFORM lpComplete_Movement_Service (inMovementId := ioId
                                         , inUserId     := inUserId);
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -101,6 +102,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.14                                        * add lpInsert_MovementItemProtocol
  08.05.14                                        * set lp
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!

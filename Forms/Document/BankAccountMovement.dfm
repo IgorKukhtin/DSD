@@ -23,34 +23,25 @@
     Top = 5
     Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
   end
-  object ceInvNumber: TcxCurrencyEdit [3]
-    Left = 8
-    Top = 23
-    Enabled = False
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 3
-    Width = 120
-  end
-  object cxLabel1: TcxLabel [4]
+  object cxLabel1: TcxLabel [3]
     Left = 148
     Top = 5
     Caption = #1044#1072#1090#1072
   end
-  object ceOperDate: TcxDateEdit [5]
+  object ceOperDate: TcxDateEdit [4]
     Left = 148
     Top = 23
     Properties.SaveTime = False
     Properties.ShowTime = False
-    TabOrder = 4
+    TabOrder = 3
     Width = 120
   end
-  object cxLabel2: TcxLabel [6]
+  object cxLabel2: TcxLabel [5]
     Left = 288
     Top = 5
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090
   end
-  object ceBankAccount: TcxButtonEdit [7]
+  object ceBankAccount: TcxButtonEdit [6]
     Left = 276
     Top = 23
     Properties.Buttons = <
@@ -58,43 +49,59 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 5
+    TabOrder = 4
     Width = 260
   end
-  object ceAmountIn: TcxCurrencyEdit [8]
+  object ceAmountIn: TcxCurrencyEdit [7]
     Left = 8
+    Top = 68
+    Properties.DecimalPlaces = 2
+    Properties.DisplayFormat = ',0.00'
+    TabOrder = 5
+    Width = 120
+  end
+  object cxLabel7: TcxLabel [8]
+    Left = 8
+    Top = 50
+    Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
+  end
+  object ceAmountOut: TcxCurrencyEdit [9]
+    Left = 148
     Top = 68
     Properties.DecimalPlaces = 2
     Properties.DisplayFormat = ',0.00'
     TabOrder = 6
     Width = 120
   end
-  object cxLabel7: TcxLabel [9]
-    Left = 8
-    Top = 50
-    Caption = #1055#1088#1080#1093#1086#1076', '#1089#1091#1084#1084#1072
-  end
-  object ceAmountOut: TcxCurrencyEdit [10]
-    Left = 148
-    Top = 68
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 7
-    Width = 120
-  end
-  object cxLabel3: TcxLabel [11]
+  object cxLabel3: TcxLabel [10]
     Left = 148
     Top = 50
     Caption = #1056#1072#1089#1093#1086#1076', '#1089#1091#1084#1084#1072
   end
-  object cxLabel6: TcxLabel [12]
+  object cxLabel6: TcxLabel [11]
     Left = 288
     Top = 50
     Caption = #1054#1090' '#1050#1086#1075#1086', '#1050#1086#1084#1091
   end
-  object ceObject: TcxButtonEdit [13]
+  object ceObject: TcxButtonEdit [12]
     Left = 276
     Top = 68
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 260
+  end
+  object cxLabel5: TcxLabel [13]
+    Left = 8
+    Top = 95
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+  end
+  object ceInfoMoney: TcxButtonEdit [14]
+    Left = 8
+    Top = 113
     Properties.Buttons = <
       item
         Default = True
@@ -103,25 +110,41 @@
     TabOrder = 8
     Width = 260
   end
-  object cxLabel5: TcxLabel [14]
-    Left = 8
-    Top = 95
-    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
-  end
-  object ceInfoMoney: TcxButtonEdit [15]
-    Left = 8
-    Top = 113
+  object ceContract: TcxButtonEdit [15]
+    Left = 276
+    Top = 115
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 9
+    TabOrder = 10
     Width = 260
   end
-  object ceContract: TcxButtonEdit [16]
+  object cxLabel8: TcxLabel [16]
+    Left = 288
+    Top = 95
+    Caption = #1044#1086#1075#1086#1074#1086#1088
+  end
+  object cxLabel10: TcxLabel [17]
+    Left = 8
+    Top = 182
+    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
+  end
+  object ceComment: TcxTextEdit [18]
+    Left = 8
+    Top = 200
+    TabOrder = 12
+    Width = 528
+  end
+  object cxLabel4: TcxLabel [19]
+    Left = 288
+    Top = 142
+    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+  end
+  object ceUnit: TcxButtonEdit [20]
     Left = 276
-    Top = 115
+    Top = 158
     Properties.Buttons = <
       item
         Default = True
@@ -130,44 +153,12 @@
     TabOrder = 11
     Width = 260
   end
-  object cxLabel8: TcxLabel [17]
-    Left = 288
-    Top = 95
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object cxLabel10: TcxLabel [18]
-    Left = 8
-    Top = 182
-    Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
-  end
-  object ceComment: TcxTextEdit [19]
-    Left = 8
-    Top = 200
-    TabOrder = 13
-    Width = 528
-  end
-  object cxLabel4: TcxLabel [20]
-    Left = 288
-    Top = 142
-    Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-  end
-  object ceUnit: TcxButtonEdit [21]
-    Left = 276
-    Top = 158
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 12
-    Width = 260
-  end
-  object cxLabel9: TcxLabel [22]
+  object cxLabel9: TcxLabel [21]
     Left = 8
     Top = 141
     Caption = #1042#1072#1083#1102#1090#1072
   end
-  object ceCurrency: TcxButtonEdit [23]
+  object ceCurrency: TcxButtonEdit [22]
     Left = 8
     Top = 159
     Properties.Buttons = <
@@ -175,8 +166,17 @@
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 10
+    TabOrder = 9
     Width = 260
+  end
+  object edInvNumber: TcxTextEdit [23]
+    Left = 8
+    Top = 23
+    Enabled = False
+    Properties.ReadOnly = True
+    TabOrder = 23
+    Text = '0'
+    Width = 118
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 131
@@ -217,8 +217,8 @@
       end
       item
         Name = 'ininvnumber'
-        Value = 0.000000000000000000
-        Component = ceInvNumber
+        Value = '0'
+        Component = edInvNumber
         DataType = ftString
         ParamType = ptInput
       end
@@ -321,8 +321,8 @@
       end
       item
         Name = 'InvNumber'
-        Value = 0.000000000000000000
-        Component = ceInvNumber
+        Value = '0'
+        Component = edInvNumber
         DataType = ftString
       end
       item
