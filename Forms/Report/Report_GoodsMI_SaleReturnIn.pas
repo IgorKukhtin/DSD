@@ -30,7 +30,6 @@ type
     clSale_Amount_Sh: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
     clReturn_Amount_Sh: TcxGridDBColumn;
     clReturn_Amount_Weight: TcxGridDBColumn;
     clReturn_Summ: TcxGridDBColumn;
@@ -44,6 +43,12 @@ type
     JuridicalGuides: TdsdGuides;
     clReturnPercent: TcxGridDBColumn;
     clGoodsGroupNameFull: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
   private
     { Private declarations }
   public

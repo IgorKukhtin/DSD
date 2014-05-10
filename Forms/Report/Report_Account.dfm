@@ -648,8 +648,8 @@ object Report_AccountForm: TReport_AccountForm
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 48
-    Top = 128
+    Left = 120
+    Top = 312
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
@@ -660,7 +660,25 @@ object Report_AccountForm: TReport_AccountForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = AccountDirectionGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = AccountGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = AccountGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = BusinessGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -676,6 +694,30 @@ object Report_AccountForm: TReport_AccountForm
           'Date')
       end
       item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ProfitLossDirectionGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ProfitLossGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = ProfitLossGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -685,8 +727,8 @@ object Report_AccountForm: TReport_AccountForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 584
-    Top = 256
+    Left = 560
+    Top = 232
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
@@ -972,13 +1014,22 @@ object Report_AccountForm: TReport_AccountForm
         Component = PeriodChoice
       end
       item
-        Component = AccountGuides
-      end
-      item
         Component = AccountGroupGuides
       end
       item
         Component = AccountDirectionGuides
+      end
+      item
+        Component = AccountGuides
+      end
+      item
+        Component = ProfitLossGroupGuides
+      end
+      item
+        Component = ProfitLossDirectionGuides
+      end
+      item
+        Component = ProfitLossGuides
       end
       item
         Component = InfoMoneyGuides
@@ -1172,8 +1223,8 @@ object Report_AccountForm: TReport_AccountForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 192
-    Top = 160
+    Left = 216
+    Top = 328
   end
   object AccountGroupGuides: TdsdGuides
     KeyField = 'Id'

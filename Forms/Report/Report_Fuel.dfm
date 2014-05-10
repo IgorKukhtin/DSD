@@ -442,6 +442,18 @@ object Report_FuelForm: TReport_FuelForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = CarGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -450,6 +462,12 @@ object Report_FuelForm: TReport_FuelForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = FuelGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = Owner
@@ -461,14 +479,14 @@ object Report_FuelForm: TReport_FuelForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 8
-    Top = 48
+    Left = 144
+    Top = 224
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -545,8 +563,8 @@ object Report_FuelForm: TReport_FuelForm
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 40
-    Top = 40
+    Left = 48
+    Top = 176
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -727,7 +745,8 @@ object Report_FuelForm: TReport_FuelForm
       item
         Component = BranchGuides
       end>
-    Left = 256
+    Left = 296
+    Top = 192
   end
   object FuelGuides: TdsdGuides
     KeyField = 'Id'

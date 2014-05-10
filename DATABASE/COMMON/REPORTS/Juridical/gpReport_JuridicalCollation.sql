@@ -1,6 +1,7 @@
 -- Function: gpReport_JuridicalCollation()
 
 DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inStartDate        TDateTime , -- 
@@ -9,6 +10,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalCollation(
     IN inContractId       Integer,    -- Договор
     IN inAccountId        Integer,    -- Счет 
     IN inPaidKindId       Integer   , --
+    IN inInfoMoneyId      Integer,    -- Управленческая статья  
     IN inSession          TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (MovementSumm TFloat, 
@@ -123,9 +125,10 @@ BEGIN
 
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
-            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-            AND (tmpContract.ContractId > 0 OR inContractId = 0)
+            AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+            AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+            AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
           GROUP BY Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId, MIContainer.MovementId
           HAVING SUM (MIContainer.Amount) <> 0
 
@@ -168,9 +171,10 @@ BEGIN
                                               AND MIContainer.OperDate >= inStartDate
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical() 
-            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-            AND (tmpContract.ContractId > 0 OR inContractId = 0)
+            AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+            AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+            AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
           GROUP BY Container.Amount, Container.ObjectId, CLO_InfoMoney.ObjectId, View_Contract_ContractKey.ContractId_Key, CLO_PaidKind.ObjectId -- Container.Id, 
 
          UNION ALL
@@ -201,9 +205,10 @@ BEGIN
                                               AND MIContainer.OperDate > inEndDate
           WHERE CLO_Juridical.ObjectId = inJuridicalId AND inJuridicalId <> 0 
             AND CLO_Juridical.DescId = zc_ContainerLinkObject_Juridical()
-            AND (Container.ObjectId = inAccountId OR inAccountId = 0)
-            AND (CLO_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-            AND (tmpContract.ContractId > 0 OR inContractId = 0)
+            AND (Container.ObjectId = inAccountId OR COALESCE (inAccountId, 0) = 0)
+            AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
+            AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+            AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
           GROUP BY Container.Amount, Container.ObjectId , CLO_InfoMoney.ObjectId, View_Contract_ContractKey.ContractId_Key, CLO_PaidKind.ObjectId -- Container.Id, 
         ) AS tmpRemains
         GROUP BY tmpRemains.AccountId, tmpRemains.InfoMoneyId, tmpRemains.ContractId, tmpRemains.PaidKindId -- tmpRemains.ContainerId, 
@@ -258,11 +263,12 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 10.05.14                                        * add inInfoMoneyId
  05.05.14                                        * add inPaidKindId
  04.05.14                                        * add PaidKindName
  26.04.14                                        * add Object_Contract_ContractKey_View
@@ -274,4 +280,4 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 */
 
 -- тест
--- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2013', inEndDate:= '01.02.2013', inJuridicalId:= null, inContractId:= null, inAccountId:= null, inPaidKindId:= null, inSession:= zfCalc_UserAdmin()); 
+-- SELECT * FROM gpReport_JuridicalCollation (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inJuridicalId:= 0, inContractId:= 0, inAccountId:= 0, inPaidKindId:= 0, inInfoMoneyId:= 0, inSession:= zfCalc_UserAdmin());

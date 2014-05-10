@@ -385,106 +385,26 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = deStart
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
+      end
+      item
+        Component = PersonalDriverGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end
       item
         Component = Owner
@@ -667,8 +587,8 @@ object Report_TransportHoursWorkForm: TReport_TransportHoursWorkForm
       item
         Component = BranchGuides
       end>
-    Left = 672
-    Top = 80
+    Left = 336
+    Top = 184
   end
   object PersonalDriverGuides: TdsdGuides
     KeyField = 'Id'
