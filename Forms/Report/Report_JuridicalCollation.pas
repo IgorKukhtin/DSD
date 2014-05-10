@@ -64,6 +64,9 @@ type
     cxLabel5: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
   private
     { Private declarations }
   public

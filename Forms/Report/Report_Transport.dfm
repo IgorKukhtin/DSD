@@ -530,106 +530,20 @@ object Report_TransportForm: TReport_TransportForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = BranchGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = deEnd
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = deStart
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = Owner
@@ -638,9 +552,6 @@ object Report_TransportForm: TReport_TransportForm
           'Left'
           'Top'
           'Width')
-      end
-      item
-        Component = BranchGuides
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream

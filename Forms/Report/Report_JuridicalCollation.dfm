@@ -12,17 +12,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     Height = 309
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1042
+    ExplicitWidth = 1020
     ExplicitHeight = 309
     ClientRectBottom = 309
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1042
+      ExplicitWidth = 1020
       ExplicitHeight = 309
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 309
-        ExplicitWidth = 1042
+        ExplicitWidth = 1020
         ExplicitHeight = 309
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -295,7 +295,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1042
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -314,22 +314,22 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       ExplicitTop = 29
     end
     inherited cxLabel1: TcxLabel
-      Left = 27
-      ExplicitLeft = 27
+      Left = 25
+      ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 8
+      Left = 6
       Top = 31
-      ExplicitLeft = 8
+      ExplicitLeft = 6
       ExplicitTop = 31
     end
     object cxLabel6: TcxLabel
-      Left = 251
+      Left = 207
       Top = 31
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 358
+      Left = 313
       Top = 29
       Properties.Buttons = <
         item
@@ -337,15 +337,15 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 237
+      Width = 210
     end
     object cxLabel3: TcxLabel
-      Left = 207
+      Left = 216
       Top = 6
-      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+      Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086':'
     end
     object edMainJuridical: TcxButtonEdit
-      Left = 358
+      Left = 313
       Top = 4
       Enabled = False
       Properties.Buttons = <
@@ -355,15 +355,15 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       TabOrder = 7
       Text = #1054#1054#1054' '#1040#1051#1040#1053
-      Width = 237
+      Width = 210
     end
     object cxLabel4: TcxLabel
-      Left = 599
+      Left = 569
       Top = 6
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
-      Left = 683
+      Left = 653
       Top = 4
       Properties.Buttons = <
         item
@@ -371,31 +371,31 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       TabOrder = 9
-      Width = 314
+      Width = 180
     end
     object cxLabel8: TcxLabel
-      Left = 631
-      Top = 31
+      Left = 867
+      Top = 6
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object ceContract: TcxButtonEdit
-      Left = 683
-      Top = 29
+      Left = 919
+      Top = 4
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 11
-      Width = 132
+      Width = 90
     end
     object cxLabel5: TcxLabel
-      Left = 825
-      Top = 30
+      Left = 837
+      Top = 31
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 908
+      Left = 919
       Top = 29
       Properties.Buttons = <
         item
@@ -403,7 +403,23 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           Kind = bkEllipsis
         end>
       TabOrder = 13
-      Width = 89
+      Width = 90
+    end
+    object cxLabel7: TcxLabel
+      Left = 530
+      Top = 31
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 653
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 15
+      Width = 180
     end
   end
   inherited cxPropertiesStore: TcxPropertiesStore
@@ -431,13 +447,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
           'Date')
       end
       item
-        Component = JuridicalGuides
+        Component = InfoMoneyGuides
         Properties.Strings = (
           'Key'
           'TextValue')
       end
       item
-        Component = MainJuridicalGuides
+        Component = JuridicalGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -514,7 +530,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'OurFirm'
-          Value = ''
+          Value = #1054#1054#1054' '#1040#1051#1040#1053
           Component = MainJuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -654,7 +670,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Name = 'OurFirm'
-          Value = ''
+          Value = #1054#1054#1054' '#1040#1051#1040#1053
           Component = MainJuridicalGuides
           ComponentItem = 'TextValue'
           DataType = ftString
@@ -737,8 +753,16 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PaidKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
-    Top = 132
+    Left = 184
+    Top = 196
   end
   inherited BarManager: TdxBarManager
     Left = 112
@@ -805,6 +829,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     end
   end
   inherited PeriodChoice: TPeriodChoice
+    Left = 24
     Top = 196
   end
   inherited RefreshDispatcher: TRefreshDispatcher
@@ -813,13 +838,19 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = PeriodChoice
       end
       item
+        Component = MainJuridicalGuides
+      end
+      item
         Component = JuridicalGuides
       end
       item
-        Component = ContractGuides
+        Component = AccountGuides
       end
       item
-        Component = AccountGuides
+        Component = InfoMoneyGuides
+      end
+      item
+        Component = ContractGuides
       end
       item
         Component = PaidKindGuides
@@ -850,8 +881,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 312
-    Top = 48
+    Left = 392
+    Top = 24
   end
   object getMovementForm: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Form'
@@ -881,8 +912,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = Null
         DataType = ftString
       end>
-    Left = 208
-    Top = 160
+    Left = 192
+    Top = 144
   end
   object spJuridicalBalance: TdsdStoredProc
     StoredProcName = 'gpReport_JuridicalBalance'
@@ -925,6 +956,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         ParamType = ptInput
       end
       item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'StartBalance'
         Component = FormParams
         ComponentItem = 'StartBalance'
@@ -942,6 +980,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   object MainJuridicalGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edMainJuridical
+    TextValue = #1054#1054#1054' '#1040#1051#1040#1053
     FormNameParam.Value = 'TJuridical_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridical_ObjectForm'
@@ -956,14 +995,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'TextValue'
-        Value = ''
+        Value = #1054#1054#1054' '#1040#1051#1040#1053
         Component = MainJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 512
-    Top = 56
+    Left = 440
   end
   object gpGetDefault: TdsdStoredProc
     StoredProcName = 'gpGetJuridicalCollation'
@@ -985,7 +1023,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       end
       item
         Name = 'MainJuridicalName'
-        Value = ''
+        Value = #1054#1054#1054' '#1040#1051#1040#1053
         Component = MainJuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
@@ -1044,7 +1082,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 736
+    Left = 720
+    Top = 65528
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1059,6 +1098,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Value = ''
         Component = ContractGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
@@ -1066,12 +1106,14 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = ContractGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalId'
         Value = ''
         Component = JuridicalGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'JuridicalName'
@@ -1079,26 +1121,51 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         Component = JuridicalGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end
       item
         Name = 'InfoMoneyId'
         Value = ''
+        Component = InfoMoneyGuides
         ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'InfoMoneyName'
         Value = ''
+        Component = InfoMoneyGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end
       item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
+        Name = 'PaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'PaidKindName'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        ParamType = ptInput
+      end
+      item
+        Name = 'MasterJuridicalId'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'MasterJuridicalName'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
       end>
-    Left = 680
-    Top = 110
+    Left = 944
+    Top = 65534
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1124,7 +1191,31 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 928
+    Left = 952
     Top = 40
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 720
+    Top = 29
   end
 end

@@ -12,17 +12,17 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     Height = 472
     TabOrder = 3
     ExplicitTop = 83
-    ExplicitWidth = 1127
+    ExplicitWidth = 1020
     ExplicitHeight = 472
     ClientRectBottom = 472
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1127
+      ExplicitWidth = 1020
       ExplicitHeight = 472
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 472
-        ExplicitWidth = 1127
+        ExplicitWidth = 1020
         ExplicitHeight = 472
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -625,7 +625,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
   inherited Panel: TPanel
     Width = 1020
     Height = 57
-    ExplicitWidth = 1127
+    ExplicitWidth = 1020
     ExplicitHeight = 57
     inherited deStart: TcxDateEdit
       Left = 118
@@ -653,7 +653,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel3: TcxLabel
       Left = 365
-      Top = 7
+      Top = 6
       Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object ceInfoMoneyGroup: TcxButtonEdit
@@ -680,7 +680,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel4: TcxLabel
       Left = 531
-      Top = 7
+      Top = 6
       Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077':'
     end
     object ceInfoMoney: TcxButtonEdit
@@ -696,7 +696,7 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
     end
     object cxLabel5: TcxLabel
       Left = 697
-      Top = 7
+      Top = 6
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
     object cxLabel6: TcxLabel
@@ -741,12 +741,6 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
           'TextValue')
       end
       item
-        Component = PaidKindGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
-      end
-      item
         Component = deEnd
         Properties.Strings = (
           'Date')
@@ -770,6 +764,12 @@ inherited Report_JuridicalSoldForm: TReport_JuridicalSoldForm
       end
       item
         Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
         Properties.Strings = (
           'Key'
           'TextValue')

@@ -11,17 +11,17 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     Width = 1020
     Height = 337
     TabOrder = 3
-    ExplicitWidth = 1218
+    ExplicitWidth = 1020
     ExplicitHeight = 337
     ClientRectBottom = 337
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1218
+      ExplicitWidth = 1020
       ExplicitHeight = 337
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 337
-        ExplicitWidth = 1218
+        ExplicitWidth = 1020
         ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -398,7 +398,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1218
+    ExplicitWidth = 1020
     inherited deStart: TcxDateEdit
       Left = 59
       EditValue = 41640d
@@ -406,17 +406,25 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ExplicitLeft = 59
     end
     inherited deEnd: TcxDateEdit
+      Left = 926
+      Top = 6
       Visible = False
+      ExplicitLeft = 926
+      ExplicitTop = 6
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
       ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
+      Left = 880
+      Top = 7
       Visible = False
+      ExplicitLeft = 880
+      ExplicitTop = 7
     end
     object edAccount: TcxButtonEdit
-      Left = 180
+      Left = 246
       Top = 5
       Properties.Buttons = <
         item
@@ -427,17 +435,17 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Width = 400
     end
     object cxLabel3: TcxLabel
-      Left = 145
+      Left = 161
       Top = 6
-      Caption = #1057#1095#1077#1090':'
+      Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object cxLabel6: TcxLabel
-      Left = 604
+      Left = 666
       Top = 6
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 687
+      Left = 749
       Top = 5
       Properties.Buttons = <
         item
@@ -1386,6 +1394,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 712
+    Left = 776
+    Top = 8
   end
 end
