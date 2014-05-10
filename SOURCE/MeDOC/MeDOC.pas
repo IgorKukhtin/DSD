@@ -11,6 +11,11 @@ type
     procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
   end;
 
+  TMedocCorrective = class
+  public
+    procedure CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: string);
+  end;
+
   TMedocAction = class(TdsdCustomAction)
   private
     FHeaderDataSet: TDataSet;
@@ -27,6 +32,11 @@ type
     property SecondaryShortCuts;
     property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
     property ItemsDataSet: TDataSet read FItemsDataSet write FItemsDataSet;
+  end;
+
+  TMedocCorrectiveAction = class(TMedocAction)
+  protected
+    function LocalExecute: boolean; override;
   end;
 
   procedure Register;
@@ -49,7 +59,7 @@ procedure TMedoc.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet; FileName: 
     result.Tab   := Tab;
     result.Line  := Line;
     result.Name  := Name;
-    result.Value := Value;
+    result.Value := trim(Value);
   end;
 var
   ZVIT: IXMLZVITType;
@@ -94,7 +104,7 @@ begin
   //Порядковий номер ПН
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_11', HeaderDataSet.FieldByName('InvNumberPartner').AsString);
   //Числовий номер філії
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_13', '0');
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_13', '');
   //Дата виписки ПН
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N11', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime));
   //Прізвище особи, яка склала ПН
@@ -134,7 +144,7 @@ begin
 
   with ItemsDataSet do begin
      First;
-     i := 1;
+     i := 0;
      while not EOF do begin
          if (FieldByName('Amount').AsFloat <> 0) and (FieldByName('PriceNoVAT').AsFloat <> 0) then begin
            //Дата відвантаження
@@ -183,6 +193,38 @@ begin
   finally
     Free;
   end;
+end;
+
+{ TMedocCorrectiveAction }
+
+function TMedocCorrectiveAction.LocalExecute: boolean;
+begin
+  with TSaveDialog.Create(nil) do
+  try
+    DefaultExt := '*.xml';
+    FileName := FormatDateTime('dd_mm_yyyy', HeaderDataSet.FieldByName('OperDate').AsDateTime) + '_' +
+                trim(HeaderDataSet.FieldByName('InvNumberPartner').AsString) + '-' + 'NALOG.xml';
+    Filter := 'Файлы МеДок (.xml)|*.xml|';
+    if Execute then begin
+       with TMedocCorrective.Create do
+       try
+         CreateXMLFile(Self.HeaderDataSet, Self.ItemsDataSet, FileName);
+       finally
+         Free;
+       end;
+      result := true;
+    end;
+  finally
+    Free;
+  end;
+end;
+
+{ TMedocCorrective }
+
+procedure TMedocCorrective.CreateXMLFile(HeaderDataSet, ItemsDataSet: TDataSet;
+  FileName: string);
+begin
+
 end;
 
 end.
