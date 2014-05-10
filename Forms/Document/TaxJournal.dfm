@@ -2,8 +2,8 @@ inherited TaxJournalForm: TTaxJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitWidth = 1126
-  ExplicitHeight = 570
+  ExplicitWidth = 1118
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -391,6 +391,24 @@ inherited TaxJournalForm: TTaxJournalForm
       FormNameParam.Name = 'TTaxForm'
       FormNameParam.Value = 'TTaxForm'
     end
+    object actMovementCheck: TdsdOpenForm [5]
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = #1054#1096#1080#1073#1082#1080
+      Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1086#1096#1080#1073#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
+      ImageIndex = 30
+      FormName = 'TMovementCheckForm'
+      FormNameParam.Value = 'TMovementCheckForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+          ParamType = ptInput
+        end>
+      isShowModal = False
+    end
     object actTax: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -672,6 +690,14 @@ inherited TaxJournalForm: TTaxJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMovementCheck'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTax_Client'
         end
         item
@@ -714,6 +740,11 @@ inherited TaxJournalForm: TTaxJournalForm
     object bbMeDoc: TdxBarButton
       Action = mactMeDoc
       Category = 0
+    end
+    object bbMovementCheck: TdxBarButton
+      Action = actMovementCheck
+      Category = 0
+      ImageIndex = 43
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn

@@ -65,6 +65,8 @@ type
     bbMeDoc: TdxBarButton;
     mactMeDoc: TMultiAction;
     actMedocProcedure: TdsdExecStoredProc;
+    actMovementCheck: TdsdOpenForm;
+    bbMovementCheck: TdxBarButton;
   private
     { Private declarations }
   public
