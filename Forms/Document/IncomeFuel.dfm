@@ -268,61 +268,29 @@ object IncomeFuelForm: TIncomeFuelForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
-              Kind = skSum
-              Position = spFooter
-              Column = colAmountSumm
-            end
-            item
-              Kind = skSum
-              Position = spFooter
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
             end
             item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
-            end
-            item
               Format = ',0.####'
+              Kind = skSum
               Column = colAmountSumm
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
-            end
-            item
-              Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
+              Column = colAmount
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmount
+              Column = colAmountSumm
             end
             item
-              Format = ',0.###;-,0.###; ;'
               Kind = skSum
-            end
-            item
-              Format = ',0.###;-,0.###; ;'
-              Kind = skSum
+              Column = colPrice
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -952,6 +920,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -963,6 +934,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelectMI
@@ -1040,6 +1014,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -1056,6 +1033,9 @@ object IncomeFuelForm: TIncomeFuelForm
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1331,7 +1311,13 @@ object IncomeFuelForm: TIncomeFuelForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <>
+    SummaryItemList = <
+      item
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = 2
+      end>
     Left = 280
     Top = 311
   end
@@ -1877,5 +1863,26 @@ object IncomeFuelForm: TIncomeFuelForm
       end>
     Left = 71
     Top = 65
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
+    Left = 444
+    Top = 188
   end
 end

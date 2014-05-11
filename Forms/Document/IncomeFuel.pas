@@ -149,6 +149,7 @@ type
     DeleteMovement: TChangeGuidesStatus;
     ceStatus: TcxButtonEdit;
     colMeasureName: TcxGridDBColumn;
+    spGetTotalSumm: TdsdStoredProc;
   private
   public
   end;

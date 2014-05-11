@@ -3,7 +3,7 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TaxCorrective_IsDocument (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TaxCorrective_IsDocument (
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inIsDocument          Boolean   , -- Есть ли подписанный документ (да/нет)
     IN inSession             TVarChar    -- сессия пользователя
 )
@@ -26,6 +26,9 @@ BEGIN
       WHERE Movement.Id = ioId
         AND Movement.DescId = zc_Movement_TaxCorrective();
 
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, FALSE);
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -33,6 +36,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.05.14                                        * add lpInsert_MovementProtocol
  30.04.14                                        * zc_Enum_Process_Update_Movement_TaxCorrective_IsDocument
  23.04.14                                        *
 */

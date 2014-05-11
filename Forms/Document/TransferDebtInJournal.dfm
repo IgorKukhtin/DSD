@@ -115,6 +115,21 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 45
           end
+          object colPartnerCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072
+            DataBinding.FieldName = 'PartnerCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 40
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'

@@ -252,11 +252,6 @@ object IncomeForm: TIncomeForm
           DataController.Filter.Options = [fcoCaseInsensitive]
           DataController.Summary.DefaultGroupSummaryItems = <
             item
-              Format = ',0.00;-,0.00;'
-              Position = spFooter
-              Column = colAmountSumm
-            end
-            item
               Format = ',0.####'
               Kind = skSum
               Column = colAmount
@@ -290,21 +285,6 @@ object IncomeForm: TIncomeForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colLiveWeight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colHeadCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmount
             end
             item
@@ -316,6 +296,25 @@ object IncomeForm: TIncomeForm
               Format = ',0.####'
               Kind = skSum
               Column = colAmountPacker
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colAmountSumm
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colLiveWeight
+            end
+            item
+              Kind = skSum
+              Column = colPrice
             end>
           DataController.Summary.SummaryGroups = <>
           Images = dmMain.SortImageList
@@ -1028,6 +1027,9 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spInsertUpdateMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = 'actUpdateMasterDS'
       DataSource = MasterDS
@@ -1039,6 +1041,9 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spGet
+        end
+        item
+          StoredProc = spGetTotalSumm
         end
         item
           StoredProc = spSelectMI
@@ -1114,6 +1119,9 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spErasedMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
       Hint = #1059#1076#1072#1083#1080#1090#1100' <'#1069#1083#1077#1084#1077#1085#1090'>'
@@ -1130,6 +1138,9 @@ object IncomeForm: TIncomeForm
       StoredProcList = <
         item
           StoredProc = spUnErasedMIMaster
+        end
+        item
+          StoredProc = spGetTotalSumm
         end>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -1376,7 +1387,13 @@ object IncomeForm: TIncomeForm
     ColorRuleList = <>
     ColumnAddOnList = <>
     ColumnEnterList = <>
-    SummaryItemList = <>
+    SummaryItemList = <
+      item
+        Param.Component = FormParams
+        Param.ComponentItem = 'TotalSumm'
+        Param.DataType = ftString
+        DataSummaryItemIndex = 6
+      end>
     Left = 347
     Top = 337
   end
@@ -1917,5 +1934,26 @@ object IncomeForm: TIncomeForm
       end>
     Left = 336
     Top = 8
+  end
+  object spGetTotalSumm: TdsdStoredProc
+    StoredProcName = 'gpGet_Movement_TotalSumm'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TotalSumm'
+        Component = FormParams
+        ComponentItem = 'TotalSumm'
+        DataType = ftString
+      end>
+    Left = 500
+    Top = 204
   end
 end

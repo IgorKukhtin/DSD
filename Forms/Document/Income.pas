@@ -156,6 +156,7 @@ type
     clInfoMoneyName: TcxGridDBColumn;
     colMeasureName: TcxGridDBColumn;
     GuidesFrom: TdsdGuides;
+    spGetTotalSumm: TdsdStoredProc;
   private
   public
   end;

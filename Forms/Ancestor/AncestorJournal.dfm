@@ -2,8 +2,8 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientHeight = 329
   ClientWidth = 717
   AddOnFormData.isSingle = False
-  ExplicitWidth = 725
-  ExplicitHeight = 363
+  ExplicitWidth = 733
+  ExplicitHeight = 364
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -109,6 +109,14 @@ inherited AncestorJournalForm: TAncestorJournalForm
   end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
       item
         Component = deEnd
         Properties.Strings = (
