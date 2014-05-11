@@ -146,6 +146,7 @@ end;
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i: integer;
     FormStr: string;
+    EffortCount: integer;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Не передано название формы');
@@ -171,7 +172,11 @@ begin
           end;
         end;
   end;
+  EffortCount := 1;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
+  // Создаем форму
+  Application.CreateForm(TParentForm, Result);
+  Result.FormClassName := FormName;
   try
     try
       FormStr := ReConvertConvert(LoadStoredProc.Execute);
@@ -184,24 +189,16 @@ begin
       // Вернуть смещение
       MemoryStream.Position := 0;
 
-      // Создаем форму
-      Application.CreateForm(TParentForm, Result);
-      Result.FormClassName := FormName;
-
       // Прочитать компонент из потока
       MemoryStream.ReadComponent(Result);
-      // Загрузить пользователские дефотлы!!!
-      for i := 0 to Result.ComponentCount - 1 do
-        if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-        try
-              TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
-        except
-
-        end;
     except
       on E: Exception do
         raise Exception.Create('TdsdFormStorage.Load ' + E.Message + chr(13) + chr(10) + FormStr);
     end;
+    // Загрузить пользователские дефотлы!!!
+    for i := 0 to Result.ComponentCount - 1 do
+        if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+           TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
   finally
     StringStream.Clear;
     MemoryStream.Clear;
