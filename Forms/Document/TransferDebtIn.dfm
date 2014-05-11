@@ -2,8 +2,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 962
-  ExplicitWidth = 978
-  ExplicitHeight = 703
+  ExplicitWidth = 970
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -148,7 +148,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 962
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
@@ -210,7 +209,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -1281,7 +1279,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'ioId'
         Value = 0
-        ParamType = ptInputOutput
+        ParamType = ptInput
       end
       item
         Name = 'inMovementId'

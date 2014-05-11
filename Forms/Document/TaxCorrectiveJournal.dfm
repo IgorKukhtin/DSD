@@ -2,8 +2,9 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
+  ExplicitTop = -8
   ExplicitWidth = 1126
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -521,6 +522,37 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrectiveReestr'
       ReportNameParam.DataType = ftString
     end
+    object MedocAction: TMedocCorrectiveAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      HeaderDataSet = PrintItemsCDS
+      ItemsDataSet = PrintItemsCDS
+    end
+    object mactMeDoc: TMultiAction
+      Category = 'TaxLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actMedocProcedure
+        end
+        item
+          Action = MedocAction
+        end>
+      InfoAfterExecute = #1060#1072#1081#1083' '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' '#1052#1077#1044#1086#1082
+      ImageIndex = 30
+    end
+    object actMedocProcedure: TdsdExecStoredProc
+      Category = 'TaxLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = 'actMedocProcedure'
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -645,6 +677,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbMeDoc'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end>
     end
@@ -664,6 +700,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       Action = actMovementCheck
       Category = 0
       ImageIndex = 43
+    end
+    object bbMeDoc: TdxBarButton
+      Action = mactMeDoc
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -777,8 +817,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Params = <
       item
         Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
+        Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end

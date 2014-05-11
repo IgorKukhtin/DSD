@@ -304,6 +304,7 @@ initialization
   RegisterClass (TInsertRecord);
   RegisterClass (TInsertUpdateChoiceAction);
   RegisterClass (TMedocAction);
+  RegisterClass (TMedocCorrectiveAction);
   RegisterClass (TMultiAction);
   RegisterClass (TOpenChoiceForm);
   RegisterClass (TPeriodChoice);
