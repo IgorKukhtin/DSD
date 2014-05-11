@@ -2,9 +2,8 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitTop = -145
-  ExplicitWidth = 1123
-  ExplicitHeight = 695
+  ExplicitWidth = 1131
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -223,7 +222,6 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1115
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -287,7 +285,6 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -499,36 +496,23 @@ inherited SaleForm: TSaleForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AncestorDocumentForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
-    Top = 640
+    Top = 576
   end
   inherited ActionList: TActionList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
     end
     object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
@@ -1725,6 +1709,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'TotalSumm'
         DataType = ftString
       end>
+    Left = 388
+    Top = 172
   end
   object spSelectTax_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Tax_Print'
@@ -1916,8 +1902,8 @@ inherited SaleForm: TSaleForm
         ComponentItem = 'ReportNameSale'
         DataType = ftString
       end>
-    Left = 552
-    Top = 384
+    Left = 632
+    Top = 400
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice

@@ -33,19 +33,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,19 +44,11 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
             end
             item
-              Format = ',0.####'
               Kind = skSum
+              Column = colPrice
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -411,6 +391,15 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AncestorDocumentForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
     Top = 640
   end
@@ -691,7 +680,7 @@ inherited TaxCorrectiveForm: TTaxCorrectiveForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        DataSummaryItemIndex = -1
+        DataSummaryItemIndex = 2
       end>
     Left = 830
     Top = 265

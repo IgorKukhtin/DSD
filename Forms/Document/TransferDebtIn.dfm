@@ -2,8 +2,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 962
-  ExplicitWidth = 970
-  ExplicitHeight = 695
+  ExplicitWidth = 978
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -382,6 +382,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AncestorDocumentForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 56
     Top = 584
   end
@@ -389,29 +398,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
     end
     object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
@@ -795,7 +782,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 2
       end>
     Left = 830
     Top = 265

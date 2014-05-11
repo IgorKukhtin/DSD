@@ -33,19 +33,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,19 +44,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end
             item
               Kind = skSum
@@ -172,7 +148,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1084
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
@@ -234,7 +209,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -436,6 +410,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = AncestorDocumentForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 56
     Top = 584
   end
@@ -443,29 +426,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
     end
     object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
@@ -945,7 +906,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        DataSummaryItemIndex = 5
+        DataSummaryItemIndex = 2
       end>
     Left = 830
     Top = 265

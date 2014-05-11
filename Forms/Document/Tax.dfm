@@ -2,8 +2,8 @@ inherited TaxForm: TTaxForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
   ClientHeight = 668
   ClientWidth = 1067
-  ExplicitWidth = 1075
-  ExplicitHeight = 695
+  ExplicitWidth = 1083
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -33,19 +33,7 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -56,19 +44,11 @@ inherited TaxForm: TTaxForm
             item
               Format = ',0.####'
               Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = colAmountSumm
             end
             item
-              Format = ',0.####'
               Kind = skSum
+              Column = colPrice
             end>
           OptionsBehavior.GoToNextCellOnEnter = False
           OptionsBehavior.FocusCellOnCycle = False
@@ -153,7 +133,6 @@ inherited TaxForm: TTaxForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
       ExplicitWidth = 1067
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -217,7 +196,6 @@ inherited TaxForm: TTaxForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 151
-      ExplicitHeight = 22
       Width = 151
     end
     object cxLabel3: TcxLabel
@@ -385,25 +363,22 @@ inherited TaxForm: TTaxForm
     Top = 552
   end
   inherited cxPropertiesStore: TcxPropertiesStore
-    Left = 40
-    Top = 640
+    Components = <
+      item
+        Component = AncestorDocumentForm.Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    Left = 32
+    Top = 576
   end
   inherited ActionList: TActionList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end
-        item
-        end>
       RefreshOnTabSetChanges = True
     end
     object mactPrint_Tax: TMultiAction [9]
@@ -815,7 +790,7 @@ inherited TaxForm: TTaxForm
         Param.Component = FormParams
         Param.ComponentItem = 'TotalSumm'
         Param.DataType = ftString
-        DataSummaryItemIndex = -1
+        DataSummaryItemIndex = 2
       end>
     Left = 830
     Top = 265
