@@ -27,7 +27,12 @@ uses
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
 
 {$R *.res}
 

@@ -120,6 +120,11 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalSave.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
 			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
 			<None Include="Load_PostgreSql.todo"/>
 			<BuildConfiguration Include="Debug">
 				<Key>Cfg_2</Key>
