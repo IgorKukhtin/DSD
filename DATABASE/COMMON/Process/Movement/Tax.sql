@@ -1,6 +1,7 @@
 -- ƒокумент <Ќалогова€ накладна€>
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_Enum_Process_Update_Movement_Tax_IsRegistered() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_Update_Movement_Tax_IsRegistered' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 -- строки
 CREATE OR REPLACE FUNCTION zc_Enum_Process_InsertUpdate_MI_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_InsertUpdate_MI_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
 CREATE OR REPLACE FUNCTION zc_Enum_Process_SetErased_MI_Tax() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT ObjectId AS Id FROM ObjectString WHERE ValueData = 'zc_Enum_Process_SetErased_MI_Tax' AND DescId = zc_ObjectString_Enum()); END; $BODY$ LANGUAGE plpgsql IMMUTABLE;
@@ -24,23 +25,28 @@ PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Tax');
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind()
                                   , inDescId:= zc_Object_Process()
-                                  , inCode:= 1
+                                  , inCode:= 2
                                   , inName:= 'ƒокумент <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - формирование/сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_Movement_Tax_From_Kind');
+PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_Update_Movement_Tax_IsRegistered()
+                                  , inDescId:= zc_Object_Process()
+                                  , inCode:= 3
+                                  , inName:= 'ƒокумент <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - изменение <«арегестрирован (да/нет)>.'
+                                  , inEnumName:= 'zc_Enum_Process_Update_Movement_Tax_IsRegistered');
 
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_InsertUpdate_MI_Tax()
                                   , inDescId:= zc_Object_Process()
-                                  , inCode:= 4
+                                  , inCode:= 1
                                   , inName:= 'Ёлемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - сохранение данных.'
                                   , inEnumName:= 'zc_Enum_Process_InsertUpdate_MI_Tax');
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetErased_MI_Tax()
                                   , inDescId:= zc_Object_Process()
-                                  , inCode:= 1
+                                  , inCode:= 2
                                   , inName:= 'Ёлемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - удаление.'
                                   , inEnumName:= 'zc_Enum_Process_SetErased_MI_Tax');
 PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Process_SetUnErased_MI_Tax()
                                   , inDescId:= zc_Object_Process()
-                                  , inCode:= 1
+                                  , inCode:= 3
                                   , inName:= 'Ёлемент документа <'||(SELECT ItemName FROM MovementDesc WHERE Id = zc_Movement_Tax())||'> - восстановление.'
                                   , inEnumName:= 'zc_Enum_Process_SetUnErased_MI_Tax');
 -- Status_Tax

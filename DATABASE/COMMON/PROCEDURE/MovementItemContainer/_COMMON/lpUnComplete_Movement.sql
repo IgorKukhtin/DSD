@@ -11,9 +11,9 @@ AS
 $BODY$
 BEGIN
   -- проверка
-  IF EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered())
+  IF EXISTS (SELECT MovementId FROM MovementBoolean WHERE MovementId = inMovementId AND DescId = zc_MovementBoolean_Registered() AND ValueData = TRUE)
   THEN
-      RAISE EXCEPTION 'Ошибка.Документ зарегестрирован.Удаление невозможно.';
+      RAISE EXCEPTION 'Ошибка.Документ зарегестрирован.<Распроведение> невозможно.';
   END IF;
 
   -- Удаляем все проводки

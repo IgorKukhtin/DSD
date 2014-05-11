@@ -14,7 +14,7 @@ BEGIN
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Tax() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, vbUserId, FALSE);
+     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
 END;
 $BODY$
