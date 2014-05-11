@@ -1,5 +1,4 @@
 inherited AncestorEditDialogForm: TAncestorEditDialogForm
-  ExplicitWidth = 320
   ExplicitHeight = 345
   PixelsPerInch = 96
   TextHeight = 13
@@ -19,9 +18,11 @@ inherited AncestorEditDialogForm: TAncestorEditDialogForm
     end
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item

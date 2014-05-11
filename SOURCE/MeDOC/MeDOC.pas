@@ -169,6 +169,7 @@ begin
      Close;
   end;
 
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 
@@ -252,10 +253,6 @@ begin
     DOCID := HeaderDataSet.FieldByName('Id').AsString;
   end;
 
-  //ЄДРПОУ покупця
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'EDR_POK', '');
-  //Адреса підприємства
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_ADR', HeaderDataSet.FieldByName('JuridicalAddress_To').AsString);
   //Код ЄДРПОУ підприємства
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_EDRPOU', HeaderDataSet.FieldByName('OKPO_To').AsString);
   //ІПН підприємства
@@ -266,7 +263,8 @@ begin
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PHON', HeaderDataSet.FieldByName('Phone_To').AsString);
   //Номер свідоцтва про реєстрацію платника
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_SRPNDS', HeaderDataSet.FieldByName('NumberVAT_To').AsString);
-
+  //Адреса підприємства
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'FIRM_ADR', HeaderDataSet.FieldByName('JuridicalAddress_To').AsString);
 
   //Код податкових зобов'язань
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'PZOB', '5');
@@ -283,7 +281,6 @@ begin
   //Числовий номер філії
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N1_13', '');
 
-
   //Дата виписки ПН
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('OperDate_Child').AsDateTime));
   //Номер податкової накладної, що корегується
@@ -293,10 +290,10 @@ begin
   //Номер податкової накладної, що корегується (номер філії)
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_13', '');
 
-  //Номер договору
-  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_3', HeaderDataSet.FieldByName('ContractName').AsString);
   //Дата договору
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_2', FormatDateTime('dd.mm.yyyy', HeaderDataSet.FieldByName('ContractSigningDate').AsDateTime));
+  //Номер договору
+  CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N2_3', HeaderDataSet.FieldByName('ContractName').AsString);
 
   //Найменування покупця
   CreateNodeROW_XML(ZVIT.ORG.CARD.DOCUMENT, '0', '0', 'N3', HeaderDataSet.FieldByName('JuridicalName_From').AsString);
@@ -354,6 +351,7 @@ begin
      Close;
   end;
 
+  ZVIT.OwnerDocument.Encoding :='WINDOWS-1251';
   ZVIT.OwnerDocument.SaveToFile(FileName);
 end;
 

@@ -1046,6 +1046,7 @@ var
   TreeList: TcxDBTreeList;
   BarManager: TdxBarManager;
   FormName: string;
+  PropertiesStoreComponent: TcxPropertiesStoreComponent;
 begin
   if gc_isSetDefault then
      exit;
@@ -1081,6 +1082,24 @@ begin
               PropertiesStore.StorageStream := TStringStream.Create(ReConvertConvert(ChildNodes[i].GetAttribute('data')));
               PropertiesStore.RestoreFrom;
               PropertiesStore.StorageStream.Free;
+              // Проверим и установим значения для сохранения размера и места формы
+              if PropertiesStore.Components.FindComponentItemByComponent(Owner, PropertiesStoreComponent) then begin
+                 if PropertiesStoreComponent.Properties.IndexOf('Top') = -1 then
+                    PropertiesStoreComponent.Properties.Add('Top');
+                 if PropertiesStoreComponent.Properties.IndexOf('Width') = -1 then
+                    PropertiesStoreComponent.Properties.Add('Width');
+                 if PropertiesStoreComponent.Properties.IndexOf('Left') = -1 then
+                    PropertiesStoreComponent.Properties.Add('Left');
+                 if PropertiesStoreComponent.Properties.IndexOf('Height') = -1 then
+                    PropertiesStoreComponent.Properties.Add('Height');
+              end
+              else
+                 with PropertiesStore.Components.Add do begin
+                      Properties.Add('Top');
+                      Properties.Add('Width');
+                      Properties.Add('Left');
+                      Properties.Add('Height');
+                 end;
            end;
         end;
       end;

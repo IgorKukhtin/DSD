@@ -132,7 +132,7 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document;
+     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls;
 
 procedure Register;
 begin
@@ -766,7 +766,7 @@ begin
         (Component as TBooleanStoredProcAction).Value := Value;
      if Component is TCustomGuides then
         if LowerCase(ComponentItem) = 'textvalue' then begin
-           (Component as TCustomGuides).TextValue := FValue
+           (Component as TCustomGuides).TextValue := FValue;
         end else
           if LowerCase(ComponentItem) = 'parentid' then
              (Component as TCustomGuides).ParentId := FValue

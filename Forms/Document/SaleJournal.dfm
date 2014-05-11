@@ -3,7 +3,7 @@ inherited SaleJournalForm: TSaleJournalForm
   ClientHeight = 535
   ClientWidth = 1020
   ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitHeight = 562
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -441,6 +441,25 @@ inherited SaleJournalForm: TSaleJournalForm
     Left = 179
   end
   inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
     Left = 40
     Top = 243
   end

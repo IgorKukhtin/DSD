@@ -1,9 +1,11 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
+  ActiveControl = nil
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitTop = -128
+  ExplicitWidth = 1028
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -227,12 +229,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitWidth = 1020
-      ExplicitHeight = 544
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
         Width = 1020
         Height = 518
         ExplicitWidth = 1020
-        ExplicitHeight = 544
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -502,15 +504,15 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AncestorDocumentForm.Owner
+        Component = Owner
         Properties.Strings = (
           'Height'
           'Left'
           'Top'
           'Width')
       end>
-    Left = 40
-    Top = 640
+    Left = 56
+    Top = 456
   end
   inherited ActionList: TActionList
     Left = 55
