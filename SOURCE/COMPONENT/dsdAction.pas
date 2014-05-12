@@ -1238,7 +1238,6 @@ begin
 
   inherited;
 
-  TdxMemData
 
 //  TAddOnDataSet(Self.DataSets[0]).GridView.DataController.
 
