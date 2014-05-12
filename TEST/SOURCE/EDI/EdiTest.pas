@@ -14,6 +14,7 @@ type
     procedure TearDown; override;
   published
     procedure CreateDesadvTest;
+    procedure LoadComdocTest;
   end;
 
 implementation
@@ -39,6 +40,19 @@ begin
   finally
     EDI.Free;
     SaleMovementItem.Delete(Id);
+  end;
+end;
+
+procedure TdbEDITest.LoadComdocTest;
+var EDI: TEDI;
+begin
+  EDI := TEDI.Create(nil);
+  // создание документа
+  try
+     EDI.ComdocLoad(nil, nil);
+     { запускаем процедуру выгрузки документа DESADV}
+  finally
+    EDI.Free;
   end;
 end;
 

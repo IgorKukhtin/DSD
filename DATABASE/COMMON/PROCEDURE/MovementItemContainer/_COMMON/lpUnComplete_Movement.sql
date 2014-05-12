@@ -26,7 +26,10 @@ BEGIN
   UPDATE Movement SET StatusId = zc_Enum_Status_UnComplete() WHERE Id = inMovementId;
 
   -- сохранили протокол
-  PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+  IF inMovementId <> 0
+  THEN
+      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+  END IF;
 
 END;
 $BODY$

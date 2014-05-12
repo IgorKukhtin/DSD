@@ -2,17 +2,20 @@ unit EDI;
 
 interface
 
-uses Classes, DB, dsdAction;
+uses Classes, DB, dsdAction, IdFTP, dsdDb;
 
 type
 
   // Компонент работы с EDI. Пока все засунем в него
   // Ну не совсем все, конечно, но много
   TEDI = class(TComponent)
+  private
+    FIdFTP: TIdFTP;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure ComdocLoad(spHeader, spList: TdsdStoredProc);
   end;
 
   TEDIActionDesadv = class(TdsdCustomAction)
@@ -26,11 +29,28 @@ type
     property ListDataSet: TDataSet read FListDataSet write FListDataSet;
   end;
 
+  TEDIActionComdocLoad = class(TdsdCustomAction)
+  private
+    FDirectory: string;
+    FPassword: string;
+    FHost: string;
+    FUser: string;
+    FspHeader: TdsdStoredProc;
+    FspList: TdsdStoredProc;
+  published
+    property Host: string read FHost write FHost;
+    property User: string read FUser write FUser;
+    property Password: string read FPassword write FPassword;
+    property Directory: string read FDirectory write FDirectory;
+    property spHeader: TdsdStoredProc read FspHeader write FspHeader;
+    property spList: TdsdStoredProc read FspList write FspList;
+  end;
+
   procedure Register;
 
 implementation
 
-uses VCL.ActnList, DBClient, DesadvXML, IdFTP, SysUtils;
+uses VCL.ActnList, DBClient, DesadvXML, SysUtils;
 
 procedure Register;
 begin
@@ -40,15 +60,34 @@ end;
 
 { TEDI }
 
+procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc);
+begin
+  // загружаем файлы с FTP
+    FIdFTP.Connect;
+    if FIdFTP.Connected then begin
+       FIdFTP.ChangeDir('/archive');
+     //  FIdFTP.
+       //FIdFTP.Put(Stream, 'testDECLAR.xml');
+    end;
+    FIdFTP.Quit;
+
+
+  // Парсим их в XML
+  // загружаем в базенку
+end;
+
 constructor TEDI.Create(AOwner: TComponent);
 begin
   inherited;
+  FIdFTP := TIdFTP.Create(nil);
+  FIdFTP.Username := 'uatovalanftp';
+  FIdFTP.Password := 'ftp349067';
+  FIdFTP.Host := 'ruftpex.edi.su';
 end;
 
 procedure TEDI.DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   DESADV: IXMLDESADVType;
-  IdFTP:  TIdFTP;
   Stream: TStream;
   i: integer;
 begin
@@ -91,30 +130,24 @@ begin
      Free;
   end;
 
-
-
   Stream := TMemoryStream.Create;
-  DESADV.OwnerDocument.SaveToStream(Stream);
   // Переслать его по ftp
-  IdFTP := TIdFTP.Create(nil);
-  IdFTP.Username := 'uatovalanftp';
-  IdFTP.Password := 'ftp349067';
-  IdFTP.Host := 'ruftpex.edi.su';
   try
-    IdFTP.Connect;
-    if IdFTP.Connected then begin
-       IdFTP.ChangeDir('/error');
-       IdFTP.Put(Stream, 'testDECLAR.xml');
+    DESADV.OwnerDocument.SaveToStream(Stream);
+    FIdFTP.Connect;
+    if FIdFTP.Connected then begin
+       FIdFTP.ChangeDir('/error');
+       FIdFTP.Put(Stream, 'testDECLAR.xml');
     end;
-    IdFTP.Quit;
+    FIdFTP.Quit;
   finally
-    IdFTP.Free;
     Stream.Free;
   end;
 end;
 
 destructor TEDI.Destroy;
 begin
+  FreeAndNil(FIdFTP);
   inherited;
 end;
 

@@ -65,23 +65,52 @@ from (
    , Object_PersonalCollation.PersonalName  AS PersonalCollationName
    , ObjectDate_Start.ValueData        AS StartDate
    , ObjectDate_End.ValueData          AS EndDate
+
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
    , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
-   , RESULT.SaleSumm::TFloat
-   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > 0 THEN RESULT.Remains - RESULT.SaleSumm ELSE 0 /*RESULT.Remains - RESULT.SaleSumm*/ END)::TFloat AS DefermentPaymentRemains
-   , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0) THEN 
-   	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm) > RESULT.SaleSumm1 THEN RESULT.SaleSumm1 ELSE (RESULT.Remains - RESULT.SaleSumm) END
-      ELSE 0 END)::TFloat AS SaleSumm1
-   , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1) > 0 AND RESULT.SaleSumm2 > 0) THEN 
-   	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1) > RESULT.SaleSumm2 THEN RESULT.SaleSumm2 ELSE (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1) END
+   , RESULT.SaleSumm :: TFloat AS SaleSumm
+
+   , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
+                THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
+           ELSE 0 /*RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm*/
+      END)::TFloat AS DefermentPaymentRemains
+
+   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0)
+                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > RESULT.SaleSumm1
+                          THEN RESULT.SaleSumm1
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm)
+                     END
+           ELSE 0
+      END)::TFloat AS SaleSumm1
+
+   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > 0 AND RESULT.SaleSumm2 > 0)
+                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1) > RESULT.SaleSumm2
+                          THEN RESULT.SaleSumm2
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1)
+                     END
       ELSE 0 END)::TFloat AS SaleSumm2
-   , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > 0 AND RESULT.SaleSumm3 > 0) THEN 
-   	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > RESULT.SaleSumm3 THEN RESULT.SaleSumm3 ELSE (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) END
-      ELSE 0 END)::TFloat AS SaleSumm3
-   , (CASE WHEN ((RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0) THEN 
-   	  CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4 THEN RESULT.SaleSumm4 ELSE (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) END
-      ELSE 0 END)::TFloat AS SaleSumm4
-   , (CASE WHEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0 THEN (RESULT.Remains - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) ELSE 0 END )::TFloat AS SaleSumm5
+
+   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > 0 AND RESULT.SaleSumm3 > 0)
+                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2) > RESULT.SaleSumm3
+                          THEN RESULT.SaleSumm3
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2)
+                     END
+           ELSE 0
+      END)::TFloat AS SaleSumm3
+
+   , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > 0 AND RESULT.SaleSumm4 > 0)
+                THEN CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3) > RESULT.SaleSumm4
+                          THEN RESULT.SaleSumm4
+                          ELSE (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3)
+                     END
+            ELSE 0
+      END)::TFloat AS SaleSumm4
+
+   , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4) > 0
+                THEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm - RESULT.SaleSumm1 - RESULT.SaleSumm2 - RESULT.SaleSumm3 - RESULT.SaleSumm4)
+                ELSE 0
+      END )::TFloat AS SaleSumm5
+
    , (RESULT.DayCount||' '|| CASE WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendar()
                                        THEN ' .‰Ì.'
                                   -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayCalendarSale()
@@ -90,9 +119,11 @@ from (
                                        THEN '¡.‰Ì.'
                                   -- WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayDayBankSale()
                                   --     THEN '¡.–.‰Ì.'
-                                  WHEN RESULT.ContractConditionKindId = zc_Enum_ContractConditionKind_DelayCreditLimit()
-                                       THEN '„Ì.'
-                                  ELSE '???'
+                                  ELSE ''
+                             END
+                     ||' '|| CASE WHEN RESULT.DelayCreditLimit <> 0
+                                       THEN '+ ' || TRIM (to_char (RESULT.DelayCreditLimit, '999 999 999 999 999D99')) || '„Ì.'
+                                  ELSE ''
                              END
       )::TVarChar AS Condition -- Object_ContractConditionKind.ValueData
    , RESULT.ContractDate::TDateTime AS StartContractDate
@@ -150,6 +181,8 @@ from (
                            FROM Object_ContractCondition_View
                                 INNER JOIN Object_ContractCondition_DefermentPaymentView 
                                         ON Object_ContractCondition_DefermentPaymentView.ConditionKindId = Object_ContractCondition_View.ContractConditionKindId
+                           WHERE Object_ContractCondition_View.ContractConditionKindId IN (zc_Enum_ContractConditionKind_DelayDayCalendar(), zc_Enum_ContractConditionKind_DelayDayBank())
+                             AND Value <> 0
                         ) AS ContractCondition_DefermentPayment
                           ON ContractCondition_DefermentPayment.ContractId = View_Contract_ContractKey.ContractId_Key -- CLO_Contract.ObjectId
 
@@ -244,6 +277,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 12.05.14                                        * add RESULT.DelayCreditLimit
  05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
  15.04.14                                        * add StartDate and EndDate
