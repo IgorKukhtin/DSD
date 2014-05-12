@@ -1,9 +1,9 @@
--- FunctiON: gpReport_CheckBonus ()
+-- FunctiON: gpReport_CheckBonus_old ()
 
-DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, TVarChar);
---DROP FUNCTION IF EXISTS gpReport_CheckBonus (TDateTime, TDateTime, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpReport_CheckBonus_old (TDateTime, TDateTime, TVarChar);
+--DROP FUNCTION IF EXISTS gpReport_CheckBonus_old (TDateTime, TDateTime, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpReport_CheckBonus (
+CREATE OR REPLACE FUNCTION gpReport_CheckBonus_old (
     IN inStartDate           TDateTime ,  
     IN inEndDate             TDateTime ,
     --IN inDocumentTaxKindID   Integer ,
@@ -223,7 +223,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpReport_CheckBonus_old (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 
@@ -236,4 +236,4 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 */
 
 -- тест
---SELECT * FROM gpReport_CheckBonus (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inSessiON:= zfCalc_UserAdmin());
+--SELECT * FROM gpReport_CheckBonus_old (inStartDate:= '01.12.2013', inEndDate:= '31.12.2013', inSessiON:= zfCalc_UserAdmin());
