@@ -23,28 +23,16 @@ type
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
-    spSelectPrint: TdsdStoredProc;
-    spSelectTax_Client: TdsdStoredProc;
-    spSelectTax_Us: TdsdStoredProc;
-    spGetReporNameTax: TdsdStoredProc;
-    spGetReportName: TdsdStoredProc;
-    mactPrint_TransferDebtOut: TMultiAction;
-    mactPrint_Tax_Us: TMultiAction;
-    mactPrint_Tax_Client: TMultiAction;
-    actPrintTax_Us: TdsdPrintAction;
-    actPrintTax_Client: TdsdPrintAction;
-    actPrint: TdsdPrintAction;
-    actSPPrintSaleProcName: TdsdExecStoredProc;
-    actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     bbPrint: TdxBarButton;
     bbPrintTax_Us: TdxBarButton;
     bbPrintTax_Client: TdxBarButton;
-    spGetReporNameBill: TdsdStoredProc;
-    actSPPrintSaleBillProcName: TdsdExecStoredProc;
-    actPrint_Bill: TdsdPrintAction;
-    mactPrint_Bill: TMultiAction;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    spGetReportName: TdsdStoredProc;
+    spSelectPrint: TdsdStoredProc;
+    actSPPrintProcName: TdsdExecStoredProc;
+    actPrint: TdsdPrintAction;
+    mactPrint: TMultiAction;
   private
     { Private declarations }
   public

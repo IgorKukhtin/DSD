@@ -2,27 +2,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 962
-  ExplicitWidth = 978
-  ExplicitHeight = 703
+  ExplicitWidth = 970
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
+    Top = 133
     Width = 962
-    Height = 537
-    ExplicitTop = 131
+    Height = 535
+    ExplicitTop = 133
     ExplicitWidth = 962
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 962
+    ExplicitHeight = 535
+    ClientRectBottom = 531
+    ClientRectRight = 958
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 962
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 956
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
-        Width = 962
-        Height = 513
-        ExplicitWidth = 962
-        ExplicitHeight = 513
+        Width = 956
+        Height = 509
+        ExplicitWidth = 956
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -148,13 +150,15 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitWidth = 962
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 956
+      ExplicitHeight = 509
       inherited cxGridEntry: TcxGrid
-        Width = 962
-        Height = 513
-        ExplicitWidth = 962
-        ExplicitHeight = 513
+        Width = 956
+        Height = 509
+        ExplicitWidth = 956
+        ExplicitHeight = 509
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -209,6 +213,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
+      ExplicitHeight = 24
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -400,12 +405,42 @@ inherited TransferDebtInForm: TTransferDebtInForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object mactPrint_Sale: TMultiAction [9]
+    inherited actPrint: TdsdPrintAction
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Component = FormParams
+      ReportNameParam.ComponentItem = 'ReportName'
+      ReportNameParam.ParamType = ptInput
+    end
+    object mactPrint: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
         item
-          Action = actSPPrintSaleProcName
+          Action = actSPPrintProcName
         end
         item
           Action = actPrint
@@ -413,193 +448,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
-    end
-    object mactPrint_Tax_Us: TMultiAction [10]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintTax_Us
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      ImageIndex = 16
-    end
-    object mactPrint_Tax_Client: TMultiAction [11]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintSaleTaxProcName
-        end
-        item
-          Action = actPrintTax_Client
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 18
-    end
-    object mactPrint_Bill: TMultiAction [12]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintSaleBillProcName
-        end
-        item
-          Action = actPrint_Bill
-        end>
-      Caption = #1057#1095#1077#1090
-      Hint = #1057#1095#1077#1090
-      ImageIndex = 21
-    end
-    object actPrintTax_Us: TdsdPrintAction [13]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectTax_Us
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Us
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrintTax_Client: TdsdPrintAction [14]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectTax_Client
-      StoredProcList = <
-        item
-          StoredProc = spSelectTax_Client
-        end>
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      ImageIndex = 3
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end
-        item
-          DataSet = PrintItemsSverkaCDS
-          UserName = 'frxDBDSverka'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleTax'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
-    end
-    inherited actPrint: TdsdPrintAction
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSale'
-      ReportNameParam.ParamType = ptInput
-    end
-    object actPrint_Bill: TdsdPrintAction [16]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spSelectPrint
-      StoredProcList = <
-        item
-          StoredProc = spSelectPrint
-        end>
-      Caption = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      Hint = #1055#1077#1095#1072#1090#1100' '#1057#1095#1077#1090
-      ImageIndex = 3
-      ShortCut = 16464
-      DataSets = <
-        item
-          DataSet = PrintHeaderCDS
-          UserName = 'frxDBDHeader'
-        end
-        item
-          DataSet = PrintItemsCDS
-          UserName = 'frxDBDMaster'
-        end>
-      Params = <
-        item
-          Name = 'Id'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      ReportName = 'NULL'
-      ReportNameParam.Name = #1057#1095#1077#1090
-      ReportNameParam.Value = Null
-      ReportNameParam.Component = FormParams
-      ReportNameParam.ComponentItem = 'ReportNameSaleBill'
-      ReportNameParam.DataType = ftString
-      ReportNameParam.ParamType = ptInput
     end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
@@ -619,7 +467,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [20]
+    object actGoodsKindChoice: TOpenChoiceForm [14]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -643,10 +491,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintSaleBillProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGetReporNameBill
       StoredProcList = <
         item
-          StoredProc = spGetReporNameBill
         end>
       Caption = 'actSPPrintSaleBillProcName'
     end
@@ -663,10 +509,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actSPPrintSaleTaxProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProc = spGetReporNameTax
       StoredProcList = <
         item
-          StoredProc = spGetReporNameTax
         end>
       Caption = 'actSPPrintSaleTaxProcName'
     end
@@ -696,6 +540,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ImageIndex = 41
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
+    end
+    object actSPPrintProcName: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetReportName
+      StoredProcList = <
+        item
+          StoredProc = spGetReportName
+        end>
+      Caption = 'actSPPrintProcName'
     end
   end
   inherited MasterDS: TDataSource
@@ -753,23 +607,31 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited bbPrint: TdxBarButton
-      Action = mactPrint_Sale
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
+      Action = mactPrint
     end
     object bbPrint_Bill: TdxBarButton [5]
-      Action = mactPrint_Bill
+      Caption = #1057#1095#1077#1090
       Category = 0
+      Hint = #1057#1095#1077#1090
+      Visible = ivAlways
+      ImageIndex = 21
     end
     object bbPrintTax: TdxBarButton [6]
-      Action = mactPrint_Tax_Us
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Category = 0
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Visible = ivAlways
+      ImageIndex = 16
     end
     object bbPrintTax_Client: TdxBarButton [7]
-      Action = mactPrint_Tax_Client
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Category = 0
+      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Visible = ivAlways
+      ImageIndex = 18
     end
     object bbTax: TdxBarButton
       Action = actTax
@@ -852,6 +714,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'ReportNameSaleBill'
         Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'ReportName'
+        Value = 'PrintMovement_TaxCorrective'
         DataType = ftString
         ParamType = ptInput
       end>
@@ -1334,28 +1202,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Left = 396
     Top = 228
   end
-  object spGetReporNameBill: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameBill'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameBill'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleBill'
-        DataType = ftString
-      end>
-    Left = 536
-    Top = 448
-  end
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
@@ -1387,68 +1233,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Left = 848
     Top = 400
   end
-  object spSelectTax_Client: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsSverkaCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisClientCopy'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    Left = 887
-    Top = 440
-  end
-  object spSelectTax_Us: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Tax_Print'
-    DataSet = PrintHeaderCDS
-    DataSets = <
-      item
-        DataSet = PrintHeaderCDS
-      end
-      item
-        DataSet = PrintItemsCDS
-      end
-      item
-        DataSet = PrintItemsSverkaCDS
-      end>
-    OutputType = otMultiDataSet
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisClientCopy'
-        Value = False
-        DataType = ftBoolean
-        ParamType = ptInput
-      end>
-    Left = 895
-    Top = 496
-  end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
     ComponentList = <
@@ -1463,28 +1247,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Params = <>
     Left = 572
     Top = 265
-  end
-  object spGetReporNameTax: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale_ReportNameTax'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'gpGet_Movement_Sale_ReportNameTax'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'ReportNameSaleTax'
-        DataType = ftString
-      end>
-    Left = 912
-    Top = 408
   end
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
@@ -1547,7 +1309,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 56
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_TransferDebtIn_Print'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item
@@ -1569,7 +1331,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 208
   end
   object spGetReportName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Sale_ReportName'
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1581,10 +1343,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ParamType = ptInput
       end
       item
-        Name = 'gpGet_Movement_Sale_ReportName'
-        Value = Null
+        Name = 'gpGet_Movement_ReturnIn_ReportName'
+        Value = 'PrintMovement_TaxCorrective'
         Component = FormParams
-        ComponentItem = 'ReportNameSale'
+        ComponentItem = 'ReportName'
         DataType = ftString
       end>
     Left = 552
