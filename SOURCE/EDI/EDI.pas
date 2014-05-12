@@ -50,7 +50,7 @@ type
 
 implementation
 
-uses VCL.ActnList, DBClient, DesadvXML, SysUtils;
+uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, ComDocXML, SimpleGauge;
 
 procedure Register;
 begin
@@ -61,11 +61,48 @@ end;
 { TEDI }
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc);
+var List: TStrings;
+    i: integer;
+    Stream: TStringStream;
+    FileData: string;
+    ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
 begin
-  // загружаем файлы с FTP
+    // загружаем файлы с FTP
     FIdFTP.Connect;
     if FIdFTP.Connected then begin
        FIdFTP.ChangeDir('/archive');
+       try
+         List := TStringList.Create;
+         Stream := TStringStream.Create;
+         FIdFTP.List(List, '' ,false);
+         with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+         try
+           Start;
+           for I := 0 to List.Count - 1 do begin
+               // если первые буквы файла comdoc, а последние .p7s
+               if (copy(list[i], 1, 6) = 'comdoc') and (copy(list[i], length(list[i]) - 3, 4) = '.p7s') then begin
+                  // тянем файл к нам
+                  FIdFTP.Get(List[i], Stream);
+                  FileData := Utf8ToAnsi(Stream.DataString);
+                  // Начало документа <?xml
+                  FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
+                  FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
+                  ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
+                  if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004' then begin
+                 //    ShowMessage(FileData);
+                     break;
+                  end;
+
+               end;
+               IncProgress;
+           end;
+         finally
+           Finish;
+         end;
+       finally
+         List.Free;
+         Stream.Free;
+       end;
      //  FIdFTP.
        //FIdFTP.Put(Stream, 'testDECLAR.xml');
     end;
