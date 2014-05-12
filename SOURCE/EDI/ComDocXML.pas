@@ -414,7 +414,7 @@ type
 { Global Functions }
 
 function GetЕлектроннийДокумент(Doc: IXMLDocument): IXMLЕлектроннийДокументType;
-function LoadЕлектроннийДокумент(const FileName: string): IXMLЕлектроннийДокументType;
+function LoadЕлектроннийДокумент(const XMLString: string): IXMLЕлектроннийДокументType;
 function NewЕлектроннийДокумент: IXMLЕлектроннийДокументType;
 
 const
@@ -429,9 +429,12 @@ begin
   Result := Doc.GetDocBinding('ЕлектроннийДокумент', TXMLЕлектроннийДокументType, TargetNamespace) as IXMLЕлектроннийДокументType;
 end;
 
-function LoadЕлектроннийДокумент(const FileName: string): IXMLЕлектроннийДокументType;
+function LoadЕлектроннийДокумент(const XMLString: string): IXMLЕлектроннийДокументType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('ЕлектроннийДокумент', TXMLЕлектроннийДокументType, TargetNamespace) as IXMLЕлектроннийДокументType;
+  with NewXMLDocument do begin
+    LoadFromXML(XMLString);
+    Result := GetDocBinding('ЕлектроннийДокумент', TXMLЕлектроннийДокументType, TargetNamespace) as IXMLЕлектроннийДокументType;
+  end;
 end;
 
 function NewЕлектроннийДокумент: IXMLЕлектроннийДокументType;
