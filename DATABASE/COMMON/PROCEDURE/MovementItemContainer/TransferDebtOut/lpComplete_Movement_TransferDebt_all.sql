@@ -563,7 +563,7 @@ $BODY$
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        *
 */
-
+/*
      -- Ú‡·ÎËˆ˚ - !!!ƒÀﬂ Œœ“»Ã»«¿÷»»!!!
      CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
@@ -580,3 +580,4 @@ $BODY$
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 267275 , inSession:= '2')
  SELECT * FROM lpComplete_Movement_TransferDebt_all (inMovementId:= 267275, inUserId:= zfCalc_UserAdmin() :: Integer)
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 267275 , inSession:= '2')
+*/
