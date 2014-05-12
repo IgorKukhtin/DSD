@@ -17,10 +17,11 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_ReturnIn_SybaseFl(
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_ReturnIn());
-     vbUserId:= inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
 /*
      IF inChangeAmount = FALSE
@@ -31,6 +32,10 @@ BEGIN
          inAmount:= inAmountPartner;
      END IF;
 */
+
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
    
@@ -40,6 +45,7 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Цена за количество>
+     IF COALESCE (inCountForPrice, 0) = 0 THEN inCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, inCountForPrice);
 
      -- сохранили связь с <Виды товаров>
@@ -54,8 +60,11 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     THEN
+         -- сохранили протокол
+         PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId, vbIsInsert);
+     END IF;
 
 END;
 $BODY$
@@ -64,6 +73,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.05.14                                        * change inCountForPrice
+ 11.05.14                                        * add lpInsert_MovementItemProtocol
  13.01.14                                        *
 */
 

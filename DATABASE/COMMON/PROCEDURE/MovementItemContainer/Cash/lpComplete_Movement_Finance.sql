@@ -277,12 +277,12 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
-                                                                            , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                                            , inObjectId_2        := _tmpItem.PaidKindId
-                                                                            , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                                            , inObjectId_3        := _tmpItem.ContractId
-                                                                            , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                                            , inObjectId_4        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                            , inObjectId_2        := _tmpItem.ContractId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_3        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                            , inObjectId_4        := _tmpItem.PaidKindId
                                                                             , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                             , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                                              )
@@ -297,12 +297,12 @@ BEGIN
                                                                             , inObjectCostId      := NULL
                                                                             , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                                             , inObjectId_1        := _tmpItem.ObjectId
-                                                                            , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                                            , inObjectId_2        := _tmpItem.PaidKindId
-                                                                            , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                                            , inObjectId_3        := _tmpItem.ContractId
-                                                                            , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                                            , inObjectId_4        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                            , inObjectId_2        := _tmpItem.ContractId
+                                                                            , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                            , inObjectId_3        := _tmpItem.InfoMoneyId
+                                                                            , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                            , inObjectId_4        := _tmpItem.PaidKindId
                                                                              )
                                        END;
 
@@ -373,6 +373,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
  04.05.14                                        * add zc_Enum_AccountDirection_40500
  04.05.14                                        * change zc_Enum_AccountDirection_30100
  19.04.14                                        * del zc_Enum_InfoMoneyDestination_40900

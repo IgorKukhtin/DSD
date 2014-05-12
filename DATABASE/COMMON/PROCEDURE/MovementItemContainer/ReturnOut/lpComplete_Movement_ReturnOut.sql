@@ -605,14 +605,14 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                        , inObjectId_1        := vbJuridicalId_To
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := vbPaidKindId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := vbContractId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                       , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                       , inObjectId_2        := vbContractId
+                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_3        := _tmpItem_group.InfoMoneyId_calc
+                                                       , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                       , inObjectId_4        := vbPaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                       , inObjectId_5        := 0
+                                                       , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                         )
                             -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Юридические лица 2)Виды форм оплаты 3)Договора 4)Статьи назначения
                        ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -624,12 +624,12 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                   , inObjectId_1        := vbJuridicalId_To
-                                                  , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                  , inObjectId_2        := vbPaidKindId
-                                                  , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                  , inObjectId_3        := vbContractId
-                                                  , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                  , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                  , inObjectId_2        := vbContractId
+                                                  , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                  , inObjectId_3        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                  , inObjectId_4        := vbPaidKindId
                                                    )
                   END AS ContainerId
                 , CASE WHEN _tmpItem_group.AccountId_Transit = 0
@@ -647,14 +647,14 @@ BEGIN
                                                        , inObjectCostId      := NULL
                                                        , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                        , inObjectId_1        := vbJuridicalId_To
-                                                       , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                       , inObjectId_2        := vbPaidKindId
-                                                       , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                       , inObjectId_3        := vbContractId
-                                                       , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                       , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                       , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                       , inObjectId_2        := vbContractId
+                                                       , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                       , inObjectId_3        := _tmpItem_group.InfoMoneyId_calc
+                                                       , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                       , inObjectId_4        := vbPaidKindId
                                                        , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
-                                                       , inObjectId_5        := 0
+                                                       , inObjectId_5        := 0 -- !!!по этой аналитике учет пока не ведем!!!
                                                         )
                        ELSE lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                   , inParentId          := NULL
@@ -665,12 +665,12 @@ BEGIN
                                                   , inObjectCostId      := NULL
                                                   , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                   , inObjectId_1        := vbJuridicalId_To
-                                                  , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                  , inObjectId_2        := vbPaidKindId
-                                                  , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                  , inObjectId_3        := vbContractId
-                                                  , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                  , inObjectId_4        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                  , inObjectId_2        := vbContractId
+                                                  , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                  , inObjectId_3        := _tmpItem_group.InfoMoneyId_calc
+                                                  , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                  , inObjectId_4        := vbPaidKindId
                                                    )
                   END AS ContainerId_Transit
                 , _tmpItem_group.InfoMoneyId
@@ -929,6 +929,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
  10.05.14                                        * add lpInsert_MovementProtocol
  26.04.14                                        * !!!RESTORE!!!
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
