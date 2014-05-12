@@ -15,14 +15,16 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_IncomeFuel(
 RETURNS RECORD
 AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
-
      -- проверка - для <Талоны на топливо> цена должна быть = 0, т.к. это типа Перемещение
      IF inPrice <> 0 AND EXISTS (SELECT tmpFrom.ObjectId FROM (SELECT ObjectId FROM MovementLinkObject WHERE MovementId = inMovementId AND DescId = zc_MovementLinkObject_From()) AS tmpFrom JOIN Object ON Object.Id = tmpFrom.ObjectId AND Object.DescId = zc_Object_TicketFuel())
      THEN
          RAISE EXCEPTION 'Ошибка.Для <Талоны на топливо> цену вводить не надо.';
      END IF;
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
 
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
@@ -46,7 +48,7 @@ BEGIN
                       END;
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$

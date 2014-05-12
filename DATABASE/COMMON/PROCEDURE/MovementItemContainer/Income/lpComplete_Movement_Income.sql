@@ -79,9 +79,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
                                ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
                               AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-          LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
      WHERE MovementItem.MovementId = inMovementId
-       AND lfObject_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+       AND View_InfoMoney.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
      ;
 
      -- Эти параметры нужны для расчета конечных сумм по Контрагенту и Сотруднику (заготовитель) и для формирования Аналитик в проводках
@@ -247,7 +247,7 @@ BEGIN
 
 
      -- определяется Управленческие назначения, параметр нужен для для формирования Аналитик в проводках
-     SELECT lfObject_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfObject_InfoMoney;
+     SELECT lfGet_InfoMoney.InfoMoneyDestinationId INTO vbInfoMoneyDestinationId_From FROM lfGet_Object_InfoMoney (vbInfoMoneyId_From) AS lfGet_InfoMoney;
 
 
      -- заполняем таблицу - элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -385,12 +385,12 @@ BEGIN
                      END AS tmpOperSumm_Packer
 
                     -- Управленческие назначения
-                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfObject_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
-                         ELSE COALESCE (lfObject_InfoMoney.InfoMoneyDestinationId, 0)
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfGet_InfoMoney_Fuel.InfoMoneyDestinationId, 0)
+                         ELSE COALESCE (View_InfoMoney.InfoMoneyDestinationId, 0)
                     END AS InfoMoneyDestinationId
                     -- Статьи назначения
-                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfObject_InfoMoney_Fuel.InfoMoneyId, 0)
-                         ELSE COALESCE (lfObject_InfoMoney.InfoMoneyId, 0)
+                  , CASE WHEN COALESCE (ObjectLink_Goods_Fuel.ChildObjectId, 0) <> 0 THEN COALESCE (lfGet_InfoMoney_Fuel.InfoMoneyId, 0)
+                         ELSE COALESCE (View_InfoMoney.InfoMoneyId, 0)
                     END AS InfoMoneyId
 
                     -- Бизнес из Товара нужен только если не <Вид топлива>
@@ -453,9 +453,9 @@ BEGIN
                                        AND ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- !!!обязательно, что б смело использовать COALESCE!!!
                                        AND vbCarId <> 0 -- !!!обязательно, т.к. в остальных случаях нужен товар!!!
 
-                   LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-                                                                              AND ObjectLink_Goods_Fuel.ChildObjectId IS NULL
-                   LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfObject_InfoMoney_Fuel ON ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- ГСМ
+                   LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
+                                                                    AND ObjectLink_Goods_Fuel.ChildObjectId IS NULL
+                   LEFT JOIN lfGet_Object_InfoMoney (zc_Enum_InfoMoney_20401()) AS lfGet_InfoMoney_Fuel ON ObjectLink_Goods_Fuel.ChildObjectId <> 0 -- ГСМ
 
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_Income()
@@ -807,12 +807,12 @@ BEGIN
                                                                                                       , inObjectCostId      := NULL
                                                                                                       , inDescId_1          := zc_ContainerLinkObject_Juridical()
                                                                                                       , inObjectId_1        := vbJuridicalId_From
-                                                                                                      , inDescId_2          := zc_ContainerLinkObject_PaidKind()
-                                                                                                      , inObjectId_2        := vbPaidKindId
-                                                                                                      , inDescId_3          := zc_ContainerLinkObject_Contract()
-                                                                                                      , inObjectId_3        := vbContractId
-                                                                                                      , inDescId_4          := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_4        := _tmpItem_SummPartner.InfoMoneyId
+                                                                                                      , inDescId_2          := zc_ContainerLinkObject_Contract()
+                                                                                                      , inObjectId_2        := vbContractId
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := _tmpItem_SummPartner.InfoMoneyId
+                                                                                                      , inDescId_4          := zc_ContainerLinkObject_PaidKind()
+                                                                                                      , inObjectId_4        := vbPaidKindId
                                                                                                       , inDescId_5          := zc_ContainerLinkObject_PartionMovement()
                                                                                                       , inObjectId_5        := _tmpItem_SummPartner.PartionMovementId
                                                                                                        )
@@ -828,10 +828,10 @@ BEGIN
                                                                                                       , inObjectCostId      := NULL
                                                                                                       , inDescId_1          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Juridical() END
                                                                                                       , inObjectId_1        := CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbJuridicalId_From END
-                                                                                                      , inDescId_2          := zc_ContainerLinkObject_InfoMoney()
-                                                                                                      , inObjectId_2        := _tmpItem_SummPartner.InfoMoneyId
-                                                                                                      , inDescId_3          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Contract() END
-                                                                                                      , inObjectId_3        := CASE WHEN vbMemberId_From <> 0 THEN 0 ELSE vbContractId END
+                                                                                                      , inDescId_2          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Contract() END
+                                                                                                      , inObjectId_2        := CASE WHEN vbMemberId_From <> 0 THEN 0 ELSE vbContractId END
+                                                                                                      , inDescId_3          := zc_ContainerLinkObject_InfoMoney()
+                                                                                                      , inObjectId_3        := _tmpItem_SummPartner.InfoMoneyId
                                                                                                       , inDescId_4          := CASE WHEN vbMemberId_From <> 0 THEN NULL ELSE zc_ContainerLinkObject_PaidKind() END
                                                                                                       , inObjectId_4        := vbPaidKindId
                                                                                                        )
@@ -1147,6 +1147,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
+ 11.05.14                                        * add Object_InfoMoney_View
  10.05.14                                        * add lpInsert_MovementProtocol
  08.04.14                                        * add Constant_InfoMoney_isCorporate_View
  04.04.14                                        * add zc_Enum_InfoMoney_21151

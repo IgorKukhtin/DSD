@@ -33,6 +33,7 @@ BEGIN
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
      -- сохранили свойство <Цена за количество>
+     IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
 
      -- сохранили свойство <Количество голов>
@@ -47,8 +48,11 @@ BEGIN
      -- сохранили связь с <Основные средства (для которых закупается ТМЦ)>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Asset(), ioId, inAssetId);
 
-     -- создали объект <Связи Товары и Виды товаров>
-     -- PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
+     IF inGoodsId <> 0
+     THEN
+         -- создали объект <Связи Товары и Виды товаров>
+         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
+     END IF;
 
      -- расчитали сумму по элементу, для грида
      outAmountSumm := CASE WHEN ioCountForPrice > 0
@@ -59,7 +63,7 @@ BEGIN
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-     IF NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
+     IF 1 = 1 -- NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = inUserId AND RoleId = zc_Enum_Role_Admin())
      THEN
          -- сохранили протокол
          PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
@@ -72,6 +76,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.    Манько Д.А.
+ 11.05.14                                        * change ioCountForPrice
  07.05.14                                        * add lpInsert_MovementItemProtocol
  08.04.14                                        * rem создали объект <Связи Товары и Виды товаров>
  14.02.14                                                         * add ioCountForPrice
