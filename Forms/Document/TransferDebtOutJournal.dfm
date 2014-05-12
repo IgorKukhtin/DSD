@@ -2,27 +2,29 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1073
-  ExplicitTop = -143
   ExplicitWidth = 1081
-  ExplicitHeight = 562
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1073
-    Height = 478
+    Height = 476
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1073
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1073
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1073
-      ExplicitHeight = 478
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1067
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1073
-        Height = 478
-        ExplicitWidth = 1073
-        ExplicitHeight = 478
+        Width = 1067
+        Height = 470
+        ExplicitWidth = 1067
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -717,6 +719,48 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end>
       Caption = 'actSPPrintSaleBillProcName'
     end
+    object actPrint_TransferDebtOut: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TransferDebtOut'
+      ReportNameParam.Value = 'PrintMovement_TransferDebtOut'
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited MasterDS: TDataSource
     Left = 64
@@ -758,7 +802,7 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -830,6 +874,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_DebtOut'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint_Bill'
         end
         item
@@ -875,6 +923,10 @@ inherited TransferDebtOutJournalForm: TTransferDebtOutJournalForm
     end
     object bbPrint_Bill: TdxBarButton
       Action = mactPrint_Bill
+      Category = 0
+    end
+    object bbPrint_DebtOut: TdxBarButton
+      Action = actPrint_TransferDebtOut
       Category = 0
     end
   end

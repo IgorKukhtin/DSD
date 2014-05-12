@@ -27,7 +27,13 @@ BEGIN
            , Object_Status.ValueData         	        AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
-           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+--           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , CASE
+              WHEN Movement.DescId = zc_Movement_ReturnIn()
+              THEN MovementString_InvNumberPartner.ValueData
+              WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+              THEN Movement.InvNumber
+             ELSE '' END                                AS InvNumberPartner
            , MovementString_InvNumberMark.ValueData     AS InvNumberMark
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
@@ -131,7 +137,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                        AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
             LEFT JOIN Object AS Object_Contract ON Object_Contract.Id = MovementLinkObject_Contract.ObjectId
 
 -- ============================
@@ -153,8 +159,8 @@ BEGIN
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_ReturnIn();
+       WHERE Movement.Id =  inMovementId;
+--         AND Movement.DescId = zc_Movement_ReturnIn();
     RETURN NEXT Cursor1;
     OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS

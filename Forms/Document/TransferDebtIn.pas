@@ -46,30 +46,19 @@ type
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;
-    mactPrint_Sale: TMultiAction;
     actSPPrintSaleProcName: TdsdExecStoredProc;
     spGetReportName: TdsdStoredProc;
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    mactPrint_Tax_Us: TMultiAction;
-    actPrintTax_Us: TdsdPrintAction;
-    spGetReporNameTax: TdsdStoredProc;
     bbPrintTax: TdxBarButton;
     actSPPrintSaleTaxProcName: TdsdExecStoredProc;
     PrintItemsCDS: TClientDataSet;
     actTax: TdsdExecStoredProc;
     spTax: TdsdStoredProc;
     bbTax: TdxBarButton;
-    mactPrint_Tax_Client: TMultiAction;
-    actPrintTax_Client: TdsdPrintAction;
-    spSelectTax_Client: TdsdStoredProc;
     bbPrintTax_Client: TdxBarButton;
-    spSelectTax_Us: TdsdStoredProc;
-    spGetReporNameBill: TdsdStoredProc;
-    mactPrint_Bill: TMultiAction;
     actSPPrintSaleBillProcName: TdsdExecStoredProc;
-    actPrint_Bill: TdsdPrintAction;
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
@@ -85,6 +74,8 @@ type
     edPartner: TcxButtonEdit;
     cxLabel12: TcxLabel;
     GuidesPartner: TdsdGuides;
+    mactPrint: TMultiAction;
+    actSPPrintProcName: TdsdExecStoredProc;
   private
     { Private declarations }
   public
