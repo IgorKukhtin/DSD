@@ -173,12 +173,12 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
-  // Создаем форму
-  Application.CreateForm(TParentForm, Result);
-  Result.FormClassName := FormName;
   try
     for EffortCount := 1 to 10 do
       try
+         // Создаем форму
+        Application.CreateForm(TParentForm, Result);
+        Result.FormClassName := FormName;
         FormStr := ReConvertConvert(LoadStoredProc.Execute);
         StringStream.WriteString(FormStr);
         if StringStream.Size = 0 then
@@ -192,14 +192,20 @@ begin
         MemoryStream.ReadComponent(Result);
         break;
       except
-        on E: Exception do
+        on E: Exception do begin
+          FreeAndNil(Result);
           if EffortCount > 9 then
-             raise Exception.Create('TdsdFormStorage.Load ' + E.Message);
+             raise Exception.Create(FormName + ' TdsdFormStorage.Load ' + E.Message);
+        end;
       end;
     // Загрузить пользователские дефолты!!!
-    for i := 0 to Result.ComponentCount - 1 do
-        if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-           TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+    try
+      for i := 0 to Result.ComponentCount - 1 do
+          if Result.Components[i] is TdsdUserSettingsStorageAddOn then
+             TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
+    except
+
+    end;
   finally
     StringStream.Clear;
     MemoryStream.Clear;
