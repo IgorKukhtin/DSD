@@ -37,6 +37,8 @@ type
     procedure LoadCurrencyFormTest;
     procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
+    procedure LoadEDIForm;
+    procedure LoadDocumentTaxKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
     procedure LoadGoodsPropertyFormTest;
@@ -60,7 +62,6 @@ type
     procedure LoadMovementFormTest;
     procedure LoadPartnerFormTest;
     procedure LoadPaidKindFormTest;
-    procedure LoadDocumentTaxKindFormTest;
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
@@ -653,6 +654,12 @@ procedure TLoadFormTest.LoadDocumentTaxKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TDocumentTaxKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TDocumentTaxKindForm');
+end;
+
+procedure TLoadFormTest.LoadEDIForm;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;

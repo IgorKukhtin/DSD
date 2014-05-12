@@ -1231,7 +1231,7 @@ begin
   isChanged := false;
   if not Assigned(IdParam) then
      raise Exception.Create('Не установлено свойство IdParam');
-  if (IdParam.Value = 0) then
+  if (IdParam.Value = 0) or VarIsNull(IdParam.Value) then
       exit;
   if Sender is TcxTextEdit then
      isChanged := FEnterValue.Values[TComponent(Sender).Name] <> (Sender as TcxTextEdit).Text;

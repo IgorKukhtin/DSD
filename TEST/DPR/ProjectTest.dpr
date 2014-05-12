@@ -424,7 +424,9 @@ uses
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
   ObjectTest in '..\SOURCE\Objects\ObjectTest.pas',
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
-  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm};
+  MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
+  EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
+  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm};
 
 {$R *.RES}
 

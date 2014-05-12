@@ -4,7 +4,7 @@ interface
 
 uses VCL.ActnList, Forms, Classes, dsdDB, DB, DBClient, UtilConst,
      cxControls, dsdGuides, ImgList, cxPC, cxGridTableView,
-     cxGridDBTableView, frxClass;
+     cxGridDBTableView, frxClass, cxGridCustomView;
 
 type
 
@@ -50,9 +50,12 @@ type
   private
     FIndexFieldNames: String;
     FUserName: String;
+    FGridView: TcxCustomGridView;
+    procedure SetGridView(const Value: TcxCustomGridView);
   published
     property UserName: String read FUserName write FUserName;
     property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
+    property GridView: TcxCustomGridView read FGridView write SetGridView;
   end;
 
 
@@ -1234,6 +1237,11 @@ begin
      end;
 
   inherited;
+
+  TdxMemData
+
+//  TAddOnDataSet(Self.DataSets[0]).GridView.DataController.
+
   result := true;
   FDataSetList := TList.Create;
   for I := 0 to Self.DataSets.Count - 1 do
@@ -1929,6 +1937,13 @@ begin
   Self.GuiParams.AssignParams(Params);
   // потом перечитываем и позиционируемся
   inherited;
+end;
+
+{ TAddOnDataSet }
+
+procedure TAddOnDataSet.SetGridView(const Value: TcxCustomGridView);
+begin
+  FGridView := Value;
 end;
 
 end.

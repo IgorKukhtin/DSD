@@ -1405,6 +1405,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbEDI'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoad1CSale'
         end
         item
@@ -1535,6 +1539,10 @@ object MainForm: TMainForm
     end
     object bbBankAccountContract: TdxBarButton
       Action = actBankAccountContract
+      Category = 0
+    end
+    object bbEDI: TdxBarButton
+      Action = actEDI
       Category = 0
     end
   end
@@ -3119,6 +3127,17 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actEDI: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = 'EDI'
+      Hint = 'EDI'
+      FormName = 'TEDIJournalForm'
+      FormNameParam.Value = 'TEDIJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -3145,7 +3164,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

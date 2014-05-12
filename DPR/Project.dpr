@@ -43,7 +43,8 @@ uses
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas';
 
 {$R *.res}
 
@@ -56,7 +57,7 @@ begin
     //≈сли все хорошо создаем главную форму Application.CreateForm();
     if ShowModal = mrOk then begin
        TUpdater.AutomaticUpdateProgram;
-       Application.CreateForm(TMainForm, MainFormInstance);
+       Application.CreateForm(TMainFormInstance, MainFormInstance);
   Application.CreateForm(TdmMain, dmMain);
   end;
   Application.Run;

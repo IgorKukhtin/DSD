@@ -92,7 +92,6 @@ begin
                  //    ShowMessage(FileData);
                      break;
                   end;
-
                end;
                IncProgress;
            end;
