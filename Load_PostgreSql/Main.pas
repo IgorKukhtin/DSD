@@ -8650,12 +8650,19 @@ begin
         Add('select Bill.ObjectId');
         Add('     , Bill.OperDate');
         Add('     , Bill.InvNumber');
+        Add('     , Bill.FromID');
         Add('     , Bill.ClientID');
         Add('     , Bill.MoneyKindId');
         Add('     , zc_mkBN() as zc_mkBN');
         Add('     , Bill.Id_Postgres as Id_Postgres');
         Add('from dba._pgSelect_Bill_Sale('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
         Add('     as Bill');
+
+        if (cbBill_List.Checked)
+        then
+             Add(' inner join dba._pgBillLoad on _pgBillLoad.BillNumber=Bill.InvNumber'
+                +'                           and _pgBillLoad.FromId=Bill.FromId')
+        else
         if (cbOKPO.Checked)and (trim(OKPOEdit.Text)<>'') then
         begin
              Add('     left outer join dba.Unit as Client on Client.ID = Bill.ClientID');
