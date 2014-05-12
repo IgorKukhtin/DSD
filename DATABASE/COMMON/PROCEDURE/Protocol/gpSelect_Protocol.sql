@@ -28,10 +28,10 @@ BEGIN
      ObjectDesc.ItemName AS ObjectTypeName,
      ObjectProtocol.isInsert
   FROM ObjectProtocol 
-  JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
-  JOIN Object ON Object.Id = ObjectProtocol.ObjectId AND (Object.Id = inObjectId OR 0 = inObjectId)
-   AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
-  JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
+       LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
+       LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId AND (Object.Id = inObjectId OR 0 = inObjectId)
+                       AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
+       LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
  WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate
    AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId);
 

@@ -6,8 +6,6 @@ inherited AncestorEnumForm: TAncestorEnumForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 575
-      ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsBehavior.GoToNextCellOnEnter = False
@@ -22,6 +20,7 @@ inherited AncestorEnumForm: TAncestorEnumForm
   inherited ActionList: TActionList
     object ChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'

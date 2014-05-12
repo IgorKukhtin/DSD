@@ -3,8 +3,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   ClientWidth = 829
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 845
-  ExplicitHeight = 451
+  ExplicitWidth = 837
+  ExplicitHeight = 443
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -274,17 +274,6 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       TabOrder = 5
       Width = 152
     end
-  end
-  inherited cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh

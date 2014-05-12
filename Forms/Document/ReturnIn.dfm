@@ -1,9 +1,11 @@
 inherited ReturnInForm: TReturnInForm
+  ActiveControl = nil
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 994
-  ExplicitWidth = 1010
-  ExplicitHeight = 703
+  ExplicitTop = -276
+  ExplicitWidth = 1002
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -444,7 +446,25 @@ inherited ReturnInForm: TReturnInForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = AncestorDocumentForm.Owner
+        Component = actAddMask
+        Properties.Strings = (
+          'Caption'
+          'Category'
+          'Hint'
+          'ImageIndex'
+          'InfoAfterExecute'
+          'MoveParams'
+          'Name'
+          'QuestionBeforeExecute'
+          'SecondaryShortCuts'
+          'ShortCut'
+          'StoredProc'
+          'StoredProcList'
+          'TabSheet'
+          'Tag')
+      end
+      item
+        Component = Owner
         Properties.Strings = (
           'Height'
           'Left'

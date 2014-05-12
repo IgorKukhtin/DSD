@@ -146,6 +146,7 @@ end;
 function TdsdFormStorage.Load(FormName: String): TParentForm;
 var i: integer;
     FormStr: string;
+    EffortCount: integer;
 begin
   if (FormName = 'NULL') or (FormName = '') then
      raise Exception.Create('Не передано название формы');
@@ -172,36 +173,33 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
+  // Создаем форму
+  Application.CreateForm(TParentForm, Result);
+  Result.FormClassName := FormName;
   try
-    try
-      FormStr := ReConvertConvert(LoadStoredProc.Execute);
-      StringStream.WriteString(FormStr);
-      if StringStream.Size = 0 then
-         raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
-      StringStream.Position := 0;
-      // Преобразовать текст в бинарные данные
-      ObjectTextToBinary(StringStream, MemoryStream);
-      // Вернуть смещение
-      MemoryStream.Position := 0;
-
-      // Создаем форму
-      Application.CreateForm(TParentForm, Result);
-      Result.FormClassName := FormName;
-
-      // Прочитать компонент из потока
-      MemoryStream.ReadComponent(Result);
-      // Загрузить пользователские дефотлы!!!
-      for i := 0 to Result.ComponentCount - 1 do
+    for EffortCount := 1 to 10 do
+      try
+        FormStr := ReConvertConvert(LoadStoredProc.Execute);
+        StringStream.WriteString(FormStr);
+        if StringStream.Size = 0 then
+           raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
+        StringStream.Position := 0;
+        // Преобразовать текст в бинарные данные
+        ObjectTextToBinary(StringStream, MemoryStream);
+        // Вернуть смещение
+        MemoryStream.Position := 0;
+        // Прочитать компонент из потока
+        MemoryStream.ReadComponent(Result);
+        break;
+      except
+        on E: Exception do
+          if EffortCount > 9 then
+             raise Exception.Create('TdsdFormStorage.Load ' + E.Message);
+      end;
+    // Загрузить пользователские дефолты!!!
+    for i := 0 to Result.ComponentCount - 1 do
         if Result.Components[i] is TdsdUserSettingsStorageAddOn then
-        try
-              TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
-        except
-
-        end;
-    except
-      on E: Exception do
-        raise Exception.Create('TdsdFormStorage.Load ' + E.Message + chr(13) + chr(10) + FormStr);
-    end;
+           TdsdUserSettingsStorageAddOn(Result.Components[i]).LoadUserSettings;
   finally
     StringStream.Clear;
     MemoryStream.Clear;

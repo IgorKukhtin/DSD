@@ -219,7 +219,15 @@ end;
 
 { TdsdGuides }
 
+type
+  TAccessWinControl = class(TWinControl)
+  public
+    property onExit;
+  end;
+
+
 procedure TdsdGuides.AfterChoice(Params: TdsdParams; Form: TForm);
+var i: integer;
 begin
   // Расставляем параметры по местам
   Self.Params.AssignParams(Params);
@@ -230,6 +238,16 @@ begin
     // Если форма не закрыта, то закрываем
     if Form.Visible then
        Form.Close;
+
+  // Вызываем заполнение параметров
+  for I := 0 to Params.Count - 1 do
+      if assigned(Self.Params.ParamByName(Params[i].Name).Component) then
+         if Self.Params.ParamByName(Params[i].Name).Component is TCustomGuides then
+            if not (Self.Params.ParamByName(Params[i].Name).Component as TCustomGuides).LookupControl.Focused then
+               if ansilowercase(Self.Params.ParamByName(Params[i].Name).ComponentItem) = 'textvalue' then
+                  if Assigned(TAccessWinControl((Self.Params.ParamByName(Params[i].Name).Component as TCustomGuides).LookupControl).onExit) then
+                     TAccessWinControl((Self.Params.ParamByName(Params[i].Name).Component as TCustomGuides).LookupControl).onExit((Self.Params.ParamByName(Params[i].Name).Component as TCustomGuides).LookupControl);
+
 end;
 
 constructor TdsdGuides.Create(AOwner: TComponent);
