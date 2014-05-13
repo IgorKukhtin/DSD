@@ -9,6 +9,11 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
 
+select '166057' as InvNumber, 4690 as FromId, 0 as ToId
+union select '3589' as InvNumber, 4690 as FromId, 0 as ToId
+union select '3559' as InvNumber, 4690 as FromId, 0 as ToId
+
+
 select '167323' as InvNumber, 4690 as FromId, 0 as ToId
 union select '166058' as InvNumber, 4690 as FromId, 0 as ToId
 union select '167339' as InvNumber, 4690 as FromId, 0 as ToId
@@ -39,6 +44,16 @@ union select '165644' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165451' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165791' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165430' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165646' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164657' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167327' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166469' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165630' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164887' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164128' as InvNumber, 4690 as FromId, 0 as ToId
+
+union select '166901' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166073' as InvNumber, 4690 as FromId, 0 as ToId
 union select '164892' as InvNumber, 4690 as FromId, 0 as ToId
 union select '166498' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165796' as InvNumber, 4690 as FromId, 0 as ToId
@@ -51,6 +66,40 @@ union select '165790' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165425' as InvNumber, 4690 as FromId, 0 as ToId
 union select '167527' as InvNumber, 4690 as FromId, 0 as ToId
 union select '166460' as InvNumber, 4690 as FromId, 0 as ToId
+
+union select '167517' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167042' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166077' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165440' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165084' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164321' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167353' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166905' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166502' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165659' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165265' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164898' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164522' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164148' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167364' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166701' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166287' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165782' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165258' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165090' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166487' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165643' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164518' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167325' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167035' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165416' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164663' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164126' as InvNumber, 4690 as FromId, 0 as ToId
+union select '167511' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166900' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166273' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164873' as InvNumber, 4690 as FromId, 0 as ToId
+union select '164302' as InvNumber, 4690 as FromId, 0 as ToId
 
 
 select '157431' as InvNumber, 4690 as FromId, 0 as ToId

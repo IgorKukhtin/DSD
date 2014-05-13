@@ -19,14 +19,6 @@ BEGIN
      PERFORM lfCheck_Movement_ParentStatus (inMovementId:= inMovementId, inNewStatusId:= zc_Enum_Status_Complete(), inComment:= 'провести');
 
 
-     -- таблица - Аналитики остатка
-     -- CREATE TEMP TABLE _tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
-     -- таблица - Аналитики <элемент с/с>
-     -- CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
-     -- таблица - Аналитики <Проводки для отчета>
-     -- CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
-
-
      -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
      CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;

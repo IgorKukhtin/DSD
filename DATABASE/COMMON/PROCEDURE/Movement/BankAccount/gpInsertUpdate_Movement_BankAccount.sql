@@ -59,8 +59,11 @@ BEGIN
      END IF;
 
      -- сохранили <Документ>
-     PERFORM lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount, 
-             inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId, (SELECT ParentId FROM Movement WHERE Id = ioId), vbUserId);
+     ioId:= lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount
+                                               , inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId
+                                               , (SELECT ParentId FROM Movement WHERE Id = ioId)
+                                               , vbUserId
+                                                );
 
      -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
      CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
@@ -91,6 +94,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 11.05.14                                        * add ioId:= 
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  04.04.14                                        * add lpComplete_Movement_BankAccount
  13.03.14                                        * add vbUserId

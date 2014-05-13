@@ -299,11 +299,9 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
-      Top = 4
       EditValue = 41640d
       Properties.SaveTime = False
       ExplicitLeft = 118
-      ExplicitTop = 4
     end
     inherited deEnd: TcxDateEdit
       Left = 118
@@ -329,7 +327,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 313
+      Left = 314
       Top = 29
       Properties.Buttons = <
         item
@@ -345,8 +343,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1043#1083#1072#1074#1085#1086#1077' '#1102#1088'.'#1083#1080#1094#1086':'
     end
     object edMainJuridical: TcxButtonEdit
-      Left = 313
-      Top = 4
+      Left = 314
+      Top = 5
       Enabled = False
       Properties.Buttons = <
         item
@@ -358,13 +356,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 210
     end
     object cxLabel4: TcxLabel
-      Left = 569
+      Left = 568
       Top = 6
       Caption = #1057#1095#1077#1090' '#1085#1072#1079#1074#1072#1085#1080#1077':'
     end
     object edAccount: TcxButtonEdit
       Left = 653
-      Top = 4
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -374,13 +372,13 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 180
     end
     object cxLabel8: TcxLabel
-      Left = 867
+      Left = 870
       Top = 6
       Caption = #1044#1086#1075#1086#1074#1086#1088':'
     end
     object ceContract: TcxButtonEdit
-      Left = 919
-      Top = 4
+      Left = 923
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -390,12 +388,12 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 90
     end
     object cxLabel5: TcxLabel
-      Left = 837
+      Left = 840
       Top = 31
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
     end
     object edPaidKind: TcxButtonEdit
-      Left = 919
+      Left = 923
       Top = 29
       Properties.Buttons = <
         item
@@ -406,7 +404,7 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Width = 90
     end
     object cxLabel7: TcxLabel
-      Left = 530
+      Left = 529
       Top = 31
       Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
     end
