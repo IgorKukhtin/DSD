@@ -90,6 +90,8 @@ type
     cxLabel12: TcxLabel;
     edPartner: TcxButtonEdit;
     GuidesPartner: TdsdGuides;
+    actPrint_TransferDebtOut: TdsdPrintAction;
+    bbPrint_DebtOut: TdxBarButton;
   private
     { Private declarations }
   public

@@ -52,32 +52,25 @@ inherited MovementCheckForm: TMovementCheckForm
           Styles.Footer = nil
           Styles.Header = nil
           object colParamText: TcxGridDBColumn
-            Caption = #1055#1072#1088#1072#1084#1077#1090#1088
+            Caption = #1056#1077#1082#1074#1080#1079#1080#1090
             DataBinding.FieldName = 'ParamText'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 88
           end
-          object colParam_Sale: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1087#1088#1086#1076#1072#1078#1080
-            DataBinding.FieldName = 'Param_Sale'
+          object colParam_Doc1: TcxGridDBColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090' 1'
+            DataBinding.FieldName = 'Param_Doc1'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
           end
-          object colParam_Tax: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1085#1072#1083#1086#1075#1086#1074#1072#1103
-            DataBinding.FieldName = 'Param_Tax'
+          object colParam_Doc2: TcxGridDBColumn
+            Caption = #1044#1086#1082#1091#1084#1077#1085#1090' 2'
+            DataBinding.FieldName = 'Param_Doc2'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
-          end
-          object colParam_TaxCorrective: TcxGridDBColumn
-            Caption = #1044#1086#1082'. '#1082#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072
-            DataBinding.FieldName = 'Param_TaxCorrective'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 80
           end
         end
       end

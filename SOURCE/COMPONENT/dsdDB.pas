@@ -70,8 +70,8 @@ type
   TdsdDataSetLink = class (TCollectionItem)
   private
     FDataSet: TDataSet;
-    procedure SetDataSet(const Value: TDataSet);
   protected
+    procedure SetDataSet(const Value: TDataSet); virtual;
     function GetDisplayName: string; override;
   public
     procedure Assign(Source: TPersistent); override;

@@ -64,6 +64,8 @@ type
     cxLabel14: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
+    actPrint_TransferDebtOut: TdsdPrintAction;
+    bbPrint_DebtOut: TdxBarButton;
   private
     { Private declarations }
   public

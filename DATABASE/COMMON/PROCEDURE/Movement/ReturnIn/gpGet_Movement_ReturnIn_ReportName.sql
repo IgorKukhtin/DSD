@@ -46,8 +46,8 @@ BEGIN
 --             AND PrintForms_View_Default.PaidKindId = MovementLinkObject_PaidKind.ObjectId
              AND PrintForms_View_Default.DescId = zc_Movement_ReturnIn()
 
-       WHERE Movement.Id =  inMovementId
-         AND Movement.DescId = zc_Movement_ReturnIn();
+       WHERE Movement.Id =  inMovementId;
+--         AND Movement.DescId = zc_Movement_ReturnIn();
 
      RETURN (vbPrintFormName);
 

@@ -56,8 +56,7 @@ requires
   cxPivotGridRS16,
   VclSmp,
   cxVerticalGridRS16,
-  dxSkinsCoreRS16,
-  ZLibEx;
+  dxSkinsCoreRS16;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -90,6 +89,7 @@ contains
   EDI in '..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas';
 
 end.

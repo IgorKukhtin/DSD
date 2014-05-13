@@ -6,20 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
-  dsdAction, cxLocalization, dxSkinsCore, dxSkinBlack, dxSkinBlue,
-  dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
-  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
-  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
-  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
-  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
-  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
-  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
-  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
-  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
-  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue, dxSkinsdxBarPainter, dsdAddOn, cxPropertiesStore, frxClass,
-  dsdDB, Data.DB, Datasnap.DBClient, frxExportRTF, frxExportPDF, frxExportXML,
-  frxExportXLS, Vcl.Menus;
+  dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
+  Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn;
 
 type
   TMainForm = class(TForm)
@@ -344,6 +332,8 @@ type
     bbTransferDebtIn: TdxBarButton;
     actBankAccountContract: TdsdOpenForm;
     bbBankAccountContract: TdxBarButton;
+    actEDI: TdsdOpenForm;
+    bbEDI: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
@@ -362,7 +352,7 @@ var
 implementation
 
 uses ParentForm, Storage, CommonData, MessagesUnit, UtilConst, Math,
-     AboutBoxUnit, UtilConvert;
+     AboutBoxUnit, UtilConvert, Menus;
 
 {$R DevExpressRus.res}
 

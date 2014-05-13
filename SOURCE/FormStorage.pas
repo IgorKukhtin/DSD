@@ -173,24 +173,28 @@ begin
         end;
   end;
   LoadStoredProc.ParamByName('FormName').Value := FormName;
-  try
     for EffortCount := 1 to 10 do
       try
-         // Создаем форму
-        Application.CreateForm(TParentForm, Result);
-        Result.FormClassName := FormName;
-        FormStr := ReConvertConvert(LoadStoredProc.Execute);
-        StringStream.WriteString(FormStr);
-        if StringStream.Size = 0 then
-           raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
-        StringStream.Position := 0;
-        // Преобразовать текст в бинарные данные
-        ObjectTextToBinary(StringStream, MemoryStream);
-        // Вернуть смещение
-        MemoryStream.Position := 0;
-        // Прочитать компонент из потока
-        MemoryStream.ReadComponent(Result);
-        break;
+        try
+          // Создаем форму
+          Application.CreateForm(TParentForm, Result);
+          Result.FormClassName := FormName;
+          FormStr := ReConvertConvert(LoadStoredProc.Execute);
+          StringStream.WriteString(FormStr);
+          if StringStream.Size = 0 then
+             raise Exception.Create('Форма "' + FormName + '" не загружена из базы данных');
+          StringStream.Position := 0;
+          // Преобразовать текст в бинарные данные
+          ObjectTextToBinary(StringStream, MemoryStream);
+          // Вернуть смещение
+          MemoryStream.Position := 0;
+          // Прочитать компонент из потока
+          MemoryStream.ReadComponent(Result);
+          break;
+        finally
+          StringStream.Clear;
+          MemoryStream.Clear;
+        end;
       except
         on E: Exception do begin
           FreeAndNil(Result);
@@ -206,10 +210,6 @@ begin
     except
 
     end;
-  finally
-    StringStream.Clear;
-    MemoryStream.Clear;
-  end;
 end;
 
 function TdsdFormStorage.LoadFile(FileName: string): AnsiString;
@@ -228,6 +228,8 @@ end;
 
 function TdsdFormStorage.LoadReport(ReportName: String): TStream;
 begin
+  if ReportName = '' then
+     raise Exception.Create('Для печатной формы не установлено название');
   LoadStoredProc.ParamByName('FormName').Value := ReportName;
   StringStream.Clear;
   StringStream.WriteString( ReConvertConvert(LoadStoredProc.Execute));
