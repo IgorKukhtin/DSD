@@ -327,7 +327,7 @@ uses
   Report_GoodsMI_Income in '..\..\Forms\Report\Report_GoodsMI_Income.pas' {Report_GoodsMI_IncomeForm: TParentForm},
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  Report_GoodsMI_TransferDebt in '..\..\Forms\Report\Report_GoodsMI_TransferDebt.pas' {Report_GoodsMI_TransferDebtForm: TParentForm},
   Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
@@ -427,7 +427,8 @@ uses
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
-  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas';
+  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm};
 
 {$R *.RES}
 

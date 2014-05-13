@@ -1,4 +1,4 @@
-inherited Report_GoodsMIForm: TReport_GoodsMIForm
+inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 374
   ClientWidth = 1082
@@ -14,24 +14,23 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Height = 294
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1020
+    ExplicitWidth = 1082
     ExplicitHeight = 294
     ClientRectBottom = 294
     ClientRectRight = 1082
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1082
       ExplicitHeight = 294
       inherited cxGrid: TcxGrid
         Width = 1082
         Height = 294
-        ExplicitWidth = 1020
+        ExplicitWidth = 1082
         ExplicitHeight = 294
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummChangePercent
             end
             item
               Format = ',0.####'
@@ -46,12 +45,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -61,18 +58,15 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Sh
             end>
           DataController.Summary.FooterSummaryItems = <
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSummChangePercent
             end
             item
               Format = ',0.####'
@@ -87,12 +81,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountPartner_Sh
             end
             item
               Format = ',0.####'
@@ -102,12 +94,10 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Weight
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmountChangePercent_Sh
             end>
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -170,29 +160,8 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Width = 35
           end
           object clAmount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'.'#1074#1077#1089
             DataBinding.FieldName = 'Amount_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountChangePercent_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountChangePercent_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountPartner_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'AmountPartner_Weight'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
@@ -201,50 +170,17 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             Width = 60
           end
           object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'. ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'.'#1096#1090'.'
             DataBinding.FieldName = 'Amount_Sh'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
-          end
-          object clAmountChangePercent_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'.  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountChangePercent_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountPartner_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'.  '#1091' '#1087#1086#1082#1091#1087'.'
-            DataBinding.FieldName = 'AmountPartner_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clSummChangePercent: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090#1085#1072#1103
-            DataBinding.FieldName = 'SummChangePercent'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
           end
           object clSummPartner: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087'.'
+            Caption = #1057#1091#1084#1084#1072' ('#1080#1090#1086#1075')'
             DataBinding.FieldName = 'SummPartner'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -292,7 +228,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
   inherited Panel: TPanel
     Width = 1082
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1082
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -352,37 +288,21 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       TabOrder = 6
       Width = 215
     end
-    object cxLabel3: TcxLabel
-      Left = 224
-      Top = 6
-      Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
-    end
-    object edUnit: TcxButtonEdit
-      Left = 314
-      Top = 5
-      Properties.Buttons = <
-        item
-          Default = True
-          Kind = bkEllipsis
-        end>
-      TabOrder = 8
-      Width = 210
-    end
     object cxLabel6: TcxLabel
-      Left = 207
-      Top = 31
+      Left = 215
+      Top = 6
       Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
     end
     object edJuridical: TcxButtonEdit
-      Left = 314
+      Left = 215
       Top = 30
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 10
-      Width = 210
+      TabOrder = 8
+      Width = 300
     end
     object cxLabel7: TcxLabel
       Left = 529
@@ -397,7 +317,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 12
+      TabOrder = 10
       Width = 180
     end
     object cxLabel5: TcxLabel
@@ -413,7 +333,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           Default = True
           Kind = bkEllipsis
         end>
-      TabOrder = 14
+      TabOrder = 12
       Width = 132
     end
   end
@@ -452,12 +372,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Properties.Strings = (
           'Key'
           'TextValue')
-      end
-      item
-        Component = UnitGuides
-        Properties.Strings = (
-          'Key'
-          'TextValue')
       end>
   end
   inherited MasterDS: TDataSource
@@ -469,7 +383,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI'
+    StoredProcName = 'gpReport_GoodsMI_TransferDebt'
     Params = <
       item
         Name = 'inStartDate'
@@ -490,13 +404,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Value = Null
         Component = FormParams
         ComponentItem = 'inDescId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inUnitId'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -551,9 +458,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
     ComponentList = <
       item
         Component = PeriodChoice
-      end
-      item
-        Component = UnitGuides
       end
       item
         Component = JuridicalGuides
@@ -612,32 +516,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       end>
     Left = 328
     Top = 170
-  end
-  object UnitGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = edUnit
-    FormNameParam.Value = 'TUnit_ObjectForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TUnit_ObjectForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'Key'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = UnitGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 360
   end
   object InfoMoneyGuides: TdsdGuides
     KeyField = 'Id'
@@ -714,6 +592,6 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ParamType = ptInput
       end>
     Left = 416
-    Top = 32
+    Top = 80
   end
 end
