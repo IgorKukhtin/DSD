@@ -228,6 +228,8 @@ end;
 
 function TdsdFormStorage.LoadReport(ReportName: String): TStream;
 begin
+  if ReportName = '' then
+     raise Exception.Create('Для печатной формы не установлено название');
   LoadStoredProc.ParamByName('FormName').Value := ReportName;
   StringStream.Clear;
   StringStream.WriteString( ReConvertConvert(LoadStoredProc.Execute));

@@ -89,6 +89,7 @@ contains
   EDI in '..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas';
 
 end.

@@ -426,7 +426,8 @@ uses
   OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
   MovementItemContainer in '..\..\Forms\System\MovementItemContainer.pas' {MovementItemContainerForm: TParentForm},
   EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
-  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm};
+  EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
+  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas';
 
 {$R *.RES}
 

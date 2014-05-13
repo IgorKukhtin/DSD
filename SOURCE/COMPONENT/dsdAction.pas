@@ -50,12 +50,14 @@ type
   private
     FIndexFieldNames: String;
     FUserName: String;
-    FGridView: TcxCustomGridView;
-    procedure SetGridView(const Value: TcxCustomGridView);
+    FGridView: TcxGridTableView;
+    procedure SetGridView(const Value: TcxGridTableView);
+  protected
+    procedure SetDataSet(const Value: TDataSet); override;
   published
     property UserName: String read FUserName write FUserName;
     property IndexFieldNames: String read FIndexFieldNames write FIndexFieldNames;
-    property GridView: TcxCustomGridView read FGridView write SetGridView;
+    property GridView: TcxGridTableView read FGridView write SetGridView;
   end;
 
 
@@ -534,7 +536,8 @@ implementation
 uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
      frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
-     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet;
+     cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet,
+     cxGridAddOn;
 
 procedure Register;
 begin
@@ -1226,6 +1229,8 @@ var i: integer;
     Stream: TStringStream;
     FReport: TfrxReport;
     ActiveControl: TWinControl;
+    ViewToMemTable: TcxViewToMemTable;
+    MemTableList: TList;
 begin
   // Перед вызовом печати попробуем у формы поменять фокус, что бы вызвалась процеура сохранения
 
@@ -1238,23 +1243,27 @@ begin
 
   inherited;
 
-
-//  TAddOnDataSet(Self.DataSets[0]).GridView.DataController.
-
   result := true;
+
   FDataSetList := TList.Create;
-  for I := 0 to Self.DataSets.Count - 1 do
-      if Assigned(Self.DataSets[i].DataSet) then
-         if Self.DataSets[i].DataSet is TClientDataSet then
-            TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
   Stream := TStringStream.Create;
+  ViewToMemTable := TcxViewToMemTable.Create;
+  MemTableList := TList.Create;
   try
     FReport := TfrxReport.Create(nil);
     for I := 0 to DataSets.Count - 1 do begin
         FDataSetList.Add(TfrxDBDataset.Create(nil));
         with TfrxDBDataset(FDataSetList[FDataSetList.Count - 1]) do begin
-          DataSet := DataSets[i].DataSet;
           UserName := TAddOnDataSet(DataSets[i]).UserName;
+          if Assigned(Self.DataSets[i].DataSet) then begin
+             if Self.DataSets[i].DataSet is TClientDataSet then
+                TClientDataSet(Self.DataSets[i].DataSet).IndexFieldNames := TAddOnDataSet(Self.DataSets[i]).IndexFieldNames;
+             DataSet := DataSets[i].DataSet;
+          end;
+          if Assigned(TAddOnDataSet(Self.DataSets[i]).GridView) then begin
+             MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(Self.DataSets[i]).GridView));
+             DataSet := MemTableList[MemTableList.Count - 1];
+          end;
         end;
     end;
     with FReport do
@@ -1266,7 +1275,7 @@ begin
                 Variables[Params[i].Name] := chr(39) + Params[i].AsString + chr(39)
              else
                 Variables[Params[i].Name] := Params[i].Value
-         end;
+          end;
          DesignReport;
          Stream.Clear;
          SaveToStream(Stream);
@@ -1306,11 +1315,15 @@ begin
       end;
     finally
       for I := 0 to FDataSetList.Count - 1 do
-          TfrxDBDataset(FDataSetList.Items[i]).Free;
+          TObject(FDataSetList.Items[i]).Free;
       FDataSetList.Free;
       Free;
     end;
   finally
+    for I := 0 to MemTableList.Count - 1 do
+        TObject(MemTableList[i]).Free;
+    MemTableList.Free;
+    ViewToMemTable.Free;
     Stream.Free
   end;
 end;
@@ -1940,8 +1953,21 @@ end;
 
 { TAddOnDataSet }
 
-procedure TAddOnDataSet.SetGridView(const Value: TcxCustomGridView);
+procedure TAddOnDataSet.SetDataSet(const Value: TDataSet);
 begin
+  if Assigned(GridView) and Assigned (Value) then begin
+     ShowMessage('Нельзя установить свойство DataSet так как установлено GridView.');
+     exit
+  end;
+  inherited;
+end;
+
+procedure TAddOnDataSet.SetGridView(const Value: TcxGridTableView);
+begin
+  if Assigned(DataSet) and Assigned (Value) then begin
+     ShowMessage('Нельзя установить свойство GridView так как установлено DataSet.');
+     exit
+  end;
   FGridView := Value;
 end;
 

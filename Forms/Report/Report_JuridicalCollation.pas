@@ -13,8 +13,7 @@ uses
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxGridLevel, cxGridCustomView,
   cxGridCustomTableView, cxGridTableView, cxGridDBTableView, cxGrid, cxPC,
   cxCurrencyEdit, DataModul, frxClass, frxDBSet, dsdGuides, cxButtonEdit,
-  dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  cxImageComboBox;
+  dxSkinsCore, cxImageComboBox;
 
 type
   TReport_JuridicalCollationForm = class(TAncestorReportForm)
@@ -67,6 +66,10 @@ type
     cxLabel7: TcxLabel;
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
+    actPrintTurnover: TdsdPrintAction;
+    bbPrintTurnover: TdxBarButton;
+    colSumm: TcxGridDBColumn;
+    colOperationSort: TcxGridDBColumn;
   private
     { Private declarations }
   public

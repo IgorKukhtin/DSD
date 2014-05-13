@@ -8,8 +8,7 @@ type
 
    TcxViewToMemTable = class(TObject)
    private
-     function  GetValidName(AOwner: TComponent; AName: string): string;
-     procedure LoadAllRecords;
+     procedure LoadAllRecords(GridView: TcxGridTableView; MemData: TdxMemData);
      procedure CreateFields(GridView: TcxGridTableView; MemData: TdxMemData);
    public
      function LoadData(GridView: TcxGridTableView): TdxMemData;
@@ -28,11 +27,10 @@ begin
     with GridView do
       begin
         for i := 0 to ColumnCount - 1 do
-          if Columns[i].Visible then
             with TField.Create(MemData) do
               begin
                 AField              := DefaultFieldClasses[TcxGridDBColumn(Columns[i]).DataBinding.Field.DataType].Create(MemData);
-                AField.Name         := GetValidName(MemData, Name + TcxGridDBColumn(Columns[i]).DataBinding.Field.FieldName);
+                AField.Name         := TcxGridDBColumn(Columns[i]).DataBinding.Field.FieldName;
 
                 AField.DisplayLabel := TcxGridDBColumn(Columns[i]).DataBinding.Field.DisplayLabel;
                 AField.DisplayWidth := TcxGridDBColumn(Columns[i]).DataBinding.Field.DisplayWidth;
@@ -47,21 +45,28 @@ begin
       end;//with TcxGridDBTableView(fGrid) do
 end;
 
-function TcxViewToMemTable.GetValidName(AOwner: TComponent;
-  AName: string): string;
-begin
-
-end;
-
 procedure TcxViewToMemTable.LoadAllRecords;
+var i, j: integer;
 begin
-
+  MemData.Open;
+  with GridView do
+    for I := 0 to DataController.FilteredRecordCount - 1 do
+      begin
+        MemData.Append;
+        for j := 0 to ColumnCount - 1 do
+          if MemData.FindField(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName) <> nil then
+             MemData.FieldByName(TcxGridDBColumn(columns[j]).DataBinding.Field.FieldName).Value :=
+                  DataController.Values[DataController.FilteredRecordIndex[i], columns[j].Index];
+        MemData.post;
+      end;//for I := 0 to fGrid.DataController.FilteredRecordCount - 1 do
 end;
 
 function TcxViewToMemTable.LoadData(
   GridView: TcxGridTableView): TdxMemData;
 begin
-
+  result := TdxMemData.Create(nil);
+  CreateFields(GridView, result);
+  LoadAllRecords(GridView, result);
 end;
 
 end.

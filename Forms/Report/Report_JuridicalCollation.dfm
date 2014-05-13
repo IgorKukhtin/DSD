@@ -2,8 +2,8 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
   Caption = #1054#1090#1095#1077#1090' <'#1040#1082#1090' '#1089#1074#1077#1088#1082#1080'>'
   ClientHeight = 389
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 424
+  ExplicitWidth = 1028
+  ExplicitHeight = 416
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -287,6 +287,17 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 86
+          end
+          object colSumm: TcxGridDBColumn
+            DataBinding.FieldName = 'MovementSumm'
+            Visible = False
+            VisibleForCustomization = False
+            IsCaptionAssigned = True
+          end
+          object colOperationSort: TcxGridDBColumn
+            DataBinding.FieldName = 'OperationSort'
+            Visible = False
+            VisibleForCustomization = False
           end
         end
       end
@@ -616,7 +627,6 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Caption = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       Hint = #1055#1088#1086#1089#1084#1086#1090#1088' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
       ImageIndex = 28
-      ShortCut = 13
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -699,6 +709,88 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end>
       ReportName = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1040#1082#1090' '#1089#1074#1077#1088#1082#1080')'
+      ReportNameParam.DataType = ftString
+    end
+    object actPrintTurnover: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1054#1073#1086#1088#1086#1090#1099' '
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1086#1073#1086#1088#1086#1090#1072#1084
+      ImageIndex = 20
+      DataSets = <
+        item
+          UserName = 'DataSet'
+          GridView = cxGridDBTableView
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+          ParamType = ptInput
+        end
+        item
+          Name = 'StartBalance'
+          Component = FormParams
+          ComponentItem = 'StartBalance'
+          DataType = ftFloat
+          ParamType = ptInput
+        end
+        item
+          Name = 'PartnerName'
+          Value = ''
+          Component = JuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'OurFirm'
+          Value = #1054#1054#1054' '#1040#1051#1040#1053
+          Component = MainJuridicalGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccounterName'
+          Component = FormParams
+          ComponentItem = 'AccounterName'
+          DataType = ftString
+          ParamType = ptInput
+        end
+        item
+          Name = 'AccountName'
+          Value = ''
+          Component = AccountGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'PaidKindName'
+          Value = ''
+          Component = PaidKindGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end
+        item
+          Name = 'ContractName'
+          Value = ''
+          Component = ContractGuides
+          ComponentItem = 'TextValue'
+          DataType = ftString
+        end>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1080#1079' '#1072#1082#1090#1072' '#1089#1074#1077#1088#1082#1080
       ReportNameParam.DataType = ftString
     end
   end
@@ -804,6 +896,10 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
         end
         item
           Visible = True
+          ItemName = 'bbPrintTurnover'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -827,6 +923,21 @@ inherited Report_JuridicalCollationForm: TReport_JuridicalCollationForm
       Action = actPrint
       Category = 0
     end
+    object bbPrintTurnover: TdxBarButton
+      Action = actPrintTurnover
+      Category = 0
+    end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    OnDblClickActionList = <
+      item
+        Action = actOpenDocument
+      end>
+    ActionItemList = <
+      item
+        Action = actOpenDocument
+        ShortCut = 13
+      end>
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 24
