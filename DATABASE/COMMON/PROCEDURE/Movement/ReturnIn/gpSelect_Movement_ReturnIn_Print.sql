@@ -23,7 +23,7 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , Movement.OperDate                          AS OperDate
-           , Object_Status.ObjectCode          		    AS StatusCode
+           , Object_Status.ObjectCode          		AS StatusCode
            , Object_Status.ValueData         	        AS StatusName
            , MovementBoolean_Checked.ValueData          AS Checked
            , MovementDate_OperDatePartner.ValueData     AS OperDatePartner
@@ -182,7 +182,7 @@ BEGIN
        , Object_GoodsKind.ValueData           AS GoodsKindName
 
        , Object_Goods.Id                      AS GoodsId
-       , Object_Goods.ValueData               AS GoodsName
+       , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
 
        , Object_GoodsPropertyValue.isErased   AS isErased
 
@@ -231,7 +231,7 @@ BEGIN
              MovementItem.Id					AS Id
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
-           , Object_Goods.ValueData   			AS GoodsName
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , MovementItem.Amount				AS Amount
            , MIFloat_AmountPartner.ValueData   	AS AmountPartner
            , MIFloat_Price.ValueData 			AS Price
@@ -367,6 +367,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.05.14                                        * add calc GoodsName
  23.04.14                                        * add InvNumberMark
  23.04.14                                                       *
  09.04.14                                        * add InvNumberPartner and JOIN MIFloat_AmountPartner

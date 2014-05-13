@@ -2,29 +2,27 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1084
-  ExplicitWidth = 1092
-  ExplicitHeight = 702
+  ExplicitWidth = 1100
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 1084
-    Height = 535
-    ExplicitTop = 133
+    Height = 537
+    ExplicitTop = 131
     ExplicitWidth = 1084
-    ExplicitHeight = 535
-    ClientRectBottom = 531
-    ClientRectRight = 1080
+    ExplicitHeight = 537
+    ClientRectBottom = 537
+    ClientRectRight = 1084
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1078
-      ExplicitHeight = 509
+      ExplicitWidth = 1084
+      ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 1078
-        Height = 509
-        ExplicitWidth = 1078
-        ExplicitHeight = 509
+        Width = 1084
+        Height = 513
+        ExplicitWidth = 1084
+        ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -150,15 +148,14 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1078
-      ExplicitHeight = 509
+      ExplicitTop = 24
+      ExplicitWidth = 1084
+      ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 1078
-        Height = 509
-        ExplicitWidth = 1078
-        ExplicitHeight = 509
+        Width = 1084
+        Height = 513
+        ExplicitWidth = 1084
+        ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -213,7 +210,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -434,8 +431,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           Action = actPrint
         end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' - '#1088#1072#1089#1093#1086#1076
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' - '#1088#1072#1089#1093#1086#1076
       ImageIndex = 3
     end
     object mactPrint_Tax_Us: TMultiAction [10]
@@ -566,8 +563,8 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' - '#1074#1086#1079#1074#1088#1072#1090
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' - '#1074#1086#1079#1074#1088#1072#1090
       ImageIndex = 19
       ShortCut = 16464
       DataSets = <
@@ -810,7 +807,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -877,11 +874,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         end
         item
           Visible = True
-          ItemName = 'bbPrint_DebtOut'
+          ItemName = 'bbPrint_Bill'
         end
         item
           Visible = True
-          ItemName = 'bbPrint_Bill'
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_DebtOut'
         end
         item
           Visible = True
@@ -914,7 +915,6 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
-      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
     object bbPrint_DebtOut: TdxBarButton [5]
       Action = actPrint_TransferDebtOut

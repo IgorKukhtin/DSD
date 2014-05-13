@@ -94,6 +94,9 @@ BEGIN
                               , MovementItem.ObjectId
                               , MILinkObject_GoodsKind.ObjectId
                       ) AS tmpReportContainerSumm
+                 WHERE tmpReportContainerSumm.Amount <> 0
+                    OR tmpReportContainerSumm.SummPartner <> 0
+                 FROM (SELECT tmpReportContainer.InfoMoneyId
                 )
 
     SELECT Object_GoodsGroup.ValueData            AS GoodsGroupName 

@@ -237,7 +237,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId IN ( zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
-            LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
             LEFT JOIN ObjectDate AS ObjectDate_Start
                                  ON ObjectDate_Start.ObjectId = MovementLinkObject_Contract.ObjectId
                                 AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
@@ -277,24 +277,37 @@ BEGIN
                                   AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 -- bank account
             LEFT JOIN ObjectLink AS ObjectLink_Contract_BankAccount
-                                 ON ObjectLink_Contract_BankAccount.ObjectId = MovementLinkObject_Contract.ObjectId
+                                 ON ObjectLink_Contract_BankAccount.ObjectId = Object_Contract.ContractId
                                 AND ObjectLink_Contract_BankAccount.DescId = zc_ObjectLink_Contract_BankAccount()
 
-            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = ObjectLink_Contract_BankAccount.ChildObjectId
-                                                   OR (Object_BankAccount.DescId = zc_Object_BankAccountContract() AND ObjectLink_Contract_BankAccount.childobjectid IS NULL)
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
+                                 ON ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
+                                AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId = Object_Contract.InfoMoneyId
+                                AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
+                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+            LEFT JOIN (SELECT ObjectLink_BankAccountContract_BankAccount.ChildObjectId
+                       FROM ObjectLink AS ObjectLink_BankAccountContract_InfoMoney
+                            LEFT JOIN ObjectLink AS ObjectLink_BankAccountContract_BankAccount
+                                                 ON ObjectLink_BankAccountContract_BankAccount.DescId = zc_ObjectLink_BankAccountContract_BankAccount()
+                                                AND ObjectLink_BankAccountContract_BankAccount.ObjectId = ObjectLink_BankAccountContract_InfoMoney.ObjectId
+                       WHERE ObjectLink_BankAccountContract_InfoMoney.DescId = zc_ObjectLink_BankAccountContract_InfoMoney()
+                         AND ObjectLink_BankAccountContract_InfoMoney.ChildObjectId IS NULL
+                      ) AS ObjectLink_BankAccountContract_BankAccount_all ON ObjectLink_BankAccountContract_BankAccount.ChildObjectId IS NULL -- !!!не ошибка!!!, выбирается с пустой УП
+                                                                         AND ObjectLink_Contract_BankAccount.ChildObjectId IS NULL
+
+            LEFT JOIN Object AS Object_BankAccount ON Object_BankAccount.Id = COALESCE (ObjectLink_Contract_BankAccount.ChildObjectId, COALESCE (ObjectLink_BankAccountContract_BankAccount.ChildObjectId, ObjectLink_BankAccountContract_BankAccount_all.ChildObjectId))
+
             LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                                  ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
                                 AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-
             LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
 
             LEFT JOIN ObjectString AS ObjectString_Bank_MFO
                                    ON ObjectString_Bank_MFO.ObjectId = Object_Bank.Id
                                   AND ObjectString_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
 --
-
-
-
        WHERE Movement.Id =  inMovementId;
     RETURN NEXT Cursor1;
 
@@ -341,7 +354,7 @@ BEGIN
        SELECT
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
-           , Object_Goods.ValueData          AS GoodsName
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
            , CASE Object_Measure.Id
@@ -455,6 +468,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.05.14                                        * add calc GoodsName
  13.05.14                                                       * zc_ObjectLink_Contract_BankAccount
  08.05.14                        * add GLN code
  08.05.14                                        * all

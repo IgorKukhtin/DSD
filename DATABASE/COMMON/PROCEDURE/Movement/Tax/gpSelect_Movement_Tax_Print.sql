@@ -298,7 +298,7 @@ BEGIN
              MovementItem.Id                        AS Id
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
-           , Object_Goods.ValueData                 AS GoodsName
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , MovementItem.Amount                    AS Amount
            , MIFloat_AmountChangePercent.ValueData  AS AmountChangePercent
            , MIFloat_AmountPartner.ValueData        AS AmountPartner
@@ -559,6 +559,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.05.14                                        * add calc GoodsName
  07.05.14                       * add CHARCODE
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  11.04.14                                                       *
