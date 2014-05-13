@@ -71,11 +71,13 @@ BEGIN
                                                                 AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                              ) AS tmpReportContainer
-                             JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
-                                                                AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
-                             JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
-                                              AND MovementItem.DescId = zc_MI_Master()
-                             JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                             INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
+                                                                      AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                             INNER JOIN Movement ON Movement.Id = MIReport.MovementId
+                                                AND Movement.DescId = inDescId
+                             INNER JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -96,7 +98,6 @@ BEGIN
                       ) AS tmpReportContainerSumm
                  WHERE tmpReportContainerSumm.Amount <> 0
                     OR tmpReportContainerSumm.SummPartner <> 0
-                 FROM (SELECT tmpReportContainer.InfoMoneyId
                 )
 
     SELECT Object_GoodsGroup.ValueData            AS GoodsGroupName 
