@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -382,6 +382,18 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbTransferDebtOut'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxDocuments_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_TransferDebtIn'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_TransferDebtOut'
         end>
     end
     object bbTaxDocuments_Separator: TdxBarSeparator
@@ -409,6 +421,22 @@ object MainForm: TMainForm
     end
     object bbSaveTaxDocument: TdxBarButton
       Action = actSaveTaxDocument
+      Category = 0
+    end
+    object bbTransferDebtIn: TdxBarButton
+      Action = actTransferDebtIn
+      Category = 0
+    end
+    object bbTransferDebtOut: TdxBarButton
+      Action = actTransferDebtOut
+      Category = 0
+    end
+    object bbReport_GoodsMI_TransferDebtIn: TdxBarButton
+      Action = actReport_GoodsMI_TransferDebtIn
+      Category = 0
+    end
+    object bbReport_GoodsMI_TransferDebtOut: TdxBarButton
+      Action = actReport_GoodsMI_TransferDebtOut
       Category = 0
     end
     object bbAssetDocuments: TdxBarSubItem
@@ -886,7 +914,6 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMIReturn: TdxBarButton
       Action = actReport_GoodsMIReturn
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
       Category = 0
     end
     object bbReport_GoodsMI_byMovementReturn: TdxBarButton
@@ -1527,14 +1554,6 @@ object MainForm: TMainForm
     end
     object bbReport_CheckContractInMovement: TdxBarButton
       Action = actReport_CheckContractInMovement
-      Category = 0
-    end
-    object bbTransferDebtOut: TdxBarButton
-      Action = actTransferDebtOut
-      Category = 0
-    end
-    object bbTransferDebtIn: TdxBarButton
-      Action = actTransferDebtIn
       Category = 0
     end
     object bbBankAccountContract: TdxBarButton
@@ -2718,29 +2737,10 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_GoodsMIReturn: TdsdOpenForm
-      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
-      MoveParams = <>
-      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1072
-      FormName = 'TReport_GoodsMIForm'
-      FormNameParam.Value = 'TReport_GoodsMIForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'inDescId'
-          Value = 6
-        end
-        item
-          Name = 'InDescName'
-          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1080#1090#1086#1075')'
-          DataType = ftString
-        end>
-      isShowModal = False
-    end
     object actReport_GoodsMISale: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1056#1077#1072#1083#1080#1079#1072#1094#1080#1103' '#1090#1086#1074#1072#1088#1072
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
       FormName = 'TReport_GoodsMIForm'
       FormNameParam.Value = 'TReport_GoodsMIForm'
       FormNameParam.DataType = ftString
@@ -2751,8 +2751,27 @@ object MainForm: TMainForm
           Value = 5
         end
         item
-          Name = 'InDescName'
-          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084' ('#1080#1090#1086#1075')'
+          Name = 'inDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1080#1090#1086#1075')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMIReturn: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+      FormName = 'TReport_GoodsMIForm'
+      FormNameParam.Value = 'TReport_GoodsMIForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 6
+        end
+        item
+          Name = 'inDescName'
+          Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103' ('#1080#1090#1086#1075')'
           DataType = ftString
         end>
       isShowModal = False
@@ -2830,7 +2849,7 @@ object MainForm: TMainForm
           Value = 6
         end
         item
-          Name = 'InDescName'
+          Name = 'inDescName'
           Value = #1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081' ('#1087#1086' '#1085#1072#1082#1083#1072#1076#1085#1099#1084')'
           DataType = ftString
         end>
@@ -3138,6 +3157,46 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actReport_GoodsMI_TransferDebtIn: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' - '#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')'
+      FormName = 'TReport_GoodsMI_TransferDebtForm'
+      FormNameParam.Value = 'TReport_GoodsMI_TransferDebtForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 34
+        end
+        item
+          Name = 'inDescName'
+          Value = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
+    object actReport_GoodsMI_TransferDebtOut: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' - '#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
+      FormName = 'TReport_GoodsMI_TransferDebtForm'
+      FormNameParam.Value = 'TReport_GoodsMI_TransferDebtForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 33
+        end
+        item
+          Name = 'inDescName'
+          Value = #1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')'
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -3164,7 +3223,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.14'
+    Version = '4.12'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

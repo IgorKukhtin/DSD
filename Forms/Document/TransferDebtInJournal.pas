@@ -18,15 +18,9 @@ uses
 
 type
   TTransferDebtInJournalForm = class(TAncestorJournalForm)
-    spTax: TdsdStoredProc;
-    actTax: TdsdExecStoredProc;
-    bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
     PrintItemsCDS: TClientDataSet;
     bbPrint: TdxBarButton;
-    bbPrintTax_Us: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     spGetReportName: TdsdStoredProc;
     spSelectPrint: TdsdStoredProc;

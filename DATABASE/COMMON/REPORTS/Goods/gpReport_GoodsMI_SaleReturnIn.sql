@@ -12,8 +12,7 @@ CREATE OR REPLACE FUNCTION gpReport_GoodsMI_SaleReturnIn (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
-             , GoodsCode Integer, GoodsName TVarChar
-             , GoodsKindName TVarChar
+             , GoodsCode Integer, GoodsName TVarChar, GoodsKindName TVarChar, MeasureName TVarChar
              , TradeMarkName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
@@ -117,9 +116,10 @@ BEGIN
                                  )
      SELECT Object_GoodsGroup.ValueData AS GoodsGroupName 
           , ObjectString_Goods_GroupNameFull.ValueData AS GoodsGroupNameFull
-          , Object_Goods.ObjectCode AS GoodsCode
-          , Object_Goods.ValueData AS GoodsName
-          , Object_GoodsKind.ValueData AS GoodsKindName
+          , Object_Goods.ObjectCode     AS GoodsCode
+          , Object_Goods.ValueData      AS GoodsName
+          , Object_GoodsKind.ValueData  AS GoodsKindName
+          , Object_Measure.ValueData    AS MeasureName
           , Object_TradeMark.ValueData  AS TradeMarkName
 
           , Object_Juridical.ObjectCode AS JuridicalCode
@@ -237,18 +237,17 @@ BEGIN
           LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = tmpOperationGroup.PartnerId
           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = tmpOperationGroup.JuridicalId 
 
-          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
-                                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-
           LEFT JOIN ObjectString AS ObjectString_Goods_GroupNameFull
                                  ON ObjectString_Goods_GroupNameFull.ObjectId = Object_Goods.Id
                                 AND ObjectString_Goods_GroupNameFull.DescId = zc_ObjectString_Goods_GroupNameFull()
           LEFT JOIN ObjectFloat AS ObjectFloat_Weight
                                 ON ObjectFloat_Weight.ObjectId = Object_Goods.Id
                                AND ObjectFloat_Weight.DescId = zc_ObjectFloat_Goods_Weight()
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id 
+                                                          AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+          LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
-         LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
+          LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
     ;
          
 END;
@@ -256,10 +255,9 @@ $BODY$
   LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpReport_GoodsMI_SaleReturnIn (TDateTime, TDateTime, Integer, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
-
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
  06.05.14                                        * add GoodsGroupNameFull
  28.03.14                                        * all
  06.02.14         *

@@ -2,29 +2,27 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 962
-  ExplicitWidth = 970
-  ExplicitHeight = 702
+  ExplicitWidth = 978
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 962
-    Height = 535
-    ExplicitTop = 133
+    Height = 537
+    ExplicitTop = 131
     ExplicitWidth = 962
-    ExplicitHeight = 535
-    ClientRectBottom = 531
-    ClientRectRight = 958
+    ExplicitHeight = 537
+    ClientRectBottom = 537
+    ClientRectRight = 962
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 956
-      ExplicitHeight = 509
+      ExplicitWidth = 962
+      ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 956
-        Height = 509
-        ExplicitWidth = 956
-        ExplicitHeight = 509
+        Width = 962
+        Height = 513
+        ExplicitWidth = 962
+        ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -150,15 +148,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 956
-      ExplicitHeight = 509
+      ExplicitTop = 24
+      ExplicitWidth = 962
+      ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 956
-        Height = 509
-        ExplicitWidth = 956
-        ExplicitHeight = 509
+        Width = 962
+        Height = 513
+        ExplicitWidth = 962
+        ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -213,16 +210,16 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
-      Left = 408
+      Left = 383
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 408
+      Left = 383
       Top = 23
       Properties.Buttons = <
         item
@@ -230,7 +227,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 174
+      Width = 200
     end
     object edTo: TcxButtonEdit
       Left = 594
@@ -249,7 +246,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = #1050#1086#1084#1091
     end
     object edContractFrom: TcxButtonEdit
-      Left = 286
+      Left = 469
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -261,17 +258,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 114
     end
     object cxLabel9: TcxLabel
-      Left = 286
-      Top = 47
+      Left = 469
+      Top = 45
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object cxLabel6: TcxLabel
-      Left = 200
-      Top = 47
+      Left = 383
+      Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKindFrom: TcxButtonEdit
-      Left = 200
+      Left = 383
       Top = 63
       Enabled = False
       Properties.Buttons = <
@@ -283,14 +280,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 77
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 408
+      Left = 200
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 14
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 542
+      Left = 334
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -298,7 +295,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 542
+      Left = 334
       Top = 45
       Caption = '% '#1053#1044#1057
     end
@@ -358,7 +355,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       TabOrder = 23
       Text = ' '
-      Width = 200
+      Width = 174
     end
     object cxLabel12: TcxLabel
       Left = 200
@@ -411,8 +408,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = ''
+      Hint = ''
+      ImageIndex = -1
       DataSets = <
         item
           DataSet = PrintHeaderCDS
@@ -488,32 +486,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
         end>
       isShowModal = True
     end
-    object actSPPrintSaleBillProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actSPPrintSaleBillProcName'
-    end
-    object actSPPrintSaleProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetReportName
-      StoredProcList = <
-        item
-          StoredProc = spGetReportName
-        end>
-      Caption = 'actSPPrintSaleProcName'
-    end
-    object actSPPrintSaleTaxProcName: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = 'actSPPrintSaleTaxProcName'
-    end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
       MoveParams = <>
@@ -526,20 +498,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
       RefreshOnTabSetChanges = False
-    end
-    object actTax: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spTax
-      StoredProcList = <
-        item
-          StoredProc = spTax
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      ImageIndex = 41
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -607,7 +565,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited bbPrint: TdxBarButton
       Action = mactPrint
@@ -634,8 +592,11 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ImageIndex = 18
     end
     object bbTax: TdxBarButton
-      Action = actTax
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
       Category = 0
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+      Visible = ivAlways
+      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1278,8 +1239,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 240
-    Top = 56
+    Left = 400
+    Top = 64
   end
   object ContractFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -1305,8 +1266,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 352
-    Top = 56
+    Left = 512
+    Top = 72
   end
   object spSelectPrint: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_ReturnIn_Print'

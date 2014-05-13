@@ -2,8 +2,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1126
-  ExplicitHeight = 562
+  ExplicitWidth = 1134
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -490,8 +490,8 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         item
           StoredProc = spSelectPrintTaxCorrective_Reest
         end>
-      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1088#1077#1077#1089#1090#1088')'
-      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1088#1077#1077#1089#1090#1088')'
+      Caption = #1056#1077#1077#1089#1090#1088
+      Hint = #1056#1077#1077#1089#1090#1088
       ImageIndex = 21
       ShortCut = 16464
       DataSets = <
@@ -680,7 +680,15 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end>
     end
     object bbPrintTaxCorrective_Us: TdxBarButton

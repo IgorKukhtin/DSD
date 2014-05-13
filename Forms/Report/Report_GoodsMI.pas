@@ -39,6 +39,15 @@ type
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
     edUnit: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
+    JuridicalGuides: TdsdGuides;
   private
     { Private declarations }
   public

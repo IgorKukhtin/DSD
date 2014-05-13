@@ -115,7 +115,7 @@ BEGIN
            , MovementItem.Id                                                AS Id
            , Object_Goods.Id                                                AS GoodsId
            , Object_Goods.ObjectCode                                        AS GoodsCode
-           , Object_Goods.ValueData                                         AS GoodsName
+           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
 
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
                   THEN MovementItem.Amount
@@ -401,6 +401,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 13.05.14                                        * add calc GoodsName
  03.05.14                                        * add zc_Enum_DocumentTaxKind_CorrectivePrice()
  30.04.14                                                       *
  24.04.14                                                       * add zc_MovementString_InvNumberBranch

@@ -49,6 +49,7 @@ type
     ceInfoMoney: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
+    clMeasureName: TcxGridDBColumn;
   private
     { Private declarations }
   public

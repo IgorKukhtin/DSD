@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
-  Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn;
+  Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TForm)
@@ -334,6 +335,10 @@ type
     bbBankAccountContract: TdxBarButton;
     actEDI: TdsdOpenForm;
     bbEDI: TdxBarButton;
+    actReport_GoodsMI_TransferDebtIn: TdsdOpenForm;
+    actReport_GoodsMI_TransferDebtOut: TdsdOpenForm;
+    bbReport_GoodsMI_TransferDebtIn: TdxBarButton;
+    bbReport_GoodsMI_TransferDebtOut: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

@@ -1,27 +1,27 @@
 inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
   ClientHeight = 339
-  ClientWidth = 1137
+  ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1153
+  ExplicitWidth = 1036
   ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1137
+    Width = 1020
     Height = 259
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1137
     ExplicitHeight = 259
     ClientRectBottom = 259
-    ClientRectRight = 1137
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1137
       ExplicitHeight = 259
       inherited cxGrid: TcxGrid
-        Width = 1137
+        Width = 1020
         Height = 259
         ExplicitWidth = 1137
         ExplicitHeight = 259
@@ -196,6 +196,13 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             HeaderAlignmentVert = vaCenter
             Width = 56
           end
+          object clMeasureName: TcxGridDBColumn
+            Caption = #1045#1076'. '#1080#1079#1084'.'
+            DataBinding.FieldName = 'MeasureName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
           object clSale_Amount_Sh: TcxGridDBColumn
             Caption = #1055#1088#1086#1076', '#1096#1090' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'Sale_Amount_Sh'
@@ -309,7 +316,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     end
   end
   inherited Panel: TPanel
-    Width = 1137
+    Width = 1020
     Height = 54
     ExplicitWidth = 1137
     ExplicitHeight = 54

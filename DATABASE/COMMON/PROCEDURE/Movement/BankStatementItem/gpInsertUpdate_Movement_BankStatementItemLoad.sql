@@ -3,15 +3,7 @@
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,  
                                                  TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                 TVarChar, TFloat, TVarChar, TVarChar);
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,  
-                                                 TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                 TVarChar, TFloat, TVarChar);
-DROP FUNCTION IF EXISTS 
-   gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,  
-                                                 TVarChar, TVarChar, TVarChar, TVarChar, TVarChar, 
-                                                 TVarChar, TVarChar, TVarChar, TFloat, TVarChar);
+                                                 TVarChar, TVarChar, TFloat, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_BankStatementItemLoad(
     IN inDocNumber           TVarChar  , -- Номер документа
@@ -162,44 +154,84 @@ BEGIN
     -- находим свойство <УП статья назначения>
     -- SELECT ObjectId INTO vbInfoMoneyId FROM MovementLinkObject WHERE DescId = zc_MovementLinkObject_InfoMoney() AND MovementId = vbMovementItemId;
 
-    -- находим свойство <Договор> "по умолчанию"
+    -- 1.1. находим свойство <Договор> "по умолчанию" для inAmount > 0
     SELECT MAX (View_Contract.ContractId) INTO vbContractId
     FROM Object_Contract_View AS View_Contract
-         JOIN ObjectBoolean AS ObjectBoolean_Default
-                            ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
-                           AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
-                           AND ObjectBoolean_Default.ValueData = TRUE
+         INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                         AND InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                         AND inAmount > 0
+         INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                  ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                                 AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                 AND ObjectBoolean_Default.ValueData = TRUE
     WHERE View_Contract.JuridicalId = vbJuridicalId
       AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
       AND View_Contract.isErased = FALSE;
 
+    -- 1.2. находим свойство <Договор> "по умолчанию" для inAmount < 0
+    IF COALESCE (vbContractId, 0) = 0
+    THEN
+        SELECT MAX (View_Contract.ContractId) INTO vbContractId
+        FROM Object_Contract_View AS View_Contract
+             INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                             AND (InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                                                  OR InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500())) -- Общефирменные + Маркетинг
+                                             AND inAmount < 0
+             INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                      ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                                     AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                     AND ObjectBoolean_Default.ValueData = TRUE
+        WHERE View_Contract.JuridicalId = vbJuridicalId
+          AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+          AND View_Contract.isErased = FALSE;
+    END IF;
+
+    -- 1.3. находим свойство <Договор> "по умолчанию" для остальных
+    IF COALESCE (vbContractId, 0) = 0
+    THEN
+        SELECT MAX (View_Contract.ContractId) INTO vbContractId
+        FROM Object_Contract_View AS View_Contract
+             INNER JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
+                                             AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
+                                             AND InfoMoneyGroupId NOT IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                                             AND InfoMoneyDestinationId NOT IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
+             INNER JOIN ObjectBoolean AS ObjectBoolean_Default
+                                      ON ObjectBoolean_Default.ObjectId = View_Contract.ContractId
+                                     AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+                                     AND ObjectBoolean_Default.ValueData = TRUE
+        WHERE View_Contract.JuridicalId = vbJuridicalId
+          AND View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
+          AND View_Contract.isErased = FALSE;
+    END IF;
+
+    -- 1.4. Находим <УП статья назначения> !!!всегда!!! у Договора
     IF vbContractId <> 0
     THEN
-        -- Находим <УП статья назначения> !!!всегда!!! у Договора
         SELECT InfoMoneyId INTO vbInfoMoneyId FROM Object_Contract_InvNumber_View WHERE ContractId = vbContractId;
     END IF;
+
 
     -- если не нашли, будем определять свойство <Договор>
     IF COALESCE (vbContractId, 0) = 0 AND COALESCE (vbJuridicalId, 0) <> 0
     THEN 
         -- Находим <Договор> у Юр. Лица !!!в зависимоти от ...!!
-        SELECT MAX (View_Contract.ContractId) INTO vbContractId
+        SELECT MAX (COALESCE (View_Contract.ContractId, View_Contract_next.ContractId)) INTO vbContractId
         FROM (SELECT zc_Enum_InfoMoney_30101()         AS InfoMoneyId -- Доходы + Продукция + Готовая продукция
                    , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
               FROM Object_InfoMoney_View
               WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_30000()) -- Доходы
                 AND inAmount > 0
              UNION ALL
-              SELECT Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId
-                   , 0 AS InfoMoneyId_Next
-              FROM Object_InfoMoney_View
-              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
-                AND inAmount < 0
-             UNION ALL
               SELECT 0 AS InfoMoneyId
                    , Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId_Next
               FROM Object_InfoMoney_View
-              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyDestination_21500()) -- Основное сырье
+              WHERE InfoMoneyGroupId IN (zc_Enum_InfoMoneyGroup_10000()) -- Основное сырье
+                AND inAmount < 0
+             UNION ALL
+              SELECT Object_InfoMoney_View.InfoMoneyId AS InfoMoneyId
+                   , 0 AS InfoMoneyId_Next
+              FROM Object_InfoMoney_View
+              WHERE InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_21500()) -- Общефирменные + Маркетинг
                 AND inAmount < 0
              ) AS tmpInfoMoney
              LEFT JOIN Object_Contract_View AS View_Contract
@@ -233,7 +265,7 @@ BEGIN
             vbInfoMoneyId:= zc_Enum_InfoMoney_21501(); -- Бонусы за продукцию
         END IF;
 
-    END IF;  
+    END IF; -- если не нашли, будем определять свойство <Договор>
 
     IF COALESCE (vbContractId, 0) <> 0 THEN
        -- сохранили связь с <Договор>
@@ -269,6 +301,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.05.14                                        * other find vbContractId
  07.05.14                                        * error
  17.03.14                                        * находим свойство <Договор> "по умолчанию"
  13.02.14                                        * Находим <Договор> и <УП статья назначения> !!!всегда!!! у Договора

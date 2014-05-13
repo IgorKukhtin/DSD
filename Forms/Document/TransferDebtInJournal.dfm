@@ -2,29 +2,26 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 972
-  ExplicitWidth = 980
-  ExplicitHeight = 569
+  ExplicitWidth = 988
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 972
-    Height = 476
+    Height = 478
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 972
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 968
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 972
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 966
-      ExplicitHeight = 470
+      ExplicitWidth = 972
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 966
-        Height = 470
-        ExplicitWidth = 966
-        ExplicitHeight = 470
+        Width = 972
+        Height = 478
+        ExplicitWidth = 972
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -397,20 +394,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       FormName = 'TTransferDebtInForm'
       FormNameParam.Value = 'TTransferDebtInForm'
     end
-    object actTax: TdsdExecStoredProc
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spTax
-      StoredProcList = <
-        item
-          StoredProc = spTax
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      ImageIndex = 41
-      QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
-      InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
-    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -438,9 +421,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1042#1086#1079#1074#1088#1072#1090#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
       ShortCut = 16464
       DataSets = <
         item
@@ -530,7 +510,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -601,37 +581,9 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           ItemName = 'dxBarStatic'
         end>
     end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1085#1072#1083#1086#1075#1086#1074#1099#1081' '#1076#1086#1082#1091#1084#1077#1085#1090
-      Visible = ivAlways
-      ImageIndex = 41
-    end
     object bbPrint: TdxBarButton
       Action = mactPrint
       Category = 0
-    end
-    object bbPrintTax_Us: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
-    end
-    object bbPrintTax_Client: TdxBarButton
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
-    end
-    object bbPrint_Bill: TdxBarButton
-      Caption = #1057#1095#1077#1090
-      Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -710,48 +662,6 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
       end>
     Left = 400
     Top = 200
-  end
-  object spTax: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId_inf'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'outInvNumberPartner_Master'
-        Component = MasterCDS
-        ComponentItem = 'InvNumberPartner_Master'
-        DataType = ftString
-      end
-      item
-        Name = 'outDocumentTaxKindId'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-      end
-      item
-        Name = 'outDocumentTaxKindName'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindName'
-        DataType = ftString
-      end>
-    Left = 296
-    Top = 312
   end
   object PrintHeaderCDS: TClientDataSet
     Aggregates = <>

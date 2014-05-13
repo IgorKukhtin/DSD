@@ -1,31 +1,31 @@
 inherited Report_GoodsMIForm: TReport_GoodsMIForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 374
-  ClientWidth = 973
+  ClientWidth = 1082
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 989
+  ExplicitWidth = 1098
   ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 83
-    Width = 973
-    Height = 291
+    Top = 80
+    Width = 1082
+    Height = 294
     TabOrder = 3
-    ExplicitTop = 83
-    ExplicitWidth = 973
-    ExplicitHeight = 291
-    ClientRectBottom = 291
-    ClientRectRight = 973
+    ExplicitTop = 80
+    ExplicitWidth = 1020
+    ExplicitHeight = 294
+    ClientRectBottom = 294
+    ClientRectRight = 1082
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 973
-      ExplicitHeight = 291
+      ExplicitWidth = 1020
+      ExplicitHeight = 294
       inherited cxGrid: TcxGrid
-        Width = 973
-        Height = 291
-        ExplicitWidth = 973
-        ExplicitHeight = 291
+        Width = 1082
+        Height = 294
+        ExplicitWidth = 1020
+        ExplicitHeight = 294
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -121,6 +121,14 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           object clTradeMarkName: TcxGridDBColumn
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1084#1072#1088#1082#1072
             DataBinding.FieldName = 'TradeMarkName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
+          object clGoodsGroupNameFull: TcxGridDBColumn
+            Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1072' ('#1074#1089#1077')'
+            DataBinding.FieldName = 'GoodsGroupNameFull'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -128,6 +136,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
           object clGoodsGroupName: TcxGridDBColumn
             Caption = #1043#1088#1091#1087#1087#1072
             DataBinding.FieldName = 'GoodsGroupName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
@@ -245,54 +254,89 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
             HeaderGlyphAlignmentHorz = taCenter
             Width = 70
           end
+          object colInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 45
+          end
+          object colInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
+          end
+          object colInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 100
+          end
         end
       end
     end
   end
   inherited Panel: TPanel
-    Width = 973
-    Height = 57
-    ExplicitWidth = 973
-    ExplicitHeight = 57
+    Width = 1082
+    Height = 54
+    ExplicitWidth = 1020
+    ExplicitHeight = 54
     inherited deStart: TcxDateEdit
-      Left = 125
+      Left = 118
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 125
+      ExplicitLeft = 118
     end
     inherited deEnd: TcxDateEdit
-      Left = 125
-      Top = 32
+      Left = 118
+      Top = 30
       EditValue = 41640d
       Properties.SaveTime = False
-      ExplicitLeft = 125
-      ExplicitTop = 32
+      ExplicitLeft = 118
+      ExplicitTop = 30
+    end
+    inherited cxLabel1: TcxLabel
+      Left = 25
+      ExplicitLeft = 25
     end
     inherited cxLabel2: TcxLabel
-      Left = 10
-      Top = 29
-      ExplicitLeft = 10
-      ExplicitTop = 29
+      Left = 6
+      Top = 31
+      ExplicitLeft = 6
+      ExplicitTop = 31
     end
     object cxLabel4: TcxLabel
-      Left = 240
-      Top = 29
+      Left = 563
+      Top = 6
       Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object edGoodsGroup: TcxButtonEdit
-      Left = 335
-      Top = 28
+      Left = 653
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 242
+      Width = 180
     end
     object edInDescName: TcxTextEdit
       AlignWithMargins = True
-      Left = 696
+      Left = 840
       Top = 5
       ParentCustomHint = False
       BeepOnEnter = False
@@ -306,24 +350,115 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
       Style.Font.Style = [fsBold]
       Style.IsFontAssigned = True
       TabOrder = 6
-      Width = 265
+      Width = 215
     end
     object cxLabel3: TcxLabel
-      Left = 240
+      Left = 224
       Top = 6
       Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077':'
     end
     object edUnit: TcxButtonEdit
-      Left = 335
-      Top = 1
+      Left = 314
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 242
+      Width = 210
     end
+    object cxLabel6: TcxLabel
+      Left = 207
+      Top = 31
+      Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086':'
+    end
+    object edJuridical: TcxButtonEdit
+      Left = 314
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 10
+      Width = 210
+    end
+    object cxLabel7: TcxLabel
+      Left = 529
+      Top = 31
+      Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+    end
+    object ceInfoMoney: TcxButtonEdit
+      Left = 653
+      Top = 30
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 12
+      Width = 180
+    end
+    object cxLabel5: TcxLabel
+      Left = 840
+      Top = 31
+      Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    end
+    object edPaidKind: TcxButtonEdit
+      Left = 923
+      Top = 29
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 14
+      Width = 132
+    end
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = InfoMoneyGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = JuridicalGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = PaidKindGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = UnitGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
   end
   inherited MasterDS: TDataSource
     Left = 72
@@ -358,16 +493,37 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         ParamType = ptInput
       end
       item
-        Name = 'inGoodsGroupId'
+        Name = 'inUnitId'
         Value = ''
-        Component = GoodsGroupGuides
+        Component = UnitGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
-        Name = 'inUnitId'
+        Name = 'inJuridicalId'
         Value = ''
-        Component = UnitGuides
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -397,10 +553,19 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         Component = PeriodChoice
       end
       item
+        Component = UnitGuides
+      end
+      item
+        Component = JuridicalGuides
+      end
+      item
         Component = GoodsGroupGuides
       end
       item
-        Component = UnitGuides
+        Component = InfoMoneyGuides
+      end
+      item
+        Component = PaidKindGuides
       end>
     Left = 208
     Top = 168
@@ -429,8 +594,7 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 432
-    Top = 24
+    Left = 736
   end
   object FormParams: TdsdFormParams
     Params = <
@@ -473,7 +637,83 @@ inherited Report_GoodsMIForm: TReport_GoodsMIForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 504
-    Top = 65528
+    Left = 360
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 680
+    Top = 29
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 952
+    Top = 32
+  end
+  object JuridicalGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edJuridical
+    FormNameParam.Value = 'TJuridical_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TJuridical_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = JuridicalGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 416
+    Top = 32
   end
 end
