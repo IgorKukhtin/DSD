@@ -16,50 +16,62 @@ $BODY$
    DECLARE ProtocolXML TBlob;
 BEGIN
      -- Подготавливаем XML для "стандартного" протокола
-     SELECT '<XML>' || STRING_AGG(FieldXML, '') || '</XML>'
-            INTO ProtocolXML
-     FROM (SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'
+     SELECT '<XML>' || STRING_AGG (D.FieldXML, '') || '</XML>' INTO ProtocolXML
+     FROM
+          (SELECT D.FieldXML
+           FROM 
+          (SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'
                || '<Field FieldName = "Code" FieldValue = "' || Object.ObjectCode || '"/>'
                || '<Field FieldName = "isErased" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
-                , 1 AS Order1
-                , 0 AS Order2
+                , 1 AS GroupId
+                , Object.DescId
            FROM Object
            WHERE Object.Id = inObjectId 
           UNION
-           SELECT '<Field FieldName = "' || ObjectStringDesc.ItemName || '" FieldValue = "' || ObjectString.ValueData || '"/>' AS FieldXML 
-                , 2 AS Order1
-                , ObjectString.DescId AS Order2
-           FROM ObjectString
-                JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
-           WHERE ObjectString.ObjectId = inObjectId
-             AND inIsErased IS NULL
-          UNION
-           SELECT '<Field FieldName = "' || ObjectFloatDesc.ItemName || '" FieldValue = "' || ObjectFloat.ValueData || '"/>' AS FieldXML 
-                , 3 AS Order1
-                , ObjectFloat.DescId AS Order2
+           SELECT '<Field FieldName = "' || ObjectFloatDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectFloat.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+                , 2 AS GroupId
+                , ObjectFloat.DescId
            FROM ObjectFloat
                 JOIN ObjectFloatDesc ON ObjectFloatDesc.Id = ObjectFloat.DescId
            WHERE ObjectFloat.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectDateDesc.ItemName || '" FieldValue = "' || ObjectDate.ValueData || '"/>' AS FieldXML 
-                , 4 AS Order1
-                , ObjectDate.DescId AS Order2
+           SELECT '<Field FieldName = "' || ObjectDateDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectDate.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+                , 3 AS GroupId
+                , ObjectDate.DescId
            FROM ObjectDate
                 JOIN ObjectDateDesc ON ObjectDateDesc.Id = ObjectDate.DescId
            WHERE ObjectDate.ObjectId = inObjectId
              AND inIsErased IS NULL
           UNION
-           SELECT '<Field FieldName = "' || ObjectLinkDesc.ItemName || '" FieldValue = "' || Object.ValueData || '"/>' AS FieldXML 
-                , 5 AS Order1
-                , ObjectLink.DescId AS Order2
+           SELECT '<Field FieldName = "' || ObjectLinkDesc.ItemName || '" FieldValue = "' || COALESCE (Object.ValueData, 'NULL') || '"/>' AS FieldXML 
+                , 4 AS GroupId
+                , ObjectLink.DescId
            FROM ObjectLink
                 JOIN Object ON Object.Id = ObjectLink.ChildObjectId
                 JOIN ObjectLinkDesc ON ObjectLinkDesc.Id = ObjectLink.DescId
            WHERE ObjectLink.ObjectId = inObjectId
              AND inIsErased IS NULL
-          ORDER BY 2, 3
-          ) AS D;
+          UNION
+           SELECT '<Field FieldName = "' || ObjectStringDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectString.ValueData, 'NULL') || '"/>' AS FieldXML 
+                , 5 AS GroupId
+                , ObjectString.DescId
+           FROM ObjectString
+                JOIN ObjectStringDesc ON ObjectStringDesc.Id = ObjectString.DescId
+           WHERE ObjectString.ObjectId = inObjectId
+             AND inIsErased IS NULL
+          UNION
+           SELECT '<Field FieldName = "' || ObjectBooleanDesc.ItemName || '" FieldValue = "' || COALESCE (ObjectBoolean.ValueData :: TVarChar, 'NULL') || '"/>' AS FieldXML 
+                , 6 AS GroupId
+                , ObjectBoolean.DescId
+           FROM ObjectBoolean
+                JOIN ObjectBooleanDesc ON ObjectBooleanDesc.Id = ObjectBoolean.DescId
+           WHERE ObjectBoolean.ObjectId = inObjectId
+             AND inIsErased IS NULL
+          ) AS D
+           ORDER BY D.GroupId, D.DescId
+          ) AS D
+         ;
 
      -- сохранили "стандартный" протокол
      INSERT INTO ObjectProtocol (ObjectId, OperDate, UserId, ProtocolData, isInsert)
@@ -91,6 +103,7 @@ ALTER FUNCTION lpInsert_ObjectProtocol (Integer, Integer, Boolean, Boolean) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 14.05.14                                        * add ObjectBoolean
  24.02.14                                        *
 */
 /*

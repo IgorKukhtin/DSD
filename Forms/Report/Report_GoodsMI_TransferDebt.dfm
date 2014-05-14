@@ -1,28 +1,28 @@
 inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084'>'
   ClientHeight = 374
-  ClientWidth = 1082
+  ClientWidth = 1020
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1098
+  ExplicitWidth = 1036
   ExplicitHeight = 409
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1082
+    Width = 1020
     Height = 294
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1082
     ExplicitHeight = 294
     ClientRectBottom = 294
-    ClientRectRight = 1082
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1082
       ExplicitHeight = 294
       inherited cxGrid: TcxGrid
-        Width = 1082
+        Width = 1020
         Height = 294
         ExplicitWidth = 1082
         ExplicitHeight = 294
@@ -226,7 +226,7 @@ inherited Report_GoodsMI_TransferDebtForm: TReport_GoodsMI_TransferDebtForm
     end
   end
   inherited Panel: TPanel
-    Width = 1082
+    Width = 1020
     Height = 54
     ExplicitWidth = 1082
     ExplicitHeight = 54
