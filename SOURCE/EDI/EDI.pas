@@ -2,7 +2,7 @@ unit EDI;
 
 interface
 
-uses Classes, DB, dsdAction, IdFTP, dsdDb;
+uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb;
 
 type
 
@@ -11,11 +11,25 @@ type
   TEDI = class(TComponent)
   private
     FIdFTP: TIdFTP;
+    procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc);
+  end;
+
+  TConnectionParams = class(TPersistent)
+  private
+    FDirectory: string;
+    FPassword: string;
+    FHost: string;
+    FUser: string;
+  published
+    property Host: string read FHost write FHost;
+    property User: string read FUser write FUser;
+    property Password: string read FPassword write FPassword;
+    property Directory: string read FDirectory write FDirectory;
   end;
 
   TEDIActionDesadv = class(TdsdCustomAction)
@@ -31,17 +45,16 @@ type
 
   TEDIActionComdocLoad = class(TdsdCustomAction)
   private
-    FDirectory: string;
-    FPassword: string;
-    FHost: string;
-    FUser: string;
     FspHeader: TdsdStoredProc;
     FspList: TdsdStoredProc;
+    FConnectionParams: TConnectionParams;
+  protected
+    function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
-    property Host: string read FHost write FHost;
-    property User: string read FUser write FUser;
-    property Password: string read FPassword write FPassword;
-    property Directory: string read FDirectory write FDirectory;
+    property ConnectionParams: TConnectionParams read FConnectionParams write FConnectionParams;
     property spHeader: TdsdStoredProc read FspHeader write FspHeader;
     property spList: TdsdStoredProc read FspList write FspList;
   end;
@@ -50,12 +63,13 @@ type
 
 implementation
 
-uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, ComDocXML, SimpleGauge;
+uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants;
 
 procedure Register;
 begin
   RegisterComponents('DSDComponent', [TEDI]);
   RegisterActions('EDI', [TEDIActionDesadv], TEDIActionDesadv);
+  RegisterActions('EDI', [TEDIActionComdocLoad], TEDIActionComdocLoad);
 end;
 
 { TEDI }
@@ -82,6 +96,7 @@ begin
                // если первые буквы файла comdoc, а последние .p7s
                if (copy(list[i], 1, 6) = 'comdoc') and (copy(list[i], length(list[i]) - 3, 4) = '.p7s') then begin
                   // тянем файл к нам
+                  Stream.Clear;
                   FIdFTP.Get(List[i], Stream);
                   FileData := Utf8ToAnsi(Stream.DataString);
                   // Начало документа <?xml
@@ -89,8 +104,8 @@ begin
                   FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
                   ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
                   if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004' then begin
-                 //    ShowMessage(FileData);
-                     break;
+                     // загружаем в базенку
+                     InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                   end;
                end;
                IncProgress;
@@ -102,14 +117,8 @@ begin
          List.Free;
          Stream.Free;
        end;
-     //  FIdFTP.
-       //FIdFTP.Put(Stream, 'testDECLAR.xml');
     end;
     FIdFTP.Quit;
-
-
-  // Парсим их в XML
-  // загружаем в базенку
 end;
 
 constructor TEDI.Create(AOwner: TComponent);
@@ -187,6 +196,33 @@ begin
   inherited;
 end;
 
+procedure TEDI.InsertUpdateComDoc(
+  ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+  spHeader, spList: TdsdStoredProc);
+var MovementId: Integer;
+    i: integer;
+begin
+  with spHeader, ЕлектроннийДокумент do begin
+    ParamByName('outid').Value := 0;
+    ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
+    if Заголовок.ДатаЗамовлення <> '' then
+       ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаЗамовлення)
+    else
+       ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаДокументу);
+    ParamByName('inSaleInvNumber').Value  := Заголовок.НомерДокументу;
+    ParamByName('inSaleOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+
+    for i:= 0 to Сторони.Count - 1 do
+        if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
+           ParamByName('inGLN').Value := Сторони.Контрагент[i].GLN;
+           ParamByName('inOKPO').Value := Сторони.Контрагент[i].КодКонтрагента;
+        end;
+     Execute;
+     MovementId := ParamByName('outid').Value;
+  end;
+
+end;
+
 { TEDIActionDesadv }
 
 function TEDIActionDesadv.LocalExecute: boolean;
@@ -196,6 +232,34 @@ begin
     DESADV(Self.HeaderDataSet, Self.ListDataSet);
   finally
     Free;
+  end;
+end;
+
+{ TEDIActionComdocLoad }
+
+constructor TEDIActionComdocLoad.Create(AOwner: TComponent);
+begin
+  inherited;
+  FConnectionParams := TConnectionParams.Create
+end;
+
+destructor TEDIActionComdocLoad.Destroy;
+begin
+  FreeAndNil(FConnectionParams);
+  inherited;
+end;
+
+function TEDIActionComdocLoad.LocalExecute: boolean;
+var
+  EDI: TEDI;
+begin
+  EDI := TEDI.Create(nil);
+  // создание документа
+  try
+     EDI.ComdocLoad(spHeader, spList);
+     { запускаем процедуру выгрузки документа DESADV}
+  finally
+    EDI.Free;
   end;
 end;
 

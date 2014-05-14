@@ -296,6 +296,7 @@ initialization
   RegisterClass (TdsdUserSettingsStorageAddOn);
 
   RegisterClass (TEDIActionDesadv);
+  RegisterClass (TEDIActionComdocLoad);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TExternalSaveAction);
