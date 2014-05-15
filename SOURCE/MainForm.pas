@@ -339,6 +339,8 @@ type
     actReport_GoodsMI_TransferDebtOut: TdsdOpenForm;
     bbReport_GoodsMI_TransferDebtIn: TdxBarButton;
     bbReport_GoodsMI_TransferDebtOut: TdxBarButton;
+    actSaveDocumentTo1C: TdsdOpenForm;
+    bbSaveDocumentTo1C: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

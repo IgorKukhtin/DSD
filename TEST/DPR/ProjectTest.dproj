@@ -1106,8 +1106,8 @@
 				<Form>ContractForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\System\SaveTaxDocument.pas">
-				<Form>SaveTaxDocumentForm</Form>
+			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
+				<Form>SaveDocumentTo1CForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -1288,6 +1288,10 @@
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI.pas">
 				<Form>Report_GoodsMIForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Export\SaveTaxDocument.pas">
+				<Form>SaveTaxDocumentForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
