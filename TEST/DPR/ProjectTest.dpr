@@ -374,7 +374,7 @@ uses
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
-  SaveTaxDocument in '..\..\Forms\System\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
+  SaveDocumentTo1C in '..\..\Forms\Export\SaveDocumentTo1C.pas' {SaveDocumentTo1CForm: TParentForm},
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
   PersonalService in '..\..\Forms\Document\PersonalService.pas' {PersonalServiceForm: TParentForm},
   PersonalServiceEdit in '..\..\Forms\Document\PersonalServiceEdit.pas' {PersonalServiceEditForm: TParentForm},
@@ -428,7 +428,8 @@ uses
   EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
   cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
-  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm};
+  Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm};
 
 {$R *.RES}
 

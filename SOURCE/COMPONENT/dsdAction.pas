@@ -1472,7 +1472,7 @@ begin
   for I := 0 to MoveParams.Count - 1 do
       TParamMoveItem(MoveParams.Items[i]).ToParam.Value := TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
-  if InfoAfterExecute <> '' then
+  if result and (InfoAfterExecute <> '') then
      ShowMessage(InfoAfterExecute);
 end;
 

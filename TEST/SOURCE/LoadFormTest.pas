@@ -38,6 +38,7 @@ type
     procedure LoadCityFormTest;
     procedure LoadDefaultFormTest;
     procedure LoadEDIForm;
+    procedure LoadExternalForm;
     procedure LoadDocumentTaxKindFormTest;
     procedure LoadFreightFormTest;
     procedure LoadFuelFormTest;
@@ -439,9 +440,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TMovementItemProtocolForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPeriodCloseForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPeriodCloseForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
-
 end;
 
 procedure TLoadFormTest.LoadSheetWorkTimeFormTest;
@@ -660,6 +658,15 @@ procedure TLoadFormTest.LoadEDIForm;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TEDIJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TEDIJournalForm');
+end;
+
+procedure TLoadFormTest.LoadExternalForm;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveTaxDocumentForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaveTaxDocumentForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TSaveDocumentTo1CForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TSaveDocumentTo1CForm');
 end;
 
 procedure TLoadFormTest.LoadPartnerFormTest;

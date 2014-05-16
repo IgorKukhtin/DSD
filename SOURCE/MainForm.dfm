@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1432,6 +1432,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbSaveDocumentTo1C'
+        end
+        item
+          Visible = True
           ItemName = 'bbEDI'
         end
         item
@@ -1562,6 +1566,10 @@ object MainForm: TMainForm
     end
     object bbEDI: TdxBarButton
       Action = actEDI
+      Category = 0
+    end
+    object bbSaveDocumentTo1C: TdxBarButton
+      Action = actSaveDocumentTo1C
       Category = 0
     end
   end
@@ -3197,6 +3205,17 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actSaveDocumentTo1C: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' 1'#1057
+      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' 1'#1057
+      FormName = 'TSaveDocumentTo1CForm'
+      FormNameParam.Value = 'TSaveDocumentTo1CForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   object cxLocalizer: TcxLocalizer
     StorageType = lstResource
@@ -3223,7 +3242,7 @@ object MainForm: TMainForm
     Top = 96
   end
   object frxReport1: TfrxReport
-    Version = '4.12'
+    Version = '4.14'
     DotMatrixReport = False
     IniFile = '\Software\Fast Reports'
     PreviewOptions.Buttons = [pbPrint, pbLoad, pbSave, pbExport, pbZoom, pbFind, pbOutline, pbPageSetup, pbTools, pbEdit, pbNavigator, pbExportQuick]

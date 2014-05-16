@@ -19,7 +19,7 @@ type
     FSourceDataSet: TDataSet;
     procedure CreateFieldList;
   public
-    constructor Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet);
+    constructor Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AisOEM: boolean = true);
     function Execute: boolean;
     procedure Open(FileName: string);
     property InitializeFile: string read FInitializeFile write FInitializeFile;
@@ -31,6 +31,7 @@ type
     FFileName: string;
     FFileDataSet: TMemDBFTable;
     FDataSet: TDataSet;
+    FisOEM: boolean;
     function GetFieldDefs: TFieldDefs;
     procedure SetFieldDefs(const Value: TFieldDefs);
   public
@@ -42,6 +43,7 @@ type
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
     property FieldDefs: TFieldDefs read GetFieldDefs write SetFieldDefs;
     property DataSet: TDataSet read FDataSet write FDataSet;
+    property isOEM: boolean read FisOEM write FisOEM default true;
   end;
 
   procedure Register;
@@ -57,12 +59,14 @@ end;
 
 { TFileExternalSave }
 
-constructor TFileExternalSave.Create;
+constructor TFileExternalSave.Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AisOEM: boolean = true);
 begin
   inherited Create;
   FFieldDefs := AFieldDefs;
+  if FFieldDefs.Count = 0 then
+     FFieldDefs.Assign(ASourceDataSet.FieldDefs);
   FSourceDataSet := ASourceDataSet;
-  Self.FOEM := true;
+  Self.FOEM := AisOEM;
 end;
 
 procedure TFileExternalSave.CreateFieldList;
@@ -78,7 +82,7 @@ begin
   try
     FileName := InitializeFile;
     DefaultExt := '*.dbf';
-    Filter := '*.dbf';
+    Filter := 'Файлы выгрузки в 1С (.dbf)|*.dbf|';
     if Execute then begin
        InitializeFile := FileName;
        Self.Open(FileName);
@@ -116,6 +120,7 @@ constructor TExternalSaveAction.Create(Owner: TComponent);
 begin
   inherited;
   FFileDataSet := TMemDBFTable.Create(Self);
+  isOEM := true;
 end;
 
 destructor TExternalSaveAction.Destroy;
@@ -126,7 +131,7 @@ end;
 
 function TExternalSaveAction.Execute: boolean;
 begin
-  with TFileExternalSave.Create(FFileDataSet.FieldDefs, DataSet) do begin
+  with TFileExternalSave.Create(FFileDataSet.FieldDefs, DataSet, isOEM) do begin
     try
       result := Execute
     finally

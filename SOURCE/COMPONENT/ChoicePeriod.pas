@@ -21,9 +21,11 @@ type
     FDateEndChange, FDateStartChange: TNotifyEvent;
     FonChange: TNotifyEvent;
     FUpdateDateEdit: boolean;
+    FOnShow: TNotifyEvent;
     procedure SetDateEnd(const Value: TcxDateEdit);
     procedure SetDateStart(const Value: TcxDateEdit);
     procedure OnDblClick(Sender: TObject);
+    procedure OnShow(Sender: TObject);
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -181,6 +183,11 @@ constructor TPeriodChoice.Create(AOwner: TComponent);
 begin
   inherited;
   FUpdateDateEdit := false;
+  if Assigned(Owner) then
+     if Owner is TForm then begin
+        FOnShow := (Owner as TForm).OnShow;
+        (Owner as TForm).OnShow := OnShow;
+     end;
 end;
 
 procedure TPeriodChoice.Execute;
@@ -240,6 +247,16 @@ begin
      FDateStartDblClick(Sender);
   if (Sender = DateEnd) and Assigned(FDateEndDblClick) then
      FDateEndDblClick(Sender);
+end;
+
+procedure TPeriodChoice.OnShow(Sender: TObject);
+begin
+ if Assigned(FOnShow) then
+    FOnShow(Sender);
+ if DateStart.Date = -700000 then
+    DateStart.Date := Date;
+ if DateEnd.Date = -700000 then
+    DateEnd.Date := Date;
 end;
 
 procedure TPeriodChoice.SetDateEnd(const Value: TcxDateEdit);
