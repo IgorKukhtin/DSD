@@ -26,6 +26,8 @@ $BODY$
    DECLARE vbToId             Integer;
    DECLARE vbPartnerId        Integer;
    DECLARE vbContractId       Integer;
+   DECLARE vbDiscountPercent     TFloat;
+   DECLARE vbExtraChargesPercent TFloat;
 
    DECLARE vbGoodsId     Integer;
    DECLARE vbGoodsKindId Integer;
@@ -61,7 +63,10 @@ BEGIN
           , ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS ToId
           , Movement.FromId           	                      AS PartnerId
           , Movement.ContractId 
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
             INTO vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+               , vbDiscountPercent, vbExtraChargesPercent
      FROM gpGet_Movement_ReturnIn (inMovementId, CURRENT_DATE, inSession) AS Movement
           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                ON ObjectLink_Partner_Juridical.ObjectId = Movement.FromId
@@ -69,6 +74,9 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis
                                ON ObjectLink_Contract_JuridicalBasis.ObjectId = Movement.ContractId
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
      WHERE Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
     ;
 
@@ -79,10 +87,10 @@ BEGIN
 
      -- выбрали возвраты
      INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, Amount, OperPrice)
-        SELECT MovementItem.ObjectId
-             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-             , MIFloat_AmountPartner.ValueData
-             , MIFloat_Price.ValueData
+        SELECT MovementItem.ObjectId AS GoodsId
+             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+             , MIFloat_AmountPartner.ValueData AS Amount
+             , CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS OperPrice
         FROM MovementItem
              INNER JOIN MovementItemFloat AS MIFloat_Price
                                           ON MIFloat_Price.MovementItemId = MovementItem.Id

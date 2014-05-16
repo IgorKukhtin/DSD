@@ -69,7 +69,7 @@ BEGIN
                     WHEN vbPriceWithVAT
                          -- если цены c НДС (Вариант может быть если первичен расчет НДС =1/6 )
                          THEN OperSumm - CAST ( (OperSumm) / (100 / vbVATPercent + 1) AS NUMERIC (16, 2))
-               END
+               END AS OperSumm_MVAT
                -- Сумма с НДС
              , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
                          -- если цены с НДС
@@ -77,7 +77,7 @@ BEGIN
                     WHEN vbVATPercent > 0
                          -- если цены без НДС
                          THEN CAST ( (1 + vbVATPercent / 100) * (OperSumm) AS NUMERIC (16, 2))
-               END
+               END AS OperSumm_PVAT
                INTO vbOperSumm_MVAT, vbOperSumm_PVAT
         FROM
        (SELECT SUM (CASE WHEN tmpMI.CountForPrice <> 0
@@ -88,10 +88,10 @@ BEGIN
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , CASE WHEN vbDiscountPercent <> 0
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           WHEN vbExtraChargesPercent <> 0
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                          ELSE MIFloat_Price.ValueData
+                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
                    , SUM (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN Movement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount
@@ -140,13 +140,13 @@ BEGIN
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSummPVAT.ValueData END AS TotalSummPVAT
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT - vbOperSumm_MVAT ELSE MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData END AS SummVAT
            , CASE WHEN vbDiscountPercent <> 0 THEN vbOperSumm_PVAT ELSE MovementFloat_TotalSumm.ValueData END AS TotalSumm
-           , Object_From.ValueData             			AS FromName
+           , Object_From.ValueData             		AS FromName
            , COALESCE (Object_Partner.ValueData, Object_To.ValueData) AS ToName
-           , Object_PaidKind.ValueData         			AS PaidKindName
-           , Object_Contract.InvNumber         			AS ContractName
+           , Object_PaidKind.ValueData         		AS PaidKindName
+           , Object_Contract.InvNumber         		AS ContractName
            , ObjectDate_Start.ValueData                 AS ContractSigningDate
            , Object_ContractKind.ValueData              AS ContractKind
-           , Object_RouteSorting.ValueData 			    AS RouteSortingName
+           , Object_RouteSorting.ValueData 		AS RouteSortingName
 
            , CASE WHEN Object_Contract.InfoMoneyId = zc_Enum_InfoMoney_30101() THEN 'Бабенко В.П.' ELSE '' END AS StoreKeeper -- кладовщик
            , '' :: TVarChar                             AS Through     -- через кого
@@ -212,6 +212,12 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -221,13 +227,8 @@ BEGIN
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
             LEFT JOIN ObjectString AS ObjectString_ToAddress
-                                   ON ObjectString_ToAddress.ObjectId = Object_To.Id
+                                   ON ObjectString_ToAddress.ObjectId = COALESCE (MovementLinkObject_Partner.ObjectId, Object_To.Id)
                                   AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
-
-            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
-                                         ON MovementLinkObject_Partner.MovementId = Movement.Id
-                                        AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = MovementLinkObject_Partner.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
@@ -355,6 +356,7 @@ BEGIN
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode         AS GoodsCode
            , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , Object_Goods.ValueData          AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
            , CASE Object_Measure.Id
@@ -403,10 +405,10 @@ BEGIN
        FROM (SELECT MovementItem.ObjectId AS GoodsId
                   , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0
-                              THEN CAST ( (1 - vbDiscountPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                              THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          WHEN vbExtraChargesPercent <> 0
-                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                         ELSE MIFloat_Price.ValueData
+                              THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                         ELSE COALESCE (MIFloat_Price.ValueData, 0)
                     END AS Price
                   , MIFloat_CountForPrice.ValueData AS CountForPrice
                   , SUM (MovementItem.Amount) AS Amount

@@ -1,28 +1,30 @@
 inherited Partner1CLinkForm: TPartner1CLinkForm
   Caption = #1057#1074#1103#1079#1100' '#1089' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103#1084#1080' 1'#1057
   ClientHeight = 401
-  ClientWidth = 1038
-  ExplicitLeft = -56
-  ExplicitWidth = 1054
+  ClientWidth = 1020
+  ExplicitWidth = 1036
   ExplicitHeight = 436
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 1038
+    Width = 1020
     Height = 375
     ExplicitWidth = 1038
     ExplicitHeight = 375
     ClientRectBottom = 375
-    ClientRectRight = 1038
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1038
       ExplicitHeight = 375
       inherited cxGrid: TcxGrid
-        Width = 1038
+        Width = 1020
         Height = 375
         ExplicitWidth = 1038
         ExplicitHeight = 375
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.CancelOnExit = True
+          OptionsData.Deleting = False
+          OptionsData.DeletingConfirmation = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil

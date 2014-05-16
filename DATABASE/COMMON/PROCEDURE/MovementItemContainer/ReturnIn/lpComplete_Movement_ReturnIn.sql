@@ -234,21 +234,21 @@ BEGIN
             , _tmp.tmpOperSumm_Partner
               -- конечная сумма по Контрагенту
             , CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                      -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                      -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но скидка/наценка учтена в цене!!!
+                      THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                                WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
                                 ELSE _tmp.tmpOperSumm_Partner
                            END
                    WHEN vbVATPercent > 0
-                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но скидка/наценка учтена в цене!!!
+                      THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                                WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
                                 ELSE CAST ( (1 + vbVATPercent / 100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2))
                            END
                    WHEN vbVATPercent > 0
-                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
-                      THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                                WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                      -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но скидка/наценка учтена в цене!!!
+                      THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                                WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * _tmp.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                                 ELSE CAST ( (1 + vbVATPercent / 100) * (_tmp.tmpOperSumm_Partner) AS NUMERIC (16, 2))
                            END
               END AS OperSumm_Partner
@@ -287,23 +287,23 @@ BEGIN
 
         FROM 
              (SELECT
-                    MovementItem.Id AS MovementItemId
+                    tmpMI.MovementItemId
 
-                  , MovementItem.ObjectId AS GoodsId
-                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+                  , tmpMI.GoodsId
+                  , tmpMI.GoodsKindId
                   , COALESCE (MILinkObject_Asset.ObjectId, 0) AS AssetId
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
  
-                  , COALESCE (MIFloat_Price.ValueData, 0) AS Price
-                    -- количество для остатка
-                  , MovementItem.Amount AS OperCount
+                  , tmpMI.Price
+                    -- количество для склада
+                  , tmpMI.OperCount
                     -- количество у контрагента
-                  , COALESCE (MIFloat_AmountPartner.ValueData, 0) AS OperCount_Partner
+                  , tmpMI.OperCount_Partner
 
                     -- промежуточная сумма по Контрагенту - с округлением до 2-х знаков
-                  , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) <> 0 THEN COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2)), 0)
-                                                                                 ELSE COALESCE (CAST (MIFloat_AmountPartner.ValueData * MIFloat_Price.ValueData AS NUMERIC (16, 2)), 0)
+                  , CASE WHEN tmpMI.CountForPrice <> 0 THEN CAST (tmpMI.OperCount_Partner * tmpMI.Price / tmpMI.CountForPrice AS NUMERIC (16, 2))
+                                                       ELSE CAST (tmpMI.OperCount_Partner * tmpMI.Price AS NUMERIC (16, 2))
                     END AS tmpOperSumm_Partner
 
                     -- Управленческие назначения
@@ -317,19 +317,28 @@ BEGIN
                   , COALESCE (ObjectBoolean_PartionCount.ValueData, FALSE)      AS isPartionCount
                   , COALESCE (ObjectBoolean_PartionSumm.ValueData, FALSE)       AS isPartionSumm
 
+              FROM
+             (SELECT (MovementItem.Id) AS MovementItemId
+                   , MovementItem.ObjectId AS GoodsId
+                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
+
+                   , SUM (MovementItem.Amount) AS OperCount
+                   , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
+                   , CASE WHEN vbDiscountPercent <> 0
+                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                          WHEN vbExtraChargesPercent <> 0
+                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                     END AS Price
+                   , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
+
               FROM Movement
                    JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master() AND MovementItem.isErased = FALSE
 
                    LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                     ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                    AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
-                                                    ON MILinkObject_Asset.MovementItemId = MovementItem.Id
-                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
 
-                   LEFT JOIN MovementItemFloat AS MIFloat_AmountChangePercent
-                                               ON MIFloat_AmountChangePercent.MovementItemId = MovementItem.Id
-                                              AND MIFloat_AmountChangePercent.DescId = zc_MIFloat_AmountChangePercent()
                    LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                               AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -340,32 +349,42 @@ BEGIN
                    LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
-
-                   LEFT JOIN MovementItemString AS MIString_PartionGoods
-                                                ON MIString_PartionGoods.MovementItemId = MovementItem.Id
-                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
-                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
-                                              ON MIDate_PartionGoods.MovementItemId = MovementItem.Id
-                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
-
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
-                                           ON ObjectBoolean_PartionCount.ObjectId = MovementItem.ObjectId
-                                          AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
-                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
-                                           ON ObjectBoolean_PartionSumm.ObjectId = MovementItem.ObjectId
-                                          AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
-
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
-                                        ON ObjectLink_Goods_Business.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
-                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
-                                        ON ObjectLink_Goods_InfoMoney.ObjectId = MovementItem.ObjectId
-                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
-                   LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
-
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId = zc_Movement_ReturnIn()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
+              GROUP BY MovementItem.Id
+                     , MovementItem.ObjectId
+                     , MILinkObject_GoodsKind.ObjectId
+                     , MIFloat_Price.ValueData
+                     , MIFloat_CountForPrice.ValueData
+             ) AS tmpMI
+
+
+                   LEFT JOIN MovementItemLinkObject AS MILinkObject_Asset
+                                                    ON MILinkObject_Asset.MovementItemId = tmpMI.MovementItemId
+                                                   AND MILinkObject_Asset.DescId = zc_MILinkObject_Asset()
+
+                   LEFT JOIN MovementItemString AS MIString_PartionGoods
+                                                ON MIString_PartionGoods.MovementItemId = tmpMI.MovementItemId
+                                               AND MIString_PartionGoods.DescId = zc_MIString_PartionGoods()
+                   LEFT JOIN MovementItemDate AS MIDate_PartionGoods
+                                              ON MIDate_PartionGoods.MovementItemId = tmpMI.MovementItemId
+                                             AND MIDate_PartionGoods.DescId = zc_MIDate_PartionGoods()
+
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionCount
+                                           ON ObjectBoolean_PartionCount.ObjectId = tmpMI.GoodsId
+                                          AND ObjectBoolean_PartionCount.DescId = zc_ObjectBoolean_Goods_PartionCount()
+                   LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionSumm
+                                           ON ObjectBoolean_PartionSumm.ObjectId = tmpMI.GoodsId
+                                          AND ObjectBoolean_PartionSumm.DescId = zc_ObjectBoolean_Goods_PartionSumm()
+
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_Business
+                                        ON ObjectLink_Goods_Business.ObjectId = tmpMI.GoodsId
+                                       AND ObjectLink_Goods_Business.DescId = zc_ObjectLink_Goods_Business()
+                   LEFT JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                        ON ObjectLink_Goods_InfoMoney.ObjectId = tmpMI.GoodsId
+                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                   LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
              ) AS _tmp;
 
 
@@ -385,21 +404,21 @@ BEGIN
      -- Расчеты сумм
      SELECT -- Расчет Итоговой суммы по Контрагенту
             CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но скидка/наценка учтена в цене!!!
+                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                               ELSE _tmpItem.tmpOperSumm_Partner
                          END
                  WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но скидка/наценка учтена в цене!!!
+                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
+                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
                  WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
-                    THEN CASE WHEN vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
-                              WHEN vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но скидка/наценка учтена в цене!!!
+                    THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
+                              WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * _tmpItem.tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
             END

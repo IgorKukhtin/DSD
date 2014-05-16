@@ -343,6 +343,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actChoiceJuridical: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceJuridical'
       FormName = 'TMoneyPlace_ObjectForm'
       FormNameParam.Value = ''
@@ -390,6 +391,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actChoiceInfoMoney: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceInfoMoney'
       FormName = 'TInfoMoney_ObjectForm'
       FormNameParam.Value = 'TInfoMoney_ObjectForm'
@@ -415,6 +417,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actChoiceContract: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actChoiceContract'
       FormName = 'TContractChoiceForm'
       FormNameParam.Value = ''
@@ -462,6 +465,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actChoiceUnit: TOpenChoiceForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'actUnitForm'
       FormName = 'TUnitForm'
       FormNameParam.Value = ''
@@ -482,6 +486,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spUpdate
       StoredProcList = <
         item
@@ -492,8 +497,12 @@ inherited BankStatementForm: TBankStatementForm
     end
     object actSendToBankAccount: TdsdExecStoredProc
       Category = 'DSDLib'
-      StoredProc = spBankAccount_From_BankStatement
+      MoveParams = <>
+      StoredProc = spSelect
       StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
         item
           StoredProc = spBankAccount_From_BankStatement
         end>
@@ -504,6 +513,7 @@ inherited BankStatementForm: TBankStatementForm
     end
     object InsertJuridical: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1102#1088'. '#1083#1080#1094#1086
       ImageIndex = 0
       FormName = 'TJuridicalEditForm'
@@ -529,6 +539,7 @@ inherited BankStatementForm: TBankStatementForm
         end>
       isShowModal = False
       DataSource = MasterDS
+      IdFieldName = 'Id'
     end
   end
   inherited MasterDS: TDataSource

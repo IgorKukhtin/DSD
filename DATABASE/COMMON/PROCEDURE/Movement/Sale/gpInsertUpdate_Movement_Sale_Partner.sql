@@ -31,7 +31,7 @@ BEGIN
 
      -- Проверка, т.к. эти параметры менять нельзя
      IF ioId <> 0 AND EXISTS (SELECT Id FROM MovementItem WHERE MovementId = ioId AND Amount <> 0 AND isErased = FALSE)
-                  AND EXISTS (SELECT Id FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_From() AND ObjectId = 8459) -- Склад Реализации
+                  AND EXISTS (SELECT MovementId FROM MovementLinkObject WHERE MovementId = ioId AND DescId = zc_MovementLinkObject_From() AND ObjectId = 8459) -- Склад Реализации
      THEN
          IF NOT EXISTS (SELECT Movement.Id
                         FROM Movement

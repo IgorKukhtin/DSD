@@ -63,7 +63,8 @@ BEGIN
                , tmpMovement.Price
                , CASE WHEN SUM (tmpMovement.Amount_Sale) > 0 THEN SUM (tmpMovement.Amount_Sale) ELSE 0 END AS Amount_Sale
                , SUM (tmpMovement.Amount_Tax)  AS Amount_Tax
-          FROM (SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
+          FROM  -- Возврат от покупателя
+               (SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
                      , ObjectLink_Partner_Juridical.ChildObjectId       AS ToId
                      , MovementLinkObject_Contract.ObjectId             AS ContractId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
@@ -79,7 +80,10 @@ BEGIN
                      , 0 AS MovementId_Tax
                      , MovementItem.ObjectId               AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                     , MIFloat_Price.ValueData             AS Price
+                     , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                            ELSE MIFloat_Price.ValueData
+                       END AS Price
                      , -1 * SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -116,6 +120,10 @@ BEGIN
                                           ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
+                     LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                             ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                            AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
                 WHERE Movement.DescId = zc_Movement_ReturnIn()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -132,7 +140,9 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MovementFloat_ChangePercent.ValueData
                UNION ALL
+                -- Продажа покупателю
                 SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
                      , ObjectLink_Partner_Juridical.ChildObjectId       AS ToId
                      , MovementLinkObject_Contract.ObjectId             AS ContractId
@@ -145,7 +155,10 @@ BEGIN
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
                      , MovementItem.ObjectId                AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                     , MIFloat_Price.ValueData              AS Price
+                     , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                            ELSE MIFloat_Price.ValueData
+                       END AS Price
                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -187,6 +200,10 @@ BEGIN
                                           ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
+                     LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                             ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                            AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
                 WHERE Movement.DescId = zc_Movement_Sale()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -205,7 +222,9 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MovementFloat_ChangePercent.ValueData
                UNION ALL
+                -- Перевод долга (расход)
                 SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
                      , MovementLinkObject_To.ObjectId                   AS ToId
                      , MovementLinkObject_Contract.ObjectId             AS ContractId
@@ -218,7 +237,10 @@ BEGIN
                      , MovementLinkMovement.MovementChildId AS MovementId_Tax
                      , MovementItem.ObjectId                AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId 
-                     , MIFloat_Price.ValueData              AS Price
+                     , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                                 THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                            ELSE MIFloat_Price.ValueData
+                       END AS Price
                      , SUM (MovementItem.Amount)            AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -258,6 +280,10 @@ BEGIN
                                           ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
                                          AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
 
+                     LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                             ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                            AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+
                 WHERE Movement.DescId = zc_Movement_TransferDebtOut()
                   AND Movement.StatusId = zc_Enum_Status_Complete()
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -276,7 +302,9 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MovementFloat_ChangePercent.ValueData
                UNION ALL
+                -- Налоговые
                 SELECT MovementLinkObject_From.ObjectId     AS FromId
                      , MovementLinkObject_To.ObjectId       AS ToId
                      , MovementLinkObject_Contract.ObjectId AS ContractId
@@ -375,6 +403,7 @@ ALTER FUNCTION gpReport_CheckTax (TDateTime, TDateTime, Integer, TVarChar) OWNER
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 03.05.14                                        * add zc_MovementFloat_ChangePercent 
  03.05.14                                        * all
  27.03.14         *
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
