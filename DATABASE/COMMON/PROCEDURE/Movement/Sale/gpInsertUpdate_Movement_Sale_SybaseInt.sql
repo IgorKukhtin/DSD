@@ -46,6 +46,12 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
+                                                                        FROM MovementLinkMovement
+                                                                             JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementLinkMovement.MovementChildId
+                                                                                                    AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                        WHERE MovementLinkMovement.MovementId = ioId
+                                                                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , ioPriceListId      := ioPriceListId
                                            , inSession          := inSession
                                             ) AS tmp;
@@ -68,6 +74,12 @@ BEGIN
                                            , inPaidKindId       := inPaidKindId
                                            , inContractId       := inContractId
                                            , inRouteSortingId   := inRouteSortingId
+                                           , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
+                                                                        FROM MovementLinkMovement
+                                                                             JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementLinkMovement.MovementChildId
+                                                                                                    AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                                        WHERE MovementLinkMovement.MovementId = ioId
+                                                                          AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master())
                                            , ioPriceListId      := ioPriceListId
                                            , inSession          := inSession
                                             ) AS tmp;

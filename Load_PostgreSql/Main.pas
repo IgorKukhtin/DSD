@@ -13251,14 +13251,16 @@ begin
              fOpenSqToQuery (' select Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459'
+                           +'               and MLO.ObjectId=8459' // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from Movement'
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
                            +' where Movement.Id='+FieldByName('Id_Postgres').AsString);
-            //
+
+// if FieldByName('Id_Postgres').AsString = '259257' then showMessage('');
+             //
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
              then begin
@@ -13271,7 +13273,7 @@ begin
                             if Id_PG<>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+FieldByName('Id_Postgres').AsString+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -13285,12 +13287,13 @@ begin
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+FieldByName('Id_Postgres').AsString+')');
                             //
                             if Id_PG<>0
-                            then
+                            then begin
                                 //!!!Complete
-                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                                toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
                                 if myExecToStoredProc_two
                                 then if cbClearDelete.Checked
                                      then fExecSqFromQuery('delete dba._pgBill_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                            end;
                   end
                   else begin
                             //!!!DELETE
@@ -13359,7 +13362,7 @@ begin
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'
                            +'       , case when Movement.DescId = zc_Movement_Sale() and MD.ValueData >= ' + FormatToDateServer_notNULL(StrToDate('01.04.2014'))
-                           +'               and MLO.ObjectId=8459'
+                           +'               and MLO.ObjectId=8459' // Склад Реализации
                            +'              then '+IntToStr(zc_rvNo)+' else '+IntToStr(zc_rvYes)
                            +'         end as isDelete'
                            +' from MovementItem'
@@ -13367,6 +13370,10 @@ begin
                            +'      left join MovementLinkObject as MLO on MLO.MovementId = Movement.Id and MLO.DescId = zc_MovementLinkObject_From()'
                            +'      left join MovementDate AS MD on MD.MovementId = Movement.Id and MD.DescId = zc_MovementDate_OperDatePartner()'
                            +' where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
+
+
+// if FieldByName('Id_Postgres').AsString = '2096798' then showMessage('');
+// if FieldByName('Id_Postgres').AsString = '2089306' then showMessage('');
 
              if  (toSqlQuery.FieldByName('OperDate').AsDateTime >= StrToDate(StartDateEdit.Text))
               and(toSqlQuery.FieldByName('OperDate').AsDateTime <= StrToDate(EndDateEdit.Text))
@@ -13381,7 +13388,7 @@ begin
                             if Id_PG<>0
                             then
                                 //!!!UnComplete
-                                fExecSqToQuery (' select * from lpUnComplete_Movement('+FieldByName('Id_Postgres').AsString+',5)');
+                                fExecSqToQuery (' select * from lpUnComplete_Movement('+IntToStr(Id_PG)+',5)');
                             //
                             //!!!UPDATE
                             fExecSqToQuery (' update MovementItem set Amount = 0'
@@ -13393,12 +13400,13 @@ begin
                             fExecSqToQuery (' select * from lpInsertUpdate_MovementFloat_TotalSumm ('+IntToStr(movId_PG)+')');
                             //
                             if Id_PG<>0
-                            then
+                            then begin
                                 //!!!Complete
                                 toStoredProc_two.Params.ParamByName('inMovementId').Value:=Id_PG;
                                 if myExecToStoredProc_two
                                 then if cbClearDelete.Checked
                                      then fExecSqFromQuery('delete dba._pgBillItems_delete where Id = '+FieldByName('ObjectId').AsString + ' and Id_PG='+FieldByName('Id_Postgres').AsString);
+                            end;
                   end
                   else begin
                             toStoredProc.Params.ParamByName('inMovementItemId').Value:=FieldByName('Id_Postgres').AsInteger;
