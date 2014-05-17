@@ -1542,6 +1542,7 @@ BEGIN
                                                         );
      END IF;
 
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
@@ -1552,7 +1553,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 16.05.14                                        * add lpInsertUpdate_Movement_Tax_From_Kind
+ 16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        * rem zc_Enum_AccountDirection_30400
  30.04.14                                        * set lp

@@ -257,7 +257,9 @@ BEGIN
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
 
-       WHERE Movement.Id =  inMovementId;
+       WHERE Movement.Id =  inMovementId
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+      ;
     RETURN NEXT Cursor1;
 
     OPEN Cursor2 FOR
@@ -416,6 +418,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  08.05.14                                        * all
  16.05.14                                        * add Object_Contract_InvNumber_View
  13.05.14                                        * add calc GoodsName

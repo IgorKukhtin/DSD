@@ -915,6 +915,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
     inherited bbPrint: TdxBarButton
       Action = mactPrint_Sale
+      Caption = #1055#1077#1095#1072#1090#1100' '#1056#1072#1089#1093#1086#1076#1085#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103
     end
     object bbPrint_DebtOut: TdxBarButton [5]
       Action = actPrint_TransferDebtOut
@@ -1307,6 +1308,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Component = GuidesPartner
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 162
     Top = 312
@@ -1359,6 +1367,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
       item
         Control = edChangePercent
+      end
+      item
+        Control = edDocumentTaxKind
       end>
     Left = 232
     Top = 193

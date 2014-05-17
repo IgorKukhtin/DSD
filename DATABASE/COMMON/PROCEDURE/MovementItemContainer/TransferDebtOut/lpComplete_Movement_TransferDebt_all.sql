@@ -649,6 +649,27 @@ BEGIN
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- 5.3. ФИНИШ - перепроводим Налоговую
+     IF EXISTS (SELECT MovementLinkMovement_Master.MovementId
+                FROM MovementLinkMovement AS MovementLinkMovement_Master
+                     INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+                                                                   AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
+                                                   ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id
+                                                  AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                  AND MovementLinkObject_DocumentTaxKind_Master.ObjectId = zc_Enum_DocumentTaxKind_Tax()
+                WHERE MovementLinkMovement_Master.MovementId = inMovementId
+                  AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                  AND vbMovementDescId = zc_Movement_TransferDebtOut()
+               )
+     THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
+                                                       , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
+                                                       , inDocumentTaxKindId_inf := NULL
+                                                       , inUserId                := inUserId
+                                                        );
+     END IF;
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
@@ -659,6 +680,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  11.05.14                                        * all
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        *

@@ -54,7 +54,9 @@ BEGIN
            LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
                                 ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
                                AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-     WHERE Movement.Id = inMovementId;
+     WHERE Movement.Id = inMovementId
+       AND Movement.StatusId = zc_Enum_Status_Complete()
+    ;
 
 
     IF vbDiscountPercent <> 0
@@ -309,7 +311,9 @@ BEGIN
                                    ON ObjectString_Bank_MFO.ObjectId = Object_Bank.Id
                                   AND ObjectString_Bank_MFO.DescId = zc_ObjectString_Bank_MFO()
 --
-       WHERE Movement.Id =  inMovementId;
+       WHERE Movement.Id =  inMovementId
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+      ;
     RETURN NEXT Cursor1;
 
 
@@ -470,6 +474,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName
  13.05.14                                                       * zc_ObjectLink_Contract_BankAccount
  08.05.14                        * add GLN code

@@ -22,30 +22,33 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
 
-     SELECT COALESCE(CASE WHEN Movement.DescId = zc_Movement_Tax()
-            THEN inMovementId
-            ELSE MovementLinkMovement_Master.MovementChildId
-            END, 0)
-     INTO vbMovementTaxId
+     -- определяется Налоговая
+     SELECT COALESCE (CASE WHEN Movement.DescId = zc_Movement_Tax()
+                                THEN inMovementId
+                           ELSE MovementLinkMovement_Master.MovementChildId
+                      END, 0)
+            INTO vbMovementTaxId
      FROM Movement
-     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                    ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
      WHERE Movement.Id =  inMovementId;
 
+     -- определяется Продажа покупателю
      SELECT COALESCE(CASE WHEN Movement.DescId = zc_Movement_Sale()
-            THEN inMovementId
-            ELSE MovementLinkMovement_Master.MovementId
-            END, 0)
-     INTO vbMovementSaleId
+                               THEN inMovementId
+                          ELSE MovementLinkMovement_Master.MovementId
+                     END, 0)
+            INTO vbMovementSaleId
      FROM Movement
-     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                    ON MovementLinkMovement_Master.MovementChildId = Movement.Id
-                                   AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+          LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                         ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                        AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
      WHERE Movement.Id =  inMovementId;
+
 
      --
-    OPEN Cursor1 FOR
+     OPEN Cursor1 FOR
        SELECT
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
@@ -227,7 +230,9 @@ BEGIN
                                   ON ObjectString_ToAddress.ObjectId = Object_To.Id
                                  AND ObjectString_ToAddress.DescId = zc_ObjectString_Partner_Address()
 
-       WHERE Movement.Id =  vbMovementTaxId;
+       WHERE Movement.Id =  vbMovementTaxId
+         AND Movement.StatusId = zc_Enum_Status_Complete()
+      ;
 
     RETURN NEXT Cursor1;
 
@@ -559,6 +564,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName
  07.05.14                       * add CHARCODE
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
