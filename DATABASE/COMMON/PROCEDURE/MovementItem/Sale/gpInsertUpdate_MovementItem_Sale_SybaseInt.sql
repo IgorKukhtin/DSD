@@ -33,7 +33,7 @@ BEGIN
                                                , inMovementId         := inMovementId
                                                , inGoodsId            := inGoodsId
                                                , inAmount             := inAmount
-                                               , inAmountPartner      := (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner())
+                                               , inAmountPartner      := COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountPartner()), 0)
                                                , inAmountChangePercent:= inAmountChangePercent
                                                , inChangePercentAmount:= inChangePercentAmount
                                                , inPrice              := inPrice

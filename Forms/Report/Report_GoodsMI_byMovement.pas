@@ -17,32 +17,40 @@ uses
 
 type
   TReport_GoodsMI_byMovementForm = class(TAncestorReportForm)
-    clTradeMarkName: TcxGridDBColumn;
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSummPartner: TcxGridDBColumn;
-    clAmountPartner_Sh: TcxGridDBColumn;
+    clSummPartner_calc: TcxGridDBColumn;
+    clAmount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmountPartner_Weight: TcxGridDBColumn;
-    clInvNumber: TcxGridDBColumn;
-    clJuridicalName: TcxGridDBColumn;
-    clFromName: TcxGridDBColumn;
-    clPaidKindName: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
-    edInDescName: TcxTextEdit;
-    clAmount_Weight: TcxGridDBColumn;
     clAmount_Sh: TcxGridDBColumn;
-    cxLabel3: TcxLabel;
-    edJuridical: TcxButtonEdit;
-    JuridicalGuides: TdsdGuides;
-    clAmountChangePercent_Weight: TcxGridDBColumn;
+    edInDescName: TcxTextEdit;
+    clAmountPartner_Weight: TcxGridDBColumn;
+    clAmountPartner_Sh: TcxGridDBColumn;
+    clGoodsKindName: TcxGridDBColumn;
+    clSummPartner: TcxGridDBColumn;
     clAmountChangePercent_Sh: TcxGridDBColumn;
-    clSummChangePercent: TcxGridDBColumn;
-    clToName: TcxGridDBColumn;
+    clAmountChangePercent_Weight: TcxGridDBColumn;
+    clMeasureName: TcxGridDBColumn;
+    cxLabel3: TcxLabel;
+    UnitGuides: TdsdGuides;
+    edUnit: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edJuridical: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    PaidKindGuides: TdsdGuides;
+    JuridicalGuides: TdsdGuides;
+    clUnitName: TcxGridDBColumn;
+    clUnitCode: TcxGridDBColumn;
+    clPartnerCode: TcxGridDBColumn;
+    clJuridicalCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

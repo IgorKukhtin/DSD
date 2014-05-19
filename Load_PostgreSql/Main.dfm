@@ -739,8 +739,8 @@ object MainForm: TMainForm
     object cbReturnInFl: TCheckBox
       Tag = 20
       Left = 3
-      Top = 221
-      Width = 235
+      Top = 219
+      Width = 228
       Height = 17
       Caption = '3.2.'#1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.Fl'
       Font.Charset = DEFAULT_CHARSET
@@ -750,7 +750,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 10
-      OnClick = cbReturnInFlClick
     end
     object cbProductionUnion: TCheckBox
       Tag = 20
@@ -873,7 +872,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 18
-      OnClick = cbReturnInFlClick
     end
     object cbReturnInInt: TCheckBox
       Tag = 20
@@ -889,7 +887,6 @@ object MainForm: TMainForm
       Font.Style = []
       ParentFont = False
       TabOrder = 19
-      OnClick = cbReturnInFlClick
     end
     object cbSaleInt: TCheckBox
       Tag = 20
@@ -926,7 +923,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 22
-      OnClick = cbReturnInFlClick
     end
     object cbDeleteFl: TCheckBox
       Tag = 20
@@ -986,11 +982,10 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 26
-      OnClick = cbReturnInFlClick
     end
     object cbOnlyUpdateInt: TCheckBox
       Left = 3
-      Top = 242
+      Top = 240
       Width = 235
       Height = 17
       Caption = #1058#1086#1083#1100#1082#1086' '#1076#1072#1085#1085#1099#1077' '#1057#1082#1083#1072#1076#1072
@@ -1001,7 +996,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 27
-      OnClick = cbReturnInFlClick
     end
     object cbErr: TCheckBox
       Left = 160
@@ -1016,7 +1010,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 28
-      OnClick = cbReturnInFlClick
     end
     object cbTotalTaxCorr: TCheckBox
       Left = 160
@@ -1031,7 +1024,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 29
-      OnClick = cbReturnInFlClick
     end
     object cblTaxPF: TCheckBox
       Left = 160
@@ -1046,7 +1038,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 30
-      OnClick = cbReturnInFlClick
     end
     object cbUpdateConrtact: TCheckBox
       Left = 185
@@ -1062,7 +1053,6 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 31
       WordWrap = True
-      OnClick = cbReturnInFlClick
     end
     object cbBill_List: TCheckBox
       Left = 3
@@ -1077,7 +1067,6 @@ object MainForm: TMainForm
       Font.Style = [fsBold]
       ParentFont = False
       TabOrder = 32
-      OnClick = cbReturnInFlClick
     end
   end
   object CompleteDocumentPanel: TPanel
@@ -1101,6 +1090,20 @@ object MainForm: TMainForm
       Width = 12
       Height = 13
       Caption = #1087#1086
+    end
+    object Label5: TLabel
+      Left = 15
+      Top = 623
+      Width = 95
+      Height = 13
+      Caption = #1057#1082#1083#1072#1076' '#1056#1077#1072#1083#1080#1079#1072#1094#1080#1080
+    end
+    object Label6: TLabel
+      Left = 127
+      Top = 623
+      Width = 46
+      Height = 13
+      Caption = 'SessionId'
     end
     object cbAllCompleteDocument: TCheckBox
       Tag = 3
@@ -1368,7 +1371,7 @@ object MainForm: TMainForm
     end
     object cbCompleteTaxFl: TCheckBox
       Tag = 30
-      Left = 14
+      Left = 15
       Top = 451
       Width = 194
       Height = 17
@@ -1384,7 +1387,7 @@ object MainForm: TMainForm
     end
     object cbCompleteTaxCorrective: TCheckBox
       Tag = 30
-      Left = 14
+      Left = 15
       Top = 474
       Width = 194
       Height = 17
@@ -1413,6 +1416,98 @@ object MainForm: TMainForm
       ParentFont = False
       TabOrder = 20
       OnClick = cbCompleteIncomeClick
+    end
+    object cbSelectData_afterLoad: TCheckBox
+      Left = 15
+      Top = 549
+      Width = 176
+      Height = 17
+      Caption = #1055#1088#1086#1074#1077#1088#1082#1072' '#1076#1072#1085#1085#1099#1093' '
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 21
+      WordWrap = True
+    end
+    object cbSelectData_afterLoad_Sale: TCheckBox
+      Left = 15
+      Top = 569
+      Width = 176
+      Height = 17
+      Caption = #1055#1088#1086#1076'.'#1087#1086#1082'.'
+      Checked = True
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      State = cbChecked
+      TabOrder = 22
+      WordWrap = True
+    end
+    object cbSelectData_afterLoad_Tax: TCheckBox
+      Left = 15
+      Top = 588
+      Width = 176
+      Height = 17
+      Caption = #1053#1072#1083#1086#1075#1086#1074#1099#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 23
+      WordWrap = True
+    end
+    object cbSelectData_afterLoad_ReturnIn: TCheckBox
+      Left = 15
+      Top = 608
+      Width = 176
+      Height = 17
+      Caption = #1042#1086#1079'.'#1086#1090' '#1087#1086#1082'.'
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = []
+      ParentFont = False
+      TabOrder = 24
+      WordWrap = True
+    end
+    object UnitIdEdit: TEdit
+      Left = 15
+      Top = 637
+      Width = 98
+      Height = 21
+      TabOrder = 25
+      Text = '8459'
+    end
+    object cbBeforeSave: TCheckBox
+      Left = 15
+      Top = 531
+      Width = 146
+      Height = 17
+      Caption = #1057#1086#1093#1088#1072#1085#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Font.Charset = DEFAULT_CHARSET
+      Font.Color = clWindowText
+      Font.Height = -11
+      Font.Name = 'MS Sans Serif'
+      Font.Style = [fsBold]
+      ParentFont = False
+      TabOrder = 26
+    end
+    object SessionIdEdit: TEdit
+      Left = 127
+      Top = 637
+      Width = 48
+      Height = 21
+      TabOrder = 27
+      Text = '0'
     end
   end
   object DataSource: TDataSource

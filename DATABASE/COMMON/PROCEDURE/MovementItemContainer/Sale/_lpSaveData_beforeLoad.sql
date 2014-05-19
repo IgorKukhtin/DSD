@@ -1,11 +1,10 @@
--- Function: _lpSaveData_beforeLoad (Integer, Integer, Boolean)
+-- Function: _lpSaveData_beforeLoad (TDateTime, TDateTime)
 
 DROP FUNCTION IF EXISTS _lpSaveData_beforeLoad (TDateTime, TDateTime);
 
 CREATE OR REPLACE FUNCTION _lpSaveData_beforeLoad(
     IN inStartDate      TDateTime , --
-    IN inEndDate        TDateTime , --
-    IN inSession        TVarChar    -- сессия пользователя
+    IN inEndDate        TDateTime   --
 )                              
 RETURNS VOID
 AS
@@ -53,6 +52,7 @@ BEGIN
                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
 
              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
+--                                    AND MovementItem.isErased = FALSE
              LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                          ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                         AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -102,5 +102,5 @@ CREATE INDEX idx_testMI_afterLoad_SessionId ON _testMI_afterLoad (SessionId);
 CREATE INDEX idx_testMI_afterLoad_SessionId_OperDate_DescId ON _testMI_afterLoad (SessionId, OperDate, DescId);
 */
 -- тест
--- SELECT * FROM _lpSaveData_beforeLoad (inStartDate:= '01.04.2014', inEndDate:= '02.05.2014', inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM _lpSaveData_beforeLoad (inStartDate:= '01.04.2014', inEndDate:= '18.05.2014')
 
