@@ -479,8 +479,7 @@ BEGIN
      )
      ,
      tmpTax AS
-     (
-       SELECT
+      (SELECT
              MovementItem.ObjectId                  AS GoodsId
            , MIFloat_Price.ValueData                AS Price
            , SUM(MovementItem.Amount)               AS Amount
@@ -500,27 +499,32 @@ BEGIN
       )
       ,
       tmpSale AS
-      (
-        SELECT
-             MovementItem.ObjectId     			        AS GoodsId
-           , MIFloat_Price.ValueData 			        AS Price
-           , SUM(MIFloat_AmountPartner.ValueData)   	AS Amount
-       FROM  MovementItem
-            JOIN MovementItemFloat AS MIFloat_Price
-                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
-                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                                  AND MIFloat_Price.ValueData <> 0
-
-            JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                   ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
-                                  AND MIFloat_AmountPartner.ValueData <> 0
+       (SELECT
+             MovementItem.ObjectId     			AS GoodsId
+           , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                       THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                  ELSE COALESCE (MIFloat_Price.ValueData, 0)
+             END AS Price
+           , SUM (MIFloat_AmountPartner.ValueData)   	AS Amount
+       FROM MovementItem
+            INNER JOIN MovementItemFloat AS MIFloat_Price
+                                         ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                                        AND MIFloat_Price.ValueData <> 0
+            INNER JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                         ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                        AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                                        AND MIFloat_AmountPartner.ValueData <> 0
+            LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                    ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
+                                   AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
        WHERE MovementItem.MovementId = vbMovementSaleId
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE--tmpIsErased.isErased)
        GROUP BY
              MovementItem.ObjectId
            , MIFloat_Price.ValueData
+           , MovementFloat_ChangePercent.ValueData
       )
 
        SELECT GoodsId
@@ -564,6 +568,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 19.05.14                                        * add MovementFloat_ChangePercent
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName
  07.05.14                       * add CHARCODE
