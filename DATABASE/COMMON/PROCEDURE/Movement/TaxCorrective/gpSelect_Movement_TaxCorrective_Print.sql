@@ -22,7 +22,7 @@ BEGIN
 
     OPEN Cursor1 FOR
      WITH tmpMovement AS
-          (SELECT COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id) AS Id
+          (SELECT Movement_find.Id
            FROM Movement
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                ON MovementLinkMovement_Master.MovementId = Movement.Id
@@ -31,6 +31,8 @@ BEGIN
                 LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
                                                ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
                                               AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
+                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_TaxCorrective()
           UNION
@@ -39,6 +41,8 @@ BEGIN
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
                                                 ON MovementLinkMovement_Master.MovementChildId = Movement.Id
                                                AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
+                                                      AND Movement_Master.StatusId = zc_Enum_Status_Complete()
            WHERE Movement.Id = inMovementId
              AND Movement.DescId = zc_Movement_ReturnIn()
           )
@@ -401,6 +405,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName
  03.05.14                                        * add zc_Enum_DocumentTaxKind_CorrectivePrice()
  30.04.14                                                       *

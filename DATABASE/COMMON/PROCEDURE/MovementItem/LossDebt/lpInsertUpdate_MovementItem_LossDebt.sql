@@ -17,6 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_LossDebt(
 )                              
 RETURNS Integer AS
 $BODY$
+   DECLARE vbIsInsert Boolean;
 BEGIN
      -- проверка
      IF COALESCE (inJuridicalId, 0) = 0
@@ -59,6 +60,9 @@ BEGIN
          RAISE EXCEPTION 'Ошибка.В документе уже существует <%> <%> <%> <%> .Дублирование запрещено.', lfGet_Object_ValueData (inJuridicalId), lfGet_Object_ValueData (inPaidKindId), lfGet_Object_ValueData (inInfoMoneyId), lfGet_Object_ValueData (inContractId);
      END IF;
 
+     -- определяется признак Создание/Корректировка
+     vbIsInsert:= COALESCE (ioId, 0) = 0;
+
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inJuridicalId, inMovementId, inAmount, NULL);
 
@@ -83,7 +87,7 @@ BEGIN
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (ioId, inUserId, vbIsInsert);
 
 END;
 $BODY$
@@ -92,6 +96,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.05.14                                        * add lpInsert_MovementItemProtocol
  10.03.14                                        *
 */
 

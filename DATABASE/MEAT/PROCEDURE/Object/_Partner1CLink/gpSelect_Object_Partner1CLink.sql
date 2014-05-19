@@ -2,7 +2,6 @@
 
 DROP FUNCTION IF EXISTS gpSelect_Object_Partner1CLink (TVarChar);
 
-
 CREATE OR REPLACE FUNCTION gpSelect_Object_Partner1CLink(
     IN inSession     TVarChar       -- сессия пользователя
 )                                                                	
@@ -36,6 +35,44 @@ BEGIN
                              GROUP BY ObjectLink_Contract_Juridical.ChildObjectId
                                     , ObjectLink_Partner_Juridical.ObjectId
                             )
+       /*WITH tmpJuridical AS (SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                  , ObjectLink_Partner_Juridical.ObjectId       AS PartnerId
+                             FROM Movement
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                                               AND MovementLinkObject_From.ObjectId IN (8459)
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                             WHERE Movement.OperDate BETWEEN '01.11.2013' AND '01.11.2014'
+                               AND Movement.DescId = zc_Movement_Sale()
+                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                            GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                   , ObjectLink_Partner_Juridical.ObjectId
+                           UNION 
+                             SELECT ObjectLink_Partner_Juridical.ChildObjectId AS JuridicalId
+                                  , ObjectLink_Partner_Juridical.ObjectId       AS PartnerId
+                             FROM Movement
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_From
+                                                                ON MovementLinkObject_From.MovementId = Movement.Id
+                                                               AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                                  INNER JOIN MovementLinkObject AS MovementLinkObject_To
+                                                                ON MovementLinkObject_To.MovementId = Movement.Id
+                                                               AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+                                                               AND MovementLinkObject_To.ObjectId IN (8459, 8461, 8462 )
+                                  INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                        ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                       AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                             WHERE Movement.OperDate BETWEEN '01.11.2013' AND '01.11.2014'
+                               AND Movement.DescId = zc_Movement_ReturnIn()
+                               AND Movement.StatusId = zc_Enum_Status_UnComplete()
+                            GROUP BY ObjectLink_Partner_Juridical.ChildObjectId
+                                   , ObjectLink_Partner_Juridical.ObjectId
+                           )*/
        SELECT Object_Partner.Id                     AS PartnerId
             , Object_Partner.ObjectCode             AS PartnerCode
             , Object_Partner.ValueData              AS PartnerName

@@ -36,6 +36,16 @@ BEGIN
      THEN
          RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
      END IF;
+     -- проверка - inAmount
+     IF inAmount IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определено количество/сумма в документе № <%>.', vbInvNumber;
+     END IF;
+     -- проверка - inObjectId
+     IF inObjectId IS NULL
+     THEN
+         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
+     END IF;
 
 
      IF COALESCE (ioId, 0) = 0
@@ -68,6 +78,7 @@ ALTER FUNCTION lpInsertUpdate_MovementItem (Integer, Integer, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 17.05.14                                        * add проверка - inAmount and inObjectId
  05.04.14                                        * add vbIsErased
  31.10.13                                        * add vbInvNumber
  06.10.13                                        * add vbStatusId

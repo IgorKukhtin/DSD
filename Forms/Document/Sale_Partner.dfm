@@ -1,27 +1,25 @@
 inherited Sale_PartnerForm: TSale_PartnerForm
-  ActiveControl = nil
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 668
-  ClientWidth = 1020
-  ExplicitTop = -128
-  ExplicitWidth = 1028
-  ExplicitHeight = 695
+  ClientWidth = 1108
+  ExplicitWidth = 1124
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 1020
+    Width = 1108
     Height = 542
     ExplicitTop = 126
     ExplicitWidth = 1020
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 1020
+    ClientRectRight = 1108
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1108
         Height = 518
         ExplicitWidth = 1020
         ExplicitHeight = 518
@@ -228,6 +226,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1020
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -256,7 +255,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1020
+    Width = 1108
     Height = 100
     TabOrder = 3
     ExplicitWidth = 1020
@@ -291,6 +290,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -1376,6 +1376,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         ParamType = ptInput
       end
       item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'ioPriceListId'
         Value = ''
         Component = GuidesPricelist
@@ -1446,6 +1453,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       end
       item
         Control = edRouteSorting
+      end
+      item
+        Control = edDocumentTaxKind
       end>
     Left = 232
     Top = 193

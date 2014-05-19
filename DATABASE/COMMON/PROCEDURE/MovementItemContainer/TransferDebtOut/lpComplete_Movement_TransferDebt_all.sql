@@ -73,7 +73,7 @@ BEGIN
           , 0 AS BusinessId_To
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE)             AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0)                    AS VATPercent
-          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
+          , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
             INTO vbMovementDescId, vbOperDate
                , vbFromId, vbToId, vbIsCorporate_From, vbIsCorporate_To, vbInfoMoneyId_Corporate_From, vbInfoMoneyId_Corporate_To
@@ -258,16 +258,16 @@ BEGIN
                      -- Статьи назначения
                    , COALESCE (ObjectLink_Goods_InfoMoney.ObjectId, 0) AS InfoMoneyId
               FROM 
-             (SELECT MAX (MovementItem.Id) AS MovementItemId
+             (SELECT (MovementItem.Id) AS MovementItemId
                    , MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
 
                    , SUM (MovementItem.Amount) AS OperCount
                    , CASE WHEN vbDiscountPercent <> 0
-                               THEN CAST ( (1 - vbDiscountPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
+                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                           WHEN vbExtraChargesPercent <> 0
-                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
-                          ELSE MIFloat_Price.ValueData 
+                               THEN CAST ( (1 + vbExtraChargesPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                          ELSE COALESCE (MIFloat_Price.ValueData, 0)
                      END AS Price
                    , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
@@ -287,7 +287,8 @@ BEGIN
               WHERE Movement.Id = inMovementId
                 AND Movement.DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
-              GROUP BY MovementItem.ObjectId
+              GROUP BY MovementItem.Id
+                     , MovementItem.ObjectId
                      , MILinkObject_GoodsKind.ObjectId
                      , MIFloat_Price.ValueData
                      , MIFloat_CountForPrice.ValueData
@@ -301,19 +302,19 @@ BEGIN
 
      -- Расчет Итоговой суммы по Контрагенту
      SELECT CASE WHEN vbPriceWithVAT OR vbVATPercent = 0
-                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки
+                    -- если цены с НДС или %НДС=0, тогда учитываем или % Скидки или % Наценки !!!но скидка/наценка учтена в цене!!!
                     THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 - vbDiscountPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
                               WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbExtraChargesPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
                               ELSE tmpOperSumm_Partner
                          END
                  WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН)
+                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы с НДС (этот вариант будет и для НАЛ и для БН) !!!но скидка/наценка учтена в цене!!!
                     THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 - vbDiscountPercent/100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
                               WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * (1 + vbExtraChargesPercent/100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
                          END
                  WHEN vbVATPercent > 0
-                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН)
+                    -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но скидка/наценка учтена в цене!!!
                     THEN CASE WHEN 1=0 AND vbDiscountPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 - vbDiscountPercent/100) * tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                               WHEN 1=0 AND vbExtraChargesPercent > 0 THEN CAST ( (1 + vbVATPercent / 100) * CAST ( (1 + vbExtraChargesPercent/100) * tmpOperSumm_Partner AS NUMERIC (16, 2)) AS NUMERIC (16, 2))
                               ELSE CAST ( (1 + vbVATPercent / 100) * tmpOperSumm_Partner AS NUMERIC (16, 2))
@@ -648,6 +649,27 @@ BEGIN
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
      UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
+     -- 5.3. ФИНИШ - перепроводим Налоговую
+     IF EXISTS (SELECT MovementLinkMovement_Master.MovementId
+                FROM MovementLinkMovement AS MovementLinkMovement_Master
+                     INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+                                                                   AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+                     INNER JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
+                                                   ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id
+                                                  AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
+                                                  AND MovementLinkObject_DocumentTaxKind_Master.ObjectId = zc_Enum_DocumentTaxKind_Tax()
+                WHERE MovementLinkMovement_Master.MovementId = inMovementId
+                  AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                  AND vbMovementDescId = zc_Movement_TransferDebtOut()
+               )
+     THEN PERFORM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId            := inMovementId
+                                                       , inDocumentTaxKindId     := zc_Enum_DocumentTaxKind_Tax()
+                                                       , inDocumentTaxKindId_inf := NULL
+                                                       , inUserId                := inUserId
+                                                        );
+     END IF;
+
+
      -- сохранили протокол
      PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
 
@@ -658,6 +680,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  11.05.14                                        * all
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        *

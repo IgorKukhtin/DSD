@@ -71,7 +71,7 @@ BEGIN
                ELSE 0
           END::TFloat AS Kredit,
 
-          Movement.OperDate,
+          Operation.OperDate,
           Movement.InvNumber, 
           Object_Account_View.AccountCode,
           Object_Account_View.AccountName_all AS AccountName,
@@ -102,6 +102,7 @@ BEGIN
                  CLO_Contract.ObjectId  AS ContractId, 
                  CLO_PaidKind.ObjectId  AS PaidKindId, 
                  MIContainer.MovementId,
+                 MIContainer.OperDate,
                  MAX (MIContainer.MovementItemId) AS MovementItemId,
                  SUM (MIContainer.Amount) AS MovementSumm,
                  0 AS StartSumm,
@@ -129,7 +130,7 @@ BEGIN
             AND (CLO_InfoMoney.ObjectId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
             AND (CLO_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
             AND (tmpContract.ContractId > 0 OR COALESCE (inContractId, 0) = 0)
-          GROUP BY Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId, MIContainer.MovementId
+          GROUP BY Container.ObjectId, CLO_InfoMoney.ObjectId, CLO_Contract.ObjectId, CLO_PaidKind.ObjectId, MIContainer.MovementId, MIContainer.OperDate
           HAVING SUM (MIContainer.Amount) <> 0
 
          UNION ALL
@@ -137,7 +138,8 @@ BEGIN
                  tmpRemains.InfoMoneyId, 
                  tmpRemains.ContractId, 
                  tmpRemains.PaidKindId, 
-                 0 AS MovementId, 
+                 0 AS MovementId,
+                 NULL :: TDateTime AS OperDate,
                  0 AS MovementItemId,
                  0 AS MovementSumm,
                  SUM (tmpRemains.StartSumm) AS StartSumm,
@@ -240,7 +242,6 @@ BEGIN
                                                                             WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
                                                                                  THEN zc_MovementLinkObject_From()
                                                                        END
-
       LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                    ON MovementLinkObject_To.MovementId = Movement.Id 
                                   AND MovementLinkObject_To.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnOut(), zc_Movement_TransferDebtOut())
@@ -248,7 +249,6 @@ BEGIN
                                                                           WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_Income(), zc_Movement_TransferDebtIn())
                                                                                THEN zc_MovementLinkObject_To()
                                                                      END
-                                                                          
       LEFT JOIN ObjectLink AS ObjectLink_BankAccount_Bank
                            ON ObjectLink_BankAccount_Bank.ObjectId = MovementItem_by.ObjectId
                           AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
@@ -268,6 +268,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 16.05.14                                        * add Operation.OperDate
  10.05.14                                        * add inInfoMoneyId
  05.05.14                                        * add inPaidKindId
  04.05.14                                        * add PaidKindName

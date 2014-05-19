@@ -7,7 +7,6 @@ CREATE OR REPLACE FUNCTION gpSelect_MovementCheck (
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (ParamText TVarChar, Param_Doc1 TVarChar, Param_Doc2 TVarChar--, Param_TaxCorrective TVarChar
-             
               )  
 AS
 $BODY$
@@ -18,24 +17,23 @@ DECLARE vbTaxId Integer;
 DECLARE vbTaxCorrectiveId Integer;
 BEGIN
 
-   
-    SELECT DescId
-    INTO vbDescId
-    FROM Movement
-    WHERE Id = inMovementId;
+    --
+    SELECT DescId INTO vbDescId FROM Movement WHERE Id = inMovementId;
     
+    -- 
     IF vbDescId = zc_Movement_Sale()
     THEN
-	vbSaleId:=inMovementId;
-		
-	SELECT COALESCE(MovementLinkMovement_Master.MovementChildId,0)
-        INTO vbTaxId
-        FROM Movement
-	     LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
-                                            ON MovementLinkMovement_Master.MovementId = Movement.Id
-                                           AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
-	WHERE Id = vbSaleId;
-
+        --
+	vbSaleId:= inMovementId;
+        --
+	SELECT COALESCE (MovementLinkMovement_Master.MovementChildId,0)
+               INTO vbTaxId
+        FROM MovementLinkMovement AS MovementLinkMovement_Master
+             INNER JOIN Movement AS Movement_DocumentMaster ON Movement_DocumentMaster.Id = MovementLinkMovement_Master.MovementChildId
+                                                           AND Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
+	WHERE MovementLinkMovement_Master.MovementId = vbSaleId
+          AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master();
+        --
         vbTaxCorrectiveId := 0;  
 	vbReturnInId := 0; 	
 
@@ -81,20 +79,31 @@ BEGIN
 	END IF;
     
    
+        -- Результат
         RETURN QUERY
-   
-        SELECT 'Дата' ::TVarChar
-             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN MovementDate_OperDatePartner.ValueData WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN  Movement.OperDate END) AS TVarChar )
-             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Tax() THEN  Movement.OperDate END) AS TVarChar )
+        SELECT ParamText
+             , Param_Doc1
+             , Param_Doc2
+        FROM
+       (SELECT 'Дата' :: TVarChar AS ParamText
+             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN DATE_TRUNC ('DAY', MovementDate_OperDatePartner.ValueData) WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN DATE_TRUNC ('DAY', Movement.OperDate) END) AS TVarChar) AS Param_Doc1
+             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Tax() THEN DATE_TRUNC ('DAY', Movement.OperDate) END) AS TVarChar) AS Param_Doc2
         FROM Movement
              LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                     ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                    AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
-        WHERE Movement.Id In (vbSaleId, vbTaxId, vbTaxCorrectiveId)
+        WHERE Movement.Id IN (vbSaleId, vbTaxId, vbTaxCorrectiveId)
        UNION  ALL
-        SELECT 'Договор' ::TVarChar
-             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN View_Contract_InvNumber.InvNumber WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN  View_Contract_InvNumber.InvNumber END)  AS TVarChar )
-             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Tax() THEN  View_Contract_InvNumber.InvNumber END) AS TVarChar )
+        SELECT 'Статус' ::TVarChar
+             , CAST (MAX (Object_Status.ValueData) AS TVarChar)
+             , CAST (MIN (Object_Status.ValueData) AS TVarChar)
+        FROM Movement
+             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+        WHERE Movement.Id IN (vbSaleId, vbTaxId, vbTaxCorrectiveId)
+       UNION  ALL
+        SELECT '№ дог.' ::TVarChar
+             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN View_Contract_InvNumber.InvNumber WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN  View_Contract_InvNumber.InvNumber END || ' * ' || View_Contract_InvNumber.ContractTagName)  AS TVarChar )
+             , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Tax() THEN  View_Contract_InvNumber.InvNumber END || ' * ' || View_Contract_InvNumber.ContractTagName) AS TVarChar )
         FROM Movement
              LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                           ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -151,6 +160,13 @@ BEGIN
                                           ON MovementDate_OperDatePartner.MovementId = Movement.Id
                                          AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
               WHERE Movement.Id In (vbTaxCorrectiveId, vbReturnInId) 
+             UNION  ALL
+              SELECT 'Статус возврат' ::TVarChar
+                   , CAST (MAX (Object_Status.ValueData) AS TVarChar)
+                   , CAST (MIN (Object_Status.ValueData) AS TVarChar)
+              FROM Movement
+                   LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+              WHERE Movement.Id In (vbTaxCorrectiveId, vbReturnInId) 
              UNION ALL
               SELECT 'Договор возврат' ::TVarChar
                    , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN View_Contract_InvNumber.InvNumber END) AS TVarChar )
@@ -193,7 +209,8 @@ BEGIN
               WHERE Movement.Id In (vbTaxCorrectiveId, vbReturnInId)
              ) AS tmpReturn
         WHERE vbReturnInId <> 0
-
+       ) AS tmp
+      WHERE Param_Doc1 <> Param_Doc2
     
     ;
             

@@ -24,7 +24,6 @@ uses
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   Log in '..\SOURCE\Log.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
-  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
   ExternalSave in '..\SOURCE\COMPONENT\ExternalSave.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
@@ -32,7 +31,9 @@ uses
   ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
   DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
-  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas';
 
 {$R *.res}
 
