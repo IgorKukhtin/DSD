@@ -380,11 +380,19 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbLoadOrder'
+        end
+        item
+          Visible = True
           ItemName = 'bbLoadComDoc'
         end>
     end
     object bbLoadComDoc: TdxBarButton
       Action = maEDIComDocLoad
+      Category = 0
+    end
+    object bbLoadOrder: TdxBarButton
+      Action = maEDIOrdersLoad
       Category = 0
     end
   end

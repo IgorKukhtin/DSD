@@ -194,9 +194,9 @@ end;
 
 procedure TEDI.FTPSetConnection;
 begin
-  FIdFTP.Username := ConnectionParams.User;// 'uatovalanftp';
-  FIdFTP.Password := ConnectionParams.Password; // 'ftp349067';
-  FIdFTP.Host := ConnectionParams.Host;// 'ruftpex.edi.su';
+  FIdFTP.Username := ConnectionParams.User;
+  FIdFTP.Password := ConnectionParams.Password;
+  FIdFTP.Host := ConnectionParams.Host;
 end;
 
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
@@ -204,37 +204,27 @@ procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
 var MovementId: Integer;
     i: integer;
 begin
-{  with spHeader, ORDER do begin
+  with spHeader, ORDER do begin
     ParamByName('outid').Value := 0;
-    ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
-    if Заголовок.ДатаЗамовлення <> '' then
-       ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаЗамовлення)
-    else
-       ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаДокументу);
-    ParamByName('inSaleInvNumber').Value  := Заголовок.НомерДокументу;
-    ParamByName('inSaleOperDate').Value   := VarToDateTime(Заголовок.ДатаДокументу);
+    ParamByName('inOrderInvNumber').Value := NUMBER;
+    ParamByName('inOrderOperDate').Value  := VarToDateTime(DATE);
 
-    for i:= 0 to Сторони.Count - 1 do
-        if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
-           ParamByName('inGLN').Value := Сторони.Контрагент[i].GLN;
-           ParamByName('inOKPO').Value := Сторони.Контрагент[i].КодКонтрагента;
-        end;
-     Execute;
-     MovementId := ParamByName('outid').Value;
+    ParamByName('inGLN').Value := HEAD.BUYER;
+
+    Execute;
+    MovementId := ParamByName('outid').Value;
   end;
-  with spList, ORDER.Таблиця do
-       for I := 0 to GetCount - 1 do begin
-           with Рядок[i] do begin
-             ParamByName('inMovementId').Value := MovementId;
-             ParamByName('inGoodsName').Value := Найменування;
-             ParamByName('inGLNCode').Value := АртикулПокупця;
-             ParamByName('inAmountOrder').Value := 0;
-             ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
-             ParamByName('inPricePartner').Value := gfStrToFloat(Ціна);
-             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.Сума);
-             Execute;
-           end;
-       end;}
+  for I := 0 to ORDER.HEAD.POSITION.Count - 1 do
+     with spList, ORDER.HEAD.POSITION[i] do begin
+         ParamByName('inMovementId').Value := MovementId;
+         ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
+         ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+         ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
+         ParamByName('inAmountPartner').Value := 0;
+         ParamByName('inPricePartner').Value := gfStrToFloat(ORDERPRICE);
+         ParamByName('inSummPartner').Value := gfStrToFloat(ORDERPRICE) * gfStrToFloat(ORDEREDQUANTITY);
+         Execute;
+     end;
 end;
 
 procedure TEDI.InsertUpdateComDoc(

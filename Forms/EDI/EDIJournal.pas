@@ -55,6 +55,7 @@ type
     EDI: TEDI;
     maEDIOrdersLoad: TMultiAction;
     EDIActionOrdersLoad: TEDIAction;
+    bbLoadOrder: TdxBarButton;
   private
     { Private declarations }
   public
