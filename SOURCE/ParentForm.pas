@@ -295,8 +295,8 @@ initialization
   RegisterClass (TdsdUpdateErased);
   RegisterClass (TdsdUserSettingsStorageAddOn);
 
-  RegisterClass (TEDIActionDesadv);
-  RegisterClass (TEDIActionComdocLoad);
+  RegisterClass (TEDI);
+  RegisterClass (TEDIAction);
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TExternalSaveAction);

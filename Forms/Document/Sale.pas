@@ -96,7 +96,7 @@ type
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
-    EDIActionDesadv: TEDIActionDesadv;
+    EDIActionDesadv: TEDIAction;
     mactDECLAR: TMultiAction;
     bbDECLAR: TdxBarButton;
     actExecPrintStoredProc: TdsdExecStoredProc;

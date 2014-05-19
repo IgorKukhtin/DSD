@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Load(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (NPP TVarChar,  NUM TVarChar,   DATEV TDateTime, NAZP TVarChar, IPN TVarChar, 
-               ZAGSUM TFloat, BAZOP20 TFloat, SUMPDV TFloat,   ZVILN TFloat,
+               ZAGSUM TFloat, BAZOP20 TFloat, SUMPDV TFloat,   BAZOP0 TFloat, ZVILN TFloat,
                EXPORT TFloat, PZOB TFloat,    NREZ TFloat,     KOR TFloat,    WMDTYPE TFloat, 
                WMDTYPESTR TVarChar)
 AS
@@ -39,6 +39,7 @@ BEGIN
                   WHEN zc_Movement_Tax() THEN (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat      
                   ELSE - (MovementFloat_TotalSummPVAT.ValueData - MovementFloat_TotalSummMVAT.ValueData)::TFloat
              END                                        AS SUMPDV
+           , 0::TFloat AS BAZOP0
            , 0::TFloat AS ZVILN
            , 0::TFloat AS EXPORT
            , 0::TFloat AS PZOB

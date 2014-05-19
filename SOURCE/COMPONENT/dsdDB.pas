@@ -433,7 +433,9 @@ end;
 
 function TdsdStoredProc.ParamByName(const Value: string): TdsdParam;
 begin
-  result := FParams.ParamByName(Value)
+  result := FParams.ParamByName(Value);
+  if not Assigned(Result) then
+     raise Exception.Create('Параметр ' + Value + ' не найден в компоненте ' + Self.Name);
 end;
 
 { TdsdParmas }

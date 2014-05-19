@@ -21,6 +21,7 @@ CREATE TABLE ObjectString(
 
 
 CREATE UNIQUE INDEX idx_ObjectString_ObjectId_DescId ON ObjectString (ObjectId, DescId);
+CREATE INDEX idx_ObjectString_ValueData_DescId_ObjectId ON ObjectString (ValueData, DescId, ObjectId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

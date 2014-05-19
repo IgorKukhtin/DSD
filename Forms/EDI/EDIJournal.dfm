@@ -1,18 +1,29 @@
 inherited EDIJournalForm: TEDIJournalForm
   Caption = 'EDI '#1078#1091#1088#1085#1072#1083
+  ClientHeight = 424
+  ClientWidth = 834
+  ExplicitWidth = 842
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 57
-    Height = 251
+    Width = 834
+    Height = 367
     ExplicitTop = 57
-    ExplicitHeight = 251
-    ClientRectBottom = 251
+    ExplicitWidth = 834
+    ExplicitHeight = 367
+    ClientRectBottom = 367
+    ClientRectRight = 834
     inherited tsMain: TcxTabSheet
-      ExplicitHeight = 251
+      ExplicitWidth = 834
+      ExplicitHeight = 367
       inherited cxGrid: TcxGrid
-        Height = 251
-        ExplicitHeight = 251
+        Width = 834
+        Height = 209
+        Align = alTop
+        ExplicitWidth = 834
+        ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -21,19 +32,164 @@ inherited EDIJournalForm: TEDIJournalForm
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OperDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'InvNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          object cxGridDBTableViewColumn3: TcxGridDBColumn
+          object colSaleOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'SaleOperDate'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
-          object cxGridDBTableViewColumn4: TcxGridDBColumn
+          object colSaleInvNumber: TcxGridDBColumn
+            Caption = #1053#1086#1084#1077#1088' '#1087#1088#1086#1076#1072#1078#1080
+            DataBinding.FieldName = 'SaleInvNumber'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
           end
+          object colGLNCode: TcxGridDBColumn
+            Caption = 'GLN '#1050#1086#1076
+            DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colPartnerName: TcxGridDBColumn
+            Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
+            DataBinding.FieldName = 'PartnerName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'. '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            Width = 60
+          end
+        end
+      end
+      object Splitter: TcxSplitter
+        Left = 0
+        Top = 209
+        Width = 834
+        Height = 3
+        AlignSplitter = salTop
+        Control = cxGrid
+      end
+      object cxChildGrid: TcxGrid
+        Left = 0
+        Top = 212
+        Width = 834
+        Height = 155
+        Align = alClient
+        PopupMenu = PopupMenu
+        TabOrder = 2
+        object cxChildGridDBTableView: TcxGridDBTableView
+          Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = ClientDS
+          DataController.Filter.Options = [fcoCaseInsensitive]
+          DataController.Summary.DefaultGroupSummaryItems = <>
+          DataController.Summary.FooterSummaryItems = <
+            item
+              Format = ',0.00'
+              Kind = skSum
+              Column = colSummPartner
+            end>
+          DataController.Summary.SummaryGroups = <>
+          Images = dmMain.SortImageList
+          OptionsBehavior.GoToNextCellOnEnter = True
+          OptionsBehavior.FocusCellOnCycle = True
+          OptionsCustomize.ColumnHiding = True
+          OptionsCustomize.ColumnsQuickCustomization = True
+          OptionsCustomize.DataRowSizing = True
+          OptionsData.CancelOnExit = False
+          OptionsData.Inserting = False
+          OptionsView.ColumnAutoWidth = True
+          OptionsView.Footer = True
+          OptionsView.GroupByBox = False
+          OptionsView.GroupSummaryLayout = gslAlignWithColumns
+          OptionsView.HeaderAutoHeight = True
+          OptionsView.Indicator = True
+          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object colGoodsGLNCode: TcxGridDBColumn
+            Caption = 'GLN '#1082#1086#1076
+            DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colEDIGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1080#1079' EDI'
+            DataBinding.FieldName = 'EDIGoodsName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colGoodsCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colGoodsName: TcxGridDBColumn
+            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colAmountOrder: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'AmountOrder'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colAmountPartner: TcxGridDBColumn
+            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'AmountPartner'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colPricePartner: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'PricePartner'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colSummPartner: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
+            DataBinding.FieldName = 'SummPartner'
+            Options.Editing = False
+          end
+          object colPrice: TcxGridDBColumn
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+        end
+        object cxGridLevel1: TcxGridLevel
+          GridView = cxChildGridDBTableView
         end
       end
     end
@@ -41,7 +197,7 @@ inherited EDIJournalForm: TEDIJournalForm
   object Panel: TPanel [1]
     Left = 0
     Top = 0
-    Width = 575
+    Width = 834
     Height = 31
     Align = alTop
     TabOrder = 5
@@ -74,8 +230,21 @@ inherited EDIJournalForm: TEDIJournalForm
       Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Top = 184
+  end
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = cxChildGrid
+        Properties.Strings = (
+          'Height')
+      end
+      item
+        Component = cxGrid
+        Properties.Strings = (
+          'Height')
+      end
       item
         Component = deEnd
         Properties.Strings = (
@@ -85,14 +254,74 @@ inherited EDIJournalForm: TEDIJournalForm
         Component = deStart
         Properties.Strings = (
           'Date')
+      end
+      item
+        Component = Splitter
+        Properties.Strings = (
+          'Top')
       end>
+    Top = 184
   end
   inherited ActionList: TActionList
-    object EDIActionComdocLoad: TEDIActionComdocLoad
+    Top = 183
+    inherited actRefresh: TdsdDataSetRefresh
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end
+        item
+          StoredProc = spClient
+        end>
+    end
+    object EDIActionComdocLoad: TEDIAction
       Category = 'EDI'
       MoveParams = <>
+      EDI = EDI
+      EDIDocType = ediComDoc
       spHeader = spHeader
       spList = spList
+      Directory = '/archive'
+    end
+    object maEDIComDocLoad: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = EDIActionComdocLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1085#1072#1082#1083#1072#1076#1085#1099#1093
+      ImageIndex = 30
+    end
+    object maEDIOrdersLoad: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = maEDIOrdersLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1079#1072#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'?'
+      InfoAfterExecute = #1047#1072#1082#1072#1079#1099' '#1091#1089#1087#1077#1096#1085#1086' '#1079#1072#1075#1088#1091#1078#1077#1085#1099
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1072
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1079#1072#1082#1072#1079#1072
+      ImageIndex = 27
+    end
+    object EDIActionOrdersLoad: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      EDI = EDI
+      EDIDocType = ediOrder
+      spHeader = spHeader
+      spList = spList
+      Directory = '/archive'
     end
   end
   inherited MasterDS: TDataSource
@@ -155,10 +384,16 @@ inherited EDIJournalForm: TEDIJournalForm
         end>
     end
     object bbLoadComDoc: TdxBarButton
-      Action = EDIActionComdocLoad
+      Action = maEDIComDocLoad
       Category = 0
-      ImageIndex = 30
     end
+  end
+  inherited DBViewAddOn: TdsdDBViewAddOn
+    Left = 448
+    Top = 120
+  end
+  inherited PopupMenu: TPopupMenu
+    Top = 184
   end
   object spHeader: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_EDI'
@@ -209,10 +444,115 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 120
   end
   object spList: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_EDI'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGLNCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountOrder'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPricePartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
     Left = 168
     Top = 168
+  end
+  object spClient: TdsdStoredProc
+    StoredProcName = 'gpSelect_MI_EDI'
+    DataSet = ClientCDS
+    DataSets = <
+      item
+        DataSet = ClientCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 96
+    Top = 312
+  end
+  object ClientDS: TDataSource
+    DataSet = ClientCDS
+    Left = 64
+    Top = 312
+  end
+  object ClientCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'MovementId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 32
+    Top = 312
+  end
+  object PeriodChoice: TPeriodChoice
+    DateStart = deStart
+    DateEnd = deEnd
+    Left = 304
+    Top = 40
+  end
+  object RefreshDispatcher: TRefreshDispatcher
+    RefreshAction = actRefresh
+    ComponentList = <
+      item
+        Component = PeriodChoice
+      end>
+    Left = 304
+    Top = 96
+  end
+  object EDI: TEDI
+    ConnectionParams.Host = 'ruftpex.edi.su'
+    ConnectionParams.User = 'uatovalanftp'
+    ConnectionParams.Password = 'ftp349067'
+    Left = 416
+    Top = 32
   end
 end
