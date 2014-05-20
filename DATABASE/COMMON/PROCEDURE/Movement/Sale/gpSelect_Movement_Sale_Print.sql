@@ -39,21 +39,21 @@ BEGIN
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
-           LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+          LEFT JOIN MovementFloat AS MovementFloat_VATPercent
                                    ON MovementFloat_VATPercent.MovementId = Movement.Id
-                                  AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
-           LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
-                                   ON MovementFloat_ChangePercent.MovementId = Movement.Id
-                                  AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
-                                        ON MovementLinkObject_To.MovementId = Movement.Id
-                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-           LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                               AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-           LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
-                                ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
-                               AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                                 AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+          LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
+                                  ON MovementFloat_ChangePercent.MovementId = Movement.Id
+                                 AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_To
+                                       ON MovementLinkObject_To.MovementId = Movement.Id
+                                      AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
+          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+          LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                               ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId)
+                              AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
      WHERE Movement.Id = inMovementId
        AND Movement.StatusId = zc_Enum_Status_Complete()
     ;
