@@ -77,8 +77,7 @@ BEGIN
    FROM _tmpPaidKind
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.isErased = FALSE
-                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
-
+                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -142,8 +141,7 @@ BEGIN
         INNER JOIN Object_Contract_View ON Object_Contract_View.PaidKindId = _tmpPaidKind.PaidKindId
                                        AND Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
                                        AND Object_Contract_View.isErased = FALSE
-                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR inJuridicalId = 0)
-
+                                       AND (Object_Contract_View.JuridicalId = inJuridicalId OR COALESCE (inJuridicalId, 0) = 0)
         LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
@@ -181,6 +179,7 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.05.14                                        * !!!ContractKindName - всегда!!!
  06.05.14                                        * add ChangePercent TFloat
  25.04.14                                        * add ContractTagName
  27.03.14                         * add inJuridicalId
@@ -192,4 +191,4 @@ ALTER FUNCTION gpSelect_Object_ContractChoice (Integer, Boolean, Integer, TVarCh
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractChoice (inPaidKindId:=NULL, inShowAll:= true, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractChoice (inPaidKindId:=NULL, inShowAll:= true, inJuridicalId:=1, inSession := zfCalc_UserAdmin())

@@ -155,9 +155,9 @@ BEGIN
            , COALESCE (Object_Partner.ValueData, Object_From.ValueData) AS FromName
            , Object_To.ValueData               		AS ToName
            , Object_PaidKind.ValueData         		AS PaidKindName
-           , Object_Contract.InvNumber         		AS ContractName
-           , ObjectDate_Start.ValueData                 AS ContractSigningDate
-           , Object_ContractKind.ValueData              AS ContractKind
+           , View_Contract.InvNumber        		AS ContractName
+           , View_Contract.StartDate                    AS ContractSigningDate
+           , View_Contract.ContractKindName             AS ContractKind
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
@@ -231,16 +231,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
-            LEFT JOIN Object_Contract_InvNumber_View AS Object_Contract ON Object_Contract.ContractId = MovementLinkObject_Contract.ObjectId
-            LEFT JOIN ObjectDate AS ObjectDate_Start
-                                 ON ObjectDate_Start.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                                 ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_JuridicalBasis ON ObjectLink_Contract_JuridicalBasis.ObjectId = MovementLinkObject_Contract.ObjectId
-                                                                      AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
 -- ============================
             --по контрагенту находим юр.лицо
@@ -253,7 +244,7 @@ BEGIN
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
-                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (ObjectLink_Contract_JuridicalBasis.ChildObjectId, Object_To.Id)
+                                                                ON OH_JuridicalDetails_To.JuridicalId = COALESCE (View_Contract.JuridicalBasisId, Object_To.Id)
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
 
 
@@ -418,6 +409,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.14                                        * add Object_Contract_View
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  08.05.14                                        * all
  16.05.14                                        * add Object_Contract_InvNumber_View

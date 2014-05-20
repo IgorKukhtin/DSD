@@ -56,7 +56,7 @@ BEGIN
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
        
-       , Object_ContractKind.Id        AS ContractKindId 
+       , Object_ContractKind.Id        AS ContractKindId
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
@@ -120,6 +120,11 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Signing
                              ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                            AND Object_Contract_View.InvNumber <> '-'
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -140,12 +145,7 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
-              
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-        
+
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
@@ -214,6 +214,8 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.05.14                                        * !!!ContractKindName - ‚ÒÂ„‰‡!!!
+ 20.05.14                                        * add Object_Contract_View.InvNumber <> '-'
  25.04.14                                        * rename BankAccountExternal
  25.04.14                                        * add ContractTagName
  17.04.14                                        * add InfoMoney..._ch

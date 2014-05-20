@@ -113,18 +113,12 @@ BEGIN
           , View_Contract.StartDate
           , View_Contract.EndDate
           , View_Contract.ContractTagName
-          , Object_ContractKind.ValueData AS ContractKindName
+          , View_Contract.ContractKindName
           , ObjectHistory_JuridicalDetails_View.OKPO
      FROM Object AS Object_Juridical
           LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Juridical.DescId
           LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.JuridicalId = Object_Juridical.Id 
           LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = View_Contract.PaidKindId
-
-          LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                               ON ObjectLink_Contract_ContractKind.ObjectId = View_Contract.ContractId
-                              AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-          LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-
           LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = View_Contract.InfoMoneyId
           LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_Juridical.Id
      WHERE Object_Juridical.DescId = zc_Object_Juridical()
@@ -146,6 +140,7 @@ ALTER FUNCTION gpSelect_Object_MoneyPlace (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.05.14                                        * change ContractKindName
  25.04.14                                        * add ContractTagName
  18.04.14                                        * rem View_Contract.ContractStateKindId <> zc_Enum_ContractStateKind_Close()
  18.03.14                                        * add all

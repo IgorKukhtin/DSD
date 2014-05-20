@@ -63,17 +63,14 @@ BEGIN
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
 --           , MovementString_InvNumberPartner.ValueData                      AS InvNumberPartner
            , CAST (REPEAT (' ', 8 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
-           , Object_From.Id                    		                        AS FromId
-           , Object_From.ValueData             		                        AS FromName
+           , Object_From.ValueData             		                    AS FromName
            , ObjectHistory_JuridicalDetails_View.OKPO                       AS OKPO_From
-           , Object_To.Id                      		                        AS ToId
-           , Object_To.ValueData               		                        AS ToName
+           , Object_To.ValueData               		                    AS ToName
            , Object_Partner.ObjectCode                                      AS PartnerCode
            , Object_Partner.ValueData               	                    AS PartnerName
-           , View_Contract_InvNumber.ContractId        		                AS ContractId
-           , View_Contract_InvNumber.invnumber         		                AS ContractName
-           , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
-           , Object_ContractKind.ValueData                                  AS ContractKind
+           , View_Contract.InvNumber         		                    AS ContractName
+           , View_Contract.StartDate                                        AS ContractSigningDate
+           , View_Contract.ContractKindName                                 AS ContractKind
            , CAST('Áàáåíêî Â.Ï.' AS TVarChar)                               AS StoreKeeper -- êëàäîâùèê
            , CAST('' AS TVarChar)                                           AS Through     -- ÷åðåç êîãî
            , Object_TaxKind.Id                		                        AS TaxKindId
@@ -246,8 +243,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-            LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
-            LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = View_Contract_InvNumber.InfoMoneyId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_DocumentMaster
                                            ON MovementLinkMovement_DocumentMaster.MovementId = Movement.Id
@@ -266,27 +262,15 @@ BEGIN
 
             LEFT JOIN MovementString AS MS_DocumentChild_InvNumberPartner ON MS_DocumentChild_InvNumberPartner.MovementId = MovementLinkMovement_DocumentChild.MovementChildId
                                                                          AND MS_DocumentChild_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
---+++++++++++++++++++++++++++++++++++++
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
-
             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
--- Contract
-            LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                                 ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-
-            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
 
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_To
                                                                 ON OH_JuridicalDetails_To.JuridicalId = Object_To.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_To.StartDate AND OH_JuridicalDetails_To.EndDate
-
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
@@ -405,6 +389,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName
  03.05.14                                        * add zc_Enum_DocumentTaxKind_CorrectivePrice()

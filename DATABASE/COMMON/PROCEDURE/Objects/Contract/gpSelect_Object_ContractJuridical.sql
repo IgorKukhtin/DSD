@@ -54,6 +54,11 @@ BEGIN
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_InvNumberArchive.DescId = zc_objectString_Contract_InvNumberArchive()
@@ -61,11 +66,6 @@ BEGIN
                                ON ObjectString_Comment.ObjectId = Object_Contract_View.ContractId
                               AND ObjectString_Comment.DescId = zc_objectString_Contract_Comment()
 
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-        
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
         LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId
 
@@ -99,6 +99,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.05.14                                        * !!!ContractKindName - всегда!!!
  25.04.14                                        * add ContractTagName
  13.02.14                                        * del zc_Enum_ContractStateKind_Close, здесь надо показывать все договора :)
  13.02.14                                        * add zc_Enum_ContractStateKind_Close
@@ -109,4 +110,4 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 */
 
 -- тест
--- SELECT * FROM gpSelect_Object_ContractJuridical (1, inSession := zfCalc_UserAdmin())
+-- SELECT * FROM gpSelect_Object_ContractJuridical (inJuridicalId:= 1, inSession := zfCalc_UserAdmin())

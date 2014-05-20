@@ -66,7 +66,7 @@ BEGIN
        , Object_Contract_View.StartDate
        , Object_Contract_View.EndDate
        
-       , Object_ContractKind.Id        AS ContractKindId 
+       , Object_ContractKind.Id        AS ContractKindId
        , Object_ContractKind.ValueData AS ContractKindName
        , Object_Juridical.Id           AS JuridicalId
        , Object_Juridical.ObjectCode   AS JuridicalCode
@@ -132,6 +132,11 @@ BEGIN
         LEFT JOIN ObjectDate AS ObjectDate_Signing
                              ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
                             AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                            AND Object_Contract_View.InvNumber <> '-'
+        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -152,11 +157,6 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
-
-        LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                             ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
-                            AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-        LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
         
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -164,8 +164,8 @@ BEGIN
         LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
         
         LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
-                            ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
-                           AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
+                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
         LEFT JOIN Object_Personal_View ON Object_Personal_View.PersonalId = ObjectLink_Contract_Personal.ChildObjectId               
 
         LEFT JOIN ObjectLink AS ObjectLink_Contract_PersonalTrade
@@ -229,6 +229,8 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.14                                        * !!!ContractKindName - всегда!!!
+ 20.05.14                                        * add Object_Contract_View.InvNumber <> '-'
  26.04.14                                        * add View_Contract_InvNumber_Key
  25.04.14                                        * add ContractKeyId
  25.04.14                                        * по другому ContractTag... and ContractStateKind...
