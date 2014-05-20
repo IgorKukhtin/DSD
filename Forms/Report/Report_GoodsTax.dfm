@@ -1,5 +1,5 @@
-inherited Report_GoodsForm: TReport_GoodsForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
+inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1085#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099')>'
   ClientHeight = 341
   ClientWidth = 1174
   ExplicitWidth = 1182
@@ -370,7 +370,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_Goods'
+    StoredProcName = 'gpReport_GoodsTax'
     Params = <
       item
         Name = 'inStartDate'
