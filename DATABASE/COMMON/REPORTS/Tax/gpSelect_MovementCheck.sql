@@ -81,9 +81,9 @@ BEGIN
    
         -- Результат
         RETURN QUERY
-        SELECT ParamText
-             , Param_Doc1
-             , Param_Doc2
+        SELECT tmp.ParamText
+             , tmp.Param_Doc1
+             , tmp.Param_Doc2
         FROM
        (SELECT 'Дата' :: TVarChar AS ParamText
              , CAST (MAX (CASE WHEN Movement.DescId = zc_Movement_Sale() THEN DATE_TRUNC ('DAY', MovementDate_OperDatePartner.ValueData) WHEN Movement.DescId = zc_Movement_TaxCorrective() THEN DATE_TRUNC ('DAY', Movement.OperDate) END) AS TVarChar) AS Param_Doc1
@@ -210,7 +210,7 @@ BEGIN
              ) AS tmpReturn
         WHERE vbReturnInId <> 0
        ) AS tmp
-      WHERE Param_Doc1 <> Param_Doc2
+      WHERE tmp.Param_Doc1 <> tmp.Param_Doc2
     
     ;
             
@@ -231,3 +231,4 @@ ALTER FUNCTION gpSelect_MovementCheck ( Integer, TVarChar) OWNER TO postgres;
 --SELECT * FROM gpSelect_MovementCheck (inDocumentId:= 161850 , inSession:= zfCalc_UserAdmin());
 
 --select * from gpSelect_MovementCheck(inmovementid := 177896  ,  inSession := '5');
+--select * from gpSelect_MovementCheck(inmovementid := 259734 ,  inSession := '5');
