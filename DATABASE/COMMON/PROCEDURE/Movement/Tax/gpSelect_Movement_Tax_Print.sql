@@ -1,6 +1,5 @@
 -- Function: gpSelect_Movement_Tax_Print()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_Tax_Print(
@@ -71,19 +70,17 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData
             -MovementFloat_TotalSummMVAT.ValueData      AS SummVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-           , Object_From.Id                    			AS FromId
-           , Object_From.ValueData             			AS FromName
-           , Object_To.Id                      			AS ToId
-           , Object_To.ValueData               			AS ToName
-           , Object_PaidKind.Id                			AS PaidKindId
-           , Object_PaidKind.ValueData         			AS PaidKindName
-           , Object_Contract.ContractId        			AS ContractId
-           , Object_Contract.invnumber         			AS ContractName
-           , Object_RouteSorting.Id        				AS RouteSortingId
-           , Object_RouteSorting.ValueData 				AS RouteSortingName
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
-           , ObjectDate_Signing.ValueData               AS ContractSigningDate
-           , Object_ContractKind.ValueData              AS ContractKind
+
+           , Object_From.ValueData             		AS FromName
+           , Object_To.ValueData               		AS ToName
+           , Object_PaidKind.ValueData         		AS PaidKindName
+           , Object_RouteSorting.ValueData 		AS RouteSortingName
+
+           , View_Contract.InvNumber         		AS ContractName
+           , View_Contract.StartDate                    AS ContractSigningDate
+           , View_Contract.ContractKindName             AS ContractKind
+
            , CAST('Бабенко В.П.' AS TVarChar)           AS StoreKeeper -- кладовщик
            , CAST('' AS TVarChar)                       AS Through     -- через кого
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
@@ -198,18 +195,7 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
-
-            LEFT JOIN object_contract_invnumber_view AS Object_Contract ON Object_Contract.contractid = MovementLinkObject_Contract.ObjectId
-
-            LEFT JOIN ObjectDate AS ObjectDate_Signing
-                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
-
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                                 ON ObjectLink_Contract_ContractKind.ObjectId = MovementLinkObject_Contract.ObjectId
-                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-
-            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+            LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_RouteSorting
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
@@ -415,8 +401,6 @@ BEGIN
                                  ON ObjectLink_Juridical_GoodsProperty.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
                                 AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
 
---            LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId -- Классификаторы свойств товаров
-
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
@@ -568,6 +552,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
  19.05.14                                        * add MovementFloat_ChangePercent
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  13.05.14                                        * add calc GoodsName

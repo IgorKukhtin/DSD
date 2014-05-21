@@ -67,7 +67,7 @@ BEGIN
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
    -- проверка уникальность <Номер договора> для !!!одного!! Юр. лица и !!!одной!! Статьи
-   IF TRIM (inInvNumber) <> '' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
+   IF TRIM (inInvNumber) <> '' AND TRIM (inInvNumber) <> '-' -- and inInvNumber <> '100398' and inInvNumber <> '877' and inInvNumber <> '24849' and inInvNumber <> '19' and inInvNumber <> 'б/н' and inInvNumber <> '369/1' and inInvNumber <> '63/12' and inInvNumber <> '4600034104' and inInvNumber <> '19М'
    THEN
        IF EXISTS (SELECT ObjectLink.ChildObjectId
                   FROM ObjectLink

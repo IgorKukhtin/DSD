@@ -37,25 +37,25 @@ BEGIN
                                             , inAmountFuel         := zfCalc_RateFuelValue_Distance (inDistance           := 100
                                                                                                    , inAmountFuel         := tmpRateFuel.AmountFuel
                                                                                                    , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                   , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, ObjectFloat_RateFuelKind_Tax.ValueData) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                   , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
                                                                                                     )
                                               -- Холод, Кол-во норма в час, с учетом Коэффициента и % дополнительного расхода
                                             , inAmountColdHour     := zfCalc_RateFuelValue_ColdHour (inColdHour           := 1
                                                                                                    , inAmountColdHour     := tmpRateFuel.AmountColdHour
                                                                                                    , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                   , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, ObjectFloat_RateFuelKind_Tax.ValueData) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                   , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
                                                                                                     )
                                               -- Холод, Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
                                             , inAmountColdDistance := zfCalc_RateFuelValue_ColdDistance (inColdDistance       := 100
                                                                                                        , inAmountColdDistance := tmpRateFuel.AmountColdDistance
                                                                                                        , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                       , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, ObjectFloat_RateFuelKind_Tax.ValueData) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                                                                                       , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
                                                                                                         )
                                             , inNumber             := CASE WHEN COALESCE (ObjectLink_Car_FuelAll.DescId, 0) = zc_ObjectLink_Car_FuelMaster() THEN 1
                                                                            WHEN COALESCE (ObjectLink_Car_FuelAll.DescId, 0) = zc_ObjectLink_Car_FuelChild() THEN 2
                                                                            ELSE 3
                                                                       END
-                                            , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, ObjectFloat_RateFuelKind_Tax.ValueData) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
+                                            , inRateFuelKindTax    := COALESCE (MIFloat_RateFuelKindTax.ValueData, COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)) -- COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, MIFloat_RateFuelKindTax.ValueData)
                                             , inRateFuelKindId     := COALESCE (MILinkObject_RateFuelKind.ObjectId, ObjectLink_Fuel_RateFuelKind.ChildObjectId) -- COALESCE (ObjectLink_Fuel_RateFuelKind.ChildObjectId, MILinkObject_RateFuelKind.ObjectId)
                                             , inUserId             := inUserId
                                              )
@@ -144,22 +144,22 @@ BEGIN
                                             , inAmountFuel         := zfCalc_RateFuelValue_Distance (inDistance           := 100
                                                                                                    , inAmountFuel         := tmpRateFuel.AmountFuel
                                                                                                    , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                   , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                   , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)
                                                                                                     )
                                               -- Холод, Кол-во норма в час, с учетом Коэффициента и % дополнительного расхода
                                             , inAmountColdHour     := zfCalc_RateFuelValue_ColdHour (inColdHour           := 1
                                                                                                    , inAmountColdHour     := tmpRateFuel.AmountColdHour
                                                                                                    , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                   , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                   , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)
                                                                                                     )
                                               -- Холод, Кол-во норма на 100 км, с учетом Коэффициента и % дополнительного расхода
                                             , inAmountColdDistance := zfCalc_RateFuelValue_ColdDistance (inColdDistance       := 100
                                                                                                        , inAmountColdDistance := tmpRateFuel.AmountColdDistance
                                                                                                        , inFuel_Ratio         := ObjectFloat_Fuel_Ratio.ValueData
-                                                                                                       , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                                                                                       , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)
                                                                                                         )
                                             , inNumber             := CASE WHEN ObjectLink_Car_FuelAll.DescId = zc_ObjectLink_Car_FuelMaster() THEN 1 ELSE 2 END
-                                            , inRateFuelKindTax    := ObjectFloat_RateFuelKind_Tax.ValueData
+                                            , inRateFuelKindTax    := COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)
                                             , inRateFuelKindId     := ObjectLink_Fuel_RateFuelKind.ChildObjectId
                                             , inUserId             := inUserId
                                              )
@@ -236,6 +236,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.05.14                                        * add COALESCE (ObjectFloat_RateFuelKind_Tax.ValueData, 0)
  14.02.13                                        * !!!для филиалов не будем учитывать % дополнительного расхода в связи с сезоном/температурой!!!
  11.12.13                                        * поменял приоритет в пересчитали Child - нормы для существующих
  24.10.13                                        * add zfCalc_RateFuelValue_...

@@ -29,6 +29,7 @@ BEGIN
     WITH tmpContractConditionKind AS (SELECT ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId AS ContractConditionKindID
                                            , View_Contract.JuridicalId
                                            , View_Contract.InvNumber   AS InvNumber_master
+                                           , View_Contract.ContractTagId         AS ContractTagId_master
                                            , View_Contract.ContractTagName       AS ContractTagName_master
                                            , View_Contract.ContractStateKindCode AS ContractStateKindCode_master
                                            , View_Contract.ContractId  AS ContractId_master
@@ -83,7 +84,7 @@ BEGIN
                                 , View_Contract_InvNumber_find.InfoMoneyId AS InfoMoneyId_find
                                 , View_Contract_InvNumber_find.InvNumber   AS InvNumber_find
                            FROM (SELECT tmpContractConditionKind.ContractId_master
-                                      , MAX (View_Contract_find.ContractId) AS ContractId_find
+                                      , MAX (COALESCE (View_Contract_find_tag.ContractId, View_Contract_find.ContractId)) AS ContractId_find
                                  FROM tmpContractConditionKind
                                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_BonusKind
                                                             ON ObjectLink_ContractCondition_BonusKind.ChildObjectId = tmpContractConditionKind.BonusKindId
@@ -95,10 +96,15 @@ BEGIN
                                       INNER JOIN ObjectLink AS ObjectLink_ContractCondition_Contract
                                                             ON ObjectLink_ContractCondition_Contract.ObjectId = ObjectLink_ContractCondition_BonusKind.ObjectId
                                                            AND ObjectLink_ContractCondition_Contract.DescId = zc_ObjectLink_ContractCondition_Contract()
-                                      INNER JOIN Object_Contract_View AS View_Contract_find
-                                                                      ON View_Contract_find.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
-                                                                     AND View_Contract_find.JuridicalId = tmpContractConditionKind.JuridicalId
-                                                                     AND View_Contract_find.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_Condition
+                                      LEFT JOIN Object_Contract_View AS View_Contract_find_tag
+                                                                     ON View_Contract_find_tag.JuridicalId = tmpContractConditionKind.JuridicalId
+                                                                    AND View_Contract_find_tag.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_Condition
+                                                                    AND View_Contract_find_tag.ContractTagId = tmpContractConditionKind.ContractTagId_master
+                                      LEFT JOIN Object_Contract_View AS View_Contract_find
+                                                                     ON View_Contract_find.ContractId = ObjectLink_ContractCondition_Contract.ChildObjectId
+                                                                    AND View_Contract_find.JuridicalId = tmpContractConditionKind.JuridicalId
+                                                                    AND View_Contract_find.InfoMoneyId = tmpContractConditionKind.InfoMoneyId_Condition
+                                                                    AND View_Contract_find_tag.ContractId IS NULL
                                       LEFT JOIN ObjectLink AS ObjectLink_ContractCondition_ContractConditionKind
                                                            ON ObjectLink_ContractCondition_ContractConditionKind.ObjectId = ObjectLink_ContractCondition_Contract.ObjectId
                                                           AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
@@ -107,6 +113,7 @@ BEGIN
                                  GROUP BY tmpContractConditionKind.ContractId_master
                                 ) AS tmpContract_find
                                 LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber_find ON View_Contract_InvNumber_find.ContractId = tmpContract_find.ContractId_find
+                           WHERE tmpContract_find.ContractId_find <> 0
                           )
       -- для всех юр лиц, у кого есть "Бонусы" формируется список всех других договоров (по ним будем делать расчет "базы")
     , tmpContract AS (SELECT tmpContractConditionKind.JuridicalId
@@ -392,6 +399,7 @@ ALTER FUNCTION gpReport_CheckBonus (TDateTime, TDateTime, TVarChar) OWNER TO pos
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.05.14                                        * add View_Contract_find_tag
  08.05.14                                        * add <> 0
  01.05.14         * 
  26.04.14                                        * add ContractTagName_child and ContractStateKindCode_child

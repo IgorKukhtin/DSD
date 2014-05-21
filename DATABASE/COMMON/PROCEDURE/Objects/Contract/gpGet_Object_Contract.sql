@@ -114,8 +114,8 @@ BEGIN
            , ObjectString_BankAccount.ValueData      AS BankAccountExternal
                       
            , ObjectDate_Signing.ValueData AS SigningDate
-           , Object_Contract_View.StartDate
-           , Object_Contract_View.EndDate
+           , ObjectDate_Start.ValueData   AS StartDate -- Object_Contract_View.StartDate
+           , ObjectDate_End.ValueData     AS EndDate   -- Object_Contract_View.EndDate
 
            , Object_ContractKind.Id        AS ContractKindId
            , Object_ContractKind.ValueData AS ContractKindName
@@ -163,6 +163,16 @@ BEGIN
             LEFT JOIN ObjectDate AS ObjectDate_Signing
                                  ON ObjectDate_Signing.ObjectId = Object_Contract_View.ContractId
                                 AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+            LEFT JOIN ObjectDate AS ObjectDate_Start
+                                 ON ObjectDate_Start.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
+            LEFT JOIN ObjectDate AS ObjectDate_End
+                                 ON ObjectDate_End.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
+            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
+                                 ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
+                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
+            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
             
             LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                    ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -184,11 +194,6 @@ BEGIN
                                     ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
            
-            LEFT JOIN ObjectLink AS ObjectLink_Contract_ContractKind
-                                 ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
-                                AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
-            LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
-            
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
@@ -243,6 +248,7 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.05.14                                        * !!! zc_ObjectDate_Contract_Start and zc_ObjectDate_Contract_End and zc_ObjectLink_Contract_ContractKind - ‚ÒÂ„‰‡!!!
  25.04.14                                        * ÔÓ ‰Û„ÓÏÛ ContractTag... and ContractStateKind...
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
                         zc_ObjectLink_Contract_PersonalCollation

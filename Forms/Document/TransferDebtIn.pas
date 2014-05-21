@@ -50,12 +50,10 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     actRefreshPrice: TdsdDataSetRefresh;
     PrintHeaderCDS: TClientDataSet;
-    bbPrintTax: TdxBarButton;
+    bbPrintTaxCorrective_Client: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    spTax: TdsdStoredProc;
-    bbTax: TdxBarButton;
-    bbPrintTax_Client: TdxBarButton;
-    bbPrint_Bill: TdxBarButton;
+    bbTaxCorrective: TdxBarButton;
+    bbPrintTaxCorrective_Us: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
     cxLabel10: TcxLabel;
@@ -72,6 +70,12 @@ type
     GuidesPartner: TdsdGuides;
     mactPrint: TMultiAction;
     actSPPrintProcName: TdsdExecStoredProc;
+    cxLabel13: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
+    bbCorrective: TdxBarButton;
+    spCorrective: TdsdStoredProc;
+    spTaxCorrective: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,27 +1,27 @@
 inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
-  ClientWidth = 962
-  ExplicitWidth = 978
+  ClientWidth = 1058
+  ExplicitWidth = 1074
   ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
-    Width = 962
+    Width = 1058
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 962
+    ExplicitWidth = 1058
     ExplicitHeight = 537
     ClientRectBottom = 537
-    ClientRectRight = 962
+    ClientRectRight = 1058
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 962
+      ExplicitWidth = 1058
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 962
+        Width = 1058
         Height = 513
-        ExplicitWidth = 962
+        ExplicitWidth = 1058
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,12 +149,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 962
+      ExplicitWidth = 1058
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 962
+        Width = 1058
         Height = 513
-        ExplicitWidth = 962
+        ExplicitWidth = 1058
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -177,10 +177,10 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 962
+    Width = 1058
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 962
+    ExplicitWidth = 1058
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -300,7 +300,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 807
+      Left = 803
       Top = 63
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
@@ -308,7 +308,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Width = 144
     end
     object cxLabel8: TcxLabel
-      Left = 807
+      Left = 803
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076#1082#1080' (+)% '#1053#1072#1094#1077#1085#1082#1080
     end
@@ -362,14 +362,30 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 5
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
+    object cxLabel13: TcxLabel
+      Left = 956
+      Top = 45
+      Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+    end
+    object edDocumentTaxKind: TcxButtonEdit
+      Left = 956
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 26
+      Width = 93
+    end
   end
   object cxLabel5: TcxLabel [2]
-    Left = 807
+    Left = 803
     Top = 5
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object edPriceList: TcxButtonEdit [3]
-    Left = 807
+    Left = 803
     Top = 23
     Properties.Buttons = <
       item
@@ -377,7 +393,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Kind = bkEllipsis
       end>
     TabOrder = 7
-    Width = 144
+    Width = 246
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -401,6 +417,78 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
+    end
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
+    object mactPrint: TMultiAction [10]
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSPPrintProcName
+        end
+        item
+          Action = actPrint
+        end>
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
+      ImageIndex = 3
+    end
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [11]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProcList = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_TaxCorrective'
+      ReportNameParam.DataType = ftString
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -433,30 +521,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       ReportNameParam.ComponentItem = 'ReportName'
       ReportNameParam.ParamType = ptInput
     end
-    object mactPrint: TMultiAction [10]
-      Category = 'DSDLib'
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSPPrintProcName
-        end
-        item
-          Action = actPrint
-        end>
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
-      ImageIndex = 3
-    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
-      StoredProcList = <
-        item
-          StoredProc = spChangeStatus
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
-    end
-    inherited actCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
           StoredProc = spChangeStatus
@@ -485,6 +550,51 @@ inherited TransferDebtInForm: TTransferDebtInForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    inherited actCompleteMovement: TChangeGuidesStatus
+      StoredProcList = <
+        item
+          StoredProc = spChangeStatus
+        end
+        item
+          StoredProc = spSelectMIContainer
+        end>
+    end
+    object actTaxCorrective: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spTaxCorrective
+      StoredProcList = <
+        item
+          StoredProc = spTaxCorrective
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
+      ImageIndex = 41
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089 +
+        ' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
+        #1080#1074#1103#1079#1082#1086#1081')>.'
+    end
+    object actCorrective: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spCorrective
+      StoredProcList = <
+        item
+          StoredProc = spCorrective
+        end>
+      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' '#1087#1088#1080#1074#1103#1079#1082#1080')>'
+      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' '#1087#1088#1080#1074#1103#1079#1082#1080')>'
+      ImageIndex = 42
+      QuestionBeforeExecute = 
+        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073 +
+        #1077#1079' '#1087#1088#1080#1074#1103#1079#1082#1080')>?'
+      InfoAfterExecute = 
+        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
+        #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
     object actRefreshPrice: TdsdDataSetRefresh
       Category = 'DSDLib'
@@ -567,36 +677,120 @@ inherited TransferDebtInForm: TTransferDebtInForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbInsertUpdateMovement'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbShowAll'
+        end
+        item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddMask'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErased'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Client'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrintTaxCorrective_Us'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEntryToGrid'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
     inherited bbPrint: TdxBarButton
       Action = mactPrint
     end
-    object bbPrint_Bill: TdxBarButton [5]
-      Caption = #1057#1095#1077#1090
+    object bbPrintTaxCorrective_Client: TdxBarButton [5]
+      Action = actPrint_TaxCorrective_Client
       Category = 0
-      Hint = #1057#1095#1077#1090
-      Visible = ivAlways
-      ImageIndex = 21
     end
-    object bbPrintTax: TdxBarButton [6]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
+    object bbPrintTaxCorrective_Us: TdxBarButton [6]
+      Action = actPrint_TaxCorrective_Us
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
-      Visible = ivAlways
-      ImageIndex = 16
     end
-    object bbPrintTax_Client: TdxBarButton [7]
-      Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
+    object bbTaxCorrective: TdxBarButton
+      Action = actTaxCorrective
       Category = 0
-      Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
-      Visible = ivAlways
-      ImageIndex = 18
     end
-    object bbTax: TdxBarButton
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
+    object bbCorrective: TdxBarButton
+      Action = actCorrective
       Category = 0
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
-      Visible = ivAlways
-      ImageIndex = 41
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -857,6 +1051,19 @@ inherited TransferDebtInForm: TTransferDebtInForm
         Name = 'PartnerName'
         Value = ' '
         Component = GuidesPartner
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'DocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'DocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1166,33 +1373,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
   object PrintItemsSverkaCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 644
-    Top = 334
-  end
-  object spTax: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Tax_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId_inf'
-        Value = ''
-        ParamType = ptInput
-      end>
-    Left = 848
-    Top = 400
+    Left = 572
+    Top = 222
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefreshPrice
@@ -1200,7 +1382,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Component = GuidesPricelist
       end>
-    Left = 528
+    Left = 448
     Top = 320
   end
   object PrintHeaderCDS: TClientDataSet
@@ -1212,8 +1394,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
   object PrintItemsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 444
-    Top = 494
+    Left = 572
+    Top = 310
   end
   object PaidKindFromGuides: TdsdGuides
     KeyField = 'Id'
@@ -1310,8 +1492,8 @@ inherited TransferDebtInForm: TTransferDebtInForm
         ComponentItem = 'ReportName'
         DataType = ftString
       end>
-    Left = 552
-    Top = 384
+    Left = 496
+    Top = 272
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
@@ -1549,5 +1731,127 @@ inherited TransferDebtInForm: TTransferDebtInForm
         DataType = ftString
       end>
     Left = 296
+  end
+  object DocumentTaxKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edDocumentTaxKind
+    FormNameParam.Value = 'TDocumentTaxKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TDocumentTaxKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 968
+    Top = 72
+  end
+  object spCorrective: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsTaxLink'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 368
+    Top = 380
+  end
+  object spTaxCorrective: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDocumentTaxKindId_inf'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inIsTaxLink'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end
+      item
+        Name = 'outDocumentTaxKindId'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'outDocumentTaxKindName'
+        Value = ''
+        Component = DocumentTaxKindGuides
+        ComponentItem = 'TextValue'
+      end>
+    Left = 368
+    Top = 432
   end
 end
