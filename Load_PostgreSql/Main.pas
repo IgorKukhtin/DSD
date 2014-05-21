@@ -150,6 +150,15 @@ type
     cblTaxPF: TCheckBox;
     cbUpdateConrtact: TCheckBox;
     cbBill_List: TCheckBox;
+    cbSelectData_afterLoad: TCheckBox;
+    cbSelectData_afterLoad_Sale: TCheckBox;
+    cbSelectData_afterLoad_Tax: TCheckBox;
+    cbSelectData_afterLoad_ReturnIn: TCheckBox;
+    UnitIdEdit: TEdit;
+    Label5: TLabel;
+    cbBeforeSave: TCheckBox;
+    Label6: TLabel;
+    SessionIdEdit: TEdit;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -162,7 +171,6 @@ type
     procedure cbUnCompleteClick(Sender: TObject);
     procedure cbCompleteIncomeClick(Sender: TObject);
     procedure OKCompleteDocumentButtonClick(Sender: TObject);
-    procedure cbReturnInFlClick(Sender: TObject);
   private
     fStop:Boolean;
     isGlobalLoad,zc_rvYes,zc_rvNo:Integer;
@@ -188,6 +196,7 @@ type
     procedure pSetNullDocument_Id_Postgres;
 
     procedure pInsertHistoryCost;
+    procedure pSelectData_afterLoad;
     // DocumentsCompelete :
     procedure pCompleteDocument_Income(isLastComplete:Boolean);
     procedure pCompleteDocument_ReturnOut(isLastComplete:Boolean);
@@ -657,12 +666,6 @@ procedure TMainForm.cbCompleteIncomeClick(Sender: TObject);
 begin
      if (not cbComplete.Checked)and(not cbUnComplete.Checked)then cbComplete.Checked:=true;
 end;
-procedure TMainForm.cbReturnInFlClick(Sender: TObject);
-begin
-
-end;
-
-//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.FormCreate(Sender: TObject);
 var
   Present: TDateTime;
@@ -831,6 +834,13 @@ var tmpDate1,tmpDate2:TDateTime;
     myRecordCount1,myRecordCount2:Integer;
 begin
      if MessageDlg('Действительно загрузить выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+     {if not cbBeforeSave.Checked
+     then begin
+               if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+          end
+     else fExecSqToQuery (' select * from _lpSaveData_beforeLoad('+StartDateEdit.Text+','+EndDateEdit.Text+')');}
+
+
      fStop:=false;
      DBGrid.Enabled:=false;
      OKGuideButton.Enabled:=false;
@@ -936,11 +946,116 @@ begin
      fStop:=true;
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pSelectData_afterLoad;
+var UnitId_str,DescId_str,SessionId_str:String;
+begin
+     try StrToInt(SessionIdEdit.Text);SessionId_str:=SessionIdEdit.Text; except SessionId_str:='0';end;
+     if SessionId_str='0'
+     then SessionId_str:='OperDate BETWEEN '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' AND '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+     else SessionId_str:='SessionId='+SessionId_str;
+
+     //
+     DescId_str:='';
+     if cbSelectData_afterLoad_Sale.Checked then DescId_str:='zc_Movement_Sale()';
+     if cbSelectData_afterLoad_Tax.Checked then if DescId_str<>'' then DescId_str:=DescId_str+',zc_Movement_Tax()' else DescId_str:='zc_Movement_Tax()';
+     if cbSelectData_afterLoad_ReturnIn.Checked then if DescId_str<>'' then DescId_str:=DescId_str+',zc_Movement_ReturnIn()' else DescId_str:='zc_Movement_ReturnIn()';
+     DescId_str:='('+DescId_str+')';
+     //
+     try StrToInt(UnitIdEdit.Text);UnitId_str:=UnitIdEdit.Text; except UnitId_str:='0';end;
+     //
+     fOpenSqToQuery (
+     ' SELECT Count(*) as calcCount, min(MovementItemId)AS minId,max(MovementItemId) AS  maxId'
+    +'     , (SELECT MAX (SessionId) FROM _testMI_afterLoad WHERE '+SessionId_str+') AS SessionId_max'
+    +'     , (SELECT MIN (SessionId) FROM _testMI_afterLoad WHERE '+SessionId_str+') AS SessionId_min'
+    +' FROM'
+    +'(SELECT tmpAll.MovementId'
+    +'      , tmpAll.InvNumber'
+    +'      , tmpAll.MovementItemId'
+    +'      , tmpAll.GoodsId'
+    +'      , tmpAll.Price'
+    +' FROM (SELECT MovementId'
+    +'            , InvNumber'
+//    +'            , DATE_TRUNC ('DAY', OperDate) AS OperDate'
+    +'            , OperDate'
+    +'            , MovementItemId'
+    +'            , GoodsId'
+    +'            , AmountPartner'
+    +'            , 0 AS AmountPartnerNew'
+    +'            , Amount'
+    +'            , 0 AS AmountNew'
+    +'            , Price'
+    +'       FROM (SELECT MAX (SessionId) AS Id FROM _testMI_afterLoad WHERE '+SessionId_str+') as tmpSession'
+    +'            INNER JOIN _testMI_afterLoad ON _testMI_afterLoad.SessionId = tmpSession.Id'
+    +'        WHERE _testMI_afterLoad.OperDate BETWEEN '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' AND '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+    +'         AND _testMI_afterLoad.DescId IN '+DescId_str
+    +'         AND _testMI_afterLoad.StatusId = zc_Enum_Status_Complete()'
+    +'         AND _testMI_afterLoad.isErased = FALSE'
+    +'         AND (_testMI_afterLoad.FromId = '+UnitId_str+' or 0='+UnitId_str+')' // 8459-Склад Реализации
+    +'      UNION ALL'
+    +'       SELECT Movement.Id AS MovementId'
+    +'            , Movement.InvNumber'
+//    +'            , DATE_TRUNC ('DAY', Movement.OperDate) AS OperDate'
+    +'            , Movement.OperDate'
+    +'            , MovementItem.Id AS MovementItemId'
+    +'            , MovementItem.ObjectId AS GoodsId'
+    +'            , 0 AS AmountPartner'
+    +'            , COALESCE (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn()) THEN MIFloat_AmountPartner.ValueData ELSE MovementItem.Amount END, 0) AS AmountPartnerNew'
+    +'            , 0 AS Amount'
+    +'            , MovementItem.Amount as AmountNew'
+    +'            , COALESCE (MIFloat_Price.ValueData, 0) AS Price'
+    +'       FROM Movement'
+    +'            LEFT JOIN MovementLinkObject AS MovementLinkObject_From'
+    +'                                         ON MovementLinkObject_From.MovementId = Movement.Id'
+    +'                                        AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()'
+    +'            LEFT JOIN MovementLinkObject AS MovementLinkObject_To'
+    +'                                         ON MovementLinkObject_To.MovementId = Movement.Id'
+    +'                                        AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()'
+    +'            LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract'
+    +'                                         ON MovementLinkObject_Contract.MovementId = Movement.Id'
+    +'                                        AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()'
+    +'            LEFT JOIN MovementDate AS MovementDate_OperDatePartner'
+    +'                                   ON MovementDate_OperDatePartner.MovementId =  Movement.Id'
+    +'                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()'
+    +'            INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id'
+    +'                                   AND MovementItem.isErased = FALSE'
+    +'            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner'
+    +'                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id'
+    +'                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()'
+    +'            LEFT JOIN MovementItemFloat AS MIFloat_Price'
+    +'                                        ON MIFloat_Price.MovementItemId = MovementItem.Id'
+    +'                                       AND MIFloat_Price.DescId = zc_MIFloat_Price()'
+    +'       WHERE Movement.DescId IN '+DescId_str
+    +'         AND Movement.StatusId = zc_Enum_Status_Complete()'
+    +'         AND Movement.OperDate BETWEEN '+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+' AND '+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))
+    +'         AND (MovementLinkObject_From.ObjectId = '+UnitId_str+' or 0='+UnitId_str+')' // 8459-Склад Реализации
+    +'      ) AS tmpAll'
+    +' GROUP BY tmpAll.MovementId'
+    +'        , tmpAll.InvNumber'
+    +'        , tmpAll.MovementItemId'
+    +'        , tmpAll.GoodsId'
+    +'        , tmpAll.Price'
+    +' HAVING SUM (tmpAll.AmountPartner) <> SUM (tmpAll.AmountPartnerNew)'
+    +') AS tmp'
+    );
+
+    if toSqlQuery.FieldByName('calcCount').AsInteger=0
+    then ShowMessage('Ошибок нет.Сессия № <'+toSqlQuery.FieldByName('SessionId_max').AsString+'> min('+toSqlQuery.FieldByName('SessionId_min').AsString+')')
+    else ShowMessage('Ошибки есть.Сессия № <'+toSqlQuery.FieldByName('SessionId_max').AsString+'> Кол-во=<'+toSqlQuery.FieldByName('calcCount').AsString+'> min=<'+toSqlQuery.FieldByName('minId').AsString+'> max=<'+toSqlQuery.FieldByName('maxId').AsString+'')
+
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.OKCompleteDocumentButtonClick(Sender: TObject);
 var tmpDate1,tmpDate2:TDateTime;
     Year, Month, Day, Hour, Min, Sec, MSec: Word;
     StrTime:String;
 begin
+     if (cbSelectData_afterLoad.Checked)
+     then begin
+               pSelectData_afterLoad;
+               exit;
+     end;
+     //
+     //
      if (cbInsertHistoryCost.Checked)
      then if MessageDlg('Действительно расчитать <СЕБЕСТОИМОСТЬ по МЕСЯЦАМ> за период с <'+DateToStr(StrToDate(StartDateCompleteEdit.Text))+'> по <'+DateToStr(StrToDate(EndDateCompleteEdit.Text))+'> ?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
      else
@@ -951,7 +1066,25 @@ begin
              then if MessageDlg('Действительно только Распровести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
              else
                  if cbComplete.Checked then if MessageDlg('Действительно только Провести выбранные документы?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
-                 else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести.'); end;
+                 else if cbBeforeSave.Checked
+                      then if MessageDlg('Действительно только Сохраненить данные?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit else
+                      else begin ShowMessage('Ошибка.Не выбрано Распровести или Провести или Сохранение.'); end;
+
+     //!!!
+     if (not cbBeforeSave.Checked)and(cbUnComplete.Checked)and(not cbInsertHistoryCost.Checked)
+     then begin
+               if MessageDlg('Сохранение отключено.Продолжить?',mtConfirmation,[mbYes,mbNo],0)<>mrYes then exit;
+          end;
+     //!!!Сохранили все данные!!!
+     if cbBeforeSave.Checked
+     then begin
+               fExecSqToQuery ('select * from _lpSaveData_beforeLoad('+FormatToDateServer_notNULL(StrToDate(StartDateCompleteEdit.Text))+','+FormatToDateServer_notNULL(StrToDate(EndDateCompleteEdit.Text))+')');
+               if (not cbComplete.Checked)and(not cbUnComplete.Checked)
+               then begin ShowMessage('Сохранение данных за период с <'+StartDateCompleteEdit.Text+'> по <'+EndDateCompleteEdit.Text+'> завершено.');
+                          exit;
+               end;
+     end;
+
      //
      fStop:=false;
      DBGrid.Enabled:=false;
@@ -11863,11 +11996,13 @@ begin
         Add('order by 2,3,1');
         Open;
 
-        cbTaxInt.Caption:='8.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Налоговые Int';
+        //cbTaxInt.Caption:='8.3.('+IntToStr(SaveCount)+')('+IntToStr(RecordCount)+')Налоговые Int';
+        cbTaxInt.Caption:='8.3.('+IntToStr(SaveCount)+')(нет)Налоговые Int';
         //
         fStop:=cbOnlyOpen.Checked;
         if cbOnlyOpen.Checked then exit;
         //
+{!!!!!НЕТ!!!!!!!
         Gauge.Progress:=0;
         Gauge.MaxValue:=RecordCount;
         //
@@ -11892,7 +12027,7 @@ begin
         while not EOF do
         begin
              //!!!
-             if fStop then begin {EnableControls;}exit;end;
+             if fStop then begin exit;end;
              //
              //!!!ВОССТАНАВЛИВАЕМ 1 ЭЛЕМЕНТ!!
              if (cbBill_List.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)
@@ -11924,6 +12059,7 @@ begin
              Gauge.Progress:=Gauge.Progress+1;
              Application.ProcessMessages;
         end;
+!!!!!НЕТ!!!!!!!}
      end;
      //
      myDisabledCB(cbTaxInt);
@@ -13356,8 +13492,6 @@ begin
              if fStop then begin exit;end;
              // gc_isDebugMode:=true;
              //
-             fOpenSqToQuery ('select Movement.OperDate from MovementItem join Movement on Movement.Id = MovementId where MovementItem.Id='+FieldByName('Id_Postgres').AsString);
-
              fOpenSqToQuery (' select Movement.Id as MovementId'
                            +'       , Movement.OperDate'
                            +'       , Movement.StatusId, zc_Enum_Status_Complete() as zc_Enum_Status_Complete'

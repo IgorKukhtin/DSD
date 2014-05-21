@@ -21,7 +21,7 @@ type
     clGoodsGroupName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
-    clSummChangePercent: TcxGridDBColumn;
+    clSummPartner_calc: TcxGridDBColumn;
     clAmount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;

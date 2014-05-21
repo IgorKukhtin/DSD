@@ -25,6 +25,7 @@ inherited EDIJournalForm: TEDIJournalForm
         ExplicitWidth = 834
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsView.GroupByBox = True
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -57,12 +58,10 @@ inherited EDIJournalForm: TEDIJournalForm
             Options.Editing = False
             Width = 60
           end
-          object colGLNCode: TcxGridDBColumn
-            Caption = 'GLN '#1050#1086#1076
-            DataBinding.FieldName = 'GLNCode'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+          object colGLNPlaceCode: TcxGridDBColumn
+            Caption = 'GLN '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
+            DataBinding.FieldName = 'GLNPlaceCode'
+            Width = 50
           end
           object colPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -81,7 +80,23 @@ inherited EDIJournalForm: TEDIJournalForm
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 60
+          end
+          object colGLNCode: TcxGridDBColumn
+            Caption = 'GLN '#1050#1086#1076
+            DataBinding.FieldName = 'GLNCode'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
+          object colLoadJuridicalName: TcxGridDBColumn
+            Caption = #1047#1072#1075#1088'. '#1070#1088' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'LoadJuridicalName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 65
           end
         end
       end
@@ -303,7 +318,7 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       ActionList = <
         item
-          Action = maEDIOrdersLoad
+          Action = EDIActionOrdersLoad
         end
         item
           Action = actRefresh
@@ -443,7 +458,19 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end
       item
+        Name = 'inGLNPlace'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inOKPO'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalName'
         Value = Null
         DataType = ftString
         ParamType = ptInput

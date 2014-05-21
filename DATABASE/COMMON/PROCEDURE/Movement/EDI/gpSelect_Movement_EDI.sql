@@ -9,8 +9,9 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , TotalCount TFloat
-             , PartnerId Integer, PartnerName TVarChar, JuridicalId Integer, JuridicalName TVarChar
-             , GLNCode TVarChar, OKPO TVarChar, SaleInvNumber TVarChar, SaleOperDate TDateTime)
+             , PartnerId Integer, PartnerName TVarChar,  JuridicalId Integer, JuridicalName TVarChar
+             , GLNCode TVarChar,  GLNPlaceCode TVarChar, OKPO TVarChar
+             , SaleInvNumber TVarChar, SaleOperDate TDateTime, LoadJuridicalName TVarChar)
 AS
 $BODY$
 BEGIN
@@ -36,9 +37,11 @@ BEGIN
            , Object_Juridical.Id               AS JuridicalId
            , Object_Juridical.ValueData        AS JuridicalName
            , MovementString_GLNCode.ValueData  AS GLNCode 
+           , MovementString_GLNPlaceCode.ValueData  AS GLNPlaceCode 
            , MovementString_OKPO.ValueData     AS OKPO 
            , MovementString_SaleInvNumber.ValueData  AS SaleInvNumber
            , MovementDate_SaleOperDate.ValueData   AS SaleOperDate
+           , MovementString_JuridicalName.ValueData AS LoadJuridicalName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -54,6 +57,14 @@ BEGIN
             LEFT JOIN MovementString AS MovementString_OKPO
                                      ON MovementString_OKPO.MovementId =  Movement.Id
                                     AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+
+            LEFT JOIN MovementString AS MovementString_GLNPlaceCode
+                                     ON MovementString_GLNPlaceCode.MovementId =  Movement.Id
+                                    AND MovementString_GLNPlaceCode.DescId = zc_MovementString_GLNPlaceCode()
+
+            LEFT JOIN MovementString AS MovementString_JuridicalName
+                                     ON MovementString_JuridicalName.MovementId =  Movement.Id
+                                    AND MovementString_JuridicalName.DescId = zc_MovementString_JuridicalName()
 
             LEFT JOIN MovementString AS MovementString_SaleInvNumber
                                      ON MovementString_SaleInvNumber.MovementId =  Movement.Id

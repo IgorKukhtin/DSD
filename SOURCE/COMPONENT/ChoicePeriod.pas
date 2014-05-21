@@ -253,10 +253,12 @@ procedure TPeriodChoice.OnShow(Sender: TObject);
 begin
  if Assigned(FOnShow) then
     FOnShow(Sender);
- if DateStart.Date = -700000 then
-    DateStart.Date := Date;
- if DateEnd.Date = -700000 then
-    DateEnd.Date := Date;
+ if Assigned(DateStart) then
+    if DateStart.Date = -700000 then
+       DateStart.Date := Date;
+ if Assigned(DateEnd) then
+    if DateEnd.Date = -700000 then
+       DateEnd.Date := Date;
 end;
 
 procedure TPeriodChoice.SetDateEnd(const Value: TcxDateEdit);

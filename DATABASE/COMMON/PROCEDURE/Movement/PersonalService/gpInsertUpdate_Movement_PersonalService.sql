@@ -6,6 +6,9 @@ DROP FUNCTION IF EXISTS
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_PersonalService (integer, tvarchar, tdatetime, tdatetime, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 
+DROP FUNCTION IF EXISTS 
+   gpInsertUpdate_Movement_PersonalService (integer, tvarchar, tdatetime, Integer, tfloat, TVarChar, integer, integer, integer, integer, TDateTime, tvarchar);
+
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
  INOUT ioMovementId          Integer   , -- 
     IN inInvNumber           TVarChar  , -- Номер документа
@@ -13,7 +16,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PersonalService(
     IN inPersonalId          Integer   , -- Сотрудник
     IN inAmount              TFloat    , -- Сумма операции 
     IN inComment             TVarChar  , -- Комментерий
-    IN inContractId          Integer   , -- Договор 
     IN inInfoMoneyId         Integer   , -- Статьи назначения 
     IN inUnitId              Integer   , -- Подразделение 	
     IN inPositionId          Integer   , -- Должность
@@ -30,6 +32,9 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_PersonalService());
      vbUserId := inSession;
+     IF inInvNumber = '' THEN
+        inInvNumber := (NEXTVAL ('Movement_PersonalService_seq'))::TVarChar;
+     END IF;
 
      -- сохранили <Документ>
      ioMovementId := lpInsertUpdate_Movement (ioMovementId, zc_Movement_PersonalService(), inInvNumber, inOperDate, NULL);
@@ -43,8 +48,6 @@ BEGIN
      -- Комментарий
      PERFORM lpInsertUpdate_MovementItemString (zc_MIString_Comment(), vbMovementItemId, inComment);
 
-     -- сохранили связь с <Договором>
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Contract(), vbMovementItemId, inContractId);
      -- сохранили связь с <Управленческие статьи>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_InfoMoney(), vbMovementItemId, inInfoMoneyId);
      -- сохранили связь с <Подразделением>
@@ -67,6 +70,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.05.14                         *
  17.02.14                         *
 
 */

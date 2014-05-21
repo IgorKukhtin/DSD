@@ -328,7 +328,6 @@ uses
   Account in '..\..\Forms\Guides\Account.pas' {AccountForm: TParentForm},
   Log in '..\..\SOURCE\Log.pas',
   Report_GoodsMI_TransferDebt in '..\..\Forms\Report\Report_GoodsMI_TransferDebt.pas' {Report_GoodsMI_TransferDebtForm: TParentForm},
-  Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
   UnitCarMember_Object in '..\..\Forms\Guides\UnitCarMember_Object.pas' {UnitCarMember_ObjectForm: TParentForm},
@@ -400,7 +399,6 @@ uses
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   MovementTaxChoice in '..\..\Forms\Guides\MovementTaxChoice.pas' {MovementTaxChoiceForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
-  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm},
@@ -428,8 +426,10 @@ uses
   EDIMovementTest in '..\SOURCE\Movement\All\EDIMovementTest.pas',
   EDIJournal in '..\..\Forms\EDI\EDIJournal.pas' {EDIJournalForm: TParentForm},
   cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
+  SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
-  SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm};
+  Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm};
 
 {$R *.RES}
 

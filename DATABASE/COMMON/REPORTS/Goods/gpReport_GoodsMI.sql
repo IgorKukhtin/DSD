@@ -19,7 +19,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , Amount_Weight TFloat, Amount_Sh TFloat
              , AmountChangePercent_Weight TFloat, AmountChangePercent_Sh TFloat
              , AmountPartner_Weight TFloat, AmountPartner_Sh TFloat
-             , SummChangePercent TFloat
+             , SummPartner_calc TFloat
              , SummPartner TFloat
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              )   
@@ -52,7 +52,7 @@ BEGIN
     -- Результат
     RETURN QUERY
     WITH tmpOperationGroup AS
-                (SELECT tmpReportContainerSumm.InfoMoneyId       
+                (SELECT tmpReportContainerSumm.InfoMoneyId
                       , tmpReportContainerSumm.GoodsId   
                       , tmpReportContainerSumm.GoodsKindId
                       , SUM (MIContainer.Amount * CASE WHEN inDescId = zc_Movement_Sale() THEN -1 ELSE 1 END) AS Amount
@@ -71,7 +71,7 @@ BEGIN
                                        END
                                        -- если цены без НДС, тогда учитываем или % Скидки или % Наценки для суммы без НДС округленной до 2-х знаков, округляем до 2-х знаков, а потом добавляем НДС (этот вариант может понадобиться для БН) !!!но скидка/наценка учитывается в цене!!!
                                        -- ...
-                             END) AS SummChangePercent
+                             END) AS SummPartner_calc
                       , SUM (tmpReportContainerSumm.SummPartner) AS SummPartner
                  FROM (SELECT tmpReportContainer.InfoMoneyId
                             , MovementItem.Id AS MovementItemId
@@ -112,16 +112,16 @@ BEGIN
                                                                 AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                 AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
                              ) AS tmpReportContainer
-                             JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
-                                                                AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
+                             INNER JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpReportContainer.ReportContainerId
+                                                                      AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
                              INNER JOIN MovementLinkObject AS MovementLinkObject_Unit
                                                            ON MovementLinkObject_Unit.MovementId = MIReport.MovementId
                                                           AND MovementLinkObject_Unit.DescId = tmpReportContainer.MLO_DescId
                              INNER JOIN _tmpUnit ON _tmpUnit.UnitId = MovementLinkObject_Unit.ObjectId
 
-                             JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
-                                              AND MovementItem.DescId = zc_MI_Master()
-                             JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
+                             INNER JOIN MovementItem ON MovementItem.Id = MIReport.MovementItemId
+                                                    AND MovementItem.DescId = zc_MI_Master()
+                             INNER JOIN _tmpGoods ON _tmpGoods.GoodsId = MovementItem.ObjectId
            
                              LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                               ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
@@ -153,7 +153,7 @@ BEGIN
                       LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                   ON MIFloat_Price.MovementItemId = MIContainer.MovementItemId
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
-                 GROUP BY tmpReportContainerSumm.InfoMoneyId       
+                 GROUP BY tmpReportContainerSumm.InfoMoneyId
                         , tmpReportContainerSumm.GoodsId
                         , tmpReportContainerSumm.GoodsKindId
                 )
@@ -174,8 +174,8 @@ BEGIN
          
          , (tmpOperationGroup.AmountPartner * CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN ObjectFloat_Weight.ValueData ELSE 1 END) :: TFloat AS AmountPartner_Weight
          , (CASE WHEN Object_Measure.Id = zc_Measure_Sh() THEN tmpOperationGroup.AmountPartner ELSE 0 END) :: TFloat                                AS AmountPartner_Sh
-         , tmpOperationGroup.SummChangePercent :: TFloat              AS SummChangePercent
-         , tmpOperationGroup.SummPartner :: TFloat                    AS SummPartner
+         , tmpOperationGroup.SummPartner_calc :: TFloat   AS SummPartner_calc
+         , tmpOperationGroup.SummPartner :: TFloat        AS SummPartner
 
          , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
          , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
@@ -222,7 +222,7 @@ ALTER FUNCTION gpReport_GoodsMI (TDateTime, TDateTime, Integer, Integer, Integer
  16.04.14         add inUnitId
  13.04.14                                        * add zc_MovementFloat_ChangePercent
  08.04.14                                        * all
- 05.04.14         * add SummChangePercent. AmountChangePercent
+ 05.04.14         * add SummPartner_calc. AmountChangePercent
  04.02.14         * 
  01.02.14                                        * All
  22.01.14         *

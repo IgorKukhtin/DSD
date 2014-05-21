@@ -167,6 +167,7 @@
     Top = 216
     object DataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -183,6 +184,7 @@
     end
     object InsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -192,6 +194,7 @@
     end
     object FormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -497,7 +500,22 @@
     FormName = 'TAccountDirection_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     ParentDataSet = 'ClientDataSet'
-    Params = <>
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
     Left = 160
     Top = 184
   end

@@ -53,7 +53,7 @@ uses
   cxDBLookupComboBox, DBGrids, cxCheckBox, cxCalendar, ExtCtrls,
   cxButtonEdit, cxSplitter, Vcl.Menus, cxPC, frxDBSet, dxBarExtItems,
   cxDBPivotGrid, ChoicePeriod, cxGridDBBandedTableView, dsdAction, ClientBankLoad,
-  cxDBEdit, cxDBVGrid, Document, Defaults, ExternalSave, MeDOC, EDI;
+  cxDBEdit, Document, Defaults, ExternalSave, MeDOC, EDI, kbmMemTable, cxDBVGrid;
 
 {$R *.dfm}
 
@@ -266,6 +266,8 @@ initialization
   RegisterClass (TdxBarManager);
   RegisterClass (TdxBarStatic);
   RegisterClass (TdxBevel);
+
+  RegisterClass (TkbmMemTable);
 
   // Собственнтые компоненты
   RegisterClass (TBooleanStoredProcAction);

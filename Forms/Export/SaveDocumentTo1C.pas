@@ -9,7 +9,7 @@ uses
   dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, ExternalSave, Data.DB,
-  Datasnap.DBClient, cxLabel, ChoicePeriod, dsdGuides, cxButtonEdit;
+  Datasnap.DBClient, cxLabel, ChoicePeriod, dsdGuides, cxButtonEdit, kbmMemTable;
 
 type
   TSaveDocumentTo1CForm = class(TAncestorDialogForm)
@@ -29,6 +29,7 @@ type
     edPaidKind: TcxButtonEdit;
     InfoMoneyGuides: TdsdGuides;
     PaidKindGuides: TdsdGuides;
+    kbmMemTable1: TkbmMemTable;
   private
     { Private declarations }
   public

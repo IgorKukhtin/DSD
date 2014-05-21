@@ -9,9 +9,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDI(
     IN inSaleInvNumber       TVarChar  , -- Номер документа
     IN inSaleOperDate        TDateTime , -- Дата документа
 
-
-    IN inGLN                 TVarChar   , -- От кого (в документе)
-    IN inOKPO                TVarChar   , -- От кого (в документе)
+    IN inGLNPlace            TVarChar   , -- 
+    IN inGLN                 TVarChar   , -- 
+    IN inOKPO                TVarChar   , -- 
+    IN inJuridicalName       TVarChar   , --
  
     IN inSession             TVarChar    -- сессия пользователя
 )                              
@@ -39,25 +40,34 @@ BEGIN
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_SaleInvNumber(), outId, inSaleInvNumber);
 
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SaleOperDate(), outId, inSaleOperDate);
-     
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), outId, inGLN);
+    
+     IF inGLNPlace <> '' THEN 
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), outId, inGLNPlace);
+     END IF;
+
+     IF inGLN <> '' THEN 
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), outId, inGLN);
+     END IF;
 
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), outId, inOKPO);
 
-     -- Находим контрагента по GLN
-     vbPartnerId := COALESCE((SELECT ObjectId FROM ObjectString 
-                       WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = inGLN), 0);     
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName(), outId, inJuridicalName);
 
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), outId, vbPartnerId);
+     -- Находим контрагента по GLN
+     IF inGLNPlace <> ''  THEN
+        vbPartnerId := COALESCE((SELECT ObjectId FROM ObjectString 
+                       WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = inGLNPlace), 0);     
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), outId, vbPartnerId);
+     END IF;
 
      -- Находим Юр лицо по OKPO
-
-     vbJuridicalId := COALESCE((SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_ViewByDate
+     IF inOKPO <> '' THEN
+        vbJuridicalId := COALESCE((SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_ViewByDate
                          WHERE CURRENT_DATE BETWEEN StartDate AND EndDate
                            AND OKPO = inOKPO), 0);
-
-     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), outId, vbJuridicalId);
-    
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), outId, vbJuridicalId);
+     END IF;
+     
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 

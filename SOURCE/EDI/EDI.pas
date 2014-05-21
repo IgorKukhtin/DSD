@@ -209,7 +209,8 @@ begin
     ParamByName('inOrderInvNumber').Value := NUMBER;
     ParamByName('inOrderOperDate').Value  := VarToDateTime(DATE);
 
-    ParamByName('inGLN').Value := HEAD.BUYER;
+    ParamByName('inGLNPlace').Value := HEAD.BUYER;
+    ParamByName('inGLN').Value := HEAD.INVOICEPARTNER;
 
     Execute;
     MovementId := ParamByName('outid').Value;
@@ -247,6 +248,7 @@ begin
         if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
            ParamByName('inGLN').Value := Сторони.Контрагент[i].GLN;
            ParamByName('inOKPO').Value := Сторони.Контрагент[i].КодКонтрагента;
+           ParamByName('inJuridicalName').Value := Сторони.Контрагент[i].НазваКонтрагента;
         end;
      Execute;
      MovementId := ParamByName('outid').Value;
@@ -286,13 +288,12 @@ begin
          try
            Start;
            for I := 0 to List.Count - 1 do begin
-               // если первые буквы файла comdoc, а последние .p7s
+               // если первые буквы файла order а последние .xml
                if (copy(list[i], 1, 5) = 'order') and (copy(list[i], length(list[i]) - 3, 4) = '.xml') then begin
                   // тянем файл к нам
                   Stream.Clear;
                   FIdFTP.Get(List[i], Stream);
-//                  FileData := Utf8ToAnsi(Stream.DataString);
-                  ORDER := LoadORDER(Stream.DataString);
+                  ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
                    // загружаем в базенку
                    InsertUpdateOrder(ORDER, spHeader, spList);
                end;

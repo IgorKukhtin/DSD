@@ -56,6 +56,8 @@ type
     maEDIOrdersLoad: TMultiAction;
     EDIActionOrdersLoad: TEDIAction;
     bbLoadOrder: TdxBarButton;
+    colLoadJuridicalName: TcxGridDBColumn;
+    colGLNPlaceCode: TcxGridDBColumn;
   private
     { Private declarations }
   public

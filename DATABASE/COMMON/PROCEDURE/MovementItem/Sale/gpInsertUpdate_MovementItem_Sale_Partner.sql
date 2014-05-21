@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_Sale_Partner()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_MovementItem_Sale_Partner (Integer, Integer, Integer, TFloat, TFloat, TFloat, TFloat, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Sale_Partner(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -51,10 +51,10 @@ BEGIN
      FROM lpInsertUpdate_MovementItem_Sale (ioId                 := ioId
                                           , inMovementId         := inMovementId
                                           , inGoodsId            := inGoodsId
-                                          , inAmount             := (SELECT Amount FROM MovementItem WHERE Id = ioId AND DescId = zc_MI_Master())
+                                          , inAmount             := COALESCE ((SELECT Amount FROM MovementItem WHERE Id = ioId AND DescId = zc_MI_Master()), 0)
                                           , inAmountPartner      := inAmountPartner
-                                          , inAmountChangePercent:= (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent())
-                                          , inChangePercentAmount:= (SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount())
+                                          , inAmountChangePercent:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_AmountChangePercent()), 0)
+                                          , inChangePercentAmount:= COALESCE ((SELECT ValueData FROM MovementItemFloat WHERE MovementItemId = ioId AND DescId = zc_MIFloat_ChangePercentAmount()), 0)
                                           , inPrice              := inPrice
                                           , ioCountForPrice      := ioCountForPrice
                                           , inHeadCount          := inHeadCount
@@ -71,6 +71,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.05.14                                        * add COALESCE
  08.02.14                                        * была ошибка с lpInsertUpdate_MovementItem_Sale
  04.02.14                        * add lpInsertUpdate_MovementItem_Sale
  08.09.13                                        * add zc_MIFloat_AmountChangePercent

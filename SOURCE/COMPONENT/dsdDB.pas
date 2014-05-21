@@ -102,6 +102,7 @@ type
     procedure DataSetRefresh;
     procedure MultiDataSetRefresh;
     procedure SetStoredProcName(const Value: String);
+    function GetDataSetType: string;
   protected
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
@@ -132,7 +133,12 @@ implementation
 uses Storage, CommonData, TypInfo, UtilConvert, SysUtils, cxTextEdit, VCL.Forms,
      XMLDoc, XMLIntf, StrUtils, cxCurrencyEdit, dsdGuides, cxCheckBox, cxCalendar,
      Variants, UITypes, dsdAction, Defaults, UtilConst, Windows, Dialogs,
-     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls;
+     dsdAddOn, cxDBData, cxGridDBTableView, Authentication, Document, Controls,
+     kbmMemTable, kbmMemCSVStreamFormat;
+
+var
+  DefaultStreamFormat: TkbmCSVStreamFormat;
+
 
 procedure Register;
 begin
@@ -181,6 +187,7 @@ end;
 
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
+    StringStream: TStringStream;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -193,6 +200,13 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then
         TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
+     if DataSets[0].DataSet is TkbmMemTable then
+        try
+           StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+           TkbmMemTable(DataSets[0].DataSet).LoadFromStreamViaFormat(StringStream, DefaultStreamFormat);
+        finally
+           StringStream.Free;
+        end;
      if Assigned(B) then
      begin
         try
@@ -271,6 +285,16 @@ begin
      result := DataSets[0].DataSet
   else
      result := nil
+end;
+
+function TdsdStoredProc.GetDataSetType: string;
+begin
+  if (DataSets.Count > 0) and
+      Assigned(DataSets[0]) and
+      Assigned(DataSets[0].DataSet) then
+        result := DataSets[0].DataSet.ClassName
+      else
+        result := ''
 end;
 
 procedure TdsdStoredProc.SetDataSet(const Value: TDataSet);
@@ -375,7 +399,7 @@ begin
      raise Exception.Create('Не указано название процедуры в объекте ' + Name);
   Result :=
            '<xml Session = "' + Session + '" >' +
-                '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '">' +
+                '<' + StoredProcName + ' OutputType = "' + GetEnumName(TypeInfo(TOutputType), ord(OutputType)) + '" DataSetType = "' + GetDataSetType + '" >' +
                    FillParams +
                 '</' + StoredProcName + '>' +
            '</xml>';
@@ -527,7 +551,10 @@ var i: Integer;
 begin
   Data := Value;
   if VarisNull(Data) then
-     Data := 'NULL';
+    case DataType of
+      ftDate, ftTime, ftDateTime: Data := '01-01-1900'
+      else  Data := '';
+    end;
   if varType(Data) in [varSingle, varDouble, varCurrency] then
      result := gfFloatToStr(Data)
   else
@@ -855,7 +882,11 @@ begin
 end;
 
 initialization
+  DefaultStreamFormat := TkbmCSVStreamFormat.Create(nil);
   Classes.RegisterClass(TdsdDataSets);
   VerifyBoolStrArray;
+
+finalization
+  DefaultStreamFormat.Free;
 
 end.
