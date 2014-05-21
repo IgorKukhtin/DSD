@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PaidKindFromName TVarChar, PaidKindToName TVarChar
              , InfoMoneyGroupName_from TVarChar, InfoMoneyDestinationName_from TVarChar, InfoMoneyCode_from Integer, InfoMoneyName_from TVarChar
              , InfoMoneyGroupName_to TVarChar, InfoMoneyDestinationName_to TVarChar, InfoMoneyCode_to Integer, InfoMoneyName_to TVarChar
+             , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              )
 AS
 $BODY$
@@ -88,6 +89,9 @@ BEGIN
            , View_InfoMoneyTo.InfoMoneyDestinationName        AS InfoMoneyDestinationName_to
            , View_InfoMoneyTo.InfoMoneyCode                   AS InfoMoneyCode_to
            , View_InfoMoneyTo.InfoMoneyName                   AS InfoMoneyName_to
+
+           , Object_TaxKind.Id                	    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
 
        FROM tmpStatus
             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtIn() AND Movement.StatusId = tmpStatus.StatusId
@@ -167,6 +171,11 @@ BEGIN
                                          ON MovementLinkObject_PaidKindTo.MovementId = Movement.Id
                                         AND MovementLinkObject_PaidKindTo.DescId = zc_MovementLinkObject_PaidKindTo()
             LEFT JOIN Object AS Object_PaidKindTo ON Object_PaidKindTo.Id = MovementLinkObject_PaidKindTo.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
      ;
 
 END;
@@ -177,6 +186,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.05.14                                        * add DocumentTaxKind...
  08.05.14                                        * add ChangePercent
  07.05.14                                        * add tmpRoleAccessKey
  07.05.14                                        * add Partner...

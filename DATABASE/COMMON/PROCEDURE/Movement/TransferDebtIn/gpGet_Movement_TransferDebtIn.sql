@@ -226,6 +226,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.05.14                                        * add DocumentTaxKind...
  07.05.14                                        * add tmpParams
  07.05.14                                        * add Partner...
  25.04.14  		  *
