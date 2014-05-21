@@ -159,6 +159,7 @@ type
     cbBeforeSave: TCheckBox;
     Label6: TLabel;
     SessionIdEdit: TEdit;
+    cbGoodsProperty_Detail: TCheckBox;
     procedure OKGuideButtonClick(Sender: TObject);
     procedure cbAllGuideClick(Sender: TObject);
     procedure FormCreate(Sender: TObject);
@@ -287,6 +288,7 @@ type
     procedure pLoadGuide_Partner_Fl (isBill:Boolean);
     procedure pLoadGuide_Partner1CLink_Fl;
     procedure pLoadGuide_Goods1CLink_Fl;
+    procedure pLoadGuide_GoodsProperty_Detail;
 
     procedure pLoadGuide_Branch;
     procedure pLoadGuide_Business;
@@ -804,6 +806,8 @@ begin
      if not fStop then pLoadGuide_ProfitLossGroup;
      if not fStop then pLoadGuide_ProfitLossDirection;
      if not fStop then pLoadGuide_ProfitLoss;
+
+     if not fStop then pLoadGuide_GoodsProperty_Detail;
      //
      Gauge.Visible:=false;
      DBGrid.Enabled:=true;
@@ -3438,6 +3442,55 @@ begin
      fOpenSqToQuery ('select * from lfExecSql('+FormatToVarCharServer_notNULL('update Object set ObjectCode=0,ValueData='+FormatToVarCharServer_notNULL('')+FormatToVarCharServer_notNULL('')+' where id in (select ObjectId from ObjectBoolean where ValueData=FALSE and DescId=zc_ObjectBoolean_GoodsByGoodsKind1CLink_Sybase())')+')');
      //
      myDisabledCB(cbData1CLink);
+end;
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+procedure TMainForm.pLoadGuide_GoodsProperty_Detail;
+begin
+     if (not cbGoodsProperty_Detail.Checked)or(not cbGoodsProperty_Detail.Enabled) then exit;
+     //
+     myEnabledCB(cbGoodsProperty_Detail);
+     //
+     with fromQuery,Sql do begin
+        Close;
+        Clear;
+        Add('select GoodsProperty_Detail.Id as ObjectId');
+        Add('     , GoodsProperty.Id_Postgres as GoodsPropertyId_pg');
+        Add('     , KindPackage.Id_Postgres as KindPackageId_pg');
+        Add('from dba.GoodsProperty_Detail');
+        Add('     left outer join dba.GoodsProperty on GoodsProperty.Id = GoodsProperty_Detail.GoodsPropertyId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
+        Add('                                    and Goods.ParentId not in(686,1670,2387,2849,5874)'); // “‡‡ + —€– + ’À≈¡ + —-œ≈–≈–¿¡Œ“ ¿ + “”ÿ≈Õ ¿
+        Add('where KindPackage.Id_Postgres is not null');
+        Add('order by ObjectId');
+        Open;
+        //
+        fStop:=cbOnlyOpen.Checked;
+        if cbOnlyOpen.Checked then exit;
+        //
+        Gauge.Progress:=0;
+        Gauge.MaxValue:=RecordCount;
+        //
+        while not EOF do
+        begin
+             //!!!
+             if fStop then begin exit;end;
+             //
+             fOpenSqToQuery (' select Object_GoodsByGoodsKind_View.Id'
+                            +' from Object_GoodsByGoodsKind_View'
+                            +' where GoodsId='+FieldByName('GoodsPropertyId_pg').AsString
+                            +'   and GoodsKindId='+FieldByName('KindPackageId_pg').AsString);
+
+             fExecSqFromQuery('update dba.GoodsProperty_Detail set Id_Postgres=zf_ChangeIntToNull('+IntToStr(toSqlQuery.FieldByName('Id').AsInteger)+') where Id = '+FieldByName('ObjectId').AsString);
+             //
+             Next;
+             Application.ProcessMessages;
+             Gauge.Progress:=Gauge.Progress+1;
+             Application.ProcessMessages;
+        end;
+     end;
+     //
+     myDisabledCB(cbGoodsProperty_Detail);
 end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 procedure TMainForm.pLoadGuide_Business;

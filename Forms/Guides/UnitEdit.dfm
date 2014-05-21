@@ -365,17 +365,17 @@
         ComponentItem = 'Key'
       end
       item
-        Name = 'ProfitLossDirectionId'
-        Value = ''
-        Component = ProfitLossDirectionGuides
-        ComponentItem = 'Key'
-      end
-      item
         Name = 'AccountDirectionName'
         Value = ''
         Component = AccountDirectionGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'ProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'ProfitLossDirectionName'

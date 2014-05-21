@@ -27,6 +27,17 @@ type
     actSPPrintProcName: TdsdExecStoredProc;
     actPrint: TdsdPrintAction;
     mactPrint: TMultiAction;
+    cxLabel14: TcxLabel;
+    edDocumentTaxKind: TcxButtonEdit;
+    DocumentTaxKindGuides: TdsdGuides;
+    spCorrective: TdsdStoredProc;
+    spTaxCorrective: TdsdStoredProc;
+    bbTaxCorrective: TdxBarButton;
+    bbCorrective: TdxBarButton;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    bbPrintTaxCorrective_Client: TdxBarButton;
+    bbPrintTaxCorrective_Us: TdxBarButton;
   private
     { Private declarations }
   public

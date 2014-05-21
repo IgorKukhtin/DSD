@@ -16,6 +16,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , ContractFromId Integer, ContractFromName TVarChar, ContractToId Integer, ContractToName TVarChar
              , PaidKindFromId Integer, PaidKindFromName TVarChar, PaidKindToId Integer, PaidKindToName TVarChar
              , PriceListId Integer, PriceListName TVarChar
+             , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
               )
 AS
 $BODY$
@@ -69,7 +70,8 @@ BEGIN
 
              , Object_PriceList.Id          AS PriceListId
              , Object_PriceList.ValueData   AS PriceListName     
-             
+             , 0                     	    AS DocumentTaxKindId
+             , CAST ('' as TVarChar) 	    AS DocumentTaxKindName
              
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtin_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
@@ -125,6 +127,8 @@ BEGIN
 
            , Object_PriceList.id                    AS PriceListId
            , Object_PriceList.valuedata             AS PriceListName
+           , Object_TaxKind.Id                	    AS DocumentTaxKindId
+           , Object_TaxKind.ValueData         	    AS DocumentTaxKindName
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -204,6 +208,11 @@ BEGIN
             LEFT JOIN tmpParams ON 1 = 1
             LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (tmpParams.PriceListId, zc_PriceList_Basis())
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                         ON MovementLinkObject_DocumentTaxKind.MovementId = Movement.Id
+                                        AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
+            LEFT JOIN Object AS Object_TaxKind ON Object_TaxKind.Id = MovementLinkObject_DocumentTaxKind.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_TransferDebtIn();
      END IF;
@@ -217,6 +226,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNE
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.05.14                                        * add DocumentTaxKind...
  07.05.14                                        * add tmpParams
  07.05.14                                        * add Partner...
  25.04.14  		  *

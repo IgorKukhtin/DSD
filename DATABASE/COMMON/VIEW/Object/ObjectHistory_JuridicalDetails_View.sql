@@ -13,8 +13,6 @@ CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_View AS
   WHERE ObjectHistory_JuridicalDetails.DescId = zc_ObjectHistory_JuridicalDetails()
     AND ObjectHistory_JuridicalDetails.EndDate = zc_DateEnd()
     -- AND ObjectHistory_JuridicalDetails.EndDate >= '01.01.2015'
-    -- update  ObjectDate  set ValueData = DATE_TRUNC ('DAY', ValueData) where DescId in  (zc_ObjectDate_Contract_Signing(), zc_ObjectDate_Contract_Start(), zc_ObjectDate_Contract_End()) and ValueData <> DATE_TRUNC ('DAY', ValueData)
-
  ;
 
 

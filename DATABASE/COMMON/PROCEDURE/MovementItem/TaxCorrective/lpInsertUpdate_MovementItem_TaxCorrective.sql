@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_MovementItem_TaxCorrective()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TaxCorrective(integer, integer, integer, tfloat, tfloat, tfloat, tfloat, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MovementItem_TaxCorrective(integer, integer, integer, tfloat, tfloat, tfloat, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MovementItem_TaxCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Элемент документа>
@@ -24,26 +24,15 @@ BEGIN
      -- сохранили <Элемент документа>
      ioId := lpInsertUpdate_MovementItem (ioId, zc_MI_Master(), inGoodsId, inMovementId, inAmount, NULL);
 
-     -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), ioId, inAmount);
-
      -- сохранили свойство <Цена>
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), ioId, inPrice);
 
      -- сохранили свойство <Цена за количество>
      IF COALESCE (ioCountForPrice, 0) = 0 THEN ioCountForPrice := 1; END IF;
-
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_CountForPrice(), ioId, ioCountForPrice);
-
 
      -- сохранили связь с <Виды товаров>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), ioId, inGoodsKindId);
-
-     IF inGoodsId <> 0
-     THEN
-         -- создали объект <Связи Товары и Виды товаров>
-         PERFORM lpInsert_Object_GoodsByGoodsKind (inGoodsId, inGoodsKindId, inUserId);
-     END IF;
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -65,6 +54,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.05.14                                        * del zc_MIFloat_AmountPartner
  07.05.14                                        * add lpInsert_MovementItemProtocol
  03.03.14                                                        *
  10.02.14                                                        *

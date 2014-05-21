@@ -56,15 +56,15 @@ from (
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
-   , View_Contract_InvNumber.ContractId
-   , View_Contract_InvNumber.ContractCode
-   , View_Contract_InvNumber.InvNumber AS ContractNumber
-   , View_Contract_InvNumber.ContractTagName
-   , View_Contract_InvNumber.ContractStateKindCode
+   , View_Contract.ContractId
+   , View_Contract.ContractCode
+   , View_Contract.InvNumber AS ContractNumber
+   , View_Contract.ContractTagName
+   , View_Contract.ContractStateKindCode
    , Object_Personal_View.PersonalName      AS PersonalName
    , Object_PersonalCollation.PersonalName  AS PersonalCollationName
-   , ObjectDate_Start.ValueData        AS StartDate
-   , ObjectDate_End.ValueData          AS EndDate
+   , View_Contract.StartDate
+   , View_Contract.EndDate
 
    , (CASE WHEN RESULT.Remains > 0 THEN RESULT.Remains ELSE 0 END)::TFloat AS DebetRemains
    , (CASE WHEN RESULT.Remains > 0 THEN 0 ELSE -1 * RESULT.Remains END)::TFloat AS KreditRemains
@@ -230,14 +230,7 @@ from (
 
        LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = RESULT.JuridicalId
        LEFT JOIN Object_Account_View ON Object_Account_View.AccountId = RESULT.AccountId
-       LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = RESULT.ContractId
-       LEFT JOIN ObjectDate AS ObjectDate_Start
-                            ON ObjectDate_Start.ObjectId = RESULT.ContractId
-                           AND ObjectDate_Start.DescId = zc_ObjectDate_Contract_Start()
-       LEFT JOIN ObjectDate AS ObjectDate_End
-                            ON ObjectDate_End.ObjectId = RESULT.ContractId
-                           AND ObjectDate_End.DescId = zc_ObjectDate_Contract_End()                               
-       -- LEFT JOIN Object AS Object_ContractConditionKind ON Object_ContractConditionKind.Id = RESULT.ContractConditionKindId
+       LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = RESULT.ContractId
 
            LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                                ON ObjectLink_Contract_Personal.ObjectId = RESULT.ContractId
@@ -277,6 +270,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 20.05.14                                        * add Object_Contract_View
  12.05.14                                        * add RESULT.DelayCreditLimit
  05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View

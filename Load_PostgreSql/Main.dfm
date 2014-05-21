@@ -580,6 +580,15 @@ object MainForm: TMainForm
       Caption = '2.6. '#1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' Int'
       TabOrder = 42
     end
+    object cbGoodsProperty_Detail: TCheckBox
+      Tag = 10
+      Left = 163
+      Top = 390
+      Width = 156
+      Height = 17
+      Caption = '4.12. GoodsProperty_Detail'
+      TabOrder = 43
+    end
   end
   object DocumentPanel: TPanel
     Left = 790
