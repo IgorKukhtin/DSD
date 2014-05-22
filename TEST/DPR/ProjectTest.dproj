@@ -130,8 +130,8 @@
 			<DCCReference Include="..\..\Forms\Guides\PriceListEdit.pas">
 				<Form>PriceListEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
-				<Form>PriceListForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\PriceList_Object.pas">
+				<Form>PriceList_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
@@ -1300,6 +1300,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
 				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
+				<Form>PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

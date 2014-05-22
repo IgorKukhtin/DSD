@@ -343,6 +343,8 @@ type
     bbSaveDocumentTo1C: TdxBarButton;
     actReport_Goods: TdsdOpenForm;
     bbReport_Goods: TdxBarButton;
+    actReport_GoodsMI_byPriceDifSale: TdsdOpenForm;
+    bbReport_GoodsMI_byPriceDifSale: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

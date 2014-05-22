@@ -181,7 +181,7 @@ BEGIN
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
                       LEFT JOIN ObjectHistory_PriceListItem_View AS ViewHistory_PriceListItem ON ViewHistory_PriceListItem.PriceListId = inPriceListId
                                                                                              AND ViewHistory_PriceListItem.GoodsId = tmpReportContainerSumm.GoodsId
-                                                                                             AND MovementDate_OperDatePartner.ValueData BETWEEN ViewHistory_PriceListItem.StartDate AND ViewHistory_PriceListItem.EndDate
+                                                                                             AND Movement.OperDate /*MovementDate_OperDatePartner.ValueData*/ BETWEEN ViewHistory_PriceListItem.StartDate AND ViewHistory_PriceListItem.EndDate
                  GROUP BY Movement.InvNumber
                         , Movement.OperDate
                         , MovementDate_OperDatePartner.ValueData

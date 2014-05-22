@@ -68,7 +68,7 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
+    PriceListGuides: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     spSelectPrint: TdsdStoredProc;

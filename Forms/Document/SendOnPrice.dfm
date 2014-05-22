@@ -2,29 +2,27 @@ inherited SendOnPriceForm: TSendOnPriceForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
-  ExplicitWidth = 1072
-  ExplicitHeight = 702
+  ExplicitWidth = 1080
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 128
+    Top = 126
     Width = 1064
-    Height = 540
-    ExplicitTop = 128
+    Height = 542
+    ExplicitTop = 126
     ExplicitWidth = 1064
-    ExplicitHeight = 540
-    ClientRectBottom = 536
-    ClientRectRight = 1060
+    ExplicitHeight = 542
+    ClientRectBottom = 542
+    ClientRectRight = 1064
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -206,15 +204,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1058
-      ExplicitHeight = 514
+      ExplicitTop = 24
+      ExplicitWidth = 1064
+      ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1058
-        Height = 514
-        ExplicitWidth = 1058
-        ExplicitHeight = 514
+        Width = 1064
+        Height = 518
+        ExplicitWidth = 1064
+        ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -271,7 +268,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -398,29 +395,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end
-        item
-          StoredProc = spSelect
-        end
-        item
-          StoredProc = spSelectMIContainer
-        end>
       RefreshOnTabSetChanges = True
-    end
-    inherited actUpdateMainDS: TdsdUpdateDataSet
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdateMIMaster
-        end
-        item
-          StoredProc = spGetTotalSumm
-        end>
     end
     inherited actPrint: TdsdPrintAction
       StoredProc = spSelectPrint
@@ -525,7 +500,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -559,7 +534,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -869,13 +844,13 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1005,14 +980,14 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'ioPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'outPriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1239,7 +1214,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 528
     Top = 320
@@ -1262,18 +1237,18 @@ inherited SendOnPriceForm: TSendOnPriceForm
     Left = 644
     Top = 334
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1281,7 +1256,7 @@ inherited SendOnPriceForm: TSendOnPriceForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

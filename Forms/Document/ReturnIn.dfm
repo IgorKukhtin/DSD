@@ -711,7 +711,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1090,13 +1090,13 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'PriceListId'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1483,7 +1483,7 @@ inherited ReturnInForm: TReturnInForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 464
     Top = 360
@@ -1625,7 +1625,7 @@ inherited ReturnInForm: TReturnInForm
     Left = 872
     Top = 72
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
@@ -1637,7 +1637,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1645,7 +1645,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

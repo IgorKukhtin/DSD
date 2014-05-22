@@ -641,7 +641,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1031,13 +1031,13 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1380,7 +1380,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 448
     Top = 320
@@ -1666,7 +1666,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Left = 728
     Top = 64
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
@@ -1677,7 +1677,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1685,7 +1685,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

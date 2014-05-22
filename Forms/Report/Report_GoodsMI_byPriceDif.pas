@@ -21,19 +21,15 @@ type
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clSummPartner_calc: TcxGridDBColumn;
-    clAmount_Weight: TcxGridDBColumn;
     cxLabel4: TcxLabel;
     edGoodsGroup: TcxButtonEdit;
     GoodsGroupGuides: TdsdGuides;
     FormParams: TdsdFormParams;
-    clAmount_Sh: TcxGridDBColumn;
     edInDescName: TcxTextEdit;
     clAmountPartner_Weight: TcxGridDBColumn;
     clAmountPartner_Sh: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clSummPartner: TcxGridDBColumn;
-    clAmountChangePercent_Sh: TcxGridDBColumn;
-    clAmountChangePercent_Weight: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGuides: TdsdGuides;
@@ -54,7 +50,8 @@ type
     clJuridicalCode: TcxGridDBColumn;
     edPriceList: TcxButtonEdit;
     cxLabel8: TcxLabel;
-    PricelistGuides: TdsdGuides;
+    PriceListGuides: TdsdGuides;
+    clPrice_calc: TcxGridDBColumn;
   private
     { Private declarations }
   public

@@ -52,7 +52,7 @@ uses
   CurrencyEdit in '..\..\Forms\CurrencyEdit.pas' {CurencyEditForm},
   GoodsGroupEdit in '..\..\Forms\GoodsGroupEdit.pas' {GoodsGroupEditForm},
   PriceListEdit in '..\..\Forms\Guides\PriceListEdit.pas' {PriceListEditForm},
-  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm},
+  PriceList_Object in '..\..\Forms\Guides\PriceList_Object.pas' {PriceList_ObjectForm},
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
@@ -431,7 +431,8 @@ uses
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
   Report_GoodsMI_byPriceDif in '..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas' {Report_GoodsMI_byPriceDifForm: TParentForm},
   Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
-  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm};
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm};
 
 {$R *.RES}
 

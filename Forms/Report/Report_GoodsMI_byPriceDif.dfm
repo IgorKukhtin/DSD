@@ -36,12 +36,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Sh
             end
             item
               Format = ',0.####'
@@ -57,16 +51,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmountChangePercent_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmountChangePercent_Sh
             end
             item
               Format = ',0.####'
@@ -82,16 +66,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clAmount_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmount_Sh
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
               Column = clAmountPartner_Weight
             end
             item
@@ -103,16 +77,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
               Format = ',0.####'
               Kind = skSum
               Column = clSummPartner
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmountChangePercent_Weight
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = clAmountChangePercent_Sh
             end
             item
               Format = ',0.####'
@@ -138,6 +102,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           object clOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
             DataBinding.FieldName = 'OperDate'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -145,6 +110,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           object clOperDatePartner: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'OperDatePartner'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 70
@@ -247,28 +213,14 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             Properties.DisplayFormat = ',0.####'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 45
+            Width = 70
           end
-          object clAmount_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
+          object clPrice_calc: TcxGridDBColumn
+            Caption = #1062#1077#1085#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            DataBinding.FieldName = 'Price_calc'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountChangePercent_Weight: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountChangePercent_Weight'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
+            Width = 70
           end
           object clAmountPartner_Weight: TcxGridDBColumn
             Caption = #1050#1086#1083'.'#1074#1077#1089'  '#1091' '#1087#1086#1082#1091#1087'.'
@@ -276,28 +228,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmount_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'. ('#1089#1082#1083#1072#1076')'
-            DataBinding.FieldName = 'Amount_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object clAmountChangePercent_Sh: TcxGridDBColumn
-            Caption = #1050#1086#1083'.'#1096#1090'.  '#1089#1086' '#1089#1082#1080#1076#1082#1086#1081
-            DataBinding.FieldName = 'AmountChangePercent_Sh'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -313,16 +243,6 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSummPartner_calc: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1088#1072#1089#1095#1077#1090#1085#1072#1103
-            DataBinding.FieldName = 'SummPartner_calc'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 70
-          end
           object clSummPartner: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' '#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'SummPartner'
@@ -332,6 +252,16 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             HeaderGlyphAlignmentHorz = taCenter
+            Width = 70
+          end
+          object clSummPartner_calc: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' '#1087#1086' '#1087#1088#1072#1081#1089#1091
+            DataBinding.FieldName = 'SummPartner_calc'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 70
           end
           object clSummDif: TcxGridDBColumn
@@ -560,6 +490,12 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
           'TextValue')
       end
       item
+        Component = PriceListGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
         Component = UnitGuides
         Properties.Strings = (
           'Key'
@@ -575,7 +511,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     Top = 208
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpReport_GoodsMI_byMovementDif'
+    StoredProcName = 'gpReport_GoodsMI_byPriceDif'
     Params = <
       item
         Name = 'inStartDate'
@@ -627,6 +563,13 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
         ParamType = ptInput
       end
       item
+        Name = 'inPriceListId'
+        Value = ''
+        Component = PriceListGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
         Name = 'inGoodsGroupId'
         Value = ''
         Component = GoodsGroupGuides
@@ -669,6 +612,9 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
       end
       item
         Component = InfoMoneyGuides
+      end
+      item
+        Component = PriceListGuides
       end
       item
         Component = PaidKindGuides
@@ -822,7 +768,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
     Left = 416
     Top = 32
   end
-  object PricelistGuides: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
@@ -833,7 +779,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
       item
         Name = 'Key'
         Value = ''
-        Component = PricelistGuides
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -841,7 +787,7 @@ inherited Report_GoodsMI_byPriceDifForm: TReport_GoodsMI_byPriceDifForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = PricelistGuides
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

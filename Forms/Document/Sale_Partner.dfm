@@ -839,7 +839,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1235,13 +1235,13 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1385,14 +1385,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'ioPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'outPriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1845,7 +1845,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 528
     Top = 320
@@ -1931,7 +1931,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Left = 928
     Top = 65528
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     FormNameParam.Value = 'TPriceList_ObjectForm'
@@ -1942,7 +1942,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1950,7 +1950,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
