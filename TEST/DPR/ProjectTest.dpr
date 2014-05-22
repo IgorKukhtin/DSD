@@ -429,6 +429,7 @@ uses
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
+  Report_GoodsMI_byPriceDif in '..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas' {Report_GoodsMI_byPriceDifForm: TParentForm},
   Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm};
 
 {$R *.RES}

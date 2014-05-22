@@ -11,17 +11,17 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1108
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 1020
+    ExplicitWidth = 1108
     ExplicitHeight = 542
     ClientRectBottom = 542
     ClientRectRight = 1108
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
+      ExplicitWidth = 1108
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
         Width = 1108
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1108
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -227,12 +227,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1020
+      ExplicitWidth = 1108
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 1020
+        Width = 1108
         Height = 518
-        ExplicitWidth = 1020
+        ExplicitWidth = 1108
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -258,7 +258,7 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     Width = 1108
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 1020
+    ExplicitWidth = 1108
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1934,9 +1934,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -11,17 +11,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1020
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 1058
+    ExplicitWidth = 1020
     ExplicitHeight = 537
     ClientRectBottom = 537
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
+      ExplicitWidth = 1020
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 513
-        ExplicitWidth = 1058
+        ExplicitWidth = 1020
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,12 +149,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1058
+      ExplicitWidth = 1020
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
         Width = 1020
         Height = 513
-        ExplicitWidth = 1058
+        ExplicitWidth = 1020
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -180,7 +180,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1020
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1058
+    ExplicitWidth = 1020
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1669,9 +1669,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

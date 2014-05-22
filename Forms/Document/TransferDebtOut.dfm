@@ -2006,9 +2006,9 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

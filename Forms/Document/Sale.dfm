@@ -222,6 +222,7 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1115
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -285,6 +286,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -2008,9 +2010,9 @@ inherited SaleForm: TSaleForm
   object GuidesPricelist: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

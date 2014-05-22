@@ -1290,6 +1290,10 @@
 				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas">
+				<Form>Report_GoodsMI_byPriceDifForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas">
 				<Form>Report_GoodsMI_byMovementDifForm</Form>
 				<DesignClass>TParentForm</DesignClass>

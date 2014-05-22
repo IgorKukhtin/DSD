@@ -60,24 +60,50 @@ BEGIN
              RAISE EXCEPTION 'Ошибка.<Признак договора> не выбран.';
          END IF;
 
-         -- поиск ключа
-         vbContractKeyId_new := (SELECT ObjectLink_1.ObjectId
-                                 FROM ObjectLink AS ObjectLink_1
-                                      INNER JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_2.ObjectId      = ObjectLink_1.ObjectId
-                                                                           AND ObjectLink_2.ChildObjectId = inContractTagId
-                                                                           AND ObjectLink_2.DescId        = zc_ObjectLink_ContractKey_ContractTag()
-                                      INNER JOIN ObjectLink AS ObjectLink_3 ON ObjectLink_3.ObjectId      = ObjectLink_1.ObjectId
-                                                                           AND ObjectLink_3.ChildObjectId = inInfoMoneyId
-                                                                           AND ObjectLink_3.DescId        = zc_ObjectLink_ContractKey_InfoMoney()
-                                      INNER JOIN ObjectLink AS ObjectLink_4 ON ObjectLink_4.ObjectId      = ObjectLink_1.ObjectId
-                                                                           AND ObjectLink_4.ChildObjectId = inPaidKindId
-                                                                           AND ObjectLink_4.DescId        = zc_ObjectLink_ContractKey_PaidKind()
-                                      INNER JOIN ObjectLink AS ObjectLink_5 ON ObjectLink_5.ObjectId      = ObjectLink_1.ObjectId
-                                                                           AND ObjectLink_5.ChildObjectId = inJuridicalId_basis
-                                                                           AND ObjectLink_5.DescId        = zc_ObjectLink_ContractKey_JuridicalBasis()
-                                 WHERE ObjectLink_1.ChildObjectId = inJuridicalId
-                                   AND ObjectLink_1.DescId = zc_ObjectLink_ContractKey_Juridical()
-                                );
+         --
+         IF inContractTagId = zc_ContractKey_Contract()
+         THEN
+              -- поиск ключа по правилу "Ключ - Договор(!!!Обработка!!!) + параметры=0"
+              vbContractKeyId_new := (SELECT ObjectLink_1.ObjectId
+                                      FROM ObjectLink AS ObjectLink_ContractKey
+                                           INNER JOIN ObjectLink AS ObjectLink_1 ON ObjectLink_1.ObjectId      = ObjectLink_ContractKey.ChildObjectId
+                                                                                AND ObjectLink_1.ChildObjectId IS NULL
+                                                                                AND ObjectLink_1.DescId        = zc_ObjectLink_ContractKey_Juridical()
+                                           INNER JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_2.ObjectId      = ObjectLink_ContractKey.ChildObjectId
+                                                                                AND ObjectLink_2.ChildObjectId IS NULL
+                                                                                AND ObjectLink_2.DescId        = zc_ObjectLink_ContractKey_ContractTag()
+                                           INNER JOIN ObjectLink AS ObjectLink_3 ON ObjectLink_3.ObjectId      = ObjectLink_ContractKey.ChildObjectId
+                                                                                AND ObjectLink_3.ChildObjectId IS NULL
+                                                                                AND ObjectLink_3.DescId        = zc_ObjectLink_ContractKey_InfoMoney()
+                                           INNER JOIN ObjectLink AS ObjectLink_4 ON ObjectLink_4.ObjectId      = ObjectLink_ContractKey.ChildObjectId
+                                                                                AND ObjectLink_4.ChildObjectId IS NULL
+                                                                                AND ObjectLink_4.DescId        = zc_ObjectLink_ContractKey_PaidKind()
+                                           INNER JOIN ObjectLink AS ObjectLink_5 ON ObjectLink_5.ObjectId      = ObjectLink_ContractKey.ChildObjectId
+                                                                                AND ObjectLink_5.ChildObjectId IS NULL
+                                                                                AND ObjectLink_5.DescId        = zc_ObjectLink_ContractKey_JuridicalBasis()
+                                      WHERE ObjectLink_ContractKey.ObjectId = inContractId_begin
+                                        AND ObjectLink_ContractKey.DescId = zc_ObjectLink_Contract_ContractKey()
+                                     );
+         ELSE
+              -- поиск ключа по правилу "Ключ - 5 параметров"
+              vbContractKeyId_new := (SELECT ObjectLink_1.ObjectId
+                                      FROM ObjectLink AS ObjectLink_1
+                                           INNER JOIN ObjectLink AS ObjectLink_2 ON ObjectLink_2.ObjectId      = ObjectLink_1.ObjectId
+                                                                                AND ObjectLink_2.ChildObjectId = inContractTagId
+                                                                                AND ObjectLink_2.DescId        = zc_ObjectLink_ContractKey_ContractTag()
+                                           INNER JOIN ObjectLink AS ObjectLink_3 ON ObjectLink_3.ObjectId      = ObjectLink_1.ObjectId
+                                                                                AND ObjectLink_3.ChildObjectId = inInfoMoneyId
+                                                                                AND ObjectLink_3.DescId        = zc_ObjectLink_ContractKey_InfoMoney()
+                                           INNER JOIN ObjectLink AS ObjectLink_4 ON ObjectLink_4.ObjectId      = ObjectLink_1.ObjectId
+                                                                                AND ObjectLink_4.ChildObjectId = inPaidKindId
+                                                                                AND ObjectLink_4.DescId        = zc_ObjectLink_ContractKey_PaidKind()
+                                           INNER JOIN ObjectLink AS ObjectLink_5 ON ObjectLink_5.ObjectId      = ObjectLink_1.ObjectId
+                                                                                AND ObjectLink_5.ChildObjectId = inJuridicalId_basis
+                                                                                AND ObjectLink_5.DescId        = zc_ObjectLink_ContractKey_JuridicalBasis()
+                                      WHERE ObjectLink_1.ChildObjectId = inJuridicalId
+                                        AND ObjectLink_1.DescId = zc_ObjectLink_ContractKey_Juridical()
+                                     );
+         END IF;
 
          -- RAISE EXCEPTION 'Ошибка.<%> <%> <%> <%> <%> <%> : <%> <%>', inJuridicalId_basis, inJuridicalId, inInfoMoneyId, inPaidKindId, inContractTagId, inContractId_begin, vbContractKeyId_old, vbContractKeyId_new;
 
@@ -127,6 +153,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.05.14                                        * add zc_ContractKey_Contract
  25.04.14                                        *
 */
 /*

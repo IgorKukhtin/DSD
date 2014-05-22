@@ -428,7 +428,7 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate)
+                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDatePartner)
                           AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpMI.GoodsId
              ) AS _tmp;
 
@@ -1553,6 +1553,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.05.14                                        * modify lfSelect_ObjectHistory_PriceListItem ... inOperDate:= vbOperDatePartner
  16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        * rem zc_Enum_AccountDirection_30400
