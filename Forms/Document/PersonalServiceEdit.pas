@@ -36,9 +36,6 @@ type
     cxLabel9: TcxLabel;
     edComment: TcxTextEdit;
     cxLabel10: TcxLabel;
-    cxLabel8: TcxLabel;
-    ceContract: TcxButtonEdit;
-    ContractGuides: TdsdGuides;
     edInvNumber: TcxTextEdit;
   private
     { Private declarations }

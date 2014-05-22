@@ -20,6 +20,7 @@ CREATE TABLE ObjectHistoryString(
 
 
 CREATE UNIQUE INDEX idx_ObjectHistoryString_ObjectHistoryId_DescId_ValueData ON ObjectHistoryString(ObjectHistoryId, DescId, ValueData); 
+CREATE INDEX idx_ObjectHistoryString_ValueData_DescId_ObjectHistoryId ON ObjectHistoryString (ValueData, DescId, ObjectHistoryId);
 
 /*
  œ–»Ã≈◊¿Õ»ﬂ:

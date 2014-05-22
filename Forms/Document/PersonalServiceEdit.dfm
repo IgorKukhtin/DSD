@@ -1,25 +1,24 @@
 ﻿inherited PersonalServiceEditForm: TPersonalServiceEditForm
   ActiveControl = ceOperDate
   Caption = #1053#1072#1095#1080#1089#1083#1077#1085#1080#1077
-  ClientHeight = 315
-  ClientWidth = 588
-  ExplicitWidth = 594
-  ExplicitHeight = 340
+  ClientHeight = 257
+  ClientWidth = 586
+  ExplicitWidth = 592
+  ExplicitHeight = 282
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 177
-    Top = 266
-    TabOrder = 1
+    Top = 217
     ExplicitLeft = 177
-    ExplicitTop = 266
+    ExplicitTop = 217
   end
   inherited bbCancel: TcxButton
     Left = 321
-    Top = 266
+    Top = 217
     TabOrder = 4
     ExplicitLeft = 321
-    ExplicitTop = 266
+    ExplicitTop = 217
   end
   object cxLabel1: TcxLabel [2]
     Left = 10
@@ -48,7 +47,7 @@
   end
   object cxLabel5: TcxLabel [7]
     Left = 304
-    Top = 155
+    Top = 106
     Caption = #1057#1090#1072#1090#1100#1080' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
   end
   object cePersonal: TcxButtonEdit [8]
@@ -86,13 +85,13 @@
   end
   object ceInfoMoney: TcxButtonEdit [11]
     Left = 304
-    Top = 178
+    Top = 129
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
-    TabOrder = 19
+    TabOrder = 18
     Width = 273
   end
   object ceOperDate: TcxDateEdit [12]
@@ -142,38 +141,22 @@
     Caption = #1044#1086#1083#1078#1085#1086#1089#1090#1100
   end
   object edComment: TcxTextEdit [19]
-    Left = 10
-    Top = 220
-    TabOrder = 22
-    Width = 567
-  end
-  object cxLabel10: TcxLabel [20]
-    Left = 10
-    Top = 200
-    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
-  end
-  object cxLabel8: TcxLabel [21]
     Left = 304
-    Top = 106
-    Caption = #1044#1086#1075#1086#1074#1086#1088
-  end
-  object ceContract: TcxButtonEdit [22]
-    Left = 304
-    Top = 129
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    TabOrder = 15
+    Top = 178
+    TabOrder = 20
     Width = 273
   end
-  object edInvNumber: TcxTextEdit [23]
+  object cxLabel10: TcxLabel [20]
+    Left = 304
+    Top = 158
+    Caption = #1050#1086#1084#1084#1077#1085#1090#1072#1088#1080#1081
+  end
+  object edInvNumber: TcxTextEdit [21]
     Left = 10
     Top = 23
     Enabled = False
     Properties.ReadOnly = True
-    TabOrder = 23
+    TabOrder = 21
     Text = '0'
     Width = 273
   end
@@ -236,13 +219,6 @@
         Value = ''
         Component = edComment
         DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inContractId'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
@@ -370,19 +346,6 @@
         DataType = ftString
       end
       item
-        Name = 'ContractId'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'ContractName'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'PositionId'
         Value = ''
         Component = PositionGuides
@@ -434,7 +397,7 @@
     FormNameParam.Value = 'TPaidKindForm'
     FormNameParam.DataType = ftString
     FormName = 'TPaidKindForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -497,8 +460,8 @@
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 480
-    Top = 173
+    Left = 472
+    Top = 93
   end
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
@@ -523,72 +486,5 @@
       end>
     Left = 352
     Top = 56
-  end
-  object ContractGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceContract
-    FormNameParam.Value = 'TContractChoiceForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
-    PositionDataSet = 'MasterCDS'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        Component = PaidKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'InfoMoneyId'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'InfoMoneyName'
-        Value = ''
-        Component = InfoMoneyGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'inPaidKindId'
-        Value = '0'
-        Component = FormParams
-        ComponentItem = 'inPaidKindId'
-      end>
-    Left = 416
-    Top = 101
   end
 end

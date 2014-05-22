@@ -11,7 +11,7 @@ RETURNS TABLE (MemberId Integer, MemberCode Integer, MemberName TVarChar,
                PositionLevelId Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupName TVarChar,
-               DateIn TDateTime, DateOut TDateTime) AS
+               DateIn TDateTime, DateOut TDateTime, Official Boolean) AS
 $BODY$
 BEGIN
 
@@ -39,7 +39,8 @@ BEGIN
            , CAST ('' as TVarChar) AS PersonalGroupName
 
            , CURRENT_DATE :: TDateTime AS DateIn
-           , CURRENT_DATE :: TDateTime AS DateOut;
+           , CURRENT_DATE :: TDateTime AS DateOut
+           , True AS Official;
    ELSE
      RETURN QUERY 
      SELECT 
@@ -61,6 +62,7 @@ BEGIN
  
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut
+         , Object_Personal_View.Official
      FROM Object_Personal_View
     WHERE Object_Personal_View.PersonalId = inId;
 
@@ -75,6 +77,7 @@ ALTER FUNCTION gpGet_Object_Personal(Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.05.14                         * add Official
  21.11.13                                         * add PositionLevel...
  28.10.13                         * return memberid
  30.09.13                                        * add Object_Personal_View

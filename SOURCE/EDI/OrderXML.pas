@@ -240,7 +240,7 @@ type
 { Global Functions }
 
 function GetORDER(Doc: IXMLDocument): IXMLORDERType;
-function LoadORDER(const FileName: string): IXMLORDERType;
+function LoadORDER(const XMLString: string): IXMLORDERType;
 function NewORDER: IXMLORDERType;
 
 const
@@ -255,9 +255,12 @@ begin
   Result := Doc.GetDocBinding('ORDER', TXMLORDERType, TargetNamespace) as IXMLORDERType;
 end;
 
-function LoadORDER(const FileName: string): IXMLORDERType;
+function LoadORDER(const XMLString: string): IXMLORDERType;
 begin
-  Result := LoadXMLDocument(FileName).GetDocBinding('ORDER', TXMLORDERType, TargetNamespace) as IXMLORDERType;
+  with NewXMLDocument do begin
+    LoadFromXML(XMLString);
+    Result := GetDocBinding('ORDER', TXMLORDERType, TargetNamespace) as IXMLORDERType;
+  end;
 end;
 
 function NewORDER: IXMLORDERType;

@@ -7,13 +7,13 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_PersonalService(
     IN inSession           TVarChar   -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
+             , StatusCode Integer, StatusName TVarChar
              , ServiceDate TDateTime
              , Amount TFloat
              , PersonalId Integer, PersonalName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , ContractId Integer, ContractName TVarChar
              , PositionId Integer, PositionName TVarChar
              , Comment TVarChar
              )
@@ -31,6 +31,8 @@ BEGIN
                0 AS Id
              , CAST (NEXTVAL ('Movement_PersonalService_seq') AS TVarChar) AS InvNumber
              , CAST (CURRENT_DATE as TDateTime)      AS OperDate
+             , 0                                     AS StatusCode
+             , ''::TVarChar                          AS StatusName
              , CAST (CURRENT_DATE as TDateTime)      AS ServiceDate
              , CAST (0 as TFloat)                    AS Amount
 
@@ -42,8 +44,6 @@ BEGIN
              , CAST ('' as TVarChar) AS InfoMoneyName
              , 0                     AS UnitId
              , CAST ('' as TVarChar) AS UnitName
-             , 0                     AS ContractId
-             , CAST ('' as TVarChar) AS ContractName
 
              , 0                     AS PositionId
              , CAST ('' as TVarChar) AS PositionName
@@ -55,6 +55,8 @@ BEGIN
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
+           , Object_Status.ObjectCode            AS StatusCode
+           , Object_Status.ValueData             AS StatusName
            
            , MIDate_ServiceDate.ValueData AS ServiceDate           
            , MovementItem.Amount 
@@ -65,20 +67,18 @@ BEGIN
            , Object_PaidKind.Id           AS PaidKindId
            , Object_PaidKind.ValueData    AS PaidKindName
    
-           , Object_InfoMoney_View.InfoMoneyId          
+           , COALESCE(Object_InfoMoney_View.InfoMoneyId,0) AS InfoMoneyId          
            , Object_InfoMoney_View.InfoMoneyName
 
            , Object_Unit.Id               AS UnitId
            , Object_Unit.ValueData        AS UnitName
-
-           , Object_Contract.Id           AS ContractId
-           , Object_Contract.ValueData    AS ContractName
 
            , Object_Position.Id           AS PositionId
            , Object_Position.ValueData    AS PositionName
            , MIString_Comment.ValueData        AS Comment
  
          FROM Movement
+            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementItem.ObjectId

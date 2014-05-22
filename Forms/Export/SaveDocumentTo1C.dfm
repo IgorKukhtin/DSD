@@ -287,7 +287,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
           DataType = ftString
           Size = 50
         end>
-      DataSet = BillList
+      DataSet = kbmMemTable1
       isOEM = False
     end
     object actClose: TdsdFormClose
@@ -302,10 +302,10 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
   end
   object spBillList: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_1C_Load'
-    DataSet = BillList
+    DataSet = kbmMemTable1
     DataSets = <
       item
-        DataSet = BillList
+        DataSet = kbmMemTable1
       end>
     Params = <
       item
@@ -400,5 +400,25 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       end>
     Left = 456
     Top = 56
+  end
+  object kbmMemTable1: TkbmMemTable
+    DesignActivation = True
+    AttachedAutoRefresh = True
+    AttachMaxCount = 1
+    FieldDefs = <>
+    IndexDefs = <>
+    SortOptions = []
+    PersistentBackup = False
+    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
+    LoadedCompletely = False
+    SavedCompletely = False
+    FilterOptions = []
+    Version = '7.20.00 Professional Edition'
+    LanguageID = 0
+    SortID = 0
+    SubLanguageID = 1
+    LocaleID = 1024
+    Left = 312
+    Top = 8
   end
 end

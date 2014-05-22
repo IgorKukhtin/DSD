@@ -1042,8 +1042,8 @@
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
-				<Form>Report_GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsTax.pas">
+				<Form>Report_GoodsTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">
@@ -1296,6 +1296,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas">
 				<Form>Report_GoodsMI_byMovementDifForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

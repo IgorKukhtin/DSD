@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_Contract()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Contract (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, TDateTime, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Boolean, Boolean, Boolean, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
  INOUT ioId                  Integer,       -- Ключ объекта <Договор>
@@ -32,6 +33,10 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Contract(
     IN inBankId              Integer  ,     -- Банк (исх.платеж)
     IN inisDefault           Boolean  ,     -- по умолчанию
     IN inisStandart          Boolean  ,     -- Типовой
+
+    IN inisPersonal          Boolean  ,     -- Служебная записка
+    IN inisUnique            Boolean  ,     -- Без группировки 
+
     IN inSession             TVarChar       -- сессия пользователя
 )
 RETURNS Integer AS
@@ -156,6 +161,10 @@ BEGIN
    -- сохранили свойство <>
    PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Standart(), ioId, inisStandart);
 
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Personal(), ioId, inisPersonal);
+   -- сохранили свойство <>
+   PERFORM lpInsertUpdate_ObjectBoolean (zc_ObjectBoolean_Contract_Unique(), ioId, inisUnique);
 
    -- сохранили связь с <Юридическое лицо>
    PERFORM lpInsertUpdate_ObjectLink (zc_ObjectLink_Contract_Juridical(), ioId, inJuridicalId);
@@ -212,6 +221,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.05.14         * add zc_ObjectBoolean_Contract_Personal
+                        zc_ObjectBoolean_Contract_Unique
  08.05.14                                        * add lpCheckRight
  26.04.14                                        * add lpInsertFind_Object_ContractKey
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade

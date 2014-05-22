@@ -2,26 +2,14 @@ unit EDI;
 
 interface
 
-uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb;
+uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
-  // Компонент работы с EDI. Пока все засунем в него
-  // Ну не совсем все, конечно, но много
-  TEDI = class(TComponent)
-  private
-    FIdFTP: TIdFTP;
-    procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
-  public
-    constructor Create(AOwner: TComponent); override;
-    destructor Destroy; override;
-    procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
-    procedure ComdocLoad(spHeader, spList: TdsdStoredProc);
-  end;
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar);
 
   TConnectionParams = class(TPersistent)
   private
-    FDirectory: string;
     FPassword: string;
     FHost: string;
     FUser: string;
@@ -29,62 +17,77 @@ type
     property Host: string read FHost write FHost;
     property User: string read FUser write FUser;
     property Password: string read FPassword write FPassword;
-    property Directory: string read FDirectory write FDirectory;
   end;
-
-  TEDIActionDesadv = class(TdsdCustomAction)
+  // Компонент работы с EDI. Пока все засунем в него
+  // Ну не совсем все, конечно, но много
+  TEDI = class(TComponent)
   private
-    FHeaderDataSet: TDataSet;
-    FListDataSet: TDataSet;
-  protected
-    function LocalExecute: boolean; override;
-  published
-    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
-    property ListDataSet: TDataSet read FListDataSet write FListDataSet;
-  end;
-
-  TEDIActionComdocLoad = class(TdsdCustomAction)
-  private
-    FspHeader: TdsdStoredProc;
-    FspList: TdsdStoredProc;
+    FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
-  protected
-    function LocalExecute: boolean; override;
+    procedure InsertUpdateOrder(ORDER: IXMLORDERType; spHeader, spList: TdsdStoredProc);
+    procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
+    procedure FTPSetConnection;
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
+    procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
+    procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams write FConnectionParams;
+  end;
+
+  TEDIAction = class(TdsdCustomAction)
+  private
+    FspHeader: TdsdStoredProc;
+    FspList: TdsdStoredProc;
+    FEDIDocType: TEDIDocType;
+    FEDI: TEDI;
+    FDirectory: string;
+  protected
+    function LocalExecute: boolean; override;
+  published
+    property EDI: TEDI read FEDI write FEDI;
+    property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
     property spHeader: TdsdStoredProc read FspHeader write FspHeader;
     property spList: TdsdStoredProc read FspList write FspList;
+    property Directory: string read FDirectory write FDirectory;
   end;
 
   procedure Register;
 
 implementation
 
-uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants;
+uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
+UtilConvert;
 
 procedure Register;
 begin
   RegisterComponents('DSDComponent', [TEDI]);
-  RegisterActions('EDI', [TEDIActionDesadv], TEDIActionDesadv);
-  RegisterActions('EDI', [TEDIActionComdocLoad], TEDIActionComdocLoad);
+  RegisterActions('EDI', [TEDIAction], TEDIAction);
 end;
 
 { TEDI }
 
-procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc);
+constructor TEDI.Create(AOwner: TComponent);
+begin
+  inherited;
+  FConnectionParams := TConnectionParams.Create;
+  FIdFTP := TIdFTP.Create(nil);
+end;
+
+procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
 var List: TStrings;
     i: integer;
     Stream: TStringStream;
     FileData: string;
     ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
 begin
+    FTPSetConnection;
     // загружаем файлы с FTP
     FIdFTP.Connect;
     if FIdFTP.Connected then begin
-       FIdFTP.ChangeDir('/archive');
+       FIdFTP.ChangeDir(Directory);
        try
          List := TStringList.Create;
          Stream := TStringStream.Create;
@@ -103,7 +106,7 @@ begin
                   FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
                   FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
                   ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
-                  if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004' then begin
+                  if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007' then begin
                      // загружаем в базенку
                      InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                   end;
@@ -114,20 +117,11 @@ begin
            Finish;
          end;
        finally
+         FIdFTP.Quit;
          List.Free;
          Stream.Free;
        end;
     end;
-    FIdFTP.Quit;
-end;
-
-constructor TEDI.Create(AOwner: TComponent);
-begin
-  inherited;
-  FIdFTP := TIdFTP.Create(nil);
-  FIdFTP.Username := 'uatovalanftp';
-  FIdFTP.Password := 'ftp349067';
-  FIdFTP.Host := 'ruftpex.edi.su';
 end;
 
 procedure TEDI.DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
@@ -179,6 +173,7 @@ begin
   // Переслать его по ftp
   try
     DESADV.OwnerDocument.SaveToStream(Stream);
+    FTPSetConnection;
     FIdFTP.Connect;
     if FIdFTP.Connected then begin
        FIdFTP.ChangeDir('/error');
@@ -193,7 +188,44 @@ end;
 destructor TEDI.Destroy;
 begin
   FreeAndNil(FIdFTP);
+  FreeAndNil(FConnectionParams);
   inherited;
+end;
+
+procedure TEDI.FTPSetConnection;
+begin
+  FIdFTP.Username := ConnectionParams.User;
+  FIdFTP.Password := ConnectionParams.Password;
+  FIdFTP.Host := ConnectionParams.Host;
+end;
+
+procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
+  spList: TdsdStoredProc);
+var MovementId: Integer;
+    i: integer;
+begin
+  with spHeader, ORDER do begin
+    ParamByName('outid').Value := 0;
+    ParamByName('inOrderInvNumber').Value := NUMBER;
+    ParamByName('inOrderOperDate').Value  := VarToDateTime(DATE);
+
+    ParamByName('inGLNPlace').Value := HEAD.BUYER;
+    ParamByName('inGLN').Value := HEAD.INVOICEPARTNER;
+
+    Execute;
+    MovementId := ParamByName('outid').Value;
+  end;
+  for I := 0 to ORDER.HEAD.POSITION.Count - 1 do
+     with spList, ORDER.HEAD.POSITION[i] do begin
+         ParamByName('inMovementId').Value := MovementId;
+         ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
+         ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
+         ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
+         ParamByName('inAmountPartner').Value := 0;
+         ParamByName('inPricePartner').Value := gfStrToFloat(ORDERPRICE);
+         ParamByName('inSummPartner').Value := gfStrToFloat(ORDERPRICE) * gfStrToFloat(ORDEREDQUANTITY);
+         Execute;
+     end;
 end;
 
 procedure TEDI.InsertUpdateComDoc(
@@ -216,51 +248,85 @@ begin
         if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
            ParamByName('inGLN').Value := Сторони.Контрагент[i].GLN;
            ParamByName('inOKPO').Value := Сторони.Контрагент[i].КодКонтрагента;
+           ParamByName('inJuridicalName').Value := Сторони.Контрагент[i].НазваКонтрагента;
         end;
      Execute;
      MovementId := ParamByName('outid').Value;
   end;
-
+  with spList, ЕлектроннийДокумент.Таблиця do
+       for I := 0 to GetCount - 1 do begin
+           with Рядок[i] do begin
+             ParamByName('inMovementId').Value := MovementId;
+             ParamByName('inGoodsName').Value := Найменування;
+             ParamByName('inGLNCode').Value := АртикулПокупця;
+             ParamByName('inAmountOrder').Value := 0;
+             ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
+             ParamByName('inPricePartner').Value := gfStrToFloat(Ціна);
+             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.Сума);
+             Execute;
+           end;
+       end;
 end;
 
-{ TEDIActionDesadv }
-
-function TEDIActionDesadv.LocalExecute: boolean;
+procedure TEDI.OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
+var List: TStrings;
+    i: integer;
+    Stream: TStringStream;
+    FileData: string;
+    ORDER: IXMLORDERType;
 begin
-  with TEDI.Create(Self) do
-  try
-    DESADV(Self.HeaderDataSet, Self.ListDataSet);
-  finally
-    Free;
-  end;
+    FTPSetConnection;
+    // загружаем файлы с FTP
+    FIdFTP.Connect;
+    if FIdFTP.Connected then begin
+       FIdFTP.ChangeDir(Directory);
+       try
+         List := TStringList.Create;
+         Stream := TStringStream.Create;
+         FIdFTP.List(List, '' ,false);
+         with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+         try
+           Start;
+           for I := 0 to List.Count - 1 do begin
+               // если первые буквы файла order а последние .xml
+               if (copy(list[i], 1, 5) = 'order') and (copy(list[i], length(list[i]) - 3, 4) = '.xml') then begin
+                  // тянем файл к нам
+                  Stream.Clear;
+                  FIdFTP.Get(List[i], Stream);
+                  ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
+                   // загружаем в базенку
+                   InsertUpdateOrder(ORDER, spHeader, spList);
+               end;
+               IncProgress;
+           end;
+         finally
+           Finish;
+         end;
+       finally
+         FIdFTP.Quit;
+         List.Free;
+         Stream.Free;
+       end;
+    end;
 end;
 
-{ TEDIActionComdocLoad }
+{ TEDIActionEDI }
 
-constructor TEDIActionComdocLoad.Create(AOwner: TComponent);
+function TEDIAction.LocalExecute: boolean;
 begin
-  inherited;
-  FConnectionParams := TConnectionParams.Create
-end;
-
-destructor TEDIActionComdocLoad.Destroy;
-begin
-  FreeAndNil(FConnectionParams);
-  inherited;
-end;
-
-function TEDIActionComdocLoad.LocalExecute: boolean;
-var
-  EDI: TEDI;
-begin
-  EDI := TEDI.Create(nil);
-  // создание документа
-  try
-     EDI.ComdocLoad(spHeader, spList);
-     { запускаем процедуру выгрузки документа DESADV}
-  finally
-    EDI.Free;
+  // создание документ
+  case EDIDocType of
+    ediOrder:  EDI.OrderLoad(spHeader, spList, Directory);
+    ediComDoc: EDI.ComdocLoad(spHeader, spList, Directory);
+//    ediDesadv,
+//    ediDeclar
   end;
 end;
 
 end.
+
+  FIdFTP.Username := 'uatovalanftp';
+  FIdFTP.Password := 'ftp349067';
+  FIdFTP.Host := 'ruftpex.edi.su';
+   '/archive'
+
