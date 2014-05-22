@@ -146,6 +146,12 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
           Size = 16
         end
         item
+          Name = 'BAZOP0'
+          DataType = ftBCD
+          Precision = 2
+          Size = 16
+        end
+        item
           Name = 'ZVILN'
           DataType = ftBCD
           Precision = 2

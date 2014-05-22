@@ -41,6 +41,7 @@ $Session = $doc->documentElement->getAttribute('Session');
 $StoredProcNode = $doc->documentElement->firstChild;
 $StoredProcName = $StoredProcNode->nodeName;
 $OutputType = $StoredProcNode->getAttribute('OutputType');
+$DataSetType = $StoredProcNode->getAttribute('DataSetType');
 
 $ParamName = '';
 $ParamValues = array();
@@ -103,7 +104,7 @@ else
   
   if ($OutputType=='otDataSet')
   {
-     $res = FillDataSet($result);
+     $res = FillDataSet($result, $DataSetType);
      // возвращаем результат
      echo 'DataSet      '.PrepareStr($res);
   };
@@ -121,7 +122,7 @@ else
            $CursorsClose .= 'CLOSE "'.$col_value.'";';
         };
         $result_cursor = pg_query($query);
-        $DataSetStr = FillDataSet($result_cursor);
+        $DataSetStr = FillDataSet($result_cursor, $DataSetType);
         $res .= $DataSetStr;
         $XMLStructure .= '<DataSet length = "'.strlen($DataSetStr).'"/>';
     };

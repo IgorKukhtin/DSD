@@ -1,6 +1,6 @@
 -- View: Object_Personal_View
 
--- DROP VIEW IF EXISTS Object_Personal_View CASCADE;
+DROP VIEW IF EXISTS Object_Personal_View CASCADE;
 
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
@@ -29,6 +29,7 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
  
        , ObjectDate_DateIn.ValueData   AS DateIn
        , ObjectDate_DateOut.ValueData  AS DateOut
+       , COALESCE(ObjectBoolean_Official.ValueData, TRUE)        AS Official
          
    FROM Object AS Object_Personal
        LEFT JOIN ObjectLink AS ObjectLink_Personal_Member
@@ -61,6 +62,10 @@ CREATE OR REPLACE VIEW Object_Personal_View AS
        LEFT JOIN ObjectDate AS ObjectDate_DateOut
                             ON ObjectDate_DateOut.ObjectId = Object_Personal.Id
                            AND ObjectDate_DateOut.DescId = zc_ObjectDate_Personal_Out()          
+
+       LEFT JOIN ObjectBoolean AS ObjectBoolean_Official
+                               ON ObjectBoolean_Official.ObjectId = Object_Personal.Id
+                              AND ObjectBoolean_Official.DescId = zc_ObjectBoolean_Personal_Official()          
  WHERE Object_Personal.DescId = zc_Object_Personal();
 
 
@@ -70,6 +75,7 @@ ALTER TABLE Object_Personal_View  OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 21.05.14                        * add Offical
  08.12.13                                        * add AccessKeyId
  21.11.13                                        * add PositionLevel...
  09.11.13                                        * add DescId

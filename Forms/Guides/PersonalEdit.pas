@@ -20,7 +20,8 @@ uses
   Datasnap.DBClient, dsdAddOn, cxPropertiesStore, dsdDB, dsdAction,
   Vcl.ActnList, cxMaskEdit, cxDropDownEdit, cxLookupEdit, cxDBLookupEdit,
   cxDBLookupComboBox, cxCurrencyEdit, Vcl.StdCtrls, cxButtons, cxLabel,
-  cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
+  cxTextEdit, cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar,
+  cxCheckBox;
 
 type
   TPersonalEditForm = class(TParentForm)
@@ -56,6 +57,7 @@ type
     cxLabel4: TcxLabel;
     cePositionLevel: TcxButtonEdit;
     PositionLevelGuides: TdsdGuides;
+    cbOfficial: TcxCheckBox;
   private
     { Private declarations }
   public

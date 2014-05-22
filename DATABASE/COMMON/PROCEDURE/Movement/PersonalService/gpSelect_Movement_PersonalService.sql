@@ -5,7 +5,8 @@ DROP FUNCTION IF EXISTS gpSelect_Movement_PersonalService (TDateTime, TDateTime,
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PersonalService(
     IN inStartDate   TDateTime , --
     IN inEndDate     TDateTime , --
-    IN inIsErased      Boolean ,
+    IN inPaidKindId  Integer   , 
+    IN inIsErased    Boolean   ,
     IN inSession     TVarChar    -- ñåññèÿ ïîëüçîâàòåëÿ
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
@@ -16,9 +17,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime
              , PaidKindId Integer, PaidKindName TVarChar
              , InfoMoneyId Integer, InfoMoneyName TVarChar
              , UnitId Integer, UnitName TVarChar
-             , ContractId Integer, ContractName TVarChar
              , PositionId Integer, PositionName TVarChar
-             , inComment TVarChar
+             , Comment TVarChar
               )
 AS
 $BODY$
@@ -31,41 +31,57 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_PersonalService());
 
      RETURN QUERY 
+SELECT 
+             PersonalData.Id
+           , PersonalData.InvNumber
+           , PersonalData.OperDate
+           , Object_Status.ObjectCode            AS StatusCode
+           , Object_Status.ValueData             AS StatusName
+           , PersonalData.ServiceDate
+           , PersonalData.Amount
+           , Object_Personal.Id                  AS PersonalId
+           , Object_Personal.ValueData           AS PersonalName
+           , Object_PaidKind.Id                  AS PaidKindName
+           , Object_PaidKind.ValueData           AS PaidKindName
+           , Object_InfoMoney_View.InfoMoneyId          
+           , Object_InfoMoney_View.InfoMoneyName
+           , Object_Unit.Id                       AS UnitId
+           , Object_Unit.ValueData                AS UnitName
+           , Object_Position.Id                   AS PositionId
+           , Object_Position.ValueData            AS PositionName
+           , PersonalData.Comment
+
+FROM 
+ (SELECT     Personal_Movement.Id
+           , Personal_Movement.InvNumber
+           , Personal_Movement.OperDate
+           , Personal_Movement.StatusId
+           , Personal_Movement.ServiceDate
+           , Personal_Movement.Amount 
+           , Personal_Movement.Comment
+           , Personal_Movement.InfoMoneyId
+           , Personal_Movement.PaidKindId          
+           , COALESCE(Personal_Movement.PersonalId, Object_Personal_View.PersonalId) AS PersonalId     
+           , COALESCE(Personal_Movement.PositionId, Object_Personal_View.PositionId) AS PositionId
+           , COALESCE(Personal_Movement.UnitId, Object_Personal_View.UnitId)         AS UnitId
+ FROM (
+ 
        SELECT
              Movement.Id
            , Movement.InvNumber
            , Movement.OperDate
-           , Object_Status.ObjectCode   AS StatusCode
-           , Object_Status.ValueData    AS StatusName
-           
-           , MIDate_ServiceDate.ValueData AS ServiceDate           
+           , Movement.StatusId
+           , MIDate_ServiceDate.ValueData    AS ServiceDate           
            , MovementItem.Amount 
-
-           , Object_Personal.Id           AS PersonalId
-           , Object_Personal.ValueData    AS PersonalName
-
-           , Object_PaidKind.Id           AS PaidKindId
-           , Object_PaidKind.ValueData    AS PaidKindName
-   
-           , Object_InfoMoney_View.InfoMoneyId          
-           , Object_InfoMoney_View.InfoMoneyName
-
-           , Object_Unit.Id               AS UnitId
-           , Object_Unit.ValueData        AS UnitName
-
-           , Object_Contract.Id           AS ContractId
-           , Object_Contract.ValueData    AS ContractName
-
-           , Object_Position.Id           AS PositionId
-           , Object_Position.ValueData    AS PositionName
-           , MIString_Comment.ValueData        AS Comment
+           , MovementItem.ObjectId           AS PersonalId
+           , MILinkObject_PaidKind.ObjectId  AS PaidKindId          
+           , MILinkObject_Position.ObjectId  AS PositionId
+           , MILinkObject_InfoMoney.ObjectId AS InfoMoneyId
+           , MILinkObject_Unit.ObjectId      AS UnitId 
+           , MIString_Comment.ValueData      AS Comment
  
        FROM Movement
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
-
-            LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
-
-            LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemDate AS MIDate_ServiceDate
                                    ON MIDate_ServiceDate.MovementItemId = MovementItem.Id
@@ -79,39 +95,50 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_InfoMoney
                                          ON MILinkObject_InfoMoney.MovementItemId = MovementItem.Id
                                         AND MILinkObject_InfoMoney.DescId = zc_MILinkObject_InfoMoney()
-            LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = MILinkObject_InfoMoney.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Unit
                                              ON MILinkObject_Unit.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Unit.DescId = zc_MILinkObject_Unit()
-            LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = MILinkObject_Unit.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_Position
                                              ON MILinkObject_Position.MovementItemId = MovementItem.Id
                                             AND MILinkObject_Position.DescId = zc_MILinkObject_Position()
-            LEFT JOIN Object AS Object_Position ON Object_Position.Id = MILinkObject_Position.ObjectId
 
             LEFT JOIN MovementItemString AS MIString_Comment 
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
                                         AND MIString_Comment.DescId = zc_MIString_Comment()
-            
        WHERE Movement.DescId = zc_Movement_PersonalService()
-         AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
-  
+         AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+         AND (MILinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)) AS Personal_Movement 
+
+           FULL JOIN 
+            (SELECT * FROM Object_Personal_View
+              WHERE ((Object_Personal_View.Official = TRUE AND inPaidKindId = zc_Enum_PaidKind_FirstForm())
+                       OR (inPaidKindId <> zc_Enum_PaidKind_FirstForm())) ) AS Object_Personal_View
+
+       ON Object_Personal_View.Personalid = Personal_Movement.PersonalId
+                              AND Object_Personal_View.UnitId = Personal_Movement.UnitId 
+                              AND Object_Personal_View.PositionId = Personal_Movement.PositionId ) AS PersonalData
+             LEFT JOIN Object AS Object_Personal ON Object_Personal.Id = PersonalData.PersonalId
+             LEFT JOIN Object AS Object_Status ON Object_Status.Id = PersonalData.StatusId
+             LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = PersonalData.InfoMoneyId
+             LEFT JOIN Object AS Object_Position ON Object_Position.Id = PersonalData.PositionId
+             LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = PersonalData.PaidKindId
+             LEFT JOIN Object AS Object_Unit ON Object_Unit.Id = PersonalData.UnitId;  
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_PersonalService (TDateTime, TDateTime, Integer, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.05.14                         *
  27.02.14                         *
  12.08.13         *
 */

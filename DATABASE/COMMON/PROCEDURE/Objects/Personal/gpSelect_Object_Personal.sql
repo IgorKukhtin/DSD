@@ -10,8 +10,7 @@ RETURNS TABLE (Id Integer, MemberCode Integer, MemberName TVarChar,
                PositionLevelId Integer, PositionLevelCode Integer, PositionLevelName TVarChar,
                UnitId Integer, UnitCode Integer, UnitName TVarChar,
                PersonalGroupId Integer, PersonalGroupCode Integer, PersonalGroupName TVarChar,
-               DateIn TDateTime, DateOut TDateTime,
-               isErased Boolean) AS
+               DateIn TDateTime, DateOut TDateTime, Official Boolean, isErased Boolean) AS
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbAccessKeyAll Boolean;
@@ -47,6 +46,7 @@ BEGIN
  
          , Object_Personal_View.DateIn
          , Object_Personal_View.DateOut
+         , Object_Personal_View.Official
          
          , Object_Personal_View.isErased
      FROM Object_Personal_View
@@ -63,6 +63,7 @@ ALTER FUNCTION gpSelect_Object_Personal (TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 21.05.14                         * add Official
  14.12.13                                        * add vbAccessKeyAll
  08.12.13                                        * add Object_RoleAccessKey_View
  21.11.13                                        * add PositionLevel...

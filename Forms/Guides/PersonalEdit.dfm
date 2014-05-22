@@ -162,11 +162,20 @@
     TabOrder = 17
     Width = 305
   end
+  object cbOfficial: TcxCheckBox
+    Left = 240
+    Top = 231
+    Hint = #1054#1092#1086#1088#1084#1083#1077#1085' '#1086#1092#1080#1094#1080#1072#1083#1100#1085#1086
+    Caption = #1054#1092#1086#1088#1084#1083#1077#1085
+    TabOrder = 18
+    Width = 81
+  end
   object ActionList: TActionList
     Left = 72
     Top = 216
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -180,9 +189,11 @@
       RefreshOnTabSetChanges = False
     end
     object dsdFormClose1: TdsdFormClose
+      MoveParams = <>
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -251,9 +262,16 @@
         Component = edDateOut
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inOfficial'
+        Value = 'False'
+        Component = cbOfficial
+        DataType = ftBoolean
+        ParamType = ptInput
       end>
-    Left = 275
-    Top = 214
+    Left = 115
+    Top = 166
   end
   object dsdFormParams: TdsdFormParams
     Params = <
@@ -262,8 +280,8 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 304
-    Top = 232
+    Left = 88
+    Top = 96
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Personal'
@@ -358,9 +376,15 @@
         Value = 0d
         Component = edDateOut
         DataType = ftDateTime
+      end
+      item
+        Name = 'Official'
+        Value = 'False'
+        Component = cbOfficial
+        DataType = ftBoolean
       end>
-    Left = 248
-    Top = 214
+    Left = 96
+    Top = 134
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -384,6 +408,8 @@
   object UnitGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceUnit
+    FormNameParam.Value = 'TUnit_ObjectForm'
+    FormNameParam.DataType = ftString
     FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -409,6 +435,8 @@
   object MemberGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMember
+    FormNameParam.Value = 'TMemberForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMemberForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -440,6 +468,8 @@
   object PersonalGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePersonalGroup
+    FormNameParam.Value = 'TPersonalGroupForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPersonalGroupForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -465,6 +495,8 @@
   object PositionGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePosition
+    FormNameParam.Value = 'TPositionForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -490,6 +522,8 @@
   object PositionLevelGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = cePositionLevel
+    FormNameParam.Value = 'TPositionLevelForm'
+    FormNameParam.DataType = ftString
     FormName = 'TPositionLevelForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
@@ -509,7 +543,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 279
-    Top = 177
+    Left = 287
+    Top = 185
   end
 end
