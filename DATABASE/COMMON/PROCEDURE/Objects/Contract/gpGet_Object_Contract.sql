@@ -31,6 +31,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , BankId Integer, BankName TVarChar
              , isDefault Boolean
              , isStandart Boolean
+
+             , isPersonal Boolean
+             , isUnique Boolean
+             
              , isErased Boolean
               )
 AS
@@ -95,6 +99,9 @@ BEGIN
            , CAST (false as Boolean)  AS isDefault 
            , CAST (false as Boolean)  AS isStandart
 
+           , CAST (false as Boolean)  AS isPersonal 
+           , CAST (false as Boolean)  AS isUnique
+
            , NULL :: Boolean  AS isErased
 
        FROM Object AS Object_PaidKind
@@ -157,6 +164,9 @@ BEGIN
            , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
            , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
 
+           , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
+           , COALESCE (ObjectBoolean_Unique.ValueData, False)  AS isUnique
+
            , Object_Contract_View.isErased
 
        FROM Object_Contract_View
@@ -193,7 +203,15 @@ BEGIN
             LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                     ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                    AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
-           
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal
+                                    ON ObjectBoolean_Personal.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_Personal.DescId = zc_ObjectBoolean_Contract_Personal()
+
+            LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
+                                    ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
+                                   AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
+
             LEFT JOIN ObjectLink AS ObjectLink_Contract_Personal
                             ON ObjectLink_Contract_Personal.ObjectId = Object_Contract_View.ContractId
                            AND ObjectLink_Contract_Personal.DescId = zc_ObjectLink_Contract_Personal()
@@ -248,6 +266,8 @@ ALTER FUNCTION gpGet_Object_Contract (Integer, TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 22.05.14         * add zc_ObjectBoolean_Contract_Personal
+                        zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!! zc_ObjectDate_Contract_Start and zc_ObjectDate_Contract_End and zc_ObjectLink_Contract_ContractKind - всегда!!!
  25.04.14                                        * по другому ContractTag... and ContractStateKind...
  21.04.14         * add zc_ObjectLink_Contract_PersonalTrade
