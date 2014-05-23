@@ -584,6 +584,7 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
                                          ) AS ContainerId_ProfitLoss_10800
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                , _tmpItem_byProfitLoss.BusinessId_To
            FROM (SELECT -- определяем ProfitLossId - для учета разница в весе : с/с1 - с/с2
                         CASE WHEN vbIsCorporate_From = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -680,6 +681,7 @@ BEGIN
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
+                                     AND _tmpItem_byDestination.BusinessId_To = _tmpItem.BusinessId_To
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль (Себестоимость)
@@ -870,6 +872,7 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
                                          ) AS ContainerId_ProfitLoss_10700
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                , _tmpItem_byProfitLoss.BusinessId_To
            FROM (SELECT -- определяем ProfitLossId - для Сумма возвратов
                         CASE WHEN vbIsCorporate_From = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -951,7 +954,8 @@ BEGIN
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination
-     WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId;
+     WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId
+       AND _tmpItem.BusinessId_To = _tmpItem_byDestination.BusinessId_To;
 
      -- 4.1.2. формируются Проводки - Прибыль (Сумма возвратов)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
