@@ -181,7 +181,7 @@ BEGIN
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
                       LEFT JOIN ObjectHistory_PriceListItem_View AS ViewHistory_PriceListItem ON ViewHistory_PriceListItem.PriceListId = inPriceListId
                                                                                              AND ViewHistory_PriceListItem.GoodsId = tmpReportContainerSumm.GoodsId
-                                                                                             AND Movement.OperDate /*MovementDate_OperDatePartner.ValueData*/ BETWEEN ViewHistory_PriceListItem.StartDate AND ViewHistory_PriceListItem.EndDate
+                                                                                             AND MovementDate_OperDatePartner.ValueData /*Movement.OperDate*/ BETWEEN ViewHistory_PriceListItem.StartDate AND ViewHistory_PriceListItem.EndDate
                  GROUP BY Movement.InvNumber
                         , Movement.OperDate
                         , MovementDate_OperDatePartner.ValueData
@@ -194,7 +194,7 @@ BEGIN
                         , ViewHistory_PriceListItem.Price
                         , MovementBoolean_PriceWithVAT.ValueData
                         , MovementFloat_VATPercent.ValueData
-                 HAVING ViewHistory_PriceListItem.Price <> MIFloat_Price.ValueData
+                 HAVING COALESCE (ViewHistory_PriceListItem.Price, 0) <> COALESCE (MIFloat_Price.ValueData, 0)
                 )
 
     SELECT tmpOperationGroup.InvNumber
