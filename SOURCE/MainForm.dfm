@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1063,6 +1063,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbRetail'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1592,6 +1596,10 @@ object MainForm: TMainForm
       Action = actReport_Goods
       Category = 0
     end
+    object bbRetail: TdxBarButton
+      Action = actRetail
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1700,6 +1708,17 @@ object MainForm: TMainForm
       Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
       FormName = 'TPersonalGroupForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRetail: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      Hint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      FormName = 'TRetailForm'
+      FormNameParam.Value = 'TRetailForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

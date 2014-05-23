@@ -241,6 +241,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagEditForm');
+  // Торговая сеть
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;

@@ -345,6 +345,8 @@ type
     bbReport_Goods: TdxBarButton;
     actReport_GoodsMI_byPriceDifSale: TdsdOpenForm;
     bbReport_GoodsMI_byPriceDifSale: TdxBarButton;
+    actRetail: TdsdOpenForm;
+    bbRetail: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
