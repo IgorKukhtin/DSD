@@ -1,5 +1,5 @@
 inherited SendForm: TSendForm
-  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077'>'
+  Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077'>'
   ClientHeight = 668
   ClientWidth = 1064
   ExplicitWidth = 1072
@@ -10,7 +10,8 @@ inherited SendForm: TSendForm
     Top = 128
     Width = 1064
     Height = 540
-    ExplicitTop = 128
+    ExplicitLeft = 8
+    ExplicitTop = 168
     ExplicitWidth = 1064
     ExplicitHeight = 540
     ClientRectBottom = 536
@@ -23,8 +24,6 @@ inherited SendForm: TSendForm
       inherited cxGrid: TcxGrid
         Width = 1058
         Height = 514
-        ExplicitLeft = -3
-        ExplicitTop = 3
         ExplicitWidth = 1058
         ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
@@ -49,6 +48,16 @@ inherited SendForm: TSendForm
             item
               Format = ',0.####'
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCount
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -74,6 +83,16 @@ inherited SendForm: TSendForm
             end
             item
               Kind = skSum
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colHeadCount
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = colCount
             end>
           OptionsBehavior.FocusCellOnCycle = False
           OptionsCustomize.DataRowSizing = False
@@ -124,23 +143,8 @@ inherited SendForm: TSendForm
             HeaderAlignmentVert = vaCenter
             Width = 120
           end
-          object colMeasureName: TcxGridDBColumn
-            Caption = #1045#1076'. '#1080#1079#1084'.'
-            DataBinding.FieldName = 'MeasureName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 25
-          end
-          object colChangePercentAmount: TcxGridDBColumn
-            Caption = '% '#1089#1082#1080#1076#1082#1080' '#1074#1077#1089
-            DataBinding.FieldName = 'ChangePercentAmount'
-            Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 45
-          end
           object colAmount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
+            Caption = #1050#1086#1083'-'#1074#1086
             DataBinding.FieldName = 'Amount'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
@@ -148,6 +152,34 @@ inherited SendForm: TSendForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
+          end
+          object colCount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1073#1072#1090#1086#1085#1086#1074' '#1080#1083#1080' '#1091#1087#1072#1082#1086#1074#1086#1082
+            DataBinding.FieldName = 'Count'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colHeadCount: TcxGridDBColumn
+            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1075#1086#1083#1086#1074
+            DataBinding.FieldName = 'HeadCount'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colAssetName: TcxGridDBColumn
+            Caption = #1054#1089#1085'.'#1089#1088#1077#1076#1089#1090#1074#1072
+            DataBinding.FieldName = 'AssetName'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 80
           end
         end
       end
@@ -222,12 +254,12 @@ inherited SendForm: TSendForm
       Width = 218
     end
     object cxLabel3: TcxLabel
-      Left = 303
+      Left = 195
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 303
+      Left = 195
       Top = 23
       Properties.Buttons = <
         item
@@ -235,7 +267,7 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 7
-      Width = 168
+      Width = 270
     end
     object edTo: TcxButtonEdit
       Left = 477
@@ -246,7 +278,7 @@ inherited SendForm: TSendForm
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 265
+      Width = 270
     end
     object cxLabel4: TcxLabel
       Left = 477
@@ -369,18 +401,6 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
-        Name = 'inPriceListId'
-        Value = ''
-        ParamType = ptInput
-      end
-      item
-        Name = 'inOperDate'
-        Value = 0d
-        Component = edOperDate
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
         Name = 'inShowAll'
         Value = False
         Component = actShowAll
@@ -393,6 +413,16 @@ inherited SendForm: TSendForm
         Component = actShowErased
         DataType = ftBoolean
         ParamType = ptInput
+      end
+      item
+        Value = ''
+        ParamType = ptUnknown
+      end
+      item
+        Value = 0d
+        Component = edOperDate
+        DataType = ftDateTime
+        ParamType = ptUnknown
       end>
     Left = 160
     Top = 248
@@ -423,10 +453,6 @@ inherited SendForm: TSendForm
           BeginGroup = True
           Visible = True
           ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTax'
         end
         item
           Visible = True
@@ -505,6 +531,9 @@ inherited SendForm: TSendForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Visible = ivAlways
       ImageIndex = 18
+    end
+    inherited bbAddMask: TdxBarButton
+      Visible = ivNever
     end
     object bbTax: TdxBarButton
       Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>'
@@ -955,45 +984,18 @@ inherited SendForm: TSendForm
         ParamType = ptInput
       end
       item
-        Name = 'inAmountPartner'
+        Name = 'inCount'
         Component = MasterCDS
-        ComponentItem = 'AmountPartner'
+        ComponentItem = 'Count'
         DataType = ftFloat
         ParamType = ptInput
       end
       item
-        Name = 'inAmountChangePercent'
+        Name = 'inHeadCount'
         Component = MasterCDS
-        ComponentItem = 'AmountChangePercent'
+        ComponentItem = 'HeadCount'
         DataType = ftFloat
         ParamType = ptInput
-      end
-      item
-        Name = 'inChangePercentAmount'
-        Component = MasterCDS
-        ComponentItem = 'ChangePercentAmount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPrice'
-        Component = MasterCDS
-        ComponentItem = 'Price'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'ioCountForPrice'
-        Component = MasterCDS
-        ComponentItem = 'CountForPrice'
-        DataType = ftFloat
-        ParamType = ptInputOutput
-      end
-      item
-        Name = 'outAmountSumm'
-        Component = MasterCDS
-        ComponentItem = 'AmountSumm'
-        DataType = ftFloat
       end
       item
         Name = 'inPartionGoods'
@@ -1007,6 +1009,27 @@ inherited SendForm: TSendForm
         Component = MasterCDS
         ComponentItem = 'GoodsKindId'
         ParamType = ptInput
+      end
+      item
+        Name = 'inAssetId'
+        Component = MasterCDS
+        ComponentItem = 'AssetId'
+        ParamType = ptInput
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
       end
       item
         Value = Null
@@ -1107,7 +1130,6 @@ inherited SendForm: TSendForm
         Value = ''
         Component = GuidesFrom
         ComponentItem = 'Key'
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -1118,7 +1140,8 @@ inherited SendForm: TSendForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 368
+    Left = 360
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1126,39 +1149,24 @@ inherited SendForm: TSendForm
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
-    PositionDataSet = 'MasterCDS'
+    PositionDataSet = 'ClientDataSet'
     Params = <
-      item
-        Name = 'PartnerId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'PartnerName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'PaidKindId'
-        Value = ''
-      end
-      item
-        Name = 'PaidKindName'
-        Value = ''
-        DataType = ftString
-      end
       item
         Name = 'Key'
         Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
         DataType = ftString
+        ParamType = ptInput
       end>
-    Left = 616
+    Left = 536
+    Top = 8
   end
 end
