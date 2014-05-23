@@ -117,6 +117,8 @@ type
     clBankAccountExternal: TcxGridDBColumn;
     clisDefault: TcxGridDBColumn;
     clisStandart: TcxGridDBColumn;
+    clisUnique: TcxGridDBColumn;
+    clisPersonal: TcxGridDBColumn;
   private
     { Private declarations }
   public

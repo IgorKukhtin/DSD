@@ -121,6 +121,8 @@ type
     BankAccountChoiceForm: TOpenChoiceForm;
     ContractTagChoiceForm: TOpenChoiceForm;
     clContractKeyId: TcxGridDBColumn;
+    clisPersonal: TcxGridDBColumn;
+    clisUnique: TcxGridDBColumn;
   private
     { Private declarations }
   public

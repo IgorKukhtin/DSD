@@ -447,6 +447,18 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 82
       end
+      object clisPersonal: TcxGridDBColumn
+        Caption = 'C'#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
+        DataBinding.FieldName = 'isPersonal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
+      end
+      object clisUnique: TcxGridDBColumn
+        Caption = ' '#1041#1077#1079' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080
+        DataBinding.FieldName = 'isUnique'
+        Width = 50
+      end
       object clIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
@@ -496,8 +508,8 @@ object ContractConditionValueForm: TContractConditionValueForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
