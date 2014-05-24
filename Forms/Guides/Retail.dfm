@@ -291,7 +291,6 @@ object RetailForm: TRetailForm
           Name = 'Key'
           Component = ClientDataSet
           ComponentItem = 'Id'
-          DataType = ftString
         end
         item
           Name = 'TextValue'

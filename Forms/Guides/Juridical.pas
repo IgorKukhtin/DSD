@@ -76,6 +76,8 @@ type
     clStartPromo: TcxGridDBColumn;
     clEndPromo: TcxGridDBColumn;
     clGoodsPropertyName: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
+    RetailChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

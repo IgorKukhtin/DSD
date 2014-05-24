@@ -78,6 +78,7 @@ type
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
+    procedure LoadRetailFormTest;
     procedure LoadRoleFormTest;
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
@@ -241,11 +242,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TContractTagForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractTagEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractTagEditForm');
-  // Торговая сеть
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 end;
 
 procedure TLoadFormTest.LoadContractKindFormTest;
@@ -1158,6 +1154,15 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
+end;
+
+procedure TLoadFormTest.LoadRetailFormTest;
+begin
+  // Торговая сеть
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 end;
 
 procedure TLoadFormTest.SetUp;
