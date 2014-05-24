@@ -5,7 +5,7 @@ DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar)
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inGoodsId      Integer   ,
+    IN inGoodsId    Integer   ,
     IN inSession      TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
 RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar, StatusName TVarChar
@@ -72,7 +72,7 @@ BEGIN
   from (select  tmpContainer_All.MovementId
               , tmpContainer_All.GoodsId
               , COALESCE (ContainerLO_Car.ObjectId, COALESCE (ContainerLO_Unit.ObjectId, COALESCE (ContainerLO_Member.ObjectId, tmpContainer_All.UnitId))) AS DirectionId
-              , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) AS GoodsKindId
+              , COALESCE (tmpContainer_All.GoodsKindId, 0) AS GoodsKindId
               , (tmpContainer_All.SummStart) AS SummStart
               , (tmpContainer_All.SummEnd) AS SummEnd
               , (tmpContainer_All.SummIn)  AS SummIn
@@ -84,6 +84,7 @@ BEGIN
                   , 0 as UnitId
                   , tmpContainer.ContainerId
                   , tmpContainer.GoodsId
+                  , COALESCE (ContainerLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) AS SummStart
                   , tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate >inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) AS SummEnd
                   , 0 AS SummIn
@@ -97,9 +98,13 @@ BEGIN
              FROM tmpContainer
                   LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                 AND MIContainer.OperDate >= inStartDate
+                  LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind 
+                                                ON ContainerLO_GoodsKind.ContainerId = tmpContainer.ContainerId
+                                               AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() 
              GROUP BY tmpContainer.ContainerId
                     , tmpContainer.GoodsId
                     , tmpContainer.Amount
+                    , ContainerLO_GoodsKind.ObjectId
                     --, MIContainer.MovementId
              HAVING (tmpContainer.Amount - COALESCE (SUM (MIContainer.Amount), 0) <> 0)
                  OR (tmpContainer.Amount - COALESCE (SUM (CASE WHEN MIContainer.OperDate > inEndDate THEN  MIContainer.Amount ELSE 0 END), 0) <> 0)
@@ -108,6 +113,7 @@ BEGIN
                   , tmpMIContainer.UnitId
                   , tmpMIContainer.ContainerId
                   , tmpMIContainer.GoodsId
+                  , tmpMIContainer.GoodsKindId
                   , 0 AS SummStart
                   , 0 AS SummEnd
                   , tmpMIContainer.SummIn  AS SummIn
@@ -118,12 +124,14 @@ BEGIN
                         , MovementLinkObject_Unit.ObjectId AS UnitId
                         , 0 AS ContainerId
                         , tmpContainer.GoodsId AS GoodsId
+                        , MILinkObject_GoodsKind.ObjectId       AS GoodsKindId
                         , 0 AS SummStart
                         , 0 AS SummEnd
                         , SUM (case when MovementDesc.Id = zc_Movement_ReturnIn() then COALESCE (MIContainer.Amount,0) else 0 end)      AS SummIn
                         , SUM (case when MovementDesc.Id = zc_Movement_Sale() then COALESCE (MIContainer.Amount,0) else 0 end) AS SummOut
                         , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
                         , COALESCE (MIFloat_Price.ValueData, 0) AS OperPrice
+                       
                    FROM tmpContainer
                         LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.Containerid = tmpContainer.ContainerId
                                                                       AND MIContainer.OperDate between inStartDate and inEndDate
@@ -144,12 +152,16 @@ BEGIN
                                                     AND MovementLinkObject_Unit.DescId = CASE WHEN MovementDesc.Id = zc_Movement_Sale() THEN zc_MovementLinkObject_From()
                                                                                               WHEN MovementDesc.Id = zc_Movement_ReturnIn() THEN zc_MovementLinkObject_To()
                                                                                          END
+                        LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                         ON MILinkObject_GoodsKind.MovementItemId = MIContainer.MovementItemId
+                                                        AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                     WHERE tmpContainer.GoodsId = inGoodsId
                      -- AND MovementItem.isErased   = FALSE
                     GROUP BY tmpContainer.GoodsId
                            , MovementLinkObject_Unit.ObjectId
                            , COALESCE (MIFloat_Price.ValueData, 0)
                            , MIContainer.MovementId
+                           , MILinkObject_GoodsKind.ObjectId 
                   ) AS tmpMIContainer
 
     ) AS tmpContainer_All
@@ -160,8 +172,8 @@ BEGIN
                                                      AND ContainerLO_Unit.DescId = zc_ContainerLinkObject_Unit()                                                          
     LEFT JOIN ContainerLinkObject AS ContainerLO_Member ON ContainerLO_Member.ContainerId = tmpContainer_All.ContainerId
                                                        AND ContainerLO_Member.DescId = zc_ContainerLinkObject_Member()
-    LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind ON ContainerLO_GoodsKind.ContainerId = tmpContainer_All.ContainerId
-                                                          AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()                                                     
+  /*  LEFT JOIN ContainerLinkObject AS ContainerLO_GoodsKind ON ContainerLO_GoodsKind.ContainerId = tmpContainer_All.ContainerId
+                                                          AND ContainerLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind() */                                                    
     ) AS tmp_All
 
      LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp_All.GoodsId
@@ -217,7 +229,6 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
- 22.05.14         *
  10.04.14                                        * ALL
  09.02.14         *  GROUP BY tmp_All
                    , add GoodsKind

@@ -432,7 +432,9 @@ uses
   Report_GoodsMI_byPriceDif in '..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas' {Report_GoodsMI_byPriceDifForm: TParentForm},
   Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
-  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm};
+  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
+  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
+  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm};
 
 {$R *.RES}
 
