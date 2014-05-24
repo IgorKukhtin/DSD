@@ -3,7 +3,7 @@ inherited ContractEditForm: TContractEditForm
   ClientHeight = 567
   ClientWidth = 911
   ExplicitWidth = 917
-  ExplicitHeight = 599
+  ExplicitHeight = 592
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -20,14 +20,14 @@ inherited ContractEditForm: TContractEditForm
     ExplicitHeight = 23
   end
   object edInvNumber: TcxTextEdit [2]
-    Left = 18
-    Top = 89
+    Left = 16
+    Top = 85
     TabOrder = 0
-    Width = 103
+    Width = 104
   end
   object LbInvNumber: TcxLabel [3]
-    Left = 18
-    Top = 71
+    Left = 16
+    Top = 68
     Caption = #8470' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object cxLabel3: TcxLabel [4]
@@ -37,7 +37,7 @@ inherited ContractEditForm: TContractEditForm
   end
   object cxLabel4: TcxLabel [5]
     Left = 127
-    Top = 152
+    Top = 153
     Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
   end
   object ceComment: TcxTextEdit [6]
@@ -76,13 +76,13 @@ inherited ContractEditForm: TContractEditForm
     Width = 217
   end
   object edSigningDate: TcxDateEdit [10]
-    Left = 18
+    Left = 16
     Top = 130
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     TabOrder = 8
-    Width = 103
+    Width = 104
   end
   object cxLabel1: TcxLabel [11]
     Left = 16
@@ -135,7 +135,7 @@ inherited ContractEditForm: TContractEditForm
     Width = 161
   end
   object edPaidKind: TcxButtonEdit [18]
-    Left = 18
+    Left = 16
     Top = 170
     Properties.Buttons = <
       item
@@ -144,26 +144,26 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 16
-    Width = 103
+    Width = 104
   end
   object cxLabel10: TcxLabel [19]
     Left = 18
-    Top = 152
+    Top = 153
     Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
   end
   object cxLabel11: TcxLabel [20]
     Left = 16
-    Top = 5
+    Top = 21
     Caption = #1050#1086#1076
   end
   object edCode: TcxCurrencyEdit [21]
     Left = 16
-    Top = 23
+    Top = 38
     Enabled = False
     Properties.DecimalPlaces = 0
     Properties.DisplayFormat = '0'
     TabOrder = 19
-    Width = 89
+    Width = 104
   end
   object cxLabel12: TcxLabel [22]
     Left = 183
@@ -208,7 +208,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 25
-    Width = 162
+    Width = 160
   end
   object cxLabel13: TcxLabel [28]
     Left = 16
@@ -256,7 +256,7 @@ inherited ContractEditForm: TContractEditForm
     Properties.Images = dmMain.ImageList
     Properties.ReadOnly = True
     TabOrder = 29
-    Width = 162
+    Width = 161
   end
   object Panel: TPanel [32]
     Left = 352
@@ -387,7 +387,7 @@ inherited ContractEditForm: TContractEditForm
       Left = 0
       Top = 250
       Width = 559
-      Height = 316
+      Height = 317
       Align = alClient
       Images = dmMain.ImageList
       LayoutStyle = lsMultiRecordView
@@ -403,7 +403,6 @@ inherited ContractEditForm: TContractEditForm
       Styles.Header = dmMain.cxHeaderStyle
       TabOrder = 3
       DataController.DataSource = DocumentDS
-      ExplicitHeight = 291
       Version = 1
       object colFileName: TcxDBEditorRow
         Options.CanAutoHeight = False
@@ -464,7 +463,7 @@ inherited ContractEditForm: TContractEditForm
     Left = 184
     Top = 468
     TabOrder = 38
-    Width = 161
+    Width = 160
   end
   object cxLabel17: TcxLabel [38]
     Left = 184
@@ -472,15 +471,15 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1080#1089#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cbisDefault: TcxCheckBox [39]
-    Left = 122
-    Top = 17
+    Left = 127
+    Top = 38
     Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
     TabOrder = 39
-    Width = 100
+    Width = 97
   end
   object ceisStandart: TcxCheckBox [40]
-    Left = 122
-    Top = 48
+    Left = 127
+    Top = 10
     Caption = #1058#1080#1087#1086#1074#1086#1081
     TabOrder = 42
     Width = 67
@@ -505,7 +504,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 43
-    Width = 162
+    Width = 160
   end
   object edPersonalCollation: TcxButtonEdit [44]
     Left = 16
@@ -525,13 +524,13 @@ inherited ContractEditForm: TContractEditForm
     Caption = #1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
   end
   object cxLabel21: TcxLabel [46]
-    Left = 129
-    Top = 71
+    Left = 127
+    Top = 67
     Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075#1086#1074#1086#1088#1072
   end
   object edContractTag: TcxButtonEdit [47]
-    Left = 129
-    Top = 89
+    Left = 127
+    Top = 85
     Properties.Buttons = <
       item
         Default = True
@@ -539,7 +538,7 @@ inherited ContractEditForm: TContractEditForm
       end>
     Properties.ReadOnly = True
     TabOrder = 47
-    Width = 215
+    Width = 217
   end
   object cxButtonEdit2: TcxButtonEdit [48]
     Left = 648
@@ -554,30 +553,30 @@ inherited ContractEditForm: TContractEditForm
     Width = 162
   end
   object ceBankAccount: TcxButtonEdit [49]
-    Left = 18
-    Top = 426
+    Left = 16
+    Top = 423
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 53
+    TabOrder = 51
     Width = 328
   end
   object ceisPersonal: TcxCheckBox [50]
-    Left = 228
-    Top = 17
+    Left = 222
+    Top = 10
     Caption = #1057#1083#1091#1078#1077#1073#1085#1072#1103' '#1079#1072#1087#1080#1089#1082#1072
-    TabOrder = 54
-    Width = 128
+    TabOrder = 53
+    Width = 122
   end
-  object ceisUnique: TcxCheckBox [51]
-    Left = 228
-    Top = 48
-    Caption = #1041#1077#1079' '#1075#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080
+  object ceIsUnique: TcxCheckBox [51]
+    Left = 222
+    Top = 38
+    Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
     TabOrder = 55
-    Width = 109
+    Width = 108
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -1056,7 +1055,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'inisUnique'
         Value = 'False'
-        Component = ceisUnique
+        Component = ceIsUnique
         DataType = ftBoolean
         ParamType = ptInput
       end>
@@ -1310,7 +1309,7 @@ inherited ContractEditForm: TContractEditForm
       item
         Name = 'isUnique'
         Value = 'False'
-        Component = ceisUnique
+        Component = ceIsUnique
         DataType = ftBoolean
       end>
     Left = 632
@@ -1533,7 +1532,7 @@ inherited ContractEditForm: TContractEditForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 104
+    Left = 88
     Top = 147
   end
   object ContractConditionDS: TDataSource
@@ -1622,8 +1621,8 @@ inherited ContractEditForm: TContractEditForm
   object BarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

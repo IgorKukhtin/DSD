@@ -70,8 +70,7 @@ INSERT INTO ObjectBooleanDesc (DescId, Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.05.14         * add zc_ObjectBoolean_Contract_Personal
-                        zc_ObjectBoolean_Contract_Unique
+ 22.05.14         * add zc_ObjectBoolean_Contract_Personal and zc_ObjectBoolean_Contract_Unique
  07.09.13                                        * add zc_ObjectBoolean_PriceList_PriceWithVAT
  20.07.13                                        * add zc_ObjectBoolean_Unit_PartionDate
  12.07.13                                        * add zc_ObjectBoolean_Goods_Partion...

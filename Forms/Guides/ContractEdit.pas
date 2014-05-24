@@ -137,7 +137,7 @@ type
     BankAccountGuides: TdsdGuides;
     ContractTagGuides: TdsdGuides;
     ceisPersonal: TcxCheckBox;
-    ceisUnique: TcxCheckBox;
+    ceIsUnique: TcxCheckBox;
   private
     { Private declarations }
   public

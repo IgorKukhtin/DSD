@@ -38,7 +38,6 @@ RETURNS TABLE (Id Integer, Code Integer
              , InsertDate TDateTime, UpdateDate TDateTime
              , isDefault Boolean
              , isStandart Boolean
-
              , isPersonal Boolean
              , isUnique Boolean
 
@@ -160,15 +159,12 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal
                                 ON ObjectBoolean_Personal.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Personal.DescId = zc_ObjectBoolean_Contract_Personal()
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
                                 ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
