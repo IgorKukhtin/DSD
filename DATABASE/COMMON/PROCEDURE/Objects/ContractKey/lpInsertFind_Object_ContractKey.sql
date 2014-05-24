@@ -61,8 +61,15 @@ BEGIN
          END IF;
 
          --
-         IF inContractTagId = zc_ContractKey_Contract()
+         IF EXISTS (SELECT ObjectId FROM ObjectBoolean WHERE ObjectId = inContractId_begin AND ValueData = TRUE AND DescId = zc_ObjectBoolean_Contract_Unique())
          THEN
+              -- обнуляются параметры
+              inJuridicalId:= NULL;
+              inContractTagId:= NULL;
+              inInfoMoneyId:= NULL;
+              inPaidKindId:= NULL;
+              inJuridicalId_basis:= NULL;
+
               -- поиск ключа по правилу "Ключ - Договор(!!!Обработка!!!) + параметры=0"
               vbContractKeyId_new := (SELECT ObjectLink_1.ObjectId
                                       FROM ObjectLink AS ObjectLink_ContractKey
@@ -153,7 +160,7 @@ $BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 22.05.14                                        * add zc_ContractKey_Contract
+ 23.05.14                                        * add zc_ObjectBoolean_Contract_Unique
  25.04.14                                        *
 */
 /*

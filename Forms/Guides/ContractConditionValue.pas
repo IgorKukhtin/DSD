@@ -115,10 +115,10 @@ type
     clBonusKindName: TcxGridDBColumn;
     clBankName: TcxGridDBColumn;
     clBankAccountExternal: TcxGridDBColumn;
-    clisDefault: TcxGridDBColumn;
-    clisStandart: TcxGridDBColumn;
-    clisUnique: TcxGridDBColumn;
-    clisPersonal: TcxGridDBColumn;
+    clIsDefault: TcxGridDBColumn;
+    clIsStandart: TcxGridDBColumn;
+    clIsUnique: TcxGridDBColumn;
+    clIsPersonal: TcxGridDBColumn;
   private
     { Private declarations }
   public
