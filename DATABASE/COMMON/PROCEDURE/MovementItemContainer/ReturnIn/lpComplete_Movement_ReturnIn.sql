@@ -1123,21 +1123,21 @@ BEGIN
                     ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
 
+
      -- !!!6.0. формируются свойства в элементах документа из данных для проводок!!!
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Branch(), tmp.MovementItemId, vbBranchId_To)
      FROM (SELECT _tmpItem.MovementItemId
            FROM _tmpItem
           ) AS tmp;
 
-
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ReturnIn() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_ReturnIn()
+                                , inUserId     := inUserId
+                                 );
 
 END;
 $BODY$
@@ -1146,6 +1146,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        * rem zc_Enum_AccountDirection_30400
  30.04.14                                        * set lp

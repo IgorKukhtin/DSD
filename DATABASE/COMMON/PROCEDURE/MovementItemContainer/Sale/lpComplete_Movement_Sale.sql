@@ -1520,12 +1520,14 @@ BEGIN
            FROM _tmpItem
           ) AS tmp;
 
-
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Sale() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Sale()
+                                , inUserId     := inUserId
+                                 );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF EXISTS (SELECT MovementLinkMovement_Master.MovementId
@@ -1546,10 +1548,6 @@ BEGIN
                                                         );
      END IF;
 
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1557,6 +1555,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.05.14                                        * add lpComplete_Movement
  22.05.14                                        * modify lfSelect_ObjectHistory_PriceListItem ... inOperDate:= vbOperDatePartner
  16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  10.05.14                                        * add lpInsert_MovementProtocol

@@ -10,12 +10,12 @@ CREATE OR REPLACE FUNCTION lpComplete_Movement_Tax(
 AS
 $BODY$
 BEGIN
-     -- Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Tax() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
-
+     -- Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Tax()
+                                , inUserId     := inUserId
+                                 );
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -23,6 +23,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * set lp
  10.05.14                                        * add lpInsert_MovementProtocol
  11.02.14                                                       *

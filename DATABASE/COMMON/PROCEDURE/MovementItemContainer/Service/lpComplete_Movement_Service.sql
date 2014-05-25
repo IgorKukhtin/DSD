@@ -181,19 +181,15 @@ BEGIN
         FROM _tmpItem
        ;
 
-     -- проводим Документ
+     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
 
-     -- для теста
-     -- RETURN QUERY SELECT _tmpItem.OperDate, _tmpItem.ObjectId, _tmpItem.ObjectDescId, _tmpItem.OperSumm, _tmpItem.ContainerId, _tmpItem.AccountGroupId, _tmpItem.AccountDirectionId, _tmpItem.AccountId, _tmpItem.ProfitLossGroupId, _tmpItem.ProfitLossDirectionId, _tmpItem.InfoMoneyGroupId, _tmpItem.InfoMoneyDestinationId, _tmpItem.InfoMoneyId, _tmpItem.BusinessId, _tmpItem.JuridicalId_Basis, _tmpItem.UnitId, _tmpItem.ContractId, _tmpItem.PaidKindId, _tmpItem.IsActive FROM _tmpItem;
-     -- return;
-
-     -- 5. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId IN (zc_Movement_Service(), zc_Movement_ProfitLossService()) AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := vbMovementDescId
+                                , inUserId     := inUserId
+                                 );
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -201,6 +197,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  21.03.14                                        * add zc_Enum_InfoMoneyDestination_21500
  10.03.14                                        * add zc_Movement_ProfitLossService

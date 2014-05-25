@@ -464,12 +464,15 @@ BEGIN
         ;
 
 
-     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     -- !!! пока работает долго надо это делать вначале!!!
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- !!! пока работает долго надо это делать в начале!!!
      -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- PERFORM lpComplete_Movement (inMovementId := inMovementId
+     --                            , inDescId     := zc_Movement_Income()
+     --                            , inUserId     := inUserId
+     --                             );
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+     -- !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 
 
      -- проверка
@@ -1134,11 +1137,11 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Income() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Income()
+                                , inUserId     := inUserId
+                                 );
 
 END;
 $BODY$
@@ -1147,6 +1150,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 25.05.14                                        * add lpComplete_Movement
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
  11.05.14                                        * add Object_InfoMoney_View
  10.05.14                                        * add lpInsert_MovementProtocol

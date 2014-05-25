@@ -1,9 +1,6 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, TVarChar, Boolean, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
-
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                  Integer   ,    -- ключ объекта <Юридическое лицо>

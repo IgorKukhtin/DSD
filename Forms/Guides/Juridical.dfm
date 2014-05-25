@@ -3,7 +3,7 @@ object JuridicalForm: TJuridicalForm
   Top = 0
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
   ClientHeight = 405
-  ClientWidth = 982
+  ClientWidth = 652
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -26,10 +26,11 @@ object JuridicalForm: TJuridicalForm
   object cxGrid: TcxGrid
     Left = 8
     Top = 26
-    Width = 974
+    Width = 644
     Height = 379
     Align = alClient
     TabOrder = 1
+    ExplicitWidth = 974
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -80,6 +81,20 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
+      object clRetailName: TcxGridDBColumn
+        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+        DataBinding.FieldName = 'RetailName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Action = RetailChoiceForm
+            Default = True
+            Kind = bkEllipsis
+          end>
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
       object clJuridicalGroupName: TcxGridDBColumn
         Caption = #1043#1088#1091#1087#1087#1072
         DataBinding.FieldName = 'JuridicalGroupName'
@@ -98,17 +113,10 @@ object JuridicalForm: TJuridicalForm
         Options.Editing = False
         Width = 50
       end
-      object clInfoMoneyCode: TcxGridDBColumn
-        Caption = #1050#1086#1076' '#1059#1055
-        DataBinding.FieldName = 'InfoMoneyCode'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Options.Editing = False
-        Width = 40
-      end
       object clInfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
         DataBinding.FieldName = 'InfoMoneyGroupName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
@@ -126,10 +134,19 @@ object JuridicalForm: TJuridicalForm
       object clInfoMoneyDestinationName: TcxGridDBColumn
         Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
         DataBinding.FieldName = 'InfoMoneyDestinationName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 70
+      end
+      object clInfoMoneyCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1059#1055
+        DataBinding.FieldName = 'InfoMoneyCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Options.Editing = False
+        Width = 40
       end
       object clInfoMoneyName: TcxGridDBColumn
         Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -175,6 +192,7 @@ object JuridicalForm: TJuridicalForm
             Kind = bkEllipsis
           end>
         Properties.ReadOnly = False
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
@@ -198,24 +216,11 @@ object JuridicalForm: TJuridicalForm
       object clGoodsPropertyName: TcxGridDBColumn
         Caption = #1050#1083#1072#1089#1089#1080#1092#1080#1082#1072#1090#1086#1088' '#1089#1074#1086#1081#1089#1090#1074' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'GoodsPropertyName'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 80
-      end
-      object clRetailName: TcxGridDBColumn
-        Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
-        DataBinding.FieldName = 'RetailName'
-        PropertiesClassName = 'TcxButtonEditProperties'
-        Properties.Buttons = <
-          item
-            Action = RetailChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
       end
       object ceIsErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -250,8 +255,8 @@ object JuridicalForm: TJuridicalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -645,7 +650,7 @@ object JuridicalForm: TJuridicalForm
     Top = 184
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Juridical'
+    StoredProcName = 'gpUpdate_Object_Juridical_Params'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -656,54 +661,9 @@ object JuridicalForm: TJuridicalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
-        Component = ClientDataSet
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inName'
-        Component = ClientDataSet
-        ComponentItem = 'Name'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGLNCode'
-        Component = ClientDataSet
-        ComponentItem = 'GLNCode'
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inisCorporate'
-        Component = ClientDataSet
-        ComponentItem = 'isCorporate'
-        DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'inJuridicalGroupId'
-        Component = ClientDataSet
-        ComponentItem = 'JuridicalGroupId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inGoodsPropertyId'
-        Component = ClientDataSet
-        ComponentItem = 'GoodsPropertyId'
-        ParamType = ptInput
-      end
-      item
         Name = 'inRetailId'
         Component = ClientDataSet
         ComponentItem = 'RetailId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inInfoMoneyId'
-        Component = ClientDataSet
-        ComponentItem = 'InfoMoneyId'
         ParamType = ptInput
       end
       item

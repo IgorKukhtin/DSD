@@ -31,10 +31,9 @@ $BODY$
   DECLARE vbProfitLossGroupId Integer;
   DECLARE vbProfitLossDirectionId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Inventory());
-     vbUserId:=2; -- CAST (inSession AS Integer);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Inventory());
+
 
      -- Эти параметры нужны для расчета остатка
      SELECT Movement.StatusId
@@ -637,10 +636,11 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Inventory() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Inventory()
+                                , inUserId     := vbUserId
+                                 );
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
@@ -648,6 +648,7 @@ LANGUAGE PLPGSQL VOLATILE;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member
  13.10.13                                        * add vbCarId
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())

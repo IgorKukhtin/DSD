@@ -25,10 +25,8 @@ $BODY$
   DECLARE vbBusinessId Integer;
 
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Transport());
-     vbUserId:=2; -- CAST (inSession AS Integer);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_Loss());
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
@@ -435,9 +433,12 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Transport() AND StatusId = zc_Enum_Status_UnComplete();
 
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Loss()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
@@ -446,6 +447,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  30.09.13                                        * add vbCarId and vbMemberId_Driver

@@ -26,9 +26,9 @@
                   , Amount
                   , 0 AS AmountNew
                   , Price
-             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDate BETWEEN '01.05.2014' AND '14.05.2014') as tmpSession
+             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDate BETWEEN '01.05.2014' AND '22.05.2014') as tmpSession
                   INNER JOIN _testMI_afterLoad ON _testMI_afterLoad.SessionId = tmpSession.Id
-             WHERE _testMI_afterLoad.OperDate BETWEEN '01.05.2014' AND '14.05.2014'
+             WHERE _testMI_afterLoad.OperDate BETWEEN '01.05.2014' AND '22.05.2014'
                AND _testMI_afterLoad.DescId = zc_Movement_Sale()
                AND _testMI_afterLoad.StatusId = zc_Enum_Status_Complete()
                AND _testMI_afterLoad.isErased = FALSE
@@ -71,7 +71,7 @@
 
              WHERE Movement.DescId = zc_Movement_Sale() -- IN (zc_Movement_Tax(), zc_Movement_Sale()) zc_Movement_ReturnIn())
                AND Movement.StatusId = zc_Enum_Status_Complete()
-               AND Movement.OperDate BETWEEN '01.05.2014' AND '14.05.2014'
+               AND Movement.OperDate BETWEEN '01.05.2014' AND '22.05.2014'
                AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
 --               AND MovementItem.Id = 2439838
 
