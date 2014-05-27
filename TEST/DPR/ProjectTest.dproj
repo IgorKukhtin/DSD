@@ -329,8 +329,8 @@
 			<DCCReference Include="..\..\Forms\Guides\PersonalEdit.pas">
 				<Form>PersonalEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
-				<Form>SendJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparateJournal.pas">
+				<Form>ProductionSeparateJournalForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\JuridicalTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SendOnPriceJournal.pas">
@@ -351,9 +351,6 @@
 			<DCCReference Include="..\..\Forms\Document\Inventory.pas">
 				<Form>InventoryForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionSeparateJournal.pas">
-				<Form>ProductionSeparateJournalForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnionJournal.pas">
 				<Form>ProductionUnionJournalForm</Form>
 			</DCCReference>
@@ -365,9 +362,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\ProductionUnion.pas">
 				<Form>ProductionUnionForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
-				<Form>ProductionSeparateForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ContractConditionValue.pas">
 				<Form>ContractConditionValueForm</Form>
@@ -641,12 +635,8 @@
 				<Form>ObjectForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
-				<Form>AncestorDocumentForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Send.pas">
-				<Form>SendForm</Form>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
+				<Form>AncestorDocumentMCForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\CashJournal.pas">
@@ -1312,6 +1302,23 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\RetailEdit.pas">
 				<Form>RetailEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
+				<Form>SendJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
+				<Form>SendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+				<Form>AncestorDocumentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
+				<Form>ProductionSeparateForm</Form>
+				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
