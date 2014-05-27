@@ -3,7 +3,7 @@
 -- DROP FUNCTION gpInsertUpdate_Movement_Loss();
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
- INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат поставщику>
+ INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
 
@@ -11,7 +11,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Loss(
     IN inToId                Integer   , -- Кому (в документе)
 
     IN inSession             TVarChar    -- сессия пользователя
-)                               
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -37,16 +37,15 @@ BEGIN
 
 END;
 $BODY$
-
 LANGUAGE PLPGSQL VOLATILE;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 18.07.13         * 
- 
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.05.14                                                        *
+
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Movement_Loss (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inSession:= '2')
+-- SELECT * FROM gpInsertUpdate_Movement_Loss (ioId:= 0, inInvNumber:= '-1', inOperDate:= '01.01.2013', inOperDatePartner:= '01.01.2013', inInvNumberPartner:= 'xxx', inPriceWithVAT:= true, inVATPercent:= 20, inChangePercent:= 0, inFromId:= 1, inToId:= 2, inPaidKindId:= 1, inContractId:= 0, inCarId:= 0, inPersonalDriverId:= 0, inPersonalPackerId:= 0, inSession:= '2')
