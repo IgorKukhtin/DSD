@@ -22,11 +22,7 @@ type
     { Public declarations }
   end;
 
-var
-  ProductionSeparateForm: TProductionSeparateForm;
-
-implementation
-
-{$R *.dfm}
+initialization
+  RegisterClass(TProductionSeparateForm);
 
 end.
