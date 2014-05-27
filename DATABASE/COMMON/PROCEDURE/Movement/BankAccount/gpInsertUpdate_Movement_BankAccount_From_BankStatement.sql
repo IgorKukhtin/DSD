@@ -126,7 +126,7 @@ BEGIN
 
      -- Ставим статус у документа выписки
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_BankStatementItem()
+                                , inDescId     := zc_Movement_BankStatement()
                                 , inUserId     := vbUserId);
      -- Ставим статус у элементов документа выписки
      PERFORM lpComplete_Movement (inMovementId := Movement.Id
