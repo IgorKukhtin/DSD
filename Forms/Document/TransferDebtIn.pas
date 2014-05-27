@@ -64,7 +64,7 @@ type
     ContractToGuides: TdsdGuides;
     cxLabel5: TcxLabel;
     edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
+    PriceListGuides: TdsdGuides;
     edPartner: TcxButtonEdit;
     cxLabel12: TcxLabel;
     GuidesPartner: TdsdGuides;

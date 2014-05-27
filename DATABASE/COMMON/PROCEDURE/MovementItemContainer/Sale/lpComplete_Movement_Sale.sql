@@ -428,7 +428,7 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                    LEFT JOIN lfSelect_Object_InfoMoney() AS lfObject_InfoMoney ON lfObject_InfoMoney.InfoMoneyId = ObjectLink_Goods_InfoMoney.ChildObjectId
 
-                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDate)
+                   LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= zc_PriceList_Basis(), inOperDate:= vbOperDatePartner)
                           AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpMI.GoodsId
              ) AS _tmp;
 
@@ -681,6 +681,7 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_Partner
                                          ) AS ContainerId_ProfitLoss_10400
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                , _tmpItem_byProfitLoss.BusinessId_From
            FROM (SELECT -- определяем ProfitLossId - для учета разница в весе : с/с2 - с/с3
                         CASE WHEN vbIsCorporate_To = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -794,6 +795,7 @@ BEGIN
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination ON _tmpItem_byDestination.InfoMoneyDestinationId = _tmpItem.InfoMoneyDestinationId
+                                     AND _tmpItem_byDestination.BusinessId_From = _tmpItem.BusinessId_From
      WHERE _tmpItemSumm.MovementItemId = _tmpItem.MovementItemId;
 
      -- 2.2. формируются Проводки - Прибыль (Себестоимость)
@@ -1030,6 +1032,7 @@ BEGIN
                                         , inObjectId_1        := _tmpItem_byProfitLoss.ProfitLossId_ChangePercent
                                          ) AS ContainerId_ProfitLoss_10300
                 , _tmpItem_byProfitLoss.InfoMoneyDestinationId
+                , _tmpItem_byProfitLoss.BusinessId_From
            FROM (SELECT -- определяем ProfitLossId - для Сумма реализации
                         CASE WHEN vbIsCorporate_To = TRUE
                               AND _tmpItem_group.ProfitLossGroupId <> zc_Enum_ProfitLossGroup_10000() -- 10000; "Результат основной деятельности"
@@ -1143,7 +1146,8 @@ BEGIN
                       ) AS _tmpItem_group
                 ) AS _tmpItem_byProfitLoss
           ) AS _tmpItem_byDestination
-     WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId;
+     WHERE _tmpItem.InfoMoneyDestinationId = _tmpItem_byDestination.InfoMoneyDestinationId
+       AND _tmpItem.BusinessId_From = _tmpItem_byDestination.BusinessId_From;
 
      -- 4.1.2. формируются Проводки - Прибыль (Сумма реализации и Скидка по акциям и Скидка дополнительная)
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
@@ -1516,12 +1520,14 @@ BEGIN
            FROM _tmpItem
           ) AS tmp;
 
-
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Sale() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
+     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Sale()
+                                , inUserId     := inUserId
+                                 );
 
      -- 6.3. ФИНИШ - перепроводим Налоговую
      IF EXISTS (SELECT MovementLinkMovement_Master.MovementId
@@ -1542,10 +1548,6 @@ BEGIN
                                                         );
      END IF;
 
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
-
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -1553,6 +1555,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.05.14                                        * add lpComplete_Movement
+ 22.05.14                                        * modify lfSelect_ObjectHistory_PriceListItem ... inOperDate:= vbOperDatePartner
  16.05.14                                        * add ФИНИШ - перепроводим Налоговую
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        * rem zc_Enum_AccountDirection_30400

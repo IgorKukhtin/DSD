@@ -17,6 +17,10 @@ RETURNS TABLE (Id Integer, Code Integer
              , AreaName TVarChar
              , ContractArticleName TVarChar
              , ContractStateKindCode Integer 
+             , isDefault Boolean
+             , isStandart Boolean
+             , isPersonal Boolean
+             , isUnique Boolean
              , isErased Boolean 
               )
 AS
@@ -51,6 +55,12 @@ BEGIN
 
        , Object_Contract_View.ContractStateKindCode
 
+       , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
+       , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+
+       , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
+       , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
+
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
@@ -58,6 +68,19 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
+                                ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
+                                ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal
+                                ON ObjectBoolean_Personal.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Personal.DescId = zc_ObjectBoolean_Contract_Personal()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
+                                ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -99,6 +122,7 @@ ALTER FUNCTION gpSelect_Object_ContractJuridical (Integer, TVarChar) OWNER TO po
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.05.14                                        * add ObjectBoolean...
  20.05.14                                        * !!!ContractKindName - всегда!!!
  25.04.14                                        * add ContractTagName
  13.02.14                                        * del zc_Enum_ContractStateKind_Close, здесь надо показывать все договора :)

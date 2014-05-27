@@ -203,8 +203,8 @@ type
     bbProtocol: TdxBarButton;
     actService: TdsdOpenForm;
     bbJuridicalService: TdxBarButton;
-    actReport_Goods: TdsdOpenForm;
-    bbReport_Goods: TdxBarButton;
+    actReport_GoodsTax: TdsdOpenForm;
+    bbReport_GoodsTax: TdxBarButton;
     actSendTicketFuel: TdsdOpenForm;
     bbSendTicketFuel: TdxBarButton;
     actBankLoad: TdsdOpenForm;
@@ -341,6 +341,12 @@ type
     bbReport_GoodsMI_TransferDebtOut: TdxBarButton;
     actSaveDocumentTo1C: TdsdOpenForm;
     bbSaveDocumentTo1C: TdxBarButton;
+    actReport_Goods: TdsdOpenForm;
+    bbReport_Goods: TdxBarButton;
+    actReport_GoodsMI_byPriceDifSale: TdsdOpenForm;
+    bbReport_GoodsMI_byPriceDifSale: TdxBarButton;
+    actRetail: TdsdOpenForm;
+    bbRetail: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);

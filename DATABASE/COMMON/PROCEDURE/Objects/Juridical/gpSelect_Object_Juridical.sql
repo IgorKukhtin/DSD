@@ -9,6 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
                GLNCode TVarChar, isCorporate Boolean,
                JuridicalGroupId Integer, JuridicalGroupName TVarChar,
                GoodsPropertyId Integer, GoodsPropertyName TVarChar,
+               RetailId Integer, RetailName TVarChar,
                InfoMoneyGroupCode Integer, InfoMoneyGroupName TVarChar, 
                InfoMoneyDestinationCode Integer, InfoMoneyDestinationName TVarChar, 
                InfoMoneyId Integer, InfoMoneyCode Integer, InfoMoneyName TVarChar,
@@ -39,6 +40,9 @@ BEGIN
 
        , Object_GoodsProperty.Id         AS GoodsPropertyId
        , Object_GoodsProperty.ValueData  AS GoodsPropertyName
+
+       , Object_Retail.Id                AS RetailId
+       , Object_Retail.ValueData         AS RetailName
 
        , Object_InfoMoney_View.InfoMoneyGroupCode
        , Object_InfoMoney_View.InfoMoneyGroupName
@@ -86,6 +90,11 @@ BEGIN
                             AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
         LEFT JOIN Object AS Object_GoodsProperty ON Object_GoodsProperty.Id = ObjectLink_Juridical_GoodsProperty.ChildObjectId
 
+        LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                             ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id 
+                            AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+        LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
         LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
                              ON ObjectLink_Juridical_InfoMoney.ObjectId = Object_Juridical.Id
                             AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
@@ -114,6 +123,7 @@ ALTER FUNCTION gpSelect_Object_Juridical (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 23.05.14         * add Retail
  12.01.14         * add PriceList,
                         PriceListPromo,
                         StartPromo,

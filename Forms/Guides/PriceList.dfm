@@ -1,7 +1,7 @@
 object PriceListForm: TPriceListForm
   Left = 0
   Top = 0
-  Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090#1099'>'
   ClientHeight = 376
   ClientWidth = 457
   Color = clBtnFace
@@ -52,33 +52,43 @@ object PriceListForm: TPriceListForm
       object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 67
+        Width = 50
       end
       object clName: TcxGridDBColumn
-        Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
+        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 281
+        Width = 200
+      end
+      object clPriceWithVAT: TcxGridDBColumn
+        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'PriceWithVAT'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 70
+      end
+      object clVATPercent: TcxGridDBColumn
+        Caption = '% '#1053#1044#1057
+        DataBinding.FieldName = 'VATPercent'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
         Visible = False
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 60
-      end
-      object clPriceWithVAT: TcxGridDBColumn
-        Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057
-        DataBinding.FieldName = 'PriceWithVAT'
-        HeaderAlignmentVert = vaCenter
-        Width = 53
-      end
-      object clVATPercent: TcxGridDBColumn
-        Caption = '% '#1053#1044#1057
-        DataBinding.FieldName = 'VATPercent'
-        HeaderAlignmentVert = vaCenter
-        Width = 70
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -99,11 +109,6 @@ object PriceListForm: TPriceListForm
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
-        Component = clName
-        Properties.Strings = (
-          'Width')
-      end
-      item
         Component = Owner
         Properties.Strings = (
           'Height'
@@ -119,8 +124,8 @@ object PriceListForm: TPriceListForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -179,7 +184,11 @@ object PriceListForm: TPriceListForm
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -187,7 +196,11 @@ object PriceListForm: TPriceListForm
         end
         item
           Visible = True
-          ItemName = 'bbChoiceGuides'
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0

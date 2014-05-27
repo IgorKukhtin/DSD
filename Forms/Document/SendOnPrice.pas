@@ -47,7 +47,7 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
+    PriceListGuides: TdsdGuides;
     spSelectPrint: TdsdStoredProc;
     N2: TMenuItem;
     N3: TMenuItem;

@@ -143,8 +143,8 @@
 			<DCCReference Include="..\..\Forms\Guides\PriceListEdit.pas">
 				<Form>PriceListEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
-				<Form>PriceListForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\PriceList_Object.pas">
+				<Form>PriceList_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\ParentForm.pas">
 				<Form>ParentForm</Form>
@@ -1046,8 +1046,8 @@
 				<Form>MovementItemProtocolForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
-				<Form>Report_GoodsForm</Form>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsTax.pas">
+				<Form>Report_GoodsTaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Sale_Partner.pas">
@@ -1290,8 +1290,28 @@
 				<Form>Report_GoodsMIForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas">
+				<Form>Report_GoodsMI_byPriceDifForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas">
 				<Form>Report_GoodsMI_byMovementDifForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Report\Report_Goods.pas">
+				<Form>Report_GoodsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\PriceList.pas">
+				<Form>PriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Retail.pas">
+				<Form>RetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RetailEdit.pas">
+				<Form>RetailEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

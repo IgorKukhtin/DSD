@@ -108,10 +108,10 @@ type
     clUpdateName: TcxGridDBColumn;
     clInsertDate: TcxGridDBColumn;
     clUpdateDate: TcxGridDBColumn;
-    clisDefault: TcxGridDBColumn;
+    clIsDefault: TcxGridDBColumn;
     clccInfoMoneyName: TcxGridDBColumn;
     InfoMoneyChoiceForm_ContractCondition: TOpenChoiceForm;
-    clisStandart: TcxGridDBColumn;
+    clIsStandart: TcxGridDBColumn;
     clPersonalTradeName: TcxGridDBColumn;
     clPersonalCollationName: TcxGridDBColumn;
     clBankAccountName: TcxGridDBColumn;
@@ -121,6 +121,8 @@ type
     BankAccountChoiceForm: TOpenChoiceForm;
     ContractTagChoiceForm: TOpenChoiceForm;
     clContractKeyId: TcxGridDBColumn;
+    clIsPersonal: TcxGridDBColumn;
+    clIsUnique: TcxGridDBColumn;
   private
     { Private declarations }
   public

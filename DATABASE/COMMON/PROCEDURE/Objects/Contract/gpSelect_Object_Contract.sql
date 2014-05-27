@@ -38,6 +38,9 @@ RETURNS TABLE (Id Integer, Code Integer
              , InsertDate TDateTime, UpdateDate TDateTime
              , isDefault Boolean
              , isStandart Boolean
+             , isPersonal Boolean
+             , isUnique Boolean
+
              , isErased Boolean 
               )
 AS
@@ -123,8 +126,11 @@ BEGIN
        , ObjectDate_Protocol_Insert.ValueData AS InsertDate
        , ObjectDate_Protocol_Update.ValueData AS UpdateDate
        
-       , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
+       , COALESCE (ObjectBoolean_Default.ValueData, False)  AS isDefault
        , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+
+       , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
+       , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        
        , Object_Contract_View.isErased
        
@@ -153,10 +159,15 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Default
                                 ON ObjectBoolean_Default.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Default.DescId = zc_ObjectBoolean_Contract_Default()
-
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal
+                                ON ObjectBoolean_Personal.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Personal.DescId = zc_ObjectBoolean_Contract_Personal()
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
+                                ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
         
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -229,6 +240,8 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.05.14         * add zc_ObjectBoolean_Contract_Personal
+                        zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!!ContractKindName - ‚ÒÂ„‰‡!!!
  20.05.14                                        * add Object_Contract_View.InvNumber <> '-'
  26.04.14                                        * add View_Contract_InvNumber_Key

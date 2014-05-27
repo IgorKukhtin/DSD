@@ -1,26 +1,26 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 446
+  ClientHeight = 495
   ClientWidth = 1127
   ExplicitWidth = 1133
-  ExplicitHeight = 471
+  ExplicitHeight = 520
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 48
-    Top = 418
+    Top = 457
     Action = InsertUpdateGuides
     TabOrder = 7
     ExplicitLeft = 48
-    ExplicitTop = 418
+    ExplicitTop = 457
   end
   inherited bbCancel: TcxButton
     Left = 159
-    Top = 418
+    Top = 457
     Action = actFormClose
     TabOrder = 8
     ExplicitLeft = 159
-    ExplicitTop = 418
+    ExplicitTop = 457
   end
   object edName: TcxTextEdit [2]
     Left = 5
@@ -119,27 +119,30 @@
     Left = 284
     Top = 0
     Width = 843
-    Height = 446
+    Height = 495
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 15
+    ExplicitHeight = 499
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
       Width = 841
-      Height = 446
+      Height = 495
       Align = alClient
       TabOrder = 0
       Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ClientRectBottom = 446
+      ExplicitHeight = 499
+      ClientRectBottom = 495
       ClientRectRight = 841
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitHeight = 475
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -168,9 +171,10 @@
           Left = 456
           Top = 0
           Width = 385
-          Height = 422
+          Height = 471
           Align = alRight
           TabOrder = 8
+          ExplicitHeight = 475
           object JuridicalDetailsGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = JuridicalDetailsDS
@@ -303,6 +307,7 @@
       object PartnerTS: TcxTabSheet
         Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
         ImageIndex = 1
+        ExplicitHeight = 475
         object PartnerDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -315,9 +320,10 @@
           Left = 0
           Top = 26
           Width = 841
-          Height = 396
+          Height = 445
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 449
           object PartnerGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = PartnerDS
@@ -358,6 +364,7 @@
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
+        ExplicitHeight = 475
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -370,9 +377,10 @@
           Left = 0
           Top = 26
           Width = 841
-          Height = 396
+          Height = 445
           Align = alClient
           TabOrder = 0
+          ExplicitHeight = 449
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -528,6 +536,38 @@
               HeaderAlignmentVert = vaCenter
               Width = 60
             end
+            object clIsStandart: TcxGridDBColumn
+              Caption = #1058#1080#1087#1086#1074#1086#1081
+              DataBinding.FieldName = 'isStandart'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 40
+            end
+            object clIsPersonal: TcxGridDBColumn
+              Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
+              DataBinding.FieldName = 'isPersonal'
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 40
+            end
+            object clIsDefault: TcxGridDBColumn
+              Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
+              DataBinding.FieldName = 'isDefault'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 40
+            end
+            object clIsUnique: TcxGridDBColumn
+              Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
+              DataBinding.FieldName = 'isUnique'
+              Visible = False
+              HeaderAlignmentHorz = taCenter
+              HeaderAlignmentVert = vaCenter
+              Width = 40
+            end
             object clComment: TcxGridDBColumn
               Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077
               DataBinding.FieldName = 'Comment'
@@ -553,12 +593,12 @@
     end
   end
   object cxLabel14: TcxLabel [16]
-    Left = 6
-    Top = 298
+    Left = 8
+    Top = 278
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
   end
   object cePriceList: TcxButtonEdit [17]
-    Left = 74
+    Left = 8
     Top = 297
     Properties.Buttons = <
       item
@@ -567,10 +607,10 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 18
-    Width = 204
+    Width = 270
   end
   object cxLabel15: TcxLabel [18]
-    Left = 7
+    Left = 8
     Top = 325
     Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090' ('#1040#1082#1094#1080#1086#1085#1085#1099#1081')'
   end
@@ -588,17 +628,17 @@
   end
   object cxLabel16: TcxLabel [20]
     Left = 13
-    Top = 365
+    Top = 408
     Caption = #1044#1072#1090#1072' '#1085#1072#1095#1072#1083#1072' '#1072#1082#1094#1080#1080
   end
   object cxLabel17: TcxLabel [21]
     Left = 157
-    Top = 365
+    Top = 408
     Caption = #1044#1072#1090#1072' '#1086#1082#1086#1085#1095#1072#1085#1080#1103' '#1072#1082#1094#1080#1080
   end
   object edEndPromo: TcxDateEdit [22]
     Left = 157
-    Top = 388
+    Top = 428
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
@@ -608,13 +648,30 @@
   end
   object edStartPromo: TcxDateEdit [23]
     Left = 15
-    Top = 388
+    Top = 428
     EditValue = 0d
     Properties.SaveTime = False
     Properties.ShowTime = False
     Properties.ValidateOnEnter = False
-    TabOrder = 27
+    TabOrder = 26
     Width = 100
+  end
+  object cxLabel19: TcxLabel [24]
+    Left = 10
+    Top = 365
+    Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+  end
+  object ceRetail: TcxButtonEdit [25]
+    Left = 8
+    Top = 383
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 29
+    Width = 273
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 499
@@ -973,6 +1030,12 @@
         ParamType = ptInput
       end
       item
+        Name = 'inRetailId'
+        Value = ''
+        Component = RetailGuides
+        ParamType = ptInput
+      end
+      item
         Name = 'inInfoMoneyId'
         Value = ''
         Component = InfoMoneyGuides
@@ -1074,6 +1137,19 @@
         Name = 'GoodsPropertyName'
         Value = ''
         Component = GoodsPropertyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'RetailId'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'RetailName'
+        Value = ''
+        Component = RetailGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1634,7 +1710,7 @@
         ParamType = ptInput
       end>
     Left = 48
-    Top = 310
+    Top = 358
   end
   object spClearDefaluts: TdsdStoredProc
     StoredProcName = 'gpGet_JuridicalDetails_ClearDefault'
@@ -1657,5 +1733,32 @@
       end>
     Left = 272
     Top = 384
+  end
+  object RetailGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceRetail
+    FormNameParam.Value = 'TRetailForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TRetailForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = RetailGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 112
+    Top = 368
   end
 end

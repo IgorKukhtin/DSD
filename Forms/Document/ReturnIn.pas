@@ -72,7 +72,7 @@ type
     DocumentTaxKindGuides: TdsdGuides;
     edPriceList: TcxButtonEdit;
     cxLabel11: TcxLabel;
-    GuidesPricelist: TdsdGuides;
+    PriceListGuides: TdsdGuides;
     spTaxCorrective: TdsdStoredProc;
     actTaxCorrective: TdsdExecStoredProc;
     bbTaxCorrective: TdxBarButton;

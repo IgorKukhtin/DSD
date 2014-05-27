@@ -22,10 +22,7 @@ BEGIN
 
      -- сохранили
      UPDATE MovementDesc SET FormId = inFormId WHERE Id = inId;
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inId, vbUserId, FALSE);
-
+     
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -34,6 +31,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.05.14                                        * del lpInsert_MovementProtocol
  10.05.14                                        * add lpInsert_MovementProtocol
  24.01.14                          *
 */

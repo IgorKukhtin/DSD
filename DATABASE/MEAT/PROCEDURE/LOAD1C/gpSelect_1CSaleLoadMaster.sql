@@ -48,7 +48,7 @@ BEGIN
             , Object_Contract_View.EndDate
             , Object_Contract_View.ContractTagName
             , Object_Contract_View.ContractStateKindCode 
-            , (Count(tmpGoodsByGoodsKind1CLink.ObjectId) <> Count(*)) AS Synchronize      
+            , (Count (tmpGoodsByGoodsKind1CLink.ObjectId) <> Count (*)) AS Synchronize      
       
       FROM Sale1C
            LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = zfGetBranchFromUnitId (Sale1C.UnitId)
@@ -65,6 +65,7 @@ BEGIN
                                                AND ObjectLink_Partner1CLink_Contract.DescId = zc_ObjectLink_Partner1CLink_Contract()                                 
 
                       WHERE Object_Partner1CLink.DescId =  zc_Object_Partner1CLink()
+                        AND Object_Partner1CLink.ObjectCode <> 0
                      ) AS tmpPartner1CLink ON tmpPartner1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
                                           AND tmpPartner1CLink.ObjectCode = Sale1C.ClientCode
 
@@ -83,6 +84,7 @@ BEGIN
                                                 ON ObjectLink_GoodsByGoodsKind1CLink_Branch.ObjectId = Object_GoodsByGoodsKind1CLink.Id
                                                AND ObjectLink_GoodsByGoodsKind1CLink_Branch.DescId = zc_ObjectLink_GoodsByGoodsKind1CLink_Branch()
                       WHERE Object_GoodsByGoodsKind1CLink.DescId =  zc_Object_GoodsByGoodsKind1CLink()
+                        AND Object_GoodsByGoodsKind1CLink.ObjectCode <> 0
                      ) AS tmpGoodsByGoodsKind1CLink ON tmpGoodsByGoodsKind1CLink.BranchId = zfGetBranchFromUnitId (Sale1C.UnitId)
                                                    AND tmpGoodsByGoodsKind1CLink.ObjectCode = Sale1C.GoodsCode
 
@@ -119,6 +121,7 @@ ALTER FUNCTION gpSelect_1CSaleLoadMaster (TDateTime, TDateTime, Integer, TVarCha
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 22.05.14                                        * add ObjectCode <> 0
  24.04.14                         * 
 */
 

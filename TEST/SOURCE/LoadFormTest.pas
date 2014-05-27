@@ -78,6 +78,7 @@ type
     procedure LoadReportFormTest;
     procedure LoadReturnInFormTest;
     procedure LoadReturnOutFormTest;
+    procedure LoadRetailFormTest;
     procedure LoadRoleFormTest;
     procedure LoadRouteFormTest;
     procedure LoadRouteSortingFormTest;
@@ -694,6 +695,8 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListGoodsItemForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListGoodsItemForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceList_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceList_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadReportFormTest;
@@ -721,6 +724,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_TransportHoursWorkForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_TransportHoursWorkForm');
 
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsTaxForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsTaxForm');
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsForm');
 
@@ -735,6 +741,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byMovementDifForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byMovementDifForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_byPriceDifForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_byPriceDifForm');
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TReport_GoodsMI_SaleReturnInForm'));
   TdsdFormStorageFactory.GetStorage.Load('TReport_GoodsMI_SaleReturnInForm');
@@ -1145,6 +1154,15 @@ end;
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TWeighingProductionJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TWeighingProductionJournalForm');
+end;
+
+procedure TLoadFormTest.LoadRetailFormTest;
+begin
+  // Торговая сеть
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRetailEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRetailEditForm');
 end;
 
 procedure TLoadFormTest.SetUp;

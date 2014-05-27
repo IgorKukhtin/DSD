@@ -23,8 +23,8 @@ object MainForm: TMainForm
     AllowCallFromAnotherForm = True
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -811,6 +811,10 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbReport_GoodsTax'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_Goods'
         end
         item
@@ -844,6 +848,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbReport_GoodsMI_byMovementDifSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbReport_GoodsMI_byPriceDifSale'
         end
         item
           Visible = True
@@ -889,8 +897,9 @@ object MainForm: TMainForm
       Action = actReport_MotionGoods
       Category = 0
     end
-    object bbReport_Goods: TdxBarButton
-      Action = actReport_Goods
+    object bbReport_GoodsTax: TdxBarButton
+      Action = actReport_GoodsTax
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091' ('#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
       Category = 0
     end
     object bbReport_GoodsMI_SaleReturnIn: TdxBarButton
@@ -907,6 +916,10 @@ object MainForm: TMainForm
     end
     object bbReport_GoodsMI_byMovementDifSale: TdxBarButton
       Action = actReport_GoodsMI_byMovementDifSale
+      Category = 0
+    end
+    object bbReport_GoodsMI_byPriceDifSale: TdxBarButton
+      Action = actReport_GoodsMI_byPriceDifSale
       Category = 0
     end
     object bbReport_GoodsMI_Income: TdxBarButton
@@ -1047,6 +1060,10 @@ object MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbArea'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetail'
         end
         item
           Visible = True
@@ -1575,6 +1592,14 @@ object MainForm: TMainForm
       Action = actSaveDocumentTo1C
       Category = 0
     end
+    object bbReport_Goods: TdxBarButton
+      Action = actReport_Goods
+      Category = 0
+    end
+    object bbRetail: TdxBarButton
+      Action = actRetail
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1683,6 +1708,17 @@ object MainForm: TMainForm
       Hint = #1043#1088#1091#1087#1087#1080#1088#1086#1074#1082#1080' '#1057#1086#1090#1088#1091#1076#1085#1080#1082#1086#1074' '
       FormName = 'TPersonalGroupForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRetail: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      Hint = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+      FormName = 'TRetailForm'
+      FormNameParam.Value = 'TRetailForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2622,13 +2658,13 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actReport_Goods: TdsdOpenForm
-      Category = #1058#1088#1072#1085#1089#1087#1086#1088#1090
+    object actReport_GoodsTax: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1095#1077#1090#1091
-      FormName = 'TReport_GoodsForm'
-      FormNameParam.Value = ''
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  ('#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091'  ('#1053#1072#1083#1086#1075#1086#1074#1099#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099')'
+      FormName = 'TReport_GoodsTaxForm'
+      FormNameParam.Value = 'TReport_GoodsTaxForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -3115,6 +3151,26 @@ object MainForm: TMainForm
         end>
       isShowModal = False
     end
+    object actReport_GoodsMI_byPriceDifSale: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' ('#1088#1072#1079#1085#1080#1094#1072' '#1074' '#1094#1077#1085#1072#1093')'
+      FormName = 'TReport_GoodsMI_byPriceDifForm'
+      FormNameParam.Value = 'TReport_GoodsMI_byPriceDifForm'
+      FormNameParam.DataType = ftString
+      FormNameParam.ParamType = ptResult
+      GuiParams = <
+        item
+          Name = 'inDescId'
+          Value = 5
+        end
+        item
+          Name = 'InDescName'
+          Value = #1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102
+          DataType = ftString
+        end>
+      isShowModal = False
+    end
     object actReport_CheckContractInMovement: TdsdOpenForm
       Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
       MoveParams = <>
@@ -3215,6 +3271,17 @@ object MainForm: TMainForm
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' 1'#1057
       FormName = 'TSaveDocumentTo1CForm'
       FormNameParam.Value = 'TSaveDocumentTo1CForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actReport_Goods: TdsdOpenForm
+      Category = #1054#1090#1095#1077#1090#1099' ('#1090#1086#1074'.)'
+      MoveParams = <>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
+      FormName = 'TReport_GoodsForm'
+      FormNameParam.Value = 'TReport_GoodsForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

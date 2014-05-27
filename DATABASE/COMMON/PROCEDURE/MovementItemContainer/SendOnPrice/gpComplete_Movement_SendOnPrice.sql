@@ -1,7 +1,7 @@
 -- Function: gpComplete_Movement_SendOnPrice()
 
--- DROP FUNCTION gpComplete_Movement_SendOnPrice (Integer, TVarChar);
--- DROP FUNCTION gpComplete_Movement_SendOnPrice (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_SendOnPrice (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_SendOnPrice (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_SendOnPrice(
     IN inMovementId        Integer               , -- ключ Документа
@@ -48,10 +48,8 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_SendOnPrice());
-     vbUserId:=2; -- CAST (inSession AS Integer);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_SendOnPrice());
 
 
      -- Эти параметры нужны для 
@@ -1116,12 +1114,15 @@ BEGIN
                     ) AS _tmpItemSumm_group ON _tmpItemSumm_group.MovementItemId = _tmpItem_byProfitLoss.MovementItemId
      ;
 */
+
      -- 6.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 6.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_SendOnPrice() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
+     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_SendOnPrice()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
@@ -1130,6 +1131,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member
  03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())

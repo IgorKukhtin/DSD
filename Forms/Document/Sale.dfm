@@ -222,6 +222,7 @@ inherited SaleForm: TSaleForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 1115
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -285,6 +286,7 @@ inherited SaleForm: TSaleForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 218
+      ExplicitHeight = 22
       Width = 218
     end
     object cxLabel3: TcxLabel
@@ -811,11 +813,6 @@ inherited SaleForm: TSaleForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103'>.'
     end
-    object EDIActionDesadv: TEDIAction
-      Category = 'EDI'
-      MoveParams = <>
-      EDIDocType = ediOrder
-    end
     object mactDECLAR: TMultiAction
       Category = 'EDI'
       MoveParams = <>
@@ -824,7 +821,6 @@ inherited SaleForm: TSaleForm
           Action = actExecPrintStoredProc
         end
         item
-          Action = EDIActionDesadv
         end>
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1074#1099#1075#1088#1091#1079#1082#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1074' EDI?'
       InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1074#1099#1075#1088#1091#1078#1077#1085
@@ -864,7 +860,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'inPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1268,13 +1264,13 @@ inherited SaleForm: TSaleForm
       item
         Name = 'PriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1418,14 +1414,14 @@ inherited SaleForm: TSaleForm
       item
         Name = 'ioPriceListId'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInputOutput
       end
       item
         Name = 'outPriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -1918,7 +1914,7 @@ inherited SaleForm: TSaleForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 528
     Top = 320
@@ -2004,18 +2000,18 @@ inherited SaleForm: TSaleForm
     Left = 928
     Top = 65528
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -2023,7 +2019,7 @@ inherited SaleForm: TSaleForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

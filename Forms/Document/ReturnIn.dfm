@@ -1,11 +1,9 @@
 inherited ReturnInForm: TReturnInForm
-  ActiveControl = nil
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 994
-  ExplicitTop = -276
-  ExplicitWidth = 1002
-  ExplicitHeight = 695
+  ExplicitWidth = 1010
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -197,6 +195,7 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitTop = 24
       ExplicitWidth = 994
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
@@ -262,6 +261,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 223
+      ExplicitHeight = 22
       Width = 223
     end
     object cxLabel3: TcxLabel
@@ -711,7 +711,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'inPriceListId'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -1090,13 +1090,13 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'PriceListId'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
       end
       item
         Name = 'PriceListName'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1483,7 +1483,7 @@ inherited ReturnInForm: TReturnInForm
     RefreshAction = actRefreshPrice
     ComponentList = <
       item
-        Component = GuidesPricelist
+        Component = PriceListGuides
       end>
     Left = 464
     Top = 360
@@ -1625,19 +1625,19 @@ inherited ReturnInForm: TReturnInForm
     Left = 872
     Top = 72
   end
-  object GuidesPricelist: TdsdGuides
+  object PriceListGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edPriceList
     Key = '0'
-    FormNameParam.Value = 'TPriceListForm'
+    FormNameParam.Value = 'TPriceList_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TPriceListForm'
+    FormName = 'TPriceList_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
         Name = 'Key'
         Value = '0'
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -1645,7 +1645,7 @@ inherited ReturnInForm: TReturnInForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = GuidesPricelist
+        Component = PriceListGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

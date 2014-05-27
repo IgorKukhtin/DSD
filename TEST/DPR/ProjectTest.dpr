@@ -65,7 +65,7 @@ uses
   CurrencyEdit in '..\..\Forms\CurrencyEdit.pas' {CurencyEditForm},
   GoodsGroupEdit in '..\..\Forms\GoodsGroupEdit.pas' {GoodsGroupEditForm},
   PriceListEdit in '..\..\Forms\Guides\PriceListEdit.pas' {PriceListEditForm},
-  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm},
+  PriceList_Object in '..\..\Forms\Guides\PriceList_Object.pas' {PriceList_ObjectForm},
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
   GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
@@ -368,7 +368,7 @@ uses
   MovementProtocol in '..\..\Forms\System\MovementProtocol.pas' {MovementProtocolForm: TParentForm},
   Protocol in '..\..\Forms\System\Protocol.pas' {ProtocolForm: TParentForm},
   MovementItemProtocol in '..\..\Forms\System\MovementItemProtocol.pas' {MovementItemProtocolForm: TParentForm},
-  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  Report_GoodsTax in '..\..\Forms\Report\Report_GoodsTax.pas' {Report_GoodsTaxForm: TParentForm},
   Sale_Partner in '..\..\Forms\Document\Sale_Partner.pas' {Sale_PartnerForm: TParentForm},
   Sale_PartnerJournal in '..\..\Forms\Document\Sale_PartnerJournal.pas' {Sale_PartnerJournalForm: TParentForm},
   ReturnOutTest in '..\SOURCE\Movement\All\ReturnOutTest.pas',
@@ -441,7 +441,12 @@ uses
   Report_GoodsMI_byMovement in '..\..\Forms\Report\Report_GoodsMI_byMovement.pas' {Report_GoodsMI_byMovementForm: TParentForm},
   SaveTaxDocument in '..\..\Forms\Export\SaveTaxDocument.pas' {SaveTaxDocumentForm: TParentForm},
   Report_GoodsMI in '..\..\Forms\Report\Report_GoodsMI.pas' {Report_GoodsMIForm: TParentForm},
-  Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm};
+  Report_GoodsMI_byPriceDif in '..\..\Forms\Report\Report_GoodsMI_byPriceDif.pas' {Report_GoodsMI_byPriceDifForm: TParentForm},
+  Report_GoodsMI_byMovementDif in '..\..\Forms\Report\Report_GoodsMI_byMovementDif.pas' {Report_GoodsMI_byMovementDifForm: TParentForm},
+  Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
+  PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
+  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
+  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm};
 
 {$R *.RES}
 

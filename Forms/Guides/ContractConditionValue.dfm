@@ -422,7 +422,21 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 56
       end
-      object clisDefault: TcxGridDBColumn
+      object clIsStandart: TcxGridDBColumn
+        Caption = #1058#1080#1087#1086#1074#1086#1081
+        DataBinding.FieldName = 'isStandart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object clIsPersonal: TcxGridDBColumn
+        Caption = 'C'#1083#1091#1078'. '#1079#1072#1087'.'
+        DataBinding.FieldName = 'isPersonal'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object clIsDefault: TcxGridDBColumn
         Caption = #1055#1086' '#1091#1084#1086#1083#1095#1072#1085#1080#1102
         DataBinding.FieldName = 'isDefault'
         Visible = False
@@ -431,12 +445,13 @@ object ContractConditionValueForm: TContractConditionValueForm
         Options.Editing = False
         Width = 40
       end
-      object clisStandart: TcxGridDBColumn
-        Caption = #1058#1080#1087#1086#1074#1086#1081
-        DataBinding.FieldName = 'isStandart'
+      object clIsUnique: TcxGridDBColumn
+        Caption = #1056#1072#1089#1095#1077#1090' '#1076#1086#1083#1075#1072
+        DataBinding.FieldName = 'isUnique'
+        Visible = False
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 30
+        Width = 40
       end
       object clComment: TcxGridDBColumn
         Caption = #1055#1088#1080#1084#1077#1095#1072#1085#1080#1077

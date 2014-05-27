@@ -1,7 +1,7 @@
 -- Function: gpComplete_Movement_ProductionSeparate()
 
--- DROP FUNCTION gpComplete_Movement_ProductionSeparate (Integer, TVarChar);
--- DROP FUNCTION gpComplete_Movement_ProductionSeparate (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ProductionSeparate (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpComplete_Movement_ProductionSeparate (Integer, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpComplete_Movement_ProductionSeparate(
     IN inMovementId        Integer              , -- ключ Документа
@@ -38,10 +38,8 @@ $BODY$
   DECLARE vbBusinessId_To Integer;
 
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Complete_Movement_Income());
-     vbUserId:=2; -- CAST (inSession AS Integer);
+     vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Complete_ProductionSeparate());
 
 
      -- Эти параметры нужны для формирования Аналитик в проводках
@@ -771,9 +769,11 @@ BEGIN
      -- 5.1. ФИНИШ - Обязательно сохраняем Проводки
      PERFORM lpInsertUpdate_MovementItemContainer_byTable ();
 
-     -- 5.2. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_ProductionSeparate() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_ProductionSeparate()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$
@@ -782,6 +782,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  21.12.13                                        * Personal -> Member
  06.10.13                                        * add StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
  03.10.13                                        * add inCarId := NULL

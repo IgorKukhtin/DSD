@@ -126,9 +126,11 @@ BEGIN
 
      -- Ставим статус у документа выписки
      PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_BankStatementItem()
                                 , inUserId     := vbUserId);
      -- Ставим статус у элементов документа выписки
      PERFORM lpComplete_Movement (inMovementId := Movement.Id
+                                , inDescId     := zc_Movement_BankStatementItem()
                                 , inUserId     := vbUserId)
      FROM Movement
      WHERE ParentId = inMovementId AND DescId = zc_Movement_BankStatementItem();
@@ -141,6 +143,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 25.05.14                                        * add lpComplete_Movement (... inDescId ...)
  10.05.14                                        * add lpComplete_Movement
  05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
  25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!

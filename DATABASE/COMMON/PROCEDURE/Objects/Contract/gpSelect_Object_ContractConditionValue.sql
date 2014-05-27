@@ -33,6 +33,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , InfoMoneyDestinationCode_ch Integer, InfoMoneyDestinationName_ch TVarChar
              , InfoMoneyId_ch Integer, InfoMoneyCode_ch Integer, InfoMoneyName_ch TVarChar
              , isDefault Boolean, isStandart Boolean
+             , isPersonal Boolean, isUnique Boolean
              , isErased Boolean 
               )
 AS
@@ -111,8 +112,11 @@ BEGIN
        , View_InfoMoney_ContractCondition.InfoMoneyCode AS InfoMoneyCode_ch
        , View_InfoMoney_ContractCondition.InfoMoneyName AS InfoMoneyName_ch
 
-       , COALESCE (ObjectBoolean_Default.ValueData, False) AS isDefault
-       , COALESCE (ObjectBoolean_Standart.ValueData, False) AS isStandart
+       , COALESCE (ObjectBoolean_Default.ValueData, False)   AS isDefault
+       , COALESCE (ObjectBoolean_Standart.ValueData, False)  AS isStandart
+
+       , COALESCE (ObjectBoolean_Personal.ValueData, False)  AS isPersonal
+       , COALESCE (ObjectBoolean_Unique.ValueData, False)    AS isUnique
 
        , Object_Contract_View.isErased
        
@@ -145,6 +149,14 @@ BEGIN
         LEFT JOIN ObjectBoolean AS ObjectBoolean_Standart
                                 ON ObjectBoolean_Standart.ObjectId = Object_Contract_View.ContractId
                                AND ObjectBoolean_Standart.DescId = zc_ObjectBoolean_Contract_Standart()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Personal
+                                ON ObjectBoolean_Personal.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Personal.DescId = zc_ObjectBoolean_Contract_Personal()
+
+        LEFT JOIN ObjectBoolean AS ObjectBoolean_Unique
+                                ON ObjectBoolean_Unique.ObjectId = Object_Contract_View.ContractId
+                               AND ObjectBoolean_Unique.DescId = zc_ObjectBoolean_Contract_Unique()
 
         LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = Object_Contract_View.JuridicalId
         LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = Object_Contract_View.PaidKindId
@@ -214,6 +226,8 @@ ALTER FUNCTION gpSelect_Object_ContractConditionValue (TVarChar) OWNER TO postgr
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 23.05.14         * add zc_ObjectBoolean_Contract_Personal
+                        zc_ObjectBoolean_Contract_Unique
  20.05.14                                        * !!!ContractKindName - всегда!!!
  20.05.14                                        * add Object_Contract_View.InvNumber <> '-'
  25.04.14                                        * rename BankAccountExternal

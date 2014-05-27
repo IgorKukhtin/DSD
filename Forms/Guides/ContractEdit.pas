@@ -136,6 +136,8 @@ type
     ceBankAccount: TcxButtonEdit;
     BankAccountGuides: TdsdGuides;
     ContractTagGuides: TdsdGuides;
+    ceisPersonal: TcxCheckBox;
+    ceIsUnique: TcxCheckBox;
   private
     { Private declarations }
   public

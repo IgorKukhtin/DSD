@@ -122,6 +122,9 @@ type
     clComment: TcxGridDBColumn;
     cxLabel18: TcxLabel;
     edPhone: TcxDBTextEdit;
+    cxLabel19: TcxLabel;
+    ceRetail: TcxButtonEdit;
+    RetailGuides: TdsdGuides;
   private
     { Private declarations }
   public

@@ -20,6 +20,8 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_UserRole());
 
+   inCloseDate:= DATE_TRUNC ('DAY', inCloseDate);
+
    IF inUserId = 0 THEN
       inUserId := NULL;
    END IF;
@@ -59,8 +61,8 @@ ALTER FUNCTION gpInsertUpdate_PeriodClose (Integer, Integer, Integer, Integer, I
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        *
  23.09.13                         *
-
 */
 
 -- тест

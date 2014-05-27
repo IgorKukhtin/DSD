@@ -138,15 +138,15 @@ BEGIN
 
 
 
-     -- проводим Документ
+     -- 5.1. ФИНИШ - формируем/сохраняем Проводки
      PERFORM lpComplete_Movement_Finance (inMovementId := inMovementId
                                         , inUserId     := inUserId);
 
-     -- 5. ФИНИШ - Обязательно меняем статус документа
-     UPDATE Movement SET StatusId = zc_Enum_Status_Complete() WHERE Id = inMovementId AND DescId = zc_Movement_Cash() AND StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (inMovementId, inUserId, FALSE);
+     -- 5.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_Cash()
+                                , inUserId     := inUserId
+                                 );
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -155,6 +155,7 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  22.01.14                                        * add IsMaster
  28.12.13                                        * rename to zc_ObjectLink_Cash_JuridicalBasis

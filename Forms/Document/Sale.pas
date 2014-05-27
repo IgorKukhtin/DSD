@@ -58,7 +58,7 @@ type
     actGoodsKindChoice: TOpenChoiceForm;
     cxLabel11: TcxLabel;
     edPriceList: TcxButtonEdit;
-    GuidesPricelist: TdsdGuides;
+    PriceListGuides: TdsdGuides;
     cxLabel12: TcxLabel;
     edInvNumberPartner: TcxTextEdit;
     spSelectPrint: TdsdStoredProc;
@@ -96,7 +96,6 @@ type
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
-    EDIActionDesadv: TEDIAction;
     mactDECLAR: TMultiAction;
     bbDECLAR: TdxBarButton;
     actExecPrintStoredProc: TdsdExecStoredProc;

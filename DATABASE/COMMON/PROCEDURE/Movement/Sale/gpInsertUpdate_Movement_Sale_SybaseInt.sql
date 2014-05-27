@@ -36,7 +36,7 @@ BEGIN
                                            , inInvNumberPartner := (SELECT ValueData FROM MovementString WHERE MovementId = ioId AND DescId = zc_MovementString_InvNumberPartner())
                                            , inInvNumberOrder   := inInvNumberOrder
                                            , inOperDate         := inOperDate
-                                           , inOperDatePartner  := inOperDatePartner -- (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner())
+                                           , inOperDatePartner  := (SELECT ValueData FROM MovementDate WHERE MovementId = ioId AND DescId = zc_MovementDate_OperDatePartner()) -- inOperDatePartner
                                            , inChecked          := (SELECT ValueData FROM MovementBoolean WHERE MovementId = ioId AND DescId = zc_MovementBoolean_Checked())
                                            , inPriceWithVAT     := inPriceWithVAT
                                            , inVATPercent       := inVATPercent
@@ -93,6 +93,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.05.14                                        * restore find inOperDatePartner
  23.04.14                                        * add COALESCE ...
  05.04.14                                        *
 */
