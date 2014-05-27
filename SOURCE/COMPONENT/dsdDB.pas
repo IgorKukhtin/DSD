@@ -188,6 +188,7 @@ end;
 procedure TdsdStoredProc.DataSetRefresh;
 var B: TBookMark;
     StringStream: TStringStream;
+    OldDateFormat: String;
 begin
   if (DataSets.Count > 0) and
       Assigned(DataSets[0]) and
@@ -200,13 +201,19 @@ begin
         B := DataSets[0].DataSet.GetBookmark;
      if DataSets[0].DataSet is TClientDataSet then
         TClientDataSet(DataSets[0].DataSet).XMLData := TStorageFactory.GetStorage.ExecuteProc(GetXML);
-     if DataSets[0].DataSet is TkbmMemTable then
+     if DataSets[0].DataSet is TkbmMemTable then begin
+
+        StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
+        OldDateFormat := ShortDateFormat;
+        ShortDateFormat := 'yyyy-mm-dd';
+        DateSeparator := '-';
         try
-           StringStream := TStringStream.Create(TStorageFactory.GetStorage.ExecuteProc(GetXML));
            TkbmMemTable(DataSets[0].DataSet).LoadFromStreamViaFormat(StringStream, DefaultStreamFormat);
         finally
            StringStream.Free;
+           ShortDateFormat := OldDateFormat;
         end;
+     end;
      if Assigned(B) then
      begin
         try
@@ -883,6 +890,8 @@ end;
 
 initialization
   DefaultStreamFormat := TkbmCSVStreamFormat.Create(nil);
+  DefaultStreamFormat.sfLocalFormat := [sfLoadAsASCII, sfLoadLocalFormat];
+
   Classes.RegisterClass(TdsdDataSets);
   VerifyBoolStrArray;
 

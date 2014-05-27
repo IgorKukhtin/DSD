@@ -3,7 +3,7 @@ unit TransferDebtIn;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, AncestorDocument, cxGraphics,
   cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxPCdxBarPopupMenu, cxStyles,
   cxCustomData, cxFilter, cxData, cxDataStorage, cxEdit, Data.DB, cxDBData,
@@ -76,6 +76,8 @@ type
     bbCorrective: TdxBarButton;
     spCorrective: TdsdStoredProc;
     spTaxCorrective: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Us: TdsdStoredProc;
+    spSelectPrintTaxCorrective_Client: TdsdStoredProc;
   private
     { Private declarations }
   public

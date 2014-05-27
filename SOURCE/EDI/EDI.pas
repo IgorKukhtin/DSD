@@ -209,8 +209,8 @@ begin
     ParamByName('inOrderInvNumber').Value := NUMBER;
     ParamByName('inOrderOperDate').Value  := VarToDateTime(DATE);
 
-    ParamByName('inGLNPlace').Value := HEAD.BUYER;
-    ParamByName('inGLN').Value := HEAD.INVOICEPARTNER;
+    ParamByName('inGLNPlace').Value := HEAD.DELIVERYPLACE;
+    ParamByName('inGLN').Value := HEAD.BUYER;
 
     Execute;
     MovementId := ParamByName('outid').Value;

@@ -25,7 +25,22 @@ uses
   ExternalLoad in '..\..\SOURCE\COMPONENT\ExternalLoad.pas',
   Log in '..\..\SOURCE\Log.pas',
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
-  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas';
+  ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
+  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\..\SOURCE\DBF\VKDBFSortedList.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas';
 
 {$R *.res}
 

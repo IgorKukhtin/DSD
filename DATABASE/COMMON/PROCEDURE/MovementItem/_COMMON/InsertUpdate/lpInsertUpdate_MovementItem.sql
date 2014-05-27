@@ -44,7 +44,7 @@ BEGIN
      -- проверка - inObjectId
      IF inObjectId IS NULL
      THEN
-         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
+--         RAISE EXCEPTION 'Ошибка-1.Не определен Объект в документе № <%>.', vbInvNumber;
      END IF;
 
 

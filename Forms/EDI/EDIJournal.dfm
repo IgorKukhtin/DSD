@@ -474,6 +474,10 @@ inherited EDIJournalForm: TEDIJournalForm
         Value = Null
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'outGoodsProperty'
+        Value = Null
       end>
     Left = 168
     Top = 120

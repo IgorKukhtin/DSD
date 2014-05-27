@@ -80,6 +80,19 @@
 			<DelphiCompile Include="$(MainSource)">
 				<MainSource>MainSource</MainSource>
 			</DelphiCompile>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFDataSet.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFPrx.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFUtil.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFMemMgr.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFGostCrypt.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCDX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFIndex.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSorters.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFCollate.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFParser.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFNTX.pas"/>
+			<DCCReference Include="..\..\SOURCE\DBF\VKDBFSortedList.pas"/>
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
 			<DCCReference Include="..\SOURCE\Metadata\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\Process\ProcessTest.pas"/>
@@ -669,7 +682,6 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
-			<DCCReference Include="..\..\SOURCE\MemDBFTable.pas"/>
 			<DCCReference Include="..\..\SOURCE\SimpleGauge.pas">
 				<Form>SimpleGaugeForm</Form>
 			</DCCReference>
@@ -757,22 +769,18 @@
 			<DCCReference Include="..\..\SOURCE\COMPONENT\Document.pas"/>
 			<DCCReference Include="..\..\Forms\System\SetUserDefaults.pas">
 				<Form>SetUserDefaultsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\DefaultsKey.pas">
 				<Form>DefaultsKeyForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\FormsUnit.pas">
 				<Form>FormsForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\UnionDesc.pas">
 				<Form>UnionDescForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\SendDebtJournal.pas">
@@ -831,7 +839,6 @@
 			<DCCReference Include="..\SOURCE\Movement\All\TransportTest.pas"/>
 			<DCCReference Include="..\..\Forms\Document\SheetWorkTimeAddRecord.pas">
 				<Form>SheetWorkTimeAddRecordForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartnerJuridicalEdit.pas">
@@ -927,7 +934,6 @@
 			<DCCReference Include="..\SOURCE\dbMeatTest.pas"/>
 			<DCCReference Include="..\..\Forms\LOAD1C\LoadSaleFrom1C.pas">
 				<Form>LoadSaleFrom1CForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalDocumentLoad.pas"/>
@@ -954,7 +960,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_JuridicalDefermentPayment.pas">
 				<Form>TReport_JuridicalDefermentPayment</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\PaidKind.pas">
@@ -1039,7 +1044,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\MovementItemProtocol.pas">
 				<Form>MovementItemProtocolForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Report_GoodsTax.pas">
@@ -1095,7 +1099,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\System\PeriodClose.pas">
 				<Form>PeriodCloseForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Contract.pas">
@@ -1104,7 +1107,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Export\SaveDocumentTo1C.pas">
 				<Form>SaveDocumentTo1CForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ExternalSave.pas"/>
@@ -1118,7 +1120,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Report\Movement_Journal.pas">
 				<Form>MovementJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\UnitTree.pas">
@@ -1274,7 +1275,6 @@
 			<DCCReference Include="..\SOURCE\Movement\All\EDIMovementTest.pas"/>
 			<DCCReference Include="..\..\Forms\EDI\EDIJournal.pas">
 				<Form>EDIJournalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\DevAddOn\cxGridAddOn.pas"/>

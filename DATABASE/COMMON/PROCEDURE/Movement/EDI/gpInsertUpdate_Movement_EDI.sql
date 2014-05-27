@@ -1,23 +1,24 @@
 -- Function: gpInsertUpdate_Movement_EDI()
 
--- DROP FUNCTION gpInsertUpdate_Movement_EDI (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+ DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDI (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDI(
-   OUT outId                 Integer   , -- Ключ объекта <Документ Перемещение>
     IN inOrderInvNumber      TVarChar  , -- Номер документа
     IN inOrderOperDate       TDateTime , -- Дата документа
     IN inSaleInvNumber       TVarChar  , -- Номер документа
     IN inSaleOperDate        TDateTime , -- Дата документа
 
-    IN inGLNPlace            TVarChar   , -- 
     IN inGLN                 TVarChar   , -- 
+    IN inGLNPlace            TVarChar   , -- 
     IN inOKPO                TVarChar   , -- 
     IN inJuridicalName       TVarChar   , --
- 
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS Integer AS
+RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров) 
+AS
 $BODY$
+   DECLARE vbMovementId INTEGER;
+   DECLARE vbGoodsPropertyId INTEGER;
    DECLARE vbUserId Integer;
    DECLARE vbPartnerId Integer;
    DECLARE vbJuridicalId Integer;
@@ -41,33 +42,42 @@ BEGIN
 
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SaleOperDate(), outId, inSaleOperDate);
     
-     IF inGLNPlace <> '' THEN 
-        PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), outId, inGLNPlace);
-     END IF;
-
      IF inGLN <> '' THEN 
         PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNCode(), outId, inGLN);
+     END IF;
+
+     IF inGLNPlace <> '' THEN 
+        PERFORM lpInsertUpdate_MovementString (zc_MovementString_GLNPlaceCode(), outId, inGLNPlace);
+        -- Пытаемся установить связь с точкой доставки
+        vbPartnerId := COALESCE((SELECT MIN(ObjectId)
+                    FROM ObjectString WHERE DescId = zc_ObjectString_Partner_GLNCode() AND ValueData = inGLNPlace), 0);
+        IF vbPartnerId <> 0 THEN
+           PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), outId, vbPartnerId);
+        END IF;
      END IF;
 
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), outId, inOKPO);
 
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName(), outId, inJuridicalName);
 
-     -- Находим контрагента по GLN
-     IF inGLNPlace <> ''  THEN
-        vbPartnerId := COALESCE((SELECT ObjectId FROM ObjectString 
-                       WHERE ObjectString.DescId = zc_ObjectString_Partner_GLNCode() AND ObjectString.ValueData = inGLNPlace), 0);     
-        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Partner(), outId, vbPartnerId);
+
+     IF vbPartnerId <> 0 THEN -- Находим Юр лицо по контрагенту
+        vbJuridicalId := COALSCE((SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Partner_Juridical AND ObjectId = vbPartnerId), 0);
      END IF;
 
      -- Находим Юр лицо по OKPO
-     IF inOKPO <> '' THEN
+     IF (inOKPO <> '') AND (COALESCE(vbJuridicalId, 0) = 0) THEN
         vbJuridicalId := COALESCE((SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_ViewByDate
                          WHERE CURRENT_DATE BETWEEN StartDate AND EndDate
                            AND OKPO = inOKPO), 0);
-        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), outId, vbJuridicalId);
      END IF;
-     
+
+     IF COALESCE(vbJuridicalId, 0) <> 0 THEN
+        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), outId, vbJuridicalId);
+        -- Возвращаем ссылку на классификатор товаров
+        outGoodsPropertyId := SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ValueData = vbJuridicalId;
+     END IF;
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
