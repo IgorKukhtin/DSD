@@ -34,7 +34,20 @@ uses
   AncestorDialog in '..\Scale\Ancestor\AncestorDialog.pas' {AncestorDialogForm},
   Util in '..\Scale\Util\Util.pas',
   DM in '..\Scale\Util\DM.pas' {DMMain: TDataModule},
-  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm};
+  GuideGoods in '..\Scale\GuideGoods.pas' {GuideGoodsForm},
+  VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
 
 {$R *.res}
 

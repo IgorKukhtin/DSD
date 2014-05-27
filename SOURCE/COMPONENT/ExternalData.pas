@@ -14,7 +14,7 @@ type
     procedure First; virtual; abstract;
   public
     constructor Create; virtual;
-    destructor Destroy;
+    destructor Destroy; override;
     function EOF: boolean;
     function RecordCount: integer;
     procedure Next;     virtual;

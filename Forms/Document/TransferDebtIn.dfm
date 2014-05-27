@@ -2,8 +2,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 703
+  ExplicitTop = -66
+  ExplicitWidth = 1028
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,17 +12,17 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1020
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 1058
+    ExplicitWidth = 1020
     ExplicitHeight = 537
     ClientRectBottom = 537
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
+      ExplicitWidth = 1020
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 513
-        ExplicitWidth = 1058
+        ExplicitWidth = 1020
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,12 +150,12 @@ inherited TransferDebtInForm: TTransferDebtInForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1058
+      ExplicitWidth = 1020
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
         Width = 1020
         Height = 513
-        ExplicitWidth = 1058
+        ExplicitWidth = 1020
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -180,7 +181,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1020
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1058
+    ExplicitWidth = 1020
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -413,6 +414,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Top = 584
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
@@ -421,7 +423,11 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actPrint_TaxCorrective_Us: TdsdPrintAction [9]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrintTaxCorrective_Us
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Us
+        end>
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 19
@@ -464,7 +470,11 @@ inherited TransferDebtInForm: TTransferDebtInForm
     object actPrint_TaxCorrective_Client: TdsdPrintAction [11]
       Category = 'DSDLib'
       MoveParams = <>
-      StoredProcList = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
@@ -1853,5 +1863,61 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end>
     Left = 368
     Top = 432
+  end
+  object spSelectPrintTaxCorrective_Us: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = False
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 586
+    Top = 306
+  end
+  object spSelectPrintTaxCorrective_Client: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
+    DataSet = PrintItemsCDS
+    DataSets = <
+      item
+        DataSet = PrintItemsCDS
+      end
+      item
+        DataSet = PrintHeaderCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 586
+    Top = 354
   end
 end

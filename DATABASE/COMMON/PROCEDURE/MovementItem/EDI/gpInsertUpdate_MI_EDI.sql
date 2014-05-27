@@ -23,13 +23,15 @@ BEGIN
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_MovementItem_EDI());
      vbUserId := inSession;
 
-     SELECT Id INTO vbMovementItemId 
+     vbMovementItemId := COALESCE((SELECT Id   
        FROM MovementItemString 
             JOIN MovementItem ON MovementItem.Id = MovementItemString.MovementItemId 
                              AND MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId = zc_MI_Master() 
       WHERE MovementItemString.ValueData = inGLNCode
-        AND MovementItemString.DescId = zc_MIString_GLNCode();
+        AND MovementItemString.DescId = zc_MIString_GLNCode()), 0);
+
+     -- Находим vbGoodsId
 
 
      -- сохранили <Элемент документа>

@@ -27,7 +27,6 @@ uses
   UnilWin in '..\SOURCE\UnilWin.pas',
   UtilTimeLogger in '..\SOURCE\UtilTimeLogger.pas',
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
-  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas',
   FastReportAddOn in '..\SOURCE\COMPONENT\FastReportAddOn.pas',
   Document in '..\SOURCE\COMPONENT\Document.pas',
@@ -44,7 +43,20 @@ uses
   DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
-  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas';
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
 
 {$R *.res}
 

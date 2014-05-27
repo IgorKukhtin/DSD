@@ -1264,6 +1264,8 @@ begin
              MemTableList.Add(ViewToMemTable.LoadData(TAddOnDataSet(Self.DataSets[i]).GridView));
              DataSet := MemTableList[MemTableList.Count - 1];
           end;
+          if not DataSet.Active then
+             raise Exception.Create('Датасет с данными ' + DataSet.Name + ' не открыт');
         end;
     end;
     with FReport do

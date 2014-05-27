@@ -23,14 +23,13 @@ type
 implementation
 
 uses dsdDB, SysUtils, DateUtils, cxCalendar, Storage, DB, Dialogs,
-     Authentication, CommonData, DBClient, MemDBFTable, dsdAction;
+     Authentication, CommonData, DBClient, dsdAction;
 
 { TComponentDBTest }
 
 procedure TComponentDBTest.DBFOpenTest;
 {var ZConnection : TZConnection;
     ZTable : TZTable;}
-    var Table: TMemDBFTable;
 begin
   {ZConnection := TZConnection.Create(nil);
   ZConnection.Protocol := 'ado';

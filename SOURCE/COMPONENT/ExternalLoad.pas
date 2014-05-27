@@ -19,6 +19,7 @@ type
     FInitializeDirectory: string;
   public
     constructor Create; override;
+    destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
@@ -51,7 +52,7 @@ type
 
 implementation
 
-uses SysUtils, MemDBFTable, Dialogs, SimpleGauge;
+uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet;
 
 { TFileExternalLoad }
 
@@ -147,11 +148,18 @@ begin
   FOEM := true;
 end;
 
+destructor TFileExternalLoad.Destroy;
+begin
+  FDataSet.Close;
+  FreeAndNil(FDataSet);
+  inherited;
+end;
+
 procedure TFileExternalLoad.Open(FileName: string);
 begin
-  FDataSet := TMemDBFTable.Create(nil);
-  TMemDBFTable(FDataSet).FileName := FileName;
-  TMemDBFTable(FDataSet).OEM := FOEM;
+  FDataSet := TVKSmartDBF.Create(nil);
+  TVKSmartDBF(FDataSet).DBFFileName := FileName;
+  TVKSmartDBF(FDataSet).OEM := FOEM;
   FDataSet.Open;
   First;
   FActive := FDataSet.Active;

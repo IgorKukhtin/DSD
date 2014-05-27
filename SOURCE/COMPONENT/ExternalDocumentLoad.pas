@@ -146,7 +146,7 @@ end;
 
 function TSale1CLoad.GetData(FieldName: String): Variant;
 begin
-  result := FDataSet.FieldByName(FieldName).AsString;
+  result := trim(FDataSet.FieldByName(FieldName).AsString);
 end;
 
 function TSale1CLoad.GetOperDate: TDateTime;

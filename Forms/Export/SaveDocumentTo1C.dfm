@@ -1,12 +1,12 @@
 inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
   ActiveControl = deStart
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' '#1074' 1'#1057
-  ClientHeight = 136
-  ClientWidth = 507
+  ClientHeight = 159
+  ClientWidth = 536
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
-  ExplicitWidth = 513
-  ExplicitHeight = 161
+  ExplicitWidth = 542
+  ExplicitHeight = 184
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -119,9 +119,24 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     Top = 104
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 87
     Top = 103
+    object mactPeriodSave: TMultiAction [0]
+      Category = 'macPeriodSave'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actRefresh
+        end
+        item
+          Action = ExternalSaveAction
+        end>
+      DataSource = DataSource
+      Caption = 'mactPeriodSave'
+    end
     inherited actRefresh: TdsdDataSetRefresh
+      Category = 'macPeriodSave'
       StoredProc = spBillList
       StoredProcList = <
         item
@@ -130,21 +145,29 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     end
     object MultiAction: TMultiAction
       Category = 'DSDLib'
-      MoveParams = <>
+      MoveParams = <
+        item
+          FromParam.DataType = ftString
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'FileName'
+          ToParam.DataType = ftString
+        end
+        item
+          FromParam.Value = Null
+          ToParam.Value = Null
+        end>
       ActionList = <
         item
-          Action = actRefresh
+          Action = actPeriodOpen
         end
         item
-          Action = ExternalSaveAction
-        end
-        item
+          Action = mactPeriodSave
         end>
       InfoAfterExecute = #1044#1072#1085#1085#1099#1077' '#1076#1083#1103' 1C '#1091#1089#1087#1077#1096#1085#1086' '#1074#1099#1075#1088#1091#1078#1077#1085#1099
       Caption = #1042#1099#1075#1088#1091#1079#1080#1090#1100
     end
     object ExternalSaveAction: TExternalSaveAction
-      Category = 'DSDLib'
+      Category = 'macPeriodSave'
       MoveParams = <>
       FieldDefs = <
         item
@@ -287,8 +310,11 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
           DataType = ftString
           Size = 50
         end>
-      DataSet = kbmMemTable1
-      isOEM = False
+      DataSet = BillList
+      OpenFileDialog = False
+      FileName.Component = FormParams
+      FileName.ComponentItem = 'FileName'
+      FileName.DataType = ftString
     end
     object actClose: TdsdFormClose
       Category = 'DSDLib'
@@ -296,29 +322,44 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       Caption = #1054#1090#1084#1077#1085#1072
       Hint = #1054#1090#1084#1077#1085#1072
     end
+    object actPeriodOpen: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spBillPeriod
+      StoredProcList = <
+        item
+          StoredProc = spBillPeriod
+        end>
+      Caption = 'actPeriodOpen'
+    end
   end
   inherited FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'FileName'
+        DataType = ftString
+      end>
     Top = 88
   end
   object spBillList: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_1C_Load'
-    DataSet = kbmMemTable1
+    DataSet = BillList
     DataSets = <
       item
-        DataSet = kbmMemTable1
+        DataSet = BillList
       end>
     Params = <
       item
         Name = 'inStartDate'
-        Value = 0d
-        Component = deStart
+        Component = cdsBillPeriod
+        ComponentItem = 'StartDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 0d
-        Component = deEnd
+        Component = cdsBillPeriod
+        ComponentItem = 'EndDate'
         DataType = ftDateTime
         ParamType = ptInput
       end
@@ -401,24 +442,50 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     Left = 456
     Top = 56
   end
-  object kbmMemTable1: TkbmMemTable
-    DesignActivation = True
-    AttachedAutoRefresh = True
-    AttachMaxCount = 1
-    FieldDefs = <>
-    IndexDefs = <>
-    SortOptions = []
-    PersistentBackup = False
-    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
-    LoadedCompletely = False
-    SavedCompletely = False
-    FilterOptions = []
-    Version = '7.20.00 Professional Edition'
-    LanguageID = 0
-    SortID = 0
-    SubLanguageID = 1
-    LocaleID = 1024
-    Left = 312
+  object spBillPeriod: TdsdStoredProc
+    StoredProcName = 'gpSelectPeriodList'
+    DataSet = cdsBillPeriod
+    DataSets = <
+      item
+        DataSet = cdsBillPeriod
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 0d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 0d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPeriodLenght'
+        Value = 'Day'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 24
+    Top = 40
+  end
+  object DataSource: TDataSource
+    DataSet = cdsBillPeriod
+    Left = 64
+    Top = 16
+  end
+  object cdsBillPeriod: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 72
     Top = 8
+  end
+  object DataSource1: TDataSource
+    Left = 408
+    Top = 128
   end
 end

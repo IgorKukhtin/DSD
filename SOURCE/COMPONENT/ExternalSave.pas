@@ -2,7 +2,7 @@ unit ExternalSave;
 
 interface
 
-uses dsdAction, dsdDb, Classes, DB, MemDBFTable, ExternalData;
+uses dsdAction, dsdDb, Classes, DB, ExternalData;
 
 type
 
@@ -14,24 +14,26 @@ type
   TFileExternalSave = class(TExternalSave)
   private
     FInitializeFile: string;
-    FFileDataSet: TMemDBFTable;
+    FFileDataSet: TDataSet;
     FFieldDefs: TFieldDefs;
     FSourceDataSet: TDataSet;
+    FFileName: string;
     procedure CreateFieldList;
   public
-    constructor Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AisOEM: boolean = true);
-    function Execute: boolean;
-    procedure Open(FileName: string);
+    constructor Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AFileName: string; AisOEM: boolean = true);
+    function Execute(var AFileName: string): boolean;
+    procedure Open(FileName: string; CreateFile: boolean);
     property InitializeFile: string read FInitializeFile write FInitializeFile;
   end;
 
   TExternalSaveAction = class(TdsdCustomAction)
   private
     FInitializeDirectory: string;
-    FFileName: string;
-    FFileDataSet: TMemDBFTable;
+    FFileName: TdsdParam;
+    FFileDataSet: TDataSet;
     FDataSet: TDataSet;
     FisOEM: boolean;
+    FOpenFileDialog: boolean;
     function GetFieldDefs: TFieldDefs;
     procedure SetFieldDefs(const Value: TFieldDefs);
   public
@@ -44,13 +46,17 @@ type
     property FieldDefs: TFieldDefs read GetFieldDefs write SetFieldDefs;
     property DataSet: TDataSet read FDataSet write FDataSet;
     property isOEM: boolean read FisOEM write FisOEM default true;
+    // Открывать ли диалог выбора файла
+    property OpenFileDialog: boolean read FOpenFileDialog write FOpenFileDialog;
+    // Файл для сохранения
+    property FileName: TdsdParam read FFileName write FFileName;
   end;
 
   procedure Register;
 
 implementation
 
-uses VCL.ActnList, Dialogs;
+uses VCL.ActnList, Dialogs, VKDBFDataSet, SysUtils;
 
 procedure Register;
 begin
@@ -59,7 +65,7 @@ end;
 
 { TFileExternalSave }
 
-constructor TFileExternalSave.Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AisOEM: boolean = true);
+constructor TFileExternalSave.Create(AFieldDefs: TFieldDefs; ASourceDataSet: TDataSet; AFileName: string; AisOEM: boolean = true);
 begin
   inherited Create;
   FFieldDefs := AFieldDefs;
@@ -67,6 +73,7 @@ begin
      FFieldDefs.Assign(ASourceDataSet.FieldDefs);
   FSourceDataSet := ASourceDataSet;
   Self.FOEM := AisOEM;
+  FFileName := AFileName;
 end;
 
 procedure TFileExternalSave.CreateFieldList;
@@ -74,42 +81,66 @@ begin
 
 end;
 
-function TFileExternalSave.Execute: boolean;
+function TFileExternalSave.Execute(var AFileName: string): boolean;
 var i: integer;
+    CreateFile: boolean;
 begin
   result := false;
-  with TOpenDialog.Create(nil) do
-  try
-    FileName := InitializeFile;
-    DefaultExt := '*.dbf';
-    Filter := 'Файлы выгрузки в 1С (.dbf)|*.dbf|';
-    if Execute then begin
-       InitializeFile := FileName;
-       Self.Open(FileName);
-       FSourceDataSet.First;
-       while not FSourceDataSet.Eof do begin
-         FDataSet.Append;
-         for I := 0 to FDataSet.FieldCount - 1 do
-             FDataSet.Fields[i].Value := FSourceDataSet.FieldByName(FDataSet.Fields[i].FieldName).Value;
-         FDataSet.Post;
-
-         FSourceDataSet.Next;
+  CreateFile := false;
+  if FFileName = '' then
+     with TOpenDialog.Create(nil) do
+     try
+       CreateFile := true;
+       FileName := InitializeFile;
+       DefaultExt := '*.dbf';
+       Filter := 'Файлы выгрузки в 1С (.dbf)|*.dbf|';
+       if Execute then begin
+          AFileName := FileName;
+          FFileName := FileName;
+          InitializeFile := FileName;
        end;
-       TMemDBFTable(FDataSet).Save;
-       result := true;
-    end;
-  finally
-    Free;
+     finally
+       Free;
+     end
+  else
+    AFileName := FFileName;
+
+  Self.Open(FFileName, CreateFile);
+  FSourceDataSet.First;
+  while not FSourceDataSet.Eof do begin
+    FDataSet.Append;
+    for I := 0 to FDataSet.FieldCount - 1 do
+        FDataSet.Fields[i].Value := FSourceDataSet.FieldByName(FDataSet.Fields[i].FieldName).Value;
+    FDataSet.Post;
+    FSourceDataSet.Next;
   end;
+  FDataSet.Close;
+  result := true;
 end;
 
-procedure TFileExternalSave.Open(FileName: string);
+procedure TFileExternalSave.Open(FileName: string; CreateFile: boolean);
+var i: integer;
 begin
-  FDataSet := TMemDBFTable.Create(nil);
-  TMemDBFTable(FDataSet).FieldDefs.Assign(FFieldDefs);
-  TMemDBFTable(FDataSet).FileName := FileName;
-  TMemDBFTable(FDataSet).OEM := FOEM;
-  TMemDBFTable(FDataSet).CreateTable;
+  FDataSet := TVKSmartDBF.Create(nil);
+  TVKSmartDBF(FDataSet).DBFFileName := FileName;
+  TVKSmartDBF(FDataSet).OEM := FOEM;
+  TVKSmartDBF(FDataSet).AccessMode.OpenReadWrite := true;
+  if CreateFile then begin
+     if FileExists(FileName) then
+        DeleteFile(FileName);
+     for I := 0 to FFieldDefs.Count - 1 do begin
+       with TVKSmartDBF(FDataSet).DBFFieldDefs.Add as TVKDBFFieldDef do begin
+          Name := FFieldDefs[i].Name;
+          case FFieldDefs[i].DataType of
+            ftString: field_type := 'C';
+            ftInteger: field_type := 'N';
+          end;
+          len :=  FFieldDefs[i].Size;
+          dec :=  FFieldDefs[i].Precision;
+       end;
+     end;
+     TVKSmartDBF(FDataSet).CreateTable;
+  end;
   FDataSet.Open;
   FActive := FDataSet.Active;
 end;
@@ -119,21 +150,25 @@ end;
 constructor TExternalSaveAction.Create(Owner: TComponent);
 begin
   inherited;
-  FFileDataSet := TMemDBFTable.Create(Self);
+  FFileDataSet := TVKSmartDBF.Create(Self);
+  FileName := TdsdParam.Create(nil);
   isOEM := true;
 end;
 
 destructor TExternalSaveAction.Destroy;
 begin
-
+  FreeAndNil(FFileDataSet);
+  FreeAndNil(FFileName);
   inherited;
 end;
 
 function TExternalSaveAction.Execute: boolean;
+var lFileName: string;
 begin
-  with TFileExternalSave.Create(FFileDataSet.FieldDefs, DataSet, isOEM) do begin
+  with TFileExternalSave.Create(FFileDataSet.FieldDefs, DataSet, FileName.AsString, isOEM) do begin
     try
-      result := Execute
+      result := Execute(lFileName);
+      FileName.Value:= lFileName;
     finally
       Free
     end;
