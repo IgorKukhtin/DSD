@@ -28,10 +28,19 @@ BEGIN
      RETURN QUERY
      SELECT
              '0' :: TVarChar                                           AS UnitId
-           , CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut())
+           , CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                        THEN 2
-                  WHEN Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                  WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND View_Contract_InvNumber.InfoMoneyId <> zc_Enum_InfoMoney_20901() -- Èðíà
+                       THEN 2
+                  WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_20901() -- Èðíà
+                       THEN 8
+
+                  WHEN Movement.DescId IN (zc_Movement_ReturnIn())
                        THEN 4
+                  WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND View_Contract_InvNumber.InfoMoneyId <> zc_Enum_InfoMoney_20901() -- Èðíà
+                       THEN 4
+                  WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_20901() -- Èðíà
+                       THEN 6
              END :: TVarChar                                           AS VidDoc
            , Movement.InvNumber				               AS InvNumber
            , TO_CHAR (COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate), 'DD.MM.YYYY') :: TVarChar AS OperDate
@@ -126,12 +135,24 @@ BEGIN
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId IN ( zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractTo())
+                                        AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                                                           THEN zc_MovementLinkObject_Contract()
+                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
+                                                                                           THEN zc_MovementLinkObject_ContractTo()
+                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtIn())
+                                                                                           THEN zc_MovementLinkObject_ContractFrom()
+                                                                                  END
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                                                                           THEN zc_MovementLinkObject_PaidKind()
+                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
+                                                                                           THEN zc_MovementLinkObject_PaidKindTo()
+                                                                                      WHEN Movement.DescId IN (zc_Movement_TransferDebtIn())
+                                                                                           THEN zc_MovementLinkObject_PaidKindFrom()
+                                                                                  END
 
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner
                                    ON MovementDate_OperDatePartner.MovementId =  Movement.Id
