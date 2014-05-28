@@ -16,11 +16,17 @@ uses
 
 type
   TProductionSeparateForm = class(TAncestorDocumentMCForm)
+    cePartionGoods: TcxTextEdit;
+    cxLabel10: TcxLabel;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
+
+implementation
+
+{$R *.dfm}
 
 initialization
   RegisterClass(TProductionSeparateForm);

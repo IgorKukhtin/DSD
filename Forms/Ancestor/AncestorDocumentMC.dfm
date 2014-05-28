@@ -20,6 +20,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
+      ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 929
       ExplicitHeight = 226
@@ -987,10 +988,13 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       item
         Name = 'InvNumber'
         Value = ''
+        Component = edInvNumber
+        DataType = ftString
       end
       item
         Name = 'OperDate'
         Value = 0d
+        Component = edOperDate
       end
       item
         Name = 'StatusCode'
@@ -1052,12 +1056,13 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       item
         Name = 'inInvNumber'
         Value = ''
-        DataType = ftString
+        Component = edInvNumber
         ParamType = ptInput
       end
       item
         Name = 'inOperDate'
         Value = 0d
+        Component = edOperDate
         DataType = ftDateTime
         ParamType = ptInput
       end

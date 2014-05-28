@@ -1,8 +1,8 @@
 -- Function: gpGet_Movement_Send()
 
 -- DROP FUNCTION gpGet_Movement_Send (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TVarChar);
-DROP FUNCTION IF EXISTS gpGet_Movement_SendOnPrice (Integer, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Send (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpGet_Movement_Send (Integer, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpGet_Movement_Send(
