@@ -143,10 +143,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_EDI() RETURNS Integer AS $BODY$BEGIN RETU
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_EDI', 'EDI документ' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_EDI');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PriceCorrective() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PriceCorrective'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PriceCorrective', 'Корректировка цены' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PriceCorrective');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 29.05.14         * add zc_Movement_PriceCorrective
  22.04.14         * add TransferDebtOut, TransferDebtIn
  11.03.14         * add zc_Movement_WeighingPartner              
  17.02.14         												*    add zc_Movement_ProfitLossService
