@@ -132,7 +132,7 @@ uses
   AssetGroupEdit in '..\..\Forms\Guides\AssetGroupEdit.pas' {AssetGroupEditForm: TParentForm},
   Personal in '..\..\Forms\Guides\Personal.pas' {PersonalForm},
   PersonalEdit in '..\..\Forms\Guides\PersonalEdit.pas' {PersonalEditForm},
-  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm},
+  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   JuridicalTest in '..\SOURCE\Objects\All\JuridicalTest.pas',
   SendOnPriceJournal in '..\..\Forms\Document\SendOnPriceJournal.pas' {SendOnPriceJournalForm},
   SendOnPrice in '..\..\Forms\Document\SendOnPrice.pas' {SendOnPriceForm},
@@ -140,12 +140,10 @@ uses
   Loss in '..\..\Forms\Document\Loss.pas' {LossForm},
   InventoryJournal in '..\..\Forms\Document\InventoryJournal.pas' {InventoryJournalForm},
   Inventory in '..\..\Forms\Document\Inventory.pas' {InventoryForm},
-  ProductionSeparateJournal in '..\..\Forms\Document\ProductionSeparateJournal.pas' {ProductionSeparateJournalForm},
   ProductionUnionJournal in '..\..\Forms\Document\ProductionUnionJournal.pas' {ProductionUnionJournalForm},
   Report_ProfitLoss in '..\..\Forms\Report\Report_ProfitLoss.pas' {Report_ProfitLossForm},
   Report_HistoryCost in '..\..\Forms\Report\Report_HistoryCost.pas' {Report_HistoryCostForm},
   ProductionUnion in '..\..\Forms\Document\ProductionUnion.pas' {ProductionUnionForm},
-  ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm},
   ContractConditionValue in '..\..\Forms\Guides\ContractConditionValue.pas' {ContractConditionValueForm},
   ContractEdit in '..\..\Forms\Guides\ContractEdit.pas' {ContractEditForm},
   Measure in '..\..\Forms\Measure.pas' {MeasureForm},
@@ -250,8 +248,7 @@ uses
   CommonObjectDescProcedureTest in '..\SOURCE\ObjectDesc\CommonObjectDescProcedureTest.pas',
   AncestorEnum in '..\..\Forms\Ancestor\AncestorEnum.pas' {AncestorEnumForm: TParentForm},
   Objects in '..\..\Forms\System\Objects.pas' {ObjectForm: TParentForm},
-  AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  AncestorDocumentMC in '..\..\Forms\Ancestor\AncestorDocumentMC.pas' {AncestorDocumentMCForm: TParentForm},
   CashJournal in '..\..\Forms\Document\CashJournal.pas' {CashJournalForm: TParentForm},
   Report_GoodsMI_SaleReturnIn in '..\..\Forms\Report\Report_GoodsMI_SaleReturnIn.pas' {Report_GoodsMI_SaleReturnInForm: TParentForm},
   CashOperation in '..\..\Forms\Document\CashOperation.pas' {CashOperationForm: TParentForm},
@@ -446,7 +443,11 @@ uses
   Report_Goods in '..\..\Forms\Report\Report_Goods.pas' {Report_GoodsForm: TParentForm},
   PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
-  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm};
+  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
+  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
+  ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm};
 
 {$R *.RES}
 
