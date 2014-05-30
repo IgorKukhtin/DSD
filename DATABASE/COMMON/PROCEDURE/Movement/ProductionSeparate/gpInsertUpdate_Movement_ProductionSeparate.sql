@@ -1,16 +1,17 @@
 -- Function: gpInsertUpdate_Movement_ProductionSeparate()
 
 -- DROP FUNCTION gpInsertUpdate_Movement_ProductionSeparate();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ProductionSeparate (integer, TVarChar, TDateTime, Integer, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ProductionSeparate(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
     IN inInvNumber           TVarChar  , -- Номер документа
     IN inOperDate            TDateTime , -- Дата документа
-    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
+    IN inPartionGoods        TVarChar  , -- Партия товара
     IN inSession             TVarChar    -- сессия пользователя
-)                              
+)
 RETURNS Integer AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -22,7 +23,7 @@ BEGIN
 
    -- сохранили <Документ>
    ioId := lpInsertUpdate_Movement (ioId, zc_Movement_ProductionSeparate(), inInvNumber, inOperDate, NULL);
-   
+
    -- сохранили связь с <От кого (в документе)>
    PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
    -- сохранили связь с <Кому (в документе)>
@@ -31,6 +32,8 @@ BEGIN
    -- сохранили свойство <Партия товара>
    PERFORM lpInsertUpdate_MovementString (zc_MovementString_PartionGoods(), ioId, inPartionGoods);
 
+   -- пересчитали Итоговые суммы по накладной
+   PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
 
    -- сохранили протокол
    -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
@@ -42,8 +45,8 @@ LANGUAGE PLPGSQL VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
-               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
-               
+               Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 28.05.14                                                        *
  16.07.13         *
 
 */
