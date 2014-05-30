@@ -2,6 +2,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 668
   ClientWidth = 1084
+  ExplicitLeft = -169
+  ExplicitTop = 7
   ExplicitWidth = 1092
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -266,13 +268,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Caption = '% '#1053#1044#1057
     end
     object cxLabel10: TcxLabel
-      Left = 594
-      Top = 44
+      Left = 809
+      Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 594
-      Top = 63
+      Left = 809
+      Top = 23
       Properties.Buttons = <
         item
           Default = True
@@ -282,13 +284,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 77
     end
     object cxLabel11: TcxLabel
-      Left = 680
-      Top = 45
+      Left = 908
+      Top = 5
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 680
-      Top = 63
+      Left = 908
+      Top = 23
       Enabled = False
       Properties.Buttons = <
         item
@@ -296,7 +298,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
           Kind = bkEllipsis
         end>
       TabOrder = 16
-      Width = 114
+      Width = 141
     end
     object edPartner: TcxButtonEdit
       Left = 200
@@ -316,20 +318,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel13: TcxLabel
-      Left = 819
-      Top = 0
+      Left = 384
+      Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 819
-      Top = 23
+      Left = 384
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 20
-      Width = 118
+      Width = 199
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1348,16 +1350,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'PaidKindId'
         Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'PaidKindName'
         Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'ChangePercent'
-        Value = 0.000000000000000000
-        DataType = ftFloat
       end
       item
         Name = 'MasterJuridicalId'
@@ -1442,8 +1443,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 616
-    Top = 56
+    Left = 832
+    Top = 8
   end
   object ContractGuides: TdsdGuides
     KeyField = 'Id'
@@ -1469,8 +1470,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 728
-    Top = 64
+    Left = 968
+    Top = 16
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1509,6 +1510,19 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 296
   end
@@ -1536,8 +1550,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 864
-    Top = 16
+    Left = 424
+    Top = 56
   end
   object spCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
