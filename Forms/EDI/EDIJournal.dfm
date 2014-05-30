@@ -30,73 +30,91 @@ inherited EDIJournalForm: TEDIJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colIsOrder: TcxGridDBColumn
+            Caption = #1047#1072#1082#1072#1079
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colIsSale: TcxGridDBColumn
+            Caption = #1056#1077#1072#1083#1080#1079
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 53
+          end
+          object colIsTax: TcxGridDBColumn
+            Caption = #1053#1072#1083#1086#1075
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 49
+          end
           object colOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'OperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 61
           end
           object colInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'InvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 67
           end
           object colSaleOperDate: TcxGridDBColumn
             Caption = #1044#1072#1090#1072' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SaleOperDate'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 71
           end
           object colSaleInvNumber: TcxGridDBColumn
             Caption = #1053#1086#1084#1077#1088' '#1087#1088#1086#1076#1072#1078#1080
             DataBinding.FieldName = 'SaleInvNumber'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 67
           end
           object colGLNPlaceCode: TcxGridDBColumn
             Caption = 'GLN '#1090#1086#1095#1082#1080' '#1076#1086#1089#1090#1072#1074#1082#1080
             DataBinding.FieldName = 'GLNPlaceCode'
-            Width = 50
+            Width = 80
           end
           object colPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
             DataBinding.FieldName = 'PartnerName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 82
           end
           object colOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 61
           end
           object colJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'. '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 62
           end
           object colGLNCode: TcxGridDBColumn
             Caption = 'GLN '#1050#1086#1076
             DataBinding.FieldName = 'GLNCode'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 60
+            Width = 55
           end
           object colLoadJuridicalName: TcxGridDBColumn
             Caption = #1047#1072#1075#1088'. '#1070#1088' '#1083#1080#1094#1086
             DataBinding.FieldName = 'LoadJuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
-            Width = 65
+            Width = 67
           end
         end
       end
@@ -171,6 +189,13 @@ inherited EDIJournalForm: TEDIJournalForm
             Options.Editing = False
             Width = 60
           end
+          object colGoodsKind: TcxGridDBColumn
+            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+            DataBinding.FieldName = 'GoodsKindName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
+          end
           object colAmountOrder: TcxGridDBColumn
             Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1072
             DataBinding.FieldName = 'AmountOrder'
@@ -196,11 +221,6 @@ inherited EDIJournalForm: TEDIJournalForm
             Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
             DataBinding.FieldName = 'SummPartner'
             Options.Editing = False
-          end
-          object colPrice: TcxGridDBColumn
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -271,6 +291,14 @@ inherited EDIJournalForm: TEDIJournalForm
           'Date')
       end
       item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end
+      item
         Component = Splitter
         Properties.Strings = (
           'Top')
@@ -293,9 +321,9 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       EDI = EDI
       EDIDocType = ediComDoc
-      spHeader = spHeader
-      spList = spList
-      Directory = '/archive'
+      spHeader = spHeaderComDoc
+      spList = spListComDoc
+      Directory = '/inbox'
     end
     object maEDIComDocLoad: TMultiAction
       Category = 'EDI'
@@ -334,16 +362,16 @@ inherited EDIJournalForm: TEDIJournalForm
       MoveParams = <>
       EDI = EDI
       EDIDocType = ediOrder
-      spHeader = spHeader
-      spList = spList
-      Directory = '/archive'
+      spHeader = spHeaderOrder
+      spList = spListOrder
+      Directory = '/inbox'
     end
   end
   inherited MasterDS: TDataSource
-    Top = 80
+    Top = 56
   end
   inherited MasterCDS: TClientDataSet
-    Top = 80
+    Top = 56
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_EDI'
@@ -362,10 +390,10 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Top = 80
+    Top = 56
   end
   inherited BarManager: TdxBarManager
-    Top = 80
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -418,15 +446,11 @@ inherited EDIJournalForm: TEDIJournalForm
   inherited PopupMenu: TPopupMenu
     Top = 184
   end
-  object spHeader: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_EDI'
+  object spHeaderOrder: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDIOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
-      item
-        Name = 'outId'
-        Value = Null
-      end
       item
         Name = 'inOrderInvNumber'
         Value = Null
@@ -435,18 +459,6 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inOrderOperDate'
-        Value = Null
-        DataType = ftDateTime
-        ParamType = ptInput
-      end
-      item
-        Name = 'inSaleInvNumber'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inSaleOperDate'
         Value = Null
         DataType = ftDateTime
         ParamType = ptInput
@@ -464,31 +476,28 @@ inherited EDIJournalForm: TEDIJournalForm
         ParamType = ptInput
       end
       item
-        Name = 'inOKPO'
+        Name = 'MovementId'
         Value = Null
-        DataType = ftString
-        ParamType = ptInput
       end
       item
-        Name = 'inJuridicalName'
-        Value = Null
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'outGoodsProperty'
+        Name = 'GoodsPropertyId'
         Value = Null
       end>
     Left = 168
     Top = 120
   end
-  object spList: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MI_EDI'
+  object spListOrder: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_EDIOrder'
     DataSets = <>
     OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsPropertyId'
         Value = Null
         ParamType = ptInput
       end
@@ -506,24 +515,6 @@ inherited EDIJournalForm: TEDIJournalForm
       end
       item
         Name = 'inAmountOrder'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAmountPartner'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPricePartner'
-        Value = Null
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inSummPartner'
         Value = Null
         DataType = ftFloat
         ParamType = ptInput
@@ -593,5 +584,105 @@ inherited EDIJournalForm: TEDIJournalForm
     ConnectionParams.Password = 'ftp349067'
     Left = 416
     Top = 32
+  end
+  object spHeaderComDoc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_EDIComdoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inOrderInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOrderOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSaleInvNumber'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSaleOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOKPO'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inJuridicalName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'MovementId'
+        Value = Null
+      end
+      item
+        Name = 'GoodsPropertyId'
+        Value = Null
+      end>
+    Left = 200
+    Top = 104
+  end
+  object spListComDoc: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_MI_EDIComDoc'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsPropertyId'
+        Value = Null
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsName'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGLNCode'
+        Value = Null
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAmountPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPricePartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inSummPartner'
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptInput
+      end>
+    Left = 192
+    Top = 160
   end
 end

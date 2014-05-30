@@ -81,6 +81,7 @@ type
     colIsError: TcxGridDBColumn;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
+    colCOMDOC: TcxGridDBColumn;
   private
     { Private declarations }
   public

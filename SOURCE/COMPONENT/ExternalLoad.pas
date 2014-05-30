@@ -61,14 +61,8 @@ begin
   with {File}TOpenDialog.Create(nil) do
   try
     InitialDir := InitializeDirectory;
-//    DefaultFolder := InitializeDirectory;
     DefaultExt := '*.dbf';
     Filter := '*.dbf';
-    {with FileTypes.Add do
-    begin
-      DisplayName := 'Файлы загрузки';
-      FileMask := '*.dbf';
-    end;}
     if Execute then begin
        InitializeDirectory := ExtractFilePath(FileName);
        Self.Open(FileName);
@@ -160,7 +154,16 @@ begin
   FDataSet := TVKSmartDBF.Create(nil);
   TVKSmartDBF(FDataSet).DBFFileName := FileName;
   TVKSmartDBF(FDataSet).OEM := FOEM;
-  FDataSet.Open;
+  try
+    FDataSet.Open;
+  except
+    on E: Exception do begin
+       if Pos('TVKSmartDBF.InternalOpen: Open error', E.Message) > -1 then
+          raise Exception.Create('Файл' + copy (E.Message, length('TVKSmartDBF.InternalOpen: Open error') + 1, MaxInt) + ' открыт другой программой. Закройте ее и попробуйте еще раз!')
+       else
+          raise Exception.Create(E.Message);
+    end;
+  end;
   First;
   FActive := FDataSet.Active;
 end;

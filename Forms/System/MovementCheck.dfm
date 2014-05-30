@@ -4,7 +4,7 @@ inherited MovementCheckForm: TMovementCheckForm
   ClientWidth = 854
   AddOnFormData.Params = FormParams
   ExplicitWidth = 862
-  ExplicitHeight = 402
+  ExplicitHeight = 395
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -76,6 +76,12 @@ inherited MovementCheckForm: TMovementCheckForm
       end
     end
   end
+  inherited MasterDS: TDataSource
+    Top = 72
+  end
+  inherited MasterCDS: TClientDataSet
+    Top = 72
+  end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_MovementCheck'
     Params = <
@@ -86,8 +92,10 @@ inherited MovementCheckForm: TMovementCheckForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
+    Top = 72
   end
   inherited BarManager: TdxBarManager
+    Top = 72
     DockControlHeights = (
       0
       0

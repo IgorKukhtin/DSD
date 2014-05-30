@@ -242,4 +242,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar) OWNER TO
 
 --select * from MovementItemContainer
 
-select * from gpReport_Goods(inStartDate := ('09.02.2014')::TDateTime , inEndDate := ('09.02.2014')::TDateTime , inGoodsId := 2153 ,  inSession := '5');
+--select * from gpReport_Goods(inStartDate := ('09.02.2014')::TDateTime , inEndDate := ('09.02.2014')::TDateTime , inGoodsId := 2153 ,  inSession := '5');

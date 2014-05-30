@@ -25,6 +25,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , RouteSortingId Integer, RouteSortingName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
+             , isCOMDOC Boolean
              , isError Boolean
               )
 AS
@@ -90,6 +91,7 @@ BEGIN
            , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
@@ -231,6 +233,10 @@ BEGIN
                                          ON MovementLinkObject_DocumentTaxKind_Master.MovementId = Movement_DocumentMaster.Id -- MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()
             LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id 
+                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
             ;
 
 END;
@@ -241,6 +247,7 @@ ALTER FUNCTION gpSelect_Movement_Sale (TDateTime, TDateTime, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.05.14                        * add isCOMDOC 
  17.05.14                                        * add MS_InvNumberPartner_Master - всегда
  03.05.14                                        * add ContractTagName
  24.04.14                                        * ... Movement_DocumentMaster.Id
