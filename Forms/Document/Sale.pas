@@ -99,6 +99,10 @@ type
     mactDECLAR: TMultiAction;
     bbDECLAR: TdxBarButton;
     actExecPrintStoredProc: TdsdExecStoredProc;
+    spEDIConnect: TdsdExecStoredProc;
+    spConnectWithEDI: TdsdStoredProc;
+    bbConnectWithComdoc: TdxBarButton;
+    cbCOMDOC: TcxCheckBox;
   private
     { Private declarations }
   public

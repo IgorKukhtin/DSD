@@ -106,7 +106,8 @@ begin
                   FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
                   FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
                   ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
-                  if ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007' then begin
+                  if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
+                    or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004') then begin
                      // загружаем в базенку
                      InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
                   end;
@@ -201,11 +202,10 @@ end;
 
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
   spList: TdsdStoredProc);
-var MovementId: Integer;
+var MovementId, GoodsPropertyId: Integer;
     i: integer;
 begin
   with spHeader, ORDER do begin
-    ParamByName('outid').Value := 0;
     ParamByName('inOrderInvNumber').Value := NUMBER;
     ParamByName('inOrderOperDate').Value  := VarToDateTime(DATE);
 
@@ -213,17 +213,16 @@ begin
     ParamByName('inGLN').Value := HEAD.BUYER;
 
     Execute;
-    MovementId := ParamByName('outid').Value;
+    MovementId := ParamByName('MovementId').Value;
+    GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
   end;
   for I := 0 to ORDER.HEAD.POSITION.Count - 1 do
      with spList, ORDER.HEAD.POSITION[i] do begin
          ParamByName('inMovementId').Value := MovementId;
+         ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
          ParamByName('inGoodsName').Value := CHARACTERISTIC.DESCRIPTION;
          ParamByName('inGLNCode').Value := PRODUCTIDBUYER;
          ParamByName('inAmountOrder').Value := gfStrToFloat(ORDEREDQUANTITY);
-         ParamByName('inAmountPartner').Value := 0;
-         ParamByName('inPricePartner').Value := gfStrToFloat(ORDERPRICE);
-         ParamByName('inSummPartner').Value := gfStrToFloat(ORDERPRICE) * gfStrToFloat(ORDEREDQUANTITY);
          Execute;
      end;
 end;
@@ -231,11 +230,10 @@ end;
 procedure TEDI.InsertUpdateComDoc(
   ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
   spHeader, spList: TdsdStoredProc);
-var MovementId: Integer;
+var MovementId, GoodsPropertyId: Integer;
     i: integer;
 begin
   with spHeader, ЕлектроннийДокумент do begin
-    ParamByName('outid').Value := 0;
     ParamByName('inOrderInvNumber').Value := Заголовок.НомерЗамовлення;
     if Заголовок.ДатаЗамовлення <> '' then
        ParamByName('inOrderOperDate').Value  := VarToDateTime(Заголовок.ДатаЗамовлення)
@@ -246,23 +244,23 @@ begin
 
     for i:= 0 to Сторони.Count - 1 do
         if Сторони.Контрагент[i].СтатусКонтрагента = 'Покупець' then begin
-           ParamByName('inGLN').Value := Сторони.Контрагент[i].GLN;
            ParamByName('inOKPO').Value := Сторони.Контрагент[i].КодКонтрагента;
            ParamByName('inJuridicalName').Value := Сторони.Контрагент[i].НазваКонтрагента;
         end;
      Execute;
-     MovementId := ParamByName('outid').Value;
+     MovementId := ParamByName('MovementId').Value;
+     GoodsPropertyId := StrToInt(ParamByName('GoodsPropertyId').asString);
   end;
   with spList, ЕлектроннийДокумент.Таблиця do
        for I := 0 to GetCount - 1 do begin
            with Рядок[i] do begin
              ParamByName('inMovementId').Value := MovementId;
+             ParamByName('inGoodsPropertyId').Value := GoodsPropertyId;
              ParamByName('inGoodsName').Value := Найменування;
              ParamByName('inGLNCode').Value := АртикулПокупця;
-             ParamByName('inAmountOrder').Value := 0;
              ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
-             ParamByName('inPricePartner').Value := gfStrToFloat(Ціна);
-             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.Сума);
+             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.СумаБезПДВ) + gfStrToFloat(ВсьогоПоРядку.СумаПДВ);
+             ParamByName('inPricePartner').Value := ParamByName('inSummPartner').Value / ParamByName('inAmountPartner').Value;
              Execute;
            end;
        end;
@@ -284,7 +282,9 @@ begin
          List := TStringList.Create;
          Stream := TStringStream.Create;
          FIdFTP.List(List, '' ,false);
-         with TGaugeFactory.GetGauge('Загрузка данных', 1, List.Count) do
+         if List.Count = 0 then
+            exit;
+         with TGaugeFactory.GetGauge('Загрузка данных', 0, List.Count) do
          try
            Start;
            for I := 0 to List.Count - 1 do begin

@@ -2,8 +2,8 @@ inherited SaleForm: TSaleForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'  ('#1074#1089#1077')>'
   ClientHeight = 668
   ClientWidth = 1115
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -285,9 +285,9 @@ inherited SaleForm: TSaleForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 218
+      ExplicitWidth = 161
       ExplicitHeight = 22
-      Width = 218
+      Width = 161
     end
     object cxLabel3: TcxLabel
       Left = 340
@@ -491,6 +491,13 @@ inherited SaleForm: TSaleForm
       Enabled = False
       TabOrder = 33
       Width = 114
+    end
+    object cbCOMDOC: TcxCheckBox
+      Left = 166
+      Top = 63
+      Caption = 'COMDOC'
+      TabOrder = 34
+      Width = 68
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -829,7 +836,7 @@ inherited SaleForm: TSaleForm
       ImageIndex = 67
     end
     object actExecPrintStoredProc: TdsdExecStoredProc
-      Category = 'EDI'
+      Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
       StoredProcList = <
@@ -837,6 +844,24 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectPrint
         end>
       Caption = 'actExecPrintStoredProc'
+    end
+    object spEDIConnect: TdsdExecStoredProc
+      Category = 'EDI'
+      MoveParams = <>
+      StoredProc = spConnectWithEDI
+      StoredProcList = <
+        item
+          StoredProc = spConnectWithEDI
+        end
+        item
+          StoredProc = spGet
+        end
+        item
+          StoredProc = spSelect
+        end>
+      Caption = 'EDIConnect'
+      Hint = #1057#1074#1103#1079#1072#1090#1100' '#1089' COMDOC '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1084
+      InfoAfterExecute = #1057#1074#1103#1079#1100' '#1089' COMDOC '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1084' '#1091#1089#1090#1072#1085#1086#1074#1083#1077#1085#1072'!'
     end
   end
   inherited MasterDS: TDataSource
@@ -993,6 +1018,10 @@ inherited SaleForm: TSaleForm
         end
         item
           Visible = True
+          ItemName = 'bbConnectWithComdoc'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end>
     end
@@ -1018,6 +1047,10 @@ inherited SaleForm: TSaleForm
     end
     object bbDECLAR: TdxBarButton
       Action = mactDECLAR
+      Category = 0
+    end
+    object bbConnectWithComdoc: TdxBarButton
+      Action = spEDIConnect
       Category = 0
     end
   end
@@ -1292,6 +1325,12 @@ inherited SaleForm: TSaleForm
         Value = ''
         Component = edTax
         DataType = ftString
+      end
+      item
+        Name = 'isCOMDOC'
+        Value = 'False'
+        Component = cbCOMDOC
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248
@@ -2156,5 +2195,20 @@ inherited SaleForm: TSaleForm
         DataType = ftFloat
       end>
     Left = 616
+  end
+  object spConnectWithEDI: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Movement_SaleLinkEDI'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inMovementId'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 592
+    Top = 96
   end
 end

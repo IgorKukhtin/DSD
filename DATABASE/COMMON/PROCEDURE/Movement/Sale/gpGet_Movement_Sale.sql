@@ -20,6 +20,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
+             , isCOMDOC Boolean
               )
 AS
 $BODY$
@@ -47,23 +48,24 @@ BEGIN
              , CAST (0 AS TFloat)                           AS TotalSummMVAT
              , CAST (0 AS TFloat)                           AS TotalSummPVAT
              , CAST (0 AS TFloat)                           AS TotalSumm
-             , 0                     				        AS FromId
-             , CAST ('' AS TVarChar) 				        AS FromName
-             , 0                     				        AS ToId
-             , CAST ('' AS TVarChar) 				        AS ToName
-             , 0                     				        AS PaidKindId
-             , CAST ('' AS TVarChar) 				        AS PaidKindName
-             , 0                     				        AS ContractId
-             , CAST ('' AS TVarChar) 				        AS ContractName
-             , 0                     				        AS RouteSortingId
-             , CAST ('' AS TVarChar) 				        AS RouteSortingName
-             , CAST ('' AS TVarChar) 				        AS InvNumberOrder
+             , 0                     		            AS FromId
+             , CAST ('' AS TVarChar)                        AS FromName
+             , 0                     			    AS ToId
+             , CAST ('' AS TVarChar) 			    AS ToName
+             , 0                     			    AS PaidKindId
+             , CAST ('' AS TVarChar) 			    AS PaidKindName
+             , 0                     			    AS ContractId
+             , CAST ('' AS TVarChar) 			    AS ContractName
+             , 0                     			    AS RouteSortingId
+             , CAST ('' AS TVarChar) 			    AS RouteSortingName
+             , CAST ('' AS TVarChar) 			    AS InvNumberOrder
              , CAST (0  AS INTEGER)                         AS PriceListId
-             , CAST ('' AS TVarChar) 				        AS PriceListName
-             , 0                     				        AS DocumentTaxKindId
-             , CAST ('' AS TVarChar) 				        AS DocumentTaxKindName
-             , 0                     				        AS MovementId_Master
-             , CAST ('' AS TVarChar) 				        AS InvNumberPartner_Master
+             , CAST ('' AS TVarChar) 			    AS PriceListName
+             , 0                     			    AS DocumentTaxKindId
+             , CAST ('' AS TVarChar) 			    AS DocumentTaxKindName
+             , 0                     			    AS MovementId_Master
+             , CAST ('' AS TVarChar) 			    AS InvNumberPartner_Master
+             , false                                        AS isCOMDOC
 
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
@@ -102,6 +104,7 @@ BEGIN
            , Object_TaxKind.ValueData         		    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -237,6 +240,10 @@ BEGIN
 
          LEFT JOIN Object AS Object_PriceList ON Object_PriceList.Id = COALESCE (MovementLinkObject_PriceList.ObjectId, COALESCE (COALESCE (COALESCE (COALESCE (ObjectLink_Partner_PriceListPromo.ChildObjectId, ObjectLink_Partner_PriceList.ChildObjectId),ObjectLink_Juridical_PriceListPromo.ChildObjectId),ObjectLink_Juridical_PriceList.ChildObjectId),zc_PriceList_Basis()))
 
+         LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                        ON MovementLinkMovement_Sale.MovementId = Movement.Id 
+                                       AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Sale();
      END IF;
@@ -250,6 +257,7 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 29.05.14                        * add isCOMDOC 
  17.05.14                                        * add Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master
  13.02.14                                                        * add DocumentChild, DocumentTaxKind

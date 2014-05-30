@@ -26,8 +26,8 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     EDIActionComdocLoad: TEDIAction;
-    spHeader: TdsdStoredProc;
-    spList: TdsdStoredProc;
+    spHeaderOrder: TdsdStoredProc;
+    spListOrder: TdsdStoredProc;
     bbLoadComDoc: TdxBarButton;
     Splitter: TcxSplitter;
     cxChildGrid: TcxGrid;
@@ -38,7 +38,7 @@ type
     colAmountPartner: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
     colPricePartner: TcxGridDBColumn;
-    colPrice: TcxGridDBColumn;
+    colGoodsKind: TcxGridDBColumn;
     spClient: TdsdStoredProc;
     ClientDS: TDataSource;
     ClientCDS: TClientDataSet;
@@ -58,6 +58,11 @@ type
     bbLoadOrder: TdxBarButton;
     colLoadJuridicalName: TcxGridDBColumn;
     colGLNPlaceCode: TcxGridDBColumn;
+    colIsOrder: TcxGridDBColumn;
+    colIsSale: TcxGridDBColumn;
+    colIsTax: TcxGridDBColumn;
+    spHeaderComDoc: TdsdStoredProc;
+    spListComDoc: TdsdStoredProc;
   private
     { Private declarations }
   public

@@ -1,6 +1,6 @@
 -- Function: gpSelect_Movement_ZakazInternal()
 
- DROP FUNCTION gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar);
+ DROP FUNCTION IF EXISTS gpSelect_Movement_EDI (TDateTime, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_EDI(
     IN inStartDate   TDateTime , --
