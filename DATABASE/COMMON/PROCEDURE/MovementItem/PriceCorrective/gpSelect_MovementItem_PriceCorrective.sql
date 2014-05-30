@@ -1,11 +1,12 @@
 -- Function: gpSelect_MovementItem_PriceCorrective()
 
  DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
     IN inMovementId  Integer      , -- ключ Документа
-    IN inPriceListId Integer      , -- ключ Прайс листа
+ --   IN inPriceListId Integer      , -- ключ Прайс листа
     IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --
@@ -37,7 +38,8 @@ BEGIN
            , tmpGoods.GoodsCode         AS GoodsCode
            , tmpGoods.GoodsName         AS GoodsName
            , CAST (NULL AS TFloat)      AS Amount
-           , CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           --, CAST (lfObjectHistory_PriceListItem.ValuePrice AS TFloat) AS Price
+           , CAST (NULL AS TFloat)      AS Price
            , CAST (NULL AS TFloat)      AS CountForPrice
            , Object_GoodsKind.Id        AS GoodsKindId
            , Object_GoodsKind.ValueData AS GoodsKindName
@@ -73,8 +75,8 @@ BEGIN
                       ) AS tmpMI ON tmpMI.GoodsId     = tmpGoods.GoodsId
                                 AND tmpMI.GoodsKindId = tmpGoods.GoodsKindId
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpGoods.GoodsKindId
-            LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
-                   AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
+            --LEFT JOIN lfSelect_ObjectHistory_PriceListItem (inPriceListId:= inPriceListId, inOperDate:= inOperDate)
+            --       AS lfObjectHistory_PriceListItem ON lfObjectHistory_PriceListItem.GoodsId = tmpGoods.GoodsId
 
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = tmpGoods.GoodsId
@@ -176,7 +178,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_MovementItem_PriceCorrective (Integer, TDateTime, Boolean, Boolean, TVarChar) OWNER TO postgres;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР

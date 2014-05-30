@@ -66,6 +66,7 @@ type
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
     procedure LoadProfitLossFormTest;
@@ -625,6 +626,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TTransferDebtInJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
+end;
+
+procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveJournalForm');
 end;
 
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;
