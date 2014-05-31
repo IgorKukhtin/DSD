@@ -91,6 +91,7 @@ BEGIN
 
        SELECT
              MovementItem.Id					AS Id
+           , MovementItem.ParentId              AS ParentId
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
