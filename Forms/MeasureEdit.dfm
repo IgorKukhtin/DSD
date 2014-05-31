@@ -1,7 +1,7 @@
 object MeasureEditForm: TMeasureEditForm
   Left = 0
   Top = 0
-  Caption = #1045#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1045#1076#1080#1085#1080#1094#1091' '#1080#1079#1084#1077#1088#1077#1085#1080#1103'>'
   ClientHeight = 139
   ClientWidth = 295
   Color = clBtnFace
@@ -24,8 +24,8 @@ object MeasureEditForm: TMeasureEditForm
   end
   object cxLabel1: TcxLabel
     Left = 10
-    Top = 49
-    Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1077#1076#1080#1085#1080#1094#1099' '#1080#1079#1084#1077#1088#1077#1085#1080#1103
+    Top = 54
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 41
@@ -64,6 +64,7 @@ object MeasureEditForm: TMeasureEditForm
     Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
@@ -72,9 +73,11 @@ object MeasureEditForm: TMeasureEditForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -83,6 +86,7 @@ object MeasureEditForm: TMeasureEditForm
       Caption = 'Ok'
     end
     object dsdFormClose: TdsdFormClose
+      MoveParams = <>
     end
   end
   object spInsertUpdate: TdsdStoredProc

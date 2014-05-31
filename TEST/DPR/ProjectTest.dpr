@@ -59,18 +59,18 @@ uses
   CommonData in '..\..\SOURCE\CommonData.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
-  GoodsKindEdit in '..\..\Forms\GoodsKindEdit.pas' {GoodsKindEditForm},
+  GoodsKindEdit in '..\..\Forms\Guides\GoodsKindEdit.pas' {GoodsKindEditForm},
   GoodsPropertyEdit in '..\..\Forms\GoodsPropertyEdit.pas' {GoodsPropertyEditForm},
   GoodsProperty in '..\..\Forms\GoodsProperty.pas' {GoodsPropertyForm},
   CurrencyEdit in '..\..\Forms\CurrencyEdit.pas' {CurencyEditForm},
-  GoodsGroupEdit in '..\..\Forms\GoodsGroupEdit.pas' {GoodsGroupEditForm},
+  GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm},
   PriceListEdit in '..\..\Forms\Guides\PriceListEdit.pas' {PriceListEditForm},
   PriceList_Object in '..\..\Forms\Guides\PriceList_Object.pas' {PriceList_ObjectForm},
   ParentForm in '..\..\SOURCE\ParentForm.pas' {ParentForm},
   dsdAction in '..\..\SOURCE\COMPONENT\dsdAction.pas',
-  GoodsKind in '..\..\Forms\GoodsKind.pas' {GoodsKindForm},
+  GoodsKind_Object in '..\..\Forms\Guides\GoodsKind_Object.pas' {GoodsKind_ObjectForm},
   Bank in '..\..\Forms\Bank.pas' {CurrencyForm},
-  GoodsGroup in '..\..\Forms\GoodsGroup.pas' {GoodsGroupForm},
+  GoodsGroup_Object in '..\..\Forms\Guides\GoodsGroup_Object.pas' {GoodsGroup_ObjectForm},
   GoodsKindWeighingTree in '..\..\Forms\Guides\GoodsKindWeighingTree.pas' {GoodsKindWeighingTreeForm},
   ToolsWeighingEdit in '..\..\Forms\Guides\ToolsWeighingEdit.pas' {ToolsWeighingEditForm},
   MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
@@ -339,7 +339,6 @@ uses
   Report_GoodsMI_TransferDebt in '..\..\Forms\Report\Report_GoodsMI_TransferDebt.pas' {Report_GoodsMI_TransferDebtForm: TParentForm},
   Report_JuridicalDefermentPayment in '..\..\Forms\Report\Report_JuridicalDefermentPayment.pas' {TReport_JuridicalDefermentPayment: TParentForm},
   PaidKind in '..\..\Forms\Kind\PaidKind.pas' {PaidKindForm: TParentForm},
-  UnitCarMember_Object in '..\..\Forms\Guides\UnitCarMember_Object.pas' {UnitCarMember_ObjectForm: TParentForm},
   Tax in '..\..\Forms\Document\Tax.pas' {TaxForm: TParentForm},
   TaxJournalSelect in '..\..\Forms\Document\TaxJournalSelect.pas' {TaxJournalSelectForm: TParentForm},
   GoodsFuel_Object in '..\..\Forms\Guides\GoodsFuel_Object.pas' {GoodsFuel_ObjectForm: TParentForm},
@@ -449,7 +448,9 @@ uses
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
   PriceCorrectiveJournal in '..\..\Forms\Document\PriceCorrectiveJournal.pas' {PriceCorrectiveJournalForm: TParentForm},
-  PriceCorrective in '..\..\Forms\Document\PriceCorrective.pas' {PriceCorrectiveForm: TParentForm};
+  PriceCorrective in '..\..\Forms\Document\PriceCorrective.pas' {PriceCorrectiveForm: TParentForm},
+  GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsKind in '..\..\Forms\Guides\GoodsKind.pas' {GoodsKindForm: TParentForm};
 
 {$R *.RES}
 

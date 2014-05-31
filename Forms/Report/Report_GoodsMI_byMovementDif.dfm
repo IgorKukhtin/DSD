@@ -662,9 +662,9 @@ inherited Report_GoodsMI_byMovementDifForm: TReport_GoodsMI_byMovementDifForm
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -684,8 +684,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Height = 87
     Align = alTop
     TabOrder = 5
-    ExplicitLeft = -56
-    ExplicitTop = 50
     object edGoodsGroup: TcxButtonEdit
       Left = 721
       Top = 9
@@ -796,8 +794,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -867,6 +865,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Top = 232
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -880,6 +879,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     end
     object actExportToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -888,6 +888,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     end
     object ExecuteDialog: TExecuteDialog
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
       Hint = #1044#1080#1072#1083#1086#1075' '#1091#1089#1090#1072#1085#1086#1074#1082#1080' '#1087#1072#1088#1072#1084#1077#1090#1088#1086#1074
       ImageIndex = 35
@@ -1029,6 +1030,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 216
     Top = 264
   end
@@ -1066,9 +1070,9 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edLocation
-    FormNameParam.Value = 'TUnitCarMember_ObjectForm'
+    FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitCarMember_ObjectForm'
+    FormName = 'TStoragePlace_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

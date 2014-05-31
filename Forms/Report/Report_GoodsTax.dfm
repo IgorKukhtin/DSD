@@ -272,6 +272,25 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
       Width = 225
     end
   end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end>
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
@@ -301,6 +320,7 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
         Name = 'inGoodsId'
         Value = ''
         Component = GoodsGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end>
     Left = 112
@@ -336,9 +356,9 @@ inherited Report_GoodsTaxForm: TReport_GoodsTaxForm
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoods
-    FormNameParam.Value = 'TGoodsFuel_ObjectForm'
+    FormNameParam.Value = 'TGoods_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsFuel_ObjectForm'
+    FormName = 'TGoods_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

@@ -1,5 +1,5 @@
 inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerForm
-  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1087#1088#1080#1093#1086#1076#1091' '#1090#1086#1074#1072#1088#1072' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')> '
+  Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1087#1086' '#1087#1086#1089#1090#1072#1074#1097#1080#1082#1072#1084')>'
   ClientHeight = 345
   ClientWidth = 978
   AddOnFormData.Params = FormParams
@@ -351,9 +351,9 @@ inherited Report_GoodsMI_IncomeByPartnerForm: TReport_GoodsMI_IncomeByPartnerFor
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

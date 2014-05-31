@@ -20,7 +20,7 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clUnit_infName: TcxGridDBColumn;
+    clDirectionDescName: TcxGridDBColumn;
     clDirectionName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
@@ -32,12 +32,14 @@ type
     clInvNumber: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
-    clPartnerName: TcxGridDBColumn;
+    clObjectByName: TcxGridDBColumn;
     clOperDatePartner: TcxGridDBColumn;
-    clPartnerCode: TcxGridDBColumn;
-    clAmountPartner: TcxGridDBColumn;
-    clOperPrice: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    clObjectByCode: TcxGridDBColumn;
+    clAmountStart: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    cxLabel4: TcxLabel;
+    edUnit: TcxButtonEdit;
+    UnitGuides: TdsdGuides;
   private
     { Private declarations }
   public

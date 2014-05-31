@@ -13,17 +13,17 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     Height = 259
     TabOrder = 3
     ExplicitTop = 80
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     ExplicitHeight = 259
     ClientRectBottom = 259
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1137
+      ExplicitWidth = 1020
       ExplicitHeight = 259
       inherited cxGrid: TcxGrid
         Width = 1020
         Height = 259
-        ExplicitWidth = 1137
+        ExplicitWidth = 1020
         ExplicitHeight = 259
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -318,7 +318,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   inherited Panel: TPanel
     Width = 1020
     Height = 54
-    ExplicitWidth = 1137
+    ExplicitWidth = 1020
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -542,9 +542,9 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item

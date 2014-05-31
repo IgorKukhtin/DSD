@@ -306,6 +306,8 @@ procedure TLoadFormTest.LoadGoodsGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
 end;
@@ -314,6 +316,8 @@ procedure TLoadFormTest.LoadGoodsKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKind_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindEditForm');
 end;
@@ -797,10 +801,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCarMember_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGUnitCarMember_ObjectForm');
-
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
