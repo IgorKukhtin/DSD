@@ -478,6 +478,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Top = 88
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 127
     Top = 287
     inherited actRefresh: TdsdDataSetRefresh
@@ -714,6 +715,44 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' '#1087#1086' '#1084#1072#1089#1082#1077
       ImageIndex = 54
     end
+    object InsertRecordChild: TInsertRecord
+      Category = 'DSDLib'
+      MoveParams = <>
+      View = cxGridDBTableView
+      Action = GoodsChoiceForm
+      Params = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+      ShortCut = 45
+      ImageIndex = 0
+    end
+    object GoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsChoiceForm'
+      FormName = 'TGoodsForm'
+      FormNameParam.Name = 'TGoodsForm'
+      FormNameParam.Value = 'TGoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ChildCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'Code'
+          Component = ChildCDS
+          ComponentItem = 'GoodsCode'
+        end
+        item
+          Name = 'TextValue'
+          Component = ChildCDS
+          ComponentItem = 'GoodsName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
   end
   inherited MasterDS: TDataSource
     Left = 752
@@ -871,6 +910,11 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object bbAddMask: TdxBarButton
       Action = actAddMask
       Category = 0
+      Visible = ivNever
+    end
+    object bbAddChild: TdxBarButton
+      Category = 0
+      Visible = ivAlways
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -944,8 +988,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
     Params = <>
-    Left = 192
-    Top = 80
+    Left = 200
+    Top = 48
   end
   object spChangeStatus: TdsdStoredProc
     DataSets = <>
@@ -965,8 +1009,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 160
-    Top = 80
+    Left = 168
+    Top = 48
   end
   object spGet: TdsdStoredProc
     DataSets = <>

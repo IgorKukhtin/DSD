@@ -18,6 +18,9 @@ type
   TProductionSeparateForm = class(TAncestorDocumentMCForm)
     cePartionGoods: TcxTextEdit;
     cxLabel10: TcxLabel;
+    actUpdateChildDS: TdsdUpdateDataSet;
+    colHeadCount: TcxGridDBColumn;
+    ColChildHeadCount: TcxGridDBColumn;
   private
     { Private declarations }
   public

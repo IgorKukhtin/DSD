@@ -71,6 +71,9 @@ type
     colGoodsCode: TcxGridDBColumn;
     colGoodsName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
+    bbAddChild: TdxBarButton;
+    InsertRecordChild: TInsertRecord;
+    GoodsChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public

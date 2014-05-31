@@ -280,6 +280,25 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpSelect_Object_Receipt.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpGet_Object_Receipt.sql', ZQuery);
 
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StreetKind\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Street\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Region\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ProvinceCity\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Province\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContactPersonKind\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContactPerson\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\City\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\CityKind\';
+  ProcedureLoad;
+
 end;
 
 procedure TdbProcedureTest.CreatePeriodCloseProcedure;
