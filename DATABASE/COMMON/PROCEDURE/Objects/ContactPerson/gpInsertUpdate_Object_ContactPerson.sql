@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_ContactPerson  (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar)
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ContactPerson (Integer,Integer,TVarChar,TVarChar,TVarChar,TVarChar,Integer,Integer,Integer,Integer,TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
  INOUT ioId                       Integer   ,    -- ключ объекта < Улица/проспект> 
@@ -9,7 +10,9 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ContactPerson(
     IN inPhone                    TVarChar  ,    -- 
     IN inMail                     TVarChar  ,    --
     IN inComment                  TVarChar  ,    --
-    IN inObjectId                 Integer   ,    --          
+    IN inPartnerId                Integer   ,    --   
+    IN inJuridicalId              Integer   ,    -- 
+    IN inContractId               Integer   ,    -- 
     IN inContactPersonKindId      Integer   ,    --
     IN inSession                  TVarChar       -- сессия пользователя
 )
@@ -42,8 +45,13 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ContactPerson_Comment(), ioId, inComment);
 
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Object(), ioId, inObjectId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Partner(), ioId, inPartnerId);
    -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Juridical(), ioId, inJuridicalId);
+   -- сохранили связь с <>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_Contract(), ioId, inContractId);
+
+  -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ContactPerson_ContactPersonKind(), ioId, inContactPersonKindId);
    
    -- сохранили протокол

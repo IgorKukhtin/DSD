@@ -682,9 +682,19 @@ CREATE OR REPLACE FUNCTION zc_ObjectLink_Street_ProvinceCity() RETURNS Integer A
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
   SELECT 'zc_ObjectLink_Street_ProvinceCity', 'Ссылка на Район в населенном пункте', zc_Object_Street(), zc_Object_ProvinceCity() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_Street_ProvinceCity');
 
-CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Object() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Object'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Partner() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Partner'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
-  SELECT 'zc_ObjectLink_ContactPerson_Object', 'Ссылка на объект', zc_Object_ContactPerson(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Object');
+  SELECT 'zc_ObjectLink_ContactPerson_Partner', 'Ссылка на Контрагента', zc_Object_ContactPerson(), zc_Object_Partner() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Partner');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Juridicalt() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Juridical'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContactPerson_Juridical', 'Ссылка на Юр.лицо', zc_Object_ContactPerson(), zc_Object_Juridical() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Juridical');
+
+CREATE OR REPLACE FUNCTION zc_ObjectLink_ContactPerson_Contract() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Contract'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO ObjectLinkDesc(Code, ItemName, DescId, ChildObjectDescId)
+  SELECT 'zc_ObjectLink_ContactPerson_Contract', 'Ссылка на Договор', zc_Object_ContactPerson(), zc_Object_Contract() WHERE NOT EXISTS (SELECT * FROM ObjectLinkDesc WHERE Code = 'zc_ObjectLink_ContactPerson_Contract');
+
+
 
 CREATE OR REPLACE FUNCTION zc_ContactPersonKindLink_ContactPerson_ContactPersonKind() RETURNS Integer AS $BODY$BEGIN  RETURN (SELECT Id FROM ContactPersonKindLinkDesc WHERE Code = 'zc_ContactPersonKindLink_ContactPerson_ContactPersonKind'); END; $BODY$  LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO ContactPersonKindLinkDesc(Code, ItemName, DescId, ChildContactPersonKindDescId)
@@ -724,6 +734,7 @@ SELECT 'zc_ObjectLink_Protocol_Update', '<Пользователь (корректировка)>', zc_Obj
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 31.05.14         * add
  25.04.14         * add св-ва для zc_Object_BankAccountContract
  25.03.14                                                        * + zc_Object_GoodsKindWeighingGroup
  21.03.14                                                        * + zc_ObjectLink_GoodsKindWeighing_GoodsKind
