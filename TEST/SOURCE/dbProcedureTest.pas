@@ -78,6 +78,11 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpInsertUpdate_MI_ZakazInternal.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpSelect_MI_ZakazInternal.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpSelect_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\lpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetErased.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetUnErased.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;

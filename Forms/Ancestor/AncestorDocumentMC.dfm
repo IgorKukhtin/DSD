@@ -939,6 +939,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   object StatusGuides: TdsdGuides
     KeyField = 'Id'
+    LookupControl = ceStatus
     FormNameParam.Value = ''
     FormNameParam.DataType = ftString
     PositionDataSet = 'ClientDataSet'
@@ -969,7 +970,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   object spGet: TdsdStoredProc
     DataSets = <>
-    OutputType = otResult
     Params = <
       item
         Name = 'inMovementId'
@@ -1345,6 +1345,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edTo
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
@@ -1366,10 +1367,11 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ParamType = ptInput
       end>
     Left = 544
-    Top = 32
+    Top = 16
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'
+    LookupControl = edFrom
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
@@ -1391,7 +1393,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ParamType = ptInput
       end>
     Left = 296
-    Top = 32
+    Top = 8
   end
   object spInsertUpdateMIChild: TdsdStoredProc
     DataSets = <>

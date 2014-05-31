@@ -389,6 +389,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbPriceCorrective'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTaxDocuments_Separator'
+        end
+        item
+          Visible = True
           ItemName = 'bbReport_GoodsMI_TransferDebtIn'
         end
         item
@@ -1598,6 +1606,10 @@ object MainForm: TMainForm
     end
     object bbRetail: TdxBarButton
       Action = actRetail
+      Category = 0
+    end
+    object bbPriceCorrective: TdxBarButton
+      Action = actPriceCorrective
       Category = 0
     end
   end
@@ -3282,6 +3294,17 @@ object MainForm: TMainForm
       Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1091
       FormName = 'TReport_GoodsForm'
       FormNameParam.Value = 'TReport_GoodsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPriceCorrective: TdsdOpenForm
+      Category = #1053#1072#1083#1086#1075#1086#1074#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099
+      FormName = 'TPriceCorrectiveJournalForm'
+      FormNameParam.Name = 'TPriceCorrectiveJournalForm'
+      FormNameParam.Value = 'TPriceCorrectiveJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

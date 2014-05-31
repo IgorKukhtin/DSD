@@ -96,4 +96,4 @@ ALTER FUNCTION gpGet_Movement_ProductionSeparate (Integer, TDateTime, TVarChar) 
 */
 
 -- тест
--- SELECT * FROM gpGet_Movement_ProductionSeparate (inId:= 1, inSession:= '2')
+ SELECT * FROM gpGet_Movement_ProductionSeparate (inMovementId := 0, inOperDate := '01.01.2014', inSession:= '2')
