@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Object_City()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_City (Integer, Integer, TVarChar Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_City (Integer, Integer, TVarChar, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_City (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_City(
  INOUT ioId             Integer   ,     -- ключ объекта <Город>
@@ -47,7 +48,7 @@ BEGIN
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_City (Integer, Integer, TVarChar Integer, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_City (Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/
