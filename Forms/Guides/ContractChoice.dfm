@@ -3,8 +3,8 @@ inherited ContractChoiceForm: TContractChoiceForm
   ClientHeight = 496
   ClientWidth = 853
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 869
-  ExplicitHeight = 531
+  ExplicitWidth = 861
+  ExplicitHeight = 530
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -253,6 +253,17 @@ inherited ContractChoiceForm: TContractChoiceForm
           Component = MasterCDS
           ComponentItem = 'ChangePercent'
           DataType = ftFloat
+        end
+        item
+          Name = 'JuridicalBasisId'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalBasisId'
+        end
+        item
+          Name = 'JuridicalBasisName'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalBasisName'
+          DataType = ftString
         end>
     end
     object actShowAll: TBooleanStoredProcAction

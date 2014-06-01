@@ -232,6 +232,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object edTo: TcxButtonEdit
       Left = 594
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
@@ -288,7 +289,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     object edContract: TcxButtonEdit
       Left = 692
-      Top = 63
+      Top = 68
       Enabled = False
       Properties.Buttons = <
         item
@@ -1370,6 +1371,19 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Name = 'MasterJuridicalName'
         Value = ''
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
     Left = 456
     Top = 16
@@ -1377,23 +1391,19 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
+    FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
