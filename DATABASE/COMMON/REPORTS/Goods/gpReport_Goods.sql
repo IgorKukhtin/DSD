@@ -64,7 +64,7 @@ BEGIN
                                                         THEN MIContainer.Amount
                                                    ELSE 0
                                               END) AS Amount_Period
-                                       , SUM (MIContainer.Amount) AS Amount_Total
+                                       , COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Total
                                   FROM tmpContainer_Count
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
@@ -109,7 +109,7 @@ BEGIN
                                                        THEN MIContainer.Amount
                                                   ELSE 0
                                              END) AS Amount_Period
-                                      , SUM (MIContainer.Amount) AS Amount_Total
+                                      , COALESCE (SUM (MIContainer.Amount), 0) AS Amount_Total
                                  FROM tmpContainer_Summ
                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
                                                                                     AND MIContainer.OperDate >= inStartDate
@@ -149,7 +149,7 @@ BEGIN
         , CAST (CASE WHEN tmpMIContainer_group.MovementId = -1 AND tmpMIContainer_group.AmountStart <> 0
                           THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountStart
                      WHEN tmpMIContainer_group.MovementId = -2 AND tmpMIContainer_group.AmountEnd <> 0
-                          THEN tmpMIContainer_group.SummStart / tmpMIContainer_group.AmountEnd
+                          THEN tmpMIContainer_group.SummEnd / tmpMIContainer_group.AmountEnd
                      WHEN tmpMIContainer_group.AmountIn <> 0
                           THEN tmpMIContainer_group.SummIn / tmpMIContainer_group.AmountIn
                      WHEN tmpMIContainer_group.AmountOut <> 0
@@ -240,6 +240,7 @@ BEGIN
                    , 0 AS SummIn
                    , 0 AS SummOut
               FROM tmpMIContainer_Count
+              WHERE tmpMIContainer_Count.Amount_Period <> 0
              UNION ALL
               SELECT -1 AS MovementId
                    , 0 AS MovementItemId
@@ -302,6 +303,7 @@ BEGIN
                    , CASE WHEN tmpMIContainer_Summ.Amount_Period > 0 THEN tmpMIContainer_Summ.Amount_Period ELSE 0 END AS SummIn
                    , CASE WHEN tmpMIContainer_Summ.Amount_Period < 0 THEN -1 * tmpMIContainer_Summ.Amount_Period ELSE 0 END AS SummOut
               FROM tmpMIContainer_Summ
+              WHERE tmpMIContainer_Summ.Amount_Period <> 0
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.MovementId
                 , tmpMIContainer_all.MovementItemId

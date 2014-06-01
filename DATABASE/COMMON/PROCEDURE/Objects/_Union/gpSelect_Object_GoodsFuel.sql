@@ -11,13 +11,11 @@ AS
 $BODY$
   DECLARE vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- vbUserId := PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Object_GoodsFuel());
-     vbUserId := inSession;
+     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
-       
+       WITH tmpUserTransport AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Transport())
      SELECT Object_Goods.Id
           , Object_Goods.ObjectCode AS Code
           , Object_Goods.ValueData AS Name
@@ -33,11 +31,12 @@ BEGIN
                            ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
                           AND Object_GoodsGroup.DescId = zc_Object_GoodsGroup()
          
-           JOIN ObjectLink AS ObjectLink_Goods_Fuel
+          LEFT JOIN ObjectLink AS ObjectLink_Goods_Fuel
                                ON ObjectLink_Goods_Fuel.ObjectId = Object_Goods.Id 
                               AND ObjectLink_Goods_Fuel.DescId = zc_ObjectLink_Goods_Fuel()
-                              AND COALESCE ( ObjectLink_Goods_Fuel.ChildObjectId,0)=0
-     WHERE Object_Goods.DescId = Zc_Object_Goods()
+     WHERE Object_Goods.DescId = zc_Object_Goods()
+       AND (COALESCE (ObjectLink_Goods_Fuel.ChildObjectId,0) = 0
+         OR vbUserId NOT IN (SELECT UserId FROM tmpUserTransport))
    UNION ALL
      SELECT Object_Fuel.Id
           , Object_Fuel.ObjectCode AS Code     
@@ -59,6 +58,7 @@ ALTER FUNCTION gpSelect_Object_GoodsFuel (TVarChar) OWNER TO postgres;
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 31.05.14                                        * add tmpUserTransport
  10.02.14         *
 
 */
