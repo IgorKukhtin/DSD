@@ -695,7 +695,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetEditForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

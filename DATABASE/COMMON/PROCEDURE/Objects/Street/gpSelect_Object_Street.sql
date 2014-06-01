@@ -68,7 +68,7 @@ BEGIN
             LEFT JOIN Object_Personal_View AS View_ProvinceCity ON View_ProvinceCity.PersonalId = ObjectLink_Street_ProvinceCity.ChildObjectId
             
      WHERE Object_Street.DescId = zc_Object_Street()
-       AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
+      -- AND (tmpRoleAccessKey.AccessKeyId IS NOT NULL OR vbAccessKeyAll)
     ;
 
 END;

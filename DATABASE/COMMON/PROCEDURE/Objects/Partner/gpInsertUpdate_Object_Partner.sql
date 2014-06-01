@@ -1,14 +1,20 @@
 -- Function: gpInsertUpdate_Object_Partner()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    OUT outPartnerName        TVarChar  ,    -- ключ объекта <Контрагент> 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
-    IN inAddress             TVarChar  ,    -- Адрес точки доставки
+    IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
+    IN inAddress             TVarChar  ,    -- Адрес точки доставки
+    IN inHouseNumber         TVarChar  ,    -- Номер дома
+    IN inCaseNumber          TVarChar  ,    -- Номер корпуса
+    IN inRoomNumber          TVarChar  ,    -- Номер квартиры
+    IN inStreetId            Integer   ,    -- Улица/проспект  
     IN inPrepareDayCount     TFloat    ,    -- За сколько дней принимается заказ
     IN inDocumentDayCount    TFloat    ,    -- Через сколько дней оформляется документально
     IN inJuridicalId         Integer   ,    -- Юридическое лицо
@@ -57,14 +63,24 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Partner(), vbCode, outPartnerName);
+   -- сохранили свойство <краткое наименование>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_ShortName(), ioId, inShortName);
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <Адрес точки доставки>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
+   -- сохранили свойство <дом>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
+   -- сохранили свойство <корпус>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_CaseNumber(), ioId, inCaseNumber);
+   -- сохранили свойство <квартира>
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_RoomNumber(), ioId, inRoomNumber);
+
    -- сохранили свойство <За сколько дней принимается заказ>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_PrepareDayCount(), ioId, inPrepareDayCount);
    -- сохранили свойство <Через сколько дней оформляется документально>
    PERFORM lpInsertUpdate_ObjectFloat( zc_ObjectFloat_Partner_DocumentDayCount(), ioId, inDocumentDayCount);
+   
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Juridical(), ioId, inJuridicalId);
    -- сохранили связь с <Маршруты>
@@ -73,6 +89,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_RouteSorting(), ioId, inRouteSortingId);
    -- сохранили связь с <Сотрудник (экспедитор)>
    PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_PersonalTake(), ioId, inPersonalTakeId);
+   -- сохранили связь с <Улица>
+   PERFORM lpInsertUpdate_ObjectLink( zc_ObjectLink_Partner_Street(), ioId, inStreetId);
 
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Partner_PriceList(), ioId, inPriceListId);
@@ -91,12 +109,14 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 01.06.14         * add ShortName,
+                        HouseNumber, CaseNumber, RoomNumber, Street
  24.04.14                                        * add outPartnerName
  12.01.14         * add PriceList,
                         PriceListPromo,
