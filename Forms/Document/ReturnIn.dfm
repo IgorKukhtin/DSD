@@ -265,12 +265,12 @@ inherited ReturnInForm: TReturnInForm
       Width = 223
     end
     object cxLabel3: TcxLabel
-      Left = 540
+      Left = 525
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
-      Left = 540
+      Left = 525
       Top = 23
       Properties.Buttons = <
         item
@@ -278,7 +278,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 5
-      Width = 117
+      Width = 132
     end
     object edFrom: TcxButtonEdit
       Left = 344
@@ -289,7 +289,7 @@ inherited ReturnInForm: TReturnInForm
           Kind = bkEllipsis
         end>
       TabOrder = 6
-      Width = 190
+      Width = 170
     end
     object cxLabel4: TcxLabel
       Left = 344
@@ -338,7 +338,7 @@ inherited ReturnInForm: TReturnInForm
       Width = 129
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 494
+      Left = 474
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -346,21 +346,21 @@ inherited ReturnInForm: TReturnInForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 494
+      Left = 474
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object edChangePercent: TcxCurrencyEdit
-      Left = 540
+      Left = 525
       Top = 63
       Enabled = False
       Properties.DecimalPlaces = 3
       Properties.DisplayFormat = ',0.###'
       TabOrder = 19
-      Width = 117
+      Width = 132
     end
     object cxLabel8: TcxLabel
-      Left = 476
+      Left = 525
       Top = 45
       Caption = '(-)% '#1057#1082#1080#1076' (+)% '#1053#1072#1094
     end
@@ -1801,8 +1801,8 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 515
-    Top = 12
+    Left = 587
+    Top = 4
   end
   object GuidesFrom: TdsdGuides
     KeyField = 'Id'

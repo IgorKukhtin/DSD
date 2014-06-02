@@ -2,8 +2,8 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1028
-  ExplicitHeight = 569
+  ExplicitWidth = 1036
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -417,25 +417,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       FormName = 'TPriceCorrectiveForm'
       FormNameParam.Value = 'TPriceCorrectiveForm'
     end
-    object actTaxCorrective: TdsdExecStoredProc [9]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spTaxCorrective
-      StoredProcList = <
-        item
-          StoredProc = spTaxCorrective
-        end>
-      Caption = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
-      Hint = #1057#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>'
-      ImageIndex = 41
-      QuestionBeforeExecute = 
-        #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1089#1092#1086#1088#1084#1080#1088#1086#1074#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089 +
-        ' '#1087#1088#1080#1074#1103#1079#1082#1086#1081')>?'
-      InfoAfterExecute = 
-        #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
-        #1080#1074#1103#1079#1082#1086#1081')>.'
-    end
-    object actCorrective: TdsdExecStoredProc [10]
+    object actCorrective: TdsdExecStoredProc [9]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spCorrective
@@ -453,7 +435,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [12]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -495,7 +477,7 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [14]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -689,14 +671,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
         end
         item
           Visible = True
-          ItemName = 'bbTaxCorrective'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
           ItemName = 'bbCorrective'
         end
         item
@@ -754,10 +728,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     end
     object bbPrint: TdxBarButton
       Action = mactPrint
-      Category = 0
-    end
-    object bbTaxCorrective: TdxBarButton
-      Action = actTaxCorrective
       Category = 0
     end
     object bbCorrective: TdxBarButton

@@ -44,7 +44,6 @@ type
     PrintHeaderCDS: TClientDataSet;
     bbPrintTaxCorrective_Client: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
-    bbTaxCorrective: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
