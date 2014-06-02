@@ -125,7 +125,7 @@
 			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdGuides.pas"/>
 			<DCCReference Include="..\..\SOURCE\FormStorage.pas"/>
-			<DCCReference Include="..\..\Forms\GoodsKindEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\GoodsKindEdit.pas">
 				<Form>GoodsKindEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\GoodsPropertyEdit.pas">
@@ -137,7 +137,7 @@
 			<DCCReference Include="..\..\Forms\CurrencyEdit.pas">
 				<Form>CurencyEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsGroupEdit.pas">
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupEdit.pas">
 				<Form>GoodsGroupEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PriceListEdit.pas">
@@ -150,14 +150,14 @@
 				<Form>ParentForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\dsdAction.pas"/>
-			<DCCReference Include="..\..\Forms\GoodsKind.pas">
-				<Form>GoodsKindForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKind_Object.pas">
+				<Form>GoodsKind_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Bank.pas">
 				<Form>CurrencyForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\GoodsGroup.pas">
-				<Form>GoodsGroupForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroup_Object.pas">
+				<Form>GoodsGroup_ObjectForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\GoodsKindWeighingTree.pas">
 				<Form>GoodsKindWeighingTreeForm</Form>
@@ -956,10 +956,6 @@
 				<Form>PaidKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\UnitCarMember_Object.pas">
-				<Form>UnitCarMember_ObjectForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\Tax.pas">
 				<Form>TaxForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -1319,6 +1315,30 @@
 			<DCCReference Include="..\..\Forms\Document\ProductionSeparate.pas">
 				<Form>ProductionSeparateForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PriceCorrectiveJournal.pas">
+				<Form>PriceCorrectiveJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\PriceCorrective.pas">
+				<Form>PriceCorrectiveForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsKind.pas">
+				<Form>GoodsKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Street.pas">
+				<Form>StreetForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StreetEdit.pas">
+				<Form>StreetEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

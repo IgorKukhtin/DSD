@@ -1,4 +1,4 @@
-unit UnitCarMember_Object;
+unit Street;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TUnitCarMember_ObjectForm = class(TParentForm)
+  TStreetForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -35,20 +35,26 @@ type
     dxBarManager: TdxBarManager;
     dxBarManagerBar1: TdxBar;
     bbRefresh: TdxBarButton;
+    bbInsert: TdxBarButton;
+    bbEdit: TdxBarButton;
+    bbErased: TdxBarButton;
+    bbUnErased: TdxBarButton;
     bbGridToExcel: TdxBarButton;
     dxBarStatic: TdxBarStatic;
     bbChoiceGuides: TdxBarButton;
     ActionList: TActionList;
     actRefresh: TdsdDataSetRefresh;
+    actInsert: TdsdInsertUpdateAction;
+    actUpdate: TdsdInsertUpdateAction;
+    dsdSetErased: TdsdUpdateErased;
+    dsdSetUnErased: TdsdUpdateErased;
     dsdGridToExcel: TdsdGridToExcel;
     dsdStoredProc: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     clErased: TcxGridDBColumn;
+    spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clDescName: TcxGridDBColumn;
-    FormParams: TdsdFormParams;
-
   private
     { Private declarations }
   public
@@ -59,7 +65,6 @@ type
 implementation
 
 {$R *.dfm}
-
 initialization
-  RegisterClass(TUnitCarMember_ObjectForm);
+  RegisterClass(TStreetForm);
 end.

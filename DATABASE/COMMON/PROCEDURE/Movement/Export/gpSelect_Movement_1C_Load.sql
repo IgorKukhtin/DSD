@@ -228,6 +228,10 @@ BEGIN
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+        AND 0 <> CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                           THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                      ELSE MIMaster.Amount
+                 END
      ;
 
 END;
@@ -238,6 +242,7 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 30.05.14                                        * add 0 <> 
  19.05.14                                        * all
  14.05.14                         *
 */

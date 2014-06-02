@@ -194,7 +194,7 @@ BEGIN
                                                         ON MB_Registered.MovementId = Movement.Id
                                                        AND MB_Registered.DescId = zc_MovementBoolean_Registered()
                          WHERE MLO_Partner.ObjectId = vbPartnerId
-                           AND MLO_Partner.DescId = zc_MovementLinkObject_To()
+                           AND MLO_Partner.DescId IN (zc_MovementLinkObject_To(), zc_MovementLinkObject_Partner())
                          GROUP BY Movement.Id
                                 , Movement.OperDate
                                 , MB_Registered.ValueData
@@ -434,6 +434,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 29.05.14                                        * add zc_MovementLinkObject_Partner
  20.05.14                                        * add zc_Movement_TransferDebtIn
  10.05.14                                        * add lpComplete_Movement_TaxCorrective
  01.05.14                                        * add lpInsertFind_Object_InvNumberTax

@@ -1,7 +1,7 @@
-object GoodsKindForm: TGoodsKindForm
+object GoodsGroupForm: TGoodsGroupForm
   Left = 0
   Top = 0
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1042#1080#1076#1099' '#1090#1086#1074#1072#1088#1072'>'
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1043#1088#1091#1087#1087#1099' '#1090#1086#1074#1072#1088#1086#1074'>'
   ClientHeight = 376
   ClientWidth = 390
   Color = clBtnFace
@@ -17,69 +17,71 @@ object GoodsKindForm: TGoodsKindForm
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   PixelsPerInch = 96
   TextHeight = 13
-  object cxGrid: TcxGrid
+  object cxDBTreeList: TcxDBTreeList
     Left = 0
     Top = 26
     Width = 390
     Height = 350
     Align = alClient
-    TabOrder = 0
-    object cxGridDBTableView: TcxGridDBTableView
-      Navigator.Buttons.CustomButtons = <>
-      DataController.DataSource = DataSource
-      DataController.Filter.Options = [fcoCaseInsensitive]
-      DataController.Filter.Active = True
-      DataController.Summary.DefaultGroupSummaryItems = <>
-      DataController.Summary.FooterSummaryItems = <>
-      DataController.Summary.SummaryGroups = <>
-      Images = dmMain.SortImageList
-      OptionsBehavior.IncSearch = True
-      OptionsBehavior.IncSearchItem = clName
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsData.Deleting = False
-      OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
-      OptionsData.Inserting = False
-      OptionsView.ColumnAutoWidth = True
-      OptionsView.GroupByBox = False
-      OptionsView.HeaderHeight = 40
-      OptionsView.Indicator = True
-      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-      object clCode: TcxGridDBColumn
-        Caption = #1050#1086#1076
-        DataBinding.FieldName = 'Code'
-        HeaderAlignmentHorz = taRightJustify
-        HeaderAlignmentVert = vaCenter
-        Width = 45
-      end
-      object clName: TcxGridDBColumn
-        Caption = #1053#1072#1079#1074#1072#1085#1080#1077
-        DataBinding.FieldName = 'Name'
-        HeaderAlignmentVert = vaCenter
-        Width = 252
-      end
-      object clErased: TcxGridDBColumn
-        Caption = #1059#1076#1072#1083#1077#1085
-        DataBinding.FieldName = 'isErased'
-        HeaderAlignmentHorz = taCenter
-        HeaderAlignmentVert = vaCenter
-        Width = 60
-      end
+    Bands = <
+      item
+      end>
+    DataController.DataSource = DataSource
+    DataController.ParentField = 'ParentId'
+    DataController.KeyField = 'Id'
+    Images = dmMain.TreeImageList
+    Navigator.Buttons.CustomButtons = <>
+    OptionsBehavior.IncSearch = True
+    OptionsCustomizing.ColumnHiding = True
+    OptionsCustomizing.ColumnsQuickCustomization = True
+    OptionsData.Editing = False
+    OptionsData.Deleting = False
+    OptionsView.ColumnAutoWidth = True
+    OptionsView.HeaderAutoHeight = True
+    OptionsView.Indicator = True
+    RootValue = -1
+    Styles.StyleSheet = dmMain.cxTreeListStyleSheet
+    TabOrder = 4
+    object cxDBTreeList1cxDBTreeListColumn2: TcxDBTreeListColumn
+      Caption.Text = #1053#1072#1079#1074#1072#1085#1080#1077
+      DataBinding.FieldName = 'Name'
+      Width = 226
+      Position.ColIndex = 0
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
     end
-    object cxGridLevel: TcxGridLevel
-      GridView = cxGridDBTableView
+    object cxDBTreeListcxDBTreeListColumn1: TcxDBTreeListColumn
+      Caption.Text = #1050#1086#1076
+      DataBinding.FieldName = 'Code'
+      Position.ColIndex = 1
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
+    end
+    object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
+      PropertiesClassName = 'TcxCheckBoxProperties'
+      Caption.Text = #1059#1076#1072#1083#1077#1085
+      DataBinding.FieldName = 'isErased'
+      Position.ColIndex = 2
+      Position.RowIndex = 0
+      Position.BandIndex = 0
+      Summary.FooterSummaryItems = <>
+      Summary.GroupFooterSummaryItems = <>
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 24
-    Top = 88
+    Left = 96
+    Top = 96
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 16
-    Top = 136
+    Left = 96
+    Top = 144
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
@@ -93,14 +95,14 @@ object GoodsKindForm: TGoodsKindForm
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
-    Left = 272
+    Left = 232
     Top = 96
   end
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -113,8 +115,8 @@ object GoodsKindForm: TGoodsKindForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 176
-    Top = 120
+    Left = 152
+    Top = 88
     DockControlHeights = (
       0
       0
@@ -142,33 +144,32 @@ object GoodsKindForm: TGoodsKindForm
         end
         item
           Visible = True
-          ItemName = 'bbErased'
+          ItemName = 'bbSetErased'
         end
         item
           Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbSetUnErased'
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'dxBarStatic1'
+        end
+        item
           Visible = True
           ItemName = 'bbRefresh'
         end
         item
           Visible = True
-          ItemName = 'bbGridToExcel'
+          ItemName = 'dxBarStatic1'
         end
         item
           Visible = True
-          ItemName = 'dxBarStatic'
+          ItemName = 'bbChoiceGuides'
         end
         item
-          BeginGroup = True
           Visible = True
-          ItemName = 'bbChoiceGuide'
+          ItemName = 'dxBarStatic1'
         end>
       OneOnRow = True
       Row = 0
@@ -191,37 +192,34 @@ object GoodsKindForm: TGoodsKindForm
       Category = 0
       ImageIndex = 1
     end
-    object bbErased: TdxBarButton
+    object bbSetErased: TdxBarButton
       Action = dsdSetErased
       Category = 0
       ImageIndex = 2
     end
-    object bbUnErased: TdxBarButton
+    object bbSetUnErased: TdxBarButton
       Action = dsdSetUnErased
       Category = 0
       ImageIndex = 8
     end
-    object dxBarStatic: TdxBarStatic
-      Caption = '      '
-      Category = 0
-      Hint = '      '
-      Visible = ivAlways
-    end
-    object bbGridToExcel: TdxBarButton
-      Action = dsdGridToExcel
-      Category = 0
-    end
-    object bbChoiceGuide: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
+    end
+    object dxBarStatic1: TdxBarStatic
+      Caption = '     '
+      Category = 0
+      Hint = '     '
+      Visible = ivAlways
     end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 104
-    Top = 200
+    Left = 232
+    Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -234,9 +232,12 @@ object GoodsKindForm: TGoodsKindForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
-      FormName = 'TGoodsKindEditForm'
+      FormName = 'TGoodsGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -245,12 +246,16 @@ object GoodsKindForm: TGoodsKindForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
-      FormName = 'TGoodsKindEditForm'
+      FormName = 'TGoodsGroupEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -262,9 +267,25 @@ object GoodsKindForm: TGoodsKindForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
+    end
+    object dsdSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedUnErased
+      StoredProcList = <
+        item
+          StoredProc = spErasedUnErased
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ShortCut = 32776
+      ErasedFieldName = 'isErased'
+      DataSource = DataSource
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spErasedUnErased
       StoredProcList = <
         item
@@ -276,22 +297,9 @@ object GoodsKindForm: TGoodsKindForm
       ErasedFieldName = 'isErased'
       DataSource = DataSource
     end
-    object dsdSetUnErased: TdsdUpdateErased
-      Category = 'DSDLib'
-      StoredProc = spErasedUnErased
-      StoredProcList = <
-        item
-          StoredProc = spErasedUnErased
-        end>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 32776
-      ErasedFieldName = 'isErased'
-      isSetErased = False
-      DataSource = DataSource
-    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -303,38 +311,41 @@ object GoodsKindForm: TGoodsKindForm
           Name = 'TextValue'
           Component = ClientDataSet
           ComponentItem = 'Name'
+          DataType = ftString
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
-    end
-    object dsdGridToExcel: TdsdGridToExcel
-      Category = 'DSDLib'
-      Grid = cxGrid
-      Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
-      ImageIndex = 6
-      ShortCut = 16472
+      DataSource = DataSource
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_GoodsKind'
+    StoredProcName = 'gpSelect_Object_GoodsGroup'
     DataSet = ClientDataSet
     DataSets = <
       item
         DataSet = ClientDataSet
       end>
     Params = <>
-    Left = 48
-    Top = 184
+    Left = 152
+    Top = 152
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 336
-    Top = 120
+  object spErasedUnErased: TdsdStoredProc
+    StoredProcName = 'gpUpdateObjectIsErased'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inObjectId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end>
+    Left = 288
+    Top = 208
   end
-  object dsdDBViewAddOn: TdsdDBViewAddOn
+  object dsdDBTreeAddOn: TdsdDBTreeAddOn
     ErasedFieldName = 'isErased'
-    View = cxGridDBTableView
     OnDblClickActionList = <
       item
         Action = dsdChoiceGuides
@@ -351,26 +362,13 @@ object GoodsKindForm: TGoodsKindForm
         Action = actUpdate
         ShortCut = 13
       end>
-    OnlyEditingCellOnEnter = False
-    Left = 296
-    Top = 168
+    SortImages = dmMain.SortImageList
+    DBTreeList = cxDBTreeList
+    Left = 48
+    Top = 160
   end
-  object spErasedUnErased: TdsdStoredProc
-    StoredProcName = 'gpUpdateObjectIsErased'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inObjectId'
-        Component = ClientDataSet
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end>
-    Left = 112
-    Top = 88
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 288
+    Top = 112
   end
 end

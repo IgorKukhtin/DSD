@@ -20,24 +20,17 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clUnit_infName: TcxGridDBColumn;
-    clDirectionName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clMovementDescName: TcxGridDBColumn;
-    clSummStart: TcxGridDBColumn;
-    clSummIn: TcxGridDBColumn;
-    clSummOut: TcxGridDBColumn;
-    clSummEnd: TcxGridDBColumn;
     clInvNumber: TcxGridDBColumn;
     clGoodsKindName: TcxGridDBColumn;
     clOperDate: TcxGridDBColumn;
     clPartnerName: TcxGridDBColumn;
-    clOperDatePartner: TcxGridDBColumn;
     clPartnerCode: TcxGridDBColumn;
-    clAmountPartner: TcxGridDBColumn;
+    clAmount: TcxGridDBColumn;
     clOperPrice: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    clStatusName: TcxGridDBColumn;
   private
     { Private declarations }
   public

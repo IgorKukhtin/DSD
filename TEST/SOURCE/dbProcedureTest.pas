@@ -78,6 +78,11 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpInsertUpdate_MI_ZakazInternal.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpSelect_MI_ZakazInternal.sql', ZQuery);
 
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpSelect_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\lpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetErased.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpMovementItem_PriceCorrective_SetUnErased.sql', ZQuery);
 end;
 
 procedure TdbProcedureTest.CreateMovementProcedure;
@@ -274,6 +279,25 @@ begin
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpInsertUpdate_Object_Receipt.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpSelect_Object_Receipt.sql', ZQuery);
   ExecFile(ProcedurePath + 'OBJECTS\Receipt\gpGet_Object_Receipt.sql', ZQuery);
+
+  ScriptDirectory := ProcedurePath + 'OBJECTS\StreetKind\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Street\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Region\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ProvinceCity\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\Province\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContactPersonKind\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\ContactPerson\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\City\';
+  ProcedureLoad;
+  ScriptDirectory := ProcedurePath + 'OBJECTS\CityKind\';
+  ProcedureLoad;
 
 end;
 

@@ -7,7 +7,8 @@ uses
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore, dsdDB,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn;
+  Vcl.StdActns, dsdAction, ParentForm, cxCurrencyEdit, dsdAddOn, dxSkinsCore,
+  dxSkinsDefaultPainters;
 
 type
   TGoodsKindEditForm = class(TParentForm)

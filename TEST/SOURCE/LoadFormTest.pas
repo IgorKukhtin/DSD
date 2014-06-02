@@ -66,6 +66,7 @@ type
     procedure LoadPersonalAccountFormTest;
     procedure LoadPersonalSendCashFormTest;
     procedure LoadPriceListFormTest;
+    procedure LoadPriceCorrectiveFormTest;
     procedure LoadProductionUnionFormTest;
     procedure LoadProductionSeparateFormTest;
     procedure LoadProfitLossFormTest;
@@ -305,6 +306,8 @@ procedure TLoadFormTest.LoadGoodsGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroup_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsGroup_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
 end;
@@ -313,6 +316,8 @@ procedure TLoadFormTest.LoadGoodsKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKind_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TGoodsKind_ObjectForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsKindEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsKindEditForm');
 end;
@@ -627,6 +632,14 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TTransferDebtInJournalForm');
 end;
 
+procedure TLoadFormTest.LoadPriceCorrectiveFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceCorrectiveJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceCorrectiveJournalForm');
+end;
+
 procedure TLoadFormTest.LoadJuridicalGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalGroupForm'));
@@ -682,7 +695,11 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetEditForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
@@ -788,10 +805,6 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsFuel_ObjectForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsFuel_ObjectForm');
-
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitCarMember_ObjectForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TGUnitCarMember_ObjectForm');
-
 end;
 
 procedure TLoadFormTest.LoadUnitFormTest;
