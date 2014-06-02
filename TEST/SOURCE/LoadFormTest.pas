@@ -20,6 +20,7 @@ type
     procedure UserFormSettingsTest;
     procedure Load1CLinkFormTest;
     procedure LoadAccountFormTest;
+    procedure LoadAddressFormTest;
     procedure LoadAssetFormTest;
     procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -695,11 +696,7 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-  //
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStreetForm');
-  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetEditForm'));
-  TdsdFormStorageFactory.GetStorage.Load('TStreetEditForm');
+
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;
@@ -974,6 +971,50 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TMakerEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TMakerEditForm');
 end;
+
+procedure TLoadFormTest.LoadAddressFormTest;
+begin
+  // облатсь
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRegionForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TRegionEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TRegionEditForm');
+  // Район
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceEditForm');
+  // Вид населенного пункта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityKindEditForm');
+
+  // населенный пункт есть ниже   City
+
+  // Вид населенного пункта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCityKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCityKindEditForm');
+  //улица
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetEditForm');
+  // вид улица/проспект
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetKindForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetKindForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStreetKindEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStreetKindEditForm');
+  // Район в населенном пункте
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceCityForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceCityForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TProvinceCityEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TProvinceCityEditForm');
+end;
+
+
 
 procedure TLoadFormTest.LoadRoleFormTest;
 begin

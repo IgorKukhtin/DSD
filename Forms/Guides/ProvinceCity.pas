@@ -1,4 +1,4 @@
-unit City;
+unit ProvinceCity;
 
 interface
 
@@ -25,7 +25,7 @@ uses
   Vcl.Menus;
 
 type
-  TCityForm = class(TParentForm)
+  TProvinceCityForm = class(TParentForm)
     cxGridLevel: TcxGridLevel;
     cxGrid: TcxGrid;
     DataSource: TDataSource;
@@ -63,9 +63,7 @@ type
     dsdSetErased: TdsdUpdateErased;
     N3: TMenuItem;
     N4: TMenuItem;
-    clCityKindName: TcxGridDBColumn;
-    clRegionName: TcxGridDBColumn;
-    clProvinceName: TcxGridDBColumn;
+    clCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -77,6 +75,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TCityForm);
+  RegisterClass(TProvinceCityForm);
 
 end.

@@ -1,7 +1,7 @@
-﻿object CountryEditForm: TCountryEditForm
+﻿object StreetKindEditForm: TStreetKindEditForm
   Left = 0
   Top = 0
-  Caption = #1053#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1072
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
   ClientHeight = 157
   ClientWidth = 386
   Color = clBtnFace
@@ -93,7 +93,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Country'
+    StoredProcName = 'gpInsertUpdate_Object_StreetKind'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -131,7 +131,7 @@
     Top = 72
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Country'
+    StoredProcName = 'gpGet_Object_StreetKind'
     DataSets = <>
     OutputType = otResult
     Params = <
