@@ -78,9 +78,9 @@ BEGIN
               SELECT inGoodsId;
          ELSE 
              INSERT INTO _tmpGoods (GoodsId)
-              SELECT Id FROM Object WHERE DescId = zc_Object_Goods()
+              SELECT Id FROM Object WHERE DescId = zc_Object_Goods() AND (inUnitGroupId <> 0 OR inLocationId <> 0)
              UNION
-              SELECT Id FROM Object WHERE DescId = zc_Object_Fuel();
+              SELECT Id FROM Object WHERE DescId = zc_Object_Fuel() AND (inUnitGroupId <> 0 OR inLocationId <> 0);
          END IF;
     END IF;
 

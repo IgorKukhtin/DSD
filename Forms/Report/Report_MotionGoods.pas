@@ -53,7 +53,7 @@ type
     PartionGoodsName: TcxGridDBColumn;
     AssetName: TcxGridDBColumn;
     SummStart: TcxGridDBColumn;
-    IncomeSumm: TcxGridDBColumn;
+    SummIncome: TcxGridDBColumn;
     CountEnd: TcxGridDBColumn;
     SummEnd: TcxGridDBColumn;
     CountSendIn: TcxGridDBColumn;
