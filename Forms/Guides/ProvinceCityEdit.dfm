@@ -1,8 +1,8 @@
-﻿object StreetEditForm: TStreetEditForm
+﻿object ProvinceCityEditForm: TProvinceCityEditForm
   Left = 0
   Top = 0
-  Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
-  ClientHeight = 300
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1080#1079#1084#1077#1085#1080#1090#1100' '#1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+  ClientHeight = 200
   ClientWidth = 377
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -29,7 +29,7 @@
   end
   object cxButton1: TcxButton
     Left = 79
-    Top = 258
+    Top = 162
     Width = 75
     Height = 25
     Action = dsdInsertUpdateGuides
@@ -39,7 +39,7 @@
   end
   object cxButton2: TcxButton
     Left = 229
-    Top = 258
+    Top = 162
     Width = 75
     Height = 25
     Action = dsdFormClose
@@ -61,67 +61,22 @@
     TabOrder = 5
     Width = 296
   end
-  object cxLabel2: TcxLabel
-    Left = 242
-    Top = 98
-    Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
-  end
-  object edPostalCode: TcxTextEdit
-    Left = 242
-    Top = 114
-    TabOrder = 7
-    Width = 94
-  end
-  object cxLabel3: TcxLabel
-    Left = 42
-    Top = 139
-    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
-  end
   object ceCity: TcxButtonEdit
-    Left = 40
-    Top = 158
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 9
-    Width = 296
-  end
-  object ceProvinceCity: TcxButtonEdit
-    Left = 40
-    Top = 199
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 10
-    Width = 296
-  end
-  object cxLabel5: TcxLabel
     Left = 42
-    Top = 98
-    Caption = #1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
-  end
-  object ceStreetKind: TcxButtonEdit
-    Left = 40
-    Top = 114
+    Top = 120
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 12
-    Width = 175
+    TabOrder = 6
+    Width = 296
   end
   object cxLabel6: TcxLabel
     Left = 42
-    Top = 183
-    Caption = #1056#1072#1081#1086#1085
+    Top = 100
+    Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
   end
   object ActionList: TActionList
     Left = 272
@@ -155,7 +110,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Street'
+    StoredProcName = 'gpInsertUpdate_Object_ProvinceCity'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -180,30 +135,9 @@
         ParamType = ptInput
       end
       item
-        Name = 'inPostalCode'
-        Value = ''
-        Component = edPostalCode
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inStreetKindId'
-        Value = ''
-        Component = StreetKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
         Name = 'inCityId'
         Value = ''
         Component = CityGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inProvinceCityId'
-        Value = ''
-        Component = ProvinceCityGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
@@ -217,11 +151,11 @@
         Value = Null
         ParamType = ptInputOutput
       end>
-    Left = 24
-    Top = 240
+    Left = 16
+    Top = 96
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Street'
+    StoredProcName = 'gpGet_Object_ProvinceCity'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -244,25 +178,6 @@
         Component = ceCode
       end
       item
-        Name = 'PostalCode'
-        Value = ''
-        Component = edPostalCode
-        DataType = ftString
-      end
-      item
-        Name = 'StreetKindId'
-        Value = ''
-        Component = StreetKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'StreetKindName'
-        Value = ''
-        Component = StreetKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
         Name = 'CityId'
         Value = ''
         Component = CityGuides
@@ -272,19 +187,6 @@
         Name = 'CityName'
         Value = ''
         Component = CityGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-      end
-      item
-        Name = 'ProvinceCityId'
-        Value = ''
-        Component = ProvinceCityGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'ProvinceCityName'
-        Value = ''
-        Component = ProvinceCityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
@@ -333,59 +235,7 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 152
-  end
-  object ProvinceCityGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceProvinceCity
-    FormNameParam.Value = 'TProvinceCityForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TProvinceCityForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = ProvinceCityGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = ProvinceCityGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 176
-    Top = 200
-  end
-  object StreetKindGuides: TdsdGuides
-    KeyField = 'Id'
-    LookupControl = ceStreetKind
-    FormNameParam.Value = 'TStreetKindForm'
-    FormNameParam.DataType = ftString
-    FormName = 'TStreetKindForm'
-    PositionDataSet = 'ClientDataSet'
-    Params = <
-      item
-        Name = 'Key'
-        Value = ''
-        Component = StreetKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'TextValue'
-        Value = ''
-        Component = StreetKindGuides
-        ComponentItem = 'TextValue'
-        DataType = ftString
-        ParamType = ptInput
-      end>
-    Left = 104
-    Top = 96
+    Left = 168
+    Top = 104
   end
 end

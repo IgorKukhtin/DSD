@@ -1,4 +1,4 @@
-unit Street;
+unit StreetKind;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox;
 
 type
-  TStreetForm = class(TParentForm)
+  TStreetKindForm = class(TParentForm)
     cxGrid: TcxGrid;
     cxGridDBTableView: TcxGridDBTableView;
     clCode: TcxGridDBColumn;
@@ -55,10 +55,6 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
-    clPostalCode: TcxGridDBColumn;
-    clStreetKindName: TcxGridDBColumn;
-    clCityName: TcxGridDBColumn;
-    clProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -70,5 +66,5 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TStreetForm);
+  RegisterClass(TStreetKindForm);
 end.

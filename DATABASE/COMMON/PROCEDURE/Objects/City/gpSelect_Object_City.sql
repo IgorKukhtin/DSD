@@ -5,7 +5,11 @@ DROP FUNCTION IF EXISTS gpSelect_Object_City(TVarChar);
 CREATE OR REPLACE FUNCTION gpSelect_Object_City(
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean) AS
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
+             , CityKindId Integer, CityKindCode Integer, CityKindName TVarChar 
+             , RegionId Integer, RegionCode Integer, RegionName TVarChar
+             , ProvinceId Integer, ProvinceCode Integer, ProvinceName TVarChar
+             , isErased boolean) AS
 $BODY$BEGIN
 
    -- проверка прав пользователя на вызов процедуры
@@ -29,7 +33,7 @@ $BODY$BEGIN
         , Object_Province.ObjectCode  AS ProvinceCode
         , Object_Province.ValueData   AS ProvinceName
 
-        , Object.isErased             AS isErased
+        , Object_City.isErased             AS isErased
    FROM Object AS Object_City
         LEFT JOIN ObjectLink AS ObjectLink_City_CityKind
                              ON ObjectLink_City_CityKind.ObjectId = Object_City.Id

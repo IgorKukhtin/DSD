@@ -1,7 +1,7 @@
-object CountryForm: TCountryForm
+object RegionForm: TRegionForm
   Left = 0
   Top = 0
-  Caption = #1057#1090#1088#1072#1085#1072
+  Caption = #1054#1073#1083#1072#1089#1090#1100
   ClientHeight = 332
   ClientWidth = 440
   Color = clBtnFace
@@ -239,8 +239,8 @@ object CountryForm: TCountryForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       ImageIndex = 0
-      FormName = 'TCountryEditForm'
-      FormNameParam.Value = 'TCountryEditForm'
+      FormName = 'TRegionEditForm'
+      FormNameParam.Value = 'TRegionEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -258,8 +258,8 @@ object CountryForm: TCountryForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       ImageIndex = 1
-      FormName = 'TCountryEditForm'
-      FormNameParam.Value = 'TCountryEditForm'
+      FormName = 'TRegionEditForm'
+      FormNameParam.Value = 'TRegionEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -336,7 +336,7 @@ object CountryForm: TCountryForm
     end
   end
   object dsdStoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Country'
+    StoredProcName = 'gpSelect_Object_Region'
     DataSet = ClientDataSet
     DataSets = <
       item

@@ -2,8 +2,8 @@ object StreetForm: TStreetForm
   Left = 0
   Top = 0
   Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
-  ClientHeight = 332
-  ClientWidth = 440
+  ClientHeight = 335
+  ClientWidth = 792
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -19,13 +19,15 @@ object StreetForm: TStreetForm
   object cxGrid: TcxGrid
     Left = 0
     Top = 26
-    Width = 440
-    Height = 306
+    Width = 792
+    Height = 309
     Align = alClient
     TabOrder = 0
     LookAndFeel.Kind = lfStandard
     LookAndFeel.NativeStyle = False
     LookAndFeel.SkinName = ''
+    ExplicitWidth = 440
+    ExplicitHeight = 306
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -53,13 +55,46 @@ object StreetForm: TStreetForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
-        Width = 82
+        Width = 83
+      end
+      object clStreetKindName: TcxGridDBColumn
+        Caption = #1042#1080#1076
+        DataBinding.FieldName = 'StreetKindName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 63
       end
       object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
-        Width = 272
+        Width = 203
+      end
+      object clProvinceCityName: TcxGridDBColumn
+        Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+        DataBinding.FieldName = 'ProvinceCityName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 148
+      end
+      object clCityName: TcxGridDBColumn
+        Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
+        DataBinding.FieldName = 'CityName'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 129
+      end
+      object clPostalCode: TcxGridDBColumn
+        Caption = #1055#1086#1095#1090#1086#1074#1099#1081' '#1080#1085#1076#1077#1082#1089
+        DataBinding.FieldName = 'PostalCode'
+        GroupSummaryAlignment = taCenter
+        HeaderAlignmentVert = vaCenter
+        HeaderGlyphAlignmentHorz = taCenter
+        Width = 74
       end
       object clErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
@@ -67,7 +102,7 @@ object StreetForm: TStreetForm
         PropertiesClassName = 'TcxCheckBoxProperties'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 78
+        Width = 76
       end
     end
     object cxGridLevel: TcxGridLevel

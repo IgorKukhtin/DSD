@@ -376,8 +376,8 @@ uses
   ProfitLossServiceJournal in '..\..\Forms\Document\ProfitLossServiceJournal.pas' {ProfitLossServiceJournalForm: TParentForm},
   Service in '..\..\Forms\Document\Service.pas' {ServiceForm: TParentForm},
   ServiceTest in '..\SOURCE\Movement\All\ServiceTest.pas',
-  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
-  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
+  CityKind in '..\..\Forms\Guides\CityKind.pas' {CityKindForm: TParentForm},
+  CityKindEdit in '..\..\Forms\Guides\CityKindEdit.pas' {CityKindEditForm: TParentForm},
   ContractConditionKind in '..\..\Forms\Enum\ContractConditionKind.pas' {ContractConditionKindForm: TParentForm},
   PeriodClose in '..\..\Forms\System\PeriodClose.pas' {PeriodCloseForm: TParentForm},
   Contract in '..\..\Forms\Guides\Contract.pas' {ContractForm: TParentForm},
@@ -407,7 +407,7 @@ uses
   GoodsEdit in '..\..\Forms\Guides\GoodsEdit.pas' {GoodsEditForm: TParentForm},
   MovementTaxChoice in '..\..\Forms\Guides\MovementTaxChoice.pas' {MovementTaxChoiceForm: TParentForm},
   CityEdit in '..\..\Forms\Guides\CityEdit.pas' {CityEditForm: TParentForm},
-  City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
+  ProvinceCity in '..\..\Forms\Guides\ProvinceCity.pas' {ProvinceCityForm: TParentForm},
   TaxJournal in '..\..\Forms\Document\TaxJournal.pas' {TaxJournalForm: TParentForm},
   Report_CheckContractInMovement in '..\..\Forms\Report\Report_CheckContractInMovement.pas' {Report_CheckContractInMovementForm: TParentForm},
   Area in '..\..\Forms\Guides\Area.pas' {AreaForm: TParentForm},
@@ -451,8 +451,18 @@ uses
   PriceCorrective in '..\..\Forms\Document\PriceCorrective.pas' {PriceCorrectiveForm: TParentForm},
   GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
   GoodsKind in '..\..\Forms\Guides\GoodsKind.pas' {GoodsKindForm: TParentForm},
+  Province in '..\..\Forms\Guides\Province.pas' {ProvinceForm: TParentForm},
+  ProvinceCityEdit in '..\..\Forms\Guides\ProvinceCityEdit.pas' {ProvinceCityEditForm: TParentForm},
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
   Street in '..\..\Forms\Guides\Street.pas' {StreetForm: TParentForm},
-  StreetEdit in '..\..\Forms\Guides\StreetEdit.pas' {StreetEditForm: TParentForm};
+  StreetEdit in '..\..\Forms\Guides\StreetEdit.pas' {StreetEditForm: TParentForm},
+  StreetKind in '..\..\Forms\Guides\StreetKind.pas' {StreetKindForm: TParentForm},
+  StreetKindEdit in '..\..\Forms\Guides\StreetKindEdit.pas' {StreetKindEditForm: TParentForm},
+  Region in '..\..\Forms\Guides\Region.pas' {RegionForm: TParentForm},
+  RegionEdit in '..\..\Forms\Guides\RegionEdit.pas' {RegionEditForm: TParentForm},
+  City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
+  ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm};
 
 {$R *.RES}
 

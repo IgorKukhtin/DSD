@@ -1,4 +1,4 @@
-unit StreetEdit;
+unit ProvinceEdit;
 
 interface
 
@@ -23,7 +23,7 @@ uses
   cxButtonEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxCalendar;
 
 type
-  TStreetEditForm = class(TParentForm)
+  TProvinceEditForm = class(TParentForm)
     edName: TcxTextEdit;
     cxLabel1: TcxLabel;
     cxButton1: TcxButton;
@@ -39,16 +39,8 @@ type
     spGet: TdsdStoredProc;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
-    cxLabel2: TcxLabel;
-    edPostalCode: TcxTextEdit;
-    cxLabel3: TcxLabel;
-    ceCity: TcxButtonEdit;
-    CityGuides: TdsdGuides;
-    ceProvinceCity: TcxButtonEdit;
-    ProvinceCityGuides: TdsdGuides;
-    cxLabel5: TcxLabel;
-    ceStreetKind: TcxButtonEdit;
-    StreetKindGuides: TdsdGuides;
+    ceRegion: TcxButtonEdit;
+    RegionGuides: TdsdGuides;
     cxLabel6: TcxLabel;
   private
     { Private declarations }
@@ -60,6 +52,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TStreetEditForm);
+  RegisterClass(TProvinceEditForm);
 
 end.

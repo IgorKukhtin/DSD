@@ -1,7 +1,7 @@
-﻿object CountryEditForm: TCountryEditForm
+﻿object RegionEditForm: TRegionEditForm
   Left = 0
   Top = 0
-  Caption = #1053#1086#1074#1072#1103' '#1089#1090#1088#1072#1085#1072
+  Caption = #1053#1086#1074#1072#1103' '#1086#1073#1083#1072#1089#1090#1100
   ClientHeight = 157
   ClientWidth = 386
   Color = clBtnFace
@@ -93,7 +93,7 @@
     end
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Country'
+    StoredProcName = 'gpInsertUpdate_Object_Region'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -131,7 +131,7 @@
     Top = 72
   end
   object spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Object_Country'
+    StoredProcName = 'gpGet_Object_Region'
     DataSets = <>
     OutputType = otResult
     Params = <

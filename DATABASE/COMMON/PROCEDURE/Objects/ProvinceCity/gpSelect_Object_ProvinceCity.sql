@@ -23,7 +23,7 @@ $BODY$BEGIN
         , Object_City.ObjectCode    AS CityCode
         , Object_City.ValueData     AS CityName        
 
-        , Object.isErased             AS isErased
+        , Object_ProvinceCity.isErased             AS isErased
    FROM Object AS Object_ProvinceCity
         LEFT JOIN ObjectLink AS ObjectLink_ProvinceCity_City 
                              ON ObjectLink_ProvinceCity_City.ObjectId = Object_ProvinceCity.Id
