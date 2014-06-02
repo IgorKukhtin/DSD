@@ -2,8 +2,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 668
   ClientWidth = 1084
-  ExplicitLeft = -169
-  ExplicitTop = 7
   ExplicitWidth = 1092
   ExplicitHeight = 702
   PixelsPerInch = 96
@@ -234,13 +232,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     object edTo: TcxButtonEdit
       Left = 594
       Top = 23
+      Enabled = False
       Properties.Buttons = <
         item
           Default = True
           Kind = bkEllipsis
         end>
       TabOrder = 8
-      Width = 200
+      Width = 239
     end
     object cxLabel4: TcxLabel
       Left = 594
@@ -268,13 +267,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Caption = '% '#1053#1044#1057
     end
     object cxLabel10: TcxLabel
-      Left = 809
-      Top = 5
+      Left = 593
+      Top = 45
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 809
-      Top = 23
+      Left = 593
+      Top = 63
       Properties.Buttons = <
         item
           Default = True
@@ -284,13 +283,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 77
     end
     object cxLabel11: TcxLabel
-      Left = 908
-      Top = 5
+      Left = 692
+      Top = 45
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 908
-      Top = 23
+      Left = 692
+      Top = 68
       Enabled = False
       Properties.Buttons = <
         item
@@ -1323,11 +1322,15 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       item
         Name = 'Key'
         Value = ''
+        Component = ContractGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = ContractGuides
+        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
@@ -1368,29 +1371,39 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Name = 'MasterJuridicalName'
         Value = ''
         DataType = ftString
+      end
+      item
+        Name = 'JuridicalBasisId'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'JuridicalBasisName'
+        Value = ''
+        Component = GuidesTo
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 504
+    Left = 456
+    Top = 16
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
     LookupControl = edTo
-    FormNameParam.Value = 'TContractChoiceForm'
+    FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
-    FormName = 'TContractChoiceForm'
+    FormName = 'TJuridicalForm'
     PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
-        Component = ContractGuides
-        ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end
@@ -1418,7 +1431,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Value = ''
         DataType = ftString
       end>
-    Left = 632
+    Left = 656
+    Top = 8
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1510,21 +1524,9 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Component = GuidesFrom
         ComponentItem = 'TextValue'
         DataType = ftString
-      end
-      item
-        Name = 'JuridicalId'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'JuridicalName'
-        Value = ''
-        Component = GuidesTo
-        ComponentItem = 'TextValue'
-        DataType = ftString
       end>
-    Left = 296
+    Left = 264
+    Top = 16
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'

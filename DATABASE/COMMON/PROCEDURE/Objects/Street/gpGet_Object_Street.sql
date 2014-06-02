@@ -8,9 +8,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Street(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , PostalCode TVarChar
-             , StreetKindId Integer, StreetKindCode Integer, StreetKindName TVarChar
-             , CityId Integer, CityCode Integer, CityName TVarChar
-             , ProvinceCityId Integer, ProvinceCityCode Integer, ProvinceCityName TVarChar
+             , StreetKindId Integer, StreetKindName TVarChar
+             , CityId Integer, CityName TVarChar
+             , ProvinceCityId Integer, ProvinceCityName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -30,15 +30,12 @@ BEGIN
            , CAST ('' as TVarChar)  AS PostalCode
 
            , CAST (0 as Integer)    AS StreetKindId
-           , CAST (0 as Integer)    AS StreetKindCode
            , CAST ('' as TVarChar)  AS StreetKindName
           
            , CAST (0 as Integer)    AS CityId
-           , CAST (0 as Integer)    AS CityCode
            , CAST ('' as TVarChar)  AS CityName
 
            , CAST (0 as Integer)    AS ProvinceCityId
-           , CAST (0 as Integer)    AS ProvinceCityCode
            , CAST ('' as TVarChar)  AS ProvinceCityName
 
            , CAST (NULL AS Boolean) AS isErased
@@ -55,15 +52,12 @@ BEGIN
            , PostalCode.ValueData      AS PostalCode
            
            , Object_StreetKind.Id           AS StreetKindId
-           , Object_StreetKind.ObjectCode   AS StreetKindCode
            , Object_StreetKind.ValueData    AS StreetKindName
          
            , Object_City.Id                 AS CityId
-           , Object_City.ObjectCode         AS CityCode
            , Object_City.ValueData          AS CityName
 
            , View_ProvinceCity.PersonalId   AS ProvinceCityId
-           , View_ProvinceCity.PersonalCode AS ProvinceCityCode
            , View_ProvinceCity.PersonalName AS ProvinceCityName
            
            , Object_Street.isErased AS isErased

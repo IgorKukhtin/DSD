@@ -733,8 +733,8 @@ object Report_AccountForm: TReport_AccountForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -859,7 +859,6 @@ object Report_AccountForm: TReport_AccountForm
       Caption = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090
       ImageIndex = 28
-      ShortCut = 13
     end
     object actOpenForm: TdsdOpenForm
       Category = 'DSDLib'
@@ -986,8 +985,15 @@ object Report_AccountForm: TReport_AccountForm
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = cxGridDBTableView
-    OnDblClickActionList = <>
-    ActionItemList = <>
+    OnDblClickActionList = <
+      item
+        Action = actOpenDocument
+      end>
+    ActionItemList = <
+      item
+        Action = actOpenDocument
+        ShortCut = 13
+      end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>

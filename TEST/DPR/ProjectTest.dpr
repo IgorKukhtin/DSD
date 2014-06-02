@@ -450,7 +450,9 @@ uses
   PriceCorrectiveJournal in '..\..\Forms\Document\PriceCorrectiveJournal.pas' {PriceCorrectiveJournalForm: TParentForm},
   PriceCorrective in '..\..\Forms\Document\PriceCorrective.pas' {PriceCorrectiveForm: TParentForm},
   GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
-  GoodsKind in '..\..\Forms\Guides\GoodsKind.pas' {GoodsKindForm: TParentForm};
+  GoodsKind in '..\..\Forms\Guides\GoodsKind.pas' {GoodsKindForm: TParentForm},
+  Street in '..\..\Forms\Guides\Street.pas' {StreetForm: TParentForm},
+  StreetEdit in '..\..\Forms\Guides\StreetEdit.pas' {StreetEditForm: TParentForm};
 
 {$R *.RES}
 

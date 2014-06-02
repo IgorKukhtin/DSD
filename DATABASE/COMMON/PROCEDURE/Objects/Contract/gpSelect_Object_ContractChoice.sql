@@ -21,6 +21,7 @@ RETURNS TABLE (Id Integer, Code Integer
              , ContractStateKindCode Integer
              , OKPO TVarChar
              , ChangePercent TFloat
+             , JuridicalBasisId Integer, JuridicalBasisName TVarChar
              , isErased Boolean 
               )
 AS
@@ -72,6 +73,9 @@ BEGIN
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
 
+       , Object_JuridicalBasis.Id           AS JuridicalBasisId
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
+
        , Object_Contract_View.isErased
        
    FROM _tmpPaidKind
@@ -103,6 +107,9 @@ BEGIN
                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+
+ 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+
    ;
 
    ELSE
@@ -134,6 +141,10 @@ BEGIN
 
        , ObjectHistory_JuridicalDetails_View.OKPO
        , tmpChangePercent.ChangePercent :: TFloat  AS ChangePercent
+
+
+       , Object_JuridicalBasis.Id           AS JuridicalBasisId
+       , Object_JuridicalBasis.ValueData    AS JuridicalBasisName
 
        , Object_Contract_View.isErased
        
@@ -167,6 +178,9 @@ BEGIN
                    WHERE ObjectLink_ContractCondition_ContractConditionKind.ChildObjectId = zc_Enum_ContractConditionKind_ChangePercent()
                      AND ObjectLink_ContractCondition_ContractConditionKind.DescId = zc_ObjectLink_ContractCondition_ContractConditionKind()
                   ) AS tmpChangePercent ON tmpChangePercent.ContractId = Object_Contract_View.ContractId
+
+ 	LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = Object_Contract_View.JuridicalBasisId
+
    ;
    END IF;
 

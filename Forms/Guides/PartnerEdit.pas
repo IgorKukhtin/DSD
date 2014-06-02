@@ -44,6 +44,17 @@ type
     cxLabel12: TcxLabel;
     edStartPromo: TcxDateEdit;
     edEndPromo: TcxDateEdit;
+    cxLabel13: TcxLabel;
+    edShortName: TcxTextEdit;
+    cxLabel14: TcxLabel;
+    cxLabel15: TcxLabel;
+    cxLabel16: TcxLabel;
+    cxLabel17: TcxLabel;
+    ceStreet: TcxButtonEdit;
+    StreetGuides: TdsdGuides;
+    edHouseNumber: TcxTextEdit;
+    edCaseNumber: TcxTextEdit;
+    edRoomNumber: TcxTextEdit;
 
   private
     { Private declarations }
