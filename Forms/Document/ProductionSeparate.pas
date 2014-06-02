@@ -21,6 +21,8 @@ type
     actUpdateChildDS: TdsdUpdateDataSet;
     colHeadCount: TcxGridDBColumn;
     ColChildHeadCount: TcxGridDBColumn;
+    colChildLineNum: TcxGridDBColumn;
+    colLineNum: TcxGridDBColumn;
   private
     { Private declarations }
   public

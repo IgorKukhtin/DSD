@@ -20,7 +20,6 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 929
       ExplicitHeight = 226
@@ -88,9 +87,11 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         Width = 929
         Height = 226
         Align = alClient
+        PopupMenu = PopupMenu
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
+          DataController.DataSource = EntryDS
           DataController.Summary.DefaultGroupSummaryItems = <>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -258,8 +259,9 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Width = 935
     Height = 358
     Align = alBottom
+    PopupMenu = PopupMenuChild
     TabOrder = 5
-    object cxGridDBTableView1: TcxGridDBTableView
+    object cxGridDBTableViewChild: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = ChildDS
       DataController.Filter.Options = [fcoCaseInsensitive]
@@ -311,16 +313,16 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           Kind = skSum
         end>
       DataController.Summary.SummaryGroups = <>
-      OptionsBehavior.GoToNextCellOnEnter = True
-      OptionsBehavior.FocusCellOnCycle = True
-      OptionsCustomize.ColumnHiding = True
-      OptionsCustomize.ColumnsQuickCustomization = True
-      OptionsCustomize.DataRowSizing = True
-      OptionsData.CancelOnExit = False
-      OptionsData.Inserting = False
+      Images = dmMain.SortImageList
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
+      OptionsView.Indicator = True
+      Styles.Inactive = dmMain.cxSelection
+      Styles.Selection = dmMain.cxSelection
+      Styles.Footer = dmMain.cxFooterStyle
+      Styles.Header = dmMain.cxHeaderStyle
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
       object colChildGoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
@@ -331,6 +333,12 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       object colChildGoodsName: TcxGridDBColumn
         Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'GoodsName'
+        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.Buttons = <
+          item
+            Default = True
+            Kind = bkEllipsis
+          end>
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 236
@@ -374,9 +382,14 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
       end
+      object colChildIsErased: TcxGridDBColumn
+        Caption = #1059#1076#1072#1083#1077#1085' ('#1076#1072'/'#1085#1077#1090')'
+        DataBinding.FieldName = 'IsErased'
+        Visible = False
+      end
     end
-    object cxGridLevel1: TcxGridLevel
-      GridView = cxGridDBTableView1
+    object cxGridLevelChild: TcxGridLevel
+      GridView = cxGridDBTableViewChild
     end
   end
   object DataPanel: TPanel [2]
@@ -479,8 +492,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   end
   inherited ActionList: TActionList
     Images = dmMain.ImageList
-    Left = 127
-    Top = 287
+    Left = 135
+    Top = 143
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -718,7 +731,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     object InsertRecordChild: TInsertRecord
       Category = 'DSDLib'
       MoveParams = <>
-      View = cxGridDBTableView
+      View = cxGridDBTableViewChild
       Action = GoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
@@ -752,6 +765,38 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           DataType = ftString
         end>
       isShowModal = True
+    end
+    object actMIChildSetErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spErasedMIChild
+        end>
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '
+      Hint = #1059#1076#1072#1083#1080#1090#1100
+      ImageIndex = 2
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      DataSource = ChildDS
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080'?'
+    end
+    object actMIChildSetUnErased: TdsdUpdateErased
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUnErasedMIChild
+      StoredProcList = <
+        item
+          StoredProc = spUnErasedMIChild
+        end>
+      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
+      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      ImageIndex = 8
+      ShortCut = 46
+      ErasedFieldName = 'isErased'
+      isSetErased = False
+      DataSource = ChildDS
     end
   end
   inherited MasterDS: TDataSource
@@ -795,7 +840,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         ParamType = ptInput
       end>
     Left = 40
-    Top = 192
+    Top = 224
   end
   inherited BarManager: TdxBarManager
     Left = 88
@@ -844,6 +889,18 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         item
           Visible = True
           ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbErasedChild'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnErasedChild'
         end
         item
           Visible = True
@@ -913,6 +970,18 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Visible = ivNever
     end
     object bbAddChild: TdxBarButton
+      Action = InsertRecordChild
+      Category = 0
+    end
+    object bbErasedChild: TdxBarButton
+      Action = actMIChildSetErased
+      Category = 0
+    end
+    object bbUnErasedChild: TdxBarButton
+      Action = actMIChildSetUnErased
+      Category = 0
+    end
+    object dxBarSeparator1: TdxBarSeparator
       Category = 0
       Visible = ivAlways
     end
@@ -924,6 +993,12 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
   inherited PopupMenu: TPopupMenu
     Left = 240
     Top = 288
+    object N5: TMenuItem
+      Action = actMISetErased
+    end
+    object N6: TMenuItem
+      Action = actMISetUnErased
+    end
   end
   object EntryCDS: TClientDataSet
     Aggregates = <>
@@ -1146,6 +1221,19 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     StoredProc = spInsertUpdateMovement
     ControlList = <
       item
+        Control = edFrom
+      end
+      item
+        Control = edTo
+      end
+      item
+        Control = edInvNumber
+      end
+      item
+        Control = edOperDate
+      end
+      item
+        Control = ceStatus
       end>
     GetStoredProc = spGet
     Left = 296
@@ -1243,8 +1331,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 752
-    Top = 222
+    Left = 720
+    Top = 230
   end
   object spInsertMaskMIMaster: TdsdStoredProc
     DataSets = <>
@@ -1322,18 +1410,18 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Params = <
       item
         Name = 'inMovementItemId'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
-    Left = 374
-    Top = 672
+    Left = 302
+    Top = 592
   end
   object spUnErasedMIChild: TdsdStoredProc
     StoredProcName = 'gpSetUnErased_MovementItem_Child'
@@ -1342,18 +1430,18 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     Params = <
       item
         Name = 'inMovementItemId'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInput
       end
       item
         Name = 'outIsErased'
-        Component = MasterCDS
+        Component = ChildCDS
         ComponentItem = 'isErased'
         DataType = ftBoolean
       end>
-    Left = 470
-    Top = 680
+    Left = 414
+    Top = 584
   end
   object spInsertMaskMIChild: TdsdStoredProc
     DataSets = <>
@@ -1384,8 +1472,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Left = 584
-    Top = 672
+    Left = 624
+    Top = 440
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1469,7 +1557,41 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
         DataType = ftFloat
         ParamType = ptInput
       end>
-    Left = 440
-    Top = 504
+    Left = 464
+    Top = 496
+  end
+  object PopupMenuChild: TPopupMenu
+    Images = dmMain.ImageList
+    Left = 120
+    Top = 544
+    object MenuItem1: TMenuItem
+      Action = actRefresh
+    end
+    object MenuItem2: TMenuItem
+      Action = actGridToExcel
+    end
+    object N2: TMenuItem
+      Action = InsertRecordChild
+    end
+    object N3: TMenuItem
+      Action = actMIChildSetErased
+    end
+    object N4: TMenuItem
+      Action = actMIChildSetUnErased
+    end
+  end
+  object ChildDBViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxGridDBTableViewChild
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 830
+    Top = 449
   end
 end
