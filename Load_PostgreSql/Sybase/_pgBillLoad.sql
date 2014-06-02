@@ -8,7 +8,32 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
+select '165371' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165372' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165380' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165381' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165385' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165387' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165388' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165389' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165390' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165391' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165392' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165393' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165394' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165395' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165399' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165400' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165401' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165402' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165404' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165406' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165408' as InvNumber, 4690 as FromId, 0 as ToId
+union select '165409' as InvNumber, 4690 as FromId, 0 as ToId
 
+
+
+select '164069' as InvNumber, 4690 as FromId, 0 as ToId
 select '166057' as InvNumber, 4690 as FromId, 0 as ToId
 union select '3589' as InvNumber, 4690 as FromId, 0 as ToId
 union select '3559' as InvNumber, 4690 as FromId, 0 as ToId

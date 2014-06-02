@@ -2,7 +2,6 @@ inherited Report_GoodsForm: TReport_GoodsForm
   Caption = #1054#1090#1095#1077#1090' <'#1087#1086' '#1090#1086#1074#1072#1088#1091'>'
   ClientHeight = 341
   ClientWidth = 1174
-  ExplicitLeft = -192
   ExplicitWidth = 1190
   ExplicitHeight = 376
   PixelsPerInch = 96
@@ -143,26 +142,26 @@ inherited Report_GoodsForm: TReport_GoodsForm
             HeaderAlignmentVert = vaCenter
             Width = 55
           end
-          object clDirectionDescName: TcxGridDBColumn
+          object clLocationDescName: TcxGridDBColumn
             Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
-            DataBinding.FieldName = 'DirectionDescName'
+            DataBinding.FieldName = 'LocationDescName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 70
           end
-          object clDirectionCode: TcxGridDBColumn
+          object clLocationCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
-            DataBinding.FieldName = 'DirectionCode'
+            DataBinding.FieldName = 'LocationCode'
             Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 45
           end
-          object clDirectionName: TcxGridDBColumn
+          object clLocationName: TcxGridDBColumn
             Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
-            DataBinding.FieldName = 'DirectionName'
+            DataBinding.FieldName = 'LocationName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -221,6 +220,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           object clGoodsName: TcxGridDBColumn
             Caption = #1058#1086#1074#1072#1088
             DataBinding.FieldName = 'GoodsName'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
@@ -374,7 +374,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       Top = 6
       Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
     end
-    object edUnit: TcxButtonEdit
+    object edLocation: TcxButtonEdit
       Left = 493
       Top = 5
       Properties.Buttons = <
@@ -405,7 +405,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
           'TextValue')
       end
       item
-        Component = UnitGuides
+        Component = LocationGuides
         Properties.Strings = (
           'Key'
           'TextValue')
@@ -437,9 +437,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
         ParamType = ptInput
       end
       item
-        Name = 'inDirectionId'
+        Name = 'inLocationId'
         Value = ''
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
@@ -475,7 +475,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
         Component = PeriodChoice
       end
       item
-        Component = UnitGuides
+        Component = LocationGuides
       end
       item
         Component = GoodsGuides
@@ -509,9 +509,9 @@ inherited Report_GoodsForm: TReport_GoodsForm
     Left = 848
     Top = 3
   end
-  object UnitGuides: TdsdGuides
+  object LocationGuides: TdsdGuides
     KeyField = 'Id'
-    LookupControl = edUnit
+    LookupControl = edLocation
     FormNameParam.Value = 'TStoragePlace_ObjectForm'
     FormNameParam.DataType = ftString
     FormName = 'TStoragePlace_ObjectForm'
@@ -520,7 +520,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'Key'
         Value = ''
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'Key'
         DataType = ftString
         ParamType = ptInput
@@ -528,7 +528,7 @@ inherited Report_GoodsForm: TReport_GoodsForm
       item
         Name = 'TextValue'
         Value = ''
-        Component = UnitGuides
+        Component = LocationGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

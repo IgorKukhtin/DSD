@@ -1,17 +1,16 @@
 -- Function: gpReport_Goods ()
 
-DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpReport_Goods (
     IN inStartDate    TDateTime ,  
     IN inEndDate      TDateTime ,
-    IN inDirectionId  Integer   , 
+    IN inLocationId   Integer   , 
     IN inGoodsId      Integer   ,
     IN inSession      TVarChar    -- сессия пользователя
 )
 RETURNS TABLE  (InvNumber TVarChar, OperDate TDateTime, OperDatePartner TDateTime, MovementDescName TVarChar
-              , DirectionDescName TVarChar, DirectionCode Integer, DirectionName TVarChar
+              , LocationDescName TVarChar, LocationCode Integer, LocationName TVarChar
               , CarCode Integer, CarName TVarChar
               , ObjectByCode Integer, ObjectByName TVarChar
               , PaidKindName TVarChar
@@ -25,9 +24,8 @@ $BODY$
 BEGIN
 
     RETURN QUERY
-
     WITH tmpContainer_Count AS (SELECT Container.Id AS ContainerId
-                                     , COALESCE (CLO_Unit.ObjectId, COALESCE (CLO_Car.ObjectId, COALESCE (CLO_Member.ObjectId, 0))) AS DirectionId
+                                     , COALESCE (CLO_Unit.ObjectId, COALESCE (CLO_Car.ObjectId, COALESCE (CLO_Member.ObjectId, 0))) AS LocationId
                                      , Container.ObjectId AS GoodsId
                                      , COALESCE (CLO_GoodsKind.ObjectId, 0) AS GoodsKindId
                                      , Container.Amount
@@ -42,13 +40,13 @@ BEGIN
                                                                                 AND CLO_Member.DescId = zc_ContainerLinkObject_Member()
                                      LEFT JOIN ContainerLinkObject AS CLO_GoodsKind ON CLO_GoodsKind.ContainerId = Container.Id
                                                                                    AND CLO_GoodsKind.DescId = zc_ContainerLinkObject_GoodsKind()
-                                WHERE CLO_Unit.ObjectId = inDirectionId
-                                   OR CLO_Car.ObjectId = inDirectionId
-                                   OR CLO_Member.ObjectId = inDirectionId
-                                   OR COALESCE (inDirectionId, 0) = 0
+                                WHERE CLO_Unit.ObjectId = inLocationId
+                                   OR CLO_Car.ObjectId = inLocationId
+                                   OR CLO_Member.ObjectId = inLocationId
+                                   OR COALESCE (inLocationId, 0) = 0
                                )
        , tmpMIContainer_Count AS (SELECT tmpContainer_Count.ContainerId
-                                       , tmpContainer_Count.DirectionId
+                                       , tmpContainer_Count.LocationId
                                        , tmpContainer_Count.GoodsId
                                        , tmpContainer_Count.GoodsKindId
                                        , tmpContainer_Count.Amount
@@ -69,7 +67,7 @@ BEGIN
                                        LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Count.ContainerId
                                                                                      AND MIContainer.OperDate >= inStartDate
                                   GROUP BY tmpContainer_Count.ContainerId
-                                         , tmpContainer_Count.DirectionId
+                                         , tmpContainer_Count.LocationId
                                          , tmpContainer_Count.GoodsId
                                          , tmpContainer_Count.GoodsKindId
                                          , tmpContainer_Count.Amount
@@ -83,7 +81,7 @@ BEGIN
                                            END
                                  )
        , tmpContainer_Summ AS (SELECT tmpContainer_Count.ContainerId AS ContainerId_Count
-                                    , tmpContainer_Count.DirectionId
+                                    , tmpContainer_Count.LocationId
                                     , tmpContainer_Count.GoodsId
                                     , tmpContainer_Count.GoodsKindId
                                     , Container.Id AS ContainerId_Summ
@@ -93,7 +91,7 @@ BEGIN
                                                         AND Container.DescId = zc_Container_Summ()
                               )
        , tmpMIContainer_Summ AS (SELECT tmpContainer_Summ.ContainerId_Count AS ContainerId
-                                      , tmpContainer_Summ.DirectionId
+                                      , tmpContainer_Summ.LocationId
                                       , tmpContainer_Summ.GoodsId
                                       , tmpContainer_Summ.GoodsKindId
                                       , tmpContainer_Summ.Amount
@@ -114,7 +112,7 @@ BEGIN
                                       LEFT JOIN MovementItemContainer AS MIContainer ON MIContainer.ContainerId = tmpContainer_Summ.ContainerId_Summ
                                                                                     AND MIContainer.OperDate >= inStartDate
                                  GROUP BY tmpContainer_Summ.ContainerId_Count
-                                        , tmpContainer_Summ.DirectionId
+                                        , tmpContainer_Summ.LocationId
                                         , tmpContainer_Summ.GoodsId
                                         , tmpContainer_Summ.GoodsKindId
                                         , tmpContainer_Summ.Amount
@@ -132,9 +130,9 @@ BEGIN
         , MovementDate_OperDatePartner.ValueData AS OperDatePartner
         , MovementDesc.ItemName AS MovementDescName
 
-        , ObjectDesc.ItemName            AS DirectionDescName
-        , Object_Direction.ObjectCode    AS DirectionCode
-        , Object_Direction.ValueData     AS DirectionName
+        , ObjectDesc.ItemName            AS LocationDescName
+        , Object_Location.ObjectCode     AS LocationCode
+        , Object_Location.ValueData      AS LocationName
         , Object_Car.ObjectCode          AS CarCode
         , Object_Car.ValueData           AS CarName
         , Object_By.ObjectCode           AS ObjectByCode
@@ -168,7 +166,7 @@ BEGIN
 
    FROM (SELECT tmpMIContainer_all.MovementId
               , tmpMIContainer_all.MovementItemId
-              , tmpMIContainer_all.DirectionId
+              , tmpMIContainer_all.LocationId
               , tmpMIContainer_all.GoodsId
               , tmpMIContainer_all.GoodsKindId
               , SUM (tmpMIContainer_all.AmountStart) AS AmountStart
@@ -182,7 +180,7 @@ BEGIN
         FROM (SELECT -1 AS MovementId
                    , 0 AS MovementItemId
                    , tmpMIContainer_Count.ContainerId
-                   , tmpMIContainer_Count.DirectionId
+                   , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
                    , tmpMIContainer_Count.Amount - SUM (tmpMIContainer_Count.Amount_Total) AS AmountStart
@@ -195,7 +193,7 @@ BEGIN
                    , 0 AS SummOut
               FROM tmpMIContainer_Count
               GROUP BY tmpMIContainer_Count.ContainerId
-                     , tmpMIContainer_Count.DirectionId
+                     , tmpMIContainer_Count.LocationId
                      , tmpMIContainer_Count.GoodsId
                      , tmpMIContainer_Count.GoodsKindId
                      , tmpMIContainer_Count.Amount
@@ -205,7 +203,7 @@ BEGIN
               SELECT -2 AS MovementId
                    , 0 AS MovementItemId
                    , tmpMIContainer_Count.ContainerId
-                   , tmpMIContainer_Count.DirectionId
+                   , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
                    , 0 AS AmountStart
@@ -218,7 +216,7 @@ BEGIN
                    , 0 AS SummOut
               FROM tmpMIContainer_Count
               GROUP BY tmpMIContainer_Count.ContainerId
-                     , tmpMIContainer_Count.DirectionId
+                     , tmpMIContainer_Count.LocationId
                      , tmpMIContainer_Count.GoodsId
                      , tmpMIContainer_Count.GoodsKindId
                      , tmpMIContainer_Count.Amount
@@ -228,7 +226,7 @@ BEGIN
               SELECT tmpMIContainer_Count.MovementId
                    , tmpMIContainer_Count.MovementItemId
                    , tmpMIContainer_Count.ContainerId
-                   , tmpMIContainer_Count.DirectionId
+                   , tmpMIContainer_Count.LocationId
                    , tmpMIContainer_Count.GoodsId
                    , tmpMIContainer_Count.GoodsKindId
                    , 0 AS AmountStart
@@ -245,7 +243,7 @@ BEGIN
               SELECT -1 AS MovementId
                    , 0 AS MovementItemId
                    , tmpMIContainer_Summ.ContainerId
-                   , tmpMIContainer_Summ.DirectionId
+                   , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
                    , 0 AS AmountStart
@@ -258,7 +256,7 @@ BEGIN
                    , 0 AS SummOut
               FROM tmpMIContainer_Summ
               GROUP BY tmpMIContainer_Summ.ContainerId
-                     , tmpMIContainer_Summ.DirectionId
+                     , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
                      , tmpMIContainer_Summ.GoodsKindId
                      , tmpMIContainer_Summ.Amount
@@ -268,7 +266,7 @@ BEGIN
               SELECT -2 AS MovementId
                    , 0 AS MovementItemId
                    , tmpMIContainer_Summ.ContainerId
-                   , tmpMIContainer_Summ.DirectionId
+                   , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
                    , 0 AS AmountStart
@@ -281,7 +279,7 @@ BEGIN
                    , 0 AS SummOut
               FROM tmpMIContainer_Summ
               GROUP BY tmpMIContainer_Summ.ContainerId
-                     , tmpMIContainer_Summ.DirectionId
+                     , tmpMIContainer_Summ.LocationId
                      , tmpMIContainer_Summ.GoodsId
                      , tmpMIContainer_Summ.GoodsKindId
                      , tmpMIContainer_Summ.Amount
@@ -291,7 +289,7 @@ BEGIN
               SELECT tmpMIContainer_Summ.MovementId
                    , tmpMIContainer_Summ.MovementItemId
                    , tmpMIContainer_Summ.ContainerId
-                   , tmpMIContainer_Summ.DirectionId
+                   , tmpMIContainer_Summ.LocationId
                    , tmpMIContainer_Summ.GoodsId
                    , tmpMIContainer_Summ.GoodsKindId
                    , 0 AS AmountStart
@@ -307,7 +305,7 @@ BEGIN
              ) AS tmpMIContainer_all
          GROUP BY tmpMIContainer_all.MovementId
                 , tmpMIContainer_all.MovementItemId
-                , tmpMIContainer_all.DirectionId
+                , tmpMIContainer_all.LocationId
                 , tmpMIContainer_all.GoodsId
                 , tmpMIContainer_all.GoodsKindId
         ) AS tmpMIContainer_group
@@ -332,12 +330,12 @@ BEGIN
 
         LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMIContainer_group.GoodsId
         LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = tmpMIContainer_group.GoodsKindId
-        LEFT JOIN Object AS Object_Direction_find ON Object_Direction_find.Id = tmpMIContainer_group.DirectionId
-        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Direction_find.DescId
-        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.DirectionId
+        LEFT JOIN Object AS Object_Location_find ON Object_Location_find.Id = tmpMIContainer_group.LocationId
+        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object_Location_find.DescId
+        LEFT JOIN ObjectLink AS ObjectLink_Car_Unit ON ObjectLink_Car_Unit.ObjectId = tmpMIContainer_group.LocationId
                                                    AND ObjectLink_Car_Unit.DescId = zc_ObjectLink_Car_Unit()
-        LEFT JOIN Object AS Object_Direction ON Object_Direction.Id = CASE WHEN Object_Direction_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.DirectionId END
-        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Direction_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.DirectionId END
+        LEFT JOIN Object AS Object_Location ON Object_Location.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN ObjectLink_Car_Unit.ChildObjectId ELSE tmpMIContainer_group.LocationId END
+        LEFT JOIN Object AS Object_Car ON Object_Car.Id = CASE WHEN Object_Location_find.DescId = zc_Object_Car() THEN tmpMIContainer_group.LocationId END
         LEFT JOIN Object AS Object_By ON Object_By.Id = MovementLinkObject_By.ObjectId
 
    ;
@@ -360,4 +358,4 @@ ALTER FUNCTION gpReport_Goods (TDateTime, TDateTime, Integer, Integer, TVarChar)
 */
 
 -- тест
--- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inDirectionId:=0, inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Goods (inStartDate:= '01.01.2014', inEndDate:= '01.01.2014', inLocationId:=0, inGoodsId:= 1826, inSession:= zfCalc_UserAdmin());

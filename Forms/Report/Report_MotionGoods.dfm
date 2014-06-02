@@ -1,8 +1,8 @@
 object Report_MotionGoodsForm: TReport_MotionGoodsForm
   Left = 0
   Top = 0
-  Caption = #1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 395
+  Caption = #1054#1090#1095#1077#1090' <'#1044#1074#1080#1078#1077#1085#1080#1077' '#1090#1086#1074#1072#1088#1086#1074'>'
+  ClientHeight = 446
   ClientWidth = 1329
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,11 +19,13 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 113
+    Top = 80
     Width = 1329
-    Height = 282
+    Height = 366
     Align = alClient
     TabOrder = 0
+    ExplicitLeft = 25
+    ExplicitTop = 72
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -40,39 +42,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Position = spFooter
         end
         item
-          Kind = skSum
-          Position = spFooter
-          Column = StartCount
-        end
-        item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
         end
         item
-          Kind = skSum
-          Position = spFooter
-          Column = IncomeCount
-        end
-        item
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-          Column = StartSumm
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-        end
-        item
-          Kind = skSum
-          Position = spFooter
-          Column = IncomeSumm
         end
         item
           Format = ',0.00'
@@ -93,13 +70,6 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Format = ',0.00'
           Kind = skSum
           Position = spFooter
-          Column = EndCount
-        end
-        item
-          Format = ',0.00'
-          Kind = skSum
-          Position = spFooter
-          Column = EndSumm
         end
         item
           Format = ',0.00'
@@ -122,152 +92,172 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = StartCount_Sh
+          Column = PriceStart
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountStart
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummStart
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = StartCount
+          Column = PriceIncome
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = StartSumm
+          Column = CountIncome
         end
         item
-          Format = ',0.##'
-          Kind = skSum
-          Column = IncomeCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = IncomeCount
-        end
-        item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
           Column = IncomeSumm
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInCount_Sh
+          Column = PriceSendIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendIn
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInCount
+          Column = PriceSendOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOut
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInSumm
+          Column = PriceSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSale
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutCount_Sh
+          Column = PriceReturnOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummReturnOut
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutCount
+          Column = PriceReturnIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummReturnIn
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutSumm
+          Column = PriceLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummLoss
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SaleCount_Sh
+          Column = PriceInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SaleCount
+          Column = PriceEnd
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = SaleSumm
+          Column = CountEnd
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnOutCount_Sh
+          Column = SummEnd
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnOutCount
+          Column = CountSendOnPriceIn
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnOutSumm
+          Column = SummSendOnPriceIn
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnInCount_Sh
+          Column = CountSendOnPriceOut
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnInCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = ReturnInSumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossSumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventoryCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventoryCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventorySumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = EndCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = EndCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = EndSumm
+          Column = SummSendOnPriceOut
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -279,34 +269,34 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           Kind = skSum
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = StartCount
+          Column = CountStart
         end
         item
           Format = ',0.00'
           Kind = skSum
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = EndCount
+          Column = CountEnd
         end
         item
           Format = ',0.00'
           Kind = skSum
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = StartSumm
+          Column = SummStart
         end
         item
           Format = ',0.00'
           Kind = skSum
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
           Column = IncomeSumm
         end
@@ -325,12 +315,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.00'
           Kind = skSum
-          Column = EndCount
+          Column = CountEnd
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = EndSumm
+          Column = SummEnd
         end
         item
           Format = ',0.00'
@@ -349,127 +339,147 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         item
           Format = ',0.##'
           Kind = skSum
-          Column = StartCount_Sh
+          Column = PriceStart
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = IncomeCount_Sh
+          Column = PriceIncome
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountIncome
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = IncomeCount
+          Column = PriceSendIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendIn
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInCount_Sh
+          Column = PriceSendOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSendOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSendOut
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInCount
+          Column = PriceSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountSale
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummSale
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendInSumm
+          Column = PriceReturnOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnOut
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummReturnOut
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutCount_Sh
+          Column = PriceReturnIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountReturnIn
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummReturnIn
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutCount
+          Column = PriceLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountLoss
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummLoss
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SendOutSumm
+          Column = PriceInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = CountInventory
+        end
+        item
+          Format = ',0.####'
+          Kind = skSum
+          Column = SummInventory
         end
         item
           Format = ',0.##'
           Kind = skSum
-          Column = SaleCount_Sh
+          Column = PriceEnd
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = SaleCount
+          Column = CountSendOnPriceIn
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = SaleSumm
+          Column = SummSendOnPriceIn
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnOutCount_Sh
+          Column = CountSendOnPriceOut
         end
         item
-          Format = ',0.##'
+          Format = ',0.####'
           Kind = skSum
-          Column = ReturnOutCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = ReturnOutSumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = ReturnInCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = ReturnInCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = ReturnInSumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = LossSumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventoryCount_Sh
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventoryCount
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = InventorySumm
-        end
-        item
-          Format = ',0.##'
-          Kind = skSum
-          Column = EndCount_Sh
+          Column = SummSendOnPriceOut
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -484,193 +494,400 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       OptionsView.Footer = True
       OptionsView.GroupFooters = gfAlwaysVisible
       OptionsView.HeaderAutoHeight = True
+      Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+      object LocationDescName: TcxGridDBColumn
+        Caption = #1042#1080#1076' '#1084#1077#1089#1090#1072' '#1091#1095#1077#1090#1072
+        DataBinding.FieldName = 'LocationDescName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object LocationCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1084#1077#1089#1090#1072' '#1091#1095'.'
+        DataBinding.FieldName = 'LocationCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
       object LocationName: TcxGridDBColumn
-        Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072'-'#1084#1077#1089#1090#1086
+        Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072
         DataBinding.FieldName = 'LocationName'
-        Width = 39
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CarCode: TcxGridDBColumn
+        Caption = #1050#1086#1076' '#1072#1074#1090#1086#1084'.'
+        DataBinding.FieldName = 'CarCode'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object CarName: TcxGridDBColumn
+        Caption = #1040#1074#1090#1086#1084#1086#1073#1080#1083#1100
+        DataBinding.FieldName = 'CarName'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object GoodsCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'GoodsCode'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
         Width = 20
       end
       object GoodsName: TcxGridDBColumn
         Caption = #1058#1086#1074#1072#1088
         DataBinding.FieldName = 'GoodsName'
-        Width = 40
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 80
       end
       object GoodsKindName: TcxGridDBColumn
-        Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+        Caption = #1042#1080#1076' '#1091#1087#1072#1082#1086#1074#1082#1080
         DataBinding.FieldName = 'GoodsKindName'
-        Width = 22
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 50
       end
       object PartionGoodsName: TcxGridDBColumn
         Caption = #1055#1072#1088#1090#1080#1103' '#1090#1086#1074#1072#1088#1072
         DataBinding.FieldName = 'PartionGoodsName'
-        Width = 29
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
       end
       object AssetName: TcxGridDBColumn
         Caption = #1054#1057' ('#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077' '#1058#1052#1062')'
         DataBinding.FieldName = 'AssetName'
-        Width = 42
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 40
       end
       object MeasureName: TcxGridDBColumn
-        Caption = #1045#1076'.'#1080#1079#1084'.'
+        Caption = #1045#1076'. '#1080#1079#1084'.'
         DataBinding.FieldName = 'MeasureName'
-        Width = 39
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 35
       end
       object Weight: TcxGridDBColumn
         Caption = #1042#1077#1089
         DataBinding.FieldName = 'Weight'
-        Width = 28
-      end
-      object StartCount_Sh: TcxGridDBColumn
-        Caption = #1053#1072#1095'.'#1086#1089#1090', '#1096#1090
-        DataBinding.FieldName = 'StartCount_Sh'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 33
-      end
-      object StartCount: TcxGridDBColumn
-        Caption = #1053#1072#1095'.'#1086#1089#1090', '#1082#1075
-        DataBinding.FieldName = 'StartCount'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 33
-      end
-      object StartSumm: TcxGridDBColumn
-        Caption = #1053#1072#1095'.'#1086#1089#1090', '#1075#1088#1085
-        DataBinding.FieldName = 'StartSumm'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 33
-      end
-      object IncomeCount_Sh: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076', '#1096#1090
-        DataBinding.FieldName = 'IncomeCount_Sh'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 33
-      end
-      object IncomeCount: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076', '#1082#1075
-        DataBinding.FieldName = 'IncomeCount'
+        Visible = False
         HeaderAlignmentHorz = taCenter
-        Width = 33
+        HeaderAlignmentVert = vaCenter
+        Width = 30
+      end
+      object CountStart: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PriceStart: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceStart'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object SummStart: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1085#1072#1095'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummStart'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountIncome: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountIncome'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PriceIncome: TcxGridDBColumn
+        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceIncome'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
       object IncomeSumm: TcxGridDBColumn
-        Caption = #1055#1088#1080#1093#1086#1076', '#1075#1088#1085
-        DataBinding.FieldName = 'IncomeSumm'
-        Width = 33
+        Caption = #1055#1086#1089#1090#1072#1074#1097'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummIncome'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SendInCount_Sh: TcxGridDBColumn
-        DataBinding.FieldName = 'SendInCount_Sh'
+      object CountReturnOut: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountReturnOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PriceReturnOut: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceReturnOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object SummReturnOut: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1089#1090'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummReturnOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object CountSendIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountSendIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PriceSendIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceSendIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
         FooterAlignmentHorz = taRightJustify
-        Width = 33
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object SendInCount: TcxGridDBColumn
-        DataBinding.FieldName = 'SendInCount'
-        Width = 33
+      object SummSendIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1087#1088#1080#1093'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummSendIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SendInSumm: TcxGridDBColumn
-        DataBinding.FieldName = 'SendInSumm'
-        Width = 33
+      object CountSendOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountSendOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SendOutCount_Sh: TcxGridDBColumn
-        DataBinding.FieldName = 'SendOutCount_Sh'
-        HeaderAlignmentHorz = taRightJustify
-        Width = 33
+      object PriceSendOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceSendOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object SendOutCount: TcxGridDBColumn
-        DataBinding.FieldName = 'SendOutCount'
-        Width = 33
+      object SummSendOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1088#1072#1089#1093'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummSendOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SendOutSumm: TcxGridDBColumn
-        DataBinding.FieldName = 'SendOutSumm'
-        Width = 33
+      object CountSendOnPriceIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountSendOnPriceIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SaleCount_Sh: TcxGridDBColumn
-        Caption = #1055#1088#1086#1076#1072#1085#1086', '#1096#1090
-        DataBinding.FieldName = 'SaleCount_Sh'
-        Width = 33
+      object PriceSendOnPriceIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceSendOnPriceIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object SaleCount: TcxGridDBColumn
-        Caption = #1055#1088#1086#1076#1072#1085#1086', '#1082#1075
-        DataBinding.FieldName = 'SaleCount'
-        Width = 33
+      object SummSendOnPriceIn: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1087#1088#1080#1093'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummSendOnPriceIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object SaleSumm: TcxGridDBColumn
-        Caption = #1055#1088#1086#1076#1072#1085#1086', '#1075#1088#1085
-        DataBinding.FieldName = 'SaleSumm'
-        Width = 33
+      object CountSendOnPriceOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountSendOnPriceOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object ReturnOutCount_Sh: TcxGridDBColumn
-        DataBinding.FieldName = 'ReturnOutCount_Sh'
-        Width = 33
+      object PriceSendOnPriceOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceSendOnPriceOut'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object ReturnOutCount: TcxGridDBColumn
-        DataBinding.FieldName = 'ReturnOutCount'
-        Width = 33
+      object SummSendOnPriceOut: TcxGridDBColumn
+        Caption = #1055#1077#1088#1077#1084'. '#1092#1080#1083'. '#1088#1072#1089#1093'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummSendOnPriceOut'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object ReturnOutSumm: TcxGridDBColumn
-        DataBinding.FieldName = 'ReturnOutSumm'
-        Width = 33
+      object CountSale: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object ReturnInCount_Sh: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1096#1090
-        DataBinding.FieldName = 'ReturnInCount_Sh'
-        Width = 33
+      object PriceSale: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceSale'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object ReturnInCount: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1082#1075
-        DataBinding.FieldName = 'ReturnInCount'
-        Width = 33
+      object SummSale: TcxGridDBColumn
+        Caption = #1055#1088#1086#1076#1072#1078#1072' '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummSale'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object ReturnInSumm: TcxGridDBColumn
-        Caption = #1042#1086#1079#1074#1088#1072#1090' ('#1087#1086#1082#1091#1087'), '#1075#1088#1085
-        DataBinding.FieldName = 'ReturnInSumm'
-        Width = 33
+      object CountReturnIn: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountReturnIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object LossCount_Sh: TcxGridDBColumn
-        Caption = #1057#1087#1080#1089#1072#1085#1086', '#1096#1090
-        DataBinding.FieldName = 'LossCount_Sh'
-        Width = 33
+      object PriceReturnIn: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceReturnIn'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object LossCount: TcxGridDBColumn
-        Caption = #1057#1087#1080#1089#1072#1085#1086', '#1082#1075
-        DataBinding.FieldName = 'LossCount'
-        Width = 33
+      object SummReturnIn: TcxGridDBColumn
+        Caption = #1042#1086#1079#1074#1088'. '#1087#1086#1082'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummReturnIn'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object LossSumm: TcxGridDBColumn
-        Caption = #1057#1087#1080#1089#1072#1085#1086', '#1075#1088#1085
-        DataBinding.FieldName = 'LossSumm'
-        Width = 33
+      object CountLoss: TcxGridDBColumn
+        AlternateCaption = 'CountLoss'
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object InventoryCount_Sh: TcxGridDBColumn
-        Caption = #1048#1085#1074#1077#1085#1090', '#1096#1090
-        DataBinding.FieldName = 'InventoryCount_Sh'
-        Width = 33
+      object PriceLoss: TcxGridDBColumn
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceLoss'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object InventoryCount: TcxGridDBColumn
-        Caption = #1048#1085#1074#1077#1085#1090', '#1082#1075
-        DataBinding.FieldName = 'InventoryCount'
-        Width = 33
+      object SummLoss: TcxGridDBColumn
+        Caption = #1057#1087#1080#1089#1072#1085#1080#1077' '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummLoss'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object InventorySumm: TcxGridDBColumn
-        Caption = #1048#1085#1074#1077#1085#1090', '#1075#1088#1085
-        DataBinding.FieldName = 'InventorySumm'
-        Width = 33
+      object CountInventory: TcxGridDBColumn
+        Caption = #1050#1086#1083'. (-) '#1091#1073#1099#1083#1100' (+) '#1101#1082#1086#1085#1086#1084'. '
+        DataBinding.FieldName = 'CountInventory'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object EndCount_Sh: TcxGridDBColumn
-        Caption = #1050#1086#1085'. '#1086#1089#1090', '#1096#1090
-        DataBinding.FieldName = 'EndCount_Sh'
-        Width = 33
+      object PriceInventory: TcxGridDBColumn
+        Caption = #1094#1077#1085#1072' '#1091#1073#1099#1083#1100', '#1101#1082#1086#1085#1086#1084'.'
+        DataBinding.FieldName = 'PriceInventory'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
       end
-      object EndCount: TcxGridDBColumn
-        Caption = #1050#1086#1085'. '#1086#1089#1090', '#1082#1075
-        DataBinding.FieldName = 'EndCount'
-        Width = 33
+      object SummInventory: TcxGridDBColumn
+        Caption = #1057#1091#1084#1084#1072' (-) '#1091#1073#1099#1083#1100' (+) '#1101#1082#1086#1085#1086#1084'. '
+        DataBinding.FieldName = 'SummInventory'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
-      object EndSumm: TcxGridDBColumn
-        Caption = #1050#1086#1085'. '#1086#1089#1090', '#1075#1088#1085
-        DataBinding.FieldName = 'EndSumm'
-        Width = 33
+      object CountEnd: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1082#1086#1083'.'
+        DataBinding.FieldName = 'CountEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
+      end
+      object PriceEnd: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1094#1077#1085#1072
+        DataBinding.FieldName = 'PriceEnd'
+        PropertiesClassName = 'TcxCurrencyEditProperties'
+        Properties.DecimalPlaces = 4
+        Properties.DisplayFormat = ',0.####;-,0.####'
+        Visible = False
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 45
+      end
+      object SummEnd: TcxGridDBColumn
+        Caption = #1054#1089#1090'. '#1082#1086#1085#1077#1095'. '#1089#1091#1084#1084#1072
+        DataBinding.FieldName = 'SummEnd'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 55
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -681,12 +898,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Left = 0
     Top = 26
     Width = 1329
-    Height = 87
+    Height = 54
     Align = alTop
     TabOrder = 5
     object edGoodsGroup: TcxButtonEdit
-      Left = 721
-      Top = 9
+      Left = 671
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -696,24 +913,26 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 192
     end
     object deStart: TcxDateEdit
-      Left = 16
-      Top = 8
-      EditValue = 41579d
+      Left = 118
+      Top = 5
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 2
-      Width = 121
+      Width = 85
     end
     object deEnd: TcxDateEdit
-      Left = 176
-      Top = 8
-      EditValue = 41608d
+      Left = 118
+      Top = 30
+      EditValue = 41640d
+      Properties.SaveTime = False
       Properties.ShowTime = False
       TabOrder = 4
-      Width = 121
+      Width = 85
     end
     object edUnitGroup: TcxButtonEdit
-      Left = 422
-      Top = 10
+      Left = 359
+      Top = 5
       Properties.Buttons = <
         item
           Default = True
@@ -723,23 +942,23 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel3: TcxLabel
-      Left = 316
-      Top = 10
-      Caption = #1043#1088'.'#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+      Left = 232
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1087#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1081':'
     end
     object cxLabel1: TcxLabel
-      Left = 651
-      Top = 10
-      Caption = #1043#1088'.'#1090#1086#1074#1072#1088#1072
+      Left = 581
+      Top = 6
+      Caption = #1043#1088#1091#1087#1087#1072' '#1090#1086#1074#1072#1088#1086#1074':'
     end
     object cxLabel2: TcxLabel
-      Left = 673
-      Top = 50
-      Caption = #1058#1086#1074#1072#1088
+      Left = 631
+      Top = 31
+      Caption = #1058#1086#1074#1072#1088':'
     end
     object edGoods: TcxButtonEdit
-      Left = 721
-      Top = 50
+      Left = 671
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -749,8 +968,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 192
     end
     object edLocation: TcxButtonEdit
-      Left = 422
-      Top = 50
+      Left = 359
+      Top = 30
       Properties.Buttons = <
         item
           Default = True
@@ -760,24 +979,62 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Width = 203
     end
     object cxLabel4: TcxLabel
-      Left = 355
-      Top = 50
-      Caption = #1040#1085#1072#1083#1080#1090#1080#1082#1072
+      Left = 286
+      Top = 31
+      Caption = #1052#1077#1089#1090#1086' '#1091#1095#1077#1090#1072':'
+    end
+    object cxLabel5: TcxLabel
+      Left = 25
+      Top = 6
+      Caption = #1053#1072#1095#1072#1083#1086' '#1087#1077#1088#1080#1086#1076#1072':'
+    end
+    object cxLabel6: TcxLabel
+      Left = 6
+      Top = 31
+      Caption = #1054#1082#1086#1085#1095#1072#1085#1080#1077' '#1087#1077#1088#1080#1086#1076#1072':'
     end
   end
   object DataSource: TDataSource
     DataSet = ClientDataSet
-    Left = 56
-    Top = 64
+    Left = 48
+    Top = 248
   end
   object ClientDataSet: TClientDataSet
     Aggregates = <>
     Params = <>
     Left = 88
-    Top = 184
+    Top = 200
   end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
+      item
+        Component = deEnd
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = deStart
+        Properties.Strings = (
+          'Date')
+      end
+      item
+        Component = GoodsGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = GoodsGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
+      item
+        Component = LocationGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
+      end
       item
         Component = Owner
         Properties.Strings = (
@@ -785,6 +1042,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
           'Left'
           'Top'
           'Width')
+      end
+      item
+        Component = UnitGroupGuides
+        Properties.Strings = (
+          'Key'
+          'TextValue')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -808,8 +1071,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     PopupMenuLinks = <>
     ShowShortCutInHint = True
     UseSystemFont = True
-    Left = 144
-    Top = 24
+    Left = 128
+    Top = 264
     DockControlHeights = (
       0
       0
@@ -858,6 +1121,12 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       Action = ExecuteDialog
       Category = 0
     end
+    object dxBarStatic1: TdxBarStatic
+      Caption = 'New Item'
+      Category = 0
+      Hint = 'New Item'
+      Visible = ivAlways
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
@@ -898,14 +1167,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       GuiParams = <
         item
           Name = 'StartDate'
-          Value = 41579d
+          Value = 41640d
           Component = deStart
           DataType = ftDateTime
           ParamType = ptInput
         end
         item
           Name = 'EndDate'
-          Value = 41608d
+          Value = 41640d
           Component = deEnd
           DataType = ftDateTime
           ParamType = ptInput
@@ -979,14 +1248,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
     Params = <
       item
         Name = 'inStartDate'
-        Value = 41579d
+        Value = 41640d
         Component = deStart
         DataType = ftDateTime
         ParamType = ptInput
       end
       item
         Name = 'inEndDate'
-        Value = 41608d
+        Value = 41640d
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
@@ -1019,8 +1288,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 152
-    Top = 176
+    Left = 168
+    Top = 192
   end
   object dsdDBViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1038,14 +1307,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
   end
   object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 344
-    Top = 272
+    Top = 288
   end
   object GoodsGroupGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = edGoodsGroup
-    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.Value = 'TGoodsGroup_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TGoodsGroupForm'
+    FormName = 'TGoodsGroup_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -1064,8 +1333,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 776
-    Top = 32
+    Left = 752
+    Top = 8
   end
   object LocationGuides: TdsdGuides
     KeyField = 'Id'
@@ -1091,14 +1360,14 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 472
-    Top = 72
+    Left = 416
+    Top = 56
   end
   object PeriodChoice: TPeriodChoice
     DateStart = deStart
     DateEnd = deEnd
     Left = 200
-    Top = 64
+    Top = 40
   end
   object UnitGroupGuides: TdsdGuides
     KeyField = 'Id'
@@ -1125,8 +1394,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 464
-    Top = 24
+    Left = 416
+    Top = 8
   end
   object GoodsGuides: TdsdGuides
     KeyField = 'Id'
@@ -1152,8 +1421,8 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 736
-    Top = 67
+    Left = 752
+    Top = 59
   end
   object RefreshDispatcher: TRefreshDispatcher
     RefreshAction = actRefresh
@@ -1174,7 +1443,7 @@ object Report_MotionGoodsForm: TReport_MotionGoodsForm
       item
         Component = GoodsGuides
       end>
-    Left = 288
-    Top = 64
+    Left = 144
+    Top = 344
   end
 end
