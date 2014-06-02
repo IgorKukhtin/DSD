@@ -23,7 +23,7 @@ uses
   dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter, dsdAddOn,
   cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxMaskEdit,
   cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, cxCurrencyEdit, dsdGuides,
-  cxButtonEdit, ChoicePeriod, cxLabel;
+  cxButtonEdit, ChoicePeriod, cxLabel, dxBarExtItems;
 
 type
   TReport_MotionGoodsForm = class(TParentForm)
@@ -39,10 +39,10 @@ type
     bbRefresh: TdxBarButton;
     actRefresh: TdsdDataSetRefresh;
     dsdStoredProc: TdsdStoredProc;
-    StartCount: TcxGridDBColumn;
+    CountStart: TcxGridDBColumn;
     actExportToExcel: TdsdGridToExcel;
     bbToExcel: TdxBarButton;
-    IncomeCount: TcxGridDBColumn;
+    CountIncome: TcxGridDBColumn;
     dsdDBViewAddOn: TdsdDBViewAddOn;
     dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     Panel1: TPanel;
@@ -52,25 +52,25 @@ type
     GoodsKindName: TcxGridDBColumn;
     PartionGoodsName: TcxGridDBColumn;
     AssetName: TcxGridDBColumn;
-    StartSumm: TcxGridDBColumn;
-    IncomeSumm: TcxGridDBColumn;
-    EndCount: TcxGridDBColumn;
-    EndSumm: TcxGridDBColumn;
-    SendInCount: TcxGridDBColumn;
-    SendInSumm: TcxGridDBColumn;
-    SendOutCount: TcxGridDBColumn;
-    SendOutSumm: TcxGridDBColumn;
-    SaleCount: TcxGridDBColumn;
-    SaleSumm: TcxGridDBColumn;
-    ReturnOutCount: TcxGridDBColumn;
-    ReturnOutSumm: TcxGridDBColumn;
-    ReturnInCount: TcxGridDBColumn;
-    ReturnInSumm: TcxGridDBColumn;
-    LossCount: TcxGridDBColumn;
-    LossSumm: TcxGridDBColumn;
-    InventoryCount: TcxGridDBColumn;
-    InventorySumm: TcxGridDBColumn;
-    StartCount_Sh: TcxGridDBColumn;
+    SummStart: TcxGridDBColumn;
+    SummIncome: TcxGridDBColumn;
+    CountEnd: TcxGridDBColumn;
+    SummEnd: TcxGridDBColumn;
+    CountSendIn: TcxGridDBColumn;
+    SummSendIn: TcxGridDBColumn;
+    CountSendOut: TcxGridDBColumn;
+    SummSendOut: TcxGridDBColumn;
+    CountSale: TcxGridDBColumn;
+    SummSale: TcxGridDBColumn;
+    CountReturnOut: TcxGridDBColumn;
+    SummReturnOut: TcxGridDBColumn;
+    CountReturnIn: TcxGridDBColumn;
+    SummReturnIn: TcxGridDBColumn;
+    CountLoss: TcxGridDBColumn;
+    SummLoss: TcxGridDBColumn;
+    CountInventory: TcxGridDBColumn;
+    SummInventory: TcxGridDBColumn;
+    PriceStart: TcxGridDBColumn;
     GoodsGroupGuides: TdsdGuides;
     LocationGuides: TdsdGuides;
     edGoodsGroup: TcxButtonEdit;
@@ -81,15 +81,15 @@ type
     RefreshDispatcher: TRefreshDispatcher;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
-    IncomeCount_Sh: TcxGridDBColumn;
-    SendInCount_Sh: TcxGridDBColumn;
-    SendOutCount_Sh: TcxGridDBColumn;
-    SaleCount_Sh: TcxGridDBColumn;
-    ReturnOutCount_Sh: TcxGridDBColumn;
-    ReturnInCount_Sh: TcxGridDBColumn;
-    LossCount_Sh: TcxGridDBColumn;
-    InventoryCount_Sh: TcxGridDBColumn;
-    EndCount_Sh: TcxGridDBColumn;
+    PriceIncome: TcxGridDBColumn;
+    PriceSendIn: TcxGridDBColumn;
+    PriceSendOut: TcxGridDBColumn;
+    PriceSale: TcxGridDBColumn;
+    PriceReturnOut: TcxGridDBColumn;
+    PriceReturnIn: TcxGridDBColumn;
+    PriceLoss: TcxGridDBColumn;
+    PriceInventory: TcxGridDBColumn;
+    PriceEnd: TcxGridDBColumn;
     cxLabel3: TcxLabel;
     UnitGroupGuides: TdsdGuides;
     cxLabel1: TcxLabel;
@@ -99,6 +99,19 @@ type
     cxLabel4: TcxLabel;
     MeasureName: TcxGridDBColumn;
     Weight: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    cxLabel6: TcxLabel;
+    dxBarStatic1: TdxBarStatic;
+    LocationDescName: TcxGridDBColumn;
+    LocationCode: TcxGridDBColumn;
+    CarCode: TcxGridDBColumn;
+    CarName: TcxGridDBColumn;
+    PriceSendOnPriceIn: TcxGridDBColumn;
+    PriceSendOnPriceOut: TcxGridDBColumn;
+    CountSendOnPriceIn: TcxGridDBColumn;
+    SummSendOnPriceIn: TcxGridDBColumn;
+    CountSendOnPriceOut: TcxGridDBColumn;
+    SummSendOnPriceOut: TcxGridDBColumn;
   private
   public
   end;
