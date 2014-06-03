@@ -20,6 +20,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
+      ExplicitLeft = 2
       ExplicitTop = 22
       ExplicitWidth = 929
       ExplicitHeight = 226
@@ -107,6 +108,7 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
           DataController.Summary.SummaryGroups = <>
           OptionsView.ColumnAutoWidth = True
           OptionsView.Footer = True
+          OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
           object colInvNumber: TcxGridDBColumn
             Caption = #8470' '#1076#1086#1082#1091#1084#1077#1085#1090#1072
@@ -317,6 +319,8 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       OptionsView.ColumnAutoWidth = True
       OptionsView.Footer = True
       OptionsView.GroupByBox = False
+      OptionsView.GroupSummaryLayout = gslAlignWithColumns
+      OptionsView.HeaderAutoHeight = True
       OptionsView.Indicator = True
       Styles.Inactive = dmMain.cxSelection
       Styles.Selection = dmMain.cxSelection
@@ -732,17 +736,59 @@ inherited AncestorDocumentMCForm: TAncestorDocumentMCForm
       Category = 'DSDLib'
       MoveParams = <>
       View = cxGridDBTableViewChild
-      Action = GoodsChoiceForm
+      Action = actGoodsChoiceForm
       Params = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       Hint = #1044#1086#1073#1072#1074#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
       ShortCut = 45
       ImageIndex = 0
     end
-    object GoodsChoiceForm: TOpenChoiceForm
+    object actGoodsKindChoiceMaster: TOpenChoiceForm
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'GoodsChoiceForm'
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actGoodsKindChoiceChild: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'GoodsKindForm'
+      FormName = 'TGoodsKindForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = ChildCDS
+          ComponentItem = 'GoodsKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object actGoodsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actGoodsChoiceForm'
       FormName = 'TGoodsForm'
       FormNameParam.Name = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
