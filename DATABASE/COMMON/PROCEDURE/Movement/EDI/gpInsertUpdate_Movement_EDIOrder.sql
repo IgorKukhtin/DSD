@@ -61,6 +61,8 @@ BEGIN
         vbGoodsPropertyID := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
      END IF;
 
+     PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка ORDER из EDI', vbUserId);
+
      RETURN QUERY 
      SELECT vbMovementId, vbGoodsPropertyID;
 

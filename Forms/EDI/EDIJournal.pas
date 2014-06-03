@@ -63,6 +63,19 @@ type
     colIsTax: TcxGridDBColumn;
     spHeaderComDoc: TdsdStoredProc;
     spListComDoc: TdsdStoredProc;
+    BottomPanel: TPanel;
+    DBChildViewAddOn: TdsdDBViewAddOn;
+    cxProtocolGrid: TcxGrid;
+    cxProtocolGridView: TcxGridDBTableView;
+    colProtocolOperDate: TcxGridDBColumn;
+    colProtocolText: TcxGridDBColumn;
+    colProtocolUserName: TcxGridDBColumn;
+    cxGridProtocolLevel: TcxGridLevel;
+    ProtocolCDS: TClientDataSet;
+    ProtocolDS: TDataSource;
+    spProtocol: TdsdStoredProc;
+    DBProtocolViewAddOn: TdsdDBViewAddOn;
+    cxVerticalSplitter: TcxSplitter;
   private
     { Private declarations }
   public

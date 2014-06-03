@@ -84,6 +84,9 @@ BEGIN
      AND COALESCE(MovementItem.ObjectId, 0) <> 0
      AND MovementItem.DescId =  zc_MI_Master();
 
+     PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Установлена связь с расходной накладной', vbUserId);
+
+
      -- сохранили протокол
      -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
 
