@@ -10,7 +10,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     ExplicitHeight = 250
     ClientRectBottom = 246
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
       ExplicitHeight = 224
       inherited cxGrid: TcxGrid
         Height = 224
@@ -75,9 +74,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 929
       ExplicitHeight = 224
       inherited cxGridEntry: TcxGrid
         Height = 224
@@ -163,12 +159,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
       inherited colChildGoodsName: TcxGridDBColumn
         Properties.AutoSelect = False
-        Properties.Buttons = <
-          item
-            Action = GoodsChoiceForm
-            Default = True
-            Kind = bkEllipsis
-          end>
       end
       inherited colChildAmount: TcxGridDBColumn
         Properties.DecimalPlaces = 4
@@ -190,9 +180,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
-    inherited ceStatus: TcxButtonEdit
-      ExplicitHeight = 24
-    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -220,9 +207,8 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    inherited GoodsChoiceForm: TOpenChoiceForm
+    inherited actGoodsKindChoiceChild: TOpenChoiceForm
       FormName = 'TGoods_ObjectForm'
-      FormNameParam.Value = ''
     end
   end
   inherited spSelect: TdsdStoredProc

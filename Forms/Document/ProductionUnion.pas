@@ -16,13 +16,18 @@ uses
 
 type
   TProductionUnionForm = class(TAncestorDocumentMCForm)
-    cePartionGoods: TcxTextEdit;
-    cxLabel10: TcxLabel;
     actUpdateChildDS: TdsdUpdateDataSet;
-    colHeadCount: TcxGridDBColumn;
-    ColChildHeadCount: TcxGridDBColumn;
+    colCount: TcxGridDBColumn;
     colChildLineNum: TcxGridDBColumn;
     colLineNum: TcxGridDBColumn;
+    colPartionClose: TcxGridDBColumn;
+    colPartionGoods: TcxGridDBColumn;
+    colComment: TcxGridDBColumn;
+    colRealWeight: TcxGridDBColumn;
+    colCuterCount: TcxGridDBColumn;
+    colGoodsKindName: TcxGridDBColumn;
+    colReceiptName: TcxGridDBColumn;
+    colPartionGoodsDate: TcxGridDBColumn;
   private
     { Private declarations }
   public
