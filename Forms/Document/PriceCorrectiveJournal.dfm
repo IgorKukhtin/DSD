@@ -10,11 +10,14 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
     Width = 1020
     Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1020
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1020
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -32,11 +35,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colTotalSumm
             end
             item
               Format = ',0.####'
@@ -63,11 +61,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
               Format = ',0.####'
               Kind = skSum
               Column = colTotalCount
-            end
-            item
-              Format = ',0.####'
-              Kind = skSum
-              Column = colTotalSumm
             end
             item
               Format = ',0.####'
@@ -329,16 +322,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
             DataBinding.FieldName = 'PriceWithVAT'
             Visible = False
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colTotalSumm: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1089' '#1053#1044#1057' ('#1080#1090#1086#1075')'
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 60
@@ -951,50 +934,6 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
       end>
     Left = 296
     Top = 280
-  end
-  object spTaxCorrective: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Component = MasterCDS
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId_inf'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inIsTaxLink'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'outDocumentTaxKindId'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindId'
-      end
-      item
-        Name = 'outDocumentTaxKindName'
-        Component = MasterCDS
-        ComponentItem = 'DocumentTaxKindName'
-        DataType = ftString
-      end>
-    Left = 296
-    Top = 312
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'

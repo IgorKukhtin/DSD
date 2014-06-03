@@ -70,8 +70,12 @@ BEGIN
           , COALESCE (MovementLinkObject_ContractFrom.ObjectId, MovementLinkObject_Contract.ObjectId) AS ContractId
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -1 * MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
+          , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective()
+                      THEN zc_Enum_DocumentTaxKind_CorrectivePrice() -- !!!всегда такая!!!
+                 ELSE inDocumentTaxKindId -- !!!не меняется!!!
+            END AS DocumentTaxKindId
             INTO vbMovementDescId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
-               , vbDiscountPercent, vbExtraChargesPercent
+               , vbDiscountPercent, vbExtraChargesPercent, inDocumentTaxKindId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                        ON MovementLinkObject_Partner.MovementId = Movement.Id
@@ -115,7 +119,7 @@ BEGIN
      CREATE TEMP TABLE _tmpMovement_find (MovementId_Corrective Integer, MovementId_Tax Integer) ON COMMIT DROP;
      CREATE TEMP TABLE _tmpResult (MovementId_Corrective Integer, MovementId_Tax Integer, GoodsId Integer, GoodsKindId Integer, Amount TFloat, OperPrice TFloat) ON COMMIT DROP;
 
-     -- выбрали <Возврат от покупателя> или <Перевод долга (приход)>
+     -- выбрали <Возврат от покупателя> или <Перевод долга (приход)> или <Корректировка цены>
      INSERT INTO _tmpMI_Return (GoodsId, GoodsKindId, OperPrice, Amount)
         SELECT tmpMI.GoodsId
              , tmpMI.GoodsKindId
@@ -124,7 +128,7 @@ BEGIN
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                    , CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS OperPrice
-                   , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN vbMovementDescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount
+                   , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) THEN MovementItem.Amount ELSE 0 END) AS Amount
               FROM MovementItem
                    INNER JOIN MovementItemFloat AS MIFloat_Price
                                                 ON MIFloat_Price.MovementItemId = MovementItem.Id
@@ -147,7 +151,7 @@ BEGIN
         WHERE tmpMI.Amount <> 0
        ;
 
-     IF inIsTaxLink = FALSE
+     IF inIsTaxLink = FALSE OR vbMovementDescId = zc_Movement_PriceCorrective()
      THEN 
          -- в этом случае не будет привязки 
           INSERT INTO _tmpResult (MovementId_Corrective, MovementId_Tax, GoodsId, GoodsKindId, Amount, OperPrice)
@@ -434,6 +438,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.05.14                                        * add zc_Movement_PriceCorrective
  29.05.14                                        * add zc_MovementLinkObject_Partner
  20.05.14                                        * add zc_Movement_TransferDebtIn
  10.05.14                                        * add lpComplete_Movement_TaxCorrective

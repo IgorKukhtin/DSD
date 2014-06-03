@@ -44,7 +44,7 @@ BEGIN
                 INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
                                                       AND Movement_Master.StatusId = zc_Enum_Status_Complete()
            WHERE Movement.Id = inMovementId
-             AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+             AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
 
       SELECT Movement.Id				                    AS MovementId
@@ -53,6 +53,7 @@ BEGIN
            , 'J1201205'::TVarChar                       AS CHARCODE  
            , 'Неграш О.В.'::TVarChar                    AS N10 
            , 'оплата з поточного рахунка'::TVarChar     AS N9
+           , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
            , CAST (REPEAT (' ', 8 - LENGTH (MovementString_InvNumberPartner.ValueData)) || MovementString_InvNumberPartner.ValueData AS TVarChar) AS InvNumberPartner
@@ -238,36 +239,46 @@ BEGIN
      WITH
           tmpMovementTaxCount AS
           (SELECT COALESCE (COUNT (MovementLinkMovement_Child.MovementChildId), 0) AS CountTaxId
+                , MAX (Movement.DescId) AS DescId
            FROM MovementLinkMovement AS MovementLinkMovement_Master
                 INNER JOIN Movement ON Movement.Id = inMovementId
                                    AND Movement.Id = MovementLinkMovement_Master.MovementChildId
-                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                 INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
                                                 ON MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
                                                AND MovementLinkMovement_Child.MovementId = MovementLinkMovement_Master.MovementId
            WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
           )
-        , tmpMovement AS
+        , tmpMovementTaxCorrective AS
           (SELECT MovementLinkMovement_Master.MovementId AS Id --CASE WHEN tmpMovementTaxCount<1
+                , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummVAT
+                , COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummMVAT
+                , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) AS TotalSummPVAT
            FROM MovementLinkMovement AS MovementLinkMovement_Master
                 INNER JOIN Movement ON Movement.Id = inMovementId
                                    AND Movement.Id = MovementLinkMovement_Master.MovementChildId
-                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+                LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                        ON MovementFloat_TotalSummMVAT.MovementId =  MovementLinkMovement_Master.MovementId
+                                       AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+                LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                        ON MovementFloat_TotalSummPVAT.MovementId =  MovementLinkMovement_Master.MovementId
+                                       AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
            WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
           )
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
-                 , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
-                             THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
-                        ELSE COALESCE (MIFloat_Price.ValueData, 0)
-                   END AS Price
-                 , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
-                                  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
-                                  ELSE MovementItem.Amount
-                        END) AS Amount
+                , CASE WHEN MovementFloat_ChangePercent.ValueData <> 0
+                            THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
+                       ELSE COALESCE (MIFloat_Price.ValueData, 0)
+                  END AS Price
+                , SUM (CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
+                                 THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
+                                 ELSE MovementItem.Amount
+                       END) AS Amount
            FROM MovementItem
                 INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
-                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn())
+                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
                 INNER JOIN MovementItemFloat AS MIFloat_Price
                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -291,52 +302,71 @@ BEGIN
              MovementItem.ObjectId                                          AS GoodsId
            , MIFloat_Price.ValueData                                        AS Price
            , SUM (MovementItem.Amount)                                      AS Amount
-       FROM tmpMovement
-           INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
-                                  AND MovementItem.DescId     = zc_MI_Master()
-                                  AND MovementItem.isErased   = FALSE
-                                  AND MovementItem.Amount <> 0
+       FROM tmpMovementTaxCorrective
+            INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovementTaxCorrective.Id
+                                   AND MovementItem.DescId     = zc_MI_Master()
+                                   AND MovementItem.isErased   = FALSE
+                                   AND MovementItem.Amount <> 0
             JOIN MovementItemFloat AS MIFloat_Price
                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                   AND MIFloat_Price.ValueData <> 0
-
             JOIN Movement ON Movement.Id = MovementItem.MovementId
                          AND Movement.StatusId <> zc_Enum_Status_Erased()
-       GROUP BY
-             MovementItem.ObjectId
-           , MIFloat_Price.ValueData
+       GROUP BY MovementItem.ObjectId
+              , MIFloat_Price.ValueData
 
        )
        -- сам запрос
-       SELECT GoodsId
-           , Object_Goods.ObjectCode         AS GoodsCode
-           , Object_Goods.ValueData          AS GoodsName
-           , Price                           AS Price
-           , CAST (tmpMovementTaxCount.CountTaxId AS Integer) AS CountTaxId
-           , SUM (ReturnInAmount)            AS ReturnInAmount
-           , SUM (TaxCorrectiveAmount)       AS TaxCorrectiveAmount
-       FROM (SELECT tmpReturnIn.GoodsId
-                  , tmpReturnIn.Price
-                  , tmpReturnIn.Amount AS ReturnInAmount
-                  , 0                  AS TaxCorrectiveAmount
-             FROM tmpReturnIn
-             WHERE tmpReturnIn.Amount <> 0
-           UNION ALL
-             SELECT tmpTaxCorrective.GoodsId
-                  , tmpTaxCorrective.Price
-                  , 0                       AS ReturnInAmount
-                  , tmpTaxCorrective.Amount AS TaxCorrectiveAmount
-             FROM tmpTaxCorrective
-          ) AS tmp
-           LEFT JOIN Object AS Object_Goods ON Object_Goods.Id =  tmp.GoodsId
-           LEFT JOIN tmpMovementTaxCount ON 1=1
-      GROUP BY tmp.GoodsId
-             , Object_Goods.ObjectCode
-             , Object_Goods.ValueData
-             , tmp.Price
-             , tmpMovementTaxCount.CountTaxId
-      HAVING SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
+       SELECT COALESCE (tmp.GoodsId, 1) AS GoodsId
+            , CAST (tmpMovementTaxCount.CountTaxId AS Integer) AS CountTaxId
+            , Object_Goods.ObjectCode         AS GoodsCode
+            , Object_Goods.ValueData          AS GoodsName
+            , tmp.Price
+            , tmp.ReturnInAmount
+            , tmp.TaxCorrectiveAmount
+            , tmpMovementTaxCorrective.TotalSummVAT  AS TotalSummVAT_calc
+            , tmpMovementTaxCorrective.TotalSummMVAT AS TotalSummMVAT_calc
+            , tmpMovementTaxCorrective.TotalSummPVAT AS TotalSummPVAT_calc
+            , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummVAT
+            , COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummMVAT
+            , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) AS TotalSummPVAT
+
+       FROM (SELECT SUM (tmpMovementTaxCorrective.TotalSummVAT)  AS TotalSummVAT
+                  , SUM (tmpMovementTaxCorrective.TotalSummMVAT) AS TotalSummMVAT
+                  , SUM (tmpMovementTaxCorrective.TotalSummPVAT) AS TotalSummPVAT
+             FROM tmpMovementTaxCorrective
+            ) AS tmpMovementTaxCorrective
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
+                                    ON MovementFloat_TotalSummMVAT.MovementId = inMovementId
+                                   AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
+                                    ON MovementFloat_TotalSummPVAT.MovementId = inMovementId
+                                   AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+            LEFT JOIN (SELECT GoodsId
+                            , Price
+                            , SUM (ReturnInAmount)            AS ReturnInAmount
+                            , SUM (TaxCorrectiveAmount)       AS TaxCorrectiveAmount
+                       FROM (SELECT tmpReturnIn.GoodsId
+                                  , tmpReturnIn.Price
+                                  , tmpReturnIn.Amount AS ReturnInAmount
+                                  , 0                  AS TaxCorrectiveAmount
+                             FROM tmpReturnIn
+                             WHERE tmpReturnIn.Amount <> 0
+                            UNION ALL
+                             SELECT tmpTaxCorrective.GoodsId
+                                  , tmpTaxCorrective.Price
+                                  , 0                       AS ReturnInAmount
+                                  , tmpTaxCorrective.Amount AS TaxCorrectiveAmount
+                             FROM tmpTaxCorrective
+                            ) AS tmp
+                       GROUP BY tmp.GoodsId
+                              , tmp.Price
+                       HAVING SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
+                      ) AS tmp ON 1 = 1
+            LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
+            LEFT JOIN tmpMovementTaxCount ON 1 = 1
+       WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL
      ;
     RETURN NEXT Cursor2;
 
@@ -348,6 +378,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.05.14                                        * add zc_Movement_PriceCorrective
  21.05.14                                        * add zc_Movement_TransferDebtIn
  20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete

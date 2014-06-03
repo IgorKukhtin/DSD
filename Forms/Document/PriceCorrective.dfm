@@ -11,17 +11,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 863
     Height = 537
     ExplicitTop = 131
-    ExplicitWidth = 1084
+    ExplicitWidth = 863
     ExplicitHeight = 537
     ClientRectBottom = 537
     ClientRectRight = 863
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1084
+      ExplicitWidth = 863
       ExplicitHeight = 513
       inherited cxGrid: TcxGrid
         Width = 863
         Height = 513
-        ExplicitWidth = 1084
+        ExplicitWidth = 863
         ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -149,12 +149,12 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 1084
+      ExplicitWidth = 863
       ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
         Width = 863
         Height = 513
-        ExplicitWidth = 1084
+        ExplicitWidth = 863
         ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -180,7 +180,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 863
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 1084
+    ExplicitWidth = 863
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -1260,7 +1260,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Top = 208
   end
   object spGetReportName: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_PriceCorrective_ReportName'
+    StoredProcName = 'gpGet_Movement_ReturnIn_ReportName'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -1570,53 +1570,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       end>
     Left = 368
     Top = 380
-  end
-  object spTaxCorrective: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inMovementId'
-        Value = Null
-        Component = FormParams
-        ComponentItem = 'Id'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inDocumentTaxKindId_inf'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-        ParamType = ptInput
-      end
-      item
-        Name = 'inIsTaxLink'
-        Value = True
-        DataType = ftBoolean
-        ParamType = ptInput
-      end
-      item
-        Name = 'outDocumentTaxKindId'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'Key'
-      end
-      item
-        Name = 'outDocumentTaxKindName'
-        Value = ''
-        Component = DocumentTaxKindGuides
-        ComponentItem = 'TextValue'
-      end>
-    Left = 368
-    Top = 432
   end
   object spSelectPrintTaxCorrective_Us: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_TaxCorrective_Print'
