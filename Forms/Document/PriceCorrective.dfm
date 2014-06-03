@@ -1238,7 +1238,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Top = 310
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_PriceCorrective_Print'
+    StoredProcName = 'gpSelect_Movement_ReturnIn_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

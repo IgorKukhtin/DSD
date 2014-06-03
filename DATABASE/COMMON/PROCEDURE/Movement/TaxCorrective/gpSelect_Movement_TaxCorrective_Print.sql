@@ -378,7 +378,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
- 03.05.14                                        * add zc_Movement_PriceCorrective
+ 03.06.14                                        * add zc_Movement_PriceCorrective
  21.05.14                                        * add zc_Movement_TransferDebtIn
  20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete

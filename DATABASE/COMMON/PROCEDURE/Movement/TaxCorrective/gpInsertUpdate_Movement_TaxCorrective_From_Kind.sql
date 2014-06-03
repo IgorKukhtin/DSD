@@ -438,7 +438,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 03.05.14                                        * add zc_Movement_PriceCorrective
+ 03.06.14                                        * add zc_Movement_PriceCorrective
  29.05.14                                        * add zc_MovementLinkObject_Partner
  20.05.14                                        * add zc_Movement_TransferDebtIn
  10.05.14                                        * add lpComplete_Movement_TaxCorrective
