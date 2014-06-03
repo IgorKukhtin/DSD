@@ -7,9 +7,9 @@ CREATE OR REPLACE FUNCTION gpGet_Object_City(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , CityKindId Integer, CityKindCode Integer, CityKindName TVarChar 
-             , RegionId Integer, RegionCode Integer, RegionName TVarChar
-             , ProvinceId Integer, ProvinceCode Integer, ProvinceName TVarChar
+             , CityKindId Integer, CityKindName TVarChar 
+             , RegionId Integer, RegionName TVarChar
+             , ProvinceId Integer, ProvinceName TVarChar
              , isErased boolean) AS
 $BODY$
 BEGIN
@@ -26,15 +26,12 @@ BEGIN
            , CAST ('' as TVarChar)  AS Name
 
            , CAST (0 as Integer)    AS CityKindId
-           , CAST (0 as Integer)    AS CityKindCode
            , CAST ('' as TVarChar)  AS CityKindName
 
            , CAST (0 as Integer)    AS RegionId
-           , CAST (0 as Integer)    AS RegionCode
            , CAST ('' as TVarChar)  AS RegionName
           
            , CAST (0 as Integer)    AS ProvinceId
-           , CAST (0 as Integer)    AS ProvinceCode
            , CAST ('' as TVarChar)  AS ProvinceName
 
            , CAST (NULL AS Boolean) AS isErased;
@@ -46,18 +43,15 @@ BEGIN
            , Object_City.ValueData  AS Name
 
            , Object_CityKind.Id          AS CityKindId
-           , Object_CityKind.ObjectCode  AS CityKindCode
            , Object_CityKind.ValueData   AS CityKindName
 
            , Object_Region.Id            AS RegionId
-           , Object_Region.ObjectCode    AS RegionCode
            , Object_Region.ValueData     AS RegionName        
 
            , Object_Province.Id          AS ProvinceId
-           , Object_Province.ObjectCode  AS ProvinceCode
            , Object_Province.ValueData   AS ProvinceName
 
-           , Object.isErased   AS isErased
+           , Object_City.isErased   AS isErased
 
        FROM Object AS Object_City
             LEFT JOIN ObjectLink AS ObjectLink_City_CityKind

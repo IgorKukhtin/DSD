@@ -1,12 +1,10 @@
 -- Function: gpSelect_MovementItem_PriceCorrective()
 
- DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, Integer, TDateTime, Boolean, Boolean, TVarChar);
 DROP FUNCTION IF EXISTS gpSelect_MovementItem_PriceCorrective (Integer, TDateTime, Boolean, Boolean, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpSelect_MovementItem_PriceCorrective(
     IN inMovementId  Integer      , -- ключ Документа
- --   IN inPriceListId Integer      , -- ключ Прайс листа
     IN inOperDate    TDateTime    , -- Дата документа
     IN inShowAll     Boolean      , --
     IN inisErased    Boolean      , --

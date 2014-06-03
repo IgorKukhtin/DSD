@@ -78,7 +78,7 @@
     Caption = #1053#1072#1089#1077#1083#1077#1085#1085#1099#1081' '#1087#1091#1085#1082#1090
   end
   object ceCity: TcxButtonEdit
-    Left = 42
+    Left = 40
     Top = 158
     Properties.Buttons = <
       item
@@ -87,23 +87,18 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 294
-  end
-  object cxLabel4: TcxLabel
-    Left = 217
-    Top = 208
-    Caption = #1056#1072#1081#1086#1085
+    Width = 296
   end
   object ceProvinceCity: TcxButtonEdit
-    Left = 42
-    Top = 204
+    Left = 40
+    Top = 199
     Properties.Buttons = <
       item
         Default = True
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 11
+    TabOrder = 10
     Width = 296
   end
   object cxLabel5: TcxLabel
@@ -112,7 +107,7 @@
     Caption = #1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
   end
   object ceStreetKind: TcxButtonEdit
-    Left = 42
+    Left = 40
     Top = 114
     Properties.Buttons = <
       item
@@ -120,7 +115,7 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 13
+    TabOrder = 12
     Width = 175
   end
   object cxLabel6: TcxLabel
@@ -326,17 +321,19 @@
       item
         Name = 'Key'
         Value = ''
+        Component = CityGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = CityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 128
+    Left = 152
     Top = 152
   end
   object ProvinceCityGuides: TdsdGuides
@@ -350,12 +347,14 @@
       item
         Name = 'Key'
         Value = ''
+        Component = ProvinceCityGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = ProvinceCityGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput
@@ -374,12 +373,14 @@
       item
         Name = 'Key'
         Value = ''
+        Component = StreetKindGuides
         ComponentItem = 'Key'
         ParamType = ptInput
       end
       item
         Name = 'TextValue'
         Value = ''
+        Component = StreetKindGuides
         ComponentItem = 'TextValue'
         DataType = ftString
         ParamType = ptInput

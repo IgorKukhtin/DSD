@@ -72,7 +72,7 @@ begin
   FParams.AddParam('inPersonalId', ftInteger, ptInput, PersonalId);
   FParams.AddParam('inAmount', ftFloat, ptInput, Amount);
   FParams.AddParam('inComment', ftString, ptInput, Comment);
-  FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
+  //FParams.AddParam('inContractId', ftInteger, ptInput, ContractId);
   FParams.AddParam('inInfoMoneyId', ftInteger, ptInput, InfoMoneyId);
   FParams.AddParam('inUnitId', ftInteger, ptInput, UnitId);
   FParams.AddParam('inPositionId', ftInteger, ptInput, PositionId);

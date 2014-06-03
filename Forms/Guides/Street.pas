@@ -55,6 +55,10 @@ type
     clErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dsdDBViewAddOn: TdsdDBViewAddOn;
+    clPostalCode: TcxGridDBColumn;
+    clStreetKindName: TcxGridDBColumn;
+    clCityName: TcxGridDBColumn;
+    clProvinceCityName: TcxGridDBColumn;
   private
     { Private declarations }
   public

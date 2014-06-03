@@ -42,7 +42,7 @@ type
     ChildCDS: TClientDataSet;
     ChildDS: TDataSource;
     cxGridChild: TcxGrid;
-    cxGridDBTableView1: TcxGridDBTableView;
+    cxGridDBTableViewChild: TcxGridDBTableView;
     colChildGoodsCode: TcxGridDBColumn;
     colChildGoodsName: TcxGridDBColumn;
     colChildGoodsKindName: TcxGridDBColumn;
@@ -50,7 +50,7 @@ type
     colChildAmountReceipt: TcxGridDBColumn;
     colChildPartionGoods: TcxGridDBColumn;
     colChildComment: TcxGridDBColumn;
-    cxGridLevel1: TcxGridLevel;
+    cxGridLevelChild: TcxGridLevel;
     spErasedMIChild: TdsdStoredProc;
     spUnErasedMIChild: TdsdStoredProc;
     spInsertMaskMIChild: TdsdStoredProc;
@@ -74,6 +74,21 @@ type
     bbAddChild: TdxBarButton;
     InsertRecordChild: TInsertRecord;
     GoodsChoiceForm: TOpenChoiceForm;
+    actMIChildSetErased: TdsdUpdateErased;
+    actMIChildSetUnErased: TdsdUpdateErased;
+    bbErasedChild: TdxBarButton;
+    bbUnErasedChild: TdxBarButton;
+    dxBarSeparator1: TdxBarSeparator;
+    PopupMenuChild: TPopupMenu;
+    MenuItem1: TMenuItem;
+    MenuItem2: TMenuItem;
+    N2: TMenuItem;
+    N3: TMenuItem;
+    N4: TMenuItem;
+    N5: TMenuItem;
+    N6: TMenuItem;
+    ChildDBViewAddOn: TdsdDBViewAddOn;
+    colChildIsErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

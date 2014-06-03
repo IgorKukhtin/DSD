@@ -72,7 +72,7 @@ from (
 
    , (CASE WHEN (RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0
                 THEN RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm
-           ELSE 0 /*RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm*/
+           ELSE RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm -- 0
       END)::TFloat AS DefermentPaymentRemains
 
    , (CASE WHEN ((RESULT.Remains - RESULT.DelayCreditLimit - RESULT.SaleSumm) > 0 AND RESULT.SaleSumm1 > 0)
@@ -270,6 +270,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 02.06.14                                        * change DefermentPaymentRemains
  20.05.14                                        * add Object_Contract_View
  12.05.14                                        * add RESULT.DelayCreditLimit
  05.05.14                                        * add inPaidKindId

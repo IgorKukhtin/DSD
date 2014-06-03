@@ -205,6 +205,7 @@ BEGIN
 
             LEFT JOIN MovementItem AS MIMaster ON MIMaster.MovementId = Movement.Id
                                               AND MIMaster.DescId = zc_MI_Master()
+                                              AND MIMaster.isErased = FALSE
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MIMaster.ObjectId
 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
@@ -242,6 +243,7 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.06.14                                        * add isErased = FALSE
  30.05.14                                        * add 0 <> 
  19.05.14                                        * all
  14.05.14                         *

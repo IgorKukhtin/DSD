@@ -20,8 +20,8 @@ type
     cxLabel3: TcxLabel;
     edGoods: TcxButtonEdit;
     GoodsGuides: TdsdGuides;
-    clDirectionDescName: TcxGridDBColumn;
-    clDirectionName: TcxGridDBColumn;
+    clLocationDescName: TcxGridDBColumn;
+    clLocationName: TcxGridDBColumn;
     clGoodsCode: TcxGridDBColumn;
     clGoodsName: TcxGridDBColumn;
     clMovementDescName: TcxGridDBColumn;
@@ -38,8 +38,8 @@ type
     clAmountStart: TcxGridDBColumn;
     clPrice: TcxGridDBColumn;
     cxLabel4: TcxLabel;
-    edUnit: TcxButtonEdit;
-    UnitGuides: TdsdGuides;
+    edLocation: TcxButtonEdit;
+    LocationGuides: TdsdGuides;
   private
     { Private declarations }
   public

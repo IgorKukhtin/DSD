@@ -63,6 +63,9 @@ type
     dsdSetErased: TdsdUpdateErased;
     N3: TMenuItem;
     N4: TMenuItem;
+    clCityKindName: TcxGridDBColumn;
+    clRegionName: TcxGridDBColumn;
+    clProvinceName: TcxGridDBColumn;
   private
     { Private declarations }
   public

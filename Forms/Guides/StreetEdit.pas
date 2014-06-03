@@ -44,7 +44,6 @@ type
     cxLabel3: TcxLabel;
     ceCity: TcxButtonEdit;
     CityGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
     ceProvinceCity: TcxButtonEdit;
     ProvinceCityGuides: TdsdGuides;
     cxLabel5: TcxLabel;

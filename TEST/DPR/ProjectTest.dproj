@@ -1071,12 +1071,12 @@
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Movement\All\ServiceTest.pas"/>
-			<DCCReference Include="..\..\Forms\Guides\Country.pas">
-				<Form>CountryForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CityKind.pas">
+				<Form>CityKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
-				<Form>CountryEditForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\CityKindEdit.pas">
+				<Form>CityKindEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ContractConditionKind.pas">
@@ -1189,8 +1189,8 @@
 				<Form>CityEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Guides\City.pas">
-				<Form>CityForm</Form>
+			<DCCReference Include="..\..\Forms\Guides\ProvinceCity.pas">
+				<Form>ProvinceCityForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Document\TaxJournal.pas">
@@ -1333,12 +1333,52 @@
 				<Form>GoodsKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Province.pas">
+				<Form>ProvinceForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProvinceCityEdit.pas">
+				<Form>ProvinceCityEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\Street.pas">
 				<Form>StreetForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\StreetEdit.pas">
 				<Form>StreetEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StreetKind.pas">
+				<Form>StreetKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\StreetKindEdit.pas">
+				<Form>StreetKindEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Region.pas">
+				<Form>RegionForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RegionEdit.pas">
+				<Form>RegionEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\City.pas">
+				<Form>CityForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\ProvinceEdit.pas">
+				<Form>ProvinceEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

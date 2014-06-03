@@ -21,6 +21,7 @@ BEGIN
     OPEN Cursor1 FOR
        SELECT
              0                                      AS Id
+           , 0                                      AS LineNum
            , tmpGoods.GoodsId                       AS GoodsId
            , tmpGoods.GoodsCode                     AS GoodsCode
            , tmpGoods.GoodsName                     AS GoodsName
@@ -46,6 +47,8 @@ BEGIN
       UNION ALL
        SELECT
              MovementItem.Id                        AS Id
+--           , 0 AS LineNum
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS LineNum
            , Object_Goods.Id                        AS GoodsId
            , Object_Goods.ObjectCode                AS GoodsCode
            , Object_Goods.ValueData                 AS GoodsName
@@ -56,17 +59,20 @@ BEGIN
        FROM (SELECT FALSE AS isErased UNION ALL SELECT inIsErased AS isErased WHERE inIsErased = TRUE) AS tmpIsErased
             JOIN MovementItem ON MovementItem.MovementId = inMovementId
                              AND MovementItem.DescId     = zc_MI_Master()
+                             AND MovementItem.isErased   = tmpIsErased.isErased
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = MovementItem.ObjectId
 
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+       ORDER BY 2--MovementItem.Id
             ;
     RETURN NEXT Cursor1;
    ELSE
     OPEN Cursor1 FOR
        SELECT
              MovementItem.Id					AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
            , Object_Goods.ValueData   			AS GoodsName
@@ -83,6 +89,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+       ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor1;
    END IF;
@@ -91,6 +98,7 @@ BEGIN
 
        SELECT
              MovementItem.Id					AS Id
+           , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
            , MovementItem.ParentId              AS ParentId
            , Object_Goods.Id          			AS GoodsId
            , Object_Goods.ObjectCode  			AS GoodsCode
@@ -108,6 +116,7 @@ BEGIN
             LEFT JOIN MovementItemFloat AS MIFloat_HeadCount
                                         ON MIFloat_HeadCount.MovementItemId = MovementItem.Id
                                        AND MIFloat_HeadCount.DescId = zc_MIFloat_HeadCount()
+       ORDER BY MovementItem.Id
             ;
     RETURN NEXT Cursor2;
 
@@ -119,6 +128,7 @@ ALTER FUNCTION gpSelect_MI_ProductionSeparate (Integer, Boolean, Boolean, TVarCh
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 02.06.14                                                       *
  27.05.14                                                       * поменял все
  16.07.13         *
 

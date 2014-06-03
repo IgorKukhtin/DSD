@@ -76,7 +76,7 @@ type
   JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
   PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
   AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-  isDefault, isStandart: boolean ): integer;
+  isDefault, isStandart, isPersonal, isUnique: boolean ): integer;
     constructor Create; override;
   end;
 
@@ -119,7 +119,10 @@ type
     function InsertDefault: integer; override;
   public
     function InsertUpdatePartner(const Id: integer; Code: Integer;
-        inAddress, GLNCode: string; PrepareDayCount, DocumentDayCount: Double;
+        Address, ShortName, GLNCode: string;
+        HouseNumber, CaseNumber, RoomNumber: string;
+        StreetId:Integer;
+        PrepareDayCount, DocumentDayCount: Double;
         JuridicalId, RouteId, RouteSortingId, PersonalTakeId, PriceListId, PriceListPromoId: integer;
         StartPromo, EndPromo: TDateTime): integer;
     constructor Create; override;
@@ -650,18 +653,23 @@ var
   JuridicalId, RouteId, RouteSortingId, PersonalTakeId: Integer;
   PriceListId, PriceListPromoId: Integer;
   StartPromo, EndPromo: TDateTime;
+  HouseNumber, CaseNumber, RoomNumber: string;
+  StreetId:Integer;
 begin
   JuridicalId := TJuridical.Create.GetDefault;
   RouteId := TRouteTest.Create.GetDefault;
   RouteSortingId := TRouteSortingTest.Create.GetDefault;
   PersonalTakeId := 0; //TPersonalTest.Create.GetDefault;
 
+  StreetId := 0;
   PriceListId := 0;
   PriceListPromoId := 0;
   StartPromo := Date;
   EndPromo := Date;
 
-  result := InsertUpdatePartner(0, -6, 'город такой улица такая', 'GLNCode', 15, 15,
+  result := InsertUpdatePartner(0, -6, 'город такой улица такая', 'ShortName', 'GLNCode',
+     HouseNumber, CaseNumber, RoomNumber, StreetId,
+     15, 15,
      JuridicalId, RouteId, RouteSortingId, PersonalTakeId,PriceListId, PriceListPromoId,
      StartPromo, EndPromo);
   inherited;
@@ -672,8 +680,13 @@ begin
   FParams.Clear;
   FParams.AddParam('ioId', ftInteger, ptInputOutput, Id);
   FParams.AddParam('inCode', ftInteger, ptInput, Code);
-  FParams.AddParam('inAddress', ftString, ptInput, inAddress);
+  FParams.AddParam('inAddress', ftString, ptInput, Address);
+  FParams.AddParam('inShortName', ftString, ptInput, ShortName);
   FParams.AddParam('inGLNCode', ftString, ptInput, GLNCode);
+  FParams.AddParam('inHouseNumber', ftString, ptInput, HouseNumber);
+  FParams.AddParam('inCaseNumber', ftString, ptInput, CaseNumber);
+  FParams.AddParam('inRoomNumber', ftString, ptInput, RoomNumber);
+  FParams.AddParam('inStreetId', ftInteger, ptInput, StreetId);
   FParams.AddParam('inPrepareDayCount', ftFloat, ptInput, PrepareDayCount);
   FParams.AddParam('inDocumentDayCount', ftFloat, ptInput, DocumentDayCount);
   FParams.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
@@ -867,7 +880,7 @@ var Id,Code: integer;
     JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
     PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
     AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-    isDefault, isStandart: boolean;
+    isDefault, isStandart, isPersonal, isUnique: boolean;
 begin
     Id:=0;
     Code:=0;
@@ -894,13 +907,15 @@ begin
     BankId:=0;
     isDefault:=True;
     isStandart:=True;
+    isPersonal:=True;
+    isUnique:=True;
 
   result := InsertUpdateContract(Id,Code,
     InvNumber,InvNumberArchive,Comment,BankAccountExternal,
     SigningDate, StartDate, EndDate,
     JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
     PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
-    AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault,isStandart);
+    AreaId,ContractArticleId,ContractStateKindId,BankId,isDefault,isStandart, isPersonal, isUnique);
   inherited;
 end;
 
@@ -909,7 +924,7 @@ function TContractTest.InsertUpdateContract(const Id: integer; Code: integer; In
   JuridicalId,JuridicalBasisId,InfoMoneyId,ContractKindId,PaidKindId,PersonalId,
   PersonalTradeId, PersonalCollationId, BankAccountId, ContractTagId,
   AreaId,ContractArticleId,ContractStateKindId,BankId :Integer;
-  isDefault, isStandart: boolean): integer;
+  isDefault, isStandart, isPersonal, isUnique: boolean): integer;
 
 begin
   FParams.Clear;
@@ -938,8 +953,10 @@ begin
   FParams.AddParam('inContractArticleId', ftInteger, ptInput, ContractArticleId);
   FParams.AddParam('inContractStateKindId', ftInteger, ptInput, ContractStateKindId);
   FParams.AddParam('inBankId', ftInteger, ptInput, BankId);
-  FParams.AddParam('inDefault', ftboolean, ptInput, isDefault);
-  FParams.AddParam('inStandart', ftboolean, ptInput, isStandart);
+  FParams.AddParam('inIsDefault', ftboolean, ptInput, isDefault);
+  FParams.AddParam('inIsStandart', ftboolean, ptInput, isStandart);
+  FParams.AddParam('inIsPersonal', ftboolean, ptInput, isPersonal);
+  FParams.AddParam('inIsUnique', ftboolean, ptInput, isUnique);
   result := InsertUpdate(FParams);
 end;
 

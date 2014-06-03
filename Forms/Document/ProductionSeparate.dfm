@@ -10,6 +10,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     ExplicitHeight = 250
     ClientRectBottom = 246
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 2
       ExplicitHeight = 224
       inherited cxGrid: TcxGrid
         Height = 224
@@ -41,6 +42,17 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object colLineNum: TcxGridDBColumn [0]
+            Caption = #8470#1087'/'#1087
+            DataBinding.FieldName = 'LineNum'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 20
+          end
+          inherited colIsErased: TcxGridDBColumn
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+          end
           inherited colGoodsCode: TcxGridDBColumn
             Options.Editing = False
           end
@@ -81,7 +93,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   end
   inherited cxGridChild: TcxGrid
     TabOrder = 4
-    inherited cxGridDBTableView1: TcxGridDBTableView
+    inherited cxGridDBTableViewChild: TcxGridDBTableView
       DataController.Summary.DefaultGroupSummaryItems = <
         item
           Kind = skSum
@@ -139,35 +151,48 @@ inherited ProductionSeparateForm: TProductionSeparateForm
           Kind = skSum
           Column = ColChildHeadCount
         end>
+      object colChildLineNum: TcxGridDBColumn [0]
+        Caption = #8470' '#1087'/'#1087
+        DataBinding.FieldName = 'LineNum'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 20
+      end
       inherited colChildGoodsCode: TcxGridDBColumn
         Options.Editing = False
       end
       inherited colChildGoodsName: TcxGridDBColumn
-        PropertiesClassName = 'TcxButtonEditProperties'
+        Properties.AutoSelect = False
         Properties.Buttons = <
           item
             Action = GoodsChoiceForm
             Default = True
             Kind = bkEllipsis
           end>
-        Properties.ReadOnly = False
       end
       inherited colChildAmount: TcxGridDBColumn
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
       end
-      object ColChildHeadCount: TcxGridDBColumn
+      object ColChildHeadCount: TcxGridDBColumn [8]
         Caption = #1050#1086#1083'-'#1074#1086' '#1075#1086#1083#1086#1074
         DataBinding.FieldName = 'HeadCount'
         PropertiesClassName = 'TcxCurrencyEditProperties'
         Properties.DecimalPlaces = 4
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
+        Width = 60
+      end
+      inherited colChildIsErased: TcxGridDBColumn
+        Width = 50
       end
     end
   end
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 24
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -195,9 +220,6 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       Caption = 'actUpdateChildDS'
       DataSource = ChildDS
     end
-    inherited InsertRecordChild: TInsertRecord
-      View = cxGridDBTableView1
-    end
     inherited GoodsChoiceForm: TOpenChoiceForm
       FormName = 'TGoods_ObjectForm'
       FormNameParam.Value = ''
@@ -212,94 +234,22 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       0
       28
       0)
-    inherited Bar: TdxBar
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbInsertUpdateMovement'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbShowErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbShowAll'
-        end
-        item
-          BeginGroup = True
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddChild'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAddMask'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnErased'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPrint'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGridToExcel'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEntryToGrid'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarStatic'
-        end>
-    end
     inherited bbPrint: TdxBarButton
       Visible = ivNever
     end
-    inherited bbAddChild: TdxBarButton
-      Action = InsertRecordChild
-    end
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 96
+    Top = 272
   end
   inherited StatusGuides: TdsdGuides
-    Left = 208
-    Top = 88
+    Left = 144
+    Top = 56
   end
   inherited spChangeStatus: TdsdStoredProc
     StoredProcName = 'gpUpdate_Status_ProductionSeparate'
-    Left = 152
-    Top = 88
+    Left = 96
+    Top = 56
   end
   inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_ProductionSeparate'
@@ -431,8 +381,13 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     Left = 418
     Top = 104
   end
+  inherited spErasedMIMaster: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetErased'
+  end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    Left = 366
+    StoredProcName = 'gpMovementItem_ProductionSeparate_Master_SetUnErased'
+    Left = 390
+    Top = 200
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Master'
@@ -469,6 +424,12 @@ inherited ProductionSeparateForm: TProductionSeparateForm
         ComponentItem = 'HeadCount'
         ParamType = ptInput
       end>
+  end
+  inherited spErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetErased'
+  end
+  inherited spUnErasedMIChild: TdsdStoredProc
+    StoredProcName = 'gpMovementItem_ProductionSeparate_Child_SetUnErased'
   end
   inherited spInsertUpdateMIChild: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_MI_ProductionSeparate_Child'
