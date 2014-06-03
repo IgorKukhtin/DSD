@@ -31,7 +31,6 @@ type
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
     spCorrective: TdsdStoredProc;
-    spTaxCorrective: TdsdStoredProc;
     bbCorrective: TdxBarButton;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
