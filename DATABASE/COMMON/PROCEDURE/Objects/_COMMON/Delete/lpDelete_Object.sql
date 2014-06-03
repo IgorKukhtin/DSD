@@ -16,10 +16,13 @@ BEGIN
   DELETE FROM ObjectHistoryLink WHERE ObjectHistoryLink.objecthistoryid IN 
         (SELECT ID FROM ObjectHistory WHERE ObjectId = inId);
   DELETE FROM ObjectHistory  WHERE ObjectId = inId;
+  DELETE FROM MovementItemProtocol WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemReport WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemContainer WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemString WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemFloat WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  DELETE FROM MovementItemDate WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
+  DELETE FROM MovementItemBoolean WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementItemLinkObject WHERE ObjectId = inId;
   DELETE FROM MovementItemLinkObject WHERE MovementItemId in (SELECT Id FROM MovementItem WHERE ObjectId = inId);
   DELETE FROM MovementLinkObject WHERE ObjectId = inId;

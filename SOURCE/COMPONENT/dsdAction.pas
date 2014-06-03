@@ -537,7 +537,7 @@ uses Windows, Storage, SysUtils, CommonData, UtilConvert, FormStorage,
      Vcl.Dialogs, Vcl.Controls, Menus, cxGridExportLink, ShellApi,
      frxDesgn, messages, ParentForm, SimpleGauge, TypInfo,
      cxExportPivotGridLink, cxGrid, cxCustomPivotGrid, StrUtils, Variants, frxDBSet,
-     cxGridAddOn;
+     cxGridAddOn, cxTextEdit;
 
 procedure Register;
 begin
@@ -1228,7 +1228,7 @@ function TdsdPrintAction.LocalExecute: boolean;
 var i: integer;
     Stream: TStringStream;
     FReport: TfrxReport;
-    ActiveControl: TWinControl;
+    lActiveControl: TWinControl;
     ViewToMemTable: TcxViewToMemTable;
     MemTableList: TList;
 begin
@@ -1236,9 +1236,10 @@ begin
 
   if Assigned(Owner) then
      if Owner is TForm then begin
-        ActiveControl := TForm(Owner).ActiveControl;
+        lActiveControl := TForm(Owner).ActiveControl;
         TForm(Owner).ActiveControl := nil;
-        TForm(Owner).ActiveControl := ActiveControl;
+        if not (lActiveControl.ClassType = TcxCustomInnerTextEdit) then
+           TForm(Owner).ActiveControl := lActiveControl;
      end;
 
   inherited;
