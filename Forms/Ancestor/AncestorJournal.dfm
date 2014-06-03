@@ -3,26 +3,28 @@ inherited AncestorJournalForm: TAncestorJournalForm
   ClientWidth = 717
   AddOnFormData.isSingle = False
   ExplicitWidth = 725
-  ExplicitHeight = 356
+  ExplicitHeight = 363
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 59
     Width = 717
-    Height = 272
-    ExplicitTop = 57
+    Height = 270
+    ExplicitTop = 59
     ExplicitWidth = 717
-    ExplicitHeight = 272
-    ClientRectBottom = 272
-    ClientRectRight = 717
+    ExplicitHeight = 270
+    ClientRectBottom = 266
+    ClientRectRight = 713
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 717
-      ExplicitHeight = 272
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 711
+      ExplicitHeight = 264
       inherited cxGrid: TcxGrid
-        Width = 717
-        Height = 272
-        ExplicitWidth = 717
-        ExplicitHeight = 272
+        Width = 711
+        Height = 264
+        ExplicitWidth = 711
+        ExplicitHeight = 264
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -122,6 +124,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     Top = 227
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     Left = 183
     Top = 210
     object actInsert: TdsdInsertUpdateAction
@@ -431,7 +434,7 @@ inherited AncestorJournalForm: TAncestorJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
