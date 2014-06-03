@@ -10,6 +10,7 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     ExplicitHeight = 250
     ClientRectBottom = 246
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 2
       ExplicitHeight = 224
       inherited cxGrid: TcxGrid
         Height = 224
@@ -74,6 +75,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
       end
     end
     inherited tsEntry: TcxTabSheet
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 929
       ExplicitHeight = 224
       inherited cxGridEntry: TcxGrid
         Height = 224
@@ -186,6 +190,9 @@ inherited ProductionSeparateForm: TProductionSeparateForm
   inherited DataPanel: TPanel
     Height = 96
     ExplicitHeight = 96
+    inherited ceStatus: TcxButtonEdit
+      ExplicitHeight = 24
+    end
     object cePartionGoods: TcxTextEdit
       Left = 214
       Top = 61
@@ -230,6 +237,10 @@ inherited ProductionSeparateForm: TProductionSeparateForm
     inherited bbPrint: TdxBarButton
       Visible = ivNever
     end
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 96
+    Top = 272
   end
   inherited StatusGuides: TdsdGuides
     Left = 144
