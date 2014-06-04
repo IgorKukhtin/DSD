@@ -32,7 +32,8 @@ BEGIN
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
-            INTO vbMovementId_Tax, vbPriceWithVAT, vbVATPercent
+          , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
+            INTO vbMovementId_Tax, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -184,32 +185,10 @@ BEGIN
      OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
-             , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId  AS GoodsKindId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
-             , ObjectFloat_Amount.ValueData         AS Amount
-             , ObjectString_BarCode.ValueData       AS BarCode
-             , ObjectString_Article.ValueData       AS Article
-             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
-             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
         FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
              LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
-                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
-
-             LEFT JOIN ObjectString AS ObjectString_BarCode
-                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
-             LEFT JOIN ObjectString AS ObjectString_Article
-                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
-
-             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
-                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
-             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
-                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
 
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
@@ -223,7 +202,7 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (COALESCE (tmpObject_GoodsPropertyValue.Name, Object_Goods.ValueData) || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 
@@ -231,13 +210,6 @@ BEGIN
            , MovementItem.Amount                    AS AmountPartner
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
-
-           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.Amount, 0)      AS AmountInPack_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.Article, '')    AS Article_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '') AS ArticleGLN_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))
@@ -289,7 +261,8 @@ BEGIN
             LEFT JOIN Object AS Object_GoodsKind ON Object_GoodsKind.Id = MILinkObject_GoodsKind.ObjectId
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
-                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = MILinkObject_GoodsKind.ObjectId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
        WHERE MovementItem.MovementId = vbMovementId_Tax
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE
@@ -395,6 +368,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  21.05.14                                        * add zc_Movement_TransferDebtOut
  20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
  19.05.14                                        * add MovementFloat_ChangePercent

@@ -1,8 +1,8 @@
--- Function: lpComplete_Movement_ReturnIn (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_PriceCorrective (Integer, Integer, Boolean)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_ReturnIn (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_PriceCorrective (Integer, Integer, Boolean);
 
-CREATE OR REPLACE FUNCTION lpComplete_Movement_ReturnIn(
+CREATE OR REPLACE FUNCTION lpComplete_Movement_PriceCorrective(
     IN inMovementId        Integer               , -- ключ Документа
     IN inUserId            Integer               , -- Пользователь
     IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
@@ -60,12 +60,12 @@ BEGIN
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate -- Movement.OperDate
           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
 
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_From
+          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS vbJuridicalId_From
 
           , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                       THEN TRUE
                  ELSE COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE)
-            END AS IsCorporate_From
+            END AS vbIsCorporate_From
 
           , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                       THEN ObjectLink_Juridical_InfoMoney.ChildObjectId
@@ -189,7 +189,7 @@ BEGIN
                               AND ObjectLink_Contract_InfoMoney.DescId = zc_ObjectLink_Contract_InfoMoney()
 
      WHERE Movement.Id = inMovementId
-       AND Movement.DescId = zc_Movement_ReturnIn()
+       AND Movement.DescId = zc_Movement_PriceCorrective()
        AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased());
 
      
@@ -215,7 +215,7 @@ BEGIN
                          , ContainerId_ProfitLoss_10700
                          , ContainerId_Partner, AccountId_Partner, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
-                         , isPartionCount, isPartionSumm, isTareReturning
+                         , isPartionCount, isPartionSumm, isTarePriceCorrectiveg
                          , PartionGoodsId)
         SELECT
               _tmp.MovementItemId
@@ -280,7 +280,7 @@ BEGIN
                     AND _tmp.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
                         THEN TRUE
                    ELSE FALSE
-              END AS isTareReturning
+              END AS isTarePriceCorrectiveg
 
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
@@ -350,7 +350,7 @@ BEGIN
                                                ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
                                               AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
               WHERE Movement.Id = inMovementId
-                AND Movement.DescId = zc_Movement_ReturnIn()
+                AND Movement.DescId = zc_Movement_PriceCorrective()
                 AND Movement.StatusId IN (zc_Enum_Status_UnComplete(), zc_Enum_Status_Erased())
               GROUP BY MovementItem.Id
                      , MovementItem.ObjectId
@@ -389,7 +389,7 @@ BEGIN
 
 
      -- проверка
-     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTareReturning FROM _tmpItem WHERE _tmpItem.isTareReturning = FALSE)
+     IF COALESCE (vbContractId, 0) = 0 AND (EXISTS (SELECT _tmpItem.isTarePriceCorrectiveg FROM _tmpItem WHERE _tmpItem.isTarePriceCorrectiveg = FALSE)
                                          -- OR !!! НАЛ !!!
                                            )
      THEN
@@ -480,13 +480,13 @@ BEGIN
                                                                           , inDescId_1          := CASE WHEN vbMemberId_From <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Partner() END
                                                                           , inObjectId_1        := CASE WHEN vbMemberId_From <> 0 THEN vbMemberId_From ELSE vbPartnerId_From END
                                                                            )
-     WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
+     WHERE _tmpItem.isTarePriceCorrectiveg = TRUE AND _tmpItem.OperCount <> 0;
 
      -- 1.1.2. формируются Проводки для количественного учета - долги Покупателя или Сотрудника
      INSERT INTO _tmpMIContainer_insert (Id, DescId, MovementId, MovementItemId, ContainerId, ParentId, Amount, OperDate, IsActive)
        SELECT 0, zc_MIContainer_CountSupplier() AS DescId, inMovementId, MovementItemId, ContainerId_GoodsPartner, 0 AS ParentId, -1 * OperCount, vbOperDate, FALSE
        FROM _tmpItem
-       WHERE _tmpItem.isTareReturning = TRUE AND _tmpItem.OperCount <> 0;
+       WHERE _tmpItem.isTarePriceCorrectiveg = TRUE AND _tmpItem.OperCount <> 0;
 
 
      -- 1.2.1. определяется ContainerId_Goods для количественного учета
@@ -509,7 +509,7 @@ BEGIN
 
 
      -- 1.2.3. дальше !!!Возвратная тара не учавствует!!!, поэтому удаляем
-     DELETE FROM _tmpItem WHERE _tmpItem.isTareReturning = TRUE;
+     DELETE FROM _tmpItem WHERE _tmpItem.isTarePriceCorrectiveg = TRUE;
 
 
      -- 1.3.1. самое интересное: заполняем таблицу - суммовые элементы документа, со всеми свойствами для формирования Аналитик в проводках
@@ -531,7 +531,7 @@ BEGIN
                                                                                  AND lfContainerSumm_20901.JuridicalId_basis = vbJuridicalId_Basis_To
                                                                                  -- AND lfContainerSumm_20901.BusinessId        = _tmpItem.BusinessId_To -- !!!пока не понятно с проводками по Бизнесу!!!
                                                                                  AND _tmpItem.InfoMoneyDestinationId         = zc_Enum_InfoMoneyDestination_20500() -- 20500; "Оборотная тара"
-                                                                                 AND _tmpItem.isTareReturning                = FALSE
+                                                                                 AND _tmpItem.isTarePriceCorrectiveg                = FALSE
              -- так находим для остальных
              LEFT JOIN Container AS Container_Summ ON Container_Summ.ParentId = _tmpItem.ContainerId_Goods
                                                   AND Container_Summ.DescId = zc_Container_Summ()
@@ -1135,7 +1135,7 @@ BEGIN
 
      -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
      PERFORM lpComplete_Movement (inMovementId := inMovementId
-                                , inDescId     := zc_Movement_ReturnIn()
+                                , inDescId     := zc_Movement_PriceCorrective()
                                 , inUserId     := inUserId
                                  );
 
@@ -1162,5 +1162,5 @@ $BODY$
 
 -- тест
 -- SELECT * FROM gpUnComplete_Movement (inMovementId:= 10154, inSession:= '2')
--- SELECT * FROM lpComplete_Movement_ReturnIn (inMovementId:= 10154, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
+-- SELECT * FROM lpComplete_Movement_PriceCorrective (inMovementId:= 10154, inIsLastComplete:= FALSE, inSession:= zfCalc_UserAdmin())
 -- SELECT * FROM gpSelect_MovementItemContainer_Movement (inMovementId:= 10154, inSession:= '2')

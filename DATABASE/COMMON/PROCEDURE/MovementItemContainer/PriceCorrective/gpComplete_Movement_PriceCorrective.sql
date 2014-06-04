@@ -27,9 +27,11 @@ BEGIN
                                , tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
                                , AccountId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
 
-     -- проводим Документ
-     --PERFORM lpComplete_Movement_TransferDebt_all (inMovementId := inMovementId
-       --                                          , inUserId     := vbUserId);
+     -- 6.2. ФИНИШ - Обязательно меняем статус документа + сохранили протокол
+     PERFORM lpComplete_Movement (inMovementId := inMovementId
+                                , inDescId     := zc_Movement_PriceCorrective()
+                                , inUserId     := vbUserId
+                                 );
 
 END;
 $BODY$

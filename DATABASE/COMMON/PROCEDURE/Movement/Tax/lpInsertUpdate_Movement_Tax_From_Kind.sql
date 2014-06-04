@@ -440,7 +440,12 @@ BEGIN
                     , CASE WHEN inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR()) THEN 0 ELSE tmpMI_all.Amount_ReturnIn END AS Amount_ReturnIn
                FROM (SELECT MovementItem.ObjectId AS GoodsId
                           , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                          , CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS Price
+                          , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                                      -- в налоговых цены всегда будут без НДС
+                                      THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                               / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+                                 ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                            END AS Price
                           , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Amount_ReturnIn
@@ -516,7 +521,7 @@ BEGIN
                                       , inOperDate         := vbOperDate
                                       , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementBoolean_Checked()), FALSE)
                                       , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_Tax AND DescId = zc_MovementBoolean_Document()), FALSE)
-                                      , inPriceWithVAT     := vbPriceWithVAT
+                                      , inPriceWithVAT     := FALSE -- в налоговых цены всегда будут без НДС -- vbPriceWithVAT
                                       , inVATPercent       := vbVATPercent
                                       , inFromId           := vbFromId
                                       , inToId             := vbToId
@@ -537,7 +542,7 @@ BEGIN
                                                      , inOperDate         := vbOperDate
                                                      , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementBoolean_Checked()), FALSE)
                                                      , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = vbMovementId_TaxCorrective AND DescId = zc_MovementBoolean_Document()), FALSE)
-                                                     , inPriceWithVAT     := vbPriceWithVAT
+                                                     , inPriceWithVAT     := FALSE -- в корректировках цены всегда будут без НДС -- vbPriceWithVAT
                                                      , inVATPercent       := vbVATPercent
                                                      , inFromId           := vbToId
                                                      , inToId             := vbFromId
@@ -709,6 +714,7 @@ ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  16.05.14                                        * set lp
  10.05.14                                        * add lpComplete_Movement_Tax and lpComplete_Movement_TaxCorrective
  10.05.14                                        * add удаляем !!!все!!! + сохранили строчную часть заново

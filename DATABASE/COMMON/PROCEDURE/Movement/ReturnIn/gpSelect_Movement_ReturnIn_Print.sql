@@ -256,7 +256,7 @@ BEGIN
     OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
-             , ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId  AS GoodsKindId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectFloat_Amount.ValueData         AS Amount
              , ObjectString_BarCode.ValueData       AS BarCode
@@ -295,7 +295,7 @@ BEGIN
        SELECT
              Object_GoodsByGoodsKind_View.Id AS Id
            , Object_Goods.ObjectCode  			AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (CASE WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name ELSE Object_Goods.ValueData END || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_Goods.ValueData          AS GoodsName_two
            , Object_GoodsKind.ValueData      AS GoodsKindName
            , Object_Measure.ValueData        AS MeasureName
@@ -339,7 +339,7 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
-                  , MILinkObject_GoodsKind.ObjectId AS GoodsKindId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
                          WHEN vbExtraChargesPercent <> 0
@@ -409,6 +409,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  20.05.14                                        * add Object_Contract_View
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
  08.05.14                                        * all

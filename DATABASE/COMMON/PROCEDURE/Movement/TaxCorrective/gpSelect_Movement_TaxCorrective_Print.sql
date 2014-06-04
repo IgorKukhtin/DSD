@@ -12,12 +12,30 @@ AS
 $BODY$
     DECLARE vbUserId Integer;
 
+    DECLARE vbGoodsPropertyId Integer;
+
     DECLARE Cursor1 refcursor;
     DECLARE Cursor2 refcursor;
 BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Sale());
      vbUserId:= inSession;
+
+     -- определяется параметр
+     vbGoodsPropertyId:= (SELECT ObjectLink_Juridical_GoodsProperty.ChildObjectId
+                          FROM Movement
+                               LEFT JOIN MovementLinkObject AS MovementLinkObject_From
+                                                            ON MovementLinkObject_From.MovementId = Movement.Id
+                                                           AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
+                               LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
+                                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+                               LEFT JOIN ObjectLink AS ObjectLink_Juridical_GoodsProperty
+                                                    ON ObjectLink_Juridical_GoodsProperty.ObjectId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
+                                                   AND ObjectLink_Juridical_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
+                          WHERE Movement.Id = inMovementId
+                         );
+
 
      -- Данные по Всем корректировкам + налоговым: заголовок + строчная часть
      OPEN Cursor1 FOR
@@ -46,6 +64,21 @@ BEGIN
            WHERE Movement.Id = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
+        , tmpObject_GoodsPropertyValue AS
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+             , Object_GoodsPropertyValue.ValueData  AS Name
+        FROM ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+        WHERE ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = vbGoodsPropertyId
+          AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+       )
 
       SELECT Movement.Id				                    AS MovementId
            , Movement.InvNumber				                    AS InvNumber
@@ -103,7 +136,7 @@ BEGIN
 
            , MovementItem.Id                                                AS Id
            , Object_Goods.ObjectCode                                        AS GoodsCode
-           , (Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (COALESCE (tmpObject_GoodsPropertyValue.Name, Object_Goods.ValueData) || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_GoodsKind.ValueData                                     AS GoodsKindName
            , Object_Measure.ValueData                                       AS MeasureName
 
@@ -154,6 +187,10 @@ BEGIN
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                                 AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
             LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+            LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
+                                                  AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
 
 -- MOVEMENT
             LEFT JOIN Movement ON Movement.Id = MovementItem.MovementId
@@ -378,6 +415,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  03.06.14                                        * add zc_Movement_PriceCorrective
  21.05.14                                        * add zc_Movement_TransferDebtIn
  20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate
