@@ -4,31 +4,32 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
   AddOnFormData.isSingle = False
   AddOnFormData.Params = FormParams
   ExplicitWidth = 837
-  ExplicitHeight = 443
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 86
+    Top = 88
     Width = 829
-    Height = 330
+    Height = 328
     TabOrder = 5
-    ExplicitTop = 86
+    ExplicitTop = 88
     ExplicitWidth = 829
-    ExplicitHeight = 330
-    ClientRectBottom = 330
-    ClientRectRight = 829
-    ClientRectTop = 24
+    ExplicitHeight = 328
+    ClientRectBottom = 324
+    ClientRectRight = 825
+    ClientRectTop = 22
     inherited tsMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       TabVisible = True
-      ExplicitTop = 24
-      ExplicitWidth = 829
-      ExplicitHeight = 306
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 823
+      ExplicitHeight = 302
       inherited cxGrid: TcxGrid
-        Width = 829
-        Height = 306
-        ExplicitWidth = 829
-        ExplicitHeight = 306
+        Width = 823
+        Height = 302
+        ExplicitWidth = 823
+        ExplicitHeight = 302
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -50,8 +51,8 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 829
-        Height = 306
+        Width = 823
+        Height = 302
         Align = alClient
         TabOrder = 0
         object cxGridEntryDBTableView: TcxGridDBTableView
@@ -276,6 +277,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     end
   end
   inherited ActionList: TActionList
+    Images = dmMain.ImageList
     inherited actRefresh: TdsdDataSetRefresh
       StoredProc = spGet
       StoredProcList = <
@@ -552,7 +554,7 @@ inherited AncestorDocumentForm: TAncestorDocumentForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

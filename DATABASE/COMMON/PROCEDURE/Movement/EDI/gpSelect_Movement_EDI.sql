@@ -11,7 +11,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , PartnerId Integer, PartnerName TVarChar,  JuridicalId Integer, JuridicalName TVarChar
              , GLNCode TVarChar,  GLNPlaceCode TVarChar, OKPO TVarChar
-             , SaleInvNumber TVarChar, SaleOperDate TDateTime, LoadJuridicalName TVarChar)
+             , SaleInvNumber TVarChar, SaleOperDate TDateTime, LoadJuridicalName TVarChar, isSaleLink Boolean)
 AS
 $BODY$
 BEGIN
@@ -42,6 +42,8 @@ BEGIN
            , MovementString_SaleInvNumber.ValueData  AS SaleInvNumber
            , MovementDate_SaleOperDate.ValueData   AS SaleOperDate
            , MovementString_JuridicalName.ValueData AS LoadJuridicalName
+           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) <> 0 AS isSaleLink
+
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
@@ -88,6 +90,10 @@ BEGIN
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
             LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
        WHERE Movement.DescId = zc_Movement_EDI()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;

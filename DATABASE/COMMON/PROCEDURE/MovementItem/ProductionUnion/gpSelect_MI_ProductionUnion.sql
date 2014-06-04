@@ -34,10 +34,11 @@ BEGIN
             , CAST (NULL AS TFloat)                 AS Count
             , CAST (NULL AS TFloat)                 AS RealWeight
             , CAST (NULL AS TFloat)                 AS CuterCount
-
+            , CAST (NULL AS Integer)                AS GoodsKindId
             , CAST (NULL AS Integer)                AS GoodsKindCode
             , CAST (NULL AS TVarchar)               AS GoodsKindName
 
+            , CAST (NULL AS Integer)                AS ReceiptId
             , CAST (NULL AS Integer)                AS ReceiptCode
             , CAST (NULL AS TVarchar)               AS ReceiptName
 
@@ -60,9 +61,10 @@ BEGIN
        WHERE tmpMI.GoodsId IS NULL
       UNION ALL
        SELECT
-             MovementItem.Id                        AS Id
+             MovementItem.Id                    AS Id
 --           , 0 AS LineNum
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS LineNum
+            , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
 
@@ -76,9 +78,11 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
 
+            , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
+            , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
 
@@ -133,6 +137,7 @@ BEGIN
        SELECT
              MovementItem.Id					AS Id
            , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
+            , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
 
@@ -146,9 +151,11 @@ BEGIN
             , MIFloat_RealWeight.ValueData      AS RealWeight
             , MIFloat_CuterCount.ValueData      AS CuterCount
 
+            , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 
+            , Object_Receipt.Id                 AS ReceiptId
             , Object_Receipt.ObjectCode         AS ReceiptCode
             , Object_Receipt.ValueData          AS ReceiptName
 
@@ -203,6 +210,7 @@ BEGIN
        SELECT
               MovementItem.Id					AS Id
             , CAST (row_number() OVER (ORDER BY MovementItem.Id) AS INTEGER) AS  LineNum
+            , Object_Goods.Id                   AS GoodsId
             , Object_Goods.ObjectCode           AS GoodsCode
             , Object_Goods.ValueData            AS GoodsName
 
@@ -216,6 +224,7 @@ BEGIN
 
             , MIString_Comment.ValueData        AS Comment
 
+            , Object_GoodsKind.Id               AS GoodsKindId
             , Object_GoodsKind.ObjectCode       AS GoodsKindCode
             , Object_GoodsKind.ValueData        AS GoodsKindName
 

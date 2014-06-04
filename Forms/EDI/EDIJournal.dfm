@@ -2,6 +2,7 @@ inherited EDIJournalForm: TEDIJournalForm
   Caption = 'EDI '#1078#1091#1088#1085#1072#1083
   ClientHeight = 424
   ClientWidth = 834
+  ExplicitTop = -32
   ExplicitWidth = 842
   ExplicitHeight = 451
   PixelsPerInch = 96
@@ -38,6 +39,7 @@ inherited EDIJournalForm: TEDIJournalForm
           end
           object colIsSale: TcxGridDBColumn
             Caption = #1056#1077#1072#1083#1080#1079
+            DataBinding.FieldName = 'isSaleLink'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 53
@@ -126,105 +128,184 @@ inherited EDIJournalForm: TEDIJournalForm
         AlignSplitter = salTop
         Control = cxGrid
       end
-      object cxChildGrid: TcxGrid
+      object BottomPanel: TPanel
         Left = 0
         Top = 212
         Width = 834
         Height = 155
         Align = alClient
-        PopupMenu = PopupMenu
+        BevelOuter = bvNone
         TabOrder = 2
-        object cxChildGridDBTableView: TcxGridDBTableView
-          Navigator.Buttons.CustomButtons = <>
-          DataController.DataSource = ClientDS
-          DataController.Filter.Options = [fcoCaseInsensitive]
-          DataController.Summary.DefaultGroupSummaryItems = <>
-          DataController.Summary.FooterSummaryItems = <
-            item
-              Format = ',0.00'
-              Kind = skSum
-              Column = colSummPartner
-            end>
-          DataController.Summary.SummaryGroups = <>
-          Images = dmMain.SortImageList
-          OptionsBehavior.GoToNextCellOnEnter = True
-          OptionsBehavior.FocusCellOnCycle = True
-          OptionsCustomize.ColumnHiding = True
-          OptionsCustomize.ColumnsQuickCustomization = True
-          OptionsCustomize.DataRowSizing = True
-          OptionsData.CancelOnExit = False
-          OptionsData.Inserting = False
-          OptionsView.ColumnAutoWidth = True
-          OptionsView.Footer = True
-          OptionsView.GroupByBox = False
-          OptionsView.GroupSummaryLayout = gslAlignWithColumns
-          OptionsView.HeaderAutoHeight = True
-          OptionsView.Indicator = True
-          Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object colGoodsGLNCode: TcxGridDBColumn
-            Caption = 'GLN '#1082#1086#1076
-            DataBinding.FieldName = 'GLNCode'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
+        object cxChildGrid: TcxGrid
+          Left = 0
+          Top = 0
+          Width = 601
+          Height = 155
+          Align = alLeft
+          PopupMenu = PopupMenu
+          TabOrder = 0
+          object cxChildGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ClientDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.00'
+                Kind = skSum
+                Column = colSummPartner
+              end>
+            DataController.Summary.SummaryGroups = <>
+            Images = dmMain.SortImageList
+            OptionsBehavior.GoToNextCellOnEnter = True
+            OptionsBehavior.FocusCellOnCycle = True
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsCustomize.DataRowSizing = True
+            OptionsData.CancelOnExit = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.Footer = True
+            OptionsView.GroupByBox = False
+            OptionsView.GroupSummaryLayout = gslAlignWithColumns
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object colGoodsGLNCode: TcxGridDBColumn
+              Caption = 'GLN '#1082#1086#1076
+              DataBinding.FieldName = 'GLNCode'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 78
+            end
+            object colEDIGoodsName: TcxGridDBColumn
+              Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1080#1079' EDI'
+              DataBinding.FieldName = 'EDIGoodsName'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 77
+            end
+            object colGoodsCode: TcxGridDBColumn
+              Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
+              DataBinding.FieldName = 'GoodsCode'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 78
+            end
+            object colGoodsName: TcxGridDBColumn
+              Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
+              DataBinding.FieldName = 'GoodsName'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 78
+            end
+            object colGoodsKind: TcxGridDBColumn
+              Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
+              DataBinding.FieldName = 'GoodsKindName'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 76
+            end
+            object colAmountOrder: TcxGridDBColumn
+              Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1072
+              DataBinding.FieldName = 'AmountOrder'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 78
+            end
+            object colAmountPartner: TcxGridDBColumn
+              Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082'-'#1083#1103
+              DataBinding.FieldName = 'AmountPartner'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 51
+            end
+            object colPricePartner: TcxGridDBColumn
+              Caption = #1062#1077#1085#1072' '#1087#1086#1082'-'#1083#1103
+              DataBinding.FieldName = 'PricePartner'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 61
+            end
+            object colSummPartner: TcxGridDBColumn
+              Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082'-'#1083#1103
+              DataBinding.FieldName = 'SummPartner'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 66
+            end
           end
-          object colEDIGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072' '#1080#1079' EDI'
-            DataBinding.FieldName = 'EDIGoodsName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colGoodsCode: TcxGridDBColumn
-            Caption = #1050#1086#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsCode'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colGoodsName: TcxGridDBColumn
-            Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colGoodsKind: TcxGridDBColumn
-            Caption = #1042#1080#1076' '#1090#1086#1074#1072#1088#1072
-            DataBinding.FieldName = 'GoodsKindName'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colAmountOrder: TcxGridDBColumn
-            Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1079#1072#1082#1072#1079#1072
-            DataBinding.FieldName = 'AmountOrder'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colAmountPartner: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-            DataBinding.FieldName = 'AmountPartner'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colPricePartner: TcxGridDBColumn
-            Caption = #1062#1077#1085#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-            DataBinding.FieldName = 'PricePartner'
-            HeaderAlignmentVert = vaCenter
-            Options.Editing = False
-            Width = 60
-          end
-          object colSummPartner: TcxGridDBColumn
-            Caption = #1057#1091#1084#1084#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-            DataBinding.FieldName = 'SummPartner'
-            Options.Editing = False
+          object cxGridLevel1: TcxGridLevel
+            GridView = cxChildGridDBTableView
           end
         end
-        object cxGridLevel1: TcxGridLevel
-          GridView = cxChildGridDBTableView
+        object cxProtocolGrid: TcxGrid
+          Left = 604
+          Top = 0
+          Width = 230
+          Height = 155
+          Align = alClient
+          PopupMenu = PopupMenu
+          TabOrder = 1
+          ExplicitLeft = 601
+          ExplicitWidth = 233
+          object cxProtocolGridView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = ProtocolDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <
+              item
+                Format = ',0.00'
+                Kind = skSum
+              end>
+            DataController.Summary.SummaryGroups = <>
+            Images = dmMain.SortImageList
+            OptionsBehavior.GoToNextCellOnEnter = True
+            OptionsBehavior.FocusCellOnCycle = True
+            OptionsCustomize.ColumnHiding = True
+            OptionsCustomize.ColumnsQuickCustomization = True
+            OptionsCustomize.DataRowSizing = True
+            OptionsData.CancelOnExit = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.Footer = True
+            OptionsView.GroupByBox = False
+            OptionsView.GroupSummaryLayout = gslAlignWithColumns
+            OptionsView.HeaderAutoHeight = True
+            OptionsView.Indicator = True
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object colProtocolOperDate: TcxGridDBColumn
+              Caption = #1044#1072#1090#1072
+              DataBinding.FieldName = 'OperDate'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 60
+            end
+            object colProtocolText: TcxGridDBColumn
+              Caption = #1054#1087#1080#1089#1072#1085#1080#1077
+              DataBinding.FieldName = 'ProtocolText'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 60
+            end
+            object colProtocolUserName: TcxGridDBColumn
+              Caption = #1055#1086#1083'-'#1083#1100
+              DataBinding.FieldName = 'UserName'
+              HeaderAlignmentVert = vaCenter
+              Options.Editing = False
+              Width = 60
+            end
+          end
+          object cxGridProtocolLevel: TcxGridLevel
+            GridView = cxProtocolGridView
+          end
+        end
+        object cxVerticalSplitter: TcxSplitter
+          Left = 601
+          Top = 0
+          Width = 3
+          Height = 155
         end
       end
     end
@@ -271,9 +352,17 @@ inherited EDIJournalForm: TEDIJournalForm
   inherited cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
+        Component = BottomPanel
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Width')
+      end
+      item
         Component = cxChildGrid
         Properties.Strings = (
-          'Height')
+          'Height'
+          'Width')
       end
       item
         Component = cxGrid
@@ -314,6 +403,9 @@ inherited EDIJournalForm: TEDIJournalForm
         end
         item
           StoredProc = spClient
+        end
+        item
+          StoredProc = spProtocol
         end>
     end
     object EDIActionComdocLoad: TEDIAction
@@ -684,5 +776,74 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Left = 192
     Top = 160
+  end
+  object DBChildViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxChildGridDBTableView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 168
+    Top = 344
+  end
+  object ProtocolCDS: TClientDataSet
+    Aggregates = <>
+    FilterOptions = [foCaseInsensitive]
+    IndexFieldNames = 'MovementId'
+    MasterFields = 'Id'
+    MasterSource = MasterDS
+    PacketRecords = 0
+    Params = <>
+    Left = 616
+    Top = 296
+  end
+  object ProtocolDS: TDataSource
+    DataSet = ProtocolCDS
+    Left = 648
+    Top = 296
+  end
+  object spProtocol: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_EDIProtocol'
+    DataSet = ProtocolCDS
+    DataSets = <
+      item
+        DataSet = ProtocolCDS
+      end>
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end>
+    Left = 680
+    Top = 296
+  end
+  object DBProtocolViewAddOn: TdsdDBViewAddOn
+    ErasedFieldName = 'isErased'
+    View = cxProtocolGridView
+    OnDblClickActionList = <>
+    ActionItemList = <>
+    SortImages = dmMain.SortImageList
+    OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
+    Left = 752
+    Top = 328
   end
 end

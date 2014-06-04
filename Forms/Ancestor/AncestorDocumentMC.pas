@@ -73,7 +73,7 @@ type
     colAmount: TcxGridDBColumn;
     bbAddChild: TdxBarButton;
     InsertRecordChild: TInsertRecord;
-    GoodsChoiceForm: TOpenChoiceForm;
+    actGoodsChoiceForm: TOpenChoiceForm;
     actMIChildSetErased: TdsdUpdateErased;
     actMIChildSetUnErased: TdsdUpdateErased;
     bbErasedChild: TdxBarButton;
@@ -89,6 +89,8 @@ type
     N6: TMenuItem;
     ChildDBViewAddOn: TdsdDBViewAddOn;
     colChildIsErased: TcxGridDBColumn;
+    actGoodsKindChoiceChild: TOpenChoiceForm;
+    actGoodsKindChoiceMaster: TOpenChoiceForm;
   private
     { Private declarations }
   public

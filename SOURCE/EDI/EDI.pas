@@ -30,7 +30,8 @@ type
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
-    procedure DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
   published
@@ -68,6 +69,11 @@ begin
 end;
 
 { TEDI }
+
+procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet);
+begin
+
+end;
 
 constructor TEDI.Create(AOwner: TComponent);
 begin
@@ -125,7 +131,7 @@ begin
     end;
 end;
 
-procedure TEDI.DESADV(HeaderDataSet, ItemsDataSet: TDataSet);
+procedure TEDI.DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
 var
   DESADV: IXMLDESADVType;
   Stream: TStream;
