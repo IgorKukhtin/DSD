@@ -1,11 +1,10 @@
--- Function: lpComplete_Movement_PriceCorrective (Integer, Integer, Boolean)
+-- Function: lpComplete_Movement_PriceCorrective (Integer, Integer)
 
-DROP FUNCTION IF EXISTS lpComplete_Movement_PriceCorrective (Integer, Integer, Boolean);
+DROP FUNCTION IF EXISTS lpComplete_Movement_PriceCorrective (Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpComplete_Movement_PriceCorrective(
     IN inMovementId        Integer               , -- ключ Документа
-    IN inUserId            Integer               , -- Пользователь
-    IN inIsLastComplete    Boolean  DEFAULT False  -- это последнее проведение после расчета с/с (для прихода параметр !!!не обрабатывается!!!)
+    IN inUserId            Integer                 -- Пользователь
 )                              
  RETURNS VOID
 --  RETURNS TABLE (OperSumm_Partner_byItem TFloat, OperSumm_Partner TFloat, !!!del!!!OperSumm_Partner_ChangePercent_byItem TFloat, !!!del!!!OperSumm_Partner_ChangePercent TFloat, PriceWithVAT Boolean, VATPercent TFloat, DiscountPercent TFloat, ExtraChargesPercent TFloat, UnitId_To Integer, PersonalId_From Integer, BranchId_To Integer, AccountDirectionId_To Integer, isPartionDate Boolean, JuridicalId_From Integer, IsCorporate Boolean, PersonalId_To Integer, InfoMoneyDestinationId_isCorporate Integer, InfoMoneyId_isCorporate Integer, InfoMoneyDestinationId_Contract Integer, InfoMoneyId_Contract Integer, PaidKindId Integer, ContractId Integer, JuridicalId_basis Integer)
@@ -31,16 +30,11 @@ $BODY$
   DECLARE vbInfoMoneyDestinationId_From Integer;
   DECLARE vbInfoMoneyId_From Integer;
 
-  DECLARE vbUnitId_To Integer;
-  DECLARE vbMemberId_To Integer;
   DECLARE vbBranchId_To Integer;
-  DECLARE vbAccountDirectionId_To Integer;
-  DECLARE vbIsPartionDate_Unit Boolean;
 
   DECLARE vbPaidKindId Integer;
   DECLARE vbContractId Integer;
   DECLARE vbJuridicalId_Basis_To Integer;
-  DECLARE vbBusinessId_To Integer;
 
 BEGIN
      -- !!!обязательно!!! очистили таблицу проводок
@@ -57,49 +51,39 @@ BEGIN
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) < 0 THEN -MovementFloat_ChangePercent.ValueData ELSE 0 END AS DiscountPercent
           , CASE WHEN COALESCE (MovementFloat_ChangePercent.ValueData, 0) > 0 THEN MovementFloat_ChangePercent.ValueData ELSE 0 END AS ExtraChargesPercent
 
-          , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate -- Movement.OperDate
-          , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
+          , Movement.OperDate AS OperDate
+          , Movement.OperDate AS OperDatePartner
 
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN ObjectLink_Partner_Juridical.ChildObjectId ELSE 0 END, 0) AS vbJuridicalId_From
+          , MovementLinkObject_From.ObjectId AS JuridicalId_From
 
           , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                       THEN TRUE
                  ELSE COALESCE (ObjectBoolean_isCorporate.ValueData, FALSE)
-            END AS vbIsCorporate_From
+            END AS IsCorporate_From
 
           , CASE WHEN Constant_InfoMoney_isCorporate_View.InfoMoneyId IS NOT NULL
                       THEN ObjectLink_Juridical_InfoMoney.ChildObjectId
                  ELSE 0
             END AS InfoMoneyId_CorporateFrom
 
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Partner() THEN Object_From.Id ELSE 0 END, 0) AS PartnerId_From
-          , COALESCE (CASE WHEN Object_From.DescId = zc_Object_Member() THEN Object_From.Id WHEN Object_From.DescId = zc_Object_Personal() THEN ObjectLink_PersonalFrom_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_From
+          , COALESCE (MovementLinkObject_Partner.ObjectId, 0) AS PartnerId_From
+          , 0 AS MemberId_From
 
-            -- УП Статью назначения берем: ВСЕГДА по договору -- а раньше было: в первую очередь - по договору, во вторую - по юрлицу !!!(если наши компании)!!!, иначе будем определять для каждого товара
-          , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_From -- COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, COALESCE (ObjectLink_Juridical_InfoMoney.ChildObjectId, 0)) AS InfoMoneyId_From
-
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN Object_To.Id ELSE 0 END, 0) AS UnitId_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Member() THEN Object_To.Id WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_PersonalTo_Member.ChildObjectId ELSE 0 END, 0) AS MemberId_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Branch.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Branch.ChildObjectId ELSE 0 END, 0) AS BranchId_To
-          , COALESCE (ObjectLink_UnitTo_AccountDirection.ChildObjectId, 0) AS AccountDirectionId_To -- Аналитики счетов - направления !!!нужны только для подразделения!!!
-          , COALESCE (ObjectBoolean_PartionDate.ValueData, FALSE) AS isPartionDate_Unit
+            -- УП Статью назначения берем: ВСЕГДА по договору
+          , COALESCE (ObjectLink_Contract_InfoMoney.ChildObjectId, 0) AS InfoMoneyId_From
 
           , COALESCE (MovementLinkObject_PaidKind.ObjectId, 0) AS PaidKindId
           , COALESCE (MovementLinkObject_Contract.ObjectId, 0) AS ContractId
 
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Juridical.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Juridical.ChildObjectId ELSE 0 END, 0) AS JuridicalId_Basis_To
-          , COALESCE (CASE WHEN Object_To.DescId = zc_Object_Unit() THEN ObjectLink_UnitTo_Business.ChildObjectId WHEN Object_To.DescId = zc_Object_Personal() THEN ObjectLink_UnitPersonalTo_Business.ChildObjectId ELSE 0 END, 0) AS BusinessId_To
+            -- Главное юр. лицо берем: "Кому"
+          , COALESCE (MovementLinkObject_To.ObjectId, 0)  AS JuridicalId_Basis_To
 
             INTO vbPriceWithVAT, vbVATPercent, vbDiscountPercent, vbExtraChargesPercent
                , vbOperDate, vbOperDatePartner
                , vbJuridicalId_From, vbIsCorporate_From, vbInfoMoneyId_CorporateFrom, vbPartnerId_From , vbMemberId_From, vbInfoMoneyId_From
-               , vbUnitId_To, vbMemberId_To, vbBranchId_To, vbAccountDirectionId_To, vbIsPartionDate_Unit
                , vbPaidKindId, vbContractId
-               , vbJuridicalId_Basis_To, vbBusinessId_To
+               , vbJuridicalId_Basis_To
      FROM Movement
-          LEFT JOIN MovementDate AS MovementDate_OperDatePartner
-                                 ON MovementDate_OperDatePartner.MovementId =  Movement.Id
-                                AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                    ON MovementBoolean_PriceWithVAT.MovementId = Movement.Id
                   AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -113,71 +97,21 @@ BEGIN
           LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                        ON MovementLinkObject_To.MovementId = Movement.Id
                                       AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-          LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Branch
-                               ON ObjectLink_UnitTo_Branch.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_UnitTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                              AND Object_To.DescId = zc_Object_Unit()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_AccountDirection
-                               ON ObjectLink_UnitTo_AccountDirection.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_UnitTo_AccountDirection.DescId = zc_ObjectLink_Unit_AccountDirection()
-                              AND Object_To.DescId = zc_Object_Unit()
-          LEFT JOIN ObjectBoolean AS ObjectBoolean_PartionDate
-                                  ON ObjectBoolean_PartionDate.ObjectId = MovementLinkObject_To.ObjectId
-                                 AND ObjectBoolean_PartionDate.DescId = zc_ObjectBoolean_Unit_PartionDate()
-                                 AND Object_To.DescId = zc_Object_Unit()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Juridical
-                               ON ObjectLink_UnitTo_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_UnitTo_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                              AND Object_To.DescId = zc_Object_Unit()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitTo_Business
-                               ON ObjectLink_UnitTo_Business.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_UnitTo_Business.DescId = zc_ObjectLink_Unit_Business()
-                              AND Object_To.DescId = zc_Object_Unit()
-
-          LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Member
-                               ON ObjectLink_PersonalTo_Member.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_PersonalTo_Member.DescId = zc_ObjectLink_Personal_Member()
-                              AND Object_To.DescId = zc_Object_Personal()
-          LEFT JOIN ObjectLink AS ObjectLink_PersonalTo_Unit
-                               ON ObjectLink_PersonalTo_Unit.ObjectId = MovementLinkObject_To.ObjectId
-                              AND ObjectLink_PersonalTo_Unit.DescId = zc_ObjectLink_Personal_Unit()
-                              AND Object_To.DescId = zc_Object_Personal()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalTo_Branch
-                               ON ObjectLink_UnitPersonalTo_Branch.ObjectId = ObjectLink_PersonalTo_Unit.ChildObjectId
-                              AND ObjectLink_UnitPersonalTo_Branch.DescId = zc_ObjectLink_Unit_Branch()
-                              AND Object_To.DescId = zc_Object_Personal()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalTo_Juridical
-                               ON ObjectLink_UnitPersonalTo_Juridical.ObjectId = ObjectLink_PersonalTo_Unit.ChildObjectId
-                              AND ObjectLink_UnitPersonalTo_Juridical.DescId = zc_ObjectLink_Unit_Juridical()
-                              AND Object_To.DescId = zc_Object_Personal()
-          LEFT JOIN ObjectLink AS ObjectLink_UnitPersonalTo_Business
-                               ON ObjectLink_UnitPersonalTo_Business.ObjectId = ObjectLink_PersonalTo_Unit.ChildObjectId
-                              AND ObjectLink_UnitPersonalTo_Business.DescId = zc_ObjectLink_Unit_Business()
-                              AND Object_To.DescId = zc_Object_Personal()
 
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-          LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
-
-          LEFT JOIN ObjectLink AS ObjectLink_PersonalFrom_Member
-                               ON ObjectLink_PersonalFrom_Member.ObjectId = MovementLinkObject_From.ObjectId
-                              AND ObjectLink_PersonalFrom_Member.DescId = zc_ObjectLink_Personal_Member()
-                              AND Object_From.DescId = zc_Object_Personal()
-          LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                               ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_From.ObjectId
-                              AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
-                              AND Object_From.DescId = zc_Object_Partner()
           LEFT JOIN ObjectBoolean AS ObjectBoolean_isCorporate
-                                  ON ObjectBoolean_isCorporate.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                                  ON ObjectBoolean_isCorporate.ObjectId = MovementLinkObject_From.ObjectId
                                  AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
           LEFT JOIN ObjectLink AS ObjectLink_Juridical_InfoMoney
-                               ON ObjectLink_Juridical_InfoMoney.ObjectId = ObjectLink_Partner_Juridical.ChildObjectId
+                               ON ObjectLink_Juridical_InfoMoney.ObjectId = MovementLinkObject_From.ObjectId
                               AND ObjectLink_Juridical_InfoMoney.DescId = zc_ObjectLink_Juridical_InfoMoney()
           LEFT JOIN Constant_InfoMoney_isCorporate_View ON Constant_InfoMoney_isCorporate_View.InfoMoneyId = ObjectLink_Juridical_InfoMoney.ChildObjectId
 
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                       ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                      AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                        ON MovementLinkObject_PaidKind.MovementId = Movement.Id
                                       AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
@@ -269,8 +203,8 @@ BEGIN
               -- Статьи назначения
             , _tmp.InfoMoneyId
 
-              -- значение Бизнес !!!выбирается!!! из Товара или Подраделения/Сотрудника
-            , CASE WHEN _tmp.BusinessId_To = 0 THEN vbBusinessId_To ELSE _tmp.BusinessId_To END AS BusinessId_To
+              -- Бизнес: ВСЕГДА по товару
+            , _tmp.BusinessId_To
 
             , _tmp.isPartionCount
             , _tmp.isPartionSumm 
@@ -1146,18 +1080,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 25.05.14                                        * add lpComplete_Movement
- 10.05.14                                        * add lpInsert_MovementProtocol
- 04.05.14                                        * rem zc_Enum_AccountDirection_30400
- 30.04.14                                        * set lp
- 16.04.14                                        * err vbInfoMoneyDestinationId_To on 3.1. определяется Счет(справочника) для проводок по долг Покупателя или Физ.лица (недостачи, порча)
- 08.04.14                                        * add Constant_InfoMoney_isCorporate_View
- 08.04.14                                        * изменился алгоритм для vbIsCorporate_From
- 08.04.14                                        * add !!!нельзя ограничивать, т.к. проводки для отчета будем делать всегда!!!
- 05.04.14                                        * add !!!ДЛЯ ОПТИМИЗАЦИИ!!! : _tmp1___ and _tmp2___
- 25.03.14                                        * таблица - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
- 18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
- 01.02.14                                        *
+ 03.06.14                                        *
 */
 
 -- тест
