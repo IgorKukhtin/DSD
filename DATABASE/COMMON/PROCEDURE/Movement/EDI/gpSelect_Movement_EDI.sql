@@ -11,7 +11,8 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , TotalCount TFloat
              , PartnerId Integer, PartnerName TVarChar,  JuridicalId Integer, JuridicalName TVarChar
              , GLNCode TVarChar,  GLNPlaceCode TVarChar, OKPO TVarChar
-             , SaleInvNumber TVarChar, SaleOperDate TDateTime, LoadJuridicalName TVarChar, isSaleLink Boolean)
+             , SaleInvNumber TVarChar, SaleOperDate TDateTime, LoadJuridicalName TVarChar, isSaleLink Boolean
+             , SaleMovementId Integer)
 AS
 $BODY$
 BEGIN
@@ -43,6 +44,7 @@ BEGIN
            , MovementDate_SaleOperDate.ValueData   AS SaleOperDate
            , MovementString_JuridicalName.ValueData AS LoadJuridicalName
            , COALESCE(MovementLinkMovement_Sale.MovementId, 0) <> 0 AS isSaleLink
+           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) AS SaleMovementId
 
 
        FROM Movement

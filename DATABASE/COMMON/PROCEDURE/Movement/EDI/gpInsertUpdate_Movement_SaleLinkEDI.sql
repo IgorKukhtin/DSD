@@ -53,7 +53,7 @@ BEGIN
         RAISE EXCEPTION 'Для данного документа не загружен документ COMDOC';
      END IF;
 
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), inMovementId, vbEDIId);
+     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), vbEDIId, inMovementId);
 
      -- Распроводим документ
      PERFORM gpUnComplete_Movement_Sale(inMovementId, inSession);
@@ -84,7 +84,7 @@ BEGIN
      AND COALESCE(MovementItem.ObjectId, 0) <> 0
      AND MovementItem.DescId =  zc_MI_Master();
 
-     PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Установлена связь с расходной накладной', vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents(vbEDIId, 'Установлена связь с расходной накладной', vbUserId);
 
 
      -- сохранили протокол

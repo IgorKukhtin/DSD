@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, EDI,
-  cxSplitter, ChoicePeriod;
+  cxSplitter, ChoicePeriod, dsdActionOld;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
@@ -76,6 +76,12 @@ type
     spProtocol: TdsdStoredProc;
     DBProtocolViewAddOn: TdsdDBViewAddOn;
     cxVerticalSplitter: TcxSplitter;
+    spGetDefaultEDI: TdsdStoredProc;
+    FormParams: TdsdFormParams;
+    actSetDefaults: TdsdExecStoredProc;
+    actOpenSaleForm: TdsdOpenForm;
+    dsdOpenForm2: TdsdOpenForm;
+    bbGotoSale: TdxBarButton;
   private
     { Private declarations }
   public

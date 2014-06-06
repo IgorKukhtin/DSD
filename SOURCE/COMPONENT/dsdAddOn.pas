@@ -423,11 +423,14 @@ type
     FRefreshAction: TdsdDataSetRefresh;
     FisSingle: boolean;
     FisAlwaysRefresh: boolean;
+    FOnLoadAction: TdsdCustomAction;
   public
     constructor Create;
   published
     // Всегда перечитываем форму
     property isAlwaysRefresh: boolean read FisAlwaysRefresh write FisAlwaysRefresh default true;
+    // Событие вызываемое после загрузки формы.
+    property OnLoadAction: TdsdCustomAction read FOnLoadAction write FOnLoadAction;
     // Событие вызываемое для перечитывания формы
     property RefreshAction: TdsdDataSetRefresh read FRefreshAction write FRefreshAction;
     // Данная форма создается в единственном экземпляре. Актуально, например, для справочников

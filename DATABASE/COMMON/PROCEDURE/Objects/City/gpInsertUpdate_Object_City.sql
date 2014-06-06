@@ -28,9 +28,10 @@ BEGIN
    -- Если код не установлен, определяем его каи последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_City());
 
-   -- проверка прав уникальности для свойства <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_City(), inName);
-   -- проверка прав уникальности для свойства <Код>
+   -- проверка уникальности для свойства <Наименование> + <Область>
+--   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_City(), inName);
+
+   -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_City(), vbCode_calc);
 
    -- сохранили <Объект>

@@ -103,6 +103,14 @@ type
     spConnectWithEDI: TdsdStoredProc;
     bbConnectWithComdoc: TdxBarButton;
     cbCOMDOC: TcxCheckBox;
+    mactCOMDOC: TMultiAction;
+    EDIDeclar: TEDIAction;
+    EDIComdoc: TEDIAction;
+    bbEDIComDoc: TdxBarButton;
+    EDI: TEDI;
+    spGetDefaultEDI: TdsdStoredProc;
+    dsdExecStoredProc1: TdsdExecStoredProc;
+    actSetDefaults: TdsdExecStoredProc;
   private
     { Private declarations }
   public

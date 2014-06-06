@@ -2,7 +2,7 @@ inherited EDIJournalForm: TEDIJournalForm
   Caption = 'EDI '#1078#1091#1088#1085#1072#1083
   ClientHeight = 424
   ClientWidth = 834
-  ExplicitTop = -32
+  AddOnFormData.OnLoadAction = actSetDefaults
   ExplicitWidth = 842
   ExplicitHeight = 451
   PixelsPerInch = 96
@@ -247,8 +247,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitLeft = 601
-          ExplicitWidth = 233
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -306,6 +304,7 @@ inherited EDIJournalForm: TEDIJournalForm
           Top = 0
           Width = 3
           Height = 155
+          Control = cxChildGrid
         end
       end
     end
@@ -458,6 +457,51 @@ inherited EDIJournalForm: TEDIJournalForm
       spList = spListOrder
       Directory = '/inbox'
     end
+    object actSetDefaults: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spGetDefaultEDI
+      StoredProcList = <
+        item
+          StoredProc = spGetDefaultEDI
+        end>
+      Caption = 'actSetDefaults'
+    end
+    object actOpenSaleForm: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'actOpenSaleForm'
+      FormName = 'TSaleForm'
+      FormNameParam.Value = 'TSaleForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'SaleMovementId'
+        end
+        item
+          Name = 'ShowAll'
+          Value = 'false'
+          DataType = ftBoolean
+        end
+        item
+          Name = 'inOperDate'
+          Component = MasterCDS
+          ComponentItem = 'OperDate'
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+    end
+    object dsdOpenForm2: TdsdOpenForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'dsdOpenForm2'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
   end
   inherited MasterDS: TDataSource
     Top = 56
@@ -520,6 +564,14 @@ inherited EDIJournalForm: TEDIJournalForm
         item
           Visible = True
           ItemName = 'bbLoadComDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGotoSale'
         end>
     end
     object bbLoadComDoc: TdxBarButton
@@ -528,6 +580,10 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbLoadOrder: TdxBarButton
       Action = maEDIOrdersLoad
+      Category = 0
+    end
+    object bbGotoSale: TdxBarButton
+      Action = actOpenSaleForm
       Category = 0
     end
   end
@@ -671,9 +727,9 @@ inherited EDIJournalForm: TEDIJournalForm
     Top = 96
   end
   object EDI: TEDI
-    ConnectionParams.Host = 'ruftpex.edi.su'
-    ConnectionParams.User = 'uatovalanftp'
-    ConnectionParams.Password = 'ftp349067'
+    ConnectionParams.Host.Value = Null
+    ConnectionParams.User.Value = Null
+    ConnectionParams.Password.Value = Null
     Left = 416
     Top = 32
   end
@@ -845,5 +901,54 @@ inherited EDIJournalForm: TEDIJournalForm
     SummaryItemList = <>
     Left = 752
     Top = 328
+  end
+  object spGetDefaultEDI: TdsdStoredProc
+    StoredProcName = 'gpGetDefaultEDI'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'Host'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Host'
+        DataType = ftString
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'UserName'
+        DataType = ftString
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        Component = FormParams
+        ComponentItem = 'Password'
+        DataType = ftString
+      end>
+    Left = 464
+    Top = 32
+  end
+  object FormParams: TdsdFormParams
+    Params = <
+      item
+        Name = 'Host'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'UserName'
+        Value = Null
+        DataType = ftString
+      end
+      item
+        Name = 'Password'
+        Value = Null
+        DataType = ftString
+      end>
+    Left = 520
+    Top = 40
   end
 end
