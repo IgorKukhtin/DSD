@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_OrderExternal(
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, OperDateMark TDateTime
-             , TotalCount TFloat, InvNumberPartner TVarChar
+             , InvNumberPartner TVarChar
              , FromId Integer, FromName TVarChar
              , PersonalId Integer, PersonalName TVarChar
              , RouteId Integer, RouteName TVarChar
@@ -34,13 +34,13 @@ BEGIN
      RETURN QUERY
          SELECT
                0                                                AS Id
-             , CAST (NEXTVAL ('movement_orderExternal_seq') AS TVarChar) AS InvNumber
+             , CAST (NEXTVAL ('movement_orderexternal_seq') AS TVarChar) AS InvNumber
              , inOperDate                                       AS OperDate
              , Object_Status.Code                               AS StatusCode
              , Object_Status.Name                               AS StatusName
              , inOperDate                                       AS OperDatePartner
              , inOperDate                                       AS OperDateMark
-             , 0                                                AS InvNumberPartner
+             , CAST ('' AS TVarChar)                            AS InvNumberPartner
              , 0                     				            AS FromId
              , CAST ('' AS TVarChar) 				            AS FromName
              , 0                     				            AS PersonalId

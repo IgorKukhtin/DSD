@@ -17,12 +17,6 @@ uses
 
 type
   TOrderExternalForm = class(TAncestorDocumentForm)
-    cxLabel3: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
-    cxLabel4: TcxLabel;
-    GuidesFrom: TdsdGuides;
-    GuidesTo: TdsdGuides;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
@@ -41,9 +35,31 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colCount: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
+    colAmountSecond: TcxGridDBColumn;
+    cxLabel5: TcxLabel;
+    edInvNumberOrder: TcxTextEdit;
+    cxLabel3: TcxLabel;
+    edOperDateMark: TcxDateEdit;
+    cxLabel10: TcxLabel;
+    edOperDatePartner: TcxDateEdit;
+    cxLabel4: TcxLabel;
+    edFrom: TcxButtonEdit;
+    cxLabel6: TcxLabel;
+    edPaidKind: TcxButtonEdit;
+    cxLabel9: TcxLabel;
+    edContract: TcxButtonEdit;
+    cxLabel13: TcxLabel;
+    edRouteSorting: TcxButtonEdit;
+    PaidKindGuides: TdsdGuides;
+    ContractGuides: TdsdGuides;
+    GuidesRouteSorting: TdsdGuides;
+    GuidesFrom: TdsdGuides;
+    cxLabel7: TcxLabel;
+    edRoute: TcxButtonEdit;
+    GuidesRoute: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edPersonal: TcxButtonEdit;
+    GuidesPersonal: TdsdGuides;
   private
     { Private declarations }
   public
