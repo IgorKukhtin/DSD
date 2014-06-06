@@ -127,10 +127,10 @@ type
     actPriceListItem: TdsdOpenForm;
     bbHistory: TdxBarSubItem;
     bbPriceListItem: TdxBarButton;
-    actZakazExternal: TdsdOpenForm;
+    actOrderExternal: TdsdOpenForm;
     bbZakazExternal: TdxBarButton;
     bbZakazInternal: TdxBarButton;
-    actZakazInternal: TdsdOpenForm;
+    actOrderInternal: TdsdOpenForm;
     bbFinanceDocuments: TdxBarSubItem;
     bbIncomeCash: TdxBarButton;
     actCashOperation: TdsdOpenForm;

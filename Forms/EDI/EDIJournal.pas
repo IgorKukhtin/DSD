@@ -12,7 +12,7 @@ uses
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, cxPC, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, EDI,
-  cxSplitter, ChoicePeriod, dsdActionOld;
+  cxSplitter, ChoicePeriod;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
