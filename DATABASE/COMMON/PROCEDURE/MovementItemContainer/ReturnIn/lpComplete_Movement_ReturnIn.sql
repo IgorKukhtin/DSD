@@ -845,7 +845,7 @@ BEGIN
             , FALSE
        FROM (SELECT _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit, SUM (_tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem GROUP BY _tmpItem.ContainerId_Partner, _tmpItem.AccountId_Transit
             ) AS _tmpItem_group
-       WHERE _tmpItem_group.OperSumm <> 0
+       WHERE _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
      UNION ALL
        -- это две проводки для счета Транзит
        SELECT 0, zc_MIContainer_Summ() AS DescId, inMovementId, 0 AS MovementItemId, _tmpItem_group.ContainerId_Transit, 0 AS ParentId
@@ -854,7 +854,7 @@ BEGIN
             , CASE WHEN tmpOperDate.OperDate = vbOperDate THEN FALSE ELSE TRUE END AS IsActive
        FROM (SELECT vbOperDate AS OperDate UNION SELECT vbOperDatePartner AS OperDate) AS tmpOperDate
             JOIN (SELECT _tmpItem.ContainerId_Transit, SUM (_tmpItem.OperSumm_Partner) AS OperSumm FROM _tmpItem WHERE _tmpItem.AccountId_Transit <> 0 GROUP BY _tmpItem.ContainerId_Transit
-                 ) AS _tmpItem_group ON _tmpItem_group.OperSumm <> 0
+                 ) AS _tmpItem_group ON _tmpItem_group.OperSumm <> 0 -- !!!ограничение - пустые проводки не формируются!!!
      ;
 
 

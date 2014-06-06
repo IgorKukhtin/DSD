@@ -132,7 +132,7 @@ BEGIN
                                THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
                                         / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
                           ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
-                     END AS Price
+                     END AS OperPrice
                    , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) THEN MovementItem.Amount ELSE 0 END) AS Amount
               FROM MovementItem
                    INNER JOIN MovementItemFloat AS MIFloat_Price

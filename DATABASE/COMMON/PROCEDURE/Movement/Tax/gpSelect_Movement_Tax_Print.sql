@@ -99,7 +99,7 @@ BEGIN
            , Object_To.ValueData               		AS ToName
 
            , View_Contract.InvNumber         		AS ContractName
-           , View_Contract.StartDate                    AS ContractSigningDate
+           , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
            , ObjectString_ToAddress.ValueData           AS PartnerAddress_To
@@ -181,6 +181,10 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                AND View_Contract.InvNumber <> '-'
 
        WHERE Movement.Id =  vbMovementId_Tax
          AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -375,6 +379,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.À.
+ 05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  21.05.14                                        * add zc_Movement_TransferDebtOut
  20.05.14                                        * ContractSigningDate -> Object_Contract_View.StartDate

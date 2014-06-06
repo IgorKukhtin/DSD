@@ -162,7 +162,7 @@ BEGIN
            , Object_To.ValueData               		AS ToName
            , Object_PaidKind.ValueData         		AS PaidKindName
            , View_Contract.InvNumber        		AS ContractName
-           , View_Contract.StartDate                    AS ContractSigningDate
+           , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
@@ -238,6 +238,10 @@ BEGIN
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
                                         AND MovementLinkObject_Contract.DescId IN (zc_MovementLinkObject_Contract(), zc_MovementLinkObject_ContractFrom())
             LEFT JOIN Object_Contract_View AS View_Contract ON View_Contract.ContractId = MovementLinkObject_Contract.ObjectId
+            LEFT JOIN ObjectDate AS ObjectDate_Signing
+                                 ON ObjectDate_Signing.ObjectId = MovementLinkObject_Contract.ObjectId
+                                AND ObjectDate_Signing.DescId = zc_ObjectDate_Contract_Signing()
+                                AND View_Contract.InvNumber <> '-'
 
 -- ============================
             --по контрагенту находим юр.лицо
@@ -422,6 +426,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  20.05.14                                        * add Object_Contract_View
  17.05.14                                        * add StatusId = zc_Enum_Status_Complete
