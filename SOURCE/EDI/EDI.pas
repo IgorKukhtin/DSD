@@ -6,17 +6,20 @@ uses Classes, DB, dsdAction, IdFTP, ComDocXML, dsdDb, OrderXML;
 
 type
 
-  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar);
+  TEDIDocType = (ediOrder, ediComDoc, ediDesadv, ediDeclar, ediComDocSave);
 
   TConnectionParams = class(TPersistent)
   private
-    FPassword: string;
-    FHost: string;
-    FUser: string;
+    FPassword: TdsdParam;
+    FHost: TdsdParam;
+    FUser: TdsdParam;
+  public
+    constructor Create;
+    destructor Destroy; override;
   published
-    property Host: string read FHost write FHost;
-    property User: string read FUser write FUser;
-    property Password: string read FPassword write FPassword;
+    property Host: TdsdParam read FHost write FHost;
+    property User: TdsdParam read FUser write FUser;
+    property Password: TdsdParam read FPassword write FPassword;
   end;
   // Компонент работы с EDI. Пока все засунем в него
   // Ну не совсем все, конечно, но много
@@ -24,14 +27,17 @@ type
   private
     FIdFTP: TIdFTP;
     FConnectionParams: TConnectionParams;
+    FInsertEDIEvents: TdsdStoredProc;
     procedure InsertUpdateOrder(ORDER: IXMLORDERType; spHeader, spList: TdsdStoredProc);
     procedure InsertUpdateComDoc(ЕлектроннийДокумент: IXMLЕлектроннийДокументType; spHeader, spList: TdsdStoredProc);
     procedure FTPSetConnection;
+    procedure SignFile(FileName: string);
+    procedure PutFileToFTP(FileName: string; Directory: string);
   public
     constructor Create(AOwner: TComponent); override;
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
-    procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet);
+    procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
     procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
     procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
   published
@@ -45,6 +51,8 @@ type
     FEDIDocType: TEDIDocType;
     FEDI: TEDI;
     FDirectory: string;
+    FHeaderDataSet: TDataSet;
+    FListDataSet: TDataSet;
   protected
     function LocalExecute: boolean; override;
   published
@@ -52,6 +60,8 @@ type
     property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
     property spHeader: TdsdStoredProc read FspHeader write FspHeader;
     property spList: TdsdStoredProc read FspList write FspList;
+    property HeaderDataSet: TDataSet read FHeaderDataSet write FHeaderDataSet;
+    property ListDataSet: TDataSet read FListDataSet write FListDataSet;
     property Directory: string read FDirectory write FDirectory;
   end;
 
@@ -60,7 +70,7 @@ type
 implementation
 
 uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
-UtilConvert;
+UtilConvert, ComObj;
 
 procedure Register;
 begin
@@ -70,9 +80,73 @@ end;
 
 { TEDI }
 
-procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet);
+procedure TEDI.COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
+var
+  ЕлектроннийДокумент: IXMLЕлектроннийДокументType;
+  i: integer;
+  XMLFileName, P7SFileName: string;
 begin
+  // создать xml файл
+  ЕлектроннийДокумент := NewЕлектроннийДокумент;
+  ЕлектроннийДокумент.Заголовок.НомерДокументу := HeaderDataSet.FieldByName('InvNumber').asString;
+  ЕлектроннийДокумент.Заголовок.ТипДокументу := 'Видаткова накладна';
+  ЕлектроннийДокумент.Заголовок.КодТипуДокументу := '006';
+  ЕлектроннийДокумент.Заголовок.ДатаДокументу := FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDate').asDateTime);
+  ЕлектроннийДокумент.Заголовок.НомерЗамовлення := HeaderDataSet.FieldByName('InvNumberOrder').asString;
 
+  with ЕлектроннийДокумент.Сторони.Add do begin
+       СтатусКонтрагента := 'Продавець';
+       НазваКонтрагента :=  HeaderDataSet.FieldByName('JuridicalName_From').asString;
+       КодКонтрагента :=    HeaderDataSet.FieldByName('OKPO_From').asString;
+       ІПН :=               HeaderDataSet.FieldByName('INN_From').asString;
+  end;
+  with ЕлектроннийДокумент.Сторони.Add do begin
+       СтатусКонтрагента := 'Покупець';
+       НазваКонтрагента :=  HeaderDataSet.FieldByName('JuridicalName_To').asString;
+       КодКонтрагента :=    HeaderDataSet.FieldByName('OKPO_To').asString;
+       ІПН :=               HeaderDataSet.FieldByName('INN_To').asString;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
+    with ЕлектроннийДокумент.Таблиця.Add do begin
+         ІД := i;
+         НомПоз := i;
+         Найменування := ItemsDataSet.FieldByName('GoodsName_Juridical').asString;
+         АртикулПокупця := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+         ПрийнятаКількість := gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
+         Ціна := gfFloatToStr(ItemsDataSet.FieldByName('PriceWVAT').AsFloat);
+    end;
+    ItemsDataSet.Next;
+  end;
+
+  // сохранить на диск
+  XMLFileName := ExtractFilePath(ParamStr(0)) + 'comdoc_' + FormatDateTime('yyyymmddhhnnss', Date + Time ) + '_' + HeaderDataSet.FieldByName('InvNumber').asString + '_006.xml';
+  ЕлектроннийДокумент.OwnerDocument.SaveToFile(XMLFileName);
+  P7SFileName := StringReplace(XMLFileName, 'xml', 'p7s', [rfIgnoreCase]);
+  try
+    // подписать
+    SignFile(XMLFileName);
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then begin
+       FInsertEDIEvents.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+       FInsertEDIEvents.ParamByName('inEDIEvent').Value   := 'Документ сформирован и подписан';
+       FInsertEDIEvents.Execute;
+    end;
+    // перекинуть на FTP
+    PutFileToFTP(P7SFileName, '/error');
+    if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then begin
+       FInsertEDIEvents.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
+       FInsertEDIEvents.ParamByName('inEDIEvent').Value   := 'Документ отправлен на FTP';
+       FInsertEDIEvents.Execute;
+    end;
+  finally
+    // удалить файлы
+    if FileExists(XMLFileName) then
+       DeleteFile(XMLFileName);
+    if FileExists(P7SFileName) then
+       DeleteFile(P7SFileName);
+  end;
 end;
 
 constructor TEDI.Create(AOwner: TComponent);
@@ -80,6 +154,11 @@ begin
   inherited;
   FConnectionParams := TConnectionParams.Create;
   FIdFTP := TIdFTP.Create(nil);
+  FInsertEDIEvents := TdsdStoredProc.Create(nil);
+  FInsertEDIEvents.Params.AddParam('inMovementId', ftInteger, ptInput, 0);
+  FInsertEDIEvents.Params.AddParam('inEDIEvent', ftString, ptInput, '');
+  FInsertEDIEvents.StoredProcName := 'gpInsert_Movement_EDIEvents';
+  FInsertEDIEvents.OutputType := otResult;
 end;
 
 procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
@@ -196,14 +275,15 @@ destructor TEDI.Destroy;
 begin
   FreeAndNil(FIdFTP);
   FreeAndNil(FConnectionParams);
+  FreeAndNil(FInsertEDIEvents);
   inherited;
 end;
 
 procedure TEDI.FTPSetConnection;
 begin
-  FIdFTP.Username := ConnectionParams.User;
-  FIdFTP.Password := ConnectionParams.Password;
-  FIdFTP.Host := ConnectionParams.Host;
+  FIdFTP.Username := ConnectionParams.User.AsString;
+  FIdFTP.Password := ConnectionParams.Password.AsString;
+  FIdFTP.Host := ConnectionParams.Host.AsString;
 end;
 
 procedure TEDI.InsertUpdateOrder(ORDER: IXMLORDERType; spHeader,
@@ -316,6 +396,64 @@ begin
     end;
 end;
 
+procedure TEDI.PutFileToFTP(FileName, Directory: string);
+begin
+  FTPSetConnection;
+  // загружаем файл на FTP
+  FIdFTP.Connect;
+  if FIdFTP.Connected then
+     try
+       FIdFTP.ChangeDir(Directory);
+       FIdFTP.Put(FileName);
+     finally
+       FIdFTP.Quit;
+     end;
+end;
+
+procedure TEDI.SignFile(FileName: string);
+var
+  ComSigner: OleVariant;
+  privateKey: string;
+begin
+  ComSigner := CreateOleObject('ComSigner.ComSigner');
+  try
+    privateKey :=  '<RSAKeyValue>'+
+      '<Modulus>0vCnV3tJx2QhZl6KoCpyskW2Q4EB4lUspJVmvaqGIhWujFpaNESHmIKlbc47JCIFY+VtYenKJVPnfZN+xlw7QsfRiKX7AdOmUm+No+X2U3eDkq0+byeMvT9m1zo3MaX6yCWlicvpYDPO29iJn8RfGYmVIO0p54ERXdZg6GuD4Nc=</Modulus>'+
+      '<Exponent>AQAB</Exponent>'     +
+      '<P>77+YBsrKezqaqOaQV0LFfP+c9J+N2qzmOlm04MD4TzbXC9huCQjaywzqadcdfNWERtQT1Dc0iOhHpR4xLSVgmw==</P>  '     +
+      '<Q>4T0kYYkrJIZdBwaewETHk52yHIIu2jr4WFEKiwCSYI++WcocVVoRKabx96v3NDmTzQUIhmH0xFOYJY+BzzbOdQ==</Q>  '     +
+      '<DP>CkEEjI3R2TFpef3agJDvh2gbW28Tjx3D/wzlKpO2SxUKX4xTMHm7eeHEiOBVd4heTvU1H+d4jL56ifpfmhG2Lw==</DP>  '     +
+      '<DQ>N7CyahtMO3+tSKtuXQOkhO8ctsfJZdPmy49eF/hQOOfRnMnIL6JRVAcfFKnEOXly/eIctX1K07AHkmHlKqLWcQ==</DQ>  '     +
+      '<InverseQ>01ZjPqfM69PA0hsYb6/5O38XT7IITGQPt1hMkTpVjhlDc3r3isPV8mgoTY/iKmTWx66Exjn+IlT6qB/X1FwDsw==</InverseQ> '     +
+      '<D>YN9/YpgusmDkS+CYNmU4JnIIeejZxilKps0sEWeqUSX28uMdsQpV4W8CbTK8i2QKaK25NbHKEal+Uvf1TUCXP8b7xE5+FIcSykHd/Ta+veQM1Ljxnuwylkbq3N4GvyYro7D1z3trt6AxlGgDu8QjRoBc2Ba9XXRtlAToiN4i8y0=</D>'+
+      '</RSAKeyValue>';
+    ComSigner.Initialize('ifin.ua', privateKey);
+    try
+      ComSigner.ResetPrivateKey;
+      ComSigner.ResetCryptToCert;
+      //Установка сетификатов
+      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Неграш О.В..cer');
+      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН1.cer');
+      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН.cer');
+
+      // Установка ключей
+      ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2', '24447183', 1); //бухгалтер
+      // Установка ключей
+      ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) + 'Ключ - для в_дтиску - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2', '24447183', 3); //Печать
+      // Установка ключей
+      ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) + 'Ключ - для шифрування - Товариство з обмеженою в_дпов_дальн_стю АЛАН.ZS2', '24447183', 4); //Шифр
+
+      // Подписание и/или шифрование
+      ComSigner.Process(FileName, 2);         //ComDoc
+      // ComSigner.Process("D:\OUTBOX\4\23440000654654J1201205100400000610520142344.xml", 1); //Declar
+    finally
+       ComSigner.Dispose;
+    end;
+  finally
+    ComSigner := Unassigned
+  end;
+end;
+
 { TEDIActionEDI }
 
 function TEDIAction.LocalExecute: boolean;
@@ -324,9 +462,28 @@ begin
   case EDIDocType of
     ediOrder:  EDI.OrderLoad(spHeader, spList, Directory);
     ediComDoc: EDI.ComdocLoad(spHeader, spList, Directory);
+    ediComDocSave: EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory);
 //    ediDesadv,
 //    ediDeclar
   end;
+end;
+
+{ TConnectionParams }
+
+constructor TConnectionParams.Create;
+begin
+  inherited;
+  FHost := TdsdParam.Create(nil);
+  FUser := TdsdParam.Create(nil);
+  FPassword := TdsdParam.Create(nil);
+end;
+
+destructor TConnectionParams.Destroy;
+begin
+  FreeAndNil(FHost);
+  FreeAndNil(FUser);
+  FreeAndNil(FPassword);
+  inherited;
 end;
 
 end.

@@ -29,6 +29,7 @@ type
     property FormSender: TComponent read FSender write SetSender;
     procedure AfterShow(var a : TWMSHOWWINDOW); message MY_MESSAGE;
   protected
+    procedure Loaded; override;
     procedure Notification(AComponent: TComponent; Operation: TOperation); override;
   public
     { Public declarations }
@@ -184,6 +185,14 @@ end;
 procedure TParentForm.FormShow(Sender: TObject);
 begin
   PostMessage(Handle, MY_MESSAGE, 0, 0);
+end;
+
+procedure TParentForm.Loaded;
+begin
+  inherited;
+  if not (csDesigning in ComponentState) then
+     if Assigned(AddOnFormData.OnLoadAction) then
+        AddOnFormData.OnLoadAction.Execute;
 end;
 
 procedure TParentForm.Notification(AComponent: TComponent;

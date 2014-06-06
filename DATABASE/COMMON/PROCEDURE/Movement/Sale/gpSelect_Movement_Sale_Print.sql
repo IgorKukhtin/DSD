@@ -192,8 +192,15 @@ BEGIN
            , Object_BankAccount.ValueData               AS BankAccount_ByContract
            , Object_Bank.ValueData                      AS BankName_ByContract
            , ObjectString_Bank_MFO.ValueData            AS BankMFO_ByContract
+           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) AS EDIId
+
 
        FROM Movement
+
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
                                      ON MovementString_InvNumberOrder.MovementId =  Movement.Id
                                     AND MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder()

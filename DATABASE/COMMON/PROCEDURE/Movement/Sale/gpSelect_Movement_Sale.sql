@@ -91,7 +91,7 @@ BEGIN
            , Object_TaxKind_Master.ValueData         	    AS DocumentTaxKindName
            , MovementLinkMovement_Master.MovementChildId    AS MovementId_Master
            , MS_InvNumberPartner_Master.ValueData           AS InvNumberPartner_Master
-           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) <> 0 AS isCOMDOC
+           , COALESCE(MovementLinkMovement_Sale.MovementId, 0) <> 0 AS isCOMDOC
            , CAST (CASE WHEN Movement_DocumentMaster.Id IS NOT NULL -- MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
                                 OR (MovementDate_OperDatePartner.ValueData <> Movement_DocumentMaster.OperDate
@@ -235,7 +235,7 @@ BEGIN
             LEFT JOIN Object AS Object_TaxKind_Master ON Object_TaxKind_Master.Id = MovementLinkObject_DocumentTaxKind_Master.ObjectId
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementId = Movement.Id 
+                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
             ;
 
