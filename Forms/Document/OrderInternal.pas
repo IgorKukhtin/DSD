@@ -26,7 +26,6 @@ type
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colGoodsKindName: TcxGridDBColumn;
-    colPartionGoods: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
     actGoodsKindChoice: TOpenChoiceForm;
     spSelectPrint: TdsdStoredProc;
@@ -41,9 +40,7 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
-    colCount: TcxGridDBColumn;
-    colHeadCount: TcxGridDBColumn;
-    colAssetName: TcxGridDBColumn;
+    colAmountSecond: TcxGridDBColumn;
   private
     { Private declarations }
   public

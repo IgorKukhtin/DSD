@@ -172,10 +172,10 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TOrderExternalForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TOrderExternalForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -229,7 +229,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send'
+    StoredProcName = 'gpSelect_Movement_OrderExternal'
     Params = <
       item
         Name = 'instartdate'
@@ -405,7 +405,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+    StoredProcName = 'gpComplete_Movement_OrderExternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -423,7 +423,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Send'
+    StoredProcName = 'gpUnComplete_Movement_OrderExternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -435,7 +435,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Send'
+    StoredProcName = 'gpSetErased_Movement_OrderExternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -466,13 +466,13 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameSend'
+        Name = 'ReportNameOrderExternal'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSendTax'
+        Name = 'ReportNameOrderExternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput

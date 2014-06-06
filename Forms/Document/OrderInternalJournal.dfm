@@ -15,8 +15,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     ClientRectBottom = 472
     ClientRectRight = 1069
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
       ExplicitWidth = 1067
       ExplicitHeight = 470
       inherited cxGrid: TcxGrid
@@ -154,7 +152,27 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 60
+          end
+          object colTotalCountKg: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086', '#1082#1075
+            DataBinding.FieldName = 'TotalCountKg'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object colTotalCountSh: TcxGridDBColumn
+            Caption = #1048#1090#1086#1075#1086', '#1096#1090
+            DataBinding.FieldName = 'TotalCountSh'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####; ;'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
           end
         end
       end
@@ -174,10 +192,10 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TOrderInternalForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TSendForm'
+      FormName = 'TOrderInternalForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -231,7 +249,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Send'
+    StoredProcName = 'gpSelect_Movement_OrderInternal'
     Params = <
       item
         Name = 'instartdate'
@@ -407,7 +425,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_Send'
+    StoredProcName = 'gpComplete_Movement_OrderInternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -425,7 +443,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_Send'
+    StoredProcName = 'gpUnComplete_Movement_OrderInternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -437,7 +455,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_Send'
+    StoredProcName = 'gpSetErased_Movement_OrderInternal'
     Params = <
       item
         Name = 'inmovementid'
@@ -468,13 +486,13 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameSend'
+        Name = 'ReportNameOrderInternal'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSendTax'
+        Name = 'ReportNameOrderInternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput

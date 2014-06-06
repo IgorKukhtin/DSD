@@ -388,7 +388,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 512
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_MovementItem_Send'
+    StoredProcName = 'gpSelect_MovementItem_OrderExternal'
     Params = <
       item
         Name = 'inMovementId'
@@ -602,19 +602,19 @@ inherited OrderExternalForm: TOrderExternalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameSend'
+        Name = 'ReportNameOrderExternal'
         Value = 'PrintMovement_Sale1'
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSendTax'
+        Name = 'ReportNameOrderExternalTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameSendBill'
+        Name = 'ReportNameOrderExternalBill'
         Value = Null
         DataType = ftString
         ParamType = ptInput
@@ -627,12 +627,12 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 48
   end
   inherited spChangeStatus: TdsdStoredProc
-    StoredProcName = 'gpUpdate_Status_Send'
+    StoredProcName = 'gpUpdate_Status_OrderExternal'
     Left = 128
     Top = 56
   end
   inherited spGet: TdsdStoredProc
-    StoredProcName = 'gpGet_Movement_Send'
+    StoredProcName = 'gpGet_Movement_OrderExternal'
     Params = <
       item
         Name = 'inMovementId'
@@ -788,7 +788,7 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 248
   end
   inherited spInsertUpdateMovement: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Movement_Send'
+    StoredProcName = 'gpInsertUpdate_Movement_OrderExternal'
     Params = <
       item
         Name = 'ioId'
@@ -942,17 +942,17 @@ inherited OrderExternalForm: TOrderExternalForm
     Top = 320
   end
   inherited spErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetErased'
+    StoredProcName = 'gpMovementItem_OrderExternal_SetErased'
     Left = 718
     Top = 512
   end
   inherited spUnErasedMIMaster: TdsdStoredProc
-    StoredProcName = 'gpMovementItem_Send_SetUnErased'
+    StoredProcName = 'gpMovementItem_OrderExternal_SetUnErased'
     Left = 718
     Top = 464
   end
   inherited spInsertUpdateMIMaster: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_MovementItem_Send'
+    StoredProcName = 'gpInsertUpdate_MovementItem_OrderExternal'
     Params = <
       item
         Name = 'ioId'
