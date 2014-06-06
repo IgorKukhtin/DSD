@@ -41,6 +41,8 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    colTotalCountKg: TcxGridDBColumn;
+    colTotalCountSh: TcxGridDBColumn;
   private
     { Private declarations }
   public
