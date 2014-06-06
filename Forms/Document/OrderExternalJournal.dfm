@@ -116,30 +116,37 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          inherited colStatus: TcxGridDBColumn
-            HeaderAlignmentHorz = taCenter
-            Width = 55
-          end
-          inherited colOperDate: TcxGridDBColumn [1]
-            Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
-            HeaderAlignmentHorz = taCenter
-            Width = 50
-          end
-          inherited colInvNumber: TcxGridDBColumn [2]
+          inherited colInvNumber: TcxGridDBColumn [0]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
+          inherited colStatus: TcxGridDBColumn [1]
+            HeaderAlignmentHorz = taCenter
+            Width = 55
+          end
+          inherited colOperDate: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1086#1090#1075#1088#1091#1079#1082#1080
+            HeaderAlignmentHorz = taCenter
+            Width = 50
+          end
+          object colOperDatePartner: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1079#1072#1082#1072#1079#1072
+            DataBinding.FieldName = 'OperDatePartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colOperDateMark: TcxGridDBColumn
+            Caption = #1044#1072#1090#1072' '#1084#1072#1088#1082#1080#1088#1086#1074#1082#1080
+            DataBinding.FieldName = 'OperDateMark'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
           object colFromName: TcxGridDBColumn
             Caption = #1054#1090' '#1082#1086#1075#1086
             DataBinding.FieldName = 'FromName'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 90
-          end
-          object colToName: TcxGridDBColumn
-            Caption = #1050#1086#1084#1091
-            DataBinding.FieldName = 'ToName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
@@ -152,7 +159,42 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
             Properties.DisplayFormat = ',0.####;-,0.####; ;'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 50
+          end
+          object colPersonalName: TcxGridDBColumn
+            Caption = #1057#1086#1090#1088#1091#1076#1085#1080#1082
+            DataBinding.FieldName = 'PersonalName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colRouteName: TcxGridDBColumn
+            Caption = #1052#1072#1088#1096#1088#1091#1090
+            DataBinding.FieldName = 'RouteName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colRouteSortingName: TcxGridDBColumn
+            Caption = #1057#1086#1088#1090#1080#1088#1086#1074#1082#1080' '#1084#1072#1088#1096#1088#1091#1090#1086#1074
+            DataBinding.FieldName = 'RouteSortingName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colPaidKindName: TcxGridDBColumn
+            Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
+            DataBinding.FieldName = 'PaidKindName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
+          end
+          object colContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 50
           end
         end
       end
@@ -359,6 +401,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
+      Visible = ivNever
     end
     object bbPrintTax_Us: TdxBarButton
       Caption = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
@@ -493,7 +536,7 @@ inherited OrderExternalJournalForm: TOrderExternalJournalForm
     Top = 270
   end
   object spSelectPrint: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    StoredProcName = 'gpSelect_Movement_OrderExternal_Print'
     DataSet = PrintHeaderCDS
     DataSets = <
       item

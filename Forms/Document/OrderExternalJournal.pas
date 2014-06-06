@@ -29,7 +29,6 @@ uses
 type
   TOrderExternalJournalForm = class(TAncestorJournalForm)
     colFromName: TcxGridDBColumn;
-    colToName: TcxGridDBColumn;
     colTotalCount: TcxGridDBColumn;
     bbTax: TdxBarButton;
     PrintHeaderCDS: TClientDataSet;
@@ -41,6 +40,13 @@ type
     bbPrintTax_Client: TdxBarButton;
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
+    colOperDatePartner: TcxGridDBColumn;
+    colOperDateMark: TcxGridDBColumn;
+    colPersonalName: TcxGridDBColumn;
+    colRouteName: TcxGridDBColumn;
+    colRouteSortingName: TcxGridDBColumn;
+    colPaidKindName: TcxGridDBColumn;
+    colContractName: TcxGridDBColumn;
   private
     { Private declarations }
   public

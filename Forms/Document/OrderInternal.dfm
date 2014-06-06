@@ -954,24 +954,10 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inCount'
+        Name = 'inAmountSecond'
         Component = MasterCDS
-        ComponentItem = 'Count'
+        ComponentItem = 'AmountSecond'
         DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inHeadCount'
-        Component = MasterCDS
-        ComponentItem = 'HeadCount'
-        DataType = ftFloat
-        ParamType = ptInput
-      end
-      item
-        Name = 'inPartionGoods'
-        Component = MasterCDS
-        ComponentItem = 'PartionGoods'
-        DataType = ftString
         ParamType = ptInput
       end
       item
@@ -981,10 +967,18 @@ inherited OrderInternalForm: TOrderInternalForm
         ParamType = ptInput
       end
       item
-        Name = 'inAssetId'
-        Component = MasterCDS
-        ComponentItem = 'AssetId'
-        ParamType = ptInput
+        Value = Null
+        DataType = ftString
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
+      end
+      item
+        Value = Null
+        DataType = ftFloat
+        ParamType = ptUnknown
       end
       item
         Value = Null
