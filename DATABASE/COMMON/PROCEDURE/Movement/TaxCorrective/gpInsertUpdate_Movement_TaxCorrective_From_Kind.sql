@@ -127,7 +127,12 @@ BEGIN
              , tmpMI.Amount
         FROM (SELECT MovementItem.ObjectId AS GoodsId
                    , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
-                   , CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END AS OperPrice
+                   , CASE WHEN vbPriceWithVAT = TRUE AND vbVATPercent <> 0
+                               -- в корректировках цены всегда будут без НДС
+                               THEN CAST (CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                                        / (1 + vbVATPercent / 100) AS NUMERIC (16, 4))
+                          ELSE CASE WHEN vbDiscountPercent <> 0 OR vbExtraChargesPercent <> 0 THEN CAST ( (1 + (vbExtraChargesPercent - vbDiscountPercent) / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2)) ELSE COALESCE (MIFloat_Price.ValueData, 0) END
+                     END AS Price
                    , SUM (CASE WHEN vbMovementDescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN vbMovementDescId IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) THEN MovementItem.Amount ELSE 0 END) AS Amount
               FROM MovementItem
                    INNER JOIN MovementItemFloat AS MIFloat_Price
@@ -326,7 +331,7 @@ BEGIN
                                                   , inOperDate         := vbOperDate
                                                   , inChecked          := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementBoolean_Checked()), FALSE)
                                                   , inDocument         := COALESCE ((SELECT ValueData FROM MovementBoolean WHERE MovementId = tmpResult_update.MovementId_Corrective AND DescId = zc_MovementBoolean_Document()), FALSE)
-                                                  , inPriceWithVAT     := vbPriceWithVAT
+                                                  , inPriceWithVAT     := FALSE -- в корректировках цены всегда будут без НДС -- vbPriceWithVAT
                                                   , inVATPercent       := vbVATPercent
                                                   , inFromId           := vbFromId
                                                   , inToId             := vbToId
@@ -352,7 +357,7 @@ BEGIN
                                                        , inOperDate         := vbOperDate
                                                        , inChecked          := FALSE
                                                        , inDocument         := FALSE
-                                                       , inPriceWithVAT     := vbPriceWithVAT
+                                                       , inPriceWithVAT     := FALSE -- в корректировках цены всегда будут без НДС -- vbPriceWithVAT
                                                        , inVATPercent       := vbVATPercent
                                                        , inFromId           := vbFromId
                                                        , inToId             := vbToId
@@ -438,6 +443,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  03.06.14                                        * add zc_Movement_PriceCorrective
  29.05.14                                        * add zc_MovementLinkObject_Partner
  20.05.14                                        * add zc_Movement_TransferDebtIn

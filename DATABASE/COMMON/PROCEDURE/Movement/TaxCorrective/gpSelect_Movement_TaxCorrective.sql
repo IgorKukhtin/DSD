@@ -79,12 +79,12 @@ BEGIN
            , zfConvert_StringToNumber (MS_InvNumberPartner_DocumentChild.ValueData) AS InvNumberPartner_Child
            , CAST (CASE WHEN (MovementLinkMovement_Master.MovementChildId IS NOT NULL
                               AND (Movement_DocumentMaster.StatusId <> zc_Enum_Status_Complete()
-                                OR Movement.OperDate <> MovementDate_OperDatePartner_Master.ValueData
-                                OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_From_Master.ObjectId, -2)
+                                OR Movement.OperDate <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_ReturnIn() THEN MovementDate_OperDatePartner_Master.ValueData ELSE Movement_DocumentMaster.OperDate END
+                                OR (COALESCE (MovementLinkObject_Partner.ObjectId, -1) <> COALESCE (MovementLinkObject_Partner_Master.ObjectId, COALESCE (MovementLinkObject_From_Master.ObjectId, -2))
                                     AND MovementLinkObject_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
                                    )
-                                OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> COALESCE (ObjectLink_Partner_Juridical_Master.ChildObjectId, -2)
-                                OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2)
+                                OR COALESCE (MovementLinkObject_From.ObjectId, -1) <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_ReturnIn() THEN COALESCE (ObjectLink_Partner_Juridical_Master.ChildObjectId, -2) ELSE COALESCE (MovementLinkObject_From_Master.ObjectId, -2) END
+                                OR COALESCE (MovementLinkObject_Contract.ObjectId, -1) <> CASE WHEN Movement_DocumentMaster.DescId = zc_Movement_TransferDebtIn() THEN COALESCE (MovementLinkObject_ContractFrom_Master.ObjectId, -2) ELSE COALESCE (MovementLinkObject_Contract_Master.ObjectId, -2) END
                                 OR COALESCE (MovementLinkObject_DocumentTaxKind.ObjectId, -1) <> COALESCE (MovementLinkObject_DocumentTaxKind_Master.ObjectId, -2)
                                   )
                              )
@@ -201,6 +201,9 @@ BEGIN
             LEFT JOIN MovementDate AS MovementDate_OperDatePartner_Master
                                    ON MovementDate_OperDatePartner_Master.MovementId =  MovementLinkMovement_Master.MovementChildId
                                   AND MovementDate_OperDatePartner_Master.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner_Master
+                                         ON MovementLinkObject_Partner_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_Partner_Master.DescId = zc_MovementLinkObject_Partner()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From_Master
                                          ON MovementLinkObject_From_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_From_Master.DescId = zc_MovementLinkObject_From()
@@ -210,6 +213,9 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract_Master
                                          ON MovementLinkObject_Contract_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_Contract_Master.DescId = zc_MovementLinkObject_Contract()
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom_Master
+                                         ON MovementLinkObject_ContractFrom_Master.MovementId = MovementLinkMovement_Master.MovementChildId
+                                        AND MovementLinkObject_ContractFrom_Master.DescId = zc_MovementLinkObject_ContractFrom()
             LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind_Master
                                          ON MovementLinkObject_DocumentTaxKind_Master.MovementId = MovementLinkMovement_Master.MovementChildId
                                         AND MovementLinkObject_DocumentTaxKind_Master.DescId = zc_MovementLinkObject_DocumentTaxKind()

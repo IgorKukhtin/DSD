@@ -13,7 +13,17 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_TaxCorrective_Params(
 )
 RETURNS INTEGER AS
 $BODY$
+  DECLARE vbStatusId  Integer;
+  DECLARE vbInvNumber TVarChar;
 BEGIN
+     -- определяем <Статус>
+     SELECT StatusId, InvNumber INTO vbStatusId, vbInvNumber FROM Movement WHERE Id = ioId;
+     -- проверка - проведенные/удаленные документы Изменять нельзя
+     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Изменение документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+
      -- сохранили свойство <Дата регистрации>
      PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_DateRegistered(), ioId, inDateRegistered);
 
@@ -30,6 +40,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 04.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя
  01.05.14                                        * здесь надо сохранить только 2 параметра
  11.02.14                                                         *
 */

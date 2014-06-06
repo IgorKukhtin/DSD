@@ -2083,14 +2083,14 @@ begin
                   Add('            when _pgPartner.NumberSheet=3 then '+ParentId_PG_in); //02-Поставщики
                   Add('       end as ParentId_Postgres');
                   Add('     , null as GoodsPropertyId_PG');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as GLNCode');
+                  Add('     , ClientInformation_gln.GLNMain as inGLNCode');
                   Add('     , _pgInfoMoney.Id3_Postgres AS InfoMoneyId_PG');
                   Add('     , null as inBankId');
-                  Add('     , case when trim(isnull(NameAll,FirmName)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(NameAll,FirmName)) else trim(FirmName) end as inFullName');
-                  Add('     , case when trim(isnull(AddressFirm,Adr)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(AddressFirm,Adr)) else trim(Adr) end as inJuridicalAddress');
-                  Add('     , case when trim(isnull(KodNalog,Inn)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodNalog,Inn)) else trim(Inn) end as inINN');
-                  Add('     , case when trim(isnull(KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
-                  Add('     , case when trim(isnull(FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(FioBuh,FioB)) else trim(FioB) end as inAccounterName');
+                  Add('     , case when trim(isnull(NameAll,ClientInformation.FirmName)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(NameAll,ClientInformation.FirmName)) else trim(ClientInformation.FirmName) end as inFullName');
+                  Add('     , case when trim(isnull(ClientInformation.AddressFirm,Adr)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.AddressFirm,Adr)) else trim(Adr) end as inJuridicalAddress');
+                  Add('     , case when trim(isnull(ClientInformation.KodNalog,Inn)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.KodNalog,Inn)) else trim(Inn) end as inINN');
+                  Add('     , case when trim(isnull(ClientInformation.KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
+                  Add('     , case when trim(isnull(ClientInformation.FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.FioBuh,FioB)) else trim(FioB) end as inAccounterName');
                   Add('     , null as inBankAccount');
                   Add('     , _pgPartner_find.Id as pgPartnerId, _pgPartner_find_two.Id as pgPartnerId_two');
                   Add('     , _pgPartner_find.OKPO as inOKPO');
@@ -2111,7 +2111,18 @@ begin
                     + '                  and _pgPartner.NumberSheet = 1'
                     + '                group by OKPO'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
-                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
+                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)'
+
+                    + '     left join (select max (_pgPartner.UnitId) as ClientId'
+                    + '                     , JuridicalId_pg'
+                    + '                from dba._pgPartner'
+                    + '                      join dba.ClientInformation on ClientInformation.ClientId = _pgPartner.UnitId'
+                    + '                                                and trim (GLNMain) <> '+FormatToVarCharServer_notNULL('')
+                    + '                where JuridicalId_pg<>0'
+                    + '                group by JuridicalId_pg'
+                    + '               ) as _pgPartner_gln on _pgPartner_gln.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
+                    + '     left join dba.ClientInformation as ClientInformation_gln on ClientInformation_gln.ClientId = _pgPartner_gln.ClientId');
+
                   Add('     left join (select trim(ClientInformation.OKPO) as OKPO, max (ClientInformation.ClientId) as ClientId'
                      +'                from dba.ClientInformation'
                      +'                where trim(OKPO) <> ' + FormatToVarCharServer_notNULL('')
@@ -2198,7 +2209,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('inGLNCode').AsString;
              toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
@@ -2222,7 +2233,10 @@ begin
 
                        JuridicalId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
                        JuridicalDetailsId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
-             end; // if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger>10000)
+             end // if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger>10000)
+             else if trim(FieldByName('inGLNCode').AsString) <> ''
+                  then
+                       fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(JuridicalId_pg)+' and DescId = zc_objectString_Juridical_GLNCode()');
              //
              //if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              if (JuridicalId_pg<>0)
@@ -2268,14 +2282,14 @@ begin
                   Add('            when _pgPartner.NumberSheet=3 then '+ParentId_PG_in); //02-Поставщики
                   Add('       end as ParentId_Postgres');
                   Add('     , null as GoodsPropertyId_PG');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as GLNCode');
+                  Add('     , ClientInformation_gln.GLNMain as inGLNCode');
                   Add('     , _pgInfoMoney.Id3_Postgres AS InfoMoneyId_PG');
                   Add('     , null as inBankId');
-                  Add('     , case when trim(isnull(NameAll,FirmName)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(NameAll,FirmName)) else trim(FirmName) end as inFullName');
-                  Add('     , case when trim(isnull(AddressFirm,Adr)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(AddressFirm,Adr)) else trim(Adr) end as inJuridicalAddress');
-                  Add('     , case when trim(isnull(KodNalog,Inn)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodNalog,Inn)) else trim(Inn) end as inINN');
-                  Add('     , case when trim(isnull(KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
-                  Add('     , case when trim(isnull(FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(FioBuh,FioB)) else trim(FioB) end as inAccounterName');
+                  Add('     , case when trim(isnull(NameAll,ClientInformation.FirmName)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(NameAll,ClientInformation.FirmName)) else trim(ClientInformation.FirmName) end as inFullName');
+                  Add('     , case when trim(isnull(ClientInformation.AddressFirm,Adr)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.AddressFirm,Adr)) else trim(Adr) end as inJuridicalAddress');
+                  Add('     , case when trim(isnull(ClientInformation.KodNalog,Inn)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.KodNalog,Inn)) else trim(Inn) end as inINN');
+                  Add('     , case when trim(isnull(ClientInformation.KodSvid,NSvid)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.KodSvid,NSvid)) else trim(NSvid) end as inNumberVAT');
+                  Add('     , case when trim(isnull(ClientInformation.FioBuh,FioB)) <> '+FormatToVarCharServer_notNULL('')+' then trim(isnull(ClientInformation.FioBuh,FioB)) else trim(FioB) end as inAccounterName');
                   Add('     , null as inBankAccount');
                   Add('     , _pgPartner_find.Id as pgPartnerId, _pgPartner_find_two.Id as pgPartnerId_two');
                   Add('     , _pgPartner_find.OKPO as inOKPO');
@@ -2296,7 +2310,18 @@ begin
                     + '                  and _pgPartner.NumberSheet = 1'
                     + '                group by OKPO'
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
-                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
+                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)'
+
+                    + '     left join (select max (_pgPartner.UnitId) as ClientId'
+                    + '                     , JuridicalId_pg'
+                    + '                from dba._pgPartner'
+                    + '                      join dba.ClientInformation on ClientInformation.ClientId = _pgPartner.UnitId'
+                    + '                                                 and trim (GLNMain) <> '+FormatToVarCharServer_notNULL('')
+                    + '                where JuridicalId_pg<>0'
+                    + '                group by JuridicalId_pg'
+                    + '               ) as _pgPartner_gln on _pgPartner_gln.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
+                    + '     left join dba.ClientInformation as ClientInformation_gln on ClientInformation_gln.ClientId = _pgPartner_gln.ClientId');
+
                   Add('     left join (select trim(ClientInformation.OKPO) as OKPO, max (ClientInformation.ClientId) as ClientId'
                      +'                from dba.ClientInformation'
                      +'                where trim(OKPO) <> ' + FormatToVarCharServer_notNULL('')
@@ -2381,7 +2406,7 @@ begin
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inCode').Value:=FieldByName('ObjectCode').AsInteger;
              toStoredProc.Params.ParamByName('inName').Value:=FieldByName('ObjectName').AsString;
-             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('GLNCode').AsString;
+             toStoredProc.Params.ParamByName('inGLNCode').Value:=FieldByName('inGLNCode').AsString;
              toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
@@ -2405,7 +2430,10 @@ begin
 
                        JuridicalId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
                        JuridicalDetailsId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
-             end;  // if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger<10000)
+             end  // if (JuridicalId_pg=0)and(FieldByName('pgPartnerId').AsInteger<10000)
+             else if trim(FieldByName('inGLNCode').AsString) <> ''
+                  then
+                       fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(JuridicalId_pg)+' and DescId = zc_objectString_Juridical_GLNCode()');
              //
              if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              then fExecFlSqFromQuery(' update dba._pgPartner set JuridicalId_pg='+IntToStr(JuridicalId_pg)
@@ -2980,7 +3008,7 @@ begin
                   Add('     , case when trim(_pgPartner.AdrUnit) <> '+FormatToVarCharServer_notNULL('')+'  then trim(_pgPartner.AdrUnit)');
                   Add('            else ObjectName');
                   Add('       end as inAddress');
-                  Add('     , '+FormatToVarCharServer_notNULL('')+' as inGLNCode');
+                  Add('     , ClientInformation_gln.GLN as inGLNCode');
                   Add('     , null AS inPrepareDayCount');
                   Add('     , null AS inDocumentDayCount');
                   //Add('     , Unit.Id_byLoad, Unit.Id');
@@ -3028,7 +3056,18 @@ begin
                     + '               ) as _pgPartner_find_two on _pgPartner_find_two.JuridicalId_pg = _pgPartner_find.JuridicalId_pg'
                     + '                                       and _pgPartner_find_two.Main = _pgPartner_find.Main'
                     + '                                       and _pgPartner_find_two.OKPO = _pgPartner_find.OKPO'
-                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)');
+                    + '     left join dba._pgPartner on _pgPartner.Id = isnull(_pgPartner_find_two.Id, _pgPartner_find.Id)'
+
+                    + '     left join (select max (_pgPartner.UnitId) as ClientId'
+                    + '                     , PartnerId_pg'
+                    + '                from dba._pgPartner'
+                    + '                      join dba.ClientInformation on ClientInformation.ClientId = _pgPartner.UnitId'
+                    + '                                                 and trim (GLN) <> '+FormatToVarCharServer_notNULL('')
+                    + '                where PartnerId_pg<>0'
+                    + '                group by PartnerId_pg'
+                    + '               ) as _pgPartner_gln on _pgPartner_gln.PartnerId_pg = _pgPartner_find.PartnerId_pg'
+                    + '     left join dba.ClientInformation as ClientInformation_gln on ClientInformation_gln.ClientId = _pgPartner_gln.ClientId');
+
                   Add('     left join (select trim(isnull(ClientInformation_child.OKPO,isnull(ClientInformation_find.OKPO,'+FormatToVarCharServer_notNULL('')+'))) as OKPO'
                      +'                from dba.Unit'
                      +'                     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)'
@@ -3090,12 +3129,17 @@ begin
              toStoredProc.Params.ParamByName('inRouteSortingId').Value:=FieldByName('inRouteSortingId').AsInteger;
              toStoredProc.Params.ParamByName('inPersonalTakeId').Value:=FieldByName('inPersonalTakeId').AsInteger;
 
-             if not myExecToStoredProc then ;//exit;
-
+                if not myExecToStoredProc then ;//exit;
                 PartnerId_pg:=toStoredProc.Params.ParamByName('ioId').Value;
+
              end // if (FieldByName('Id_Postgres').AsInteger=0)and(FieldByName('pgPartnerId').AsInteger>10000)
-             else
+             else begin
                  PartnerId_pg:=FieldByName('Id_Postgres').AsInteger;
+                 if trim(FieldByName('inGLNCode').AsString) <> ''
+                 then
+                     fExecSqToQuery ('update ObjectString set ValueData = '+FormatToVarCharServer_notNULL(trim(FieldByName('inGLNCode').AsString))+' where ObjectId = '+IntToStr(PartnerId_pg)+' and DescId = zc_objectString_Partner_GLNCode()');
+                 end;
+
              //
              //if (1=1)or(FieldByName('Id_Postgres').AsInteger=0)
              if (PartnerId_pg>0)
@@ -6112,7 +6156,6 @@ begin
 
         Add('from dba.GoodsProperty_Detail');
         Add('     left outer join dba.GoodsProperty on GoodsProperty.Id=GoodsProperty_Detail.GoodsPropertyId');
-        Add('     left outer join dba.KindPackage on KindPackage.Id=GoodsProperty_Detail.KindPackageId');
         Add('     left outer join dba.GoodsProperty_Postgres as PG1 on PG1.Id=1');
         Add('     left outer join dba.GoodsProperty_Postgres as PG2 on PG2.Id=2');
         Add('     left outer join dba.GoodsProperty_Postgres as PG3 on PG3.Id=3');
@@ -6131,8 +6174,15 @@ begin
         Add('     left outer join dba.GoodsProperty_Postgres as PG16 on PG16.Id=16');
         Add('     left outer join dba.GoodsProperty_Postgres as PG17 on PG17.Id=17');
         Add('     left outer join dba.GoodsProperty_Postgres as PG18 on PG18.Id=18');
-//        Add('where is4=zc_rvYes()'
-        Add('where KindPackage.Id_Postgres is not null'
+
+        //Add('     left outer join dba.KindPackage on KindPackage.Id=GoodsProperty_Detail.KindPackageId');
+        Add('     left outer join dba.Goods on Goods.Id = GoodsProperty.GoodsId');
+        Add('     left outer join dba.KindPackage on KindPackage.Id = GoodsProperty_Detail.KindPackageId');
+        Add('                                     and Goods.ParentId not in(686,1670,2387,2849,5874)'); // Тара + СЫР + ХЛЕБ + С-ПЕРЕРАБОТКА + ТУШЕНКА
+
+        //        Add('where is4=zc_rvYes()'
+        Add('where (KindPackage.Id_Postgres is not null or trim (GoodsProperty_Detail.GoodsName_Client)<> '+FormatToVarCharServer_notNULL('')+' or trim (GoodsProperty_Detail.GoodsName_GD)<> '+FormatToVarCharServer_notNULL('')
+             +'    )'
              +' and(is1=zc_rvYes()'
              +' or is2=zc_rvYes()'
              +' or is3=zc_rvYes()'
@@ -11039,7 +11089,7 @@ begin
            +'                              and find2.ContractNumber <> '+FormatToVarCharServer_notNULL('')
            +'      where Bill.BillDate between '+FormatToDateServer_notNULL(StrToDate(StartDateEdit.Text))+' and '+FormatToDateServer_notNULL(StrToDate(EndDateEdit.Text))
            +'        and Bill.BillKind in (zc_bkReturnToUnit())'
-           +'        and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
+           +'        and Bill.ToId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'      group by Bill.Id'
            +'     union all'
@@ -11797,7 +11847,7 @@ begin
            +'           , max(case when isnull(Goods.ParentId,0) = 1730'
            +'                           then 30103'//(30103) Доходы Продукция Хлеб
            +'                      when BillItems.GoodsPropertyId = 5510'
-           +'                        or Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
+           +'                        or Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'                           then 30201'//(30201) Доходы Мясное сырье
            +'                      else 30101'//(30101) Доходы Продукция Готовая продукция
            +'                 end) as CodeIM'
@@ -11823,7 +11873,7 @@ begin
            +'        and Bill.BillKind in (zc_bkSaleToClient())'
            +'        and Bill.MoneyKindId = zc_mkBN()'
            +'        and Bill.BillNumberNalog <> 0'
-           +'        and Bill.FromId in (zc_UnitId_StoreSale(),zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())'
+           +'        and Bill.FromId in (zc_UnitId_StoreSale(),zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())'
            +'        and Bill.Id_Postgres<>0'
            //+'        and BillItems_5510.BillId is null'
            +'        and (Bill.BillDate >=zc_def_StartDate_PG() or Bill.FromId=zc_UnitId_StoreSale())'
@@ -11871,7 +11921,7 @@ begin
         then Add(' where isnull (Information1.OKPO, Information2.OKPO)=' + FormatToVarCharServer_notNULL(trim(OKPOEdit.Text)))
         else
             if cblTaxPF.Checked
-            then Add('where Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
+            then Add('where Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())')
             else
                 if cbOnlyInsertDocument.Checked
                 then Add('where isnull(Bill.NalogId_PG,0)=0');
@@ -12042,7 +12092,7 @@ begin
 // +'  and MovementId_Postgres = 10154'
            );
         if cblTaxPF.Checked
-        then Add(' and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF())')
+        then Add(' and Bill.FromId in (zc_UnitId_StoreMaterialBasis(),zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())')
         else
             if cbOnlyInsertDocument.Checked
             then Add('and isnull(BillItems.NalogId_PG,0)=0');
