@@ -443,8 +443,8 @@ uses
   PriceList in '..\..\Forms\Guides\PriceList.pas' {PriceListForm: TParentForm},
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
-  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
-  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  OrderExternalJournal in '..\..\Forms\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
+  OrderExternal in '..\..\Forms\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   AncestorDocument in '..\..\Forms\Ancestor\AncestorDocument.pas' {AncestorDocumentForm: TParentForm},
   ProductionSeparate in '..\..\Forms\Document\ProductionSeparate.pas' {ProductionSeparateForm: TParentForm},
   PriceCorrectiveJournal in '..\..\Forms\Document\PriceCorrectiveJournal.pas' {PriceCorrectiveJournalForm: TParentForm},
@@ -462,7 +462,11 @@ uses
   Region in '..\..\Forms\Guides\Region.pas' {RegionForm: TParentForm},
   RegionEdit in '..\..\Forms\Guides\RegionEdit.pas' {RegionEditForm: TParentForm},
   City in '..\..\Forms\Guides\City.pas' {CityForm: TParentForm},
-  ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm};
+  ProvinceEdit in '..\..\Forms\Guides\ProvinceEdit.pas' {ProvinceEditForm: TParentForm},
+  Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
+  SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
+  OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
+  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
 
 {$R *.RES}
 

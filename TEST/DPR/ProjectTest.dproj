@@ -1300,12 +1300,12 @@
 				<Form>RetailEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
-				<Form>SendJournalForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderExternalJournal.pas">
+				<Form>OrderExternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\Forms\Document\Send.pas">
-				<Form>SendForm</Form>
+			<DCCReference Include="..\..\Forms\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
@@ -1379,6 +1379,22 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\ProvinceEdit.pas">
 				<Form>ProvinceEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\Send.pas">
+				<Form>SendForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\SendJournal.pas">
+				<Form>SendJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

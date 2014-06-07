@@ -39,7 +39,7 @@ object MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBar: TdxBar
       AllowClose = False
@@ -256,11 +256,11 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbZakazExternal: TdxBarButton
-      Action = actZakazExternal
+      Action = actOrderExternal
       Category = 0
     end
     object bbZakazInternal: TdxBarButton
-      Action = actZakazInternal
+      Action = actOrderInternal
       Category = 0
     end
     object bbFinanceDocuments: TdxBarSubItem
@@ -2465,12 +2465,12 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actZakazExternal: TdsdOpenForm
+    object actOrderExternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TZakazExternalJournalForm'
-      FormNameParam.Value = ''
+      FormName = 'TOrderExternalJournalForm'
+      FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2486,12 +2486,12 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actZakazInternal: TdsdOpenForm
+    object actOrderInternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
-      FormName = 'TZakazInternalJournalForm'
-      FormNameParam.Value = ''
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
