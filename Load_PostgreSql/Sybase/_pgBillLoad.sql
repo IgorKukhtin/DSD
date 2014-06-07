@@ -8,6 +8,11 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
+select '166334' as InvNumber, 4690 as FromId, 0 as ToId
+union select '166383' as InvNumber, 4690 as FromId, 0 as ToId
+
+
+
 select '165371' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165372' as InvNumber, 4690 as FromId, 0 as ToId
 union select '165380' as InvNumber, 4690 as FromId, 0 as ToId

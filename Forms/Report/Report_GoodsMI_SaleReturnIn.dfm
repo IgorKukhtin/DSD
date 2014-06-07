@@ -1,27 +1,27 @@
 inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
   ClientHeight = 339
-  ClientWidth = 1020
+  ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
+  ExplicitWidth = 1071
   ExplicitHeight = 374
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 80
-    Width = 1020
+    Width = 1055
     Height = 259
     TabOrder = 3
     ExplicitTop = 80
     ExplicitWidth = 1020
     ExplicitHeight = 259
     ClientRectBottom = 259
-    ClientRectRight = 1020
+    ClientRectRight = 1055
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 1020
       ExplicitHeight = 259
       inherited cxGrid: TcxGrid
-        Width = 1020
+        Width = 1055
         Height = 259
         ExplicitWidth = 1020
         ExplicitHeight = 259
@@ -144,6 +144,31 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object colContractCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractCode'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 45
+          end
+          object colContractNumber: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractNumber'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clContractTagName: TcxGridDBColumn
+            Caption = #1055#1088#1080#1079#1085#1072#1082' '#1076#1086#1075'.'
+            DataBinding.FieldName = 'ContractTagName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 60
           end
           object clPartnerName: TcxGridDBColumn
             Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
@@ -316,7 +341,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     end
   end
   inherited Panel: TPanel
-    Width = 1020
+    Width = 1055
     Height = 54
     ExplicitWidth = 1020
     ExplicitHeight = 54

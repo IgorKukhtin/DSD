@@ -61,7 +61,7 @@ BEGIN
           LEFT JOIN ObjectLink AS ObjectLink_JuridicalBasis_GoodsProperty
                                ON ObjectLink_JuridicalBasis_GoodsProperty.ObjectId = zc_Juridical_Basis()
                               AND ObjectLink_JuridicalBasis_GoodsProperty.DescId = zc_ObjectLink_Juridical_GoodsProperty()
-                              AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
+                              -- AND ObjectLink_Juridical_GoodsProperty.ChildObjectId IS NULL
      ;
 
      -- определяется <Продажа покупателю> или <Перевод долга (расход)>
@@ -193,16 +193,36 @@ BEGIN
 
      -- Данные по строчной части налоговой
      OPEN Cursor2 FOR
-     WITH tmpObject_GoodsPropertyValue AS
+     WITH
+       tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
-        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0 UNION SELECT vbGoodsPropertyId_basis AS GoodsPropertyId WHERE vbGoodsPropertyId_basis <> 0
+        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           AND Object_GoodsPropertyValue.ValueData <> ''
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+       )
+     , tmpObject_GoodsPropertyValue_basis AS
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             , Object_GoodsPropertyValue.ValueData  AS Name
+        FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+             ) AS tmpGoodsProperty
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           AND Object_GoodsPropertyValue.ValueData <> ''
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -213,7 +233,7 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
-           , (COALESCE (tmpObject_GoodsPropertyValue.Name, Object_Goods.ValueData) || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData)) || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 
@@ -273,7 +293,10 @@ BEGIN
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                                  AND tmpObject_GoodsPropertyValue.Name <> ''
+            LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
+                                                        AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
+
        WHERE MovementItem.MovementId = vbMovementId_Tax
          AND MovementItem.DescId     = zc_MI_Master()
          AND MovementItem.isErased   = FALSE

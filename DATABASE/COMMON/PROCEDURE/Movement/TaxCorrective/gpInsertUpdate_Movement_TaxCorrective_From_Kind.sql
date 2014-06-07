@@ -16,6 +16,9 @@ AS
 $BODY$
    DECLARE vbUserId           Integer;
 
+   DECLARE vbStatusId  Integer;
+   DECLARE vbInvNumber TVarChar;
+
    DECLARE vbMovementId_Tax   Integer;
    DECLARE vbAmount_Tax       TFloat;
 
@@ -57,7 +60,9 @@ BEGIN
 
 
      -- определяются параметры для <Налогового документа>
-     SELECT Movement.DescId AS MovementDescId
+     SELECT Movement.StatusId
+          , Movement.InvNumber
+          , Movement.DescId AS MovementDescId
           , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
                       THEN MovementDate_OperDatePartner.ValueData -- совпадает с датой контрагента
                  ELSE Movement.OperDate  -- совпадает с документом inMovementId
@@ -74,7 +79,8 @@ BEGIN
                       THEN zc_Enum_DocumentTaxKind_CorrectivePrice() -- !!!всегда такая!!!
                  ELSE inDocumentTaxKindId -- !!!не меняется!!!
             END AS DocumentTaxKindId
-            INTO vbMovementDescId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
+            INTO vbStatusId, vbInvNumber
+               , vbMovementDescId, vbOperDate, vbPriceWithVAT, vbVATPercent, vbFromId, vbToId, vbPartnerId, vbContractId
                , vbDiscountPercent, vbExtraChargesPercent, inDocumentTaxKindId
      FROM Movement
           LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
@@ -111,8 +117,14 @@ BEGIN
                                ON ObjectLink_Contract_JuridicalBasis.ObjectId = COALESCE (MovementLinkObject_ContractFrom.ObjectId, MovementLinkObject_Contract.ObjectId)
                               AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
      WHERE Movement.Id = inMovementId
-       AND Movement.StatusId IN (zc_Enum_Status_Complete(), zc_Enum_Status_UnComplete())
     ;
+
+     -- проверка - проведенные/удаленные документы Изменять нельзя
+     IF vbStatusId <> zc_Enum_Status_UnComplete()
+     THEN
+         RAISE EXCEPTION 'Ошибка.Формирование <Корректировки к налоговой> на основании документа № <%> в статусе <%> не возможно.', vbInvNumber, lfGet_Object_ValueData (vbStatusId);
+     END IF;
+
 
      -- таблица - Данные
      CREATE TEMP TABLE _tmpMI_Return (GoodsId Integer, GoodsKindId Integer, OperPrice TFloat, Amount TFloat) ON COMMIT DROP;
@@ -443,6 +455,7 @@ ALTER FUNCTION gpInsertUpdate_Movement_TaxCorrective_From_Kind (Integer, Integer
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 06.06.14                                        * add проверка - проведенные/удаленные документы Изменять нельзя
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  03.06.14                                        * add zc_Movement_PriceCorrective
  29.05.14                                        * add zc_MovementLinkObject_Partner

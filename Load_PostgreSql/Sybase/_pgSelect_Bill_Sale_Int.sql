@@ -1,3 +1,21 @@
+-- select * from 
+-- update 
+dba.Bill
+   set BillNumberNalog = 0
+where BillDate between '2014-05-01' and '2014-07-01'
+and FromId in (zc_UnitId_StoreMaterialBasis(), zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())
+and BillNumberNalog <> 0
+and Bill.ToId in(
+select Unit.Id -- trim(ClientInformation.OKPO) as OKPO, 
+from dba.Unit
+     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)
+                                                                    and trim(ClientInformation_find.OKPO) <> ''
+     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id
+     join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_find.ClientID,ClientInformation_child.ClientID)
+                                                            and trim(ClientInformation.OKPO) <> ''
+where trim(ClientInformation.OKPO) in ('38685495', '30982361', '33184262', '32294926', '32294905')
+)
+
 -- Int
 alter  PROCEDURE "DBA"."_pgSelect_Bill_Sale" (in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, BillId Integer, OperDate Date, InvNumber TVarCharLongLong, BillNumberClient1 TVarCharLongLong, OperDatePartner Date, PriceWithVAT smallint, VATPercent TSumm, ChangePercent  TSumm

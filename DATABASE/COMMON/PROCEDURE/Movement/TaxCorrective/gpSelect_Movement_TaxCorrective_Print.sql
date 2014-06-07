@@ -67,16 +67,35 @@ BEGIN
            WHERE Movement.Id = inMovementId
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
-        , tmpObject_GoodsPropertyValue AS
+     , tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
-        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0 UNION SELECT vbGoodsPropertyId_basis AS GoodsPropertyId WHERE vbGoodsPropertyId_basis <> 0
+        FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           AND Object_GoodsPropertyValue.ValueData <> ''
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
+                                  ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
+             LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
+                                  ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                 AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+       )
+     , tmpObject_GoodsPropertyValue_basis AS
+       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
+             , Object_GoodsPropertyValue.ValueData  AS Name
+        FROM (SELECT vbGoodsPropertyId_basis AS GoodsPropertyId
+             ) AS tmpGoodsProperty
+             INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
+                                   ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
+                                  AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
+             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                                           AND Object_GoodsPropertyValue.ValueData <> ''
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
