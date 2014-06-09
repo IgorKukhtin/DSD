@@ -72,11 +72,15 @@ begin
   ExecFile(ProcedurePath + 'MovementItem\Inventory\gpInsertUpdate_MovementItem_Inventory.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\Inventory\gpSelect_MovementItem_Inventory.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'MovementItem\ZakazExternal\gpInsertUpdate_MI_ZakazExternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\ZakazExternal\gpSelect_MI_ZakazExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderExternal\gpInsertUpdate_MovementItem_OrderExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderExternal\gpSelect_MovementItem_OrderExternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderExternal\gpMovementItem_OrderExternal_SetErased.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderExternal\gpMovementItem_OrderExternal_SetUnErased.sql', ZQuery);
 
-  ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpInsertUpdate_MI_ZakazInternal.sql', ZQuery);
-  ExecFile(ProcedurePath + 'MovementItem\ZakazInternal\gpSelect_MI_ZakazInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderInternal\gpInsertUpdate_MovementItem_OrderInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderInternal\gpSelect_MovementItem_OrderInternal.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderInternal\gpMovementItem_OrderInternal_SetErased.sql', ZQuery);
+  ExecFile(ProcedurePath + 'MovementItem\OrderInternal\gpMovementItem_OrderInternal_SetUnErased.sql', ZQuery);
 
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpInsertUpdate_MovementItem_PriceCorrective.sql', ZQuery);
   ExecFile(ProcedurePath + 'MovementItem\PriceCorrective\gpSelect_MovementItem_PriceCorrective.sql', ZQuery);
