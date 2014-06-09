@@ -48,6 +48,8 @@ BEGIN
                                            , inRouteSortingId   := inRouteSortingId
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
+                                                                             JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                                              JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementLinkMovement.MovementChildId
                                                                                                     AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                                         WHERE MovementLinkMovement.MovementId = ioId
@@ -76,6 +78,8 @@ BEGIN
                                            , inRouteSortingId   := inRouteSortingId
                                            , inDocumentTaxKindId_inf:= (SELECT MovementLinkObject.ObjectId
                                                                         FROM MovementLinkMovement
+                                                                             JOIN Movement ON Movement.Id = MovementLinkMovement.MovementChildId
+                                                                                          AND Movement.StatusId <> zc_Enum_Status_Erased()
                                                                              JOIN MovementLinkObject ON MovementLinkObject.MovementId = MovementLinkMovement.MovementChildId
                                                                                                     AND MovementLinkObject.DescId = zc_MovementLinkObject_DocumentTaxKind()
                                                                         WHERE MovementLinkMovement.MovementId = ioId

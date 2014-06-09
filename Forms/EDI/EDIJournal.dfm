@@ -8,14 +8,14 @@ inherited EDIJournalForm: TEDIJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
+    Top = 59
     Width = 834
-    Height = 367
+    Height = 365
     ExplicitTop = 57
     ExplicitWidth = 834
     ExplicitHeight = 367
-    ClientRectBottom = 367
-    ClientRectRight = 834
+    ClientRectBottom = 361
+    ClientRectRight = 830
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 834
       ExplicitHeight = 367
@@ -533,7 +533,7 @@ inherited EDIJournalForm: TEDIJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

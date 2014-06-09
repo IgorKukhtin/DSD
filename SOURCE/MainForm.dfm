@@ -1,4 +1,4 @@
-object MainForm: TMainForm
+﻿object MainForm: TMainForm
   Left = 0
   Top = 0
   Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
@@ -256,11 +256,11 @@ object MainForm: TMainForm
       Category = 0
     end
     object bbZakazExternal: TdxBarButton
-      Action = actZakazExternal
+      Action = actOrderExternal
       Category = 0
     end
     object bbZakazInternal: TdxBarButton
-      Action = actZakazInternal
+      Action = actOrderInternal
       Category = 0
     end
     object bbFinanceDocuments: TdxBarSubItem
@@ -1075,6 +1075,14 @@ object MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbContactPerson'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPersonKind'
+        end
+        item
+          Visible = True
           ItemName = 'bbGuides_Separator'
         end
         item
@@ -1147,7 +1155,7 @@ object MainForm: TMainForm
         end
         item
           Visible = True
-          ItemName = 'bbCity'
+          ItemName = 'bbAdres'
         end
         item
           Visible = True
@@ -1612,6 +1620,72 @@ object MainForm: TMainForm
       Action = actPriceCorrective
       Category = 0
     end
+    object bbAdres: TdxBarSubItem
+      Caption = #1040#1076#1088#1077#1089#1072' '#1076#1086#1089#1090#1072#1074#1082#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbRegion'
+        end
+        item
+          Visible = True
+          ItemName = 'bb'#1056#1072#1081#1086#1085
+        end
+        item
+          Visible = True
+          ItemName = 'bbProvinceCity'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCity'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCityKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStreet'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStreetKind'
+        end>
+    end
+    object bbContactPerson: TdxBarButton
+      Action = actContactPerson
+      Category = 0
+    end
+    object bbContactPersonKind: TdxBarButton
+      Action = actContactPersonKind
+      Category = 0
+    end
+    object bbRegion: TdxBarButton
+      Action = actRegion
+      Category = 0
+    end
+    object bbРайон: TdxBarButton
+      Action = actProvince
+      Category = 0
+    end
+    object bbCityKind: TdxBarButton
+      Action = actCityKind
+      Category = 0
+    end
+    object bbProvinceCity: TdxBarButton
+      Action = actProvinceCity
+      Category = 0
+    end
+    object bbStreetKind: TdxBarButton
+      Action = actStreetKind
+      Category = 0
+    end
+    object bbStreet: TdxBarButton
+      Action = actStreet
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -1627,6 +1701,17 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actContactPersonKind: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
+      Hint = #1042#1080#1076' '#1082#1086#1085#1090#1072#1082#1090#1072
+      FormName = 'TContactPersonKindForm'
+      FormNameParam.Value = 'TContactPersonKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actAsset: TdsdOpenForm
       Category = #1054#1057
       MoveParams = <>
@@ -1634,6 +1719,39 @@ object MainForm: TMainForm
       Hint = #1054#1089#1085#1086#1074#1085#1099#1077' '#1089#1088#1077#1076#1089#1090#1074#1072' '
       FormName = 'TAssetForm'
       FormNameParam.Value = 'TAssetForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContactPerson: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
+      Hint = #1050#1086#1085#1090#1072#1082#1090#1085#1099#1077' '#1083#1080#1094#1072
+      FormName = 'TContactPersonForm'
+      FormNameParam.Value = 'TContactPersonForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProvinceCity: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+      Hint = #1056#1072#1081#1086#1085' '#1074' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1084' '#1087#1091#1085#1082#1090#1077
+      FormName = 'TProvinceCityForm'
+      FormNameParam.Value = 'TProvinceCityForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actProvince: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1056#1072#1081#1086#1085
+      Hint = #1056#1072#1081#1086#1085
+      FormName = 'TProvinceForm'
+      FormNameParam.Value = 'TProvinceForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -1659,6 +1777,28 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+    object actStreet: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
+      Hint = #1059#1083#1080#1094#1072'/'#1087#1088#1086#1089#1087#1077#1082#1090
+      FormName = 'TStreetForm'
+      FormNameParam.Value = 'TStreetForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actStreetKind: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
+      Hint = #1042#1080#1076'('#1091#1083#1080#1094#1072','#1087#1088#1086#1089#1087#1077#1082#1090')'
+      FormName = 'TStreetKindForm'
+      FormNameParam.Value = 'TStreetKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actBankAccountContract: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -1666,6 +1806,17 @@ object MainForm: TMainForm
       Hint = #1056#1072#1089#1095#1077#1090#1085#1099#1077' '#1089#1095#1077#1090#1072' '#1076#1083#1103' '#1074#1089#1077#1093' ('#1074#1093'.'#1087#1083#1072#1090#1077#1078')'
       FormName = 'TBankAccountContractForm'
       FormNameParam.Value = 'TBankAccountContractForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actCityKind: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
+      Hint = #1042#1080#1076' '#1085#1072#1089#1077#1083#1077#1085#1085#1086#1075#1086' '#1087#1091#1085#1082#1090#1072
+      FormName = 'TCityKindForm'
+      FormNameParam.Value = 'TCityKindForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2004,6 +2155,17 @@ object MainForm: TMainForm
       Caption = #1055#1077#1088#1077#1084#1077#1097#1077#1085#1080#1077' '#1087#1086' '#1094#1077#1085#1077
       FormName = 'TSendOnPriceJournalForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRegion: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1054#1073#1083#1072#1089#1090#1100
+      Hint = #1054#1073#1083#1072#1089#1090#1100
+      FormName = 'TRegionForm'
+      FormNameParam.Value = 'TRegionForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2465,12 +2627,12 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actZakazExternal: TdsdOpenForm
+    object actOrderExternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103
-      FormName = 'TZakazExternalJournalForm'
-      FormNameParam.Value = ''
+      FormName = 'TOrderExternalJournalForm'
+      FormNameParam.Value = 'TOrderExternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -2486,12 +2648,12 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actZakazInternal: TdsdOpenForm
+    object actOrderInternal: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
       Caption = #1047#1072#1103#1074#1082#1072' '#1087#1088#1086#1080#1079#1074#1086#1076#1089#1090#1074#1077#1085#1085#1072#1103
-      FormName = 'TZakazInternalJournalForm'
-      FormNameParam.Value = ''
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

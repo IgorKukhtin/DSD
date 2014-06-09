@@ -87,6 +87,9 @@ type
     procedure LoadRateFuelKindFormTest;
     procedure LoadSaleFormTest;
     procedure LoadSendFormTest;
+    procedure LoadOrderInternalFormTest;
+    procedure LoadOrderExternalFormTest;
+
     procedure LoadSendDebtFormTest;
     procedure LoadSendOnPriceFormTest;
     procedure LoadServiceDocumentFormTest;
@@ -387,6 +390,23 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendTicketFuelJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TSendTicketFuelJournalForm');
 end;
+
+procedure TLoadFormTest.LoadOrderInternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+end;
+
+procedure TLoadFormTest.LoadOrderExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+end;
+
 procedure TLoadFormTest.LoadSendDebtFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TSendDebtForm'));

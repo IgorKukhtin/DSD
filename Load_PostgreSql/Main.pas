@@ -2170,6 +2170,7 @@ begin
         toStoredProc.Params.AddParam ('inIsCorporate',ftBoolean,ptInput, false);
         toStoredProc.Params.AddParam ('inJuridicalGroupId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inGoodsPropertyId',ftInteger,ptInput, 0);
+        toStoredProc.Params.AddParam ('inRetailId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inInfoMoneyId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListId',ftInteger,ptInput, 0);
         toStoredProc.Params.AddParam ('inPriceListPromoId',ftInteger,ptInput, 0);
@@ -2213,6 +2214,7 @@ begin
              toStoredProc.Params.ParamByName('inIsCorporate').Value:=false;
              toStoredProc.Params.ParamByName('inJuridicalGroupId').Value:=FieldByName('ParentId_Postgres').AsInteger;
              toStoredProc.Params.ParamByName('inGoodsPropertyId').Value:=FieldByName('GoodsPropertyId_PG').AsInteger;
+             toStoredProc.Params.ParamByName('inRetailId').Value:=0;
              toStoredProc.Params.ParamByName('inInfoMoneyId').Value:=FieldByName('InfoMoneyId_PG').AsInteger;
 
              if not myExecToStoredProc then ;//exit;
@@ -11710,6 +11712,7 @@ begin
         Add('select Bill.Id as ObjectId');
         Add('     , Bill.BillDate as OperDate');
         Add('     , cast(Bill.BillNumber as integer)as InvNumber');
+        Add('     , Bill.BillNumberNalog');
         Add('     , Bill.FromID');
         Add('     , Bill.ToID');
         Add('     , Bill.MoneyKindId');
@@ -11748,18 +11751,33 @@ begin
         toStoredProc.Params.Clear;
         toStoredProc.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
         //
+        toStoredProc_two.StoredProcName:='gpSetErased_Movement';
+        toStoredProc_two.OutputType := otResult;
+        toStoredProc_two.Params.Clear;
+        toStoredProc_two.Params.AddParam ('inMovementId',ftInteger,ptInput, 0);
+        //
         while not EOF do
         begin
              //!!!
              if fStop then begin exit;end;
              //
-             if cbUnComplete.Checked then
-             begin
-                  toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
-                  if not myExecToStoredProc then ;//exit;
-             end;
-             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger) then
-             begin
+             if cbUnComplete.Checked
+             then if (FieldByName('BillNumberNalog').AsInteger=0)or(FieldByName('MoneyKindId').AsInteger<>FieldByName('zc_mkBN').AsInteger)
+                  then
+                      begin
+                           // удаляем
+                           toStoredProc_two.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                           if not myExecToStoredProc_two then ;//exit;
+                      end
+                  else
+                      begin
+                           // распроводим
+                           toStoredProc.Params.ParamByName('inMovementId').Value:=FieldByName('Id_Postgres').AsInteger;
+                           if not myExecToStoredProc then ;//exit;
+                      end;
+             if (cbComplete.Checked)and(FieldByName('MoneyKindId').AsInteger=FieldByName('zc_mkBN').AsInteger)
+               and(FieldByName('BillNumberNalog').AsInteger<>0)
+             then begin
                   // проводим
                   fExecSqToQuery (' UPDATE Movement SET StatusId = zc_Enum_Status_Complete()'
                                  +' where Id='+FieldByName('Id_Postgres').AsString);

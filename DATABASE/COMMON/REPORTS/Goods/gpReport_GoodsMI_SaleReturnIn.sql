@@ -16,6 +16,7 @@ RETURNS TABLE (GoodsGroupName TVarChar, GoodsGroupNameFull TVarChar
              , TradeMarkName TVarChar
              , JuridicalCode Integer, JuridicalName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
+             , ContractCode Integer, ContractNumber TVarChar, ContractTagName TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , Sale_Summ TFloat, Sale_Amount_Weight TFloat , Sale_Amount_Sh TFloat, Sale_AmountPartner_Weight TFloat , Sale_AmountPartner_Sh TFloat
              , Return_Summ TFloat, Return_Amount_Weight TFloat , Return_Amount_Sh TFloat, Return_AmountPartner_Weight TFloat , Return_AmountPartner_Sh TFloat 
@@ -48,6 +49,7 @@ BEGIN
     -- ограничиваем по ёр.лицу
     WITH tmpMovement AS (SELECT tmpListContainer.JuridicalId 
                               , MovementLinkObject_Partner.ObjectId AS PartnerId
+                              , tmpListContainer.ContractId 
                               , tmpListContainer.InfoMoneyId
 
                               , MovementItem.Id AS MovementItemId
@@ -67,6 +69,7 @@ BEGIN
                                     , ContainerLO_Juridical.ObjectId         AS JuridicalId
                                     , ContainerLinkObject_InfoMoney.ObjectId AS InfoMoneyId
                                     , ContainerLinkObject_PaidKind.ObjectId  AS PaidKindId
+                                    , ContainerLinkObject_Contract.ObjectId  AS ContractId
                                     , CASE WHEN isSale = TRUE THEN zc_Movement_Sale() ELSE zc_Movement_ReturnIn() END AS MovementDescId
                                     , CASE WHEN isSale = TRUE THEN zc_MovementLinkObject_To() ELSE zc_MovementLinkObject_From() END AS MLO_DescId
                                FROM (SELECT ProfitLossId AS Id, isSale FROM Constant_ProfitLoss_Sale_ReturnIn_View
@@ -92,6 +95,9 @@ BEGIN
                                                                   ON ContainerLinkObject_PaidKind.ContainerId = ReportContainerLink_Juridical.ContainerId
                                                                  AND ContainerLinkObject_PaidKind.DescId = zc_ContainerLinkObject_PaidKind()
                                                                  AND (ContainerLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
+                                         LEFT JOIN ContainerLinkObject AS ContainerLinkObject_Contract
+                                                                  ON ContainerLinkObject_Contract.ContainerId = ReportContainerLink_Juridical.ContainerId
+                                                                 AND ContainerLinkObject_Contract.DescId = zc_ContainerLinkObject_Contract()
                               ) AS tmpListContainer
                               JOIN MovementItemReport AS MIReport ON MIReport.ReportContainerId = tmpListContainer.ReportContainerId
                                                                  AND MIReport.OperDate BETWEEN inStartDate AND inEndDate
@@ -108,6 +114,7 @@ BEGIN
                                                               AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                          GROUP BY tmpListContainer.JuridicalId 
                                 , MovementLinkObject_Partner.ObjectId
+                                , tmpListContainer.ContractId 
                                 , tmpListContainer.InfoMoneyId
                                 , MovementItem.Id 
                                 , MovementItem.ObjectId
@@ -127,6 +134,9 @@ BEGIN
           , Object_Partner.ObjectCode   AS PartnerCode
           , Object_Partner.ValueData    AS PartnerName
 
+          , View_Contract_InvNumber.ContractCode
+          , View_Contract_InvNumber.InvNumber              AS ContractNumber
+          , View_Contract_InvNumber.ContractTagName
           , View_InfoMoney.InfoMoneyGroupName              AS InfoMoneyGroupName
           , View_InfoMoney.InfoMoneyDestinationName        AS InfoMoneyDestinationName
           , View_InfoMoney.InfoMoneyCode                   AS InfoMoneyCode
@@ -148,6 +158,7 @@ BEGIN
 
      FROM (SELECT tmpOperation.JuridicalId
                 , tmpOperation.PartnerId
+                , tmpOperation.ContractId 
                 , tmpOperation.InfoMoneyId
 
                 , tmpOperation.GoodsId
@@ -164,6 +175,7 @@ BEGIN
                 
            FROM (SELECT tmpMovement.JuridicalId 
                       , tmpMovement.PartnerId
+                      , tmpMovement.ContractId 
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
@@ -179,6 +191,7 @@ BEGIN
                  FROM tmpMovement
                  GROUP BY tmpMovement.JuridicalId 
                         , tmpMovement.PartnerId
+                        , tmpMovement.ContractId 
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.GoodsId
                         , tmpMovement.GoodsKindId
@@ -186,6 +199,7 @@ BEGIN
                 UNION ALL    
                  SELECT tmpMovement.JuridicalId 
                       , tmpMovement.PartnerId
+                      , tmpMovement.ContractId 
                       , tmpMovement.InfoMoneyId
                       , tmpMovement.GoodsId
                       , tmpMovement.GoodsKindId
@@ -207,6 +221,7 @@ BEGIN
                                                   ON MIFloat_AmountPartner.MovementItemId = tmpMovement.MovementItemId
                                                  AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
                  GROUP BY tmpMovement.JuridicalId 
+                        , tmpMovement.ContractId 
                         , tmpMovement.PartnerId
                         , tmpMovement.InfoMoneyId
                         , tmpMovement.GoodsId
@@ -215,6 +230,7 @@ BEGIN
 
            GROUP BY tmpOperation.JuridicalId
                   , tmpOperation.PartnerId
+                  , tmpOperation.ContractId 
                   , tmpOperation.InfoMoneyId
                   , tmpOperation.GoodsId
                   , tmpOperation.GoodsKindId
@@ -247,6 +263,7 @@ BEGIN
                                                           AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
           LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
+          LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = tmpOperationGroup.ContractId
           LEFT JOIN Object_InfoMoney_View AS View_InfoMoney ON View_InfoMoney.InfoMoneyId = tmpOperationGroup.InfoMoneyId
     ;
          
