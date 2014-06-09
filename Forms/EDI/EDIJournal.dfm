@@ -728,8 +728,17 @@ inherited EDIJournalForm: TEDIJournalForm
   end
   object EDI: TEDI
     ConnectionParams.Host.Value = Null
+    ConnectionParams.Host.Component = FormParams
+    ConnectionParams.Host.ComponentItem = 'Host'
+    ConnectionParams.Host.DataType = ftString
     ConnectionParams.User.Value = Null
+    ConnectionParams.User.Component = FormParams
+    ConnectionParams.User.ComponentItem = 'UserName'
+    ConnectionParams.User.DataType = ftString
     ConnectionParams.Password.Value = Null
+    ConnectionParams.Password.Component = FormParams
+    ConnectionParams.Password.ComponentItem = 'Password'
+    ConnectionParams.Password.DataType = ftString
     Left = 416
     Top = 32
   end

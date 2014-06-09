@@ -27,8 +27,8 @@ BEGIN
    -- Если код не установлен, определяем его как последний+1
    vbCode_calc:=lfGet_ObjectCode (inCode, zc_Object_Street()); 
    
-   -- проверка прав уникальности для свойства <Наименование >
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Street(), inName);
+   -- проверка прав уникальности для свойства <Наименование > + <City>
+ --  PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Street(), inName);
    -- проверка прав уникальности для свойства <Код >
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Street(), vbCode_calc);
 
