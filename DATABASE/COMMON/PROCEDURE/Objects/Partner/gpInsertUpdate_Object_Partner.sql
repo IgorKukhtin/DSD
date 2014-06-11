@@ -2,6 +2,9 @@
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar, TVarChar, TVarChar, TVarChar,
+                             Integer, TFloat, TFloat, 
+                             Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar);
 
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
@@ -10,7 +13,6 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
     IN inShortName           TVarChar  ,    -- краткое наименование
     IN inGLNCode             TVarChar  ,    -- Код GLN
-    IN inAddress             TVarChar  ,    -- Адрес точки доставки
     IN inHouseNumber         TVarChar  ,    -- Номер дома
     IN inCaseNumber          TVarChar  ,    -- Номер корпуса
     IN inRoomNumber          TVarChar  ,    -- Номер квартиры
@@ -33,6 +35,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner(
 $BODY$
    DECLARE vbUserId Integer;
    DECLARE vbCode Integer;   
+   DECLARE vbAddress TVarChar;
+   
 BEGIN
    
    -- проверка прав пользователя на вызов процедуры
@@ -47,16 +51,20 @@ BEGIN
    -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! vbCode:= lfGet_ObjectCode (inCode, zc_Object_Partner());
    IF COALESCE (inCode, 0) = 0  THEN vbCode := 0; ELSE vbCode := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
-   
+
+   vbAddress := (SELECT COALESCE(cityname, '')||', '||COALESCE(streetkindname, '')||' '||
+                        COALESCE(name, '')||', '
+                   FROM Object_Street_View  WHERE Id = inStreetId);
+   vbAddress := vbAddress||inHouseNumber;
 
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
    SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
    -- !!!в название добавляем <Адрес точки доставки>!!!
-   outPartnerName:= outPartnerName || ' ' || inAddress;
+   outPartnerName:= outPartnerName || ', ' || vbAddress;
 
 
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), outPartnerName);
+--   PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Partner(), outPartnerName);
    -- проверка уникальности <Код>
    IF inCode <> 0 THEN PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Partner(), vbCode); END IF;
 
@@ -68,7 +76,7 @@ BEGIN
    -- сохранили свойство <Код GLN>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_GLNCode(), ioId, inGLNCode);
    -- сохранили свойство <Адрес точки доставки>
-   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, inAddress);
+   PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_Address(), ioId, vbAddress);
    -- сохранили свойство <дом>
    PERFORM lpInsertUpdate_ObjectString( zc_ObjectString_Partner_HouseNumber(), ioId, inHouseNumber);
    -- сохранили свойство <корпус>
@@ -109,7 +117,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Partner (Integer, Integer, TVarChar, TVarChar,  TVarChar, TVarChar, TVarChar,Integer,TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------

@@ -9,7 +9,7 @@ RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
              , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
              , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , ContactId Integer, ContactCode Integer, ContacttName TVarChar
+             , ContractId Integer, ContractCode Integer, ContractName TVarChar
              , ContactPersonKindId Integer, ContactPersonKindCode Integer, ContactPersonKindName TVarChar
              , isErased boolean
              ) AS
@@ -50,9 +50,6 @@ BEGIN
            , Object_ContactPersonKind.ObjectCode AS ContactPersonKindCode
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
 
-           , View_ContactPersonKind.PersonalId   AS ContactPersonKindId
-           , View_ContactPersonKind.PersonalCode AS ContactPersonKindCode
-           , View_ContactPersonKind.PersonalName AS ContactPersonKindName
            
            , Object_ContactPerson.isErased    AS isErased
            

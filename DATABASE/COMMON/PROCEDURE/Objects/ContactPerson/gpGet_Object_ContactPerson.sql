@@ -8,10 +8,10 @@ CREATE OR REPLACE FUNCTION gpGet_Object_ContactPerson(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar 
              , Phone TVarChar, Mail TVarChar, Comment TVarChar
-             , PartnerId Integer, PartnerCode Integer, PartnerName TVarChar
-             , JuridicalId Integer, JuridicalCode Integer, JuridicalName TVarChar
-             , ContactId Integer, ContactCode Integer, ContacttName TVarChar
-             , ContactPersonKindId Integer, ContactPersonKindCode Integer, ContactPersonKindName TVarChar
+             , PartnerId Integer, PartnerName TVarChar
+             , JuridicalId Integer, JuridicalName TVarChar
+             , ContactId Integer, ContacttName TVarChar
+             , ContactPersonKindId Integer, ContactPersonKindName TVarChar
              , isErased boolean
              ) AS
 $BODY$
@@ -33,19 +33,15 @@ BEGIN
            , CAST ('' as TVarChar)  AS Comment
 
            , CAST (0 as Integer)    AS PartnerId
-           , CAST (0 as Integer)    AS PartnerCode
            , CAST ('' as TVarChar)  AS PartnerName
   
            , CAST (0 as Integer)    AS JuridicalId
-           , CAST (0 as Integer)    AS JuridicalCode
            , CAST ('' as TVarChar)  AS JuridicalName
+    
+           , CAST (0 as Integer)    AS ContractId
+           , CAST ('' as TVarChar)  AS ContractName
 
-           , CAST (0 as Integer)    AS ObjectId
-           , CAST (0 as Integer)    AS ObjectCode
-           , CAST ('' as TVarChar)  AS ObjectName
-        
            , CAST (0 as Integer)    AS ContactPersonKindId
-           , CAST (0 as Integer)    AS ContactPersonKindCode
            , CAST ('' as TVarChar)  AS ContactPersonKindName
 
            , CAST (NULL AS Boolean) AS isErased
@@ -64,25 +60,17 @@ BEGIN
            , ObjectString_Comment.ValueData   AS Comment 
          
            , Object_Partner.Id                   AS PartnerId
-           , Object_Partner.ObjectCode           AS PartnerCode
            , Object_Partner.ValueData            AS PartnerName
 
-           , Object_Juridical.Id                   AS JuridicalId
-           , Object_Juridical.ObjectCode           AS JuridicalCode
-           , Object_Juridical.ValueData            AS JuridicalName
+           , Object_Juridical.Id                 AS JuridicalId
+           , Object_Juridical.ValueData          AS JuridicalName
 
            , Object_Contract.Id                   AS ContractId
-           , Object_Contract.ObjectCode           AS ContractCode
            , Object_Contract.ValueData            AS ContractName
 
            , Object_ContactPersonKind.Id         AS ContactPersonKindId
-           , Object_ContactPersonKind.ObjectCode AS ContactPersonKindCode
            , Object_ContactPersonKind.ValueData  AS ContactPersonKindName
-
-           , View_ContactPersonKind.PersonalId   AS ContactPersonKindId
-           , View_ContactPersonKind.PersonalCode AS ContactPersonKindCode
-           , View_ContactPersonKind.PersonalName AS ContactPersonKindName
-           
+          
            , Object_ContactPerson.isErased AS isErased
            
        FROM Object AS Object_ContactPerson

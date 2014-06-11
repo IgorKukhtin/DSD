@@ -466,7 +466,11 @@ uses
   Send in '..\..\Forms\Document\Send.pas' {SendForm: TParentForm},
   SendJournal in '..\..\Forms\Document\SendJournal.pas' {SendJournalForm: TParentForm},
   OrderInternalJournal in '..\..\Forms\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
-  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm};
+  OrderInternal in '..\..\Forms\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
+  ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
+  ContactPersonKind in '..\..\Forms\Guides\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
+  ContactPersonKindEdit in '..\..\Forms\Guides\ContactPersonKindEdit.pas' {ContactPersonKindEditForm: TParentForm};
 
 {$R *.RES}
 
