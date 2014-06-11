@@ -32,11 +32,12 @@ BEGIN
 
      -- таблица - количественные элементы документа, со всеми свойствами для формирования Аналитик в проводках
      CREATE TEMP TABLE _tmpItem (MovementItemId Integer
-                               , GoodsId Integer, GoodsKindId Integer
+                               , ContainerId_Summ Integer, GoodsId Integer, GoodsKindId Integer
                                , OperCount TFloat, tmpOperSumm_Partner TFloat, OperSumm_Partner TFloat
                                , ContainerId_ProfitLoss_10300 Integer
-                               , ContainerId_Partner Integer, AccountId_Partner Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
-                               , BusinessId_To Integer) ON COMMIT DROP;
+                               , ContainerId_Partner Integer, AccountId_Partner Integer
+                               , BusinessId_To Integer
+                               , AccountId_Summ Integer, InfoMoneyDestinationId_Summ Integer, InfoMoneyId_Summ Integer) ON COMMIT DROP;
 
      -- Проводим Документ
      PERFORM lpComplete_Movement_PriceCorrective (inMovementId     := inMovementId
