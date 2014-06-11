@@ -3,7 +3,7 @@
   ClientHeight = 512
   ClientWidth = 394
   ExplicitWidth = 400
-  ExplicitHeight = 544
+  ExplicitHeight = 537
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -20,6 +20,7 @@
   object edAddress: TcxTextEdit [2]
     Left = 40
     Top = 107
+    Enabled = False
     TabOrder = 0
     Width = 312
   end
@@ -355,13 +356,6 @@
         Name = 'inGLNCode'
         Value = ''
         Component = edGLNCode
-        DataType = ftString
-        ParamType = ptInput
-      end
-      item
-        Name = 'inAddress'
-        Value = ''
-        Component = edAddress
         DataType = ftString
         ParamType = ptInput
       end

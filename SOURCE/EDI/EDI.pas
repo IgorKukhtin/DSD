@@ -345,7 +345,7 @@ begin
              ParamByName('inGoodsName').Value := Найменування;
              ParamByName('inGLNCode').Value := АртикулПокупця;
              ParamByName('inAmountPartner').Value := gfStrToFloat(ПрийнятаКількість);
-             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.СумаБезПДВ) + gfStrToFloat(ВсьогоПоРядку.СумаПДВ);
+             ParamByName('inSummPartner').Value := gfStrToFloat(ВсьогоПоРядку.СумаБезПДВ);
              ParamByName('inPricePartner').Value := ParamByName('inSummPartner').Value / ParamByName('inAmountPartner').Value;
              Execute;
            end;
