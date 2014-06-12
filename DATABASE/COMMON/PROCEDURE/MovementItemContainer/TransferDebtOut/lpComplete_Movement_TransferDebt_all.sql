@@ -243,7 +243,7 @@ BEGIN
               END AS OperSumm_Partner
               
             , zc_Enum_Account_110401()   AS AccountId_Summ      -- Счет(справочника), Транзит + виртуальный склад
-            , tmpMI.InfoMoneyId           AS InfoMoneyId_Summ    -- Статьи назначения 
+            , tmpMI.InfoMoneyId          AS InfoMoneyId_Summ    -- Статьи назначения 
 
         FROM (SELECT tmpMI.MovementItemId
                    , tmpMI.GoodsId

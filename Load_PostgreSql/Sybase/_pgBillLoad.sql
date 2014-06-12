@@ -12,638 +12,84 @@ select '166334' as InvNumber, 4690 as FromId, 0 as ToId
 union select '166383' as InvNumber, 4690 as FromId, 0 as ToId
 
 
-
-select '165371' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165372' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165381' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165385' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165387' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165388' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165389' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165390' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165391' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165392' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165393' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165394' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165395' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165399' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165400' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165401' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165402' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165404' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165406' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165408' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165409' as InvNumber, 4690 as FromId, 0 as ToId
+-- !!!!!!!!!!!!!!!
+-- !!! ERROR PF !!!
+-- !!!!!!!!!!!!!!!
+-- select * from 
+-- update 
+dba.Bill
+set BillNumberNalog = 0
+where BillDate between '2014-05-01' and '2014-07-01'
+and FromId in (zc_UnitId_StoreMaterialBasis(), zc_UnitId_StorePF(), zc_UnitId_StoreSalePF())
+and BillNumberNalog <> 0
+and Bill.ToId in(
+select Unit.Id -- trim(ClientInformation.OKPO) as OKPO, 
+from dba.Unit
+     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)
+                                                                    and trim(ClientInformation_find.OKPO) <> ''
+     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id
+     join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_find.ClientID,ClientInformation_child.ClientID)
+                                                            and trim(ClientInformation.OKPO) <> ''
+where trim(ClientInformation.OKPO) in ('38685495', '30982361', '33184262', '32294926', '32294905', '38939423', '38183389')
+)
 
 
 
-select '164069' as InvNumber, 4690 as FromId, 0 as ToId
-select '166057' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3589' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3559' as InvNumber, 4690 as FromId, 0 as ToId
+-- !!!!!!!!!!!!!!!
+-- !!! LIST POK !!!
+-- !!!!!!!!!!!!!!!
+select Unit_inf.UnitName as GroupsName, isnull(ClientInformation.OKPO,'') as OKPO, Unit.Id AS Id_byLoad, Unit.UnitName -- , Unit_FindBill.Kind
+from dba.Unit
+     left outer join dba.Unit as Unit_inf on Unit_inf.ID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)
+     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = Unit_inf.ID
+                                                                    and ClientInformation_find.OKPO <> ''
+     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id
+                                                                     and ClientInformation_child.OKPO <> ''
+     left outer join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_child.ClientID,ClientInformation_find.ClientID)
+     inner join (select ToId as Id, 1 as kind from dba.Bill where FromId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSaleToClient() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 1 as kind from dba.Bill where ToId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkReturnToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
+               union 
+                 select ToId as Id, 1 as kind from dba.Bill left join dba.isUnit as isUnit_to on isUnit_to.UnitId = ToId where FromId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and isUnit_to.UnitId is null and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSendUnitToUnit() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 1 as kind from dba.Bill left join dba.isUnit as isUnit_from on isUnit_from.UnitId = FromId where ToId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and isUnit_from.UnitId is null and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSendUnitToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
+
+               union 
+                 select ToId as Id, 2 as kind from dba.Bill where FromId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSaleToClient() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 2 as kind from dba.Bill where ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkReturnToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
+               union 
+                 select ToId as Id, 2 as kind from dba.Bill left join dba.isUnit as isUnit_to on isUnit_to.UnitId = ToId where FromId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak()) and isUnit_to.UnitId is null and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSendUnitToUnit() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 2 as kind from dba.Bill left join dba.isUnit as isUnit_from on isUnit_from.UnitId = FromId where ToId in (zc_UnitId_StoreSale(),zc_UnitId_StoreReturn(),zc_UnitId_StoreReturnBrak()) and isUnit_from.UnitId is null and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkSendUnitToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
+                )as Unit_FindBill on Unit_FindBill.Id = Unit.Id and Kind = 1
+
+where Unit.Id not in (select UnitId from dba._pgPartner where PartnerId_pg <> 0)
+order by 2, 1, 4
 
 
-select '167323' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166058' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167339' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166291' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165792' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165789' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165420' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164891' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166306' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165787' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165421' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165775' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165424' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166459' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166050' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165234' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166065' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165621' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165423' as InvNumber, 4690 as FromId, 0 as ToId
 
-union select '167340' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166889' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166490' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167037' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166461' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165799' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165644' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165451' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165791' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165430' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165646' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164657' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167327' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166469' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165630' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164887' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164128' as InvNumber, 4690 as FromId, 0 as ToId
+-- !!!!!!!!!!!!!!!
+-- !!! LIST POST !!!
+-- !!!!!!!!!!!!!!!
+select Unit_inf.UnitName as GroupsName, isnull(ClientInformation.OKPO,'') as OKPO, Unit.Id AS Id_byLoad, Unit.UnitName -- , Unit_FindBill.Kind
+from dba.Unit
+     left outer join dba.Unit as Unit_inf on Unit_inf.ID = isnull(zf_ChangeIntToNull(Unit.InformationFromUnitId),Unit.Id)
+     left outer join dba.ClientInformation as ClientInformation_find on ClientInformation_find.ClientID = Unit_inf.ID
+                                                                    and ClientInformation_find.OKPO <> ''
+     left outer join dba.ClientInformation as ClientInformation_child on ClientInformation_child.ClientID = Unit.Id
+                                                                     and ClientInformation_child.OKPO <> ''
+     left outer join dba.ClientInformation on ClientInformation.ClientID = isnull(ClientInformation_child.ClientID,ClientInformation_find.ClientID)
+     inner join (select ToId as Id, 1 as kind from dba.Bill where FromId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkReturnToClient() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 1 as kind from dba.Bill where ToId in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkIncomeToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
 
-union select '166901' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166073' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164892' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166498' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165796' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165649' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166464' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166275' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165772' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166063' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165790' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165425' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167527' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166460' as InvNumber, 4690 as FromId, 0 as ToId
+               union 
+                 select ToId as Id, 2 as kind from dba.Bill where FromId not in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkReturnToClient() and Bill.MoneyKindId = zc_mkNal() group by ToId
+               union 
+                 select FromId as Id, 2 as kind from dba.Bill where ToId not in (zc_UnitId_StoreSalePF(), zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis()) and Bill.BillDate >= '2014-01-01' and BillKind = zc_bkIncomeToUnit() and Bill.MoneyKindId = zc_mkNal() group by FromId
+                )as Unit_FindBill on Unit_FindBill.Id = Unit.Id and Kind = 2
 
-union select '167517' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167042' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166077' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165440' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165084' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164321' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167353' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166905' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166502' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165659' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165265' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164898' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164522' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164148' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167364' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166701' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166287' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165782' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165258' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165090' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166487' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165643' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164518' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167325' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167035' as InvNumber, 4690 as FromId, 0 as ToId
-union select '165416' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164663' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164126' as InvNumber, 4690 as FromId, 0 as ToId
-union select '167511' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166900' as InvNumber, 4690 as FromId, 0 as ToId
-union select '166273' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164873' as InvNumber, 4690 as FromId, 0 as ToId
-union select '164302' as InvNumber, 4690 as FromId, 0 as ToId
-
-
-select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157431' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154799' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154803' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154791' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154791' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154793' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159528' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159205' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159500' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159500' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159793' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159793' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159793' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159793' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159124' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159359' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159601' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159280' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159280' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159280' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000165' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000165' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156933' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158245' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158633' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154834' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159502' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156531' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156531' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159502' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159502' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155525' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159361' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157735' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159792' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158508' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155962' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159361' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159361' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159792' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159361' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159792' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159361' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159122' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159792' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156456' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155173' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158312' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159028' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157833' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155772' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159602' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159279' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158420' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155874' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159279' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158829' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159279' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '04-300000293' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156935' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156935' as InvNumber, 4690 as FromId, 0 as ToId
-union select '154848' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156366' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157637' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155208' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159934' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159937' as InvNumber, 4690 as FromId, 0 as ToId
-union select '30' as InvNumber, 4690 as FromId, 0 as ToId
-union select '28' as InvNumber, 4690 as FromId, 0 as ToId
-union select '30' as InvNumber, 4690 as FromId, 0 as ToId
-union select '30' as InvNumber, 4690 as FromId, 0 as ToId
-union select '28' as InvNumber, 4690 as FromId, 0 as ToId
-union select '30' as InvNumber, 4690 as FromId, 0 as ToId
-union select '28' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157162' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158409' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156251' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157163' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159316' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159316' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158870' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159763' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '17' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159972' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159971' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159930' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159569' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159930' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159576' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159930' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159569' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159932' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159955' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159954' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159953' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159959' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159958' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159940' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159939' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155967' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '156099' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155956' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155965' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159931' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159931' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159929' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159931' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159929' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159931' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159931' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159926' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159919' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157374' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157380' as InvNumber, 4690 as FromId, 0 as ToId
-union select '2' as InvNumber, 4690 as FromId, 0 as ToId
-union select '2' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3613' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3613' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3613' as InvNumber, 4690 as FromId, 0 as ToId
-union select '3613' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158201' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '158201' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157630' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '9' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155474' as InvNumber, 4690 as FromId, 0 as ToId
-union select '157942' as InvNumber, 4690 as FromId, 0 as ToId
-union select '155727' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159480' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159480' as InvNumber, 4690 as FromId, 0 as ToId
-union select '159281' as InvNumber, 4690 as FromId, 0 as ToId
+where Unit.Id not in (select UnitId from dba._pgPartner where PartnerId_pg <> 0)
+  and OKPO = ''
+order by 2, 1, 4
