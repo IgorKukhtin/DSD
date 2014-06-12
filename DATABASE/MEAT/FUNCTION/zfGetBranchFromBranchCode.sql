@@ -9,7 +9,7 @@ BEGIN
   CASE inUnitId 
     WHEN    2 THEN Return(8379);  -- Киев
     WHEN    8 THEN Return(8378);  -- Донецк
-    WHEN 4481 THEN Return(8377);  -- Кривой Рог
+    WHEN    7 THEN Return(8377);  -- Кривой Рог
     WHEN 2994 THEN Return(8376);  -- Крым
     WHEN  999 THEN Return(18342); -- Никополь
     WHEN 1048 THEN Return(8374);  -- Одесса
