@@ -54,6 +54,7 @@ BEGIN
            AND ObjectString_ArticleGLN.ValueData = inGLNCode;        
      END IF;
 
+     vbOrderAmount := COALESCE(vbOrderAmount, 0);
 
      -- сохранили <Ёлемент документа>
      vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), vbGoodsId, inMovementId, vbOrderAmount, NULL);

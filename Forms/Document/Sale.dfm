@@ -2267,7 +2267,7 @@ inherited SaleForm: TSaleForm
         ParamType = ptInput
       end>
     Left = 640
-    Top = 88
+    Top = 72
   end
   object EDI: TEDI
     ConnectionParams.Host.Component = FormParams

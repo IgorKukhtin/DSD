@@ -3,6 +3,7 @@ DO $$
 BEGIN
 
 delete from partner where kodbranch ='' and namebranch = ''  and juridicalname = '';
+
 UPDATE partner SET PartnerId = null;
 
 
@@ -90,6 +91,7 @@ UPDATE partner SET PartnerId = Object_Partner.Id
              WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()  AND partner.codett1c <> ''
        AND partner.codett1c::integer = Object_Partner1CLink.ObjectCode
                              AND zfGetBranchFromBranchCode(kodbranch::integer) = ObjectLink_Partner1CLink_Branch.ChildObjectId;
+UPDATE partner SET PartnerOldId = PartnerId;
 
 
 PERFORM ObjectPartner.Name, ObjectRegion.name, ObjectCity.*, ObjectStreet.*, partner.*,  
@@ -155,11 +157,11 @@ JOIN gpSelect_Object_Street('') AS ObjectStreet ON ObjectStreet.Name = Partner.S
 -- Нужно добавить данные таким образом, что бы взять существующие данные из нашего Партнера
 -- Остальные же из текущих значений загруженных
 
-UPDATE partner SET partnerId = dd.PartnerId
+UPDATE partner SET partnerId = dd.PartnerId, PartnerOldId = dd.OldPartnerId
 
 FROM  
 
-(select right(left(PartnerId::TEXT,7),6)::integer as PartnerId, codett1C from (SELECT gpInsertUpdate_Object_Partner(
+(select right(left(PartnerId::TEXT,7),6)::integer as PartnerId, codett1C, OldPartnerId from (SELECT gpInsertUpdate_Object_Partner(
  0,    -- ключ объекта <Контрагент> 
     0                ,    -- код объекта <Контрагент> 
     ObjectPartner.ShortName           ,    -- краткое наименование
@@ -181,7 +183,7 @@ FROM
     ObjectPartner.EndPromo            ,    -- Дата окончания акции     
     
     vbAdmin::TVarChar
-) AS PartnerId, partner.codett1C, 
+) AS PartnerId, partner.codett1C, ObjectPartner.Id AS OldPartnerId,
   -- Так же убрать связи с 1С у текущего
      lpUpdate_Object_Partner1CLink_Null(partner.codett1C::integer, ObjectPartner.Id, zfGetBranchFromBranchCode(kodbranch::integer))
  FROM 
@@ -221,14 +223,17 @@ SELECT  gpInsertUpdate_Object_Partner1CLink(
     Partner.PartnerId              ,    -- 
     zfGetBranchFromBranchCode(kodbranch::integer),    -- 
     0,    -- 
-    0,    -- 
+    OldPartner1CLink.ContractId,    -- 
     false,    -- 
     vbAdmin::TVarChar       -- сессия пользователя
 )
 FROM Partner
 LEFT JOIN gpSelect_Object_Partner1CLink('') AS Partner1CLink ON Partner1CLink.PartnerId = Partner.PartnerId
      AND Partner1CLink.Code = Partner.codett1c::INTEGER
-     AND Partner1CLink.BranchId = zfGetBranchFromBranchCode(kodbranch::integer);
+     AND Partner1CLink.BranchId = zfGetBranchFromBranchCode(kodbranch::integer)
+LEFT JOIN gpSelect_Object_Partner1CLink('') AS OldPartner1CLink ON OldPartner1CLink.PartnerId = Partner.PartnerOldId
+     AND OldPartner1CLink.Code = Partner.codett1c::INTEGER
+     AND OldPartner1CLink.BranchId = zfGetBranchFromBranchCode(kodbranch::integer);
 
 
 
