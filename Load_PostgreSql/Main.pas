@@ -1342,6 +1342,8 @@ begin
                      +' = case when GoodsProperty.Id in (5510) then 30201' // !!!РУЛЬКА ВАРЕНАЯ в пакете для запекания!!! - 30201	Доходы	Мясное сырье
                      +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
+
+                     +'        when fCheckGoodsParentID(8778,Goods.ParentId) =zc_rvYes() then 20302' // компьютеры  - 20401	Общефирменные Прочие основные ср-ва Комп. и оргтехника
                      +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные

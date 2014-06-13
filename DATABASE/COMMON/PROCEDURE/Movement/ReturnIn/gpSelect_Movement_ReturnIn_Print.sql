@@ -331,8 +331,9 @@ BEGIN
            , Object_Measure.ValueData        AS MeasureName
 
            , tmpMI.Amount                    AS Amount
-           , tmpMI.AmountPartner             AS AmountPartner
-           , tmpMI.Price                     AS Price
+           , tmpMI.AmountPartner             AS AmountPartner_abs
+           , CASE WHEN Movement.DescId <> zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.AmountPartner            AS AmountPartner
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END * tmpMI.Price                     AS Price
            , tmpMI.CountForPrice             AS CountForPrice
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
@@ -346,7 +347,8 @@ BEGIN
                        THEN CAST (tmpMI.AmountPartner * (tmpMI.Price / tmpMI.CountForPrice) AS NUMERIC (16, 2))
                   ELSE CAST (tmpMI.AmountPartner * tmpMI.Price AS NUMERIC (16, 2))
              END AS AmountSumm
-           , CASE WHEN vbPriceWithVAT = TRUE
+           , CASE WHEN Movement.DescId = zc_Movement_PriceCorrective() THEN -1 ELSE 1 END
+           * CASE WHEN vbPriceWithVAT = TRUE
                   THEN CAST (tmpMI.Price - tmpMI.Price * (vbVATPercent / 100) AS NUMERIC (16, 4))
                   ELSE tmpMI.Price
              END  / CASE WHEN tmpMI.CountForPrice <> 0 THEN tmpMI.CountForPrice ELSE 1 END
@@ -369,6 +371,7 @@ BEGIN
                    AS NUMERIC (16, 3)) AS AmountSummWVAT
 
        FROM (SELECT MovementItem.ObjectId AS GoodsId
+                  , MovementItem.MovementId
                   , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                   , CASE WHEN vbDiscountPercent <> 0
                               THEN CAST ( (1 - vbDiscountPercent / 100) * COALESCE (MIFloat_Price.ValueData, 0) AS NUMERIC (16, 2))
@@ -403,11 +406,13 @@ BEGIN
                AND MovementItem.DescId     = zc_MI_Master()
                AND MovementItem.isErased   = FALSE
              GROUP BY MovementItem.ObjectId
+                    , MovementItem.MovementId
                     , MILinkObject_GoodsKind.ObjectId
                     , MIFloat_Price.ValueData
                     , MIFloat_CountForPrice.ValueData
             ) AS tmpMI
 
+            LEFT JOIN Movement ON Movement.Id = tmpMI.MovementId
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmpMI.GoodsId
             LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
                                  ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
@@ -441,6 +446,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 12.06.14                                        * restore ContractSigningDate
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  20.05.14                                        * add Object_Contract_View

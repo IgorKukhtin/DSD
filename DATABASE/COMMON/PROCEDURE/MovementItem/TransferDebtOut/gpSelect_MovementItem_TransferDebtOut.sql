@@ -31,6 +31,11 @@ BEGIN
      RETURN QUERY
            WITH tmpParams AS (SELECT zc_Enum_InfoMoney_30103() AS InfoMoneyId
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
+                             UNION ALL
+                              SELECT InfoMoneyId
+                              FROM Object_InfoMoney_View
+                              WHERE InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+                                AND EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_1107() AND UserId = vbUserId)
                              )
        SELECT
              0                          AS Id
@@ -51,6 +56,19 @@ BEGIN
                   , Object_Goods.ValueData    AS GoodsName
                   , zc_Enum_GoodsKind_Main()  AS GoodsKindId
 
+             FROM tmpParams
+                  INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
+                                        ON ObjectLink_Goods_InfoMoney.ChildObjectId = tmpParams.InfoMoneyId
+                                       AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
+                  INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
+                                                   AND Object_Goods.isErased = FALSE
+
+           UNION
+            SELECT Object_Goods.Id           AS GoodsId
+                  , Object_Goods.ObjectCode   AS GoodsCode
+                  , Object_Goods.ValueData    AS GoodsName
+                  , zc_Enum_GoodsKind_Main()  AS GoodsKindId
+
              FROM Object_InfoMoney_View
                   LEFT JOIN tmpParams ON 1 = 1
                   INNER JOIN ObjectLink AS ObjectLink_Goods_InfoMoney
@@ -60,7 +78,8 @@ BEGIN
                                                    AND Object_Goods.isErased = FALSE
 
              WHERE Object_InfoMoney_View.InfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_21000(), zc_Enum_InfoMoneyDestination_21100(), zc_Enum_InfoMoneyDestination_30100())
-               AND (tmpParams.InfoMoneyId IS NULL OR tmpParams.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId)
+               -- AND (tmpParams.InfoMoneyId IS NULL OR tmpParams.InfoMoneyId = Object_InfoMoney_View.InfoMoneyId)
+               AND tmpParams.InfoMoneyId IS NULL
             ) AS tmpGoods
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
                             , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
@@ -182,6 +201,7 @@ ALTER FUNCTION gpSelect_MovementItem_TransferDebtOut (Integer, Integer, TDateTim
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 13.06.14                                        * add zc_Enum_InfoMoneyDestination_10100
  07.05.14                                        * add tmpParams
  24.04.14         *
 */
