@@ -62,7 +62,6 @@ BEGIN
                                        AND ObjectLink_Goods_InfoMoney.DescId = zc_ObjectLink_Goods_InfoMoney()
                   INNER JOIN Object AS Object_Goods ON Object_Goods.Id = ObjectLink_Goods_InfoMoney.ObjectId
                                                    AND Object_Goods.isErased = FALSE
-
            UNION
             SELECT Object_Goods.Id           AS GoodsId
                   , Object_Goods.ObjectCode   AS GoodsCode
