@@ -35,7 +35,7 @@ BEGIN
 
        LEFT JOIN PrintForms_View
               ON Movement.OperDate BETWEEN PrintForms_View.StartDate AND PrintForms_View.EndDate
-             AND PrintForms_View.JuridicalId = ObjectLink_Partner_Juridical.ChildObjectId
+             AND PrintForms_View.JuridicalId = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
              AND PrintForms_View.ReportType = 'ReturnIn'
              AND PrintForms_View.DescId = zc_Movement_ReturnIn()
 
@@ -60,6 +60,7 @@ ALTER FUNCTION gpGet_Movement_ReturnIn_ReportName (Integer, TVarChar) OWNER TO p
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
+ 12.06.14                                        * add COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_From.ObjectId)
  23.04.14                                                        * + PrintMovement_ReturnIn32049199
  06.02.14                                                        *
 */

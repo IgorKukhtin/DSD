@@ -27,7 +27,16 @@ BEGIN
                                           , inDescId := zc_Object_Role()
                                           , inEnumName:= 'zc_Enum_Role_Bread');
    ELSE
-       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Bread(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Bread'), inName:= 'Хлеб', inEnumName:= 'zc_Enum_Role_Transport');
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Bread(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Bread'), inName:= 'Хлеб', inEnumName:= 'zc_Enum_Role_Bread');
+   END IF;
+   -- zc_Enum_Role_1107
+   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 1107)
+   THEN
+       PERFORM lpUpdate_Object_Enum_byCode (inCode   := 1107
+                                          , inDescId := zc_Object_Role()
+                                          , inEnumName:= 'zc_Enum_Role_1107');
+   ELSE
+       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_1107(), inDescId:= zc_Object_Role(), inCode:= 1107, inName:= 'Бухг + мясо', inEnumName:= 'zc_Enum_Role_1107');
    END IF;
 
    -- Добавляем формы оплаты
@@ -492,6 +501,7 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 13.06.14                                        * add zc_Enum_Role_1107
  21.05.14                                        * add zc_Enum_DocumentTaxKind_Prepay
  21.05.14                                        * add zc_Enum_ContractConditionKind_DelayPrepay
  13.05.14                                        * add zc_Enum_ProfitLossDirection_70110 and zc_Enum_ProfitLoss_70111 and zc_Enum_ProfitLoss_70112
