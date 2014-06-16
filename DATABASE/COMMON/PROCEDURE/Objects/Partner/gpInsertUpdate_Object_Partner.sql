@@ -60,7 +60,7 @@ BEGIN
    -- определяем параметры, т.к. значения должны быть синхронизированы с объектом <Юридическое лицо>
    SELECT ValueData INTO outPartnerName FROM Object WHERE Id = inJuridicalId;
    -- !!!в название добавляем <Адрес точки доставки>!!!
-   outPartnerName:= outPartnerName || ', ' || vbAddress;
+   outPartnerName:= COALESCE(outPartnerName || ', ' || vbAddress, '');
 
 
    -- проверка уникальности <Наименование>

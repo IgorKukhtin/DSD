@@ -2,9 +2,80 @@ DO $$
    DECLARE vbAdmin integer;
 BEGIN
 
+-- удаляем лишние записи
 delete from partner where kodbranch ='' and namebranch = ''  and juridicalname = '';
 
+-- обнуляем ссылку на Контрагента
 UPDATE partner SET PartnerId = null;
+
+-- устанавливаем ссылку на Контрагента
+UPDATE partner SET PartnerId = Object_Partner.Id
+
+       FROM Object AS Object_Partner1CLink
+            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
+                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
+                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
+
+            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
+            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
+                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
+                                AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
+             WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()  AND partner.codett1c <> ''
+       AND partner.codett1c::integer = Object_Partner1CLink.ObjectCode
+                             AND zfGetBranchFromBranchCode(kodbranch::integer) = ObjectLink_Partner1CLink_Branch.ChildObjectId;
+UPDATE partner SET PartnerOldId = PartnerId;
+
+-- это если вдруг есть адрес и состыкованный и новый
+SELECT * FROM Partner AS PartnerWithNull
+  JOIN Partner AS PartnerWithOutNull
+    ON NOT (PartnerWithNull.PartnerId IS NULL) AND PartnerWithNull.okpo = PartnerWithOutNull.okpo
+    AND PartnerWithNull.citytype = PartnerWithOutN0ull.citytype
+    AND PartnerWithNull.cityname = PartnerWithOutNull.cityname
+    AND PartnerWithNull.region = PartnerWithOutNull.region
+    AND PartnerWithNull.streettype = PartnerWithOutNull.streettype
+    AND PartnerWithNull.streetname = PartnerWithOutNull.streetname
+    AND PartnerWithNull.house = PartnerWithOutNull.house
+WHERE PartnerWithNull.PartnerId IS NULL
+
+-- добавляем новых контрагентов!!!
+
+
+
+BEGIN;
+
+SELECT gpInsertUpdate_Object_Partner(
+ 0,    -- ключ объекта <Контрагент> 
+    0                ,    -- код объекта <Контрагент> 
+    ObjectPartner.ShortName           ,    -- краткое наименование
+    ''::TVarChar             ,    -- Код GLN
+    ''::TVarChar         ,    -- Номер дома
+    ''::TVarChar          ,    -- Номер корпуса
+    ''::TVarChar          ,    -- Номер квартиры
+    ObjectStreet.Id            ,    -- Улица/проспект  
+    ObjectPartner.PrepareDayCount     ,    -- За сколько дней принимается заказ
+    ObjectPartner.DocumentDayCount    ,    -- Через сколько дней оформляется документально
+    ObjectPartner.JuridicalId         ,    -- Юридическое лицо
+    ObjectPartner.RouteId             ,    -- Маршрут
+    ObjectPartner.RouteSortingId      ,    -- Сортировка маршрутов
+    ObjectPartner.PersonalTakeId      ,    -- Сотрудник (экспедитор) 
+    
+    ObjectPartner.PriceListId         ,    -- Прайс-лист
+    ObjectPartner.PriceListPromoId    ,    -- Прайс-лист(Акционный)
+    ObjectPartner.StartPromo          ,    -- Дата начала акции
+    ObjectPartner.EndPromo            ,    -- Дата окончания акции     
+    
+    vbAdmin::TVarChar
+) AS PartnerId */
+
+*
+FROM partner 
+ JOIN gpSelect_Object_Juridical('') AS Juridical
+ ON Juridical.OKPO = partner.OKPO
+WHERE PartnerID IS NULL;
+
+--rollback
+
+
 
 
   vbAdmin :=  (SELECT 
@@ -76,22 +147,6 @@ ORDER BY streetname) AS Street
   
 WHERE (streetname <> '') AND (NOT (streetname, StreetKind.Id, City.Id)  IN (
 SELECT Name, StreetKindId, CityId FROM gpSelect_Object_Street('') ORDER BY Name));
-
-UPDATE partner SET PartnerId = Object_Partner.Id
-
-       FROM Object AS Object_Partner1CLink
-            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Partner
-                                 ON ObjectLink_Partner1CLink_Partner.ObjectId = Object_Partner1CLink.Id
-                                AND ObjectLink_Partner1CLink_Partner.DescId = zc_ObjectLink_Partner1CLink_Partner()
-
-            LEFT JOIN Object AS Object_Partner ON Object_Partner.Id = ObjectLink_Partner1CLink_Partner.ChildObjectId
-            LEFT JOIN ObjectLink AS ObjectLink_Partner1CLink_Branch
-                                 ON ObjectLink_Partner1CLink_Branch.ObjectId = Object_Partner1CLink.Id
-                                AND ObjectLink_Partner1CLink_Branch.DescId = zc_ObjectLink_Partner1CLink_Branch()
-             WHERE Object_Partner1CLink.DescId = zc_Object_Partner1CLink()  AND partner.codett1c <> ''
-       AND partner.codett1c::integer = Object_Partner1CLink.ObjectCode
-                             AND zfGetBranchFromBranchCode(kodbranch::integer) = ObjectLink_Partner1CLink_Branch.ChildObjectId;
-UPDATE partner SET PartnerOldId = PartnerId;
 
 
 PERFORM ObjectPartner.Name, ObjectRegion.name, ObjectCity.*, ObjectStreet.*, partner.*,  
@@ -216,7 +271,7 @@ ORDER BY 2) AS dd) AS dd
 WHERE partner.codett1C = dd.codett1C; 
 
 -- и установить связи у добавленных
-SELECT  gpInsertUpdate_Object_Partner1CLink(
+PERFORM  gpInsertUpdate_Object_Partner1CLink(
     Partner1CLink.Id,    -- ключ объекта
     Partner.codett1c::INTEGER,    -- Код объекта
     Partner.ttin1C,   -- Название объекта
