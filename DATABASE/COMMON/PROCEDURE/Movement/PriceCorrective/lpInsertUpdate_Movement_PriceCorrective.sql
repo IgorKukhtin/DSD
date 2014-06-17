@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_PriceCorrective()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, integer, integer, integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_PriceCorrective(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
@@ -45,7 +48,12 @@ BEGIN
      PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_PriceWithVAT(), ioId, inPriceWithVAT);
      -- сохранили свойство <% НДС>
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_VATPercent(), ioId, inVATPercent);
-
+     
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), ioId, inInvNumberPartner);     
+     -- сохранили свойство <>
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberMark(), ioId, inInvNumberMark);
+     
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
@@ -74,6 +82,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.06.14         * add inInvNumberPartner 
+                      , inInvNumberMark                
  29.05.14         * 
 
 */

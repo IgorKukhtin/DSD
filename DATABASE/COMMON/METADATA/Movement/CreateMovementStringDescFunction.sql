@@ -62,9 +62,20 @@ CREATE OR REPLACE FUNCTION zc_MovementString_SaleInvNumber() RETURNS Integer AS 
 INSERT INTO MovementStringDesc (Code, ItemName)
   SELECT 'zc_MovementString_SaleInvNumber', 'SaleInvNumber' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_SaleInvNumber');
 
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberPartner', 'Номер накладной у контрагента' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner');
+
+CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberMark() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberMark'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementStringDesc (Code, ItemName)
+  SELECT 'zc_MovementString_InvNumberMark', 'Номер перекресленої зеленої марки зi складу' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberMark');
+
+
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.06.14         * add zc_MovementString_InvNumberPartner() 
+                      , zc_MovementString_InvNumberMark() 
  24.04.14                                                       * add zc_MovementString_InvNumberBranch
  23.04.14                                        * add zc_MovementString_InvNumberMark
  11.01.14                                        * add zc_MovementString_InvNumberOrder
