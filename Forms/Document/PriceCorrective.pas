@@ -65,6 +65,10 @@ type
     spCorrective: TdsdStoredProc;
     spSelectPrintTaxCorrective_Us: TdsdStoredProc;
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
+    cxLabel5: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
+    cxLabel6: TcxLabel;
+    edInvNumberMark: TcxTextEdit;
   private
     { Private declarations }
   public
