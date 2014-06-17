@@ -8,6 +8,8 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
            , Object_BankAccount.ObjectCode   AS Code
            , Object_BankAccount.ValueData    AS Name
           
+           , BankAccount_Juridical.ChildObjectId AS JuridicalId
+           , Juridical.ValueData AS JuridicalName
            , ObjectLink_BankAccount_Bank.ChildObjectId   AS BankId  
            , Object_Bank.ValueData                       AS BankName
            , BankAccount_Currency.ChildObjectId          AS CurrencyId
@@ -20,6 +22,10 @@ CREATE OR REPLACE VIEW Object_BankAccount_View AS
          ON ObjectLink_BankAccount_Bank.ObjectId = Object_BankAccount.Id
         AND ObjectLink_BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
   LEFT JOIN Object AS Object_Bank ON Object_Bank.Id = ObjectLink_BankAccount_Bank.ChildObjectId
+  LEFT JOIN ObjectLink AS BankAccount_Juridical
+         ON BankAccount_Juridical.ObjectId = Object_BankAccount.Id AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
+  LEFT JOIN Object AS Juridical
+       ON Juridical.Id = BankAccount_Juridical.ChildObjectId
   LEFT JOIN ObjectLink AS BankAccount_Currency
          ON BankAccount_Currency.ObjectId = Object_BankAccount.Id 
         AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()

@@ -13,29 +13,16 @@ $BODY$BEGIN
    -- PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
      RETURN QUERY 
-     SELECT 
-       Object.Id           AS Id
-     , Object.ObjectCode   AS Code
-     , Object.ValueData    AS Name
-     , Object.isErased     AS isErased
-     , Juridical.ValueData AS JuridicalName
-     , Bank.ValueData      AS BankName
-     , BankAccount_Currency.ChildObjectId AS CurrencyId
-     , Currency.ValueData  AS CurrencyName
-     FROM Object
-LEFT JOIN ObjectLink AS BankAccount_Juridical
-       ON BankAccount_Juridical.ObjectId = Object.Id AND BankAccount_Juridical.DescId = zc_ObjectLink_BankAccount_Juridical()
-LEFT JOIN Object AS Juridical
-       ON Juridical.Id = BankAccount_Juridical.ChildObjectId
-LEFT JOIN ObjectLink AS BankAccount_Bank
-       ON BankAccount_Bank.ObjectId = Object.Id AND BankAccount_Bank.DescId = zc_ObjectLink_BankAccount_Bank()
-LEFT JOIN Object AS Bank
-       ON Bank.Id = BankAccount_Bank.ChildObjectId
-LEFT JOIN ObjectLink AS BankAccount_Currency
-       ON BankAccount_Currency.ObjectId = Object.Id AND BankAccount_Currency.DescId = zc_ObjectLink_BankAccount_Currency()
-LEFT JOIN Object AS Currency
-       ON Currency.Id = BankAccount_Currency.ChildObjectId
-    WHERE Object.DescId = zc_Object_BankAccount();
+         SELECT 
+             Object_BankAccount_View.Id
+           , Object_BankAccount_View.Code
+           , Object_BankAccount_View.Name
+           , Object_BankAccount_View.isErased                 
+           , Object_BankAccount_View.JuridicalName
+           , Object_BankAccount_View.BankName
+           , Object_BankAccount_View.CurrencyId
+           , Object_BankAccount_View.CurrencyName
+     FROM Object_BankAccount_View;
   
 END;$BODY$
 

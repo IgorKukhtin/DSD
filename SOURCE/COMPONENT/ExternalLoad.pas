@@ -120,6 +120,7 @@ begin
            finally
              Finish
            end;
+           result := true
          end;
        finally
          FStoredProc.Free
@@ -128,7 +129,6 @@ begin
   finally
     FExternalLoad.Free;
   end;
-  result := true
 end;
 
 function TExternalLoadAction.StartDate: TDateTime;
@@ -144,8 +144,10 @@ end;
 
 destructor TFileExternalLoad.Destroy;
 begin
-  FDataSet.Close;
-  FreeAndNil(FDataSet);
+  if Assigned(FDataSet) then begin
+     FDataSet.Close;
+     FreeAndNil(FDataSet);
+  end;
   inherited;
 end;
 
