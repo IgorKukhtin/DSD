@@ -81,8 +81,8 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
 
-           , COALESCE(MovementString_InvNumberPartner.ValueData, '') AS InvNumberPartner
-           , COALESCE(MovementString_InvNumberMark.ValueData, '')    AS InvNumberMark
+           , COALESCE(MovementString_InvNumberPartner.ValueData, CAST ('' as TVarChar)) AS InvNumberPartner
+           , COALESCE(MovementString_InvNumberMark.ValueData, CAST ('' as TVarChar))    AS InvNumberMark
              
            , Object_From.Id                    	    AS FromId
            , Object_From.ValueData             	    AS FromName
