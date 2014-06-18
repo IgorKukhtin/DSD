@@ -112,12 +112,16 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
             DataBinding.FieldName = 'InvNumberPartner'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object clInvNumberMark: TcxGridDBColumn
             Caption = #8470' '#1079'.'#1084'.'
             DataBinding.FieldName = 'InvNumberMark'
             Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 55
           end
           object colDocumentTaxKindName: TcxGridDBColumn
