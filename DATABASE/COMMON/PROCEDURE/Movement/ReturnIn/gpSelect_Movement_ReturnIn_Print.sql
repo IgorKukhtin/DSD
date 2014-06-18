@@ -141,7 +141,7 @@ BEGIN
                        THEN MovementString_InvNumberPartner.ValueData
                   WHEN Movement.DescId = zc_Movement_TransferDebtIn()
                        THEN Movement.InvNumber
-                  ELSE ''
+                  ELSE MovementString_InvNumberPartner.ValueData
              END AS InvNumberPartner
 
            , MovementString_InvNumberMark.ValueData     AS InvNumberMark
@@ -259,7 +259,7 @@ BEGIN
 
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+--         AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
 
@@ -446,6 +446,7 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.06.14                                                       *
  12.06.14                                        * restore ContractSigningDate
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
