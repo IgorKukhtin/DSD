@@ -133,7 +133,8 @@ begin
           Name := FFieldDefs[i].Name;
           case FFieldDefs[i].DataType of
             ftString: field_type := 'C';
-            ftInteger: field_type := 'N';
+            ftInteger, ftBCD: field_type := 'N';
+            ftDate: field_type := 'D';
           end;
           len :=  FFieldDefs[i].Size;
           dec :=  FFieldDefs[i].Precision;

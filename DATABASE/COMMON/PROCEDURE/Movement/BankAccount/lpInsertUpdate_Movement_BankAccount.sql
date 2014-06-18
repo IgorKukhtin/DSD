@@ -16,6 +16,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inUnitId              Integer   , -- Подразделение
     IN inCurrencyId          Integer   , -- Валюта 
     IN inParentId            Integer   , -- 
+    IN inBankAccountId       Integer   , -- С какого счета нам платили
     IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer AS
@@ -93,7 +94,9 @@ BEGIN
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Unit(), vbMovementItemId, inUnitId);
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
-
+     -- 
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountId);
+     
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
 

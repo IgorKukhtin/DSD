@@ -147,7 +147,9 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
       Category = 'DSDLib'
       MoveParams = <
         item
+          FromParam.Value = Null
           FromParam.DataType = ftString
+          ToParam.Value = Null
           ToParam.Component = FormParams
           ToParam.ComponentItem = 'FileName'
           ToParam.DataType = ftString
@@ -312,6 +314,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
         end>
       DataSet = BillList
       OpenFileDialog = False
+      FileName.Value = Null
       FileName.Component = FormParams
       FileName.ComponentItem = 'FileName'
       FileName.DataType = ftString
@@ -337,6 +340,7 @@ inherited SaveDocumentTo1CForm: TSaveDocumentTo1CForm
     Params = <
       item
         Name = 'FileName'
+        Value = Null
         DataType = ftString
       end>
     Top = 88

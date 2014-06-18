@@ -13,16 +13,12 @@ $BODY$BEGIN
 
      RETURN QUERY 
      SELECT 
-       Object.Id
-     , Object.ObjectCode
-     , Object.ValueData
-     , ObjectString_MFO.ValueData AS MFO
-     , Object.isErased
-     FROM Object
-        LEFT JOIN ObjectString AS ObjectString_MFO
-                 ON ObjectString_MFO.ObjectId = Object.Id
-                AND ObjectString_MFO.DescId = zc_ObjectString_Bank_MFO()
-     WHERE Object.DescId = zc_Object_Bank();
+       Object_Bank_View.Id
+     , Object_Bank_View.Code
+     , Object_Bank_View.BankName
+     , Object_Bank_View.MFO
+     , Object_Bank_View.isErased
+     FROM Object_Bank_View;
   
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -32,6 +28,7 @@ ALTER FUNCTION gpSelect_Object_Bank (TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.06.14                         *
  19.02.14                                        *
  10.06.13          *
 */
