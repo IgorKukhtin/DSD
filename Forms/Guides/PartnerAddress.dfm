@@ -572,7 +572,7 @@ object PartnerAddressForm: TPartnerAddressForm
     Top = 152
   end
   object spInsertUpdate: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_Partner_Address'
+    StoredProcName = 'gpUpdate_Object_Partner_Address'
     DataSets = <>
     OutputType = otResult
     Params = <

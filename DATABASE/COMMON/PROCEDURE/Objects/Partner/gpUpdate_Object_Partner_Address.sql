@@ -1,11 +1,11 @@
--- Function: gpInsertUpdate_Object_Partner_Address()
+-- Function: gpUpdate_Object_Partner_Address()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, Integer, TVarChar);
-
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, Integer, TVarChar);
 DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdate_Object_Partner_Address (Integer, Integer, TVarChar, TVarChar, TVarChar,  TVarChar, Integer, TVarChar);
 
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Partner_Address(
+CREATE OR REPLACE FUNCTION gpUpdate_Object_Partner_Address(
  INOUT ioId                  Integer   ,    -- ключ объекта <Контрагент> 
    --OUT outPartnerName        TVarChar  ,    -- ключ объекта <Контрагент> 
     IN inCode                Integer   ,    -- код объекта <Контрагент> 
@@ -77,7 +77,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Partner_Address (Integer, Integer,  TVarChar, TVarChar,  TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpUpdate_Object_Partner_Address (Integer, Integer,  TVarChar, TVarChar,  TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------
@@ -87,4 +87,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Partner_Address (Integer, Integer,  TVarCha
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Partner_Address()
+-- SELECT * FROM gpUpdate_Object_Partner_Address()
