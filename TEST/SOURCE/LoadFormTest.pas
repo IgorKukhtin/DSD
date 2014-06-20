@@ -730,7 +730,9 @@ begin
 
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPartnerJuridicalEditForm');
-
+  //
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPartnerAddressForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPartnerAddressForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

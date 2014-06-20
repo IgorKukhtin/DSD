@@ -1063,6 +1063,10 @@
         end
         item
           Visible = True
+          ItemName = 'bbPartnerAddress'
+        end
+        item
+          Visible = True
           ItemName = 'bbRouteSorting'
         end
         item
@@ -1686,6 +1690,10 @@
       Action = actStreet
       Category = 0
     end
+    object bbPartnerAddress: TdxBarButton
+      Action = actPartnerAddress
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Left = 192
@@ -2036,6 +2044,17 @@
       Hint = #1042#1080#1076#1099' '#1090#1086#1087#1083#1080#1074#1072
       FormName = 'TFuelForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPartnerAddress: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1072#1076#1088#1077#1089#1072')'
+      Hint = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099' ('#1072#1076#1088#1077#1089#1072')'
+      FormName = 'TPartnerAddressForm'
+      FormNameParam.Value = 'TPartnerAddressForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
