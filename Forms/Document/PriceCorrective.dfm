@@ -3,7 +3,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
   ClientHeight = 542
   ClientWidth = 998
   ExplicitWidth = 1006
-  ExplicitHeight = 576
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -11,20 +11,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 998
     Height = 411
     ExplicitTop = 131
-    ExplicitWidth = 863
-    ExplicitHeight = 537
+    ExplicitWidth = 998
+    ExplicitHeight = 411
     ClientRectBottom = 411
     ClientRectRight = 998
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 863
-      ExplicitHeight = 513
+      ExplicitWidth = 998
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
         Width = 998
         Height = 387
-        ExplicitWidth = 863
-        ExplicitHeight = 513
+        ExplicitWidth = 998
+        ExplicitHeight = 387
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -182,7 +182,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Width = 998
     Height = 105
     TabOrder = 3
-    ExplicitLeft = -8
     ExplicitWidth = 998
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
@@ -1084,8 +1083,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Control = edFrom
       end
       item
+        Control = edInvNumberPartner
       end
       item
+        Control = edInvNumberMark
       end
       item
         Control = edTo

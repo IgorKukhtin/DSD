@@ -56,7 +56,6 @@ type
     actComplete: TdsdChangeMovementStatus;
     spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
-    N1: TMenuItem;
     bbComplete: TdxBarButton;
     actUnComplete: TdsdChangeMovementStatus;
     spMovementUnComplete: TdsdStoredProc;

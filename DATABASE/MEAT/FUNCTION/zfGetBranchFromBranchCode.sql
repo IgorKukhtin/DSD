@@ -12,9 +12,9 @@ BEGIN
     WHEN    7 THEN Return(8377);  -- Кривой Рог
     WHEN 2994 THEN Return(8376);  -- Крым
     WHEN  999 THEN Return(18342); -- Никополь
-    WHEN 1048 THEN Return(8374);  -- Одесса
-    WHEN 5271 THEN Return(8381);  -- Харьков
-    WHEN 2991 THEN Return(8373);  -- Херсон-Николаев
+    WHEN    4 THEN Return(8374);  -- Одесса
+    WHEN    9 THEN Return(8381);  -- Харьков
+    WHEN    3 THEN Return(8373);  -- Херсон-Николаев
     WHEN 2780 THEN Return(8375);  -- Черкассы
   END CASE;
 END;

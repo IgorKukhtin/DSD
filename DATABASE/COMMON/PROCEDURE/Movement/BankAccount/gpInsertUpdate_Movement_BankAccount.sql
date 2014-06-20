@@ -61,7 +61,7 @@ BEGIN
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_BankAccount (ioId, inInvNumber, inOperDate, vbAmount
                                                , inBankAccountId, inComment, inMoneyPlaceId, inContractId, inInfoMoneyId, inUnitId, inCurrencyId
-                                               , (SELECT ParentId FROM Movement WHERE Id = ioId)
+                                               , (SELECT ParentId FROM Movement WHERE Id = ioId), null
                                                , vbUserId
                                                 );
 

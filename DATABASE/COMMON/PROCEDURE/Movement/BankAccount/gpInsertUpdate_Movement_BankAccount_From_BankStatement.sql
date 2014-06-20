@@ -42,6 +42,8 @@ BEGIN
                inUnitId := MovementLinkObject_Unit.ObjectId, 
                inCurrencyId := MovementLinkObject_Currency.ObjectId, 
                inParentId := Movement.Id, 
+               inBankAccountPartnerId := 
+      lpInsertFind_BankAccount(MovementString_BankAccount.ValueData, MovementString_BankMFO.ValueData, MovementString_BankName.ValueData, MovementLinkObject_Juridical.ObjectId, vbUserId),
                inUserId:= vbUserId)
 
        FROM Movement
@@ -55,6 +57,19 @@ BEGIN
             LEFT JOIN MovementLinkObject AS MovementLinkObject_BankAccount
                                          ON MovementLinkObject_BankAccount.MovementId = Movement.ParentId
                                         AND MovementLinkObject_BankAccount.DescId = zc_MovementLinkObject_BankAccount()
+
+            LEFT JOIN MovementString AS MovementString_BankAccount
+                                     ON MovementString_BankAccount.MovementId =  Movement.Id
+                                    AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
+
+            LEFT JOIN MovementString AS MovementString_BankMFO
+                                     ON MovementString_BankMFO.MovementId =  Movement.Id
+                                    AND MovementString_BankMFO.DescId = zc_MovementString_BankMFO()
+
+            LEFT JOIN MovementString AS MovementString_BankName
+                                     ON MovementString_BankName.MovementId =  Movement.Id
+                                    AND MovementString_BankName.DescId = zc_MovementString_BankName()
+
 
             LEFT JOIN MovementString AS MovementString_Comment
                                      ON MovementString_Comment.MovementId =  Movement.Id

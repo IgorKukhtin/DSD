@@ -45,6 +45,7 @@ type
   TClientBankLoadAction = class(TExternalLoadAction)
   private
     FClientBankType: TClientBankType;
+    FBankOKPO: string;
     function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
   protected
     function GetStoredProc: TdsdStoredProc; override;
@@ -281,7 +282,11 @@ end;
 
 function TPrivatBankLoad.GetBankName: string;
 begin
-
+  if FDataSet.FieldByName('DOC_DT_KT').AsInteger = 0 then
+     result := FDataSet.FieldByName('BANK_A').AsString
+  else
+     result := FDataSet.FieldByName('BANK_B').AsString;
+  result := trim(result);
 end;
 
 function TPrivatBankLoad.GetBankMFO: string;
