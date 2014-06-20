@@ -8,7 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtIn(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -28,15 +28,16 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
-           WITH tmpParams AS (SELECT 131931 AS ToId -- Дворкин 
+           WITH tmpParams AS (SELECT 131931 AS ToId -- Дворкин
                                    , (SELECT MAX (ContractId) FROM Object_Contract_View WHERE JuridicalId = 131931 AND InfoMoneyId = zc_Enum_InfoMoney_30103()) AS ContractFromId
                                    , zc_PriceList_Bread() AS PriceListId
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
          SELECT
-               0 	     	                AS Id
+               0 	     	                    AS Id
              , tmpInvNum.InvNumber              AS InvNumber
-             , inOperDate			AS OperDate
+             , CAST ('' as TVarChar)            AS InvNumberPartner
+             , inOperDate			            AS OperDate
              , Object_Status.Code               AS StatusCode
              , Object_Status.Name              	AS StatusName
 
@@ -50,29 +51,29 @@ BEGIN
              , CAST (0 as TFloat)       AS TotalSummMVAT
              , CAST (0 as TFloat)       AS TotalSummPVAT
              , CAST (0 as TFloat)       AS TotalSumm
-             
-             , 0	                AS FromId
+
+             , 0	                    AS FromId
              , CAST ('' as TVarChar)	AS FromName
              , Object_To.Id             AS ToId
              , Object_To.ValueData      AS ToName
              , 0                        AS PartnerId
              , CAST ('' as TVarChar)    AS PartnerName
-             
+
              , 0                     	AS ContractFromId
              , CAST ('' as TVarChar) 	AS ContractFromName
              , View_Contract_InvNumber.ContractId   AS ContractToId
              , View_Contract_InvNumber.InvNumber    AS ContractToName
 
              , 0                     	    AS PaidKindFromId
-             , CAST ('' as TVarChar) 	    AS PaidKindFromName             
+             , CAST ('' as TVarChar) 	    AS PaidKindFromName
              , Object_PaidKindTo.Id 	    AS PaidKindToId
-             , Object_PaidKindTo.ValueData  AS PaidKindToName  
+             , Object_PaidKindTo.ValueData  AS PaidKindToName
 
              , Object_PriceList.Id          AS PriceListId
-             , Object_PriceList.ValueData   AS PriceListName     
+             , Object_PriceList.ValueData   AS PriceListName
              , 0                     	    AS DocumentTaxKindId
              , CAST ('' as TVarChar) 	    AS DocumentTaxKindName
-             
+
           FROM (SELECT CAST (NEXTVAL ('movement_transferdebtin_seq') AS TVarChar) AS InvNumber) AS tmpInvNum
                LEFT JOIN lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status ON 1 = 1
                LEFT JOIN TaxPercent_View ON inOperDate BETWEEN TaxPercent_View.StartDate AND TaxPercent_View.EndDate
@@ -91,11 +92,12 @@ BEGIN
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
        SELECT
-             Movement.Id				AS Id
-           , Movement.InvNumber				AS InvNumber
-           , Movement.OperDate				AS OperDate
-           , Object_Status.ObjectCode    		AS StatusCode
-           , Object_Status.ValueData     		AS StatusName
+             Movement.Id				                AS Id
+           , Movement.InvNumber				            AS InvNumber
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , Movement.OperDate				            AS OperDate
+           , Object_Status.ObjectCode    		        AS StatusCode
+           , Object_Status.ValueData     		        AS StatusName
            , COALESCE (MovementBoolean_PriceWithVAT.ValueData, FALSE)   AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -103,18 +105,18 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalCountSh.ValueData       AS TotalCountSh
            , MovementFloat_TotalCount.ValueData         AS TotalCount
- 
+
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
-    
+
            , Object_From.Id                    		AS FromId
            , Object_From.ValueData             		AS FromName
            , Object_To.Id                      		AS ToId
            , Object_To.ValueData               		AS ToName
            , Object_Partner.Id                     	AS PartnerId
            , Object_Partner.ValueData              	AS PartnerName
-           
+
            , View_ContractFrom.ContractId     	  AS ContractFromId
            , View_ContractFrom.InvNumber          AS ContractFromName
            , View_ContractTo.ContractId           AS ContractToId
@@ -133,6 +135,10 @@ BEGIN
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
                                      AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -148,7 +154,7 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
@@ -164,11 +170,11 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
-                                   
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -226,6 +232,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtIn (Integer, TDateTime, TVarChar) OWNE
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * add InvNumberPartner
  20.05.14                                        * add DocumentTaxKind...
  07.05.14                                        * add tmpParams
  07.05.14                                        * add Partner...

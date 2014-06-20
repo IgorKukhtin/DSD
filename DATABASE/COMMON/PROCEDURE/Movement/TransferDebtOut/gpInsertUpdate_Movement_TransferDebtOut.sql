@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtOut()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtOut (integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -36,6 +38,7 @@ BEGIN
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_TransferDebtOut (ioId               := ioId
                                                    , inInvNumber        := inInvNumber
+                                                   , inInvNumberPartner := inInvNumberPartner
                                                    , inOperDate         := inOperDate
                                                    , inPriceWithVAT     := inPriceWithVAT
                                                    , inVATPercent       := inVATPercent
@@ -82,7 +85,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 17.04.14                                        * add восстановить/удалить Налоговую 
+ 20.06.14                                                       * add InvNumberPartner
+ 17.04.14                                        * add восстановить/удалить Налоговую
  07.05.14                                        * add inPartnerId
  03.05.14                                        * del inMasterId, ioPriceListId, outPriceListName
  24.04.14         *

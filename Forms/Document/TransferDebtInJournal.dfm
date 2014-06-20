@@ -2,26 +2,26 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1028
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 478
+    Height = 476
     TabOrder = 3
-    ExplicitWidth = 1058
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1020
+    ExplicitWidth = 1020
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1058
-      ExplicitHeight = 478
+      ExplicitWidth = 1014
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 478
-        ExplicitWidth = 1058
-        ExplicitHeight = 478
+        Width = 1014
+        Height = 470
+        ExplicitWidth = 1014
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -113,6 +113,13 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
           inherited colInvNumber: TcxGridDBColumn [2]
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
+            Width = 45
+          end
+          object colInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1082#1086#1085#1090#1088'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
             Width = 45
           end
           object colDocumentTaxKindName: TcxGridDBColumn
@@ -382,7 +389,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
   end
   inherited Panel: TPanel
     Width = 1020
-    ExplicitWidth = 1058
+    ExplicitWidth = 1020
     object cxLabel14: TcxLabel
       Left = 615
       Top = 6
@@ -653,7 +660,7 @@ inherited TransferDebtInJournalForm: TTransferDebtInJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

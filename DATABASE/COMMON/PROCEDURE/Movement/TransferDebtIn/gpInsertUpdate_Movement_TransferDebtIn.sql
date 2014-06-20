@@ -1,10 +1,12 @@
 -- Function: gpInsertUpdate_Movement_TransferDebtIn()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_TransferDebtIn (integer, TVarChar, TVarChar, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_TransferDebtIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перевод долга (расход)>
     IN inInvNumber           TVarChar  , -- Номер документа
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
@@ -28,6 +30,7 @@ BEGIN
      -- сохранили <Документ>
      ioId:= lpInsertUpdate_Movement_TransferDebtIn (ioId    := ioId
                                                   , inInvNumber        := inInvNumber
+                                                  , inInvNumberPartner := inInvNumberPartner
                                                   , inOperDate         := inOperDate
                                                   , inPriceWithVAT     := inPriceWithVAT
                                                   , inVATPercent       := inVATPercent
@@ -49,6 +52,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 20.06.14                                                       * add InvNumberPartner
  07.05.14                                        * add inPartnerId
  04.05.14                                        * del ioPriceListId, outPriceListName
  25.04.14         *

@@ -1,28 +1,28 @@
 inherited TransferDebtOutForm: TTransferDebtOutForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1088#1072#1089#1093#1086#1076')>'
   ClientHeight = 668
-  ClientWidth = 1084
-  ExplicitWidth = 1100
-  ExplicitHeight = 703
+  ClientWidth = 1176
+  ExplicitWidth = 1184
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 131
-    Width = 1084
-    Height = 537
-    ExplicitTop = 131
+    Top = 133
+    Width = 1176
+    Height = 535
+    ExplicitTop = 133
     ExplicitWidth = 1084
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 1084
+    ExplicitHeight = 535
+    ClientRectBottom = 531
+    ClientRectRight = 1172
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1084
-      ExplicitHeight = 513
+      ExplicitWidth = 1078
+      ExplicitHeight = 509
       inherited cxGrid: TcxGrid
-        Width = 1084
-        Height = 513
-        ExplicitWidth = 1084
-        ExplicitHeight = 513
+        Width = 1170
+        Height = 509
+        ExplicitWidth = 1078
+        ExplicitHeight = 509
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -148,14 +148,15 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 1084
-      ExplicitHeight = 513
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 1182
+      ExplicitHeight = 509
       inherited cxGridEntry: TcxGrid
-        Width = 1084
-        Height = 513
-        ExplicitWidth = 1084
-        ExplicitHeight = 513
+        Width = 1170
+        Height = 509
+        ExplicitWidth = 1182
+        ExplicitHeight = 509
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -177,7 +178,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 1084
+    Width = 1176
     Height = 105
     TabOrder = 3
     ExplicitWidth = 1084
@@ -210,7 +211,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -389,6 +390,17 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
       TabOrder = 28
       Text = ' '
       Width = 174
+    end
+    object cxLabel13: TcxLabel
+      Left = 1082
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'.'#1091' '#1082#1086#1085#1090#1088'.'
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 1082
+      Top = 23
+      TabOrder = 30
+      Width = 84
     end
   end
   object cxLabel5: TcxLabel [2]
@@ -807,7 +819,7 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1050,6 +1062,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Name = 'InvNumber'
         Value = ''
         Component = edInvNumber
+        DataType = ftString
+      end
+      item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
       end
       item
         Name = 'OperDate'
@@ -1229,6 +1248,13 @@ inherited TransferDebtOutForm: TTransferDebtOutForm
         Name = 'inInvNumber'
         Value = ''
         Component = edInvNumber
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
         DataType = ftString
         ParamType = ptInput
       end

@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransferDebtIn(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -48,6 +49,7 @@ BEGIN
            , Movement.OperDate		                AS OperDate
            , Object_Status.ObjectCode    		AS StatusCode
            , Object_Status.ValueData     		AS StatusName
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -79,7 +81,7 @@ BEGIN
 
            , Object_PaidKindFrom.ValueData        AS PaidKindFromName
            , Object_PaidKindTo.ValueData          AS PaidKindToName
-      
+
            , View_InfoMoneyFrom.InfoMoneyGroupName            AS InfoMoneyGroupName_from
            , View_InfoMoneyFrom.InfoMoneyDestinationName      AS InfoMoneyDestinationName_from
            , View_InfoMoneyFrom.InfoMoneyCode                 AS InfoMoneyCode_from
@@ -97,6 +99,9 @@ BEGIN
             INNER JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_TransferDebtIn() AND Movement.StatusId = tmpStatus.StatusId
             INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -112,15 +117,15 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()                                               
-            
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -186,6 +191,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtIn (TDateTime, TDateTime, Boolean, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * add InvNumberPartner
  20.05.14                                        * add DocumentTaxKind...
  08.05.14                                        * add ChangePercent
  07.05.14                                        * add tmpRoleAccessKey
