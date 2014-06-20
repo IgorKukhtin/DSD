@@ -32,6 +32,9 @@ type
     clComment: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
     clOKPO_Parent: TcxGridDBColumn;
+    colPartnerBankName: TcxGridDBColumn;
+    colPartnerBankMFO: TcxGridDBColumn;
+    colPartnerBankAccount: TcxGridDBColumn;
   private
     { Private declarations }
   public

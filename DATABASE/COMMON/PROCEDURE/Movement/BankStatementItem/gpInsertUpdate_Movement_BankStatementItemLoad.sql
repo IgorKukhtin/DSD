@@ -60,7 +60,7 @@ BEGIN
          AND inOperDate BETWEEN ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND ObjectHistory_JuridicalDetails_ViewByDate.EndDate
        WHERE Object_BankAccount_View.NAME = inBankAccountMain; 
    END IF;
-
+  
    SELECT Object_Currency_View.Id INTO vbCurrencyId
      FROM Object_Currency_View 
     WHERE Object_Currency_View.Code = zfConvert_StringToNumber(inCurrencyCode) OR InternalName = inCurrencyName;
@@ -142,10 +142,14 @@ BEGIN
 
 
     IF COALESCE(vbJuridicalId, 0) = 0 THEN
-       -- Пытаемся найти расчетный счет
-       SELECT Object_BankAccount.Id INTO vbJuridicalId
-         FROM Object AS Object_BankAccount 
-        WHERE Object_BankAccount.DescId = zc_Object_BankAccount() AND Object_BankAccount.ValueData = inBankAccount;
+       -- Пытаемся найти расчетный счет ТОЛЬКО ВО ВНУТРЕННИХ ФИРМАХ!!!
+       SELECT Object_BankAccount_View.Id INTO vbJuridicalId
+         FROM Object_BankAccount_View 
+         JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                            ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 
+                           AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                           AND ObjectBoolean_isCorporate.ValueData = TRUE
+         WHERE Object_BankAccount_View.Name = inBankAccount;
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- Пытаемся найти юр. лицо по OKPO

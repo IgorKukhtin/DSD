@@ -239,6 +239,62 @@ LEFT JOIN gpSelect_Object_Partner1CLink('') AS Partner1CLink ON Partner1CLink.Pa
      AND Partner1CLink.Code = Partner.codett1c::INTEGER
      AND Partner1CLink.BranchId = zfGetBranchFromBranchCode(kodbranch::integer);
 
+PERFORM gpInsertUpdate_Object_ContactPerson
+( 0,    -- ключ объекта < Улица/проспект> 
+  0,    -- Код объекта <>
+  kontakt1name,    -- Название объекта <>
+  kontakt1tel,    -- 
+  kontakt1email,    --
+  ''::TVarChar,    --
+  PartnerId,    --   
+  zc_Enum_ContactPersonKind_CreateOrder(),    --
+  vbAdmin::TVarChar) FROM Partner 
+WHERE PartnerId NOT IN (
+
+SELECT partner.PartnerId
+
+ FROM partner 
+ JOIN gpSelect_Object_ContactPerson('') AS ContactPerson ON ContactPerson.PartnerID = partner.partnerId
+                                                        AND ContactPerson.ContactPersonKindId = zc_Enum_ContactPersonKind_CreateOrder()
+);
+PERFORM gpInsertUpdate_Object_ContactPerson
+( 0,    -- ключ объекта < Улица/проспект> 
+  0,    -- Код объекта <>
+  kontakt2name,    -- Название объекта <>
+  kontakt2tel,    -- 
+  kontakt2email,    --
+  ''::TVarChar,    --
+  PartnerId,    --   
+  zc_Enum_ContactPersonKind_CheckDocument(),    --
+  vbAdmin::TVarChar) FROM Partner 
+WHERE PartnerId NOT IN (
+
+SELECT partner.PartnerId
+
+ FROM partner 
+ JOIN gpSelect_Object_ContactPerson('') AS ContactPerson ON ContactPerson.PartnerID = partner.partnerId
+                                                        AND ContactPerson.ContactPersonKindId = zc_Enum_ContactPersonKind_CheckDocument()
+);
+PERFORM gpInsertUpdate_Object_ContactPerson
+( 0,    -- ключ объекта < Улица/проспект> 
+  0,    -- Код объекта <>
+  kontakt3name,    -- Название объекта <>
+  kontakt3tel,    -- 
+  kontakt3email,    --
+  ''::TVarChar,    --
+  PartnerId,    --   
+  zc_Enum_ContactPersonKind_AktSverki(),    --
+  vbAdmin::TVarChar) FROM Partner 
+WHERE PartnerId NOT IN (
+
+SELECT partner.PartnerId
+
+ FROM partner 
+ JOIN gpSelect_Object_ContactPerson('') AS ContactPerson ON ContactPerson.PartnerID = partner.partnerId
+                                                        AND ContactPerson.ContactPersonKindId = zc_Enum_ContactPersonKind_AktSverki()
+);
+
+
 
 END $$;
 

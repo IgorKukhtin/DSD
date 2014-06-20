@@ -22,7 +22,13 @@ $BODY$BEGIN
            , Object_BankAccount_View.BankName
            , Object_BankAccount_View.CurrencyId
            , Object_BankAccount_View.CurrencyName
-     FROM Object_BankAccount_View;
+     FROM Object_BankAccount_View
+     -- Покажем счета только по внутренним фирмам
+          JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                             ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 
+                            AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                            AND ObjectBoolean_isCorporate.ValueData = TRUE
+;
   
 END;$BODY$
 

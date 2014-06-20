@@ -12,19 +12,29 @@ CREATE OR REPLACE FUNCTION lpInsertFind_BankAccount(
 RETURNS integer AS
 $BODY$
    DECLARE vbBankId Integer;
+   DECLARE vbBankAccountId Integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
 --   vbUserId := lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_BankAccount());
 
    -- Ищем Банк по МФО. Если не находим, то добавляем
+   vbBankId := lpInsertFind_Bank(inBankMFO, inBankName, inUserId);
 
-   -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_BankAccount(), Code_max, inName);
+    
+   SELECT Id INTO vbBankAccountId 
+     FROM Object_BankAccount_View 
+    WHERE BankId = vbBankId AND JuridicalId = inJuridicalId AND Name = inBankAccount;
 
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), ioId, inJuridicalId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), ioId, inBankId);
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Currency(), ioId, inCurrencyId);
 
+   IF COALESCE(vbBankAccountId, 0) = 0 THEN
+     -- сохранили <Объект>
+     vbBankAccountId := lpInsertUpdate_Object(vbBankAccountId, zc_Object_BankAccount(), 0, inBankAccount);
+
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Juridical(), vbBankAccountId, inJuridicalId);
+     PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_BankAccount_Bank(), vbBankAccountId, vbBankId);
+   END IF;
+
+   RETURN vbBankAccountId;
 
 END;$BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -34,7 +44,7 @@ ALTER FUNCTION lpInsertFind_BankAccount(TVarChar, TVarChar, TVarChar, Integer, I
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 17.06.14          *
+ 17.06.14                         *
 */
 
 -- тест

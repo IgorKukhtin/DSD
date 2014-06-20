@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_BankAccount()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_BankAccount(Integer, TVarChar, TDateTime, TFloat, Integer, TVarChar, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ>
@@ -16,7 +17,7 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_BankAccount(
     IN inUnitId              Integer   , -- Подразделение
     IN inCurrencyId          Integer   , -- Валюта 
     IN inParentId            Integer   , -- 
-    IN inBankAccountId       Integer   , -- С какого счета нам платили
+    IN inBankAccountPartnerId       Integer   , -- С какого счета нам платили
     IN inUserId              Integer     -- Пользователь
 )                              
 RETURNS Integer AS
@@ -95,7 +96,7 @@ BEGIN
      -- сохранили связь с <Валютой>
      PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_Currency(), vbMovementItemId, inCurrencyId);
      -- 
-     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountId);
+     PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_BankAccount(), vbMovementItemId, inBankAccountPartnerId);
      
      -- сохранили протокол
      PERFORM lpInsert_MovementItemProtocol (vbMovementItemId, inUserId, vbIsInsert);
