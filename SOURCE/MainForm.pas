@@ -366,6 +366,8 @@ type
     bbProvinceCity: TdxBarButton;
     bbStreetKind: TdxBarButton;
     bbStreet: TdxBarButton;
+    actPartnerAddress: TdsdOpenForm;
+    bbPartnerAddress: TdxBarButton;
     procedure FormCreate(Sender: TObject);
     procedure FormShow(Sender: TObject);
     procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
