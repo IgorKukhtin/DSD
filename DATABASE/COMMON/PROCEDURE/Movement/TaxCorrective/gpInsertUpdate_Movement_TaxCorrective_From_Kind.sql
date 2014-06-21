@@ -91,7 +91,7 @@ BEGIN
                                       AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_ContractFrom
                                        ON MovementLinkObject_ContractFrom.MovementId = Movement.Id
-                                      AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractTo()
+                                      AND MovementLinkObject_ContractFrom.DescId = zc_MovementLinkObject_ContractFrom()
           LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                        ON MovementLinkObject_From.MovementId = Movement.Id
                                       AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
