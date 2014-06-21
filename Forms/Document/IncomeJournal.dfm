@@ -60,6 +60,7 @@ object IncomeJournalForm: TIncomeJournalForm
     Width = 1240
     Height = 370
     Align = alClient
+    PopupMenu = PopupMenu
     TabOrder = 0
     LookAndFeel.NativeStyle = False
     object cxGridDBTableView: TcxGridDBTableView
@@ -428,179 +429,20 @@ object IncomeJournalForm: TIncomeJournalForm
       item
         Component = deEnd
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = deStart
         Properties.Strings = (
-          'Align'
-          'AlignWithMargins'
-          'Anchors'
-          'AutoSize'
-          'BeepOnEnter'
-          'BiDiMode'
-          'Constraints'
-          'Cursor'
-          'CustomHint'
-          'Date'
-          'DragCursor'
-          'DragKind'
-          'DragMode'
-          'EditValue'
-          'Enabled'
-          'FakeStyleController'
-          'Height'
-          'HelpContext'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'ImeMode'
-          'ImeName'
-          'Left'
-          'Margins'
-          'Name'
-          'ParentBiDiMode'
-          'ParentColor'
-          'ParentCustomHint'
-          'ParentFont'
-          'ParentShowHint'
-          'PopupMenu'
-          'Properties'
-          'RepositoryItem'
-          'ShowHint'
-          'Style'
-          'StyleDisabled'
-          'StyleFocused'
-          'StyleHot'
-          'TabOrder'
-          'TabStop'
-          'Tag'
-          'TextHint'
-          'Top'
-          'Touch'
-          'Visible'
-          'Width')
+          'Date')
       end
       item
         Component = Owner
         Properties.Strings = (
-          'Action'
-          'ActiveControl'
-          'AddOnFormData'
-          'Align'
-          'AlignWithMargins'
-          'AlphaBlend'
-          'AlphaBlendValue'
-          'Anchors'
-          'AutoScroll'
-          'AutoSize'
-          'BiDiMode'
-          'BorderIcons'
-          'BorderStyle'
-          'BorderWidth'
-          'Caption'
-          'ClientHeight'
-          'ClientWidth'
-          'Color'
-          'Constraints'
-          'Ctl3D'
-          'Cursor'
-          'CustomHint'
-          'DefaultMonitor'
-          'DockSite'
-          'DoubleBuffered'
-          'DragKind'
-          'DragMode'
-          'Enabled'
-          'Font'
-          'FormStyle'
-          'GlassFrame'
           'Height'
-          'HelpContext'
-          'HelpFile'
-          'HelpKeyword'
-          'HelpType'
-          'Hint'
-          'HorzScrollBar'
-          'Icon'
-          'KeyPreview'
           'Left'
-          'Margins'
-          'Menu'
-          'Name'
-          'ObjectMenuItem'
-          'OldCreateOrder'
-          'Padding'
-          'ParentBiDiMode'
-          'ParentCustomHint'
-          'ParentFont'
-          'PixelsPerInch'
-          'PopupMenu'
-          'PopupMode'
-          'PopupParent'
-          'Position'
-          'PrintScale'
-          'Scaled'
-          'ScreenSnap'
-          'ShowHint'
-          'SnapBuffer'
-          'Tag'
           'Top'
-          'Touch'
-          'TransparentColor'
-          'TransparentColorValue'
-          'UseDockManager'
-          'VertScrollBar'
-          'Visible'
-          'Width'
-          'WindowMenu'
-          'WindowState')
+          'Width')
       end>
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
@@ -867,6 +709,117 @@ object IncomeJournalForm: TIncomeJournalForm
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1089#1090#1080' '#1074#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076'?'
       InfoAfterExecute = #1042#1089#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1099' '#1079#1072' '#1087#1077#1088#1080#1086#1076' '#1087#1077#1088#1077#1087#1088#1086#1074#1077#1076#1077#1085#1099'.'
     end
+    object actCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleCompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      ImageIndex = 12
+    end
+    object actUnCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleUncompleteList
+        end
+        item
+          Action = actRefresh
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1088#1072#1089#1087#1088#1086#1074#1077#1076#1077#1085#1099
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 11
+    end
+    object actSetErasedList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spErased
+        end>
+      QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074'? '
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090#1099' '#1091#1076#1072#1083#1077#1085#1099
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      ImageIndex = 13
+    end
+    object spCompete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementComplete
+        end>
+      Caption = 'spCompete'
+    end
+    object spUncomplete: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementUnComplete
+      StoredProcList = <
+        item
+          StoredProc = spMovementUnComplete
+        end>
+      Caption = 'spUncomplete'
+    end
+    object spErased: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spMovementSetErased
+      StoredProcList = <
+        item
+          StoredProc = spMovementSetErased
+        end>
+      Caption = 'spErased'
+    end
+    object actSimpleCompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spCompete
+        end>
+      View = cxGridDBTableView
+      Caption = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+      Hint = #1055#1088#1086#1074#1077#1076#1077#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074
+    end
+    object actSimpleUncompleteList: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = spUncomplete
+        end>
+      View = cxGridDBTableView
+      Caption = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1056#1072#1089#1087#1088#1086#1074#1077#1089#1090#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
+    object actSimpleErased: TMultiAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actSimpleErased
+        end
+        item
+          Action = actRefresh
+        end>
+      View = cxGridDBTableView
+      Caption = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1086#1082#1091#1084#1077#1085#1090#1099
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_Income'
@@ -917,11 +870,35 @@ object IncomeJournalForm: TIncomeJournalForm
     Images = dmMain.ImageList
     Left = 112
     Top = 64
-    object N1: TMenuItem
-      Action = actComplete
+    object N3: TMenuItem
+      Action = actInsert
     end
     object N2: TMenuItem
+      Action = actUpdate
+    end
+    object N4: TMenuItem
+      Caption = '-'
+    end
+    object N5: TMenuItem
+      Action = actComplete
+    end
+    object N7: TMenuItem
       Action = actUnComplete
+    end
+    object N8: TMenuItem
+      Action = actSetErased
+    end
+    object N9: TMenuItem
+      Caption = '-'
+    end
+    object N10: TMenuItem
+      Action = actCompleteList
+    end
+    object N11: TMenuItem
+      Action = actUnCompleteList
+    end
+    object N12: TMenuItem
+      Action = actSetErasedList
     end
   end
   object spMovementUnComplete: TdsdStoredProc

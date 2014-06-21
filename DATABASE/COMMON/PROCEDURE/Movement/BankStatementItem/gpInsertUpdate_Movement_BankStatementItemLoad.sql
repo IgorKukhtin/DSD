@@ -1,4 +1,4 @@
--- Function: gpInsertUpdate_Movement_BankStatementItemLoad()
+-- Function: gpInsertUpdate_Movement_BankStatementItemLoad()                                   
 
 DROP FUNCTION IF EXISTS 
    gpInsertUpdate_Movement_BankStatementItemLoad(TVarChar, TDateTime, TVarChar, TVarChar,  
@@ -43,10 +43,24 @@ BEGIN
 
    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF COALESCE(vbMainBankAccountId, 0) = 0  THEN
---      RETURN 0;
       RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', TRIM (inBankAccountMain), chr(13);
    END IF;
 
+   -- 3. Если OKPO пустой, значит это внутренние операции по банку, в таком случае надо взять OKPO из главного расчетного счета
+
+   IF COALESCE(inOKPO, '') = '' THEN
+      SELECT ObjectHistory_JuridicalDetails_ViewByDate.OKPO INTO inOKPO 
+        FROM Object_BankAccount_View
+        JOIN ObjectLink AS ObjectLink_Bank_Juridical
+                        ON ObjectLink_Bank_Juridical.ObjectId = Object_BankAccount_View.BankId
+                       AND ObjectLink_Bank_Juridical.DescId = zc_ObjectLink_Bank_Juridical()
+
+        JOIN ObjectHistory_JuridicalDetails_ViewByDate 
+          ON ObjectHistory_JuridicalDetails_ViewByDate.JuridicalId = ObjectLink_Bank_Juridical.ChildObjectId
+         AND inOperDate BETWEEN ObjectHistory_JuridicalDetails_ViewByDate.StartDate AND ObjectHistory_JuridicalDetails_ViewByDate.EndDate
+       WHERE Object_BankAccount_View.NAME = inBankAccountMain; 
+   END IF;
+  
    SELECT Object_Currency_View.Id INTO vbCurrencyId
      FROM Object_Currency_View 
     WHERE Object_Currency_View.Code = zfConvert_StringToNumber(inCurrencyCode) OR InternalName = inCurrencyName;
@@ -56,12 +70,12 @@ BEGIN
       FROM Object_BankAccount_View WHERE Object_BankAccount_View.Id = vbMainBankAccountId;
    END IF;
 
-   -- 2. Если такой валюты нет, то выдать сообщение об ошибке и прервать выполнение загрузки
+   -- 4. Если такой валюты нет, то выдать сообщение об ошибке и прервать выполнение загрузки
    IF COALESCE(vbCurrencyId, 0) = 0  THEN
       RAISE EXCEPTION 'Валюта "%" "%" не определена в справочнике валют.% Дальнейшая загрузка не возможна', inCurrencyCode, inCurrencyName, chr(13);
    END IF;
 
---  4. Найди документ zc_Movement_BankStatement по дате и расчетному счету. 
+--  5. Найди документ zc_Movement_BankStatement по дате и расчетному счету. 
    SELECT Movement.Id INTO vbMovementId 
      FROM Movement
      JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id AND MovementLinkObject.ObjectId = vbMainBankAccountId
@@ -84,7 +98,8 @@ BEGIN
        ON MovementString_OKPO.MovementId =  Movement.Id
       AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
      JOIN MovementString AS MovementString_BankAccount
-       ON MovementString_BankAccount.MovementId =  Movement.Id
+     
+  ON MovementString_BankAccount.MovementId =  Movement.Id
       AND MovementString_BankAccount.DescId = zc_MovementString_BankAccount()
      JOIN MovementString AS MovementString_Comment
        ON MovementString_Comment.MovementId =  Movement.Id
@@ -127,10 +142,14 @@ BEGIN
 
 
     IF COALESCE(vbJuridicalId, 0) = 0 THEN
-       -- Пытаемся найти расчетный счет
-       SELECT Object_BankAccount.Id INTO vbJuridicalId
-         FROM Object AS Object_BankAccount 
-        WHERE Object_BankAccount.DescId = zc_Object_BankAccount() AND Object_BankAccount.ValueData = inBankAccount;
+       -- Пытаемся найти расчетный счет ТОЛЬКО ВО ВНУТРЕННИХ ФИРМАХ!!!
+       SELECT Object_BankAccount_View.Id INTO vbJuridicalId
+         FROM Object_BankAccount_View 
+         JOIN ObjectBoolean AS ObjectBoolean_isCorporate
+                            ON ObjectBoolean_isCorporate.ObjectId = Object_BankAccount_View.JuridicalId 
+                           AND ObjectBoolean_isCorporate.DescId = zc_ObjectBoolean_Juridical_isCorporate()
+                           AND ObjectBoolean_isCorporate.ValueData = TRUE
+         WHERE Object_BankAccount_View.Name = inBankAccount;
 
        IF COALESCE(vbJuridicalId, 0) = 0 THEN
          -- Пытаемся найти юр. лицо по OKPO
@@ -301,6 +320,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 17.06.14                        * Если OKPO пустой
  29.05.14                                        * add TRIM
  13.05.14                                        * other find vbContractId
  07.05.14                                        * error

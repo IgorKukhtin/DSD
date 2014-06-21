@@ -26,7 +26,7 @@ BEGIN
    -- проверка прав уникальности для свойства <Код Банка>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Bank(), vbCode_calc);
    -- проверка прав уникальности для свойства <МФО>
-   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_Object_Bank(), inMFO);
+   PERFORM lpCheckUnique_ObjectString_ValueData (ioId, zc_ObjectString_Bank_MFO(), inMFO);
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_Bank(), vbCode_calc, inName);

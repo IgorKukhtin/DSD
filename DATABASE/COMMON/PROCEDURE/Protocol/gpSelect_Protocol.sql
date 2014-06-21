@@ -29,11 +29,12 @@ BEGIN
      ObjectProtocol.isInsert
   FROM ObjectProtocol 
        LEFT JOIN Object AS Object_User ON Object_User.Id = ObjectProtocol.UserId 
-       LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId AND (Object.Id = inObjectId OR 0 = inObjectId)
-                       AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
+       LEFT JOIN Object ON Object.Id = ObjectProtocol.ObjectId 
        LEFT JOIN ObjectDesc ON ObjectDesc.Id = Object.DescId
  WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate
-   AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId);
+   AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId)
+   AND (Object.Id = inObjectId OR 0 = inObjectId)
+   AND (Object.DescId = inObjectDescId OR inObjectDescId = 0);
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта

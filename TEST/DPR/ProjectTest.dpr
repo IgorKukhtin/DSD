@@ -470,7 +470,8 @@ uses
   ContactPerson in '..\..\Forms\Guides\ContactPerson.pas' {ContactPersonForm: TParentForm},
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Guides\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
-  ContactPersonKindEdit in '..\..\Forms\Guides\ContactPersonKindEdit.pas' {ContactPersonKindEditForm: TParentForm};
+  ContactPersonKindEdit in '..\..\Forms\Guides\ContactPersonKindEdit.pas' {ContactPersonKindEditForm: TParentForm},
+  PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm};
 
 {$R *.RES}
 

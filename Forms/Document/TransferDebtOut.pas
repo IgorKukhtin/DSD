@@ -92,6 +92,8 @@ type
     GuidesPartner: TdsdGuides;
     actPrint_TransferDebtOut: TdsdPrintAction;
     bbPrint_DebtOut: TdxBarButton;
+    cxLabel13: TcxLabel;
+    edInvNumberPartner: TcxTextEdit;
   private
     { Private declarations }
   public

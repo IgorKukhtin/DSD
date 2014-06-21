@@ -1,27 +1,27 @@
 inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
   ActiveControl = deStart
   Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1085#1072#1083#1086#1075#1086#1074#1099#1093' '#1085#1072#1082#1083#1072#1076#1085#1099#1093' '#1074' '#1052#1077#1076#1086#1082
-  ClientHeight = 108
-  ClientWidth = 494
+  ClientHeight = 154
+  ClientWidth = 503
   AddOnFormData.RefreshAction = nil
   AddOnFormData.isSingle = False
-  ExplicitWidth = 500
-  ExplicitHeight = 133
+  ExplicitWidth = 509
+  ExplicitHeight = 179
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
     Left = 148
-    Top = 56
+    Top = 101
     Action = MultiAction
     ExplicitLeft = 148
-    ExplicitTop = 56
+    ExplicitTop = 101
   end
   inherited bbCancel: TcxButton
     Left = 292
-    Top = 56
+    Top = 101
     Action = actClose
     ExplicitLeft = 292
-    ExplicitTop = 56
+    ExplicitTop = 101
   end
   object deStart: TcxDateEdit [2]
     Left = 131
@@ -47,6 +47,40 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     Top = 18
     Caption = #1050#1086#1085#1077#1095#1085#1072#1103' '#1076#1072#1090#1072':'
   end
+  object cxLabel7: TcxLabel [6]
+    Left = 7
+    Top = 55
+    Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103':'
+  end
+  object ceInfoMoney: TcxButtonEdit [7]
+    Left = 131
+    Top = 54
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 7
+    Width = 170
+  end
+  object cxLabel5: TcxLabel [8]
+    Left = 307
+    Top = 55
+    Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099':'
+    Visible = False
+  end
+  object edPaidKind: TcxButtonEdit [9]
+    Left = 402
+    Top = 54
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Visible = False
+    Width = 90
+  end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 59
     Top = 48
@@ -62,14 +96,6 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = deStart
         Properties.Strings = (
           'Date')
-      end
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
       end>
     Left = 32
     Top = 48
@@ -189,6 +215,9 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
           Size = 4
         end>
       DataSet = TaxBillList
+      OpenFileDialog = False
+      FileName.Value = Null
+      FileName.DataType = ftString
     end
     object actClose: TdsdFormClose
       Category = 'DSDLib'
@@ -221,6 +250,20 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
         Component = deEnd
         DataType = ftDateTime
         ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inPaidKindId'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 280
     Top = 24
@@ -235,6 +278,57 @@ inherited SaveTaxDocumentForm: TSaveTaxDocumentForm
     DateStart = deStart
     DateEnd = deEnd
     Left = 392
+    Top = 56
+  end
+  object InfoMoneyGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceInfoMoney
+    FormNameParam.Value = 'TInfoMoney_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TInfoMoney_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 216
+    Top = 53
+  end
+  object PaidKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edPaidKind
+    FormNameParam.Value = 'TPaidKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TPaidKindForm'
+    PositionDataSet = 'MasterCDS'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = PaidKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 456
     Top = 56
   end
 end

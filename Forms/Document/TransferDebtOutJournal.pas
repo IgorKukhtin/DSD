@@ -66,6 +66,7 @@ type
     DocumentTaxKindGuides: TdsdGuides;
     actPrint_TransferDebtOut: TdsdPrintAction;
     bbPrint_DebtOut: TdxBarButton;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public

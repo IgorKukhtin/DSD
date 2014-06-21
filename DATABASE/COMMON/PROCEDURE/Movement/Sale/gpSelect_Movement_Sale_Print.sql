@@ -132,7 +132,15 @@ BEGIN
     OPEN Cursor1 FOR
        SELECT
              Movement.Id                                AS Id
-           , Movement.InvNumber                         AS InvNumber
+--           , Movement.InvNumber                         AS InvNumber
+           , CASE WHEN Movement.DescId = zc_Movement_Sale()
+                       THEN Movement.InvNumber
+                  WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                       THEN COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
+                  ELSE Movement.InvNumber
+             END AS InvNumber
+
+
            , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementString_InvNumberOrder.ValueData    AS InvNumberOrder
            , Movement.OperDate                          AS OperDate
@@ -197,7 +205,7 @@ BEGIN
        FROM Movement
 
             LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
-                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id 
+                                           ON MovementLinkMovement_Sale.MovementChildId = Movement.Id
                                           AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
 
             LEFT JOIN MovementString AS MovementString_InvNumberOrder
@@ -503,6 +511,7 @@ ALTER FUNCTION gpSelect_Movement_Sale_Print (Integer,TVarChar) OWNER TO postgres
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * change InvNumber
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  20.05.14                                        * add Object_Contract_View

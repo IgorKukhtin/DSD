@@ -39,7 +39,8 @@ Kontakt3Name	TVarChar ,
 Kontakt3Tel	TVarChar ,
 Kontakt3EMail  TVarChar,
 PartnerId Integer,
-PartnerOldId Integer 
+PartnerOldId Integer, 
+ContractOldId Integer 
 )
 WITH (
   OIDS=FALSE

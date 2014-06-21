@@ -133,15 +133,15 @@ BEGIN
              Movement.Id                                AS Id
            , Movement.InvNumber                         AS InvNumber
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDate
-           , Object_Status.ObjectCode          		AS StatusCode
+           , Object_Status.ObjectCode          		    AS StatusCode
            , Object_Status.ValueData         	        AS StatusName
 
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
            , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
                        THEN MovementString_InvNumberPartner.ValueData
                   WHEN Movement.DescId = zc_Movement_TransferDebtIn()
-                       THEN Movement.InvNumber
-                  ELSE ''
+                       THEN COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
+                  ELSE MovementString_InvNumberPartner.ValueData
              END AS InvNumberPartner
 
            , MovementString_InvNumberMark.ValueData     AS InvNumberMark
@@ -259,7 +259,7 @@ BEGIN
 
 
        WHERE Movement.Id =  inMovementId
-         AND Movement.StatusId = zc_Enum_Status_Complete()
+--         AND Movement.StatusId = zc_Enum_Status_Complete()
       ;
     RETURN NEXT Cursor1;
 
@@ -446,6 +446,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * change InvNumberPartner
+ 17.06.14                                                       *
  12.06.14                                        * restore ContractSigningDate
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name

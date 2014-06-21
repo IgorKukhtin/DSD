@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_PriceCorrective()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, integer, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_PriceCorrective (integer, tvarchar, tdatetime, boolean, tfloat, tvarchar, tvarchar, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -8,6 +9,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_PriceCorrective(
     IN inOperDate            TDateTime , -- Дата документа
     IN inPriceWithVAT        Boolean   , -- Цена с НДС (да/нет)
     IN inVATPercent          TFloat    , -- % НДС
+    IN inInvNumberPartner    TVarChar  , -- Номер накладной у контрагента
+    IN inInvNumberMark       TVarChar  , -- Номер "перекресленої зеленої марки зi складу"
     IN inFromId              Integer   , -- От кого (в документе)
     IN inToId                Integer   , -- Кому (в документе)
     IN inPartnerId           Integer   , -- Контрагент
@@ -29,6 +32,8 @@ BEGIN
                                       , inOperDate         := inOperDate
                                       , inPriceWithVAT     := inPriceWithVAT
                                       , inVATPercent       := inVATPercent
+                                      , inInvNumberPartner := inInvNumberPartner
+									  , inInvNumberMark    := inInvNumberMark
                                       , inFromId           := inFromId
                                       , inToId             := inToId
                                       , inPartnerId        := inPartnerId
@@ -45,6 +50,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 17.06.14         * add inInvNumberPartner 
+                      , inInvNumberMark  
  29.05.14         *
  
 */

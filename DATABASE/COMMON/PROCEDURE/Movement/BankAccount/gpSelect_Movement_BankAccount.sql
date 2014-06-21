@@ -22,7 +22,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumber_Parent TVarChar, Parent
              , ContractInvNumber TVarChar
              , UnitName TVarChar
              , CurrencyName TVarChar
-)
+             , PartnerBankName TVarChar, PartnerBankMFO TVarChar, PartnerBankAccountName TVarChar)
 AS
 $BODY$
    DECLARE vbUserId Integer;
@@ -71,6 +71,9 @@ BEGIN
            , Object_Contract_InvNumber_View.InvNumber AS ContractInvNumber
            , Object_Unit.ValueData             AS UnitName
            , Object_Currency.ValueData         AS CurrencyName 
+           , Partner_BankAccount_View.BankName
+           , Partner_BankAccount_View.MFO
+           , Partner_BankAccount_View.Name      AS BankAccountName
        FROM tmpStatus
             JOIN Movement ON Movement.DescId = zc_Movement_BankAccount()
                          AND Movement.OperDate BETWEEN inStartDate AND inEndDate
@@ -120,7 +123,10 @@ BEGIN
                                         AND MILinkObject_Currency.DescId = zc_MILinkObject_Currency()
             LEFT JOIN Object AS Object_Currency ON Object_Currency.Id = MILinkObject_Currency.ObjectId
 
-      ;
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_BankAccount
+                                         ON MILinkObject_BankAccount.MovementItemId = MovementItem.Id
+                                        AND MILinkObject_BankAccount.DescId = zc_MILinkObject_BankAccount()
+            LEFT JOIN Object_BankAccount_View AS Partner_BankAccount_View ON Partner_BankAccount_View.Id = MILinkObject_BankAccount.ObjectId;
   
 END;
 $BODY$
@@ -130,6 +136,7 @@ ALTER FUNCTION gpSelect_Movement_BankAccount (TDateTime, TDateTime, Boolean, TVa
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 18.06.14                         * add Object_BankAccount_View
  18.03.14                                        * add zc_ObjectLink_BankAccount_Bank
  03.02.14                                        * add inIsErased
  29.01.14                                        * add InvNumber_Parent

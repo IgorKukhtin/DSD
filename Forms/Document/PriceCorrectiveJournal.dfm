@@ -2,8 +2,8 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
   ClientHeight = 535
   ClientWidth = 1020
-  ExplicitWidth = 1036
-  ExplicitHeight = 570
+  ExplicitWidth = 1028
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -107,6 +107,22 @@ inherited PriceCorrectiveJournalForm: TPriceCorrectiveJournalForm
             Caption = #8470' '#1076#1086#1082'.'
             HeaderAlignmentHorz = taCenter
             Width = 45
+          end
+          object clInvNumberPartner: TcxGridDBColumn
+            Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+            DataBinding.FieldName = 'InvNumberPartner'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
+          end
+          object clInvNumberMark: TcxGridDBColumn
+            Caption = #8470' '#1079'.'#1084'.'
+            DataBinding.FieldName = 'InvNumberMark'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 55
           end
           object colDocumentTaxKindName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'

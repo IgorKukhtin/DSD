@@ -1,6 +1,7 @@
 -- Function: gpSelect_Movement_PriceCorrective()
 
 DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, Boolean,TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Movement_PriceCorrective(
     IN inStartDate     TDateTime , --
@@ -12,6 +13,7 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat
              , TotalCount TFloat, TotalCountSh TFloat, TotalCountKg TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat
+             , InvNumberPartner TVarChar, InvNumberMark TVarChar
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PartnerCode Integer, PartnerName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
@@ -51,6 +53,10 @@ BEGIN
            , MovementFloat_TotalCountKg.ValueData       AS TotalCountKg
            , MovementFloat_TotalSummMVAT.ValueData      AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
+           
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark           
+           
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                               AS ToId
@@ -108,6 +114,14 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
                                     ON MovementFloat_TotalSummPVAT.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
+            
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
             
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -157,6 +171,8 @@ ALTER FUNCTION gpSelect_Movement_PriceCorrective (TDateTime, TDateTime, Boolean,
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 17.06.14         * add inInvNumberPartner 
+                      , inInvNumberMark
  29.05.14         *
 */
 

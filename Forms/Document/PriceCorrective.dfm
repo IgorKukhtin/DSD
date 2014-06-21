@@ -1,28 +1,30 @@
 inherited PriceCorrectiveForm: TPriceCorrectiveForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1094#1077#1085#1099'>'
-  ClientHeight = 668
-  ClientWidth = 863
-  ExplicitWidth = 879
-  ExplicitHeight = 703
+  ClientHeight = 542
+  ClientWidth = 998
+  ExplicitWidth = 1006
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 131
-    Width = 863
-    Height = 537
+    Width = 998
+    Height = 411
     ExplicitTop = 131
-    ExplicitWidth = 863
-    ExplicitHeight = 537
-    ClientRectBottom = 537
-    ClientRectRight = 863
+    ExplicitWidth = 998
+    ExplicitHeight = 411
+    ClientRectBottom = 411
+    ClientRectRight = 998
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 863
-      ExplicitHeight = 513
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 998
+      ExplicitHeight = 387
       inherited cxGrid: TcxGrid
-        Width = 863
-        Height = 513
-        ExplicitWidth = 863
-        ExplicitHeight = 513
+        Width = 998
+        Height = 387
+        ExplicitWidth = 998
+        ExplicitHeight = 387
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -149,13 +151,13 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 863
-      ExplicitHeight = 513
+      ExplicitWidth = 998
+      ExplicitHeight = 387
       inherited cxGridEntry: TcxGrid
-        Width = 863
-        Height = 513
-        ExplicitWidth = 863
-        ExplicitHeight = 513
+        Width = 998
+        Height = 387
+        ExplicitWidth = 998
+        ExplicitHeight = 387
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -177,10 +179,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 863
+    Width = 998
     Height = 105
     TabOrder = 3
-    ExplicitWidth = 863
+    ExplicitWidth = 998
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -193,14 +195,14 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       ExplicitLeft = 8
     end
     inherited edOperDate: TcxDateEdit
-      Left = 91
+      Left = 249
       Properties.SaveTime = False
       Properties.ShowTime = False
-      ExplicitLeft = 91
+      ExplicitLeft = 249
     end
     inherited cxLabel2: TcxLabel
-      Left = 91
-      ExplicitLeft = 91
+      Left = 249
+      ExplicitLeft = 249
     end
     inherited cxLabel15: TcxLabel
       Top = 45
@@ -214,12 +216,12 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 183
     end
     object cxLabel3: TcxLabel
-      Left = 200
+      Left = 358
       Top = 5
       Caption = #1054#1090' '#1082#1086#1075#1086
     end
     object edFrom: TcxButtonEdit
-      Left = 200
+      Left = 358
       Top = 23
       Properties.Buttons = <
         item
@@ -230,7 +232,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 200
     end
     object edTo: TcxButtonEdit
-      Left = 410
+      Left = 568
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -242,19 +244,19 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 170
     end
     object cxLabel4: TcxLabel
-      Left = 410
+      Left = 568
       Top = 5
       Caption = #1050#1086#1084#1091
     end
     object edPriceWithVAT: TcxCheckBox
-      Left = 410
+      Left = 568
       Top = 63
       Caption = #1062#1077#1085#1072' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
       TabOrder = 10
       Width = 128
     end
     object edVATPercent: TcxCurrencyEdit
-      Left = 540
+      Left = 698
       Top = 63
       Properties.DecimalPlaces = 0
       Properties.DisplayFormat = ',0'
@@ -262,17 +264,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 40
     end
     object cxLabel7: TcxLabel
-      Left = 540
+      Left = 698
       Top = 45
       Caption = '% '#1053#1044#1057
     end
     object cxLabel10: TcxLabel
-      Left = 595
+      Left = 753
       Top = 5
       Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
     end
     object edPaidKind: TcxButtonEdit
-      Left = 595
+      Left = 753
       Top = 23
       Properties.Buttons = <
         item
@@ -283,12 +285,12 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 77
     end
     object cxLabel11: TcxLabel
-      Left = 685
+      Left = 843
       Top = 0
       Caption = #1044#1086#1075#1086#1074#1086#1088
     end
     object edContract: TcxButtonEdit
-      Left = 685
+      Left = 843
       Top = 23
       Enabled = False
       Properties.Buttons = <
@@ -300,7 +302,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 109
     end
     object edPartner: TcxButtonEdit
-      Left = 200
+      Left = 358
       Top = 63
       Properties.Buttons = <
         item
@@ -312,17 +314,17 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
       Width = 200
     end
     object cxLabel12: TcxLabel
-      Left = 200
+      Left = 358
       Top = 45
       Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090
     end
     object cxLabel13: TcxLabel
-      Left = 595
+      Left = 753
       Top = 45
       Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
     end
     object edDocumentTaxKind: TcxButtonEdit
-      Left = 595
+      Left = 753
       Top = 63
       Properties.Buttons = <
         item
@@ -331,6 +333,28 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         end>
       TabOrder = 20
       Width = 199
+    end
+    object cxLabel5: TcxLabel
+      Left = 88
+      Top = 5
+      Caption = #8470' '#1076#1086#1082'.'#1091' '#1087#1086#1082#1091#1087'.'
+    end
+    object edInvNumberPartner: TcxTextEdit
+      Left = 88
+      Top = 23
+      TabOrder = 22
+      Width = 84
+    end
+    object cxLabel6: TcxLabel
+      Left = 180
+      Top = 5
+      Caption = #8470' '#1079'.'#1084'.'
+    end
+    object edInvNumberMark: TcxTextEdit
+      Left = 179
+      Top = 23
+      TabOrder = 24
+      Width = 63
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -351,7 +375,6 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
     Top = 584
   end
   inherited ActionList: TActionList
-    Images = dmMain.ImageList
     Left = 55
     Top = 303
     inherited actRefresh: TdsdDataSetRefresh
@@ -855,6 +878,18 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftFloat
       end
       item
+        Name = 'InvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+      end
+      item
+        Name = 'InvNumberMark'
+        Value = ''
+        Component = edInvNumberMark
+        DataType = ftString
+      end
+      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -974,6 +1009,20 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ParamType = ptInput
       end
       item
+        Name = 'inInvNumberPartner'
+        Value = ''
+        Component = edInvNumberPartner
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInvNumberMark'
+        Value = ''
+        Component = edInvNumberMark
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
         Name = 'inFromId'
         Value = ''
         Component = GuidesFrom
@@ -1034,8 +1083,10 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Control = edFrom
       end
       item
+        Control = edInvNumberPartner
       end
       item
+        Control = edInvNumberMark
       end
       item
         Control = edTo
@@ -1355,7 +1406,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 312
+    Left = 456
+    Top = 8
   end
   object GuidesTo: TdsdGuides
     KeyField = 'Id'
@@ -1400,8 +1452,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         Value = ''
         DataType = ftString
       end>
-    Left = 464
-    Top = 65528
+    Left = 624
   end
   object PaidKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1426,7 +1477,7 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 616
+    Left = 792
     Top = 8
   end
   object ContractGuides: TdsdGuides
@@ -1453,7 +1504,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 744
+    Left = 896
+    Top = 8
   end
   object GuidesPartner: TdsdGuides
     KeyField = 'Id'
@@ -1493,8 +1545,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         ComponentItem = 'TextValue'
         DataType = ftString
       end>
-    Left = 264
-    Top = 48
+    Left = 488
+    Top = 64
   end
   object DocumentTaxKindGuides: TdsdGuides
     KeyField = 'Id'
@@ -1520,8 +1572,8 @@ inherited PriceCorrectiveForm: TPriceCorrectiveForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 736
-    Top = 56
+    Left = 848
+    Top = 64
   end
   object spCorrective: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Movement_TaxCorrective_From_Kind'

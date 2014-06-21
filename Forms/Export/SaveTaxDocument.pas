@@ -9,7 +9,7 @@ uses
   dsdAction, cxPropertiesStore, dsdAddOn, Vcl.StdCtrls, cxButtons, cxControls,
   cxContainer, cxEdit, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit,
   cxMaskEdit, cxDropDownEdit, cxCalendar, ExternalSave, Data.DB,
-  Datasnap.DBClient, cxLabel, ChoicePeriod;
+  Datasnap.DBClient, cxLabel, ChoicePeriod, dsdGuides, cxButtonEdit;
 
 type
   TSaveTaxDocumentForm = class(TAncestorDialogForm)
@@ -23,6 +23,12 @@ type
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     PeriodChoice: TPeriodChoice;
+    cxLabel7: TcxLabel;
+    ceInfoMoney: TcxButtonEdit;
+    InfoMoneyGuides: TdsdGuides;
+    cxLabel5: TcxLabel;
+    PaidKindGuides: TdsdGuides;
+    edPaidKind: TcxButtonEdit;
   private
     { Private declarations }
   public
