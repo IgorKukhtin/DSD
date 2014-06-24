@@ -1,7 +1,5 @@
 -- View: Object_ProfitLossDirection_View
 
--- DROP VIEW IF EXISTS Object_ProfitLossDirection_View;
-
 CREATE OR REPLACE VIEW Object_ProfitLossDirection_View AS
       SELECT ProfitLossGroupId
            , ProfitLossGroupCode

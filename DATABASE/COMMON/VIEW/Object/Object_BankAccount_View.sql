@@ -1,7 +1,5 @@
 -- View: Object_BankAccount_View
 
-DROP VIEW IF EXISTS Object_BankAccount_View;
-
 CREATE OR REPLACE VIEW Object_BankAccount_View AS
          SELECT 
              Object_BankAccount.Id           AS Id

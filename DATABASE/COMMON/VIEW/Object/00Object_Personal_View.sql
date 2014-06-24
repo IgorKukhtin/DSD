@@ -1,7 +1,5 @@
 -- View: Object_Personal_View
 
-DROP VIEW IF EXISTS Object_Personal_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_Personal_View AS
   SELECT Object_Personal.Id                        AS PersonalId
        , Object_Personal.DescId

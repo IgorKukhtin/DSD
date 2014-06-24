@@ -1,7 +1,5 @@
 -- View: Object_Bank_View
 
-DROP VIEW IF EXISTS Object_Bank_View;
-
 CREATE OR REPLACE VIEW Object_Bank_View AS
      SELECT 
        Object.Id
@@ -16,7 +14,7 @@ CREATE OR REPLACE VIEW Object_Bank_View AS
      WHERE Object.DescId = zc_Object_Bank();
 
 
-ALTER TABLE Object_BankAccount_View  OWNER TO postgres;
+ALTER TABLE Object_Bank_View  OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

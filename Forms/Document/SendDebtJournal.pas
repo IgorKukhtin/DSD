@@ -3,28 +3,15 @@ unit SendDebtJournal;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxGraphics, cxControls, cxLookAndFeels,
-  cxLookAndFeelPainters, cxStyles, cxCustomData, cxFilter, cxData,
-  cxDataStorage, cxEdit, Data.DB, cxDBData, cxGridLevel, cxClasses,
-  cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
-  Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
-  cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
-  cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxTextEdit, cxDropDownEdit,
-  cxCalendar, Vcl.ExtCtrls, cxImageComboBox, Vcl.Menus, dsdAddOn, dxSkinsCore,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010,
-  dxSkinWhiteprint, dxSkinXmas2008Blue, dxSkinscxPCPainter, dxSkinsdxBarPainter,
-  dxBarExtItems, cxCurrencyEdit, ChoicePeriod, System.Contnrs, cxLabel;
+  DataModul, Winapi.Windows, Winapi.Messages, ParentForm, cxGraphics,
+  cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer, cxEdit,
+  Vcl.ComCtrls, dxCore, cxDateUtils, cxStyles, cxCustomData, cxFilter, cxData,
+  cxDataStorage, Data.DB, cxDBData, cxImageComboBox, cxCurrencyEdit, dsdAddOn,
+  ChoicePeriod, Vcl.Menus, dsdDB, dsdAction, System.Classes, Vcl.ActnList,
+  dxBarExtItems, dxBar, cxClasses, cxPropertiesStore, Datasnap.DBClient,
+  cxGridLevel, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
+  cxGridCustomView, cxGrid, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit,
+  cxCalendar, Vcl.Controls, Vcl.ExtCtrls;
 
 type
   TSendDebtJournalForm = class(TParentForm)
@@ -51,7 +38,6 @@ type
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
     actComplete: TdsdChangeMovementStatus;
-    spMovementComplete: TdsdStoredProc;
     PopupMenu: TPopupMenu;
     N1: TMenuItem;
     bbComplete: TdxBarButton;
@@ -96,6 +82,7 @@ type
     actUpdateDataSet: TdsdUpdateDataSet;
     actMovementItemContainer: TdsdOpenForm;
     bbMovementItemContainer: TdxBarButton;
+    bbAddBonus: TdxBarButton;
   private
   public
   end;

@@ -32,7 +32,7 @@ BEGIN
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_MI_EDI (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_EDIProtocol (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
 
 
 /*

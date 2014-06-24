@@ -3515,21 +3515,22 @@ begin
     if FIndexes <> nil then FIndexes.CloseAll;
   finally
     CloseLobStream;
-    if DBFHandler.IsOpen then begin
-      //Add 1A at end dbf file
-      if AccessMode.OpenReadWrite then begin
-        DBFHandler.Seek(0, 2);
-        DBFHandler.Seek(-1, 1);
-        end1a := 0;
-        DBFHandler.Read(end1a, 1);
-        if end1a <> $1A then begin
-          end1a := $1A;
+    if Assigned(DBFHandler) then
+      if DBFHandler.IsOpen then begin
+        //Add 1A at end dbf file
+        if AccessMode.OpenReadWrite then begin
           DBFHandler.Seek(0, 2);
-          DBFHandler.Write(end1a, 1);
+          DBFHandler.Seek(-1, 1);
+          end1a := 0;
+          DBFHandler.Read(end1a, 1);
+          if end1a <> $1A then begin
+            end1a := $1A;
+            DBFHandler.Seek(0, 2);
+            DBFHandler.Write(end1a, 1);
+          end;
         end;
+        DBFHandler.Close;
       end;
-      DBFHandler.Close;
-    end;
   end;
 end;
 
@@ -8777,9 +8778,10 @@ end;
 
 procedure TVKSmartDBF.CloseLobStream;
 begin
-  if LobHandler.IsOpen then begin
-    LobHandler.Close;
-  end;
+  if Assigned(LobHandler) then
+     if LobHandler.IsOpen then begin
+        LobHandler.Close;
+     end;
 end;
 
 procedure TVKSmartDBF.OpenLobStream(dbf_id: Byte);

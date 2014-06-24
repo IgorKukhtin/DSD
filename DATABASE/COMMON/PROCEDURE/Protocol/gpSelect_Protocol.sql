@@ -34,7 +34,8 @@ BEGIN
  WHERE ObjectProtocol.OperDate BETWEEN inStartDate AND inEndDate
    AND (ObjectProtocol.UserId = inUserId OR 0 = inUserId)
    AND (Object.Id = inObjectId OR 0 = inObjectId)
-   AND (Object.DescId = inObjectDescId OR inObjectDescId = 0);
+   AND (Object.DescId = inObjectDescId OR inObjectDescId = 0)
+   AND ((inObjectId + inUserId + inObjectDescId) <> 0 );
 
 --inUserId        Integer,    -- пользователь  
   --  IN inObjectDescId  Integer,    -- тип объекта

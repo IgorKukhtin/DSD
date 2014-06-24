@@ -1,7 +1,5 @@
 -- View: Object_InfoMoneyDestination_View
 
--- DROP VIEW IF EXISTS Object_InfoMoneyDestination_View;
-
 CREATE OR REPLACE VIEW Object_InfoMoneyDestination_View AS
   SELECT Object_InfoMoney_View.InfoMoneyGroupId
        , Object_InfoMoney_View.InfoMoneyGroupCode

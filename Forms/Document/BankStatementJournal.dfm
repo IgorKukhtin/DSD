@@ -1,20 +1,27 @@
 inherited BankStatementJournalForm: TBankStatementJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1041#1072#1085#1082#1086#1074#1089#1082#1080#1077' '#1074#1099#1087#1080#1089#1082#1080'>'
   ClientWidth = 873
-  ExplicitWidth = 889
-  ExplicitHeight = 364
+  ExplicitWidth = 881
+  ExplicitHeight = 356
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 873
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 873
+    ExplicitHeight = 272
     ClientRectRight = 873
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 873
+      ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 873
+        Height = 272
         ExplicitWidth = 873
+        ExplicitHeight = 272
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.CancelOnExit = True
           OptionsData.Deleting = False
@@ -121,37 +128,66 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       QuestionBeforeExecute = #1042#1099' '#1091#1074#1077#1088#1077#1085#1099' '#1074' '#1091#1076#1072#1083#1077#1085#1080#1080' '#1076#1086#1082#1091#1084#1077#1085#1090#1072'? '
     end
     object BankPrivatLoad: TClientBankLoadAction
-      Category = 'DSDLib'
-      StartDateParam.Value = 41579d
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
+      EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
       ClientBankType = cbPrivatBank
     end
     object BankForumLoad: TClientBankLoadAction
-      Category = 'DSDLib'
-      StartDateParam.Value = 41579d
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
+      EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
       ClientBankType = cbForum
     end
-    object BankOTPLoad: TClientBankLoadAction
-      Category = 'DSDLib'
-      StartDateParam.Value = 41579d
+    object BankPireusLoad: TClientBankLoadAction
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+      ClientBankType = cbPireusBank
+    end
+    object BankOTPLoad: TClientBankLoadAction
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
       ClientBankType = cbOTPBank
     end
+    object BankPireus: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankPireusLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1080#1088#1077#1091#1089' '#1073#1072#1085#1082#1072' '
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1080#1088#1077#1091#1089' '#1073#1072#1085#1082#1072' '
+      ImageIndex = 70
+    end
     object BankOTP: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Load'
+      MoveParams = <>
       ActionList = <
         item
           Action = BankOTPLoad
@@ -161,30 +197,33 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1054#1058#1055' '#1073#1072#1085#1082#1072' '
-      ImageIndex = 50
+      ImageIndex = 69
     end
     object BankVostokLoad: TClientBankLoadAction
-      Category = 'DSDLib'
-      StartDateParam.Value = 41579d
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
+      EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
       ClientBankType = cbVostok
     end
     object BankFidoLoad: TClientBankLoadAction
-      Category = 'DSDLib'
-      StartDateParam.Value = 41579d
+      Category = 'Load'
+      MoveParams = <>
+      StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
-      EndDateParam.Value = 41608d
+      EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
       ClientBankType = cbFidoBank
     end
     object BankPrivat: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Load'
+      MoveParams = <>
       ActionList = <
         item
           Action = BankPrivatLoad
@@ -197,7 +236,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ImageIndex = 47
     end
     object BankForum: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Load'
+      MoveParams = <>
       ActionList = <
         item
           Action = BankForumLoad
@@ -210,7 +250,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ImageIndex = 48
     end
     object BankVostok: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Load'
+      MoveParams = <>
       ActionList = <
         item
           Action = BankVostokLoad
@@ -223,7 +264,8 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
       ImageIndex = 49
     end
     object BankFido: TMultiAction
-      Category = 'DSDLib'
+      Category = 'Load'
+      MoveParams = <>
       ActionList = <
         item
           Action = BankFidoLoad
@@ -233,7 +275,7 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         end>
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1060#1080#1076#1086#1073#1072#1085#1082#1072
       Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1060#1080#1076#1086#1073#1072#1085#1082#1072
-      ImageIndex = 50
+      ImageIndex = 68
     end
   end
   inherited spSelect: TdsdStoredProc
@@ -274,6 +316,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
         item
           Visible = True
           ItemName = 'bbOTPLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPireus'
         end
         item
           BeginGroup = True
@@ -323,6 +369,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbOTPLoad: TdxBarButton
       Action = BankOTP
+      Category = 0
+    end
+    object bbPireus: TdxBarButton
+      Action = BankPireus
       Category = 0
     end
   end

@@ -46,8 +46,6 @@ begin
     // Получение данных о кассе
     with ObjectTest.GetRecord(Id) do
       Check((FieldByName('name').AsString = 'Расчетный счет'), 'Не сходятся данные Id = ' + FieldByName('id').AsString);
-    // Получим список касс
-    Check(ObjectTest.GetDataSet.RecordCount = (RecordCount + 1), 'Количество записей не изменилось');
   finally
     ObjectTest.Delete(Id);
   end;

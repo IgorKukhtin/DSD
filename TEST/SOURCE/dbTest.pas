@@ -115,6 +115,7 @@ begin
   saFound := TStringList.Create;
   try
     FilesInDir('*.sql', Directory, iFilesCount, saFound);
+    TStringList(saFound).Sort;
     for I := 0 to saFound.Count - 1 do
       ExecFile(saFound[i], ZQuery);
   finally
