@@ -1,19 +1,16 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
--- DROP FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, TFloat, TFloat, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                Integer   ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
+    
+    IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inExtraChargeCategoriesId  Integer   ,    -- Категория наценок
-    IN inNDS                 TFloat    ,    -- НДС
-    IN inCashName            TVarChar  ,    -- Название в кассе
-    IN inPartyCount          TFloat    ,    -- Минимальная партия в заказе
-    IN inisReceiptNeed       Boolean   ,    -- Нужен ли рецепт
-    IN inPrice               TFloat    ,    -- Цена
-    IN inPercentReprice      TFloat    ,    -- % наценки
+    IN inNDSId               Integer   ,    -- НДС
+
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
@@ -25,7 +22,7 @@ BEGIN
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
-   -- !!! Если код не установлен, определяем его каи последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
+   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    -- !!! IF COALESCE (inCode, 0) = 0
    -- !!! THEN 
    -- !!!     SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Goods();
@@ -42,22 +39,13 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), Code_max, inName);
-   -- сохранили связь с <Категория наценок>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_ExtraChargeCategories(), ioId, inExtraChargeCategoriesId);
+   -- сохранили связь с <Группа>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили свойство <НДС>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_NDS(), ioId, inNDS);
-   -- сохранили свойство <Минимальная партия в заказе>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_PartyCount(), ioId, inPartyCount);
-   -- сохранили свойство <Цена>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_Price(), ioId, inPrice);
-   -- сохранили свойство <% наценки>
-   PERFORM lpInsertUpdate_ObjectFloat(zc_ObjectFloat_Goods_PercentReprice(), ioId, inPercentReprice);
-   -- сохранили свойство <Название в кассе>
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_CashName(), ioId, inCashName);
-   -- сохранили свойство <Нужен ли рецепт>
-   PERFORM lpInsertUpdate_ObjectBoolean(zc_ObjectBoolean_Goods_isReceiptNeed(), ioId, inisReceiptNeed);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDS(), ioId, inNDSId );
+  
 
    -- сохранили протокол
    -- PERFORM lpInsert_ObjectProtocol (ioId, UserId);
@@ -65,12 +53,13 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, TFloat, TVarChar, TFloat, Boolean, TFloat, TFloat, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.14         *
  19.06.13                        * 
 
 */

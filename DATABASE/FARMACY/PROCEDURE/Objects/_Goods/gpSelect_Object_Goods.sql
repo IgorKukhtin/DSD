@@ -1,62 +1,56 @@
 ﻿-- Function: gpSelect_Object_Goods()
 
---DROP FUNCTION gpSelect_Object_Goods(TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Object_Goods(TVarChar);
 
 CREATE OR REPLACE FUNCTION gpSelect_Object_Goods(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
-              ExtraChargeCategoriesName TVarChar, MeasureName TVarChar,
-              NDS TFloat, PartyCount TFloat, Price TFloat, PercentReprice TFloat, isReceiptNeed Boolean) AS
-$BODY$BEGIN
+               GoodsGroupId Integer, GoodsGroupName TVarChar,
+               MeasureId Integer, MeasureName TVarChar,
+               NDSId Integer, NDSName TVarChar
+              ) AS
+$BODY$
+BEGIN
 
 --   PERFORM lpCheckRight(inSession, zc_Enum_Process_User());
 
    RETURN QUERY 
-   SELECT 
-     Object.Id          AS Id 
-   , Object.ObjectCode  AS Code
-   , Object.ValueData   AS Name
-   , Object.isErased    AS isErased
-   , ExtraChargeCategories.ValueData AS ExtraChargeCategoriesName
-   , Measure.ValueData AS MeasureName
-   , ObjectFloat_Goods_NDS.ValueData AS NDS
-   , ObjectFloat_Goods_PartyCount.ValueData AS PartyCount
-   , ObjectFloat_Goods_Price.ValueData AS Price
-   , ObjectFloat_Goods_PercentReprice.ValueData AS PercentReprice
-   , ObjectBoolean_Goods_isReceiptNeed.ValueData AS isReceiptNeed
-   FROM Object
-LEFT JOIN ObjectLink AS ObjectLink_Goods_ExtraChargeCategories
-       ON ObjectLink_Goods_ExtraChargeCategories.ObjectId = Object.Id
-      AND ObjectLink_Goods_ExtraChargeCategories.DescId = zc_ObjectLink_Goods_ExtraChargeCategories()
-LEFT JOIN Object AS ExtraChargeCategories 
-       ON ExtraChargeCategories.Id = ObjectLink_Goods_ExtraChargeCategories.ChildObjectId
-LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-       ON ObjectLink_Goods_Measure.ObjectId = Object.Id
-      AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
-LEFT JOIN Object AS Measure 
-       ON Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
-LEFT JOIN ObjectFloat AS ObjectFloat_Goods_NDS
-       ON ObjectFloat_Goods_NDS.ObjectId = Object.Id
-      AND ObjectFloat_Goods_NDS.DescId = zc_ObjectFloat_Goods_NDS()
-LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PartyCount
-       ON ObjectFloat_Goods_PartyCount.ObjectId = Object.Id
-      AND ObjectFloat_Goods_PartyCount.DescId = zc_ObjectFloat_Goods_PartyCount()
-LEFT JOIN ObjectFloat AS ObjectFloat_Goods_Price
-       ON ObjectFloat_Goods_Price.ObjectId = Object.Id
-      AND ObjectFloat_Goods_Price.DescId = zc_ObjectFloat_Goods_Price()
-LEFT JOIN ObjectFloat AS ObjectFloat_Goods_PercentReprice
-       ON ObjectFloat_Goods_PercentReprice.ObjectId = Object.Id
-      AND ObjectFloat_Goods_PercentReprice.DescId = zc_ObjectFloat_Goods_PercentReprice()
-LEFT JOIN ObjectBoolean AS ObjectBoolean_Goods_isReceiptNeed
-       ON ObjectBoolean_Goods_isReceiptNeed.ObjectId = Object.Id
-      AND ObjectBoolean_Goods_isReceiptNeed.DescId = zc_ObjectBoolean_Goods_isReceiptNeed()
-    WHERE Object.DescId = zc_Object_Goods();
+   SELECT Object_Goods.Id           AS Id 
+        , Object_Goods.ObjectCode   AS Code
+        , Object_Goods.ValueData    AS Name
+        , Object_Goods.isErased     AS isErased
+   
+        , Object_GoodsGroup.Id        AS GoodsGroupId
+        , Object_GoodsGroup.ValueData AS GoodsGroupName
+   
+        , Object_Measure.Id        AS MeasureId
+        , Object_Measure.ValueData AS MeasureName
+   
+        , Object_NDS.Id        AS NDSId
+        , Object_NDS.ValueData AS NDSName
+   
+    FROM Object AS Object_Goods
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
+                             ON ObjectLink_Goods_GoodsGroup.ObjectId = Object_Goods.Id
+                            AND ObjectLink_Goods_GoodsGroup.DescId = zc_ObjectLink_Goods_GoodsGroup()
+        LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
+        
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
+                             ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                            AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
+        LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
+
+        LEFT JOIN ObjectLink AS ObjectLink_Goods_NDS
+                             ON ObjectLink_Goods_NDS.ObjectId = Object.Id
+                            AND ObjectLink_Goods_NDS.DescId = zc_ObjectLink_Goods_NDS()
+        LEFT JOIN Object AS Object_NDS ON Object_NDS.Id = ObjectLink_Goods_NDS.ChildObjectId
+
+    WHERE Object_Goods.DescId = zc_Object_Goods();
   
-END;$BODY$
-  LANGUAGE plpgsql VOLATILE
-  COST 100
-  ROWS 100;
+END;
+$BODY$
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
 
 
@@ -64,6 +58,7 @@ ALTER FUNCTION gpSelect_Object_Goods(TVarChar) OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 24.06.14         *
  20.06.13                         *
 
 */
