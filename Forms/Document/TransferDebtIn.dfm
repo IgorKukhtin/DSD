@@ -2,27 +2,29 @@ inherited TransferDebtInForm: TTransferDebtInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1077#1088#1077#1074#1086#1076' '#1076#1086#1083#1075#1072' ('#1087#1088#1080#1093#1086#1076')>'
   ClientHeight = 668
   ClientWidth = 1146
-  ExplicitWidth = 1154
-  ExplicitHeight = 702
+  ExplicitWidth = 1162
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 133
+    Top = 131
     Width = 1146
-    Height = 535
-    ExplicitTop = 133
-    ExplicitWidth = 1020
-    ExplicitHeight = 535
-    ClientRectBottom = 531
-    ClientRectRight = 1142
+    Height = 537
+    ExplicitTop = 131
+    ExplicitWidth = 1146
+    ExplicitHeight = 537
+    ClientRectBottom = 537
+    ClientRectRight = 1146
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1014
-      ExplicitHeight = 509
+      ExplicitLeft = 0
+      ExplicitTop = 24
+      ExplicitWidth = 1146
+      ExplicitHeight = 513
       inherited cxGrid: TcxGrid
-        Width = 1140
-        Height = 509
-        ExplicitWidth = 1014
-        ExplicitHeight = 509
+        Width = 1146
+        Height = 513
+        ExplicitWidth = 1146
+        ExplicitHeight = 513
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -148,15 +150,14 @@ inherited TransferDebtInForm: TTransferDebtInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 22
-      ExplicitWidth = 1119
-      ExplicitHeight = 509
+      ExplicitTop = 24
+      ExplicitWidth = 1146
+      ExplicitHeight = 513
       inherited cxGridEntry: TcxGrid
-        Width = 1140
-        Height = 509
-        ExplicitWidth = 1119
-        ExplicitHeight = 509
+        Width = 1146
+        Height = 513
+        ExplicitWidth = 1146
+        ExplicitHeight = 513
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -181,7 +182,6 @@ inherited TransferDebtInForm: TTransferDebtInForm
     Width = 1146
     Height = 105
     TabOrder = 3
-    ExplicitLeft = -1
     ExplicitWidth = 1146
     ExplicitHeight = 105
     inherited edInvNumber: TcxTextEdit
@@ -212,7 +212,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
       Top = 63
       ExplicitTop = 63
       ExplicitWidth = 183
-      ExplicitHeight = 24
+      ExplicitHeight = 22
       Width = 183
     end
     object cxLabel3: TcxLabel
@@ -696,7 +696,7 @@ inherited TransferDebtInForm: TTransferDebtInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1217,6 +1217,9 @@ inherited TransferDebtInForm: TTransferDebtInForm
     ControlList = <
       item
         Control = edInvNumber
+      end
+      item
+        Control = edInvNumberPartner
       end
       item
         Control = edOperDate
