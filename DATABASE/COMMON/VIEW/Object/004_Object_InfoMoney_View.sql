@@ -1,7 +1,5 @@
 -- View: Object_InfoMoney_View
 
-DROP VIEW IF EXISTS Object_InfoMoney_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_InfoMoney_View AS
   SELECT ObjectLink_InfoMoney_InfoMoneyGroup.ChildObjectId               AS InfoMoneyGroupId
        , Object_InfoMoneyGroup.ObjectCode       AS InfoMoneyGroupCode

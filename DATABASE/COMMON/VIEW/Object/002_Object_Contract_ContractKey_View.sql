@@ -1,7 +1,5 @@
 -- View: Object_Contract_ContractKey_View
 
-DROP VIEW IF EXISTS Object_Contract_ContractKey_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_Contract_ContractKey_View
 AS
   SELECT ObjectLink_Contract_ContractKey.ChildObjectId AS ContractKeyId

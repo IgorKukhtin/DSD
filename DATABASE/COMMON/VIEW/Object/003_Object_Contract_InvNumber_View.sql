@@ -1,7 +1,5 @@
 -- View: Object_Contract_InvNumber_View
 
-DROP VIEW IF EXISTS Object_Contract_InvNumber_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_Contract_InvNumber_View
 AS
   SELECT Object_Contract.Id                            AS ContractId

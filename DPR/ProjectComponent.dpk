@@ -58,7 +58,7 @@ requires
   cxVerticalGridRS16,
   dxSkinsCoreRS16,
   kbmMemRunDXE2Pro,
-  ZLibEx;
+  adortl;
 
 contains
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',

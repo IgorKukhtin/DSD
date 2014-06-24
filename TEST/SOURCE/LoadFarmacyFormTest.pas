@@ -17,7 +17,7 @@ type
     procedure TearDown; override;
   published
     procedure UserFormSettingsTest;
-    procedure LoadBankFormTest;
+(*    procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBusinessFormTest;
     procedure LoadCashFormTest;
@@ -39,7 +39,7 @@ type
     procedure LoadIncomeFormTest;
     procedure LoadUnitGroupFormTest;
     procedure LoadUnitFormTest;
-    procedure LoadReportFormTest;
+    procedure LoadReportFormTest;*)
   end;
 
 implementation
@@ -56,6 +56,7 @@ begin
   Application.CreateForm(TComponentClass(GetClass(FormClass)), Result);
 end;
 
+(*
 procedure TLoadFormTest.LoadBankAccountFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBankAccountForm'));
@@ -237,7 +238,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitGroupEditForm');
 end;
-
+*)
 procedure TLoadFormTest.SetUp;
 begin
   inherited;

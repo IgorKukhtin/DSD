@@ -6,7 +6,7 @@ uses dsdAction, DB, dsdDb, Classes, ExternalLoad;
 
 type
 
-  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank);
+  TClientBankType = (cbPrivatBank, cbForum, cbVostok, cbFidoBank, cbOTPBank, cbPireusBank);
 
   TClientBankLoad = class(TFileExternalLoad)
   private
@@ -25,7 +25,7 @@ type
     function GetCurrencyName: string; virtual; abstract;
     procedure First; override;
   public
-    constructor Create(StartDate, EndDate: TDateTime); overload; virtual;
+    constructor Create(StartDate, EndDate: TDateTime; DataSetType: TDataSetType = dtDBF); overload; virtual;
     procedure Next;     override;
     property DocNumber: string read GetDocNumber;
     property OperDate: TDateTime read GetOperDate;
@@ -72,7 +72,7 @@ end;
 type
 
   TPrivatBankLoad = class(TClientBankLoad)
-    constructor Create(StartDate, EndDate: TDateTime); override;
+    constructor Create(StartDate, EndDate: TDateTime); overload;
     function GetOperSumm: real; override;
     function GetDocNumber: string; override;
     function GetOperDate: TDateTime; override;
@@ -157,6 +157,24 @@ type
     function GetCurrencyName: string; override;
   end;
 
+  TPireusBankLoad = class(TClientBankLoad)
+    constructor Create(StartDate, EndDate: TDateTime); overload;
+    function GetOperSumm: real; override;
+    function GetDocNumber: string; override;
+    function GetOperDate: TDateTime; override;
+
+    function GetBankAccountMain: string; override;
+    function GetOKPO: string; override;
+    function GetBankAccount: string; override;
+    function GetBankMFOMain: string; override;
+    function GetBankMFO: string; override;
+    function GetJuridicalName: string; override;
+    function GetBankName: string; override;
+    function GetComment: string; override;
+    function GetCurrencyCode: string; override;
+    function GetCurrencyName: string; override;
+  end;
+
 function TClientBankLoadAction.GetClientBankLoad(
   AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
 begin
@@ -166,6 +184,7 @@ begin
     cbVostok: result := TVostokBankLoad.Create(StartDate, EndDate);
     cbFidoBank: result := TFidoBankLoad.Create(StartDate, EndDate);
     cbOTPBank: result := TOTPBankLoad.Create(StartDate, EndDate);
+    cbPireusBank: result := TPireusBankLoad.Create(StartDate, EndDate);
   end;
 end;
 
@@ -219,9 +238,9 @@ end;
 
 { TClientBankLoad }
 
-constructor TClientBankLoad.Create(StartDate, EndDate: TDateTime);
+constructor TClientBankLoad.Create(StartDate, EndDate: TDateTime; DataSetType: TDataSetType = dtDBF);
 begin
-  inherited Create;
+  inherited Create(DataSetType);
   FStartDate := StartDate;
   FEndDate := EndDate;
   FOEM := false;
@@ -249,7 +268,7 @@ end;
 
 constructor TPrivatBankLoad.Create(StartDate, EndDate: TDateTime);
 begin
-  inherited;
+  inherited Create(StartDate, EndDate);
   FOEM := true;
 end;
 
@@ -703,6 +722,80 @@ begin
      result := FDataSet.FieldByName('SUM').AsFloat
   else
      result := - FDataSet.FieldByName('SUM').AsFloat
+end;
+
+{ TPireusBankLoad }
+
+constructor TPireusBankLoad.Create(StartDate, EndDate: TDateTime);
+begin
+  inherited Create(StartDate, EndDate, dtXLS);
+end;
+
+function TPireusBankLoad.GetBankAccount: string;
+begin
+  result := trim(FDataSet.FieldByName('Счет').AsString)
+end;
+
+function TPireusBankLoad.GetBankAccountMain: string;
+begin
+  result := trim(FDataSet.FieldByName('Наш счет').AsString)
+end;
+
+function TPireusBankLoad.GetBankMFO: string;
+begin
+  result := trim(FDataSet.FieldByName('МФО банка').AsString)
+end;
+
+function TPireusBankLoad.GetBankMFOMain: string;
+begin
+
+end;
+
+function TPireusBankLoad.GetBankName: string;
+begin
+
+end;
+
+function TPireusBankLoad.GetComment: string;
+begin
+  result := trim(FDataSet.FieldByName('Назначение платежа').AsString)
+end;
+
+function TPireusBankLoad.GetCurrencyCode: string;
+begin
+end;
+
+function TPireusBankLoad.GetCurrencyName: string;
+begin
+  result := trim(FDataSet.FieldByName('Валюта').AsString)
+end;
+
+function TPireusBankLoad.GetDocNumber: string;
+begin
+  result := trim(FDataSet.FieldByName('Номер документа').AsString)
+end;
+
+function TPireusBankLoad.GetJuridicalName: string;
+begin
+  result := trim(FDataSet.FieldByName('Наименование контрагента').AsString)
+end;
+
+function TPireusBankLoad.GetOKPO: string;
+begin
+  result := trim(FDataSet.FieldByName('Код контрагента').AsString)
+end;
+
+function TPireusBankLoad.GetOperDate: TDateTime;
+begin
+  result := FDataSet.FieldByName('Дата проводки').AsDateTime
+end;
+
+function TPireusBankLoad.GetOperSumm: real;
+begin
+  if FDataSet.FieldByName('Операция').AsString = 'Дебет' then
+     result := FDataSet.FieldByName('Сумма').AsFloat
+  else
+     result := - FDataSet.FieldByName('Сумма').AsFloat
 end;
 
 end.

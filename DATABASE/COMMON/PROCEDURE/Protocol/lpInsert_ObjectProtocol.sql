@@ -22,6 +22,7 @@ BEGIN
            FROM 
           (SELECT '<Field FieldName = "Name" FieldValue = "' || Object.ValueData || '"/>'
                || '<Field FieldName = "Code" FieldValue = "' || Object.ObjectCode || '"/>'
+               || '<Field FieldName = "AccessKeyId" FieldValue = "' || Object.AccessKeyId || '"/>'
                || '<Field FieldName = "isErased" FieldValue = "' || Object.isErased || '"/>' AS FieldXML
                 , 1 AS GroupId
                 , Object.DescId

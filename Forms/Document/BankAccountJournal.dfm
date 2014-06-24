@@ -10,11 +10,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     Width = 1056
     Height = 320
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1056
     ExplicitHeight = 320
     ClientRectBottom = 320
     ClientRectRight = 1056
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1056
       ExplicitHeight = 320
       inherited cxGrid: TcxGrid
@@ -278,6 +281,32 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           DataType = ftDateTime
         end>
     end
+    object actInsertProfitLossService: TdsdInsertUpdateAction
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      ImageIndex = 27
+      FormName = 'TProfitLossServiceForm'
+      FormNameParam.Value = 'TProfitLossServiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      IdFieldName = 'Id'
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
@@ -338,6 +367,14 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbAddBonus'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbMovementItemContainer'
         end
         item
@@ -352,6 +389,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
           Visible = True
           ItemName = 'dxBarStatic'
         end>
+    end
+    object bbAddBonus: TdxBarButton
+      Action = actInsertProfitLossService
+      Category = 0
     end
   end
   inherited spMovementComplete: TdsdStoredProc

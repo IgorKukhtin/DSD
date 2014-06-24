@@ -37,6 +37,9 @@ type
     BankOTPLoad: TClientBankLoadAction;
     BankOTP: TMultiAction;
     bbOTPLoad: TdxBarButton;
+    bbPireus: TdxBarButton;
+    BankPireus: TMultiAction;
+    BankPireusLoad: TClientBankLoadAction;
   private
     { Private declarations }
   public

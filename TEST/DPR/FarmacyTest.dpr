@@ -34,7 +34,6 @@ uses
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
   UnilWin in '..\..\SOURCE\UnilWin.pas',
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
@@ -42,27 +41,34 @@ uses
   Log in '..\..\SOURCE\Log.pas',
   ExternalData in '..\..\SOURCE\COMPONENT\ExternalData.pas',
   ExternalSave in '..\..\SOURCE\COMPONENT\ExternalSave.pas',
-  VKDBFDataSet in '..\SOURCE\DBF\VKDBFDataSet.pas',
-  VKDBFPrx in '..\SOURCE\DBF\VKDBFPrx.pas',
-  VKDBFUtil in '..\SOURCE\DBF\VKDBFUtil.pas',
-  VKDBFMemMgr in '..\SOURCE\DBF\VKDBFMemMgr.pas',
-  VKDBFCrypt in '..\SOURCE\DBF\VKDBFCrypt.pas',
-  VKDBFGostCrypt in '..\SOURCE\DBF\VKDBFGostCrypt.pas',
-  VKDBFCDX in '..\SOURCE\DBF\VKDBFCDX.pas',
-  VKDBFIndex in '..\SOURCE\DBF\VKDBFIndex.pas',
-  VKDBFSorters in '..\SOURCE\DBF\VKDBFSorters.pas',
-  VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
-  VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
-  VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFDataSet in '..\..\SOURCE\DBF\VKDBFDataSet.pas',
+  VKDBFPrx in '..\..\SOURCE\DBF\VKDBFPrx.pas',
+  VKDBFUtil in '..\..\SOURCE\DBF\VKDBFUtil.pas',
+  VKDBFMemMgr in '..\..\SOURCE\DBF\VKDBFMemMgr.pas',
+  VKDBFCrypt in '..\..\SOURCE\DBF\VKDBFCrypt.pas',
+  VKDBFGostCrypt in '..\..\SOURCE\DBF\VKDBFGostCrypt.pas',
+  VKDBFCDX in '..\..\SOURCE\DBF\VKDBFCDX.pas',
+  VKDBFIndex in '..\..\SOURCE\DBF\VKDBFIndex.pas',
+  VKDBFSorters in '..\..\SOURCE\DBF\VKDBFSorters.pas',
+  VKDBFCollate in '..\..\SOURCE\DBF\VKDBFCollate.pas',
+  VKDBFParser in '..\..\SOURCE\DBF\VKDBFParser.pas',
+  VKDBFNTX in '..\..\SOURCE\DBF\VKDBFNTX.pas',
+  VKDBFSortedList in '..\..\SOURCE\DBF\VKDBFSortedList.pas',
+  ObjectTest in '..\SOURCE\Objects\ObjectTest.pas',
+  cxGridAddOn in '..\..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas',
+  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas';
 
 {$R *.res}
 
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
-  MetadataPath := '..\DATABASE\FARMACY\METADATA\Desc\';
-  EnumPath := '..\DATABASE\FARMACY\METADATA\Enum\';
 
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);

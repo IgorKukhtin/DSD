@@ -35,6 +35,8 @@ type
     colPartnerBankName: TcxGridDBColumn;
     colPartnerBankMFO: TcxGridDBColumn;
     colPartnerBankAccount: TcxGridDBColumn;
+    actInsertProfitLossService: TdsdInsertUpdateAction;
+    bbAddBonus: TdxBarButton;
   private
     { Private declarations }
   public

@@ -131,8 +131,6 @@ begin
 
   RecordCount := MovementCashOperation.GetDataSet.RecordCount;
 
-  // создание документа
-  Id := MovementCashOperation.InsertDefault;
   // ѕровер€ем остаток по счету кассы
   StoredProc := TdsdStoredProc.Create(nil);
   StoredProc.Params.AddParam('inStartDate', ftDateTime, ptInput, Date);
@@ -142,19 +140,19 @@ begin
   StoredProc.OutputType := otDataSet;
   StoredProc.Execute;
   with StoredProc.DataSet do begin
-     if Locate('AccountCode', '40101', []) then
+     if Locate('AccountCode', '40201', []) then
         AccountAmount := FieldByName('AmountDebetEnd').AsFloat + FieldByName('AmountKreditEnd').AsFloat
   end;
+  // создание документа и проведение
+  Id := MovementCashOperation.InsertDefault;
   MovementCashOperation.GetRecord(Id);
   try
-    // проведение
-    MovementCashOperation.DocumentComplete(Id);
     StoredProc.Execute;
     with StoredProc.DataSet do begin
-      if Locate('AccountCode', '40101', []) then
+      if Locate('AccountCode', '40201', []) then
          AccountAmountTwo := FieldByName('AmountDebetEnd').AsFloat - FieldByName('AmountKreditEnd').AsFloat;
     end;
-    Check(abs(AccountAmount - (AccountAmountTwo + 265.68)) < 0.01, 'ѕровелось не правильно. Ѕыло ' + FloatToStr(AccountAmount) + ' стало ' + FloatToStr(AccountAmountTwo));
+    Check(abs(AccountAmount - (AccountAmountTwo - 265.68)) < 0.01, 'ѕровелось не правильно. Ѕыло ' + FloatToStr(AccountAmount) + ' стало ' + FloatToStr(AccountAmountTwo));
   finally
     // распроведение
     MovementCashOperation.DocumentUnComplete(Id);

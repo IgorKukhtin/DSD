@@ -1,18 +1,10 @@
 unit dbFarmacyProcedureTest;
 
 interface
-uses TestFramework, ZConnection, ZDataset;
+uses TestFramework, ZConnection, ZDataset, dbTest;
 
 type
-  TdbProcedureTest = class (TTestCase)
-  private
-    ZConnection: TZConnection;
-    ZQuery: TZQuery;
-  protected
-    // подготавливаем данные для тестирования
-    procedure SetUp; override;
-    // возвращаем данные для тестирования
-    procedure TearDown; override;
+  TdbProcedureTest = class (TdbTest)
   published
     procedure CreateFunction;
     procedure CreateContainerProcedure;
@@ -61,11 +53,11 @@ end;
 
 procedure TdbProcedureTest.CreateHistoryProcedure;
 begin
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistory.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\InsertUpdate\lpInsertUpdate_ObjectHistory.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\InsertUpdate\lpInsertUpdate_ObjectHistoryFloat.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\InsertUpdate\lpInsertUpdate_ObjectHistoryFloat.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\Delete\lpDelete_ObjectHistory.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'ObjectHistory\_COMMON\Delete\lpDelete_ObjectHistory.sql');
   ZQuery.ExecSQL;
 
 //  ZQuery.SQL.LoadFromFile(ProcedurePath + 'ObjectHistory\_PriceListItem\gpInsertUpdate_ObjectHistory_PriceListItem.sql');
@@ -158,260 +150,37 @@ end;
 
 procedure TdbProcedureTest.CreateObjectProcedure;
 begin
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ValueData.sql');
+  DirectoryLoad(CommonProcedurePath + 'OBJECTS\_COMMON\');
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpInsertUpdate_Object_User.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpSelect_Object_User.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\User\gpGet_Object_User.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Form\gpInsertUpdate_Object_Form.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Form\gpGet_Object_Form.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
+
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpInsertUpdate_Object_Goods.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql');
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpSelect_Object_Goods.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_ObjectString_ValueData.sql');
+  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\Goods\gpGet_Object_Goods.sql');
   ZQuery.ExecSQL;
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\Constraint\lpCheck_Object_CycleLink.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\Constraint\lfGet_ObjectCode.sql', ZQuery);
-
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_Object.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpInsertUpdate_Object_Measure.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectString.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql');
   ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBLOB.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectFloat.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectBoolean.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\InsertUpdate\lpInsertUpdate_ObjectLink.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Delete\lpDelete_Object.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\gpUpdateObjectIsErased.sql');
+  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql');
   ZQuery.ExecSQL;
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpInsertUpdate_Object_User.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpSelect_Object_User.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\_User\gpGet_Object_User.sql', ZQuery);
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\_Form\gpInsertUpdate_Object_Form.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\_Form\gpGet_Object_Form.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpSelect_Object_Unit.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql', ZQuery);
 
-  ExecFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpInsertUpdate_Object_UserFormSettings.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\_UserFormSettings\gpGet_Object_UserFormSettings.sql', ZQuery);
-
-  ExecFile(CommonProcedurePath + 'OBJECTS\lpCheckRight.sql', ZQuery);
-  ExecFile(CommonProcedurePath + 'OBJECTS\gpCheckLogin.sql', ZQuery);
-
-  {
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\gpInsertUpdate_Object_Account.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Account\lpFind_Object_Account.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Bank\gpInsertUpdate_Object_Bank.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Bank\gpSelect_Object_Bank.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Bank\gpGet_Object_Bank.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpInsertUpdate_Object_BankAccount.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpSelect_Object_BankAccount.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_BankAccount\gpGet_Object_BankAccount.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Branch\gpInsertUpdate_Object_Branch.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Branch\gpSelect_Object_Branch.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Branch\gpGet_Object_Branch.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Business\gpInsertUpdate_Object_Business.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Business\gpSelect_Object_Business.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Business\gpGet_Object_Business.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Car\gpInsertUpdate_Object_Car.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Car\gpSelect_Object_Car.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Car\gpGet_Object_Car.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_CarModel\gpInsertUpdate_Object_CarModel.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_CarModel\gpSelect_Object_CarModel.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_CarModel\gpGet_Object_CarModel.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpInsertUpdate_Object_Cash.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpSelect_Object_Cash.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Cash\gpGet_Object_Cash.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpInsertUpdate_Object_Contract.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpSelect_Object_Contract.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Contract\gpGet_Object_Contract.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ContractKind\gpInsertUpdate_Object_ContractKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ContractKind\gpSelect_Object_ContractKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_ContractKind\gpGet_Object_ContractKind.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpInsertUpdate_Object_Currency.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpSelect_Object_Currency.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Currency\gpGet_Object_Currency.sql');
-  ZQuery.ExecSQL;
-}
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_Goods\gpInsertUpdate_Object_Goods.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_Goods\gpSelect_Object_Goods.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_Goods\gpGet_Object_Goods.sql');
-  ZQuery.ExecSQL;
-
-{  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpSelect_Object_GoodsGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsGroup\gpGet_Object_GoodsGroup.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsKind\gpInsertUpdate_Object_GoodsKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsKind\gpSelect_Object_GoodsKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsKind\gpGet_Object_GoodsKind.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsProperty\gpInsertUpdate_Object_GoodsProperty.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsProperty\gpSelect_Object_GoodsProperty.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsProperty\gpGet_Object_GoodsProperty.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpInsertUpdate_Object_GoodsPropertyValue.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpSelect_Object_GoodsPropertyValue.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_GoodsPropertyValue\gpGet_Object_GoodsPropertyValue.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpInsertUpdate_Object_InfoMoneyGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpSelect_Object_InfoMoneyGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyGroup\gpGet_Object_InfoMoneyGroup.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpInsertUpdate_Object_InfoMoneyDestination.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpSelect_Object_InfoMoneyDestination.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoneyDestination\gpGet_Object_InfoMoneyDestination.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpInsertUpdate_Object_InfoMoney.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpSelect_Object_InfoMoney.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_InfoMoney\gpGet_Object_InfoMoney.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpInsertUpdate_Object_Juridical.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpSelect_Object_Juridical.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Juridical\gpGet_Object_Juridical.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_JuridicalGroup\gpInsertUpdate_Object_JuridicalGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_JuridicalGroup\gpSelect_Object_JuridicalGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_JuridicalGroup\gpGet_Object_JuridicalGroup.sql');
-  ZQuery.ExecSQL;
-   }
-
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_ExtraChargeCategories\gpInsertUpdate_Object_ExtraChargeCategories.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_ExtraChargeCategories\gpSelect_Object_ExtraChargeCategories.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(FarmacyProcedurePath + 'OBJECTS\_ExtraChargeCategories\gpGet_Object_ExtraChargeCategories.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_Measure\gpInsertUpdate_Object_Measure.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_Measure\gpSelect_Object_Measure.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(CommonProcedurePath + 'OBJECTS\_Measure\gpGet_Object_Measure.sql');
-  ZQuery.ExecSQL;
-
-    {
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Partner\gpInsertUpdate_Object_Partner.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Partner\gpSelect_Object_Partner.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Partner\gpGet_Object_Partner.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpInsertUpdate_Object_PriceList.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpSelect_Object_PriceList.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceList\gpGet_Object_PriceList.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PriceListItem\lpGetInsert_Object_PriceListItem.sql');
-  ZQuery.ExecSQL;}
-
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpInsertUpdate_Object_Unit.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpSelect_Object_Unit.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\_Unit\gpGet_Object_Unit.sql', ZQuery);
-
-  {ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpInsertUpdate_Object_UnitGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpSelect_Object_UnitGroup.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_UnitGroup\gpGet_Object_UnitGroup.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpInsertUpdate_Object_Route.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpSelect_Object_Route.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_Route\gpGet_Object_Route.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\Constraint\lpCheckUnique_Object_ObjectCode.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpInsertUpdate_Object_RouteSorting.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpSelect_Object_RouteSorting.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_RouteSorting\gpGet_Object_RouteSorting.sql');
-  ZQuery.ExecSQL;
-
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpInsertUpdate_Object_PaidKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpSelect_Object_PaidKind.sql');
-  ZQuery.ExecSQL;
-  ZQuery.SQL.LoadFromFile(ProcedurePath + 'OBJECTS\_PaidKind\gpGet_Object_PaidKind.sql');
-  ZQuery.ExecSQL;
-     }
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
@@ -424,22 +193,6 @@ procedure TdbProcedureTest.CreateReportProcedure;
 begin
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}
-end;
-
-procedure TdbProcedureTest.SetUp;
-begin
-  inherited;
-  ZConnection := TConnectionFactory.GetConnection;
-  ZConnection.Connected := true;
-  ZQuery := TZQuery.Create(nil);
-  ZQuery.Connection := ZConnection;
-end;
-
-procedure TdbProcedureTest.TearDown;
-begin
-  inherited;
-  ZConnection.Free;
-  ZQuery.Free;
 end;
 
 initialization

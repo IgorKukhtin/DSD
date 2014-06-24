@@ -1,7 +1,5 @@
 -- View: Object_ProfitLoss_View
 
-DROP VIEW IF EXISTS Object_ProfitLoss_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_ProfitLoss_View
 AS
       SELECT Object_ProfitLossGroup.Id            AS ProfitLossGroupId

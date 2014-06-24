@@ -1,7 +1,5 @@
 -- View: ObjectHistory_JuridicalDetails_View
 
-DROP VIEW IF EXISTS ObjectHistory_JuridicalDetails_View CASCADE;
-
 CREATE OR REPLACE VIEW ObjectHistory_JuridicalDetails_View AS
   SELECT ObjectHistory_JuridicalDetails.Id AS ObjectHistoryId
        , ObjectHistory_JuridicalDetails.ObjectId AS JuridicalId

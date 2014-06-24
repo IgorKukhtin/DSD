@@ -65,7 +65,10 @@ BEGIN
 
      RETURN QUERY
        SELECT
-             inMovementId as Id
+             CASE WHEN inMovementId = -1 
+                  THEN 0
+                  ELSE     inMovementId 
+             END as Id
            , CASE WHEN inMovementId = 0
                   THEN CAST (NEXTVAL ('movement_profitlossservice_seq') AS TVarChar)
                   ELSE Movement.InvNumber END       AS InvNumber
@@ -77,14 +80,14 @@ BEGIN
 
            , CASE WHEN inMovementId = 0
                        THEN 0
-                  WHEN MovementItem.Amount > 0
+                  WHEN (MovementItem.Amount > 0) AND (Movement.descid <> zc_Movement_SendDebt())
                        THEN MovementItem.Amount
                   ELSE 0
              END :: TFloat                          AS AmountIn
            , CASE WHEN inMovementId = 0
                        THEN 0
-                  WHEN MovementItem.Amount < 0
-                       THEN -1 * MovementItem.Amount
+                  WHEN (MovementItem.Amount < 0) OR (Movement.descid = zc_Movement_SendDebt())
+                       THEN -1 * MovementItem.Amount * ((Movement.descid <> zc_Movement_SendDebt())::INTEGER*2 - 1)
                   ELSE 0
              END :: TFloat                          AS AmountOut
            , MIString_Comment.ValueData             AS Comment
@@ -112,7 +115,11 @@ BEGIN
 
             LEFT JOIN MovementItem ON MovementItem.MovementId = Movement.Id AND MovementItem.DescId = zc_MI_Master()
 
-            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = MovementItem.ObjectId
+            LEFT JOIN MovementItemLinkObject AS MILinkObject_MoneyPlace
+                                             ON MILinkObject_MoneyPlace.MovementItemId = MovementItem.Id
+                                            AND MILinkObject_MoneyPlace.DescId = zc_MILinkObject_MoneyPlace()
+
+            LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = COALESCE(MILinkObject_MoneyPlace.ObjectId, MovementItem.ObjectId)
 
             LEFT JOIN MovementItemString AS MIString_Comment
                                          ON MIString_Comment.MovementItemId = MovementItem.Id
@@ -138,8 +145,10 @@ BEGIN
             LEFT JOIN MovementItemLinkObject AS MILinkObject_PaidKind
                                              ON MILinkObject_PaidKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_PaidKind.DescId = zc_MILinkObject_PaidKind()
-            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MILinkObject_PaidKind.ObjectId
-
+            LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = CASE WHEN inMovementId = - 1
+                                                                             THEN zc_Enum_PaidKind_FirstForm()
+                                                                             ELSE MILinkObject_PaidKind.ObjectId
+                                                                        END 
             LEFT JOIN MovementItemLinkObject AS MILinkObject_ContractConditionKind
                                              ON MILinkObject_ContractConditionKind.MovementItemId = MovementItem.Id
                                             AND MILinkObject_ContractConditionKind.DescId = zc_MILinkObject_ContractConditionKind()
@@ -166,9 +175,11 @@ ALTER FUNCTION gpGet_Movement_ProfitLossService (Integer, Integer, TDateTime, TV
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».    Ã‡Ì¸ÍÓ ƒ.¿
+ 23.06.14                        * 
  19.02.14         * add BonusKind
  18.02.14                                                         *
 */
 
 -- ÚÂÒÚ
 -- SELECT * FROM gpGet_Movement_ProfitLossService (inMovementId:= 1, inOperDate:= CURRENT_DATE,  inSession:= zfCalc_UserAdmin());
+-- select * from gpGet_Movement_ProfitLossService(inMovementId := -1 , inMovementId_Value := 266333 , inOperDate := ('01.05.2014')::TDateTime ,  inSession := '5');

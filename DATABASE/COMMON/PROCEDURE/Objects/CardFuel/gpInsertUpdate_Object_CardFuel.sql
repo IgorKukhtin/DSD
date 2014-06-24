@@ -34,6 +34,10 @@ BEGIN
    -- проверка уникальности для свойства <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_CardFuel(), vbCode_calc);
 
+   IF COALESCE(inCarId, 0) = 0 THEN
+      RAISE EXCEPTION 'Не установлен автомобиль. Сохранение не возможно';
+   END IF;
+
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object (ioId, zc_Object_CardFuel(), vbCode_calc, inName
                                 , inAccessKeyId:= COALESCE ((SELECT Object_Branch.AccessKeyId FROM ObjectLink LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch ON ObjectLink_Unit_Branch.ObjectId = ObjectLink.ChildObjectId AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch() LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId WHERE ObjectLink.ObjectId = inCarId AND ObjectLink.DescId = zc_ObjectLink_Car_Unit()), zc_Enum_Process_AccessKey_TrasportDnepr()));

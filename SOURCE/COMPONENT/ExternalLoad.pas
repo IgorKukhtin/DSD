@@ -2,9 +2,11 @@ unit ExternalLoad;
 
 interface
 
-uses dsdAction, dsdDb, Classes, DB, ExternalData;
+uses dsdAction, dsdDb, Classes, DB, ExternalData, ADODB;
 
 type
+
+  TDataSetType = (dtDBF, dtXLS);
 
   TExternalLoad = class(TExternalData)
   protected
@@ -17,8 +19,12 @@ type
   TFileExternalLoad = class(TExternalLoad)
   private
     FInitializeDirectory: string;
+    FDataSetType: TDataSetType;
+    FAdoConnection: TADOConnection;
+    FFileExtension: string;
+    FFileFilter: string;
   public
-    constructor Create; override;
+    constructor Create(DataSetType: TDataSetType = dtDBF);
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
@@ -61,8 +67,8 @@ begin
   with {File}TOpenDialog.Create(nil) do
   try
     InitialDir := InitializeDirectory;
-    DefaultExt := '*.dbf';
-    Filter := '*.dbf';
+    DefaultExt := FFileExtension;
+    Filter := FFileFilter;
     if Execute then begin
        InitializeDirectory := ExtractFilePath(FileName);
        Self.Open(FileName);
@@ -136,34 +142,73 @@ begin
   result := StartDateParam.Value;
 end;
 
-constructor TFileExternalLoad.Create;
+constructor TFileExternalLoad.Create(DataSetType: TDataSetType);
 begin
-  inherited;
+  inherited Create;
   FOEM := true;
+  FDataSetType := DataSetType;
+  case FDataSetType of
+    dtDBF: begin
+             FFileExtension := '*.dbf';
+             FFileFilter := 'Файлы DBF (*.dbf)|*.dbf|';
+           end;
+    dtXLS: begin
+             FFileExtension := '*.xls';
+             FFileFilter := 'Файлы выгрузки Excel|*.xls;*.xlsx|';
+           end;
+  end;
 end;
 
 destructor TFileExternalLoad.Destroy;
 begin
-  if Assigned(FDataSet) then begin
-     FDataSet.Close;
+  if Assigned(FDataSet) then
      FreeAndNil(FDataSet);
-  end;
+  if Assigned(FAdoConnection) then
+     FreeAndNil(FAdoConnection);
   inherited;
 end;
 
 procedure TFileExternalLoad.Open(FileName: string);
+var strConn :  widestring;
+    List: TStringList;
 begin
-  FDataSet := TVKSmartDBF.Create(nil);
-  TVKSmartDBF(FDataSet).DBFFileName := FileName;
-  TVKSmartDBF(FDataSet).OEM := FOEM;
-  try
-    FDataSet.Open;
-  except
-    on E: Exception do begin
-       if Pos('TVKSmartDBF.InternalOpen: Open error', E.Message) > -1 then
-          raise Exception.Create('Файл' + copy (E.Message, length('TVKSmartDBF.InternalOpen: Open error') + 1, MaxInt) + ' открыт другой программой. Закройте ее и попробуйте еще раз!')
-       else
-          raise Exception.Create(E.Message);
+  case FDataSetType of
+    dtDBF: begin
+        FDataSet := TVKSmartDBF.Create(nil);
+        TVKSmartDBF(FDataSet).DBFFileName := FileName;
+        TVKSmartDBF(FDataSet).OEM := FOEM;
+        try
+          FDataSet.Open;
+        except
+          on E: Exception do begin
+             if Pos('TVKSmartDBF.InternalOpen: Open error', E.Message) > -1 then
+                raise Exception.Create('Файл' + copy (E.Message, length('TVKSmartDBF.InternalOpen: Open error') + 1, MaxInt) + ' открыт другой программой. Закройте ее и попробуйте еще раз!')
+             else
+                raise Exception.Create(E.Message);
+          end;
+        end;
+    end;
+    dtXLS: begin
+      strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
+               'Data Source=' + FileName + ';' +
+               'Extended Properties=Excel 8.0;';
+      if not Assigned(FAdoConnection) then begin
+         FAdoConnection := TAdoConnection.Create(nil);
+         FAdoConnection.LoginPrompt := false;
+         FDataSet := TADOQuery.Create(nil);
+         TADOQuery(FDataSet).Connection := FAdoConnection;
+      end;
+      FAdoConnection.Connected := False;
+      FAdoConnection.ConnectionString := strConn;
+      FAdoConnection.Open;
+      List := TStringList.Create;
+      try
+        FAdoConnection.GetTableNames(List, True);
+        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0] + ']';
+        TADOQuery(FDataSet).Open;
+      finally
+        FreeAndNil(List);
+      end;
     end;
   end;
   First;

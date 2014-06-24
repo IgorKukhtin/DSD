@@ -349,8 +349,8 @@ object SendDebtJournalForm: TSendDebtJournalForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -407,6 +407,14 @@ object SendDebtJournalForm: TSendDebtJournalForm
         item
           Visible = True
           ItemName = 'bbDelete'
+        end
+        item
+          Visible = True
+          ItemName = 'bbStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAddBonus'
         end
         item
           Visible = True
@@ -476,13 +484,44 @@ object SendDebtJournalForm: TSendDebtJournalForm
       Action = actMovementItemContainer
       Category = 0
     end
+    object bbAddBonus: TdxBarButton
+      Action = actInsertProfitLossService
+      Category = 0
+    end
   end
   object ActionList: TActionList
     Images = dmMain.ImageList
     Left = 80
     Top = 64
+    object actInsertProfitLossService: TdsdInsertUpdateAction
+      MoveParams = <>
+      Caption = #1044#1086#1073#1072#1074#1080#1090#1100' '#1085#1072#1095#1080#1089#1083#1077#1085#1080#1077' '#1073#1086#1085#1091#1089#1086#1074
+      ImageIndex = 27
+      FormName = 'TProfitLossServiceForm'
+      FormNameParam.Value = 'TProfitLossServiceForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'Id'
+          Value = '-1'
+        end
+        item
+          Name = 'inMovementId_Value'
+          Component = ClientDataSet
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'inOperDate'
+          Value = 41579d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      isShowModal = False
+      IdFieldName = 'Id'
+    end
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = dsdStoredProc
       StoredProcList = <
         item
@@ -496,6 +535,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TSendDebtForm'
@@ -515,9 +555,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TSendDebtForm'
@@ -541,9 +583,11 @@ object SendDebtJournalForm: TSendDebtJournalForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUnComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementUnComplete
       StoredProcList = <
         item
@@ -557,6 +601,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object actComplete: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementComplete
       StoredProcList = <
         item
@@ -570,6 +615,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object actSetErased: TdsdChangeMovementStatus
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spMovementSetErased
       StoredProcList = <
         item
@@ -583,6 +629,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object dsdGridToExcel: TdsdGridToExcel
       Category = 'DSDLib'
+      MoveParams = <>
       Grid = cxGrid
       Caption = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
       Hint = #1042#1099#1075#1088#1091#1079#1082#1072' '#1074' Excel'
@@ -591,6 +638,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object actUpdateDataSet: TdsdUpdateDataSet
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
@@ -602,6 +650,7 @@ object SendDebtJournalForm: TSendDebtJournalForm
     end
     object actMovementItemContainer: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       Hint = #1055#1086#1082#1072#1079#1072#1090#1100' '#1087#1088#1086#1074#1086#1076#1082#1080' '#1087#1086' '#1076#1086#1082#1091#1084#1077#1085#1090#1091
       ImageIndex = 57
@@ -714,6 +763,10 @@ object SendDebtJournalForm: TSendDebtJournalForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 216
   end

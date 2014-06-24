@@ -1,7 +1,5 @@
 -- View: Object_Member_View
 
--- DROP VIEW IF EXISTS Object_Member_View CASCADE;
-
 CREATE OR REPLACE VIEW Object_Member_View AS
   SELECT Object_Member.Id                        AS MemberId
        , Object_Member.ObjectCode                AS MemberCode
