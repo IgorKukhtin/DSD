@@ -135,8 +135,10 @@ BEGIN
 --           , Movement.InvNumber                         AS InvNumber
            , CASE WHEN Movement.DescId = zc_Movement_Sale()
                        THEN Movement.InvNumber
-                  WHEN Movement.DescId = zc_Movement_TransferDebtOut()
+                  WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData <> ''
                        THEN COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
+                  WHEN Movement.DescId = zc_Movement_TransferDebtOut() AND MovementString_InvNumberPartner.ValueData = ''
+                       THEN Movement.InvNumber
                   ELSE Movement.InvNumber
              END AS InvNumber
 
