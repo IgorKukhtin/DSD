@@ -9,6 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_TransferDebtOut(
     IN inSession        TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+             , InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummVAT TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -40,16 +41,17 @@ BEGIN
                        UNION
                         SELECT zc_Enum_Status_Erased() AS StatusId WHERE inIsErased = TRUE
                        )
-        , tmpUserAdmin AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Admin() AND UserId = vbUserId)
-        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
-                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAdmin) GROUP BY AccessKeyId
+        , tmpUserAll AS (SELECT UserId FROM ObjectLink_UserRole_View WHERE RoleId <> zc_Enum_Role_Bread() AND UserId = vbUserId)
+        , tmpRoleAccessKey AS (SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE UserId = vbUserId AND NOT EXISTS (SELECT UserId FROM tmpUserAll) GROUP BY AccessKeyId
+                         UNION SELECT AccessKeyId FROM Object_RoleAccessKey_View WHERE EXISTS (SELECT UserId FROM tmpUserAll) GROUP BY AccessKeyId
                               )
      SELECT
-             Movement.Id	                        AS Id
-           , Movement.InvNumber		                AS InvNumber
-           , Movement.OperDate		                AS OperDate
-           , Object_Status.ObjectCode    		AS StatusCode
-           , Object_Status.ValueData     		AS StatusName
+             Movement.Id	                            AS Id
+           , Movement.InvNumber		                    AS InvNumber
+           , Movement.OperDate		                    AS OperDate
+           , Object_Status.ObjectCode    		        AS StatusCode
+           , Object_Status.ValueData     		        AS StatusName
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , MovementBoolean_PriceWithVAT.ValueData     AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData         AS VATPercent
            , MovementFloat_ChangePercent.ValueData      AS ChangePercent
@@ -62,8 +64,8 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData      AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData          AS TotalSumm
 
-           , Object_From.Id                    		AS FromId
-           , Object_From.ValueData             		AS FromName
+           , Object_From.Id                    		    AS FromId
+           , Object_From.ValueData             		    AS FromName
            , View_JuridicalDetails_From.OKPO            AS OKPO_From
            , Object_To.Id                      		AS ToId
            , Object_To.ValueData               		AS ToName
@@ -81,7 +83,7 @@ BEGIN
 
            , Object_PaidKindFrom.ValueData        AS PaidKindFromName
            , Object_PaidKindTo.ValueData          AS PaidKindToName
-      
+
            , View_InfoMoneyFrom.InfoMoneyGroupName            AS InfoMoneyGroupName_from
            , View_InfoMoneyFrom.InfoMoneyDestinationName      AS InfoMoneyDestinationName_from
            , View_InfoMoneyFrom.InfoMoneyCode                 AS InfoMoneyCode_from
@@ -117,6 +119,9 @@ BEGIN
             INNER JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -128,19 +133,19 @@ BEGIN
             LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountKg
                                     ON MovementFloat_TotalCountKg.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountKg.DescId = zc_MovementFloat_TotalCountKg()
-            
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalCountSh
                                     ON MovementFloat_TotalCountSh.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCountSh.DescId = zc_MovementFloat_TotalCountSh()
 
             LEFT JOIN MovementFloat AS MovementFloat_TotalCount
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()                                               
-            
+                                   AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
+
             LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
@@ -223,6 +228,7 @@ ALTER FUNCTION gpSelect_Movement_TransferDebtOut (TDateTime, TDateTime, Boolean,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * add InvNumberPartner
  17.05.14                                        * add MS_InvNumberPartner_Master - всегда
  08.05.14                                        * add ChangePercent
  07.05.14                                        * add tmpRoleAccessKey

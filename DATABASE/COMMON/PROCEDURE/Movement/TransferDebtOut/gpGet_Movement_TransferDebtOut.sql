@@ -7,7 +7,7 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_TransferDebtOut(
     IN inOperDate          TDateTime, -- ключ Документа
     IN inSession           TVarChar   -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
+RETURNS TABLE (Id Integer, InvNumber TVarChar, InvNumberPartner TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCountKg TFloat, TotalCountSh TFloat, TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
@@ -28,15 +28,16 @@ BEGIN
      IF COALESCE (inMovementId, 0) = 0
      THEN
          RETURN QUERY
-           WITH tmpParams AS (SELECT 131931 AS FromId -- Дворкин 
+           WITH tmpParams AS (SELECT 131931 AS FromId -- Дворкин
                                    , (SELECT MAX (ContractId) FROM Object_Contract_View WHERE JuridicalId = 131931 AND InfoMoneyId = zc_Enum_InfoMoney_30103()) AS ContractFromId
                                    , zc_PriceList_Bread() AS PriceListId
                               WHERE EXISTS (SELECT 1 FROM ObjectLink_UserRole_View WHERE RoleId = zc_Enum_Role_Bread() AND UserId = vbUserId)
                              )
          SELECT
-               0 	     	                    AS Id
+               0 	     	                        AS Id
              , tmpInvNum.InvNumber                  AS InvNumber
-             , inOperDate			    AS OperDate
+             , CAST ('' as TVarChar)                AS InvNumberPartner
+             , inOperDate			                AS OperDate
              , Object_Status.Code                   AS StatusCode
              , Object_Status.Name              	    AS StatusName
 
@@ -64,7 +65,7 @@ BEGIN
              , CAST ('' as TVarChar) 	            AS ContractToName
 
              , Object_PaidKindFrom.Id 	            AS PaidKindFromId
-             , Object_PaidKindFrom.ValueData        AS PaidKindFromName  
+             , Object_PaidKindFrom.ValueData        AS PaidKindFromName
              , 0                     	            AS PaidKindToId
              , CAST ('' as TVarChar) 	            AS PaidKindToName
 
@@ -96,6 +97,7 @@ BEGIN
        SELECT
              Movement.Id				                AS Id
            , Movement.InvNumber				            AS InvNumber
+           , MovementString_InvNumberPartner.ValueData  AS InvNumberPartner
            , Movement.OperDate				            AS OperDate
            , Object_Status.ObjectCode    		        AS StatusCode
            , Object_Status.ValueData     		        AS StatusName
@@ -138,6 +140,10 @@ BEGIN
 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                                     ON MovementString_InvNumberPartner.MovementId =  Movement.Id
+                                    AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
             LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                       ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
@@ -240,6 +246,7 @@ ALTER FUNCTION gpGet_Movement_TransferDebtOut (Integer, TDateTime, TVarChar) OWN
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 20.06.14                                                       * add InvNumberPartner
  17.05.14                                        * add Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
  07.05.14                                        * add tmpParams
  07.05.14                                        * add Partner...

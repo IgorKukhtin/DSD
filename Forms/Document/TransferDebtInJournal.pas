@@ -38,6 +38,7 @@ type
     spSelectPrintTaxCorrective_Client: TdsdStoredProc;
     bbPrintTaxCorrective_Client: TdxBarButton;
     bbPrintTaxCorrective_Us: TdxBarButton;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public
