@@ -25,9 +25,9 @@ type
     procedure LoadContractKindFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadExtraChargeCategoriesFormTest;
-    procedure LoadGoodsGroupFormTest;
+    procedure LoadGoodsGroupFormTest; *)
     procedure LoadGoodsFormTest;
-    procedure LoadGoodsPropertyFormTest;
+   (*procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
     procedure LoadGoodsKindFormTest;
     procedure LoadJuridicalGroupFormTest;
@@ -122,7 +122,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
 end;
-
+*)
 procedure TLoadFormTest.LoadGoodsFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsForm'));
@@ -130,7 +130,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsEditForm');
 end;
-
+ (*
 procedure TLoadFormTest.LoadGoodsGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupForm'));

@@ -12,7 +12,8 @@ uses
   Vcl.ActnList, dsdAction, DataModul, cxTL, cxTLdxBarBuiltInMenu,
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdAddOn,
   cxCheckBox, cxCurrencyEdit, ZAbstractRODataset, ZAbstractDataset, ZDataset,
-  ZAbstractConnection, ZConnection, dxBarExtItems;
+  ZAbstractConnection, ZConnection, dxBarExtItems, dxSkinsCore,
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
 
 type
   TGoodsForm = class(TParentForm)
@@ -39,18 +40,14 @@ type
     cxGrid: TcxGrid;
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    clNDS: TcxGridDBColumn;
-    clPartyCount: TcxGridDBColumn;
+    clNDSKindName: TcxGridDBColumn;
     clMeasureName: TcxGridDBColumn;
-    clisReceiptNeed: TcxGridDBColumn;
-    clPercentReprice: TcxGridDBColumn;
-    clExtraChargeCategoriesName: TcxGridDBColumn;
-    clPrice: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
     spErasedUnErased: TdsdStoredProc;
     dxBarStatic1: TdxBarStatic;
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
+    clGoodsGroupName: TcxGridDBColumn;
   private
     { Private declarations }
   public
