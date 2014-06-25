@@ -20,7 +20,6 @@ uses
   UnilWin in '..\SOURCE\UnilWin.pas',
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
-  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
@@ -39,7 +38,15 @@ uses
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
 
 {$R *.res}
 

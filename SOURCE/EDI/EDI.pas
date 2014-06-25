@@ -53,9 +53,16 @@ type
     FDirectory: string;
     FHeaderDataSet: TDataSet;
     FListDataSet: TDataSet;
+    FEndDate: TdsdParam;
+    FStartDate: TdsdParam;
   protected
     function LocalExecute: boolean; override;
+  public
+    constructor Create(AOwner: TComponent); override;
+    destructor Destroy; override;
   published
+    property StartDateParam: TdsdParam read FStartDate write FStartDate;
+    property EndDateParam: TdsdParam read FEndDate write FEndDate;
     property EDI: TEDI read FEDI write FEDI;
     property EDIDocType: TEDIDocType read FEDIDocType write FEDIDocType;
     property spHeader: TdsdStoredProc read FspHeader write FspHeader;
@@ -455,6 +462,20 @@ begin
 end;
 
 { TEDIActionEDI }
+
+constructor TEDIAction.Create(AOwner: TComponent);
+begin
+  inherited;
+  FEndDate := TdsdParam.Create(nil);
+  FStartDate := TdsdParam.Create(nil);
+end;
+
+destructor TEDIAction.Destroy;
+begin
+  FreeAndNil(FEndDate);
+  FreeAndNil(FStartDate);
+  inherited;
+end;
 
 function TEDIAction.LocalExecute: boolean;
 begin
