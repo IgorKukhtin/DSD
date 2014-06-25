@@ -110,7 +110,6 @@
 				<Form>MessagesForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
-			<DCCReference Include="..\SOURCE\MemDBFTable.pas"/>
 			<DCCReference Include="..\SOURCE\SimpleGauge.pas">
 				<Form>SimpleGaugeForm</Form>
 			</DCCReference>
@@ -132,6 +131,14 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>
