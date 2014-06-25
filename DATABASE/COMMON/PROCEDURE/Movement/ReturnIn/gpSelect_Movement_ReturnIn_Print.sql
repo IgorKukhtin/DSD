@@ -139,9 +139,11 @@ BEGIN
            , COALESCE (MovementDate_OperDatePartner.ValueData, Movement.OperDate) AS OperDatePartner
            , CASE WHEN Movement.DescId = zc_Movement_ReturnIn()
                        THEN MovementString_InvNumberPartner.ValueData
-                  WHEN Movement.DescId = zc_Movement_TransferDebtIn()
+                  WHEN Movement.DescId = zc_Movement_TransferDebtIn() AND MovementString_InvNumberPartner.ValueData <> ''
                        THEN COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
-                  ELSE MovementString_InvNumberPartner.ValueData
+                  WHEN Movement.DescId = zc_Movement_TransferDebtIn() AND MovementString_InvNumberPartner.ValueData = ''
+                       THEN Movement.InvNumber
+                  ELSE COALESCE (MovementString_InvNumberPartner.ValueData, Movement.InvNumber)
              END AS InvNumberPartner
 
            , MovementString_InvNumberMark.ValueData     AS InvNumberMark
@@ -464,4 +466,8 @@ ALTER FUNCTION gpSelect_Movement_ReturnIn_Print (Integer,TVarChar) OWNER TO post
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId := 35173, inSession:= '2')
+/*
+BEGIN;
+ SELECT * FROM gpSelect_Movement_ReturnIn_Print (inMovementId := 185827, inSession:= '2')
+COMMIT;
+*/
