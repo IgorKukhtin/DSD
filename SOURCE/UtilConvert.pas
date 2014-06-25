@@ -47,7 +47,7 @@ uses DB;
    {функция возвращает тип данных по его строковому названию}
    function gfStringToDataType(inType: String): TFieldType;  //tested
    // Конвертируем строку в дату
-   function gfStrFormatToDate (s, fmt: string): TDateTime;
+   function gfStrFormatToDate (DateStr, Format: string): TDateTime;
 
 implementation
 uses XSBuiltIns, SysUtils, UtilConst, variants, StrUtils;
@@ -69,14 +69,13 @@ const
   cpdInputOutput = 'ptInputOutput';
 
 {-----------------------------------------------------------------------------------------------}
-function gfStrFormatToDate (s, fmt: string): TDateTime;
-var
+function gfStrFormatToDate (DateStr, Format: string): TDateTime;
+{var
   i, k: integer;
   c: char;
   f: TFormatSettings;
-  OldShortDateFormat: string;
-begin
-  GetLocaleFormatSettings (0, f);
+  OldShortDateFormat: string;}
+  (*GetLocaleFormatSettings (0, f);
   c := fmt [1];
   i := 1;
   while i <= Length (fmt) do begin
@@ -89,7 +88,41 @@ begin
     Inc (i);
   end;
   f.ShortDateFormat := fmt;
-  Result := StrToDate (s, f);
+  Result := StrToDate (s, f);*)
+Var
+  PosD, PosM, PosY : Integer;
+  sD, sM, sY       : String;
+
+begin
+
+  sd := '0';
+  sm := '0';
+  sy := '0';
+
+  If Length(DateStr) = Length(Format) Then
+    Begin
+      Format := UpperCase(Format);
+      PosD := Pos('D', Format);
+      PosM := Pos('M', Format);
+      PosY := Pos('Y', Format);
+
+      sd := Copy(DateStr, PosD, 2);
+      sm := Copy(DateStr, PosM, 2);
+
+      if Length(DateStr) = 6 then
+        begin
+          sy := Copy(DateStr, PosY, 2);
+          if StrToInt(sy) > 50 then
+            sy := '19'+sy
+          else
+            sy := '20'+sy;
+        end
+      else
+        sy := Copy(DateStr, Posy, 4);
+    End;
+  Result := EncodeDate(StrToInt(sY),
+                       StrToInt(sM),
+                       StrToInt(sD));
 end;
 {-----------------------------------------------------------------------------------------------}
 
