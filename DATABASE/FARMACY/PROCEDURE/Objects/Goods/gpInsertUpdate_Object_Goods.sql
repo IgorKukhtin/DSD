@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inNDSId               Integer   ,    -- НДС
+    IN inNDSKindId               Integer   ,    -- НДС
 
     IN inSession             TVarChar       -- текущий пользователь
 )
@@ -44,7 +44,7 @@ BEGIN
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили свойство <НДС>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDS(), ioId, inNDSId );
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
   
 
    -- сохранили протокол
