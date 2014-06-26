@@ -1,199 +1,146 @@
-﻿inherited GoodsEditForm: TGoodsEditForm
-  Caption = #1056#1077#1076#1072#1082#1090#1080#1088#1086#1074#1072#1085#1080#1077' '#1090#1086#1074#1072#1088#1072
-  ClientHeight = 279
-  ClientWidth = 354
-  ExplicitWidth = 362
-  ExplicitHeight = 306
+﻿object GoodsEditForm: TGoodsEditForm
+  Left = 0
+  Top = 0
+  Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
+  ClientHeight = 273
+  ClientWidth = 347
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
+  AddOnFormData.RefreshAction = dsdDataSetRefresh
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object edName: TcxTextEdit
-    Left = 65
-    Top = 16
-    TabOrder = 0
-    Width = 281
+    Left = 10
+    Top = 78
+    TabOrder = 1
+    Width = 331
   end
   object cxLabel1: TcxLabel
     Left = 8
-    Top = 16
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077':'
+    Top = 55
+    Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
   object cxButton1: TcxButton
     Left = 65
-    Top = 229
+    Top = 236
     Width = 75
     Height = 25
-    Action = dsdExecStoredProc
+    Action = dsdInsertUpdateGuides
     Default = True
-    ModalResult = 8
-    TabOrder = 10
+    TabOrder = 3
   end
   object cxButton2: TcxButton
-    Left = 209
-    Top = 229
+    Left = 176
+    Top = 236
     Width = 75
     Height = 25
-    Action = dsdFormClose1
+    Action = dsdFormClose
     Cancel = True
-    ModalResult = 8
-    TabOrder = 11
+    Caption = #1054#1090#1084#1077#1085#1072
+    TabOrder = 4
+  end
+  object cxLabel2: TcxLabel
+    Left = 8
+    Top = 100
+    Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
+  end
+  object ceCode: TcxCurrencyEdit
+    Left = 9
+    Top = 28
+    Properties.DecimalPlaces = 0
+    Properties.DisplayFormat = '0'
+    TabOrder = 0
+    Width = 332
   end
   object Код: TcxLabel
     Left = 8
-    Top = 56
-    Caption = #1050#1086#1076':'
+    Top = 5
+    Caption = #1050#1086#1076
   end
-  object ceCode: TcxCurrencyEdit
-    Left = 38
-    Top = 55
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 1
-    Width = 65
-  end
-  object cxLabel3: TcxLabel
-    Left = 17
-    Top = 151
-    Caption = #1050#1072#1090#1077#1075#1086#1088#1080#1103' '#1085#1072#1094#1077#1085#1082#1080':'
-  end
-  object ceExtraChargeCategories: TcxLookupComboBox
-    Left = 130
-    Top = 150
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+  object ceParentGroup: TcxButtonEdit
+    Left = 10
+    Top = 123
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = ExtraChargeCategoriesDS
+    Properties.ReadOnly = True
     TabOrder = 7
-    Width = 216
+    Width = 331
   end
   object cxLabel4: TcxLabel
-    Left = 135
-    Top = 82
+    Left = 8
+    Top = 160
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103':'
   end
-  object ceMeasure: TcxLookupComboBox
-    Left = 222
-    Top = 82
-    Properties.KeyFieldNames = 'Id'
-    Properties.ListColumns = <
+  object ceMeasure: TcxButtonEdit
+    Left = 8
+    Top = 183
+    Properties.Buttons = <
       item
-        FieldName = 'Name'
+        Default = True
+        Kind = bkEllipsis
       end>
-    Properties.ListSource = MeasureDS
-    TabOrder = 4
-    Width = 124
-  end
-  object cxLabel2: TcxLabel
-    Left = 28
-    Top = 187
-    Caption = #1062#1077#1085#1072' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1080':'
-  end
-  object cePrice: TcxCurrencyEdit
-    Left = 130
-    Top = 186
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 8
-    Width = 65
-  end
-  object cxLabel5: TcxLabel
-    Left = 120
-    Top = 56
-    Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1074' '#1082#1072#1089#1089#1077':'
-  end
-  object edCashName: TcxTextEdit
-    Left = 222
-    Top = 55
-    TabOrder = 2
-    Width = 124
+    Properties.ReadOnly = True
+    TabOrder = 9
+    Width = 132
   end
   object cxLabel6: TcxLabel
-    Left = 6
-    Top = 82
-    Caption = #1053#1044#1057':'
+    Left = 154
+    Top = 160
+    Caption = #1042#1080#1076' '#1053#1044#1057':'
   end
-  object ceNDS: TcxCurrencyEdit
-    Left = 38
-    Top = 82
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 3
-    Width = 65
-  end
-  object cxLabel7: TcxLabel
-    Left = 201
-    Top = 187
-    Caption = '% '#1085#1072#1094#1077#1085#1082#1080':'
-  end
-  object cePercentReprice: TcxCurrencyEdit
-    Left = 266
-    Top = 186
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 2
-    Properties.DisplayFormat = ',0.00'
-    TabOrder = 9
-    Width = 80
-  end
-  object cxLabel8: TcxLabel
-    Left = 8
-    Top = 118
-    Caption = #1050#1086#1083#1080#1095#1077#1089#1090#1074#1086' '#1074' '#1087#1072#1088#1090#1080#1080':'
-  end
-  object cePartyCount: TcxCurrencyEdit
-    Left = 130
-    Top = 117
-    Properties.Alignment.Horz = taRightJustify
-    Properties.Alignment.Vert = taVCenter
-    Properties.DecimalPlaces = 0
-    Properties.DisplayFormat = '0'
-    TabOrder = 5
-    Width = 65
-  end
-  object cbisReceiptNeed: TcxCheckBox
-    Left = 201
-    Top = 117
-    Caption = #1057#1087#1077#1094#1082#1086#1085#1090#1088#1086#1083#1100
-    TabOrder = 6
-    Width = 121
+  object ceNDSKind: TcxButtonEdit
+    Left = 154
+    Top = 183
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 11
+    Width = 187
   end
   object ActionList: TActionList
-    Left = 312
-    Top = 224
+    Left = 208
+    Top = 56
     object dsdDataSetRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spGet
       StoredProcList = <
         item
           StoredProc = spGet
         end
         item
-          StoredProc = spGetMeasure
-        end
-        item
-          StoredProc = spGetExtraChargeCategories
         end>
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
-    object dsdExecStoredProc: TdsdExecStoredProc
+    object dsdFormClose: TdsdFormClose
       Category = 'DSDLib'
+      MoveParams = <>
+    end
+    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
+      Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spInsertUpdate
       StoredProcList = <
         item
           StoredProc = spInsertUpdate
         end>
-      Caption = 'Ok'
-    end
-    object dsdFormClose1: TdsdFormClose
+      Caption = #1054#1082
     end
   end
   object spInsertUpdate: TdsdStoredProc
@@ -203,95 +150,57 @@
     Params = <
       item
         Name = 'ioId'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInputOutput
-        Value = '0'
       end
       item
         Name = 'inCode'
+        Value = 0.000000000000000000
         Component = ceCode
-        DataType = ftInteger
         ParamType = ptInput
-        Value = ''
       end
       item
         Name = 'inName'
+        Value = ''
         Component = edName
         DataType = ftString
         ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsGroupId'
         Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end
       item
         Name = 'inMeasureId'
+        Value = ''
         Component = dsdMeasureGuides
-        DataType = ftInteger
+        ComponentItem = 'Key'
         ParamType = ptInput
-        Value = '0'
       end
       item
-        Name = 'inExtraChargeCategoriesId'
-        Component = dsdExtraChargeCategoriesGuides
-        DataType = ftInteger
-        ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'inNDS'
-        Component = ceNDS
-        DataType = ftFloat
-        ParamType = ptInput
+        Name = 'inNDSKindId'
         Value = ''
-      end
-      item
-        Name = 'inCashName'
-        Component = edCashName
-        DataType = ftString
+        Component = NDSKindGuides
+        ComponentItem = 'Key'
         ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inPartyCount'
-        Component = cePartyCount
-        DataType = ftFloat
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inisReceiptNeed'
-        Component = cbisReceiptNeed
-        DataType = ftBoolean
-        ParamType = ptInput
-        Value = 'False'
-      end
-      item
-        Name = 'inPrice'
-        Component = cePrice
-        DataType = ftFloat
-        ParamType = ptInput
-        Value = ''
-      end
-      item
-        Name = 'inPercentReprice'
-        Component = cePercentReprice
-        DataType = ftFloat
-        ParamType = ptInput
-        Value = ''
       end>
-    Left = 256
-    Top = 216
+    Left = 280
+    Top = 8
   end
   object dsdFormParams: TdsdFormParams
     Params = <
       item
         Name = 'Id'
-        DataType = ftInteger
+        Value = Null
         ParamType = ptInputOutput
-        Value = '0'
       end>
-    Left = 304
-    Top = 200
+    Left = 176
+    Top = 8
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
@@ -300,159 +209,153 @@
     Params = <
       item
         Name = 'Id'
+        Value = Null
         Component = dsdFormParams
         ComponentItem = 'Id'
-        DataType = ftInteger
         ParamType = ptInput
-        Value = '0'
-      end
-      item
-        Name = 'Name'
-        Component = edName
-        DataType = ftString
-        ParamType = ptOutput
-        Value = ''
       end
       item
         Name = 'Code'
+        Value = 0.000000000000000000
         Component = ceCode
-        DataType = ftInteger
-        ParamType = ptOutput
+      end
+      item
+        Name = 'Name'
         Value = ''
+        Component = edName
+        DataType = ftString
       end
       item
-        Name = 'ExtraChargeCategoriesId'
-        Component = dsdExtraChargeCategoriesGuides
+        Name = 'GoodsGroupId'
+        Value = ''
+        Component = GoodsGroupGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
-        Name = 'ExtraChargeCategoriesName'
-        Component = dsdExtraChargeCategoriesGuides
+        Name = 'GoodsGroupName'
+        Value = ''
+        Component = GoodsGroupGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'MeasureId'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'Key'
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = '0'
       end
       item
         Name = 'MeasureName'
+        Value = ''
         Component = dsdMeasureGuides
         ComponentItem = 'TextValue'
         DataType = ftString
-        ParamType = ptOutput
-        Value = '0'
       end
       item
-        Name = 'NDS'
-        Component = ceNDS
-        DataType = ftCurrency
-        ParamType = ptOutput
+        Name = 'NDSKindId'
         Value = ''
+        Component = NDSKindGuides
+        ComponentItem = 'Key'
       end
       item
-        Name = 'PartyCount'
-        Component = cePartyCount
-        DataType = ftUnknown
-        ParamType = ptOutput
+        Name = 'NDSKindName'
         Value = ''
-      end
-      item
-        Name = 'Price'
-        Component = cePrice
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'PercentReprice'
-        Component = cePercentReprice
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
-      end
-      item
-        Name = 'isReceiptNeed'
-        Component = cbisReceiptNeed
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = 'False'
-      end
-      item
-        Name = 'CashName'
-        Component = edCashName
-        DataType = ftInteger
-        ParamType = ptOutput
-        Value = ''
+        Component = NDSKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Left = 224
-    Top = 200
+    Left = 304
+    Top = 216
   end
-  object ExtraChargeCategoriesDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Top = 136
-  end
-  object spGetExtraChargeCategories: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ExtraChargeCategories'
-    DataSet = ExtraChargeCategoriesDataSet
-    DataSets = <
-      item
-        DataSet = ExtraChargeCategoriesDataSet
-      end>
-    Params = <>
-    Left = 65528
-    Top = 192
-  end
-  object ExtraChargeCategoriesDS: TDataSource
-    DataSet = ExtraChargeCategoriesDataSet
-    Top = 208
-  end
-  object dsdExtraChargeCategoriesGuides: TdsdGuides
-    Key = '0'
-    LookupControl = ceExtraChargeCategories
-    FormName = 'TExtraChargeCategories'
+  object GoodsGroupGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceParentGroup
+    FormNameParam.Value = 'TGoodsGroupForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TGoodsGroupForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 65528
-    Top = 152
-  end
-  object MeasureDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 312
-    Top = 96
-  end
-  object spGetMeasure: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_Measure'
-    DataSet = MeasureDataSet
-    DataSets = <
+    Params = <
       item
-        DataSet = MeasureDataSet
+        Name = 'Key'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = GoodsGroupGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
       end>
-    Params = <>
-    Left = 224
+    Left = 208
     Top = 112
   end
-  object MeasureDS: TDataSource
-    DataSet = MeasureDataSet
-    Left = 256
-    Top = 112
+  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 104
+    Top = 8
+  end
+  object cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = Owner
+        Properties.Strings = (
+          'Height'
+          'Left'
+          'Top'
+          'Width')
+      end>
+    StorageName = 'cxPropertiesStore'
+    StorageType = stStream
+    Left = 64
+    Top = 8
   end
   object dsdMeasureGuides: TdsdGuides
-    Key = '0'
+    KeyField = 'Id'
     LookupControl = ceMeasure
+    FormNameParam.Value = 'TMeasureForm'
+    FormNameParam.DataType = ftString
     FormName = 'TMeasureForm'
     PositionDataSet = 'ClientDataSet'
-    Left = 288
-    Top = 112
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = dsdMeasureGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = dsdMeasureGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 48
+    Top = 184
+  end
+  object NDSKindGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = ceNDSKind
+    FormNameParam.Value = 'TNDSKindForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TNDSKindForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = NDSKindGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = NDSKindGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end>
+    Left = 232
+    Top = 176
   end
 end

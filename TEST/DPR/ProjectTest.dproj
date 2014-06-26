@@ -559,7 +559,7 @@
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
-				<Form>ModelServiceKindForm</Form>
+				<Form>NDSKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
