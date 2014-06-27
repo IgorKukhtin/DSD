@@ -48,7 +48,6 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     clGoodsGroupName: TcxGridDBColumn;
-    kbmMemTable1: TkbmMemTable;
   private
     { Private declarations }
   public
