@@ -24,6 +24,7 @@ object Report_AccountForm: TReport_AccountForm
     Height = 382
     Align = alClient
     TabOrder = 0
+    ExplicitHeight = 256
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -825,7 +826,6 @@ object Report_AccountForm: TReport_AccountForm
     object bbPrint: TdxBarButton
       Action = actPrint
       Category = 0
-      Visible = ivNever
     end
   end
   object ActionList: TActionList
