@@ -181,6 +181,24 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpSelect_Object_Unit.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql', ZQuery);
 
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\NDSKind\gpSelect_Object_NDSKind.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpGet_Object_GoodsGroup.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpSelect_Object_GoodsGroup.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpInsertUpdate_Object_Measure.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpGet_Object_Measure.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Measure\gpSelect_Object_Measure.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpInsertUpdate_Object_Maker.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpGet_Object_Maker.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Maker\gpSelect_Object_Maker.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpInsertUpdate_Object_Country.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpGet_Object_Country.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpSelect_Object_Country.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

@@ -4,13 +4,25 @@ interface
 
 uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore,
+  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, cxPropertiesStore, dsdDB,
   cxGraphics, cxControls, cxLookAndFeels, cxLookAndFeelPainters, cxContainer,
   cxEdit, Vcl.Menus, Vcl.StdCtrls, cxButtons, cxLabel, cxTextEdit, Vcl.ActnList,
-  Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
-  Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
-  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction;
+  Vcl.StdActns, dsdAction, ParentForm, Data.DB, Datasnap.DBClient,
+  cxCurrencyEdit, cxMaskEdit, cxDropDownEdit, cxDBEdit, cxCustomData, cxStyles,
+  cxTL, cxTLdxBarBuiltInMenu, cxInplaceContainer, cxTLData, cxDBTL,
+  cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, dsdGuides,
+  Vcl.Grids, Vcl.DBGrids, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxButtonEdit, dsdAddOn;
 
 type
   TGoodsEditForm = class(TParentForm)
@@ -23,39 +35,26 @@ type
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
     dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
-    Код: TcxLabel;
-    ceCode: TcxCurrencyEdit;
-    cxLabel3: TcxLabel;
-    ceExtraChargeCategories: TcxLookupComboBox;
-    ExtraChargeCategoriesDataSet: TClientDataSet;
-    spGetExtraChargeCategories: TdsdStoredProc;
-    ExtraChargeCategoriesDS: TDataSource;
-    dsdExtraChargeCategoriesGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    ceMeasure: TcxLookupComboBox;
-    MeasureDataSet: TClientDataSet;
-    spGetMeasure: TdsdStoredProc;
-    MeasureDS: TDataSource;
-    dsdMeasureGuides: TdsdGuides;
+    dsdFormClose: TdsdFormClose;
     cxLabel2: TcxLabel;
-    cePrice: TcxCurrencyEdit;
-    cxLabel5: TcxLabel;
-    edCashName: TcxTextEdit;
+    ceCode: TcxCurrencyEdit;
+    Код: TcxLabel;
+    GoodsGroupGuides: TdsdGuides;
+    dsdInsertUpdateGuides: TdsdInsertUpdateGuides;
+    ceParentGroup: TcxButtonEdit;
+    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
+    cxPropertiesStore: TcxPropertiesStore;
+    cxLabel4: TcxLabel;
+    ceMeasure: TcxButtonEdit;
+    dsdMeasureGuides: TdsdGuides;
     cxLabel6: TcxLabel;
-    ceNDS: TcxCurrencyEdit;
-    cxLabel7: TcxLabel;
-    cePercentReprice: TcxCurrencyEdit;
-    cxLabel8: TcxLabel;
-    cePartyCount: TcxCurrencyEdit;
-    cbisReceiptNeed: TcxCheckBox;
+    ceNDSKind: TcxButtonEdit;
+    NDSKindGuides: TdsdGuides;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
 
 implementation
 

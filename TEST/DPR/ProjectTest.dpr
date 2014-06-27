@@ -226,7 +226,7 @@ uses
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
   TaxCorrectiveMovementItemTest in '..\SOURCE\MovementItem\All\TaxCorrectiveMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
-  ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
+  ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {NDSKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',

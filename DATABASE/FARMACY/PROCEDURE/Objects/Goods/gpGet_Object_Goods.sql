@@ -6,10 +6,11 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Goods(
     IN inId          Integer,       -- Товар 
     IN inSession     TVarChar       -- сессия пользователя
 )
-RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, isErased boolean, 
+RETURNS TABLE (Id Integer, Code Integer, Name TVarChar, 
                GoodsGroupId Integer, GoodsGroupName TVarChar,
                MeasureId Integer, MeasureName TVarChar,
-               NDSKindId Integer, NDSKindName TVarChar
+               NDSKindId Integer, NDSKindName TVarChar,
+               isErased boolean
                ) AS
 $BODY$BEGIN
 
@@ -23,15 +24,16 @@ $BODY$BEGIN
              CAST (0 as Integer)    AS Id
            , COALESCE(MAX (Object_Goods.ObjectCode), 0) + 1 AS Code
            , CAST ('' as TVarChar)  AS Name
-           , CAST (NULL AS Boolean) AS isErased
-           
+              
            , CAST (0 as Integer)    AS GoodsGroupId
            , CAST ('' as TVarChar)  AS GoodsGroupName  
            , CAST (0 as Integer)    AS MeasureId
            , CAST ('' as TVarChar)  AS MeasureName
            , CAST (0 as Integer)    AS NDSKindId
            , CAST ('' as TVarChar)  AS NDSKindName
-          
+
+           , CAST (NULL AS Boolean) AS isErased
+
        FROM Object AS Object_Goods
        WHERE Object_Goods.DescId = zc_Object_Goods();
    ELSE
@@ -39,7 +41,6 @@ $BODY$BEGIN
      SELECT Object_Goods.Id             AS Id 
           , Object_Goods.ObjectCode     AS Code
           , Object_Goods.ValueData      AS Name
-          , Object_Goods.isErased       AS isErased
           
           , Object_GoodsGroup.Id        AS GoodsGroupId
           , Object_GoodsGroup.ValueData AS GoodsGroupName
@@ -49,6 +50,8 @@ $BODY$BEGIN
    
           , Object_NDSKind.Id               AS NDSKindId
           , Object_NDSKind.ValueData        AS NDSKindName
+
+          , Object_Goods.isErased       AS isErased
           
      FROM Object AS Object_Goods
         LEFT JOIN ObjectLink AS ObjectLink_Goods_GoodsGroup
@@ -57,12 +60,12 @@ $BODY$BEGIN
         LEFT JOIN Object AS Object_GoodsGroup ON Object_GoodsGroup.Id = ObjectLink_Goods_GoodsGroup.ChildObjectId
         
         LEFT JOIN ObjectLink AS ObjectLink_Goods_Measure
-                             ON ObjectLink_Goods_Measure.ObjectId = Object.Id
+                             ON ObjectLink_Goods_Measure.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_Measure.DescId = zc_ObjectLink_Goods_Measure()
         LEFT JOIN Object AS Object_Measure ON Object_Measure.Id = ObjectLink_Goods_Measure.ChildObjectId
 
         LEFT JOIN ObjectLink AS ObjectLink_Goods_NDSKind
-                             ON ObjectLink_Goods_NDSKind.ObjectId = Object.Id
+                             ON ObjectLink_Goods_NDSKind.ObjectId = Object_Goods.Id
                             AND ObjectLink_Goods_NDSKind.DescId = zc_ObjectLink_Goods_NDSKind()
         LEFT JOIN Object AS Object_NDSKind ON Object_NDSKind.Id = ObjectLink_Goods_NDSKind.ChildObjectId
     WHERE Object_Goods.Id = inId;

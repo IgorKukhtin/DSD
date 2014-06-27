@@ -12,6 +12,7 @@ object GoodsForm: TGoodsForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.RefreshAction = actRefresh
   PixelsPerInch = 96
   TextHeight = 13
   object cxGrid: TcxGrid

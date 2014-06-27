@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_NDSKind(
     IN inSession        TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar
-             , Comment TVarChar
+             , NDS TFloat
              , isErased Boolean) AS
 $BODY$BEGIN
 
@@ -19,14 +19,14 @@ $BODY$BEGIN
       , Object_NDSKind.ObjectCode   AS Code
       , Object_NDSKind.ValueData    AS NAME
       
-      , ObjectFloat_NDS.ValueData   AS NDS
+      , ObjectFloat_NDSKind_NDS.ValueData   AS NDS
       
       , Object_NDSKind.isErased     AS isErased
       
    FROM OBJECT AS Object_NDSKind
-        LEFT JOIN ObjectFloat AS ObjectFloat_NDS
-                              ON ObjectFloat_NDS.ObjectId = Object_NDSKind.Id 
-                             AND ObjectFloat_NDS.DescId = zc_ObjectFloat_NDS()   
+        LEFT JOIN ObjectFloat AS ObjectFloat_NDSKind_NDS
+                              ON ObjectFloat_NDSKind_NDS.ObjectId = Object_NDSKind.Id 
+                             AND ObjectFloat_NDSKind_NDS.DescId = zc_ObjectFloat_NDSKind_NDS()   
                               
    WHERE Object_NDSKind.DescId = zc_Object_NDSKind();
   
@@ -45,3 +45,6 @@ ALTER FUNCTION gpSelect_Object_NDSKind (TVarChar) OWNER TO postgres;
 
 -- тест
 -- SELECT * FROM gpSelect_Object_NDSKind('2')
+
+
+

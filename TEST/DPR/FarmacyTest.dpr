@@ -11,7 +11,6 @@ uses
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
   LoadFarmacyFormTest in '..\SOURCE\LoadFarmacyFormTest.pas',
   PriceListGoodsItem in '..\..\Forms\Guides\PriceListGoodsItem.pas' {PriceListGoodsItemForm},
-  MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm},
   CommonData in '..\..\SOURCE\CommonData.pas',
   Authentication in '..\..\SOURCE\Authentication.pas',
   FormStorage in '..\..\SOURCE\FormStorage.pas',
@@ -62,7 +61,16 @@ uses
   DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
   DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
   EDI in '..\..\SOURCE\EDI\EDI.pas',
-  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas';
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  GoodsGroup in '..\..\Forms\Guides\GoodsGroup.pas' {GoodsGroupForm: TParentForm},
+  GoodsGroupEdit in '..\..\Forms\Guides\GoodsGroupEdit.pas' {GoodsGroupEditForm: TParentForm},
+  Measure in '..\..\Forms\Measure.pas' {MeasureForm: TParentForm},
+  MeasureEdit in '..\..\Forms\MeasureEdit.pas' {MeasureEditForm: TParentForm},
+  Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
+  MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
+  Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
+  NDSKind in '..\..\FarmacyForms\NDSKind.pas' {NDSKindForm: TParentForm};
 
 {$R *.res}
 
