@@ -102,6 +102,11 @@ type
     ProfitLossGuides: TdsdGuides;
     cxLabel10: TcxLabel;
     ceBranch: TcxButtonEdit;
+    spSelectPrint: TdsdStoredProc;
+    PrintItemsCDS: TClientDataSet;
+    PrintHeaderCDS: TClientDataSet;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
   public
   end;
