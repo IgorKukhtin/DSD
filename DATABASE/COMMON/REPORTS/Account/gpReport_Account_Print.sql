@@ -28,6 +28,7 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Account());
 --     vbUserId:= lpGetUserBySession (inSession);
+  SELECT inAccountGroupId = 9017 , inAccountDirectionId = 9046;
 
      OPEN Cursor1 FOR
        SELECT
