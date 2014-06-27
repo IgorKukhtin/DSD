@@ -92,7 +92,7 @@ object GoodsForm: TGoodsForm
     end
   end
   object DataSource: TDataSource
-    DataSet = ClientDataSet
+    DataSet = kbmMemTable1
     Left = 96
     Top = 96
   end
@@ -333,10 +333,10 @@ object GoodsForm: TGoodsForm
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
-    DataSet = ClientDataSet
+    DataSet = kbmMemTable1
     DataSets = <
       item
-        DataSet = ClientDataSet
+        DataSet = kbmMemTable1
       end>
     Params = <>
     Left = 152
@@ -368,5 +368,25 @@ object GoodsForm: TGoodsForm
       end>
     Left = 80
     Top = 232
+  end
+  object kbmMemTable1: TkbmMemTable
+    DesignActivation = True
+    AttachedAutoRefresh = True
+    AttachMaxCount = 1
+    FieldDefs = <>
+    IndexDefs = <>
+    SortOptions = []
+    PersistentBackup = False
+    ProgressFlags = [mtpcLoad, mtpcSave, mtpcCopy]
+    LoadedCompletely = False
+    SavedCompletely = False
+    FilterOptions = []
+    Version = '7.20.00 Professional Edition'
+    LanguageID = 0
+    SortID = 0
+    SubLanguageID = 1
+    LocaleID = 1024
+    Left = 288
+    Top = 120
   end
 end

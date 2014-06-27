@@ -11,6 +11,7 @@ object MainForm: TMainForm
   Font.Name = 'Tahoma'
   Font.Style = []
   OldCreateOrder = False
+  OnCreate = FormCreate
   PixelsPerInch = 96
   TextHeight = 13
   object GuidePanel: TPanel
@@ -38,8 +39,8 @@ object MainForm: TMainForm
     end
     object cbGoods: TCheckBox
       Tag = 10
-      Left = 14
-      Top = 55
+      Left = 15
+      Top = 43
       Width = 225
       Height = 15
       Caption = '1.3. '#1058#1086#1074#1072#1088#1099
@@ -80,7 +81,7 @@ object MainForm: TMainForm
     end
     object cbPriceList: TCheckBox
       Tag = 10
-      Left = 14
+      Left = 15
       Top = 186
       Width = 225
       Height = 17
@@ -126,7 +127,7 @@ object MainForm: TMainForm
     end
     object cbBank: TCheckBox
       Tag = 10
-      Left = 14
+      Left = 15
       Top = 122
       Width = 225
       Height = 17
@@ -147,7 +148,7 @@ object MainForm: TMainForm
     end
     object CheckBox1: TCheckBox
       Tag = 10
-      Left = 20
+      Left = 15
       Top = 245
       Width = 225
       Height = 17
@@ -158,7 +159,7 @@ object MainForm: TMainForm
     end
     object CheckBox2: TCheckBox
       Tag = 10
-      Left = 20
+      Left = 15
       Top = 268
       Width = 225
       Height = 17
@@ -167,28 +168,13 @@ object MainForm: TMainForm
     end
     object CheckBox3: TCheckBox
       Tag = 10
-      Left = 20
+      Left = 15
       Top = 290
       Width = 225
       Height = 17
       Caption = '3.2. '#1041#1072#1085#1082#1080
       Enabled = False
       TabOrder = 14
-    end
-    object cbExtraChargeCategories: TCheckBox
-      Tag = 10
-      Left = 15
-      Top = 37
-      Width = 225
-      Height = 17
-      Caption = '1.2. '#1042#1080#1076#1099' '#1085#1072#1094#1077#1085#1086#1082
-      Font.Charset = DEFAULT_CHARSET
-      Font.Color = clWindowText
-      Font.Height = -11
-      Font.Name = 'MS Sans Serif'
-      Font.Style = []
-      ParentFont = False
-      TabOrder = 15
     end
   end
   object DBGrid: TDBGrid
@@ -345,7 +331,7 @@ object MainForm: TMainForm
   object fromADOConnection: TADOConnection
     ConnectionString = 
       'Provider=MSDASQL.1;Password=sql;Persist Security Info=True;User ' +
-      'ID=dba;Data Source=HouseStoreDS'
+      'ID=dba;Data Source=CodeDS'
     LoginPrompt = False
     Provider = 'MSDASQL.1'
     Left = 352

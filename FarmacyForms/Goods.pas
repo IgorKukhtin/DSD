@@ -13,7 +13,7 @@ uses
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdAddOn,
   cxCheckBox, cxCurrencyEdit, ZAbstractRODataset, ZAbstractDataset, ZDataset,
   ZAbstractConnection, ZConnection, dxBarExtItems, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, kbmMemTable;
 
 type
   TGoodsForm = class(TParentForm)
@@ -48,6 +48,7 @@ type
     dsdGridToExcel: TdsdGridToExcel;
     bbGridToExcel: TdxBarButton;
     clGoodsGroupName: TcxGridDBColumn;
+    kbmMemTable1: TkbmMemTable;
   private
     { Private declarations }
   public
