@@ -3,7 +3,6 @@ program Farmacy;
 uses
   Vcl.Forms,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  FarmacyMainForm in '..\SOURCE\FarmacyMainForm.pas' {MainForm},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -46,9 +45,14 @@ uses
   EDI in '..\SOURCE\EDI\EDI.pas',
   OrderXML in '..\SOURCE\EDI\OrderXML.pas',
   MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
-  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas';
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm};
 
 {$R *.res}
+{$R DevExpressRus.res}
+
 
 begin
   Application.Initialize;
@@ -57,6 +61,5 @@ begin
 
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
   Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 end.

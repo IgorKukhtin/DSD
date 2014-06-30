@@ -119,7 +119,6 @@
 			<DCCReference Include="..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalLoad.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\ExternalData.pas"/>
-			<DCCReference Include="..\SOURCE\MemDBFTable.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\Document.pas"/>
 			<DCCReference Include="..\SOURCE\UnilWin.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\Defaults.pas"/>
@@ -153,6 +152,14 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

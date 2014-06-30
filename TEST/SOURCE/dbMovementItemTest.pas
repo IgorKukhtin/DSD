@@ -115,7 +115,7 @@ type
 
 implementation
 
-uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication;
+uses Storage, SysUtils, dbMovementTest, DBClient, dsdDB, CommonData, Authentication, dbObjectMeatTest;
 { TdbMovementItemTest }
 
 {------------------------------------------------------------------------------}

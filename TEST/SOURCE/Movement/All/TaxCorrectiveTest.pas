@@ -25,7 +25,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, DocumentTaxKindTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TTaxCorrective }
 

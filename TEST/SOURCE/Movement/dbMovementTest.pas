@@ -131,7 +131,8 @@ type
 
 implementation
 
-uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData, Authentication;
+uses DB, Storage, SysUtils, UnitsTest, dbMovementItemTest, dsdDB, CommonData
+   , Authentication, dbObjectMeatTest;
 { TDataBaseObjectTest }
 {------------------------------------------------------------------------------}
 procedure TdbMovementTest.DeleteMovement(Id: integer);
