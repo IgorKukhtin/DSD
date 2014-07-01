@@ -2,7 +2,7 @@ unit UnitsTest;
 
 interface
 
-uses dbTest, dbObjectTest, ObjectTest;
+uses dbTest, dbObjectTest, dbObjectMeatTest, ObjectTest;
 
 type
 

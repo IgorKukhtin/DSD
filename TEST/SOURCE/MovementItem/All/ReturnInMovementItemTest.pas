@@ -31,7 +31,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants,ReturnInTest;
+     Variants, dbObjectMeatTest, ReturnInTest;
 
 { TReturnInMovementItemTest }
 

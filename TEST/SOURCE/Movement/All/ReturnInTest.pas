@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses UtilConst, DocumentTaxKindTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, DocumentTaxKindTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TReturnIn }
 

@@ -1,57 +1,38 @@
-﻿object GoodsEditForm: TGoodsEditForm
-  Left = 0
-  Top = 0
+﻿inherited GoodsEditForm: TGoodsEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1058#1086#1074#1072#1088'>'
-  ClientHeight = 273
-  ClientWidth = 347
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  KeyPreview = True
-  OldCreateOrder = False
-  AddOnFormData.RefreshAction = dsdDataSetRefresh
-  AddOnFormData.Params = dsdFormParams
+  ClientHeight = 277
+  ClientWidth = 350
+  ExplicitWidth = 356
+  ExplicitHeight = 302
   PixelsPerInch = 96
   TextHeight = 13
-  object edName: TcxTextEdit
+  inherited bbOk: TcxButton
+    Top = 228
+    TabOrder = 2
+    ExplicitTop = 228
+  end
+  inherited bbCancel: TcxButton
+    Top = 228
+    TabOrder = 3
+    ExplicitTop = 228
+  end
+  object edName: TcxTextEdit [2]
     Left = 10
     Top = 78
     TabOrder = 1
     Width = 331
   end
-  object cxLabel1: TcxLabel
+  object cxLabel1: TcxLabel [3]
     Left = 8
     Top = 55
     Caption = #1053#1072#1079#1074#1072#1085#1080#1077
   end
-  object cxButton1: TcxButton
-    Left = 65
-    Top = 236
-    Width = 75
-    Height = 25
-    Action = dsdInsertUpdateGuides
-    Default = True
-    TabOrder = 3
-  end
-  object cxButton2: TcxButton
-    Left = 176
-    Top = 236
-    Width = 75
-    Height = 25
-    Action = dsdFormClose
-    Cancel = True
-    Caption = #1054#1090#1084#1077#1085#1072
-    TabOrder = 4
-  end
-  object cxLabel2: TcxLabel
+  object cxLabel2: TcxLabel [4]
     Left = 8
     Top = 100
     Caption = #1043#1088#1091#1087#1087#1072' '#1088#1086#1076#1080#1090#1077#1083#1100
   end
-  object ceCode: TcxCurrencyEdit
+  object ceCode: TcxCurrencyEdit [5]
     Left = 9
     Top = 28
     Properties.DecimalPlaces = 0
@@ -59,12 +40,12 @@
     TabOrder = 0
     Width = 332
   end
-  object Код: TcxLabel
+  object Код: TcxLabel [6]
     Left = 8
     Top = 5
     Caption = #1050#1086#1076
   end
-  object ceParentGroup: TcxButtonEdit
+  object ceParentGroup: TcxButtonEdit [7]
     Left = 10
     Top = 123
     Properties.Buttons = <
@@ -73,16 +54,33 @@
         Kind = bkEllipsis
       end>
     Properties.ReadOnly = True
-    TabOrder = 7
+    TabOrder = 5
     Width = 331
   end
-  object cxLabel4: TcxLabel
+  object cxLabel4: TcxLabel [8]
     Left = 8
     Top = 160
     Caption = #1045#1076'. '#1080#1079#1084#1077#1088#1077#1085#1080#1103':'
   end
-  object ceMeasure: TcxButtonEdit
+  object ceMeasure: TcxButtonEdit [9]
     Left = 8
+    Top = 183
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    Properties.ReadOnly = True
+    TabOrder = 7
+    Width = 132
+  end
+  object cxLabel6: TcxLabel [10]
+    Left = 154
+    Top = 160
+    Caption = #1042#1080#1076' '#1053#1044#1057':'
+  end
+  object ceNDSKind: TcxButtonEdit [11]
+    Left = 154
     Top = 183
     Properties.Buttons = <
       item
@@ -91,67 +89,31 @@
       end>
     Properties.ReadOnly = True
     TabOrder = 9
-    Width = 132
-  end
-  object cxLabel6: TcxLabel
-    Left = 154
-    Top = 160
-    Caption = #1042#1080#1076' '#1053#1044#1057':'
-  end
-  object ceNDSKind: TcxButtonEdit
-    Left = 154
-    Top = 183
-    Properties.Buttons = <
-      item
-        Default = True
-        Kind = bkEllipsis
-      end>
-    Properties.ReadOnly = True
-    TabOrder = 11
     Width = 187
   end
-  object ActionList: TActionList
-    Left = 208
-    Top = 56
-    object dsdDataSetRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGet
-      StoredProcList = <
-        item
-          StoredProc = spGet
-        end
-        item
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
-    object dsdFormClose: TdsdFormClose
-      Category = 'DSDLib'
-      MoveParams = <>
-    end
-    object dsdInsertUpdateGuides: TdsdInsertUpdateGuides
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spInsertUpdate
-      StoredProcList = <
-        item
-          StoredProc = spInsertUpdate
-        end>
-      Caption = #1054#1082
-    end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 155
+    Top = 48
   end
-  object spInsertUpdate: TdsdStoredProc
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Left = 104
+    Top = 48
+  end
+  inherited ActionList: TActionList
+    Left = 207
+    Top = 55
+  end
+  inherited FormParams: TdsdFormParams
+    Left = 296
+    Top = 16
+  end
+  inherited spInsertUpdate: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_Object_Goods'
-    DataSets = <>
-    OutputType = otResult
     Params = <
       item
         Name = 'ioId'
-        Value = Null
-        Component = dsdFormParams
+        Value = '0'
+        Component = FormParams
         ComponentItem = 'Id'
         ParamType = ptInputOutput
       end
@@ -192,25 +154,12 @@
     Left = 280
     Top = 8
   end
-  object dsdFormParams: TdsdFormParams
-    Params = <
-      item
-        Name = 'Id'
-        Value = Null
-        ParamType = ptInputOutput
-      end>
-    Left = 176
-    Top = 8
-  end
-  object spGet: TdsdStoredProc
+  inherited spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Object_Goods'
-    DataSets = <>
-    OutputType = otResult
     Params = <
       item
         Name = 'Id'
         Value = Null
-        Component = dsdFormParams
         ComponentItem = 'Id'
         ParamType = ptInput
       end
@@ -291,25 +240,6 @@
     Left = 208
     Top = 112
   end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 104
-    Top = 8
-  end
-  object cxPropertiesStore: TcxPropertiesStore
-    Components = <
-      item
-        Component = Owner
-        Properties.Strings = (
-          'Height'
-          'Left'
-          'Top'
-          'Width')
-      end>
-    StorageName = 'cxPropertiesStore'
-    StorageType = stStream
-    Left = 64
-    Top = 8
-  end
   object dsdMeasureGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceMeasure
@@ -332,7 +262,7 @@
         DataType = ftString
       end>
     Left = 48
-    Top = 184
+    Top = 176
   end
   object NDSKindGuides: TdsdGuides
     KeyField = 'Id'

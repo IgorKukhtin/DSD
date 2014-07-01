@@ -22,7 +22,7 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, Authentication, Storage, CommonData;
+uses DB, UtilConst, dbObjectMeatTest, TestFramework, SysUtils, Authentication, Storage, CommonData;
 
 { TInfoMoneyTest }
 

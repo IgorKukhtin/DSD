@@ -33,7 +33,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants, SaleTest;
+     Variants, dbObjectMeatTest, SaleTest;
 
 { TSaleMovementItemTest }
 

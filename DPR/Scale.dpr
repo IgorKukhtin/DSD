@@ -25,7 +25,6 @@ uses
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
   ExternalData in '..\SOURCE\COMPONENT\ExternalData.pas',
-  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   Document in '..\SOURCE\COMPONENT\Document.pas',
   UnilWin in '..\SOURCE\UnilWin.pas',
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
@@ -47,7 +46,15 @@ uses
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas';
 
 {$R *.res}
 

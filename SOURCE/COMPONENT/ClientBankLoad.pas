@@ -793,9 +793,9 @@ end;
 function TPireusBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('Операция').AsString = 'Дебет' then
-     result := FDataSet.FieldByName('Сумма').AsFloat
-  else
      result := - FDataSet.FieldByName('Сумма').AsFloat
+  else
+     result := FDataSet.FieldByName('Сумма').AsFloat
 end;
 
 end.

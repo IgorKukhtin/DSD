@@ -1,94 +1,28 @@
-object MainForm: TMainForm
-  Left = 0
-  Top = 0
-  Caption = 'MainForm'
-  ClientHeight = 94
-  ClientWidth = 596
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
-  OldCreateOrder = False
-  OnCreate = FormCreate
+inherited MainForm: TMainForm
+  ClientHeight = 151
+  ClientWidth = 689
+  ExplicitWidth = 697
+  ExplicitHeight = 178
   PixelsPerInch = 96
   TextHeight = 13
-  object dxBarManager: TdxBarManager
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    PopupMenuLinks = <>
-    UseSystemFont = True
-    Left = 128
-    Top = 48
+  inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
       26
       0)
-    object dxBarManager1Bar1: TdxBar
-      Caption = 'MainMenu'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 683
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      IsMainMenu = True
+    inherited bbService: TdxBarSubItem
       ItemLinks = <
         item
           Visible = True
-          ItemName = 'bbDocuments'
+          ItemName = 'bbAbout'
         end
         item
           Visible = True
-          ItemName = 'bbGuides'
-        end
-        item
-          Visible = True
-          ItemName = 'bbReports'
-        end
-        item
-          Visible = True
-          ItemName = 'bbExit'
-        end>
-      MultiLine = True
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = True
-    end
-    object bbExit: TdxBarButton
-      Action = actExit
-      Category = 0
-    end
-    object bbDocuments: TdxBarSubItem
-      Caption = #1053#1072#1082#1083#1072#1076#1085#1099#1077
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbIncome'
+          ItemName = 'bbUpdateProgramm'
         end>
     end
-    object bbGuides: TdxBarSubItem
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Category = 0
-      Visible = ivAlways
+    inherited bbGuides: TdxBarSubItem
       ItemLinks = <
         item
           Visible = True
@@ -119,76 +53,86 @@ object MainForm: TMainForm
           ItemName = 'bbExtraChargeCategories'
         end>
     end
-    object bbMeasure: TdxBarButton
+    object bbDocuments: TdxBarSubItem [6]
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1099#1077
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbIncome'
+        end>
+    end
+    object bbMeasure: TdxBarButton [7]
       Action = actMeasure
       Category = 0
     end
-    object bbJuridicalGroup: TdxBarButton
+    object bbJuridicalGroup: TdxBarButton [8]
       Action = actJuridicalGroup
       Category = 0
     end
-    object bbGoodsProperty: TdxBarButton
+    object bbGoodsProperty: TdxBarButton [9]
       Action = actGoodsProperty
       Category = 0
     end
-    object bbJuridical: TdxBarButton
+    object bbJuridical: TdxBarButton [10]
       Action = actJuridical
       Category = 0
     end
-    object bbBusiness: TdxBarButton
+    object bbBusiness: TdxBarButton [11]
       Action = actBusiness
       Category = 0
     end
-    object bbBranch: TdxBarButton
+    object bbBranch: TdxBarButton [12]
       Action = actExtraChargeCategories
       Category = 0
     end
-    object bbIncome: TdxBarButton
+    object bbIncome: TdxBarButton [13]
       Action = actIncome
       Category = 0
     end
-    object bbPartner: TdxBarButton
+    object bbPartner: TdxBarButton [14]
       Action = actPartner
       Category = 0
     end
-    object dxBarSeparator1: TdxBarSeparator
+    object dxBarSeparator1: TdxBarSeparator [15]
       Category = 0
       Visible = ivAlways
       ShowCaption = False
     end
-    object bbPaidKind: TdxBarButton
+    object bbPaidKind: TdxBarButton [16]
       Action = actPaidKind
       Category = 0
     end
-    object bbContractKind: TdxBarButton
+    object bbContractKind: TdxBarButton [17]
       Action = actContractKind
       Category = 0
     end
-    object bbUnitGroup: TdxBarButton
+    object bbUnitGroup: TdxBarButton [18]
       Action = actUnitGroup
       Category = 0
     end
-    object bbUnit: TdxBarButton
+    object bbUnit: TdxBarButton [19]
       Action = actUnit
       Category = 0
     end
-    object bbGoodsGroup: TdxBarButton
+    object bbGoodsGroup: TdxBarButton [20]
       Action = actGoodsGroup
       Category = 0
     end
-    object bbGoods: TdxBarButton
+    object bbGoods: TdxBarButton [21]
       Action = actGoods
       Category = 0
     end
-    object bbGoodsKind: TdxBarButton
+    object bbGoodsKind: TdxBarButton [22]
       Action = actGoodsKind
       Category = 0
     end
-    object bbBalance: TdxBarButton
+    object bbBalance: TdxBarButton [23]
       Action = actBalance
       Category = 0
     end
-    object bbReports: TdxBarSubItem
+    object bbReports: TdxBarSubItem [24]
       Caption = #1054#1090#1095#1077#1090#1099
       Category = 0
       Visible = ivAlways
@@ -198,21 +142,12 @@ object MainForm: TMainForm
           ItemName = 'bbBalance'
         end>
     end
-    object bbExtraChargeCategories: TdxBarButton
+    object bbExtraChargeCategories: TdxBarButton [25]
       Action = actExtraChargeCategories
       Category = 0
     end
   end
-  object ActionList: TActionList
-    Left = 192
-    Top = 48
-    object actExit: TFileExit
-      Category = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077
-      Caption = #1042#1099'&x'#1086#1076
-      Hint = #1042#1099#1093#1086#1076'|'#1047#1072#1082#1088#1099#1090#1100' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
-      ImageIndex = 43
-      ShortCut = 16472
-    end
+  inherited ActionList: TActionList
     object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -431,10 +366,5 @@ object MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-  end
-  object cxLocalizer: TcxLocalizer
-    StorageType = lstResource
-    Left = 256
-    Top = 48
   end
 end

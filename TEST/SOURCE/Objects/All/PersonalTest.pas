@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, UnitsTest;
+uses DB, dbObjectMeatTest, UtilConst, TestFramework, SysUtils, UnitsTest;
 
 { TdbUnitTest }
 

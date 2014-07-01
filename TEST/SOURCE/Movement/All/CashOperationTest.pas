@@ -25,7 +25,7 @@ type
 implementation
 
 uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, TestFramework,
-     DBClient, dsdDB, CashTest;
+     DBClient, dsdDB, CashTest, dbObjectMeatTest;
 
 { TIncomeCashJuridical }
 

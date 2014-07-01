@@ -1,59 +1,20 @@
-﻿object MainForm: TMainForm
-  Left = 0
-  Top = 0
-  Caption = #1059#1087#1088#1072#1074#1083#1077#1085#1095#1077#1089#1082#1080#1081' '#1059#1095#1077#1090' '#171'Project'#187
-  ClientHeight = 247
+﻿inherited MainForm: TMainForm
+  ClientHeight = 174
   ClientWidth = 1118
-  Color = clBtnFace
-  Font.Charset = DEFAULT_CHARSET
-  Font.Color = clWindowText
-  Font.Height = -11
-  Font.Name = 'Tahoma'
-  Font.Style = []
   KeyPreview = True
-  OldCreateOrder = False
   Position = poDesigned
-  OnCloseQuery = FormCloseQuery
-  OnCreate = FormCreate
-  OnKeyDown = FormKeyDown
-  OnShow = FormShow
+  ExplicitLeft = -320
+  ExplicitWidth = 1126
+  ExplicitHeight = 201
   PixelsPerInch = 96
   TextHeight = 13
-  object dxBarManager: TdxBarManager
-    AllowCallFromAnotherForm = True
-    Font.Charset = DEFAULT_CHARSET
-    Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
-    Font.Style = []
-    Categories.Strings = (
-      'Default')
-    Categories.ItemsVisibles = (
-      2)
-    Categories.Visibles = (
-      True)
-    PopupMenuLinks = <>
-    UseSystemFont = True
-    Left = 128
-    Top = 40
+  inherited dxBarManager: TdxBarManager
     DockControlHeights = (
       0
       0
       26
       0)
-    object dxBar: TdxBar
-      AllowClose = False
-      Caption = 'MainMenu'
-      CaptionButtons = <>
-      DockedDockingStyle = dsTop
-      DockedLeft = 0
-      DockedTop = 0
-      DockingStyle = dsTop
-      FloatLeft = 683
-      FloatTop = 8
-      FloatClientWidth = 0
-      FloatClientHeight = 0
-      IsMainMenu = True
+    inherited dxBar: TdxBar
       ItemLinks = <
         item
           Visible = True
@@ -111,12 +72,256 @@
           Visible = True
           ItemName = 'bbExit'
         end>
-      MultiLine = True
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = True
+    end
+    inherited bbService: TdxBarSubItem
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbAction'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProcess'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUser'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRole'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSetUserDefaults'
+        end
+        item
+          Visible = True
+          ItemName = 'bbProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUserProtocol'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMovementDesc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPeriodClose'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartner1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods1CLink'
+        end
+        item
+          Visible = True
+          ItemName = 'bbSaveDocumentTo1C'
+        end
+        item
+          Visible = True
+          ItemName = 'bbEDI'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoad1CSale'
+        end
+        item
+          Visible = True
+          ItemName = 'bbToolsWeighingTree'
+        end
+        item
+          Visible = True
+          ItemName = 'bbService_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAbout'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUpdateProgramm'
+        end>
+    end
+    inherited bbGuides: TdxBarSubItem
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbJuridicalGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical_List'
+        end
+        item
+          Visible = True
+          ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartner'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPartnerAddress'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRouteSorting'
+        end
+        item
+          Visible = True
+          ItemName = 'bbArea'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPerson'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContactPersonKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPaidKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractConditionValue'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContractArticle'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAssetDocuments'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBusiness'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBranch'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnit_List'
+        end
+        item
+          Visible = True
+          ItemName = 'bbUnit'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCash'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBank'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankAccount'
+        end
+        item
+          Visible = True
+          ItemName = 'bbBankAccountContract'
+        end
+        item
+          Visible = True
+          ItemName = 'bbCurrency'
+        end
+        item
+          Visible = True
+          ItemName = 'bbAdres'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsGroup'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods_List'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoods'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsKind'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsKindWeighing'
+        end
+        item
+          Visible = True
+          ItemName = 'bbMeasure'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsProperty'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGoodsPropertyValue'
+        end
+        item
+          Visible = True
+          ItemName = 'bbTradeMark'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPriceList'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGuides_Separator'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSubItem'
+        end>
     end
     object bbGoodsDocuments: TdxBarSubItem
       Caption = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
@@ -1040,180 +1245,6 @@
       Action = actReport_ProfitLoss
       Category = 0
     end
-    object bbGuides: TdxBarSubItem
-      Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbJuridicalGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridical_List'
-        end
-        item
-          Visible = True
-          ItemName = 'bbJuridical'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartner'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerAddress'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRouteSorting'
-        end
-        item
-          Visible = True
-          ItemName = 'bbArea'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRetail'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContactPerson'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContactPersonKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPaidKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContractConditionValue'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContract'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContractKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbContractArticle'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAssetDocuments'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBusiness'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBranch'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnit_List'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUnit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCash'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBank'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankAccount'
-        end
-        item
-          Visible = True
-          ItemName = 'bbBankAccountContract'
-        end
-        item
-          Visible = True
-          ItemName = 'bbCurrency'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAdres'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsGroup'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoods_List'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoods'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsKind'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsKindWeighing'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMeasure'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsProperty'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoodsPropertyValue'
-        end
-        item
-          Visible = True
-          ItemName = 'bbTradeMark'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPriceList'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGuides_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'dxBarSubItem'
-        end>
-    end
     object bbGuides_Separator: TdxBarSeparator
       Caption = 'bbGuides_Separator'
       Category = 0
@@ -1417,88 +1448,6 @@
       Action = actProfitLoss
       Category = 0
     end
-    object bbService: TdxBarSubItem
-      Caption = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Category = 0
-      Visible = ivAlways
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbAction'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProcess'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUser'
-        end
-        item
-          Visible = True
-          ItemName = 'bbRole'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSetUserDefaults'
-        end
-        item
-          Visible = True
-          ItemName = 'bbProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUserProtocol'
-        end
-        item
-          Visible = True
-          ItemName = 'bbMovementDesc'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPeriodClose'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartner1CLink'
-        end
-        item
-          Visible = True
-          ItemName = 'bbGoods1CLink'
-        end
-        item
-          Visible = True
-          ItemName = 'bbSaveDocumentTo1C'
-        end
-        item
-          Visible = True
-          ItemName = 'bbEDI'
-        end
-        item
-          Visible = True
-          ItemName = 'bbLoad1CSale'
-        end
-        item
-          Visible = True
-          ItemName = 'bbToolsWeighingTree'
-        end
-        item
-          Visible = True
-          ItemName = 'bbService_Separator'
-        end
-        item
-          Visible = True
-          ItemName = 'bbAbout'
-        end
-        item
-          Visible = True
-          ItemName = 'bbUpdateProgramm'
-        end>
-    end
     object bbService_Separator: TdxBarSeparator
       Caption = 'bbService_Separator'
       Category = 0
@@ -1545,18 +1494,6 @@
     end
     object bbLoad1CSale: TdxBarButton
       Action = actLoad1CSale
-      Category = 0
-    end
-    object bbAbout: TdxBarButton
-      Action = actAbout
-      Category = 0
-    end
-    object bbUpdateProgramm: TdxBarButton
-      Action = actUpdateProgram
-      Category = 0
-    end
-    object bbExit: TdxBarButton
-      Action = actExit
       Category = 0
     end
     object bbUserProtocol: TdxBarButton
@@ -1695,9 +1632,7 @@
       Category = 0
     end
   end
-  object ActionList: TActionList
-    Left = 192
-    Top = 48
+  inherited ActionList: TActionList
     object actAssetGroup: TdsdOpenForm
       Category = #1054#1057
       MoveParams = <>
@@ -2120,13 +2055,6 @@
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
-    end
-    object actExit: TFileExit
-      Category = #1055#1088#1080#1083#1086#1078#1077#1085#1080#1077
-      Caption = #1042#1099'&x'#1086#1076
-      Hint = #1042#1099#1093#1086#1076'|'#1047#1072#1082#1088#1099#1090#1100' '#1087#1088#1080#1083#1086#1078#1077#1085#1080#1077
-      ImageIndex = 43
-      ShortCut = 16472
     end
     object actReturnOut: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
@@ -3252,17 +3180,6 @@
       GuiParams = <>
       isShowModal = False
     end
-    object actAbout: TAction
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = #1054' '#1087#1088#1086#1075#1088#1072#1084#1084#1077'...'
-      OnExecute = actAboutExecute
-    end
-    object actUpdateProgram: TAction
-      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
-      Caption = #1054#1073#1085#1086#1074#1080#1090#1100' '#1074#1077#1088#1089#1080#1102' '#1087#1088#1086#1075#1088#1072#1084#1084#1099
-      ShortCut = 57429
-      OnExecute = actUpdateProgramExecute
-    end
     object actWeighingPartner: TdsdOpenForm
       Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
       MoveParams = <>
@@ -3491,15 +3408,6 @@
       isShowModal = False
     end
   end
-  object cxLocalizer: TcxLocalizer
-    StorageType = lstResource
-    Left = 256
-    Top = 48
-  end
-  object dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
-    Left = 184
-    Top = 96
-  end
   object cxPropertiesStore: TcxPropertiesStore
     Components = <
       item
@@ -3513,7 +3421,7 @@
     StorageName = 'cxPropertiesStore'
     StorageType = stStream
     Left = 240
-    Top = 96
+    Top = 56
   end
   object frxReport1: TfrxReport
     Version = '4.14'
@@ -4423,79 +4331,5 @@
         end
       end
     end
-  end
-  object StoredProc: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ActionByUser'
-    DataSet = ClientDataSet
-    DataSets = <
-      item
-        DataSet = ClientDataSet
-      end>
-    Params = <>
-    Left = 128
-    Top = 152
-  end
-  object ClientDataSet: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 192
-    Top = 168
-  end
-  object frxXLSExport: TfrxXLSExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    ExportEMF = True
-    AsText = False
-    Background = True
-    FastExport = True
-    PageBreaks = True
-    EmptyLines = True
-    SuppressPageHeadersFooters = False
-    Left = 56
-    Top = 144
-  end
-  object frxXMLExport: TfrxXMLExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    Background = True
-    Creator = 'FastReport'
-    EmptyLines = True
-    SuppressPageHeadersFooters = False
-    RowsCount = 0
-    Split = ssNotSplit
-    Left = 56
-    Top = 192
-  end
-  object frxRTFExport: TfrxRTFExport
-    UseFileCache = True
-    ShowProgress = True
-    OverwritePrompt = False
-    DataOnly = False
-    PictureType = gpPNG
-    Wysiwyg = True
-    Creator = 'FastReport'
-    SuppressPageHeadersFooters = False
-    HeaderFooterMode = hfText
-    AutoSize = False
-    Left = 56
-    Top = 104
-  end
-  object spUserProtocol: TdsdStoredProc
-    StoredProcName = 'gpInsert_UserProtocol'
-    DataSets = <>
-    OutputType = otResult
-    Params = <
-      item
-        Name = 'inProtocolData'
-        Value = Null
-        DataType = ftBlob
-        ParamType = ptInput
-      end>
-    Left = 256
-    Top = 168
   end
 end

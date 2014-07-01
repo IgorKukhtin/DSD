@@ -38,8 +38,8 @@ type
     destructor Destroy; override;
     procedure DESADVSave(HeaderDataSet, ItemsDataSet: TDataSet);
     procedure COMDOCSave(HeaderDataSet, ItemsDataSet: TDataSet; Directory: String);
-    procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
-    procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
+    procedure ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
+    procedure OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
   published
     property ConnectionParams: TConnectionParams read FConnectionParams write FConnectionParams;
   end;
@@ -74,9 +74,11 @@ type
 
   procedure Register;
 
+  function lpStrToDateTime(DateTimeString: string): TDateTime;
+
 implementation
 
-uses VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
+uses Windows, VCL.ActnList, DBClient, DesadvXML, SysUtils, Dialogs, SimpleGauge, Variants,
 UtilConvert, ComObj;
 
 procedure Register;
@@ -168,7 +170,7 @@ begin
   FInsertEDIEvents.OutputType := otResult;
 end;
 
-procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String);
+procedure TEDI.ComdocLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
 var List: TStrings;
     i: integer;
     Stream: TStringStream;
@@ -190,18 +192,21 @@ begin
            for I := 0 to List.Count - 1 do begin
                // если первые буквы файла comdoc, а последние .p7s
                if (copy(list[i], 1, 6) = 'comdoc') and (copy(list[i], length(list[i]) - 3, 4) = '.p7s') then begin
+                  if (StartDate <= gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd'))
+                    and (gfStrFormatToDate(copy(list[i], 8, 8), 'yyyymmdd') <= EndDate)  then begin
                   // тянем файл к нам
-                  Stream.Clear;
-                  FIdFTP.Get(List[i], Stream);
-                  FileData := Utf8ToAnsi(Stream.DataString);
-                  // Начало документа <?xml
-                  FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
-                  FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
-                  ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
-                  if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
-                    or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004') then begin
-                     // загружаем в базенку
-                     InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                    Stream.Clear;
+                    FIdFTP.Get(List[i], Stream);
+                    FileData := Utf8ToAnsi(Stream.DataString);
+                    // Начало документа <?xml
+                    FileData := copy(FileData, pos('<?xml', FileData), MaxInt);
+                    FileData := copy(FileData, 1, pos('</ЕлектроннийДокумент>', FileData) + 21);
+                    ЕлектроннийДокумент := LoadЕлектроннийДокумент(FileData);
+                    if (ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '007')
+                      or(ЕлектроннийДокумент.Заголовок.КодТипуДокументу = '004') then begin
+                         // загружаем в базенку
+                         InsertUpdateComDoc(ЕлектроннийДокумент, spHeader, spList);
+                    end;
                   end;
                end;
                IncProgress;
@@ -359,7 +364,12 @@ begin
        end;
 end;
 
-procedure TEDI.OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String);
+function lpStrToDateTime(DateTimeString: string): TDateTime;
+begin
+  result := VarToDateTime(DateTimeString)
+end;
+
+procedure TEDI.OrderLoad(spHeader, spList: TdsdStoredProc; Directory: String; StartDate, EndDate: TDateTime);
 var List: TStrings;
     i: integer;
     Stream: TStringStream;
@@ -381,16 +391,19 @@ begin
          try
            Start;
            for I := 0 to List.Count - 1 do begin
-               // если первые буквы файла order а последние .xml
-               if (copy(list[i], 1, 5) = 'order') and (copy(list[i], length(list[i]) - 3, 4) = '.xml') then begin
+             // если первые буквы файла order а последние .xml
+             if (copy(list[i], 1, 5) = 'order') and (copy(list[i], length(list[i]) - 3, 4) = '.xml') then begin
+                if (StartDate <= gfStrFormatToDate(copy(list[i], 7, 8), 'yyyymmdd'))
+                    and (gfStrFormatToDate(copy(list[i], 7, 8), 'yyyymmdd') <= EndDate)  then begin
                   // тянем файл к нам
                   Stream.Clear;
                   FIdFTP.Get(List[i], Stream);
                   ORDER := LoadORDER(Utf8ToAnsi(Stream.DataString));
                    // загружаем в базенку
-                   InsertUpdateOrder(ORDER, spHeader, spList);
+                  InsertUpdateOrder(ORDER, spHeader, spList);
                end;
-               IncProgress;
+             end;
+             IncProgress;
            end;
          finally
            Finish;
@@ -481,8 +494,8 @@ function TEDIAction.LocalExecute: boolean;
 begin
   // создание документ
   case EDIDocType of
-    ediOrder:  EDI.OrderLoad(spHeader, spList, Directory);
-    ediComDoc: EDI.ComdocLoad(spHeader, spList, Directory);
+    ediOrder:  EDI.OrderLoad(spHeader, spList, Directory, StartDateParam.Value, EndDateParam.Value);
+    ediComDoc: EDI.ComdocLoad(spHeader, spList, Directory, StartDateParam.Value, EndDateParam.Value);
     ediComDocSave: EDI.COMDOCSave(HeaderDataSet, ListDataSet, Directory);
 //    ediDesadv,
 //    ediDeclar

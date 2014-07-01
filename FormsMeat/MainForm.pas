@@ -3,25 +3,22 @@ unit MainForm;
 interface
 
 uses
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
+  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
+  System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinsdxBarPainter;
+  dxSkinsDefaultPainters, dxSkinsdxBarPainter, AncestorMain;
 
 type
-  TMainForm = class(TForm)
-    dxBarManager: TdxBarManager;
-    dxBar: TdxBar;
+  TMainForm = class(TAncestorMainForm)
     bbExit: TdxBarButton;
     bbGoodsDocuments: TdxBarSubItem;
     bbGuides: TdxBarSubItem;
-    ActionList: TActionList;
     actExit: TFileExit;
     actMeasure: TdsdOpenForm;
     bbMeasure: TdxBarButton;
-    cxLocalizer: TcxLocalizer;
     actJuridicalGroup: TdsdOpenForm;
     bbJuridicalGroup: TdxBarButton;
     actGoodsProperty: TdsdOpenForm;
@@ -116,7 +113,6 @@ type
     bbInventory: TdxBarButton;
     bbProductionSeparate: TdxBarButton;
     bbProductionUnion: TdxBarButton;
-    dsdUserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn;
     cxPropertiesStore: TcxPropertiesStore;
     actReport_HistoryCost: TdsdOpenForm;
     bbReportProfitLoss: TdxBarButton;
@@ -146,8 +142,6 @@ type
     bbUser: TdxBarButton;
     actProcess: TdsdOpenForm;
     bbProcess: TdxBarButton;
-    StoredProc: TdsdStoredProc;
-    ClientDataSet: TClientDataSet;
     bbTransportDocuments: TdxBarSubItem;
     bbTransport: TdxBarButton;
     bbFuel: TdxBarButton;
@@ -184,18 +178,13 @@ type
     actTicketFuel: TdsdOpenForm;
     bbCardFuel: TdxBarButton;
     bbTicketFuel: TdxBarButton;
-    frxXLSExport: TfrxXLSExport;
-    frxXMLExport: TfrxXMLExport;
-    frxRTFExport: TfrxRTFExport;
     actPositionLevel: TdsdOpenForm;
     bbPositionLevel: TdxBarButton;
     actStaffListData: TdsdOpenForm;
     bbStaffListData: TdxBarButton;
-    actUpdateProgram: TAction;
     bbUpdateProgramm: TdxBarButton;
     actModelService: TdsdOpenForm;
     bbModelService: TdxBarButton;
-    actAbout: TAction;
     bbAbout: TdxBarButton;
     actReport_TransportHoursWork: TdsdOpenForm;
     bbReport_TransportHoursWork: TdxBarButton;
@@ -290,7 +279,6 @@ type
     actCountry: TdsdOpenForm;
     bbCountry: TdxBarButton;
     bbMaker: TdxBarButton;
-    spUserProtocol: TdsdStoredProc;
     actProtocolUser: TdsdOpenForm;
     actProtocolMovement: TdsdOpenForm;
     bbUserProtocol: TdxBarButton;
@@ -369,13 +357,6 @@ type
     actPartnerAddress: TdsdOpenForm;
     bbPartnerAddress: TdxBarButton;
     procedure FormCreate(Sender: TObject);
-    procedure FormShow(Sender: TObject);
-    procedure FormKeyDown(Sender: TObject; var Key: Word; Shift: TShiftState);
-    procedure actUpdateProgramExecute(Sender: TObject);
-    procedure actAboutExecute(Sender: TObject);
-    procedure FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-  private
-    procedure OnException(Sender: TObject; E: Exception);
   public
     { Public declarations }
   end;
@@ -385,147 +366,12 @@ var
 
 implementation
 
-uses ParentForm, Storage, CommonData, MessagesUnit, UtilConst, Math,
-     AboutBoxUnit, UtilConvert, Menus;
-
-{$R DevExpressRus.res}
-
 {$R *.dfm}
-
-procedure TMainForm.actAboutExecute(Sender: TObject);
-begin
-  TAboutBox.Create(Self).ShowModal;
-end;
-
-procedure TMainForm.actUpdateProgramExecute(Sender: TObject);
-var Index: integer;
-    AllParentFormFree: boolean;
-begin
-  AllParentFormFree := false;
-  while not AllParentFormFree do begin
-    AllParentFormFree := true;
-    for Index := 0 to Screen.FormCount - 1 do
-        if Screen.Forms[Index] is TParentForm then begin
-           AllParentFormFree := false;
-           Screen.Forms[Index].Free;
-           break;
-        end;
-  end;
-  ShowMessage('Программа обновлена');
-end;
-
-procedure TMainForm.FormCloseQuery(Sender: TObject; var CanClose: Boolean);
-begin
-  // Здесь поверяем
-end;
 
 procedure TMainForm.FormCreate(Sender: TObject);
 begin
-  // Локализуем сообщения DevExpress
-  cxLocalizer.Active:= True;
-  cxLocalizer.Locale:= 1049;
-  Application.OnException := OnException;
-  dsdUserSettingsStorageAddOn.LoadUserSettings;
-end;
+  inherited;
 
-procedure TMainForm.FormKeyDown(Sender: TObject; var Key: Word;
-  Shift: TShiftState);
-begin
-  // Ctrl + Shift + S
-  if ShortCut(Key, Shift) = 24659 then begin
-     gc_isDebugMode := not gc_isDebugMode;
-     if gc_isDebugMode then
-        ShowMessage('Установлен режим отладки')
-      else
-        ShowMessage('Снят режим отладки');
-  end;
-  // Ctrl + Shift + T
-  if ShortCut(Key, Shift) = 24660 then begin
-     gc_isShowTimeMode := not gc_isShowTimeMode;
-     if gc_isShowTimeMode then
-        ShowMessage('Установлен режим проверки времени')
-      else
-        ShowMessage('Снят режим проверки времени');
-  end;
-  // Ctrl + Shift + D
-  if ShortCut(Key, Shift) = 24644 then begin
-     gc_isSetDefault := not gc_isSetDefault;
-     if gc_isSetDefault then
-        ShowMessage('Установки пользователя не загружаются')
-      else
-        ShowMessage('Установки пользователя загружаются');
-  end;
-end;
-
-procedure TMainForm.FormShow(Sender: TObject);
-var i, j, k: integer;
-begin
-  StoredProc.Execute;
-  ClientDataSet.IndexFieldNames := 'ActionName';
-  for I := 0 to ActionList.ActionCount - 1 do
-      // Проверяем только открытие формы
-      if ActionList.Actions[i] is TdsdOpenForm then
-         if not ClientDataSet.Locate('ActionName', ActionList.Actions[i].Name, []) then begin
-            TCustomAction(ActionList.Actions[i]).Enabled := false;
-            TCustomAction(ActionList.Actions[i]).Visible := false;
-         end;
-
-  ClientDataSet.EmptyDataSet;
-  // Отображаем видимые пункты меню
-  for i := 0 to dxBarManager.ItemCount - 1 do
-      if dxBarManager.Items[i] is TdxBarButton then
-         if Assigned(dxBarManager.Items[i].Action) then
-            if not TCustomAction(dxBarManager.Items[i].Action).Enabled then
-               dxBarManager.Items[i].Visible := ivNever;
-
-  for k := 1 to 3 do
-    // А теперь бы пройтись по группам меню и отрубить те, у которых нет видимых чайлдов
-    for i := 0 to dxBarManager.ItemCount - 1 do
-        if dxBarManager.Items[i] is TdxBarSubItem then begin
-           dxBarManager.Items[i].Visible := ivNever;
-           for j := 0 to TdxBarSubItem(dxBarManager.Items[i]).ItemLinks.Count - 1 do
-               if (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item.Visible = ivAlways)
-                  and not (TdxBarSubItem(dxBarManager.Items[i]).ItemLinks[j].Item is TdxBarSeparator) then begin
-                  dxBarManager.Items[i].Visible := ivAlways;
-                  break;
-               end;
-        end;
-
-end;
-
-procedure TMainForm.OnException(Sender: TObject; E: Exception);
-var TextMessage: String;
-    isMessage: boolean;
-begin
-
-  if E is ESortException then begin
-
-  end
-  else begin
-     isMessage := false;
-     if (E is EStorageException) then begin
-        isMessage := (E as EStorageException).ErrorCode = 'P0001';
-
-        if pos('context', AnsilowerCase(E.Message)) = 0 then
-           TextMessage := E.Message
-         else
-           // Выбрасываем все что после Context
-           TextMessage := Copy(E.Message, 1, pos('context', AnsilowerCase(E.Message)) - 1)
-     end
-     else
-        TextMessage := E.Message;
-     if not isMessage then begin
-        // Сохраняем протокол в базе
-        try
-          spUserProtocol.ParamByName('inProtocolData').Value := gfStrToXmlStr(E.Message);
-          spUserProtocol.Execute;
-        except
-
-        end;
-     end;
-
-     TMessagesForm.Create(nil).Execute(TextMessage, E.Message);
-  end;
 end;
 
 end.
