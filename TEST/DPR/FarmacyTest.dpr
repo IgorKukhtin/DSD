@@ -7,7 +7,7 @@ uses
   dbCreateStructureTest in '..\SOURCE\STRUCTURE\dbCreateStructureTest.pas',
   dbMetadataTest in '..\SOURCE\METADATA\dbMetadataTest.pas',
   zLibUtil in '..\SOURCE\zLibUtil.pas',
-  dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas,
+  dbCreateViewTest in '..\SOURCE\View\dbCreateViewTest.pas',
   dbFarmacyProcedureTest in '..\SOURCE\dbFarmacyProcedureTest.pas',
   UtilConst in '..\..\SOURCE\UtilConst.pas',
   dbEnumTest in '..\SOURCE\dbEnumTest.pas',
