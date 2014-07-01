@@ -8,6 +8,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
+               JuridicalId Integer, JuridicalName TVarChar,
                Comment Integer,
                isErased boolean) AS
 $BODY$
@@ -25,6 +26,9 @@ BEGIN
            
            , CAST (0 as Integer)   AS JuridicalBasisId
            , CAST ('' as TVarChar) AS JuridicalBasisName 
+           
+           , CAST (0 as Integer)   AS JuridicalId
+           , CAST ('' as TVarChar) AS JuridicalName
 
            , CAST (NULL AS Integer) AS Comment     
        
@@ -40,6 +44,9 @@ BEGIN
            , Object_JuridicalBasis.Id         AS JuridicalBasisId
            , Object_JuridicalBasis.ValueData  AS JuridicalBasisName 
 
+           , Object_Juridical.Id         AS JuridicalId
+           , Object_Juridical.ValueData  AS JuridicalName          
+
            , ObjectString_Comment.ValueData AS Comment
            
            , Object_Contract.isErased       AS isErased
@@ -50,6 +57,11 @@ BEGIN
                                AND ObjectLink_Contract_JuridicalBasis.DescId = zc_ObjectLink_Contract_JuridicalBasis()
            LEFT JOIN Object AS Object_JuridicalBasis ON Object_JuridicalBasis.Id = ObjectLink_Contract_JuridicalBasis.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Contract_Juridical
+                                ON ObjectLink_Contract_Juridical.ObjectId = Object_Contract.Id
+                               AND ObjectLink_Contract_Juridical.DescId = zc_ObjectLink_Contract_Juridical()
+           LEFT JOIN Object AS Object_Juridical ON Object_Juridical.Id = ObjectLink_Contract_Juridical.ChildObjectId  
+           
            LEFT JOIN ObjectString AS ObjectString_Comment 
                                   ON ObjectString_Comment.ObjectId = Object_Contract.Id
                                  AND ObjectString_Comment.DescId = zc_ObjectString_Contract_Comment()
