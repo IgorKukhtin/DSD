@@ -27,7 +27,6 @@ uses
   Goods in '..\..\FarmacyForms\Goods.pas' {GoodsForm},
   GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm},
   Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
-  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm},
   dbTest in '..\SOURCE\dbTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
@@ -70,7 +69,8 @@ uses
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
-  NDSKind in '..\..\FarmacyForms\NDSKind.pas' {NDSKindForm: TParentForm};
+  NDSKind in '..\..\FarmacyForms\NDSKind.pas' {NDSKindForm: TParentForm},
+  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm: TParentForm};
 
 {$R *.res}
 

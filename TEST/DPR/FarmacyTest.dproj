@@ -122,9 +122,6 @@
 			<DCCReference Include="..\..\FarmacyForms\Units.pas">
 				<Form>UnitForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
 				<Form>PeriodChoiceForm</Form>
@@ -199,6 +196,10 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FarmacyForms\NDSKind.pas">
 				<Form>NDSKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FarmacyForms\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

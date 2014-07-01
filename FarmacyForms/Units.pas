@@ -11,7 +11,8 @@ uses
   cxGrid, Datasnap.DBClient, cxPropertiesStore, dxBar,
   Vcl.ActnList, DataModul, cxTL, cxTLdxBarBuiltInMenu,
   cxInplaceContainer, cxTLData, cxDBTL, cxMaskEdit, ParentForm, dsdDB, dsdAction,
-  cxSplitter, dsdAddOn;
+  cxSplitter, dsdAddOn, dxSkinsCore, dxSkinsDefaultPainters, dxSkinscxPCPainter,
+  dxSkinsdxBarPainter;
 
 type
   TUnitForm = class(TParentForm)

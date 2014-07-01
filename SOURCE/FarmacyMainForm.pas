@@ -6,7 +6,8 @@ uses
   Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
   Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
-  dsdAction, cxLocalization;
+  dsdAction, cxLocalization, dxSkinsCore, dxSkinsDefaultPainters,
+  dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TForm)

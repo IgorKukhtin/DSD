@@ -1,9 +1,17 @@
-inherited UnitForm: TUnitForm
+object UnitForm: TUnitForm
+  Left = 0
+  Top = 0
   Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
   ClientHeight = 515
   ClientWidth = 710
-  ExplicitWidth = 718
-  ExplicitHeight = 542
+  Color = clBtnFace
+  Font.Charset = DEFAULT_CHARSET
+  Font.Color = clWindowText
+  Font.Height = -11
+  Font.Name = 'Tahoma'
+  Font.Style = []
+  KeyPreview = True
+  OldCreateOrder = False
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -201,6 +209,7 @@ inherited UnitForm: TUnitForm
     Top = 144
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spTree
       StoredProcList = <
         item
@@ -212,60 +221,71 @@ inherited UnitForm: TUnitForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
+      RefreshOnTabSetChanges = False
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
-          DataType = ftInteger
-          ParamType = ptOutput
           Value = '0'
         end>
       isShowModal = True
       DataSource = TreeDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
           Component = ClientGridDataSet
-          DataType = ftInteger
           ParamType = ptInput
         end>
       isShowModal = True
       ActionType = acUpdate
       DataSource = TreeDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = TreeDS
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 32776
+      ErasedFieldName = 'isErased'
       isSetErased = False
       DataSource = TreeDS
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
@@ -310,6 +330,9 @@ inherited UnitForm: TUnitForm
     Top = 160
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
+    ErasedFieldName = 'isErased'
+    OnDblClickActionList = <>
+    ActionItemList = <>
     DBTreeList = cxDBTreeList
     Left = 192
     Top = 240
@@ -321,14 +344,12 @@ inherited UnitForm: TUnitForm
         Component = ClientGridDataSet
         ComponentItem = 'Id'
         DataType = ftString
-        ParamType = ptOutput
       end
       item
         Name = 'TextValue'
         Component = ClientGridDataSet
         ComponentItem = 'Name'
         DataType = ftString
-        ParamType = ptOutput
       end>
     Left = 344
     Top = 232

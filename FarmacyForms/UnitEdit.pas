@@ -10,7 +10,18 @@ uses
   Vcl.StdActns, cxCurrencyEdit, cxCheckBox,
   Data.DB, Datasnap.DBClient, cxMaskEdit, cxDropDownEdit,
   cxLookupEdit, cxDBLookupEdit, cxDBLookupComboBox, ParentForm, dsdGuides,
-  dsdDB, dsdAction;
+  dsdDB, dsdAction, dxSkinsCore, dxSkinBlack, dxSkinBlue, dxSkinBlueprint,
+  dxSkinCaramel, dxSkinCoffee, dxSkinDarkRoom, dxSkinDarkSide,
+  dxSkinDevExpressDarkStyle, dxSkinDevExpressStyle, dxSkinFoggy,
+  dxSkinGlassOceans, dxSkinHighContrast, dxSkiniMaginary, dxSkinLilian,
+  dxSkinLiquidSky, dxSkinLondonLiquidSky, dxSkinMcSkin, dxSkinMoneyTwins,
+  dxSkinOffice2007Black, dxSkinOffice2007Blue, dxSkinOffice2007Green,
+  dxSkinOffice2007Pink, dxSkinOffice2007Silver, dxSkinOffice2010Black,
+  dxSkinOffice2010Blue, dxSkinOffice2010Silver, dxSkinPumpkin, dxSkinSeven,
+  dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus, dxSkinSilver,
+  dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008, dxSkinTheAsphaltWorld,
+  dxSkinsDefaultPainters, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
+  dxSkinXmas2008Blue, cxButtonEdit;
 
 type
   TUnitEditForm = class(TParentForm)
@@ -22,23 +33,30 @@ type
     spInsertUpdate: TdsdStoredProc;
     dsdFormParams: TdsdFormParams;
     spGet: TdsdStoredProc;
-    dsdDataSetRefresh: TdsdDataSetRefresh;
-    dsdExecStoredProc: TdsdExecStoredProc;
-    dsdFormClose1: TdsdFormClose;
+    DataSetRefresh: TdsdDataSetRefresh;
+    InsertUpdateGuides: TdsdInsertUpdateGuides;
+    FormClose: TdsdFormClose;
     Код: TcxLabel;
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
-    ceParentGroup: TcxLookupComboBox;
-    UnitGroupDataSet: TClientDataSet;
-    spGetJuridicalGroup: TdsdStoredProc;
-    UnitlGroupDS: TDataSource;
-    dsdUnitGroupGuides: TdsdGuides;
+    ParentGuides: TdsdGuides;
     cxLabel4: TcxLabel;
-    ceBranch: TcxLookupComboBox;
-    BranchDataSet: TClientDataSet;
-    spGetBranch: TdsdStoredProc;
-    BranchDS: TDataSource;
-    dsdBranchGuides: TdsdGuides;
+    BranchGuides: TdsdGuides;
+    ceParent: TcxButtonEdit;
+    cxLabel2: TcxLabel;
+    BusinessGuides: TdsdGuides;
+    ceBranch: TcxButtonEdit;
+    ceBusiness: TcxButtonEdit;
+    cxLabel5: TcxLabel;
+    ceJuridical: TcxButtonEdit;
+    JuridicalGuides: TdsdGuides;
+    cxLabel6: TcxLabel;
+    ceAccountDirection: TcxButtonEdit;
+    cxLabel7: TcxLabel;
+    ceProfitLossDirection: TcxButtonEdit;
+    AccountDirectionGuides: TdsdGuides;
+    ProfitLossDirectionGuides: TdsdGuides;
+    cbPartionDate: TcxCheckBox;
   private
     { Private declarations }
   public
