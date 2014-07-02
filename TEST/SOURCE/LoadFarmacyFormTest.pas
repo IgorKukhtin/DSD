@@ -39,9 +39,9 @@ type
     procedure LoadPaidKindFormTest;
     procedure LoadPriceListFormTest;
     procedure LoadIncomeFormTest;
-    procedure LoadUnitGroupFormTest;
+    procedure LoadUnitGroupFormTest; *)
     procedure LoadUnitFormTest;
-    procedure LoadReportFormTest;*)
+  (*  procedure LoadReportFormTest;*)
   end;
 
 implementation
@@ -237,7 +237,7 @@ procedure TLoadFormTest.LoadReportFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TBalanceForm'));
   TdsdFormStorageFactory.GetStorage.Load('TBalanceForm');
-end;
+end;*)
 
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
@@ -246,7 +246,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
 end;
-
+(*
 procedure TLoadFormTest.LoadUnitGroupFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitGroupForm'));
