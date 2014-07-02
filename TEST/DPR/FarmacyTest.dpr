@@ -22,11 +22,6 @@ uses
   dsdDB in '..\..\SOURCE\COMPONENT\dsdDB.pas',
   dsdGuides in '..\..\SOURCE\COMPONENT\dsdGuides.pas',
   DataModul in '..\..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  ExtraChargeCategories in '..\..\FarmacyForms\ExtraChargeCategories.pas' {ExtraChargeCategoriesForm},
-  ExtraChargeCategoriesEdit in '..\..\FarmacyForms\ExtraChargeCategoriesEdit.pas' {ExtraChargeCategoriesEditForm},
-  Goods in '..\..\FarmacyForms\Goods.pas' {GoodsForm},
-  GoodsEdit in '..\..\FarmacyForms\GoodsEdit.pas' {GoodsEditForm},
-  Units in '..\..\FarmacyForms\Units.pas' {UnitForm},
   dbTest in '..\SOURCE\dbTest.pas',
   ChoicePeriod in '..\..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
@@ -68,9 +63,7 @@ uses
   Maker in '..\..\Forms\Guides\Maker.pas' {MakerForm: TParentForm},
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
-  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
-  NDSKind in '..\..\FarmacyForms\NDSKind.pas' {NDSKindForm: TParentForm},
-  UnitEdit in '..\..\FarmacyForms\UnitEdit.pas' {UnitEditForm: TParentForm};
+  CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm};
 
 {$R *.res}
 

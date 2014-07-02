@@ -107,21 +107,6 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\ExtraChargeCategories.pas">
-				<Form>ExtraChargeCategoriesForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\ExtraChargeCategoriesEdit.pas">
-				<Form>ExtraChargeCategoriesEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\Goods.pas">
-				<Form>GoodsForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\GoodsEdit.pas">
-				<Form>GoodsEditForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\Units.pas">
-				<Form>UnitForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
 				<Form>PeriodChoiceForm</Form>
@@ -192,14 +177,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
 				<Form>CountryEditForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\NDSKind.pas">
-				<Form>NDSKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
