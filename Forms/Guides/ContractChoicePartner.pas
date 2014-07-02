@@ -42,6 +42,7 @@ type
     colChangePercent: TcxGridDBColumn;
     actShowAll: TBooleanStoredProcAction;
     bbShowAll: TdxBarButton;
+    colContractCode: TcxGridDBColumn;
   private
     { Private declarations }
   public
