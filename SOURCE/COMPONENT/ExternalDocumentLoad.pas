@@ -9,6 +9,8 @@ type
   TSale1CLoadAction = class(TExternalLoadAction)
   private
     FBranch: TdsdParam;
+    FEndDate: TdsdParam;
+    FStartDate: TdsdParam;
     function ToDate(S: string): Variant;
   protected
     function GetStoredProc: TdsdStoredProc; override;
@@ -19,6 +21,9 @@ type
     destructor Destroy; override;
   published
     property Branch: TdsdParam read FBranch write FBranch;
+    // Период дат
+    property StartDateParam: TdsdParam read FStartDate write FStartDate;
+    property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
 
   TSale1CLoad = class(TFileExternalLoad)
@@ -50,10 +55,14 @@ constructor TSale1CLoadAction.Create(AOwner: TComponent);
 begin
   inherited;
   Branch := TdsdParam.Create(nil);
+  FStartDate := TdsdParam.Create(nil);
+  FEndDate := TdsdParam.Create(nil);
 end;
 
 destructor TSale1CLoadAction.Destroy;
 begin
+  FreeAndNil(FStartDate);
+  FreeAndNil(FEndDate);
   FreeAndNil(FBranch);
   inherited;
 end;

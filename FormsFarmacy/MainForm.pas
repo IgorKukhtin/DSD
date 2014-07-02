@@ -2,26 +2,10 @@ unit MainForm;
 
 interface
 
-uses AncestorMain, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
-  dsdAction, frxExportXML, frxExportXLS, frxClass, frxExportRTF, Data.DB,
-  Datasnap.DBClient, dsdDB, dsdAddOn, cxLocalization, Vcl.ActnList,
-  System.Classes, Vcl.StdActns, dxBar, cxClasses;
-
-uses
-<<<<<<< HEAD:SOURCE/FarmacyMainForm.pas
-  Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants, System.Classes, Vcl.Graphics,
-  Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar, cxClasses, Vcl.ActnList,
-  Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
-  dsdAction, cxLocalization, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinsdxBarPainter;
-=======
-  DataModul, Winapi.Windows, Winapi.Messages, System.SysUtils, System.Variants,
-  System.Classes, Vcl.Graphics, Vcl.Controls, Vcl.Forms, Vcl.Dialogs, dxBar,
-  cxClasses, Vcl.ActnList, Vcl.StdActns, Vcl.StdCtrls,
-  Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan, dsdAction, cxLocalization,
-  AncestorMain, frxExportXML, frxExportXLS, frxClass, frxExportRTF, Data.DB,
-  Datasnap.DBClient, dsdDB, dsdAddOn;
->>>>>>> refs/remotes/origin/master:FormsFarmacy/MainForm.pas
+uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
+  frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn, cxLocalization,
+  Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
+  DataModul;
 
 type
   TMainForm = class(TAncestorMainForm)
