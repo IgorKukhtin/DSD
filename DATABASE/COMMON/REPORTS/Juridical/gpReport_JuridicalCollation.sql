@@ -19,7 +19,7 @@ RETURNS TABLE (MovementSumm TFloat,
                Debet TFloat, 
                Kredit TFloat, 
                OperDate TDateTime, 
-               InvNumber TVarChar, 
+               InvNumber TVarChar, InvNumberPartner TVarChar,
                AccountCode Integer,
                AccountName TVarChar,
                ContractCode Integer, 
@@ -268,6 +268,7 @@ ALTER FUNCTION gpReport_JuridicalCollation (TDateTime, TDateTime, Integer, Integ
 /*-------------------------------------------------------------------------------
  ÈÑÒÎĞÈß ĞÀÇĞÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎĞ
                Ôåëîíşê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 03.07.14                                        * add InvNumberPartner
  16.05.14                                        * add Operation.OperDate
  10.05.14                                        * add inInfoMoneyId
  05.05.14                                        * add inPaidKindId

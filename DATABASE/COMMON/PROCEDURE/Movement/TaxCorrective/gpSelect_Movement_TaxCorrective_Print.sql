@@ -431,7 +431,8 @@ BEGIN
                       ) AS tmp ON 1 = 1
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
             LEFT JOIN tmpMovementTaxCount ON 1 = 1
-       WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL
+       -- !!! print all !!!
+       -- WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL
      ;
     RETURN NEXT Cursor2;
 
@@ -443,6 +444,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 27.06.14                                        * !!! print all !!!
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  03.06.14                                        * add zc_Movement_PriceCorrective
