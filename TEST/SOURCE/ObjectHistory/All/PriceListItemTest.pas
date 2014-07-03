@@ -35,7 +35,7 @@ var
 implementation
 
 uses DB, UtilConst, TestFramework, Authentication, CommonData, Storage,
-   dbMovementItemTest, dbMovementTest;
+   dbMovementItemTest, dbMovementTest, dbObjectMeatTest;
 
 procedure TPriceListItemTest.ProcedureLoad;
 begin

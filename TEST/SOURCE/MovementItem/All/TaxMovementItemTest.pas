@@ -28,7 +28,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants,TaxTest;
+     Variants, dbObjectMeatTest, TaxTest;
 
 { TTaxMovementItemTest }
 

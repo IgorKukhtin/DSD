@@ -18,7 +18,6 @@ uses
   dsdGuides in '..\SOURCE\COMPONENT\dsdGuides.pas',
   FormStorage in '..\SOURCE\FormStorage.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
-  MainForm in '..\SOURCE\MainForm.pas' {MainForm},
   ChoicePeriod in '..\SOURCE\COMPONENT\ChoicePeriod.pas' {PeriodChoiceForm},
   Defaults in '..\SOURCE\COMPONENT\Defaults.pas',
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
@@ -56,9 +55,12 @@ uses
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  MainForm in '..\FormsMeat\MainForm.pas' {MainForm};
 
 {$R *.res}
+{$R DevExpressRus.res}
 
 begin
   Application.Initialize;

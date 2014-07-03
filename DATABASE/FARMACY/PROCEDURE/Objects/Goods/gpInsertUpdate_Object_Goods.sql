@@ -9,42 +9,35 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
     
     IN inGoodsGroupId        Integer   ,    -- группы товаров
     IN inMeasureId           Integer   ,    -- ссылка на единицу измерения
-    IN inNDSId               Integer   ,    -- НДС
+    IN inNDSKindId           Integer   ,    -- НДС
 
     IN inSession             TVarChar       -- текущий пользователь
 )
 RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
-   DECLARE Code_max Integer;   
+   DECLARE vbCode Integer;   
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
-   -- !!! Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
-   -- !!! IF COALESCE (inCode, 0) = 0
-   -- !!! THEN 
-   -- !!!     SELECT MAX (ObjectCode) + 1 INTO Code_max FROM Object WHERE Object.DescId = zc_Object_Goods();
-   -- !!!  ELSE
-   -- !!!     Code_max := inCode;
-   -- !!! END IF; 
-   IF COALESCE (inCode, 0) = 0  THEN Code_max := NULL; ELSE Code_max := inCode; END IF; -- !!! А ЭТО УБРАТЬ !!!
+   vbCode := lfGet_ObjectCode (inCode, zc_Object_Goods());
    
    -- !!! проверка уникальности <Наименование>
    -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
 
    -- проверка уникальности <Код>
-   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), Code_max);
+   PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
 
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), Code_max, inName);
+   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), vbCode, inName);
    -- сохранили связь с <Группа>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsGroup(), ioId, inGoodsGroupId);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили свойство <НДС>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDS(), ioId, inNDSId );
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
   
 
    -- сохранили протокол
@@ -59,6 +52,7 @@ ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, Integer, TVarChar, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 26.06.14                        *
  24.06.14         *
  19.06.13                        * 
 

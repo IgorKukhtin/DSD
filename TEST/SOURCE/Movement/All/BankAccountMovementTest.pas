@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework, dsdDB,
+uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework, dsdDB,
      DBClient, BankAccountTest, BusinessTest;
 
 { TBankAccount }

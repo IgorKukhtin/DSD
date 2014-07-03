@@ -84,15 +84,13 @@
 			<DCCReference Include="..\SOURCE\STRUCTURE\dbCreateStructureTest.pas"/>
 			<DCCReference Include="..\SOURCE\METADATA\dbMetadataTest.pas"/>
 			<DCCReference Include="..\SOURCE\zLibUtil.pas"/>
+			<DCCReference Include="..\SOURCE\View\dbCreateViewTest.pas"/>
 			<DCCReference Include="..\SOURCE\dbFarmacyProcedureTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\UtilConst.pas"/>
 			<DCCReference Include="..\SOURCE\dbEnumTest.pas"/>
 			<DCCReference Include="..\SOURCE\LoadFarmacyFormTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\PriceListGoodsItem.pas">
 				<Form>PriceListGoodsItemForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
-				<Form>MeasureEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\SOURCE\CommonData.pas"/>
 			<DCCReference Include="..\..\SOURCE\Authentication.pas"/>
@@ -110,23 +108,20 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\ExtraChargeCategories.pas">
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ExtraChargeCategories.pas">
 				<Form>ExtraChargeCategoriesForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\ExtraChargeCategoriesEdit.pas">
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ExtraChargeCategoriesEdit.pas">
 				<Form>ExtraChargeCategoriesEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\Goods.pas">
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Goods.pas">
 				<Form>GoodsForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\GoodsEdit.pas">
+			<DCCReference Include="..\..\FormsFarmacy\Guides\GoodsEdit.pas">
 				<Form>GoodsEditForm</Form>
 			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\Units.pas">
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Units.pas">
 				<Form>UnitForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\..\FarmacyForms\UnitEdit.pas">
-				<Form>UnitEditForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\dbTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\COMPONENT\ChoicePeriod.pas">
@@ -168,6 +163,96 @@
 			<DCCReference Include="..\..\SOURCE\EDI\DesadvXML.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\EDI.pas"/>
 			<DCCReference Include="..\..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroup.pas">
+				<Form>GoodsGroupForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\GoodsGroupEdit.pas">
+				<Form>GoodsGroupEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Measure.pas">
+				<Form>MeasureForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\MeasureEdit.pas">
+				<Form>MeasureEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Maker.pas">
+				<Form>MakerForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\MakerEdit.pas">
+				<Form>MakerEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\Country.pas">
+				<Form>CountryForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\CountryEdit.pas">
+				<Form>CountryEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Enum\NDSKind.pas">
+				<Form>NDSKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\UnitEdit.pas">
+				<Form>UnitEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
+				<Form>AncestorBaseForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorData.pas">
+				<Form>AncestorDataForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDBGrid.pas">
+				<Form>AncestorDBGridForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
+				<Form>AncestorDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocument.pas">
+				<Form>AncestorDocumentForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorDocumentMC.pas">
+				<Form>AncestorDocumentMCForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEditDialog.pas">
+				<Form>AncestorEditDialogForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorEnum.pas">
+				<Form>AncestorEnumForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorGuides.pas">
+				<Form>AncestorGuidesForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorJournal.pas">
+				<Form>AncestorJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorReport.pas">
+				<Form>AncestorReportForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
+				<Form>AboutBox</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

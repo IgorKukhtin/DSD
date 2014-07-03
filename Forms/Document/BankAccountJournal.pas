@@ -37,6 +37,11 @@ type
     colPartnerBankAccount: TcxGridDBColumn;
     actInsertProfitLossService: TdsdInsertUpdateAction;
     bbAddBonus: TdxBarButton;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    spSelectPrint: TdsdStoredProc;
+    actPrint: TdsdPrintAction;
+    bbPrint: TdxBarButton;
   private
     { Private declarations }
   public

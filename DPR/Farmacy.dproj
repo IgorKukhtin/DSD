@@ -85,9 +85,6 @@
 				<Form>dmMain</Form>
 				<DesignClass>TDataModule</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\FarmacyMainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdAction.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdAddOn.pas"/>
 			<DCCReference Include="..\SOURCE\COMPONENT\dsdDB.pas"/>
@@ -110,7 +107,6 @@
 				<Form>MessagesForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\COMPONENT\ClientBankLoad.pas"/>
-			<DCCReference Include="..\SOURCE\MemDBFTable.pas"/>
 			<DCCReference Include="..\SOURCE\SimpleGauge.pas">
 				<Form>SimpleGaugeForm</Form>
 			</DCCReference>
@@ -132,6 +128,23 @@
 			<DCCReference Include="..\SOURCE\DBF\VKDBFParser.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFNTX.pas"/>
 			<DCCReference Include="..\SOURCE\DBF\VKDBFSortedList.pas"/>
+			<DCCReference Include="..\SOURCE\DevAddOn\cxGridAddOn.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\ComDocXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DeclarXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\DesadvXML.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\EDI.pas"/>
+			<DCCReference Include="..\SOURCE\EDI\OrderXML.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDOC.pas"/>
+			<DCCReference Include="..\SOURCE\MeDOC\MeDocXML.pas"/>
+			<DCCReference Include="..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\AboutBoxUnit.pas">
+				<Form>AboutBox</Form>
+			</DCCReference>
+			<DCCReference Include="..\FormsFarmacy\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

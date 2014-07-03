@@ -3,7 +3,6 @@ program Farmacy;
 uses
   Vcl.Forms,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
-  FarmacyMainForm in '..\SOURCE\FarmacyMainForm.pas' {MainForm},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
   dsdDB in '..\SOURCE\COMPONENT\dsdDB.pas',
@@ -20,7 +19,6 @@ uses
   UnilWin in '..\SOURCE\UnilWin.pas',
   MessagesUnit in '..\SOURCE\MessagesUnit.pas' {MessagesForm},
   ClientBankLoad in '..\SOURCE\COMPONENT\ClientBankLoad.pas',
-  MemDBFTable in '..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   Document in '..\SOURCE\COMPONENT\Document.pas',
   ExternalLoad in '..\SOURCE\COMPONENT\ExternalLoad.pas',
@@ -39,9 +37,22 @@ uses
   VKDBFCollate in '..\SOURCE\DBF\VKDBFCollate.pas',
   VKDBFParser in '..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\SOURCE\DBF\VKDBFNTX.pas',
-  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas';
+  VKDBFSortedList in '..\SOURCE\DBF\VKDBFSortedList.pas',
+  cxGridAddOn in '..\SOURCE\DevAddOn\cxGridAddOn.pas',
+  ComDocXML in '..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\SOURCE\EDI\OrderXML.pas',
+  MeDOC in '..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
+  AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm};
 
 {$R *.res}
+{$R DevExpressRus.res}
+
 
 begin
   Application.Initialize;
@@ -50,6 +61,5 @@ begin
 
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
   Application.CreateForm(TMainForm, MainFormInstance);
-  Application.CreateForm(TdmMain, dmMain);
   Application.Run;
 end.

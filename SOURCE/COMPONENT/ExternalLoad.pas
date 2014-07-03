@@ -34,27 +34,19 @@ type
   TExternalLoadAction = class(TdsdCustomAction)
   private
     FInitializeDirectory: string;
-    FEndDate: TdsdParam;
-    FStartDate: TdsdParam;
     FFileName: string;
   protected
-    function StartDate: TDateTime;
-    function EndDate: TDateTime;
     function GetStoredProc: TdsdStoredProc; virtual; abstract;
     function GetExternalLoad: TExternalLoad; virtual; abstract;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); virtual; abstract;
   public
     property FileName: string read FFileName write FFileName;
     constructor Create(Owner: TComponent); override;
-    destructor Destroy; override;
     function Execute: boolean; override;
   published
     // Директория загрузки. Сделана published что бы сохранять данные по стандартной схеме
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
-    property StartDateParam: TdsdParam read FStartDate write FStartDate;
-    property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
-
 
 implementation
 
@@ -82,20 +74,6 @@ constructor TExternalLoadAction.Create(Owner: TComponent);
 begin
   FileName := '';
   inherited;
-  FStartDate := TdsdParam.Create(nil);
-  FEndDate := TdsdParam.Create(nil);
-end;
-
-destructor TExternalLoadAction.Destroy;
-begin
-  FreeAndNil(FStartDate);
-  FreeAndNil(FEndDate);
-  inherited;
-end;
-
-function TExternalLoadAction.EndDate: TDateTime;
-begin
-  result := EndDateParam.Value;
 end;
 
 function TExternalLoadAction.Execute: boolean;
@@ -135,11 +113,6 @@ begin
   finally
     FExternalLoad.Free;
   end;
-end;
-
-function TExternalLoadAction.StartDate: TDateTime;
-begin
-  result := StartDateParam.Value;
 end;
 
 constructor TFileExternalLoad.Create(DataSetType: TDataSetType);

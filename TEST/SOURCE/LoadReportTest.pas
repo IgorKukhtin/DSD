@@ -71,6 +71,7 @@ begin
   LoadReportFromFile('Акт сверки (бухгалтерский) АЛАН', ReportPath + '\Отчеты (финансы)\Акт сверки (бухгалтерский) АЛАН.fr3');
   LoadReportFromFile('Отчет Итог по покупателю (Акт сверки)', ReportPath + '\Отчеты (финансы)\Отчет Итог по покупателю (Акт сверки).fr3');
   LoadReportFromFile('Обороты из акта сверки', ReportPath + '\Отчеты (финансы)\Обороты из акта сверки.fr3');
+  LoadReportFromFile('Обороты по счету', ReportPath + '\Отчеты (финансы)\Обороты по счету.fr3');
 
   // Печатные формы накладных
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');

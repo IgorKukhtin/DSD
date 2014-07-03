@@ -18,7 +18,6 @@ uses
   Defaults in '..\..\SOURCE\COMPONENT\Defaults.pas',
   UnilWin in '..\..\SOURCE\UnilWin.pas',
   MessagesUnit in '..\..\SOURCE\MessagesUnit.pas' {MessagesForm},
-  MemDBFTable in '..\..\SOURCE\MemDBFTable.pas',
   SimpleGauge in '..\..\SOURCE\SimpleGauge.pas' {SimpleGaugeForm},
   ClientBankLoad in '..\..\SOURCE\COMPONENT\ClientBankLoad.pas',
   Document in '..\..\SOURCE\COMPONENT\Document.pas',
@@ -40,7 +39,13 @@ uses
   VKDBFParser in '..\..\SOURCE\DBF\VKDBFParser.pas',
   VKDBFNTX in '..\..\SOURCE\DBF\VKDBFNTX.pas',
   VKDBFSortedList in '..\..\SOURCE\DBF\VKDBFSortedList.pas',
-  EDI in '..\..\SOURCE\EDI\EDI.pas';
+  ComDocXML in '..\..\SOURCE\EDI\ComDocXML.pas',
+  DeclarXML in '..\..\SOURCE\EDI\DeclarXML.pas',
+  DesadvXML in '..\..\SOURCE\EDI\DesadvXML.pas',
+  EDI in '..\..\SOURCE\EDI\EDI.pas',
+  OrderXML in '..\..\SOURCE\EDI\OrderXML.pas',
+  MeDOC in '..\..\SOURCE\MeDOC\MeDOC.pas',
+  MeDocXML in '..\..\SOURCE\MeDOC\MeDocXML.pas';
 
 {$R *.res}
 

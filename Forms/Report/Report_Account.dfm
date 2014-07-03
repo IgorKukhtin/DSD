@@ -2,7 +2,7 @@ object Report_AccountForm: TReport_AccountForm
   Left = 0
   Top = 0
   Caption = #1054#1090#1095#1077#1090' <'#1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091'>'
-  ClientHeight = 395
+  ClientHeight = 521
   ClientWidth = 1189
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
@@ -19,9 +19,9 @@ object Report_AccountForm: TReport_AccountForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 137
+    Top = 139
     Width = 1189
-    Height = 258
+    Height = 382
     Align = alClient
     TabOrder = 0
     object cxGridDBTableView: TcxGridDBTableView
@@ -468,7 +468,7 @@ object Report_AccountForm: TReport_AccountForm
   end
   object Panel1: TPanel
     Left = 0
-    Top = 26
+    Top = 28
     Width = 1189
     Height = 111
     Align = alTop
@@ -752,7 +752,7 @@ object Report_AccountForm: TReport_AccountForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -784,6 +784,10 @@ object Report_AccountForm: TReport_AccountForm
         end
         item
           BeginGroup = True
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
           Visible = True
           ItemName = 'bbToExcel'
         end>
@@ -817,6 +821,11 @@ object Report_AccountForm: TReport_AccountForm
     object bbOpenDocument: TdxBarButton
       Action = actOpenDocument
       Category = 0
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+      Visible = ivNever
     end
   end
   object ActionList: TActionList
@@ -892,6 +901,43 @@ object Report_AccountForm: TReport_AccountForm
           StoredProc = getMovementForm
         end>
       Caption = 'actMovementForm'
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = '0'
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.Name = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
     end
   end
   object dsdStoredProc: TdsdStoredProc
@@ -1440,5 +1486,109 @@ object Report_AccountForm: TReport_AccountForm
       end>
     Left = 600
     Top = 77
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_Account_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountGroupId'
+        Value = ''
+        Component = AccountGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountDirectionId'
+        Value = ''
+        Component = AccountDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        Component = InfoMoneyGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        Component = AccountGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBusinessId'
+        Value = ''
+        Component = BusinessGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossGroupId'
+        Value = ''
+        Component = ProfitLossGroupGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = ''
+        Component = ProfitLossDirectionGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossId'
+        Value = ''
+        Component = ProfitLossGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        Component = BranchGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 767
+    Top = 232
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 844
+    Top = 262
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 844
+    Top = 209
   end
 end

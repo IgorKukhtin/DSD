@@ -1,1 +1,1 @@
-DROP DATABASE farmacy;
+DROP IF EXISTS DATABASE farmacy;

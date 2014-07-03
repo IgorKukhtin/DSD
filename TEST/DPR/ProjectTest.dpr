@@ -177,7 +177,6 @@ uses
   Report_MotionGoodsDialog in '..\..\Forms\Report\Report_MotionGoodsDialog.pas' {Report_MotionGoodsDialogForm},
   Report_MotionGoods in '..\..\Forms\Report\Report_MotionGoods.pas' {Report_MotionGoodsForm},
   ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
-  MainForm in '..\..\SOURCE\MainForm.pas' {MainForm},
   Role in '..\..\Forms\Role.pas' {RoleForm},
   RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm},
   Action in '..\..\Forms\Action.pas' {ActionForm},
@@ -226,7 +225,7 @@ uses
   PersonalTest in '..\SOURCE\Objects\All\PersonalTest.pas',
   TaxCorrectiveMovementItemTest in '..\SOURCE\MovementItem\All\TaxCorrectiveMovementItemTest.pas',
   ModelService in '..\..\Forms\ModelService.pas' {ModelServiceForm},
-  ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {ModelServiceKindForm},
+  ModelServiceKind in '..\..\Forms\Enum\ModelServiceKind.pas' {NDSKindForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
   UnilWin in '..\..\SOURCE\UnilWin.pas',
@@ -237,7 +236,6 @@ uses
   StaffList in '..\..\Forms\StaffList.pas' {StaffListForm: TParentForm},
   StaffListSummKind in '..\..\Forms\Enum\StaffListSummKind.pas' {StaffListSummKindForm: TParentForm},
   DocumentTaxKind in '..\..\Forms\Kind\DocumentTaxKind.pas' {DocumentTaxKindForm: TParentForm},
-  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorDialog in '..\..\Forms\Ancestor\AncestorDialog.pas' {AncestorDialogForm: TParentForm},
   AncestorEditDialog in '..\..\Forms\Ancestor\AncestorEditDialog.pas' {AncestorEditDialogForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
@@ -471,7 +469,11 @@ uses
   ContactPersonEdit in '..\..\Forms\Guides\ContactPersonEdit.pas' {ContactPersonEditForm: TParentForm},
   ContactPersonKind in '..\..\Forms\Guides\ContactPersonKind.pas' {ContactPersonKindForm: TParentForm},
   ContactPersonKindEdit in '..\..\Forms\Guides\ContactPersonKindEdit.pas' {ContactPersonKindEditForm: TParentForm},
-  PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm};
+  PartnerAddress in '..\..\Forms\Guides\PartnerAddress.pas' {PartnerAddressForm: TParentForm},
+  dbObjectMeatTest in '..\SOURCE\dbObjectMeatTest.pas',
+  MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
+  AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
+  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
 
 {$R *.RES}
 

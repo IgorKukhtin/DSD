@@ -46,14 +46,24 @@ type
   private
     FClientBankType: TClientBankType;
     FBankOKPO: string;
+    FEndDate: TdsdParam;
+    FStartDate: TdsdParam;
     function GetClientBankLoad(AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
+    function StartDate: TDateTime;
+    function EndDate: TDateTime;
   protected
     function GetStoredProc: TdsdStoredProc; override;
     function GetExternalLoad: TExternalLoad; override;
     procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AStoredProc: TdsdStoredProc); override;
+  public
+    constructor Create(Owner: TComponent); override;
+    destructor Destroy; override;
   published
     // Для какого банка осуществляется загрузка
     property ClientBankType: TClientBankType read FClientBankType write FClientBankType;
+    // Период дат
+    property StartDateParam: TdsdParam read FStartDate write FStartDate;
+    property EndDateParam: TdsdParam read FEndDate write FEndDate;
   end;
 
   procedure Register;
@@ -175,6 +185,25 @@ type
     function GetCurrencyName: string; override;
   end;
 
+constructor TClientBankLoadAction.Create(Owner: TComponent);
+begin
+  inherited;
+  FStartDate := TdsdParam.Create(nil);
+  FEndDate := TdsdParam.Create(nil);
+end;
+
+destructor TClientBankLoadAction.Destroy;
+begin
+  FreeAndNil(FStartDate);
+  FreeAndNil(FEndDate);
+  inherited;
+end;
+
+function TClientBankLoadAction.EndDate: TDateTime;
+begin
+  result := EndDateParam.Value;
+end;
+
 function TClientBankLoadAction.GetClientBankLoad(
   AClientBankType: TClientBankType; StartDate, EndDate: TDateTime): TClientBankLoad;
 begin
@@ -234,6 +263,11 @@ begin
     ParamByName('inComment').Value := Comment;
     Execute;
   end;
+end;
+
+function TClientBankLoadAction.StartDate: TDateTime;
+begin
+  result := StartDateParam.Value;
 end;
 
 { TClientBankLoad }
@@ -793,9 +827,9 @@ end;
 function TPireusBankLoad.GetOperSumm: real;
 begin
   if FDataSet.FieldByName('Операция').AsString = 'Дебет' then
-     result := FDataSet.FieldByName('Сумма').AsFloat
-  else
      result := - FDataSet.FieldByName('Сумма').AsFloat
+  else
+     result := FDataSet.FieldByName('Сумма').AsFloat
 end;
 
 end.

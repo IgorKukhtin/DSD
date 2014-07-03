@@ -29,7 +29,7 @@ implementation
 
 uses UtilConst, Db, SysUtils, PersonalTest, dbMovementTest, UnitsTest,
      Storage, Authentication, TestFramework, CommonData, dbObjectTest,
-     Variants,TaxCorrectiveTest;
+     Variants, dbObjectMeatTest, TaxCorrectiveTest;
 
 { TTaxCorrectiveMovementItemTest }
 

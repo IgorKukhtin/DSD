@@ -31,7 +31,7 @@ type
 
 implementation
 
-uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB;
+uses UtilConst, TestFramework, SysUtils, DBClient, dsdDB, dbObjectMeatTest;
 
 { TdbUnitTest }
 

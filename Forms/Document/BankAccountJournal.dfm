@@ -3,28 +3,25 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   ClientHeight = 377
   ClientWidth = 1056
   ExplicitWidth = 1064
-  ExplicitHeight = 404
+  ExplicitHeight = 411
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1056
-    Height = 320
+    Height = 318
     TabOrder = 3
-    ExplicitTop = 57
     ExplicitWidth = 1056
-    ExplicitHeight = 320
-    ClientRectBottom = 320
-    ClientRectRight = 1056
+    ExplicitHeight = 318
+    ClientRectBottom = 314
+    ClientRectRight = 1052
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 0
-      ExplicitTop = 0
-      ExplicitWidth = 1056
-      ExplicitHeight = 320
+      ExplicitWidth = 1050
+      ExplicitHeight = 312
       inherited cxGrid: TcxGrid
-        Width = 1056
-        Height = 320
-        ExplicitWidth = 1056
-        ExplicitHeight = 320
+        Width = 1050
+        Height = 312
+        ExplicitWidth = 1050
+        ExplicitHeight = 312
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -307,6 +304,43 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       isShowModal = False
       IdFieldName = 'Id'
     end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Value = Null
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 3
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDItems'
+        end>
+      Params = <>
+      ReportName = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.Name = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.Value = #1054#1073#1086#1088#1086#1090#1099' '#1087#1086' '#1089#1095#1077#1090#1091
+      ReportNameParam.DataType = ftString
+      ReportNameParam.ParamType = ptInput
+    end
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Movement_BankAccount'
@@ -315,7 +349,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -379,6 +413,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -394,6 +432,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
       Action = actInsertProfitLossService
       Category = 0
     end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited spMovementComplete: TdsdStoredProc
     StoredProcName = 'gpComplete_Movement_BankAccount'
@@ -403,5 +445,100 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   end
   inherited spMovementSetErased: TdsdStoredProc
     StoredProcName = 'gpSetErased_Movement_BankAccount'
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 209
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 708
+    Top = 262
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpReport_Account_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inStartDate'
+        Value = 41640d
+        Component = deStart
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inEndDate'
+        Value = 41640d
+        Component = deEnd
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountGroupId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountDirectionId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inInfoMoneyId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inAccountId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBusinessId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossGroupId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossDirectionId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inProfitLossId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBranchId'
+        Value = ''
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end>
+    Left = 631
+    Top = 232
   end
 end

@@ -24,7 +24,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, UnitsTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TReturnOut }
 

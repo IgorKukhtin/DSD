@@ -8,14 +8,14 @@ inherited EDIJournalForm: TEDIJournalForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 59
+    Top = 57
     Width = 834
-    Height = 365
+    Height = 367
     ExplicitTop = 57
     ExplicitWidth = 834
     ExplicitHeight = 367
-    ClientRectBottom = 361
-    ClientRectRight = 830
+    ClientRectBottom = 367
+    ClientRectRight = 834
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 834
       ExplicitHeight = 367
@@ -410,6 +410,12 @@ inherited EDIJournalForm: TEDIJournalForm
     object EDIActionComdocLoad: TEDIAction
       Category = 'EDI'
       MoveParams = <>
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
       EDI = EDI
       EDIDocType = ediComDoc
       spHeader = spHeaderComDoc
@@ -451,6 +457,12 @@ inherited EDIJournalForm: TEDIJournalForm
     object EDIActionOrdersLoad: TEDIAction
       Category = 'EDI'
       MoveParams = <>
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
       EDI = EDI
       EDIDocType = ediOrder
       spHeader = spHeaderOrder
@@ -533,7 +545,7 @@ inherited EDIJournalForm: TEDIJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

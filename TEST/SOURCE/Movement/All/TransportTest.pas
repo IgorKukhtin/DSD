@@ -23,7 +23,7 @@ type
 
 implementation
 
-uses UtilConst, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
+uses UtilConst, dbObjectMeatTest, JuridicalTest, dbObjectTest, SysUtils, Db, TestFramework;
 
 { TTransport }
 

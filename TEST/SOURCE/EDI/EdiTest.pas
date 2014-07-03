@@ -49,7 +49,7 @@ begin
   EDI := TEDI.Create(nil);
   // создание документа
   try
-     EDI.ComdocLoad(nil, nil, '\archive');
+   //  EDI.ComdocLoad(nil, nil, '\archive');
      { запускаем процедуру выгрузки документа DESADV}
   finally
     EDI.Free;

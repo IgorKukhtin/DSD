@@ -30,6 +30,7 @@ type
     property TraceLevel: TTraceLevel read FTraceLevel write SetTraceLevel;
   end;
 
+
   var
     Logger: TLog;
 

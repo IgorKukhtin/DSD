@@ -424,9 +424,6 @@
 				<Form>Report_MotionGoodsForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
-			<DCCReference Include="..\..\SOURCE\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
 			<DCCReference Include="..\..\Forms\Role.pas">
 				<Form>RoleForm</Form>
 			</DCCReference>
@@ -559,7 +556,7 @@
 				<Form>ModelServiceForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\ModelServiceKind.pas">
-				<Form>ModelServiceKindForm</Form>
+				<Form>NDSKindForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
@@ -592,10 +589,6 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Kind\DocumentTaxKind.pas">
 				<Form>DocumentTaxKindForm</Form>
-				<DesignClass>TParentForm</DesignClass>
-			</DCCReference>
-			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
-				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Ancestor\AncestorDialog.pas">
@@ -1415,6 +1408,17 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Guides\PartnerAddress.pas">
 				<Form>PartnerAddressForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\dbObjectMeatTest.pas"/>
+			<DCCReference Include="..\..\FormsMeat\MainForm.pas">
+				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorMain.pas">
+				<Form>AncestorMainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Ancestor\AncestorBase.pas">
+				<Form>AncestorBaseForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
