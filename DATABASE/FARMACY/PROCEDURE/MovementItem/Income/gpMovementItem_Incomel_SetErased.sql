@@ -1,8 +1,8 @@
--- Function: gpMovementItem_OrderExternal_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Income_SetErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_OrderExternal_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Income_SetErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_OrderExternal_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Income_SetErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -14,7 +14,7 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_OrderExternal());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_Income());
 
   -- устанавливаем новое значение
   outIsErased := TRUE;
@@ -40,7 +40,7 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_OrderExternal_SetErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovementItem_Income_SetErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
@@ -49,4 +49,4 @@ ALTER FUNCTION gpMovementItem_OrderExternal_SetErased (Integer, TVarChar) OWNER 
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_OrderExternal_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_Income_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')

@@ -1,8 +1,8 @@
--- Function: gpMovementItem_OrderExternal_SetErased (Integer, Integer, TVarChar)
+-- Function: gpMovementItem_Income_SetUnErased (Integer, Integer, TVarChar)
 
-DROP FUNCTION IF EXISTS gpMovementItem_OrderExternal_SetErased (Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpMovementItem_Income_SetUnErased (Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpMovementItem_OrderExternal_SetErased(
+CREATE OR REPLACE FUNCTION gpMovementItem_Income_SetUnErased(
     IN inMovementItemId      Integer              , -- ключ объекта <Элемент документа>
    OUT outIsErased           Boolean              , -- новое значение
     IN inSession             TVarChar               -- текущий пользователь
@@ -14,13 +14,13 @@ $BODY$
    DECLARE vbStatusId Integer;
    DECLARE vbUserId Integer;
 BEGIN
-  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetErased_MI_OrderExternal());
+  vbUserId:= lpCheckRight(inSession, zc_Enum_Process_SetUnErased_MI_Income());
 
   -- устанавливаем новое значение
-  outIsErased := TRUE;
+  outIsErased := FALSE;
 
   -- Обязательно меняем
-  UPDATE MovementItem SET isErased = TRUE WHERE Id = inMovementItemId
+  UPDATE MovementItem SET isErased = FALSE WHERE Id = inMovementItemId
          RETURNING MovementId INTO vbMovementId;
 
   -- проверка - связанные документы Изменять нельзя
@@ -29,7 +29,7 @@ BEGIN
   -- определяем <Статус>
   vbStatusId := (SELECT StatusId FROM Movement WHERE Id = vbMovementId);
   -- проверка - проведенные/удаленные документы Изменять нельзя
-  IF vbStatusId <> zc_Enum_Status_UnComplete() AND NOT EXISTS (SELECT UserId FROM ObjectLink_UserRole_View WHERE UserId = vbUserId AND RoleId = zc_Enum_Role_Admin())
+  IF vbStatusId <> zc_Enum_Status_UnComplete()
   THEN
       RAISE EXCEPTION 'Ошибка.Изменение документа в статусе <%> не возможно.', lfGet_Object_ValueData (vbStatusId);
   END IF;
@@ -40,13 +40,13 @@ BEGIN
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpMovementItem_OrderExternal_SetErased (Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpMovementItem_Income_SetUnErased (Integer, TVarChar) OWNER TO postgres;
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.A.
- 01.07.14                                                       *
+ 03.07.14                                                       *
 */
 
 -- тест
--- SELECT * FROM gpMovementItem_OrderExternal_SetErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
+-- SELECT * FROM gpMovementItem_Income_SetUnErased (inMovementId:= 55, inJuridicalId = 1, inSession:= '2')
