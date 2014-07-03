@@ -8,7 +8,6 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Unit(
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                ParentId Integer, ParentName TVarChar,
-               BranchId Integer, BranchName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
                isLeaf boolean,
                isErased boolean) AS
@@ -28,9 +27,6 @@ BEGIN
            , CAST (0 as Integer)   AS ParentId
            , CAST ('' as TVarChar) AS ParentName 
 
-           , CAST (0 as Integer)   AS BranchId
-           , CAST ('' as TVarChar) AS BranchName
-         
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
          
@@ -46,10 +42,7 @@ BEGIN
          
            , ObjectLink_Unit_Parent.ChildObjectId  AS ParentId
            , Object_Parent.ValueData  AS ParentName 
-
-           , Object_Branch.Id         AS BranchId
-           , Object_Branch.ValueData  AS BranchName
-         
+        
            , Object_Juridical.Id         AS JuridicalId
            , Object_Juridical.ValueData  AS JuridicalName
 
@@ -63,11 +56,6 @@ BEGIN
                                AND ObjectLink_Unit_Parent.DescId = zc_ObjectLink_Unit_Parent()
            LEFT JOIN Object AS Object_Parent ON Object_Parent.Id = ObjectLink_Unit_Parent.ChildObjectId
 
-           LEFT JOIN ObjectLink AS ObjectLink_Unit_Branch
-                                ON ObjectLink_Unit_Branch.ObjectId = Object_Unit.Id
-                               AND ObjectLink_Unit_Branch.DescId = zc_ObjectLink_Unit_Branch()
-           LEFT JOIN Object AS Object_Branch ON Object_Branch.Id = ObjectLink_Unit_Branch.ChildObjectId
-         
            LEFT JOIN ObjectLink AS ObjectLink_Unit_Juridical
                                 ON ObjectLink_Unit_Juridical.ObjectId = Object_Unit.Id
                                AND ObjectLink_Unit_Juridical.DescId = zc_ObjectLink_Unit_Juridical()

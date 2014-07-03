@@ -26,7 +26,7 @@ BEGIN
            , CAST (0 as Integer)   AS RetailId
            , CAST ('' as TVarChar) AS RetailName 
 
-           , CAST (NULL AS Boolean) AS isCorporate     
+           , CAST (False AS Boolean) AS isCorporate     
        
            , CAST (NULL AS Boolean) AS isErased;
    

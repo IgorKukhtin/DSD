@@ -84,7 +84,11 @@ uses
   AncestorJournal in '..\..\Forms\Ancestor\AncestorJournal.pas' {AncestorJournalForm: TParentForm},
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
-  AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox};
+  AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
+  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
+  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm};
 
 {$R *.res}
 

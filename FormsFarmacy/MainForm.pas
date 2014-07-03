@@ -5,7 +5,7 @@ interface
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn, cxLocalization,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
-  DataModul;
+  DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter;
 
 type
   TMainForm = class(TAncestorMainForm)

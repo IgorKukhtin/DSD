@@ -40,23 +40,10 @@ type
     ceCode: TcxCurrencyEdit;
     cxLabel3: TcxLabel;
     ParentGuides: TdsdGuides;
-    cxLabel4: TcxLabel;
-    BranchGuides: TdsdGuides;
     ceParent: TcxButtonEdit;
-    cxLabel2: TcxLabel;
-    BusinessGuides: TdsdGuides;
-    ceBranch: TcxButtonEdit;
-    ceBusiness: TcxButtonEdit;
     cxLabel5: TcxLabel;
     ceJuridical: TcxButtonEdit;
     JuridicalGuides: TdsdGuides;
-    cxLabel6: TcxLabel;
-    ceAccountDirection: TcxButtonEdit;
-    cxLabel7: TcxLabel;
-    ceProfitLossDirection: TcxButtonEdit;
-    AccountDirectionGuides: TdsdGuides;
-    ProfitLossDirectionGuides: TdsdGuides;
-    cbPartionDate: TcxCheckBox;
   private
     { Private declarations }
   public
