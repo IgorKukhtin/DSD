@@ -49,6 +49,8 @@ type
     bbBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
     bbExtraChargeCategories: TdxBarButton;
+    actContract: TdsdOpenForm;
+    bbContract: TdxBarButton;
   private
     { Private declarations }
   public

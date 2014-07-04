@@ -1,4 +1,4 @@
-unit Juridical;
+unit Contract;
 
 interface
 
@@ -14,11 +14,12 @@ uses
   cxGrid, cxPC;
 
 type
-  TJuridicalForm = class(TAncestorGuidesForm)
+  TContractForm = class(TAncestorGuidesForm)
     clCode: TcxGridDBColumn;
     clName: TcxGridDBColumn;
-    clisCorporate: TcxGridDBColumn;
-    clRetailName: TcxGridDBColumn;
+    clComment: TcxGridDBColumn;
+    clJuridicalBasisName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
   private
     { Private declarations }
@@ -31,7 +32,7 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TJuridicalForm);
+  RegisterClass(TContractForm);
 
 
 end.

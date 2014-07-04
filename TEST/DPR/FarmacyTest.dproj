@@ -256,7 +256,6 @@
 			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
 				<Form>PriceListLoadForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
@@ -277,6 +276,14 @@
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
 				<Form>JuridicalEditForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
+				<Form>ContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
+				<Form>ContractEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

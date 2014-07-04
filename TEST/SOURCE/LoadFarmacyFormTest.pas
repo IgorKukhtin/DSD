@@ -20,9 +20,9 @@ type
 (*    procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBusinessFormTest;
-    procedure LoadCashFormTest;
+    procedure LoadCashFormTest;  *)
     procedure LoadContractFormTest;
-    procedure LoadContractKindFormTest;
+ (*   procedure LoadContractKindFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadExtraChargeCategoriesFormTest; *)
     procedure LoadGoodsGroupFormTest;
@@ -101,7 +101,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
-end;
+end;   *)
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
@@ -110,7 +110,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
 end;
-
+(*
 procedure TLoadFormTest.LoadContractKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractKindForm'));

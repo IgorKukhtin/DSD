@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpGet_Object_Contract(
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,  
                JuridicalBasisId Integer, JuridicalBasisName TVarChar,
                JuridicalId Integer, JuridicalName TVarChar,
-               Comment Integer,
+               Comment TVarChar,
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -30,7 +30,7 @@ BEGIN
            , CAST (0 as Integer)   AS JuridicalId
            , CAST ('' as TVarChar) AS JuridicalName
 
-           , CAST (NULL AS Integer) AS Comment     
+           , CAST (NULL AS TVarChar) AS Comment     
        
            , CAST (NULL AS Boolean) AS isErased;
    
