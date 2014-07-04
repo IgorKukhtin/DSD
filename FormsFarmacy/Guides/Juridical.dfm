@@ -1,7 +1,5 @@
 inherited JuridicalForm: TJuridicalForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1080#1077' '#1083#1080#1094#1072'>'
-  ExplicitWidth = 583
-  ExplicitHeight = 342
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -10,6 +8,7 @@ inherited JuridicalForm: TJuridicalForm
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         inherited cxGridDBTableView: TcxGridDBTableView
+          OptionsData.Editing = False
           Styles.Inactive = nil
           Styles.Selection = nil
           Styles.Footer = nil
@@ -40,6 +39,10 @@ inherited JuridicalForm: TJuridicalForm
   end
   inherited ActionList: TActionList
     inherited actInsert: TdsdInsertUpdateAction
+      FormName = 'TJuridicalEditForm'
+      FormNameParam.Value = 'TJuridicalEditForm'
+    end
+    inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TJuridicalEditForm'
       FormNameParam.Value = 'TJuridicalEditForm'
     end

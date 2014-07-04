@@ -161,8 +161,8 @@ inherited JuridicalEditForm: TJuridicalEditForm
         Value = 'False'
         Component = cbisCorporate
       end>
-    Left = 208
-    Top = 152
+    Left = 176
+    Top = 184
   end
   object RetailGuides: TdsdGuides
     KeyField = 'Id'
