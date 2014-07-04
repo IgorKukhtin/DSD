@@ -15,6 +15,7 @@ type
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
     procedure CreateReportProcedure;
+    procedure CreateSystemProcedure;
   end;
 
 
@@ -250,6 +251,11 @@ procedure TdbProcedureTest.CreateReportProcedure;
 begin
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}
+end;
+
+procedure TdbProcedureTest.CreateSystemProcedure;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Objects\Program\');
 end;
 
 initialization

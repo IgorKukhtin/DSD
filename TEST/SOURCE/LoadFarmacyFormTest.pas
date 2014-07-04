@@ -29,6 +29,7 @@ type
     procedure LoadGoodsFormTest;
     procedure LoadMeasureFormTest;
     procedure LoadNDSKindFormTest;
+    procedure LoadLoadFormTest;
    (*procedure LoadGoodsPropertyFormTest;
     procedure LoadGoodsPropertyValueFormTest;
     procedure LoadGoodsKindFormTest;
@@ -148,6 +149,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TGoodsGroupEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TGoodsGroupEditForm');
+end;
+
+procedure TLoadFormTest.LoadLoadFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
 end;
 
 procedure TLoadFormTest.LoadNDSKindFormTest;

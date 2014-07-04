@@ -48,7 +48,8 @@ uses
   MeDocXML in '..\SOURCE\MeDOC\MeDocXML.pas',
   AncestorMain in '..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AboutBoxUnit in '..\SOURCE\AboutBoxUnit.pas' {AboutBox},
-  MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm};
+  MainForm in '..\FormsFarmacy\MainForm.pas' {MainForm},
+  Updater in '..\SOURCE\COMPONENT\Updater.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -58,8 +59,10 @@ begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
   ConnectionPath := '..\INIT\farmacy_init.php';
-
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
+
+  TUpdater.AutomaticUpdateProgram;
+
   Application.CreateForm(TMainForm, MainFormInstance);
   Application.Run;
 end.

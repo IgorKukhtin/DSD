@@ -253,6 +253,14 @@
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
+				<Form>PriceListLoadForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
 			<DCCReference Include="..\..\Forms\Guides\Retail.pas">
 				<Form>RetailForm</Form>
 				<DesignClass>TParentForm</DesignClass>

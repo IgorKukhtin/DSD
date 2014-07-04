@@ -15,7 +15,6 @@ CREATE TABLE LoadPriceList
   Id            serial    NOT NULL PRIMARY KEY,
   OperDate	TDateTime, -- Дата документа
   JuridicalId	Integer , -- Юридические лица
-  NDSKindId	Integer ,  -- Типы НДС
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_NDSKindId   FOREIGN KEY (NDSKindId)      REFERENCES Object (id)
 )

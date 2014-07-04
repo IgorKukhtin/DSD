@@ -85,6 +85,10 @@ uses
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
   AncestorReport in '..\..\Forms\Ancestor\AncestorReport.pas' {AncestorReportForm: TParentForm},
   AboutBoxUnit in '..\..\SOURCE\AboutBoxUnit.pas' {AboutBox},
+  dbLoadTest in '..\SOURCE\Load\dbLoadTest.pas',
+  PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
+  UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
+  dbObjectTest in '..\SOURCE\dbObjectTest.pas',
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
@@ -95,6 +99,7 @@ uses
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';
   CreateStructurePath := '..\DATABASE\FARMACY\STRUCTURE\';
+  gc_ProgramName := 'Farmacy.exe';
 
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
