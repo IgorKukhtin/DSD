@@ -88,7 +88,11 @@ uses
   dbLoadTest in '..\SOURCE\Load\dbLoadTest.pas',
   PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
   UpdaterTest in '..\SOURCE\Component\UpdaterTest.pas',
-  dbObjectTest in '..\SOURCE\dbObjectTest.pas';
+  dbObjectTest in '..\SOURCE\dbObjectTest.pas',
+  Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
+  RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
+  Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
+  JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm};
 
 {$R *.res}
 

@@ -231,6 +231,14 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpSelect_Object_ImportSettings.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpGet_Object_ImportSettings.sql', ZQuery);
 
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpInsertUpdate_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpSelect_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpGet_Object_ImportSettingsItems.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpInsertUpdate_Object_Retail.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpGet_Object_Retail.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpSelect_Object_Retail.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;

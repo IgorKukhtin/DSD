@@ -300,8 +300,8 @@ object UnitForm: TUnitForm
         DataSet = ClientTreeDataSet
       end>
     Params = <>
-    Left = 152
-    Top = 152
+    Left = 160
+    Top = 176
   end
   object GridDS: TDataSource
     DataSet = ClientGridDataSet
@@ -326,8 +326,8 @@ object UnitForm: TUnitForm
         DataSet = ClientGridDataSet
       end>
     Params = <>
-    Left = 416
-    Top = 160
+    Left = 448
+    Top = 152
   end
   object dsdDBTreeAddOn: TdsdDBTreeAddOn
     ErasedFieldName = 'isErased'

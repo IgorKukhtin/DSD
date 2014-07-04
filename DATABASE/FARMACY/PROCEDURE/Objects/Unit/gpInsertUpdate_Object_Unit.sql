@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Object_Unit()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit();
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Unit(Integer, Integer, TVarChar, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Unit(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
@@ -18,7 +18,8 @@ $BODY$
    DECLARE vbOldParentId integer;
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
+   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Unit());
+   vbUserId:= inSession;
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Unit());
@@ -42,8 +43,7 @@ BEGIN
 
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Parent(), ioId, inParentId);
-   -- сохранили связь с <Филиалы>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Branch(), ioId, inBranchId);
+
    -- сохранили связь с <Юридические лица>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Unit_Juridical(), ioId, inJuridicalId);
 

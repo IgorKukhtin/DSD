@@ -2,7 +2,7 @@ inherited MainForm: TMainForm
   ClientHeight = 151
   ClientWidth = 689
   ExplicitWidth = 697
-  ExplicitHeight = 178
+  ExplicitHeight = 185
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager

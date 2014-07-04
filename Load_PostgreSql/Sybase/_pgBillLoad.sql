@@ -8,8 +8,37 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-select '161403' as InvNumber, 4690 as FromId, 0 as ToId
-union select '163693' as InvNumber, 4690 as FromId, 0 as ToId
+select '171200' as InvNumber, 4690 as FromId, 0 as ToId
+union select '171041' as InvNumber, 4690 as FromId, 0 as ToId
+union select '171049' as InvNumber, 4690 as FromId, 0 as ToId
+union select '171232' as InvNumber, 4690 as FromId, 0 as ToId
+
+union select '171010' as InvNumber, 4690 as FromId, 0 as ToId
+union select '170992' as InvNumber, 4690 as FromId, 0 as ToId
+union select '171012' as InvNumber, 4690 as FromId, 0 as ToId
+union select '170969' as InvNumber, 4690 as FromId, 0 as ToId
+
+…. 30.06.2014
+
+170967 ….28.06.2014
+
+171203 …29.06.2014
+
+171201 …29.06.2014
+
+171010 …27.06.2014
+
+170992 …27.06.2014
+
+171012 …27.06.2014
+
+170969 …28.06.2014
+
+
+
+
+
+
 
 -- !!!!!!!!!!!!!!!
 -- !!! ERROR PF !!!
