@@ -147,10 +147,15 @@ CREATE OR REPLACE FUNCTION zc_Movement_PriceCorrective() RETURNS Integer AS $BOD
 INSERT INTO MovementDesc (Code, ItemName)
   SELECT 'zc_Movement_PriceCorrective', 'Корректировка цены' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PriceCorrective');
 
+CREATE OR REPLACE FUNCTION zc_Movement_PriceList() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDesc WHERE Code = 'zc_Movement_PriceList'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+INSERT INTO MovementDesc (Code, ItemName)
+  SELECT 'zc_Movement_PriceList', 'Прайс-лист' WHERE NOT EXISTS (SELECT * FROM MovementDesc WHERE Code = 'zc_Movement_PriceList');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 04.07.14                      	                 		        *  + zc_Movement_PriceList
  06.06.14                                                       *    change Zakaz to Order  zc_Movement_OrderInternal, zc_Movement_OrderExternal
  29.05.14         * add zc_Movement_PriceCorrective
  22.04.14         * add TransferDebtOut, TransferDebtIn
