@@ -15,6 +15,7 @@ type
     procedure CreateObjectProcedure;
     procedure CreateProtocolProcedure;
     procedure CreateReportProcedure;
+    procedure CreateSystemProcedure;
   end;
 
 
@@ -230,6 +231,14 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpSelect_Object_ImportSettings.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpGet_Object_ImportSettings.sql', ZQuery);
 
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpInsertUpdate_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpSelect_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpGet_Object_ImportSettingsItems.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpInsertUpdate_Object_Retail.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpGet_Object_Retail.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpSelect_Object_Retail.sql', ZQuery);
+
 end;
 
 procedure TdbProcedureTest.CreateProtocolProcedure;
@@ -242,6 +251,11 @@ procedure TdbProcedureTest.CreateReportProcedure;
 begin
   {ZQuery.SQL.LoadFromFile(ReportsPath + 'gpReport_Balance.sql');
   ZQuery.ExecSQL;}
+end;
+
+procedure TdbProcedureTest.CreateSystemProcedure;
+begin
+  DirectoryLoad(CommonProcedurePath + 'Objects\Program\');
 end;
 
 initialization

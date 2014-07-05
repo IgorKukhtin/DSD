@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 782
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 790
-  ExplicitHeight = 450
+  ExplicitHeight = 457
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -94,13 +94,22 @@ inherited GoodsForm: TGoodsForm
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
+      isShowModal = True
     end
   end
+  inherited MasterDS: TDataSource
+    Left = 56
+    Top = 48
+  end
   inherited MasterCDS: TClientDataSet
+    FilterOptions = []
     AfterInsert = nil
+    Top = 48
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Goods'
+    Left = 144
+    Top = 88
   end
   inherited BarManager: TdxBarManager
     DockControlHeights = (

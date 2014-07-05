@@ -253,6 +253,39 @@
 			<DCCReference Include="..\..\SOURCE\AboutBoxUnit.pas">
 				<Form>AboutBox</Form>
 			</DCCReference>
+			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
+				<Form>PriceListLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
+			<DCCReference Include="..\SOURCE\dbObjectTest.pas"/>
+			<DCCReference Include="..\..\Forms\Guides\Retail.pas">
+				<Form>RetailForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Guides\RetailEdit.pas">
+				<Form>RetailEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical.pas">
+				<Form>JuridicalForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
+				<Form>JuridicalEditForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
+				<Form>ContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
+				<Form>ContractEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

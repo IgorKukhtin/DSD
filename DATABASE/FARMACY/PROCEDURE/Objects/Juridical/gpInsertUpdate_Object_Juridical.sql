@@ -17,7 +17,8 @@ $BODY$
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
+   -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_Juridical());
+   vbUserId:= inSession;
 
    -- Если код не установлен, определяем его как последний+1 (!!! ПОТОМ НАДО БУДЕТ ЭТО ВКЛЮЧИТЬ !!!)
    vbCode_calc:= lfGet_ObjectCode (inCode, zc_Object_Juridical());
@@ -27,6 +28,9 @@ BEGIN
    PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_Juridical(), inName);
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Juridical(), vbCode_calc);
+
+   -- сохранили <Объект>
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_Juridical(), vbCode_calc, inName);
 
    -- сохранили связь с <Подразделения>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Juridical_Retail(), ioId, inRetailId);
@@ -50,4 +54,4 @@ ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Inte
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_Juridical ()                            
+-- select * from gpInsertUpdate_Object_Juridical(ioId := 0 , inCode := 1 , inName := 'sdggsd' , inRetailId := 0 , inisCorporate := 'False' ,  inSession := '8');                        

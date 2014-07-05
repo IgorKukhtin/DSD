@@ -2,7 +2,7 @@ inherited MainForm: TMainForm
   ClientHeight = 151
   ClientWidth = 689
   ExplicitWidth = 697
-  ExplicitHeight = 178
+  ExplicitHeight = 185
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
@@ -35,6 +35,10 @@ inherited MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'bbContract'
         end
         item
           Visible = True
@@ -144,6 +148,10 @@ inherited MainForm: TMainForm
     end
     object bbExtraChargeCategories: TdxBarButton [25]
       Action = actExtraChargeCategories
+      Category = 0
+    end
+    object bbContract: TdxBarButton
+      Action = actContract
       Category = 0
     end
   end
@@ -362,6 +370,17 @@ inherited MainForm: TMainForm
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TBalanceForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actContract: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractForm'
+      FormNameParam.Value = 'TContractForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
