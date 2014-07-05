@@ -72,7 +72,8 @@ BEGIN
           END::TFloat AS Kredit,
 
           Operation.OperDate,
-          Movement.InvNumber, 
+          Movement.InvNumber,
+          MovementString_InvNumberPartner.ValueData AS InvNumberPartner,
           Object_Account_View.AccountCode,
           Object_Account_View.AccountName_all AS AccountName,
           View_Contract_InvNumber.ContractCode,
@@ -223,6 +224,9 @@ BEGIN
       LEFT JOIN Object_InfoMoney_View ON Object_InfoMoney_View.InfoMoneyId = Operation.InfoMoneyId
       LEFT JOIN Movement ON Movement.Id = Operation.MovementId
       LEFT JOIN MovementDesc ON Movement.DescId = MovementDesc.Id
+      LEFT JOIN MovementString AS MovementString_InvNumberPartner
+                               ON MovementString_InvNumberPartner.MovementId =  Operation.MovementId
+                              AND MovementString_InvNumberPartner.DescId = zc_MovementString_InvNumberPartner()
 
       LEFT JOIN MovementItem AS MovementItem_by ON MovementItem_by.Id = Operation.MovementItemId
                                                AND MovementItem_by.DescId IN (zc_MI_Master())

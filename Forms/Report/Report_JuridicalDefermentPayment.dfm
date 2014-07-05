@@ -283,6 +283,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 70
           end
+          object clStartContractDate: TcxGridDBColumn
+            Caption = #1054#1090#1089#1088#1086#1095#1082#1072' '#1076#1086
+            DataBinding.FieldName = 'StartContractDate'
+            Visible = False
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
           object colDebetRemains: TcxGridDBColumn
             Caption = #1053#1072#1095'. '#1076#1086#1083#1075' ('#1044#1077#1073#1077#1090')'
             DataBinding.FieldName = 'DebetRemains'

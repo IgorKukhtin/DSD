@@ -63,6 +63,7 @@ type
     cxLabel6: TcxLabel;
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
+    clStartContractDate: TcxGridDBColumn;
   private
     { Private declarations }
   public

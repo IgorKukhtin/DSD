@@ -71,6 +71,7 @@ type
     bbPrintTurnover: TdxBarButton;
     colSumm: TcxGridDBColumn;
     colOperationSort: TcxGridDBColumn;
+    colInvNumberPartner: TcxGridDBColumn;
   private
     { Private declarations }
   public
