@@ -21,7 +21,7 @@ uses
   dsdDB, dsdAction, Vcl.ActnList, dxBarExtItems, dxBar, cxClasses,
   cxPropertiesStore, Datasnap.DBClient, cxGridLevel, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGridCustomView, cxGrid, cxCheckBox,
-  DataModul;
+  DataModul, cxButtonEdit;
 
 type
   TMemberForm = class(TParentForm)
@@ -59,6 +59,8 @@ type
     dsdDBViewAddOn: TdsdDBViewAddOn;
     clDriverCertificate: TcxGridDBColumn;
     clComment: TcxGridDBColumn;
+    spInsertUpdate: TdsdStoredProc;
+    actUpdateDataSet: TdsdUpdateDataSet;
   private
     { Private declarations }
   public

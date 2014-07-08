@@ -2,7 +2,6 @@
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
   ClientHeight = 304
   ClientWidth = 981
-  ExplicitLeft = -135
   ExplicitWidth = 987
   ExplicitHeight = 336
   PixelsPerInch = 96
@@ -938,14 +937,14 @@
   end
   object JuridicalDetailsDS: TDataSource
     DataSet = JuridicalDetailsCDS
-    Left = 104
-    Top = 160
+    Left = 96
+    Top = 192
   end
   object JuridicalDetailsCDS: TClientDataSet
     Aggregates = <>
     Params = <>
-    Left = 144
-    Top = 216
+    Left = 256
+    Top = 256
   end
   object PartnerDS: TDataSource
     DataSet = PartnerCDS
@@ -1066,8 +1065,8 @@
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 760
-    Top = 40
+    Left = 480
+    Top = 200
   end
   object spJuridicalDetailsIU: TdsdStoredProc
     StoredProcName = 'gpInsertUpdate_ObjectHistory_JuridicalDetails'
@@ -1143,8 +1142,8 @@
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 264
-    Top = 216
+    Left = 280
+    Top = 192
   end
   object spClearDefaluts: TdsdStoredProc
     StoredProcName = 'gpGet_JuridicalDetails_ClearDefault'
