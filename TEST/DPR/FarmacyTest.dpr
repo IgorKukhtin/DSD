@@ -94,7 +94,11 @@ uses
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
-  ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm};
+  ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
+  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
+  OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
+  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas';
 
 {$R *.res}
 

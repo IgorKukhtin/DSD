@@ -16,6 +16,7 @@ type
     // возвращаем данные дл€ тестировани€
     procedure TearDown; override;
   published
+    procedure MainFormTest;
     procedure UserFormSettingsTest;
 (*    procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
@@ -44,12 +45,19 @@ type
     procedure LoadUnitGroupFormTest; *)
     procedure LoadUnitFormTest;
   (*  procedure LoadReportFormTest;*)
+    procedure LoadOrderInternalFormTest;
+    procedure LoadOrderExternalFormTest;
+
   end;
 
 implementation
 
+
 uses CommonData, Storage, FormStorage, Classes,
-     Authentication, SysUtils, cxPropertiesStore, cxStorage;
+     dsdDB, Authentication, SysUtils, cxPropertiesStore,
+     cxStorage, DBClient, MainForm, ActionTest;
+
+
 
 { TLoadFormTest }
 
@@ -102,6 +110,36 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
 end;   *)
+
+procedure TLoadFormTest.MainFormTest;
+var ActionDataSet: TClientDataSet;
+    StoredProc: TdsdStoredProc;
+    i: integer;
+    Action: ActionTest.TAction;
+begin
+  // «десь мы заполн€ем справочник Action
+  // ѕолучаем все Action из базы
+  ActionDataSet := TClientDataSet.Create(nil);
+  StoredProc := TdsdStoredProc.Create(nil);
+  MainFormInstance := TMainForm.Create(nil);
+  Action := ActionTest.TAction.Create;
+  try
+    StoredProc.DataSet := ActionDataSet;
+    StoredProc.StoredProcName := 'gpSelect_Object_Action';
+    StoredProc.Execute;
+    // добавим тех, что нет
+    with MainFormInstance.ActionList do
+      for I := 0 to ActionCount - 1 do
+          if not ActionDataSet.Locate('Name', Actions[i].Name, []) then
+             Action.InsertUpdateAction(0, 0, Actions[i].Name);
+  finally
+    Action.Free;
+    StoredProc.Free;
+    ActionDataSet.Free;
+    MainFormInstance.Free;
+  end;
+end;
+
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
@@ -310,6 +348,26 @@ begin
     TempStream.Free;
   end;*)
 end;
+
+
+procedure TLoadFormTest.LoadOrderInternalFormTest;
+begin
+{
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+}
+end;
+
+procedure TLoadFormTest.LoadOrderExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+end;
+
 
 initialization
   TestFramework.RegisterTest('«агрузка форм', TLoadFormTest.Suite);

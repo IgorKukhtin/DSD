@@ -9,8 +9,27 @@ inherited MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited dxBar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDocuments'
+        end
+        item
+          Visible = True
+          ItemName = 'bbService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExit'
+        end>
+    end
     inherited bbService: TdxBarSubItem
       ItemLinks = <
         item
@@ -62,6 +81,10 @@ inherited MainForm: TMainForm
       Category = 0
       Visible = ivAlways
       ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOrderExtrnal'
+        end
         item
           Visible = True
           ItemName = 'bbIncome'
@@ -152,6 +175,10 @@ inherited MainForm: TMainForm
     end
     object bbContract: TdxBarButton
       Action = actContract
+      Category = 0
+    end
+    object bbOrderExtrnal: TdxBarButton
+      Action = actOrderExternal
       Category = 0
     end
   end
@@ -381,6 +408,26 @@ inherited MainForm: TMainForm
       Hint = #1044#1086#1075#1086#1074#1086#1088#1072
       FormName = 'TContractForm'
       FormNameParam.Value = 'TContractForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderExternal: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1077#1096#1085#1080#1077
+      FormName = 'TOrderExternalJournalForm'
+      FormNameParam.Value = 'TOrderExternalJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderInternal: TdsdOpenForm
+      Category = #1058#1086#1074#1072#1088#1085#1099#1081' '#1091#1095#1077#1090
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
