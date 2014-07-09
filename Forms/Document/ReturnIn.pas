@@ -92,6 +92,8 @@ type
     bbCorrective: TdxBarButton;
     edInvNumberMark: TcxTextEdit;
     cxLabel13: TcxLabel;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    bbPrint_Return_By_TaxCorrective: TdxBarButton;
   private
     { Private declarations }
   public
