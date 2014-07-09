@@ -18,6 +18,7 @@ RETURNS TABLE (InvNumberTransport Integer, OperDate TDateTime
              , RateFuelKindName TVarChar
              , FuelName TVarChar
              , DistanceFuel TFloat, RateFuelKindTax TFloat
+             , Weight TFloat, WeightTransport TFloat
              , StartOdometre TFloat, EndOdometre TFloat
              , AmountFuel_Start TFloat, AmountFuel_In TFloat, AmountFuel_Out TFloat, AmountFuel_End TFloat
              , ColdHour TFloat, ColdDistance TFloat
@@ -42,6 +43,8 @@ BEGIN
                                  , MovementItem.Amount AS DistanceFuelMaster
                                  , MovementItem.ObjectId AS RouteId
                                  , MILinkObject_RouteKind.ObjectId AS RouteKindId
+                                 , MIFloat_Weight.ValueData          AS Weight
+                                 , MIFloat_WeightTransport.ValueData AS WeightTransport
                             FROM Movement
                                  LEFT JOIN MovementLinkObject AS MovementLinkObject_Car
                                                               ON MovementLinkObject_Car.MovementId = Movement.Id
@@ -55,6 +58,12 @@ BEGIN
                                  LEFT JOIN MovementItemLinkObject AS MILinkObject_RouteKind
                                                                   ON MILinkObject_RouteKind.MovementItemId = MovementItem.Id
                                                                  AND MILinkObject_RouteKind.DescId = zc_MILinkObject_RouteKind()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_Weight
+                                                             ON MIFloat_Weight.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_Weight.DescId = zc_MIFloat_Weight()
+                                 LEFT JOIN MovementItemFloat AS MIFloat_WeightTransport
+                                                             ON MIFloat_WeightTransport.MovementItemId = MovementItem.Id
+                                                            AND MIFloat_WeightTransport.DescId = zc_MIFloat_WeightTransport()
                             WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate
                               AND Movement.DescId = zc_Movement_Transport()
                               AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -74,6 +83,8 @@ BEGIN
              , SUM (tmpFuel.DistanceFuel)    :: TFloat AS DistanceFuel
              , MAX (tmpFuel.RateFuelKindTax) :: TFloat AS RateFuelKindTax
 
+             , MAX (tmpFuel.Weight)          :: TFloat AS Weight
+             , MAX (tmpFuel.WeightTransport) :: TFloat AS WeightTransport
              , MAX (tmpFuel.StartOdometre)   :: TFloat AS StartOdometre
              , MAX (tmpFuel.EndOdometre)     :: TFloat AS EndOdometre
 
@@ -102,13 +113,15 @@ BEGIN
                    , MAX (tmpAll.RouteId)         AS RouteId
                    , MAX (tmpAll.RouteKindId)     AS RouteKindId
                    , MAX (tmpAll.RateFuelKindId)  AS RateFuelKindId
-                   , (tmpAll.FuelId)          AS FuelId
+                   , (tmpAll.FuelId)              AS FuelId
 
                    , SUM (tmpAll.DistanceFuel)    AS DistanceFuel
                    , MAX (tmpAll.RateFuelKindTax) AS RateFuelKindTax
 
-                   , MAX (tmpAll.StartOdometre) AS StartOdometre
-                   , MAX (tmpAll.EndOdometre)   AS EndOdometre
+                   , MAX (tmpAll.Weight)          AS Weight
+                   , MAX (tmpAll.WeightTransport) AS WeightTransport
+                   , MAX (tmpAll.StartOdometre)   AS StartOdometre
+                   , MAX (tmpAll.EndOdometre)     AS EndOdometre
 
                    , SUM (tmpAll.AmountFuel_Start) AS AmountFuel_Start
                    , SUM (tmpAll.AmountFuel_In)    AS AmountFuel_In
@@ -182,6 +195,9 @@ BEGIN
 --                   , 0 AS StartOdometre
 --                   , 0 AS EndOdometre
 
+                   , tmpTransport.Weight
+                   , tmpTransport.WeightTransport
+
                    , COALESCE (MIFloat_StartOdometre.ValueData, 0) AS StartOdometre
                    , COALESCE (MIFloat_EndOdometre.ValueData, 0)   AS EndOdometre
 
@@ -225,6 +241,7 @@ BEGIN
 
                    JOIN MovementItem AS MI ON MI.ParentId = tmpTransport.MovementItemId
                                           AND MI.DescId   = zc_MI_Child()
+                                          AND MI.isErased   = FALSE
                    LEFT JOIN MovementItemContainer AS MIContainer
                                                    ON MIContainer.MovementItemId = MI.Id
                                                   AND MIContainer.DescId = zc_MIContainer_Count()
@@ -281,6 +298,8 @@ BEGIN
                    , 0 AS DistanceFuel
                    , 0 AS RateFuelKindTax
 
+                   , 0 AS Weight
+                   , 0 AS WeightTransport
                    , 0 AS StartOdometre
                    , 0 AS EndOdometre
                    , 0 AS AmountFuel_Start
@@ -373,6 +392,7 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 07.07.14                                       * add Weight and WeightTransport
  09.02.14         * ограничения для zc_Branch_Basis()
  12.12.13         * add inBranchId     
  28.10.13                                        *
@@ -380,4 +400,4 @@ ALTER FUNCTION gpReport_Transport (TDateTime, TDateTime, Integer, Integer, TVarC
 */
 
 -- тест
- --SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());
+-- SELECT * FROM gpReport_Transport (inStartDate:= '01.01.2014', inEndDate:= '31.01.2014', inCarId:= null,  inBranchId:= 1, inSession:= zfCalc_UserAdmin());

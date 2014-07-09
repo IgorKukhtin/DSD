@@ -73,13 +73,15 @@ type
     clRateFuelKindName: TcxGridDBColumn;
     clAmount_ColdHour_calc: TcxGridDBColumn;
     clAmount_ColdDistance_calc: TcxGridDBColumn;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
+    clFuelName: TcxGridDBColumn;
     cxLabel1: TcxLabel;
     cxLabel2: TcxLabel;
     cxLabel5: TcxLabel;
     edBranch: TcxButtonEdit;
     BranchGuides: TdsdGuides;
     colBranchName: TcxGridDBColumn;
+    clWeight: TcxGridDBColumn;
+    clWeightTransport: TcxGridDBColumn;
   private
   public
   end;

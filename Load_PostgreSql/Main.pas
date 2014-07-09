@@ -8,7 +8,7 @@ uses
   ZConnection, dsdDB, ZAbstractRODataset, ZAbstractDataset, ZDataset, Data.DB,
   Data.Win.ADODB, Vcl.StdCtrls, cxTextEdit, cxMaskEdit, cxDropDownEdit,
   cxCalendar, Vcl.Controls, Vcl.Samples.Gauges, Vcl.ExtCtrls, System.Classes,
-  Vcl.Grids, Vcl.DBGrids, DBTables;
+  Vcl.Grids, Vcl.DBGrids, DBTables, dxSkinsCore, dxSkinsDefaultPainters;
 
 type
   TMainForm = class(TForm)
@@ -1165,7 +1165,7 @@ begin
      fExecSqFromQuery('update dba.ContractKind set Id_Postgres = null');
      //  !!! Unit.PersonalId_Postgres and Unit.pgUnitId - is by User !!!
      fExecSqFromQuery('update dba.Unit set Id_Postgres_RouteSorting=null,Id_Postgres_Business = null, Id_Postgres_Business_TWO = null, Id_Postgres_Business_Chapli = null, Id1_Postgres = null, Id2_Postgres = null, Id3_Postgres = null');
-     fExecSqFromQuery('update dba._pgPersonal set Id1_Postgres = null, Id2_Postgres = null');
+     fExecSqFromQuery('update dba._pgPersonal set Id_Postgres = null');
      fExecSqFromQuery('update dba.PriceList_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.PriceListItems_byHistory set Id_Postgres = null');
      fExecSqFromQuery('update dba.GoodsProperty_Postgres set Id_Postgres = null');
@@ -13811,8 +13811,8 @@ begin
         Add('     , Bill.BillNumber as InvNumber');
         Add('     , Bill.BillDate as OperDate');
         Add('     , Bill.Id_Postgres as Id_Postgres');
-        Add('     , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
-        Add('     , isnull (pgPersonalTo.Id2_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
+        Add('     , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres');
+        Add('     , isnull (pgPersonalTo.Id_Postgres, pgUnitTo.Id_Postgres) as ToId_Postgres');
         Add('from dba.Bill');
         Add('     left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId');
         Add('     left outer join dba.Unit AS UnitTo on UnitTo.Id = Bill.ToId');
