@@ -42,7 +42,6 @@ object MemberForm: TMemberForm
       OptionsCustomize.ColumnsQuickCustomization = True
       OptionsData.Deleting = False
       OptionsData.DeletingConfirmation = False
-      OptionsData.Editing = False
       OptionsData.Inserting = False
       OptionsView.ColumnAutoWidth = True
       OptionsView.GroupByBox = False
@@ -53,12 +52,14 @@ object MemberForm: TMemberForm
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 60
       end
       object clName: TcxGridDBColumn
         Caption = #1060#1048#1054
         DataBinding.FieldName = 'Name'
         HeaderAlignmentVert = vaCenter
+        Options.Editing = False
         Width = 173
       end
       object clMember_INN: TcxGridDBColumn
@@ -356,6 +357,17 @@ object MemberForm: TMemberForm
       ImageIndex = 6
       ShortCut = 16472
     end
+    object actUpdateDataSet: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spInsertUpdate
+      StoredProcList = <
+        item
+          StoredProc = spInsertUpdate
+        end>
+      Caption = 'actUpdateDataSet'
+      DataSource = DataSource
+    end
   end
   object dsdStoredProc: TdsdStoredProc
     StoredProcName = 'gpSelect_Object_Member'
@@ -413,5 +425,53 @@ object MemberForm: TMemberForm
     SummaryItemList = <>
     Left = 328
     Top = 264
+  end
+  object spInsertUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_Member'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId'
+        Component = ClientDataSet
+        ComponentItem = 'Id'
+        ParamType = ptInputOutput
+      end
+      item
+        Name = 'inCode'
+        Component = ClientDataSet
+        ComponentItem = 'Code'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inName'
+        Component = ClientDataSet
+        ComponentItem = 'Name'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inINN'
+        Component = ClientDataSet
+        ComponentItem = 'INN'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDriverCertificate'
+        Component = ClientDataSet
+        ComponentItem = 'DriverCertificate'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inComment'
+        Component = ClientDataSet
+        ComponentItem = 'Comment'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 560
+    Top = 152
   end
 end
