@@ -2,26 +2,26 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitWidth = 1114
-  ExplicitHeight = 569
+  ExplicitWidth = 1122
+  ExplicitHeight = 570
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
-    Height = 476
+    Height = 478
     TabOrder = 3
     ExplicitWidth = 1106
-    ExplicitHeight = 476
-    ClientRectBottom = 472
-    ClientRectRight = 1102
+    ExplicitHeight = 478
+    ClientRectBottom = 478
+    ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1100
-      ExplicitHeight = 470
+      ExplicitWidth = 1106
+      ExplicitHeight = 478
       inherited cxGrid: TcxGrid
-        Width = 1100
-        Height = 470
-        ExplicitWidth = 1100
-        ExplicitHeight = 470
+        Width = 1106
+        Height = 478
+        ExplicitWidth = 1106
+        ExplicitHeight = 478
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -506,7 +506,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 18
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -548,7 +547,6 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       Hint = #1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 16
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -651,6 +649,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+      ShortCut = 16464
     end
     object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
       Category = 'DSDLib'
@@ -669,10 +668,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         item
           StoredProc = spSelectPrintTaxCorrective_Client
         end>
-      Caption = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
-      Hint = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
+      Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
+      Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103' ('#1089' '#1087#1088#1080#1074#1103#1079#1082#1086#1081' '#1082' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084')'
       ImageIndex = 21
-      ShortCut = 16464
       DataSets = <
         item
           DataSet = PrintItemsCDS
@@ -742,7 +740,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -815,6 +813,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         item
           Visible = True
           ItemName = 'bbPrintReturnIn'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True
