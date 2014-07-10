@@ -2,19 +2,22 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 535
   ClientWidth = 1106
-  ExplicitWidth = 1122
-  ExplicitHeight = 570
+  ExplicitWidth = 1114
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
     Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1106
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1106
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1106
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -440,13 +443,25 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actSetErased: TdsdChangeMovementStatus [5]
     end
-    inherited actCompleteList: TMultiAction [6]
+    object actChecked: TdsdExecStoredProc [6]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1084#1077#1090#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1074#1077#1088#1077#1085
+      ImageIndex = 10
     end
-    inherited actUnCompleteList: TMultiAction [7]
+    inherited actCompleteList: TMultiAction [7]
     end
-    inherited actSetErasedList: TMultiAction [8]
+    inherited actUnCompleteList: TMultiAction [8]
     end
-    object actTaxCorrective: TdsdExecStoredProc [9]
+    inherited actSetErasedList: TMultiAction [9]
+    end
+    object actTaxCorrective: TdsdExecStoredProc [10]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spTaxCorrective
@@ -464,7 +479,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1089' '#1087#1088 +
         #1080#1074#1103#1079#1082#1086#1081')>.'
     end
-    object actCorrective: TdsdExecStoredProc [10]
+    object actCorrective: TdsdExecStoredProc [11]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spCorrective
@@ -482,11 +497,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         #1047#1072#1074#1077#1088#1096#1077#1085#1086' '#1092#1086#1088#1084#1080#1088#1086#1074#1072#1085#1080#1077' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081'('#1073#1077#1079' ' +
         #1087#1088#1080#1074#1103#1079#1082#1080')>.'
     end
-    inherited actMovementItemContainer: TdsdOpenForm [11]
+    inherited actMovementItemContainer: TdsdOpenForm [12]
     end
-    inherited actShowErased: TBooleanStoredProcAction [12]
+    inherited actShowErased: TBooleanStoredProcAction [13]
     end
-    object actPrint_TaxCorrective_Us: TdsdPrintAction [13]
+    object actPrint_TaxCorrective_Us: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -527,7 +542,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    object actPrint_TaxCorrective_Client: TdsdPrintAction [14]
+    object actPrint_TaxCorrective_Client: TdsdPrintAction [15]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -568,7 +583,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.Value = 'PrintMovement_TaxCorrective'
       ReportNameParam.DataType = ftString
     end
-    object actPrint: TdsdPrintAction [15]
+    object actPrint: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <
         item
@@ -613,9 +628,9 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    inherited actGridToExcel: TdsdGridToExcel [16]
+    inherited actGridToExcel: TdsdGridToExcel [17]
     end
-    inherited actInsertMask: TdsdInsertUpdateAction [17]
+    inherited actInsertMask: TdsdInsertUpdateAction [18]
     end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
@@ -812,6 +827,14 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbactChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintReturnIn'
         end
         item
@@ -869,6 +892,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     object bbPrint_Return_By_TaxCorrective: TdxBarButton
       Action = actPrint_ReturnIn_by_TaxCorrective
+      Category = 0
+    end
+    object bbactChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -1190,5 +1217,26 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       end>
     Left = 584
     Top = 376
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 435
   end
 end

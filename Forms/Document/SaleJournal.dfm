@@ -1325,7 +1325,7 @@ inherited SaleJournalForm: TSaleJournalForm
     Top = 294
   end
   object spChecked: TdsdStoredProc
-    StoredProcName = 'gpCheckMovement_Checked'
+    StoredProcName = 'gpUpdateMovement_Checked'
     DataSets = <>
     OutputType = otResult
     Params = <
