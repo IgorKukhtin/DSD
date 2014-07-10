@@ -91,6 +91,9 @@ type
     colIsError: TcxGridDBColumn;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
+    spChecked: TdsdStoredProc;
+    bbactChecked: TdxBarButton;
+    actChecked: TdsdExecStoredProc;
   private
     { Private declarations }
   public
