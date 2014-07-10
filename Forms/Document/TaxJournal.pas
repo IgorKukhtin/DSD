@@ -67,6 +67,9 @@ type
     actMedocProcedure: TdsdExecStoredProc;
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbactChecked: TdxBarButton;
   private
     { Private declarations }
   public

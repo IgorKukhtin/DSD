@@ -65,6 +65,9 @@ type
     actOrderExternal: TdsdOpenForm;
     actOrderInternal: TdsdOpenForm;
     bbOrderExtrnal: TdxBarButton;
+    actPriceList: TdsdOpenForm;
+    bbPriceList: TdxBarButton;
+    bbOrderInternal: TdxBarButton;
   private
     { Private declarations }
   public

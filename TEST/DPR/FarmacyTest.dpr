@@ -95,10 +95,16 @@ uses
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
   ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
+  Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
+  IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
+  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  PriceList in '..\..\FormsFarmacy\Document\PriceList.pas' {PriceListForm: TParentForm},
+  PriceListJournal in '..\..\FormsFarmacy\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
   OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
-  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
-  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas';
+  OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
+  OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm};
 
 {$R *.res}
 

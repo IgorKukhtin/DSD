@@ -1,8 +1,8 @@
--- Function: gpSelect_Movement_OrderExternal()
+-- Function: gpSelect_Movement_Income()
 
-DROP FUNCTION IF EXISTS gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
+CREATE OR REPLACE FUNCTION gpSelect_Movement_Income(
     IN inStartDate     TDateTime , --
     IN inEndDate       TDateTime , --
     IN inIsErased      Boolean ,
@@ -25,7 +25,7 @@ BEGIN
 -- inEndDate:= '01.01.2100';
 
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_OrderExternal());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_Movement_Income());
 --     vbUserId:= lpGetUserBySession (inSession);
 
      RETURN QUERY
@@ -59,7 +59,7 @@ BEGIN
 
        FROM (SELECT Movement.id
              FROM tmpStatus
-                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_OrderExternal() AND Movement.StatusId = tmpStatus.StatusId
+                  JOIN Movement ON Movement.OperDate BETWEEN inStartDate AND inEndDate  AND Movement.DescId = zc_Movement_Income() AND Movement.StatusId = tmpStatus.StatusId
 --                  JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
             ) AS tmpMovement
 
@@ -104,15 +104,15 @@ BEGIN
 END;
 $BODY$
   LANGUAGE PLPGSQL VOLATILE;
-ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, Boolean, TVarChar) OWNER TO postgres;
 
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
- 03.07.14                                                        *
+ 10.07.14                                                        *
 
 */
 
 -- тест
--- SELECT * FROM gpSelect_Movement_OrderExternal (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
+-- SELECT * FROM gpSelect_Movement_Income (inStartDate:= '30.01.2014', inEndDate:= '01.02.2014', inIsErased := FALSE, inSession:= '2')
