@@ -1,5 +1,5 @@
-inherited OrderInternalJournalForm: TOrderInternalJournalForm
-  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1047#1072#1103#1074#1082#1072'>'
+inherited PriceListJournalForm: TPriceListJournalForm
+  Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1072#1081#1089'-'#1083#1080#1089#1090'>'
   ClientHeight = 535
   ClientWidth = 1073
   ExplicitWidth = 1081
@@ -31,7 +31,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
             end
             item
               Format = ',0.####'
@@ -69,7 +68,6 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = colTotalCount
             end
             item
               Format = ',0.####'
@@ -129,32 +127,12 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
             HeaderAlignmentHorz = taCenter
             Width = 55
           end
-          object colUnitName: TcxGridDBColumn
-            Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
-            DataBinding.FieldName = 'UnitName'
+          object colJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 90
-          end
-          object colTotalCount: TcxGridDBColumn
-            Caption = #1050#1086#1083'-'#1074#1086
-            DataBinding.FieldName = 'TotalCount'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
-          end
-          object colTotalSumm: TcxGridDBColumn
-            Caption = #1048#1090#1086#1075#1086' '#1089#1091#1084#1084#1072
-            DataBinding.FieldName = 'TotalSumm'
-            PropertiesClassName = 'TcxCurrencyEditProperties'
-            Properties.DecimalPlaces = 4
-            Properties.DisplayFormat = ',0.####;-,0.####; ;'
-            HeaderAlignmentHorz = taCenter
-            HeaderAlignmentVert = vaCenter
-            Width = 60
           end
         end
       end
@@ -174,10 +152,10 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
   inherited ActionList: TActionList
     Left = 471
     inherited actInsert: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TPriceListForm'
     end
     inherited actUpdate: TdsdInsertUpdateAction
-      FormName = 'TOrderInternalForm'
+      FormName = 'TPriceListForm'
     end
     object actPrint: TdsdPrintAction
       Category = 'DSDLib'
@@ -231,7 +209,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 139
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Movement_OrderInternal'
+    StoredProcName = 'gpSelect_Movement_PriceList'
     Params = <
       item
         Name = 'instartdate'
@@ -408,7 +386,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 344
   end
   inherited spMovementComplete: TdsdStoredProc
-    StoredProcName = 'gpComplete_Movement_OrderInternal'
+    StoredProcName = 'gpComplete_Movement_PriceList'
     Params = <
       item
         Name = 'inmovementid'
@@ -426,7 +404,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 320
   end
   inherited spMovementUnComplete: TdsdStoredProc
-    StoredProcName = 'gpUnComplete_Movement_OrderInternal'
+    StoredProcName = 'gpUnComplete_Movement_PriceList'
     Params = <
       item
         Name = 'inmovementid'
@@ -438,7 +416,7 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
     Top = 384
   end
   inherited spMovementSetErased: TdsdStoredProc
-    StoredProcName = 'gpSetErased_Movement_OrderInternal'
+    StoredProcName = 'gpSetErased_Movement_PriceList'
     Params = <
       item
         Name = 'inmovementid'
@@ -469,13 +447,13 @@ inherited OrderInternalJournalForm: TOrderInternalJournalForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'ReportNameOrderInternal'
+        Name = 'ReportNamePriceList'
         Value = Null
         DataType = ftString
         ParamType = ptInput
       end
       item
-        Name = 'ReportNameOrderInternalTax'
+        Name = 'ReportNamePriceListTax'
         Value = Null
         DataType = ftString
         ParamType = ptInput

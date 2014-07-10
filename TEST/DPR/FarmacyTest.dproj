@@ -298,12 +298,12 @@
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
-				<Form>OrderInternalForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceList.pas">
+				<Form>PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
-				<Form>OrderInternalJournalForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceListJournal.pas">
+				<Form>PriceListJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
@@ -312,6 +312,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternalJournal.pas">
 				<Form>OrderExternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

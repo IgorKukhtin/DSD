@@ -38,8 +38,7 @@ type
     procedure LoadJuridicalFormTest;
    (* procedure LoadMeasureFormTest;
     procedure LoadPartnerFormTest;
-    procedure LoadPaidKindFormTest;
-    procedure LoadPriceListFormTest; *)
+    procedure LoadPaidKindFormTest;*)
     procedure LoadRetailFormTest;
   (*procedure LoadIncomeFormTest;
     procedure LoadUnitGroupFormTest; *)
@@ -47,7 +46,8 @@ type
   (*  procedure LoadReportFormTest;*)
     procedure LoadOrderInternalFormTest;
     procedure LoadOrderExternalFormTest;
-
+    procedure LoadIncomeFormTest;
+    procedure LoadPriceListFormTest;
   end;
 
 implementation
@@ -352,12 +352,12 @@ end;
 
 procedure TLoadFormTest.LoadOrderInternalFormTest;
 begin
-{
+
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
-}
+
 end;
 
 procedure TLoadFormTest.LoadOrderExternalFormTest;
@@ -366,6 +366,22 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+end;
+
+procedure TLoadFormTest.LoadIncomeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+end;
+
+procedure TLoadFormTest.LoadPriceListFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
 end;
 
 
