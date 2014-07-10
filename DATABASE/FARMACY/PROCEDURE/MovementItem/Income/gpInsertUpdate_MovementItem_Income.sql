@@ -7,8 +7,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_MovementItem_Income(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
     IN inGoodsId             Integer   , -- Товары
     IN inAmount              TFloat    , -- Количество
-    IN inPrice                TFloat   , -- Цена
-    IN inSumm                TFloat    , -- Сумма
+    IN inPrice               TFloat   , -- Цена
+--    IN inSumm                TFloat    , -- Сумма
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -28,7 +28,7 @@ BEGIN
 
 
      -- сохранили свойство <Сумма>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inSumm);
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Summ(), ioId, inAmount * inPrice);
 
      -- пересчитали Итоговые суммы
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);

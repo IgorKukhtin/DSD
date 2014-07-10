@@ -298,6 +298,14 @@
 				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
 				<Form>OrderExternalForm</Form>
 				<DesignClass>TParentForm</DesignClass>

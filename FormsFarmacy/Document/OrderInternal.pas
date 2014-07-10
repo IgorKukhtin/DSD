@@ -1,4 +1,4 @@
-unit Income;
+unit OrderInternal;
 
 interface
 
@@ -26,13 +26,10 @@ uses
   dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint, dxSkinXmas2008Blue;
 
 type
-  TIncomeForm = class(TAncestorDocumentForm)
-    cxLabel3: TcxLabel;
-    edFrom: TcxButtonEdit;
-    edTo: TcxButtonEdit;
+  TOrderInternalForm = class(TAncestorDocumentForm)
+    edUnit: TcxButtonEdit;
     cxLabel4: TcxLabel;
-    GuidesFrom: TdsdGuides;
-    GuidesTo: TdsdGuides;
+    GuidesUnit: TdsdGuides;
     colCode: TcxGridDBColumn;
     colName: TcxGridDBColumn;
     colAmount: TcxGridDBColumn;
@@ -50,11 +47,6 @@ type
     bbPrint_Bill: TdxBarButton;
     PrintItemsSverkaCDS: TClientDataSet;
     colSumm: TcxGridDBColumn;
-    edPriceWithVAT: TcxCheckBox;
-    cxLabel10: TcxLabel;
-    edNDSKind: TcxButtonEdit;
-    NDSKindGuides: TdsdGuides;
-    colPrice: TcxGridDBColumn;
   private
     { Private declarations }
   public
@@ -66,6 +58,6 @@ implementation
 {$R *.dfm}
 
 initialization
-  RegisterClass(TIncomeForm);
+  RegisterClass(TOrderInternalForm);
 
 end.
