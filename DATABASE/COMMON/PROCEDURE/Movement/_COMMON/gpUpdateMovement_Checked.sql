@@ -1,21 +1,20 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
-DROP FUNCTION IF EXISTS gpCheckMovement_Checked (Integer, Boolean, TVarChar);
+DROP FUNCTION IF EXISTS gpUpdateMovement_Checked (Integer, Boolean, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpCheckMovement_Checked(
- INout ioId                  Integer   , -- Ключ объекта <Документ>
+CREATE OR REPLACE FUNCTION gpUpdateMovement_Checked(
+    IN ioId                  Integer   , -- Ключ объекта <Документ>
     IN inChecked             Boolean   , -- Проверен
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer 
+RETURNS void 
 AS
 $BODY$
-   DECLARE vbIsInsert Boolean;
-   DECLARE vbUserId Integer;
+    DECLARE vbUserId Integer;
 BEGIN
      -- проверка
      -- проверка прав пользователя на вызов процедуры
-     vbUserId:= inSession;  -- lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
+     vbUserId:= inSession;  --  lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_Sale());
 
   
      -- определяем признак проверки
@@ -30,9 +29,6 @@ BEGIN
          PERFORM lpInsertUpdate_MovementBoolean (zc_MovementBoolean_Checked(), ioId, True);
          
      END IF;
-
-     -- сохранили протокол
-     PERFORM lpInsert_MovementProtocol (ioId, vbUserId, vbIsInsert);
   
 END;
 $BODY$
@@ -46,4 +42,4 @@ $BODY$
 
 
 -- тест
--- SELECT * FROM gpCheckMovement_Checked (ioId:= 275079, inChecked:= 'False', inSession:= '2')
+-- SELECT * FROM gpUpdateMovement_Checked (ioId:= 275079, inChecked:= 'False', inSession:= '2')
