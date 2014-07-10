@@ -95,10 +95,12 @@ uses
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
   Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
   ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
-  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
-  OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
+  Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
+  IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
   MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
-  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas';
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
+  OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm};
 
 {$R *.res}
 

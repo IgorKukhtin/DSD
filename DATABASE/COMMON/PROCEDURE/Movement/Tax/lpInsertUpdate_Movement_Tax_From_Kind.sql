@@ -301,25 +301,32 @@ BEGIN
               WHERE MovementDate_OperDatePartner.ValueData BETWEEN vbStartDate AND vbEndDate
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
              UNION ALL
-              -- данные <Перевод долга (расход)>
+              -- данные <Перевод долга (расход)> и <Перевод долга (приход)>
               SELECT Movement.Id
                    , Movement.DescId
-                   , inDocumentTaxKindId AS DocumentTaxKindId
-              FROM Movement
+                   , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
+                               THEN inDocumentTaxKindId
+                          ELSE vbDocumentTaxKindId_TaxCorrective
+                     END AS DocumentTaxKindId
+              FROM (SELECT zc_Movement_TransferDebtOut() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId, zc_MovementLinkObject_ContractTo() AS ContractDescId, zc_MovementLinkObject_PaidKindTo() AS PaidKindDescId
+                   UNION ALL
+                    SELECT zc_Movement_TransferDebtIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId, zc_MovementLinkObject_ContractFrom() AS ContractDescId, zc_MovementLinkObject_PaidKindFrom() AS PaidKindDescId
+                   ) AS tmpDesc
+                   INNER JOIN Movement ON Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                      AND Movement.DescId = tmpDesc.MovementDescId
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_ContractTo()
+                                                AND MovementLinkObject_Contract.DescId = tmpDesc.ContractDescId
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+                                                AND MovementLinkObject.DescId = tmpDesc.MLODescId
                                                 AND MovementLinkObject.ObjectId = vbToId
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind_To
-                                                 ON MovementLinkObject_PaidKind_To.MovementId = Movement.Id
-                                                AND MovementLinkObject_PaidKind_To.DescId = zc_MovementLinkObject_PaidKindTo()
-                                                AND MovementLinkObject_PaidKind_To.ObjectId = zc_Enum_PaidKind_FirstForm()
-              WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                AND Movement.DescId = zc_Movement_TransferDebtOut()
-                AND Movement.StatusId = zc_Enum_Status_Complete();
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                AND MovementLinkObject_PaidKind.DescId = tmpDesc.PaidKindDescId
+                                                AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
+              ;
 
       ELSE
       IF inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
@@ -386,27 +393,32 @@ BEGIN
                 AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
                 AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
              UNION ALL
-              -- данные <Перевод долга (расход)>
+              -- данные <Перевод долга (расход)> и <Перевод долга (приход)>
               SELECT Movement.Id
                    , Movement.DescId
-                   , inDocumentTaxKindId AS DocumentTaxKindId
-              FROM Movement
+                   , CASE WHEN Movement.DescId <> zc_Movement_TransferDebtIn()
+                               THEN inDocumentTaxKindId
+                          ELSE vbDocumentTaxKindId_TaxCorrective
+                     END AS DocumentTaxKindId
+              FROM (SELECT zc_Movement_TransferDebtOut() AS MovementDescId, zc_MovementLinkObject_To() AS MLODescId, zc_MovementLinkObject_ContractTo() AS ContractDescId, zc_MovementLinkObject_PaidKindTo() AS PaidKindDescId
+                   UNION ALL
+                    SELECT zc_Movement_TransferDebtIn() AS MovementDescId, zc_MovementLinkObject_From() AS MLODescId, zc_MovementLinkObject_ContractFrom() AS ContractDescId, zc_MovementLinkObject_PaidKindFrom() AS PaidKindDescId
+                   ) AS tmpDesc
+                   INNER JOIN Movement ON Movement.OperDate BETWEEN vbStartDate AND vbEndDate
+                                      AND Movement.DescId = tmpDesc.MovementDescId
+                                      AND Movement.StatusId = zc_Enum_Status_Complete()
+                                      AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_ContractTo()
+                                                AND MovementLinkObject_Contract.DescId = tmpDesc.ContractDescId
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
-                                                AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
+                                                AND MovementLinkObject.DescId = tmpDesc.MLODescId
                                                 AND MovementLinkObject.ObjectId = vbToId
-                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind_To
-                                                 ON MovementLinkObject_PaidKind_To.MovementId = Movement.Id
-                                                AND MovementLinkObject_PaidKind_To.DescId = zc_MovementLinkObject_PaidKindTo()
-                                                AND MovementLinkObject_PaidKind_To.ObjectId = zc_Enum_PaidKind_FirstForm()
-              WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
-                AND Movement.DescId = zc_Movement_TransferDebtOut()
-                AND Movement.StatusId = zc_Enum_Status_Complete()
-                AND inDocumentTaxKindId IN (zc_Enum_DocumentTaxKind_TaxSummaryJuridicalS(), zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR())
-
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                                 ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                                AND MovementLinkObject_PaidKind.DescId = tmpDesc.PaidKindDescId
+                                                AND MovementLinkObject_PaidKind.ObjectId = zc_Enum_PaidKind_FirstForm()
              UNION ALL
               -- данные <Продажа покупателю> и <Возврат от покупателя>
               SELECT Movement.Id
@@ -456,7 +468,7 @@ BEGIN
                             END AS Price
                           , CASE WHEN COALESCE (MIFloat_CountForPrice.ValueData, 0) = 0 THEN 1 ELSE COALESCE (MIFloat_CountForPrice.ValueData, 0) END AS CountForPrice
                           , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_Sale() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtOut() THEN MovementItem.Amount ELSE 0 END) AS Amount_Sale
-                          , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) ELSE 0 END) AS Amount_ReturnIn
+                          , SUM (CASE WHEN _tmpMovement.DescId = zc_Movement_ReturnIn() THEN COALESCE (MIFloat_AmountPartner.ValueData, 0) WHEN _tmpMovement.DescId = zc_Movement_TransferDebtIn() THEN MovementItem.Amount ELSE 0 END) AS Amount_ReturnIn
                      FROM _tmpMovement2 AS _tmpMovement
                           INNER JOIN MovementItem ON MovementItem.MovementId = _tmpMovement.MovementId
                                                  AND MovementItem.isErased = FALSE
@@ -500,7 +512,7 @@ BEGIN
            INNER JOIN MovementLinkMovement ON MovementLinkMovement.MovementChildId = _tmpMovement.MovementId
                                           AND MovementLinkMovement.DescId = zc_MovementLinkMovement_Master()
                                           AND MovementLinkMovement.MovementId <> COALESCE (vbMovementId_TaxCorrective, 0)
-      WHERE _tmpMovement.DescId = zc_Movement_ReturnIn();
+      WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn());
 
       -- удаляем для НЕ "база" связь с Налоговым документом
       PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Master(), MovementLinkMovement.MovementId, 0)
@@ -570,7 +582,7 @@ BEGIN
       -- сохранили для "база" связь с <Тип формирования налогового документа> !!!только для корректировок!!!
       PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_DocumentTaxKind(), _tmpMovement.MovementId, _tmpMovement.DocumentTaxKindId)
       FROM _tmpMovement
-      WHERE _tmpMovement.DescId = zc_Movement_ReturnIn();
+      WHERE _tmpMovement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn());
 
 
       -- удаляем !!!все!!! строки из Налоговой
@@ -722,6 +734,7 @@ ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.07.14                                        * add zc_Movement_TransferDebtIn
  03.06.14                                        * add в налоговых цены всегда будут без НДС + в корректировках цены всегда будут без НДС
  16.05.14                                        * set lp
  10.05.14                                        * add lpComplete_Movement_Tax and lpComplete_Movement_TaxCorrective
@@ -736,4 +749,4 @@ ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 */
 
 -- тест
- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 328405 , inDocumentTaxKindId := 80788 , inDocumentTaxKindId_inf := 80788 ,  inSession := '5');
+-- select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 328405 , inDocumentTaxKindId := 80788 , inDocumentTaxKindId_inf := 80788 ,  inSession := '5');

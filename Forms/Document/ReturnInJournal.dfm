@@ -8,23 +8,25 @@ inherited ReturnInJournalForm: TReturnInJournalForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1106
-    Height = 478
+    Height = 476
     TabOrder = 3
     ExplicitTop = 57
     ExplicitWidth = 1106
-    ExplicitHeight = 478
-    ClientRectBottom = 478
-    ClientRectRight = 1106
+    ExplicitHeight = 476
+    ClientRectBottom = 472
+    ClientRectRight = 1102
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 0
       ExplicitWidth = 1106
       ExplicitHeight = 478
+      ExplicitWidth = 1100
+      ExplicitHeight = 470
       inherited cxGrid: TcxGrid
-        Width = 1106
-        Height = 478
-        ExplicitWidth = 1106
-        ExplicitHeight = 478
+        Width = 1100
+        Height = 470
+        ExplicitWidth = 1100
+        ExplicitHeight = 470
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Filter.Options = [fcoCaseInsensitive, fcoShowOperatorDescription]
           DataController.Filter.TranslateBetween = True
@@ -634,6 +636,8 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     end
     inherited actInsertMask: TdsdInsertUpdateAction [18]
     end
+    inherited actInsertMask: TdsdInsertUpdateAction [17]
+    end
     object actSPPrintProcName: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -666,6 +670,48 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Caption = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
+    end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <
+        item
+          FromParam.Name = 'id'
+          FromParam.Component = MasterCDS
+          FromParam.ComponentItem = 'id'
+          ToParam.Value = Null
+          ToParam.Component = FormParams
+          ToParam.ComponentItem = 'Id'
+          ToParam.ParamType = ptInputOutput
+        end>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
+      Hint = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
     end
   end
   inherited MasterDS: TDataSource
@@ -715,7 +761,7 @@ inherited ReturnInJournalForm: TReturnInJournalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -799,6 +845,10 @@ inherited ReturnInJournalForm: TReturnInJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Return_By_TaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -842,8 +892,11 @@ inherited ReturnInJournalForm: TReturnInJournalForm
       Action = actPrint_TaxCorrective_Us
       Category = 0
     end
+
     object bbactChecked: TdxBarButton
       Action = actChecked
+    object bbPrint_Return_By_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
       Category = 0
     end
   end

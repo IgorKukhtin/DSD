@@ -104,12 +104,12 @@ BEGIN
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
 
-      SELECT Movement.Id				                    AS MovementId
-           , Movement.InvNumber				                    AS InvNumber
-           , Movement.OperDate				                    AS OperDate
-           , 'J1201205'::TVarChar                       AS CHARCODE  
-           , 'Неграш О.В.'::TVarChar                    AS N10 
-           , 'оплата з поточного рахунка'::TVarChar     AS N9
+      SELECT Movement.Id				                                    AS MovementId
+           , Movement.InvNumber				                                AS InvNumber
+           , Movement.OperDate				                                AS OperDate
+           , 'J1201205'::TVarChar                                           AS CHARCODE
+           , 'Неграш О.В.'::TVarChar                                        AS N10
+           , 'оплата з поточного рахунка'::TVarChar                         AS N9
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectivePrice() THEN 'Змiна цiни'  ELSE 'повернення' END :: TVarChar AS KindName
            , MovementBoolean_PriceWithVAT.ValueData                         AS PriceWithVAT
            , MovementFloat_VATPercent.ValueData                             AS VATPercent
@@ -120,7 +120,7 @@ BEGIN
            , MovementFloat_TotalSummPVAT.ValueData                          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData                              AS TotalSumm
 
-           , View_Contract.InvNumber         		                    AS ContractName
+           , View_Contract.InvNumber         		                        AS ContractName
            , ObjectDate_Signing.ValueData                                   AS ContractSigningDate
            , View_Contract.ContractKindName                                 AS ContractKind
 
@@ -185,6 +185,12 @@ BEGIN
 
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch_Child.ValueData)) || MovementString_InvNumberBranch_Child.ValueData AS TVarChar) AS InvNumberBranch_Child
+
+           , MovementString_InvNumberMark.ValueData     AS InvNumberMark
+           , COALESCE (MovementDate_OperDatePartner.ValueData, Movement_ReturnIn.OperDate) AS OperDatePartner_ReturnIn
+           , COALESCE (MovementString_InvNumberPartner_ReturnIn.ValueData, Movement_ReturnIn.InvNumber) AS InvNumberPartner_ReturnIn
+--           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
+
 
        FROM tmpMovement
             INNER JOIN MovementItem ON MovementItem.MovementId =  tmpMovement.Id
@@ -280,6 +286,21 @@ BEGIN
                                           AND MovementLinkMovement_child.DescId = zc_MovementLinkMovement_Child()
             LEFT JOIN Movement AS Movement_child ON Movement_child.Id = MovementLinkMovement_child.MovementChildId
                                                 AND Movement_child.StatusId = zc_Enum_Status_Complete()
+
+--   09.07.14
+            LEFT JOIN Movement AS Movement_ReturnIn ON Movement_ReturnIn.Id = inMovementId
+
+            LEFT JOIN MovementString AS MovementString_InvNumberMark
+                                     ON MovementString_InvNumberMark.MovementId =  Movement_ReturnIn.Id
+                                    AND MovementString_InvNumberMark.DescId = zc_MovementString_InvNumberMark()
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartner
+                                   ON MovementDate_OperDatePartner.MovementId =  Movement_ReturnIn.Id
+                                  AND MovementDate_OperDatePartner.DescId = zc_MovementDate_OperDatePartner()
+            LEFT JOIN MovementString AS MovementString_InvNumberPartner_ReturnIn
+                                     ON MovementString_InvNumberPartner_ReturnIn.MovementId =  Movement_ReturnIn.Id
+                                    AND MovementString_InvNumberPartner_ReturnIn.DescId = zc_MovementString_InvNumberPartner()
+
+--   09.07.14
 
             LEFT JOIN MovementString AS MovementString_InvNumberBranch_Child
                                      ON MovementString_InvNumberBranch_Child.MovementId =  Movement_child.Id
@@ -444,6 +465,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 09.07.14                                                       *
  27.06.14                                        * !!! print all !!!
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
@@ -465,8 +487,9 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 
 /*
 BEGIN;
- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
+ SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 141816, inisClientCopy:= FALSE ,inSession:= '2');
 COMMIT;
 */
 -- тест
+-- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');
 -- SELECT * FROM gpSelect_Movement_TaxCorrective_Print (inMovementId := 185675, inisClientCopy:= FALSE ,inSession:= '2');

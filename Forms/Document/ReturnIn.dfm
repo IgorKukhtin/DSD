@@ -2,27 +2,27 @@ inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
   ClientWidth = 994
-  ExplicitWidth = 1010
-  ExplicitHeight = 703
+  ExplicitWidth = 1002
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 126
+    Top = 128
     Width = 994
-    Height = 542
-    ExplicitTop = 126
+    Height = 540
+    ExplicitTop = 128
     ExplicitWidth = 994
-    ExplicitHeight = 542
-    ClientRectBottom = 542
-    ClientRectRight = 994
+    ExplicitHeight = 540
+    ClientRectBottom = 536
+    ClientRectRight = 990
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 994
-      ExplicitHeight = 518
+      ExplicitWidth = 988
+      ExplicitHeight = 514
       inherited cxGrid: TcxGrid
-        Width = 994
-        Height = 518
-        ExplicitWidth = 994
-        ExplicitHeight = 518
+        Width = 988
+        Height = 514
+        ExplicitWidth = 988
+        ExplicitHeight = 514
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -195,14 +195,15 @@ inherited ReturnInForm: TReturnInForm
       end
     end
     inherited tsEntry: TcxTabSheet
-      ExplicitTop = 24
-      ExplicitWidth = 994
-      ExplicitHeight = 518
+      ExplicitLeft = 2
+      ExplicitTop = 22
+      ExplicitWidth = 988
+      ExplicitHeight = 514
       inherited cxGridEntry: TcxGrid
-        Width = 994
-        Height = 518
-        ExplicitWidth = 994
-        ExplicitHeight = 518
+        Width = 988
+        Height = 514
+        ExplicitWidth = 988
+        ExplicitHeight = 514
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -261,7 +262,7 @@ inherited ReturnInForm: TReturnInForm
       TabOrder = 8
       ExplicitTop = 63
       ExplicitWidth = 223
-      ExplicitHeight = 22
+      ExplicitHeight = 24
       Width = 223
     end
     object cxLabel3: TcxLabel
@@ -591,6 +592,39 @@ inherited ReturnInForm: TReturnInForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
+    object actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction [13]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrintTaxCorrective_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrintTaxCorrective_Client
+        end>
+      Caption = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
+      Hint = #1042#1086#1079#1074#1088#1072#1090#1099' ('#1087#1086' '#1082#1086#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072#1084' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081')'
+      ImageIndex = 21
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = PrintItemsCDS
+          UserName = 'frxDBDMaster'
+        end
+        item
+          DataSet = PrintHeaderCDS
+          UserName = 'frxDBDHeader'
+        end>
+      Params = <
+        item
+          Name = 'Id'
+          Value = Null
+          Component = FormParams
+          ComponentItem = 'Id'
+        end>
+      ReportName = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.Name = #1055#1077#1095#1072#1090#1100' '#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081' ('#1082#1083#1080#1077#1085#1090#1091')'
+      ReportNameParam.Value = 'PrintMovement_ReturnIn_By_TaxCorrective'
+      ReportNameParam.DataType = ftString
+    end
     inherited actUnCompleteMovement: TChangeGuidesStatus
       StoredProcList = <
         item
@@ -609,7 +643,7 @@ inherited ReturnInForm: TReturnInForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [16]
+    object actGoodsKindChoice: TOpenChoiceForm [17]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'
@@ -745,7 +779,7 @@ inherited ReturnInForm: TReturnInForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -816,6 +850,10 @@ inherited ReturnInForm: TReturnInForm
         end
         item
           Visible = True
+          ItemName = 'bbPrint_Return_By_TaxCorrective'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarStatic'
         end
         item
@@ -864,6 +902,10 @@ inherited ReturnInForm: TReturnInForm
       Action = actPrint_TaxCorrective_Us
       Category = 0
       ImageIndex = 18
+    end
+    object bbPrint_Return_By_TaxCorrective: TdxBarButton
+      Action = actPrint_ReturnIn_by_TaxCorrective
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
