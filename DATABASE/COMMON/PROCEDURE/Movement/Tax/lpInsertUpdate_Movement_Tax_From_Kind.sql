@@ -308,11 +308,15 @@ BEGIN
               FROM Movement
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_ContractTo()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                                                 AND MovementLinkObject.ObjectId = vbToId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind_To
+                                                 ON MovementLinkObject_PaidKind_To.MovementId = Movement.Id
+                                                AND MovementLinkObject_PaidKind_To.DescId = zc_MovementLinkObject_PaidKindTo()
+                                                AND MovementLinkObject_PaidKind_To.ObjectId = zc_Enum_PaidKind_FirstForm()
               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                 AND Movement.DescId = zc_Movement_TransferDebtOut()
                 AND Movement.StatusId = zc_Enum_Status_Complete();
@@ -389,11 +393,15 @@ BEGIN
               FROM Movement
                    INNER JOIN MovementLinkObject AS MovementLinkObject_Contract
                                                  ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                                AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_ContractTo()
                                                 AND MovementLinkObject_Contract.ObjectId = vbContractId
                    INNER JOIN MovementLinkObject ON MovementLinkObject.MovementId = Movement.Id
                                                 AND MovementLinkObject.DescId = zc_MovementLinkObject_To()
                                                 AND MovementLinkObject.ObjectId = vbToId
+                   INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind_To
+                                                 ON MovementLinkObject_PaidKind_To.MovementId = Movement.Id
+                                                AND MovementLinkObject_PaidKind_To.DescId = zc_MovementLinkObject_PaidKindTo()
+                                                AND MovementLinkObject_PaidKind_To.ObjectId = zc_Enum_PaidKind_FirstForm()
               WHERE Movement.OperDate BETWEEN vbStartDate AND vbEndDate
                 AND Movement.DescId = zc_Movement_TransferDebtOut()
                 AND Movement.StatusId = zc_Enum_Status_Complete()
@@ -728,4 +736,4 @@ ALTER FUNCTION lpInsertUpdate_Movement_Tax_From_Kind (Integer, Integer, Integer,
 */
 
 -- тест
--- SELECT * FROM lpInsertUpdate_Movement_Tax_From_Kind (inMovementId:= 21838, inDocumentTaxKindId:= 80770, inUserId:=  zfCalc_UserAdmin() :: TVarChar);
+ select * from gpInsertUpdate_Movement_Tax_From_Kind(inMovementId := 328405 , inDocumentTaxKindId := 80788 , inDocumentTaxKindId_inf := 80788 ,  inSession := '5');

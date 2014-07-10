@@ -125,13 +125,17 @@ BEGIN
      END IF;
 
 
+     -- таблицы - !!!ДЛЯ ОПТИМИЗАЦИИ!!!
+     CREATE TEMP TABLE _tmp1___ (Id Integer) ON COMMIT DROP;
+     CREATE TEMP TABLE _tmp2___ (Id Integer) ON COMMIT DROP;
+
      -- таблица - Аналитики остатка
      CREATE TEMP TABLE tmpContainer (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <элемент с/с>
      CREATE TEMP TABLE _tmpObjectCost (DescId Integer, ObjectId Integer) ON COMMIT DROP;
      -- таблица - Аналитики <Проводки для отчета>
      CREATE TEMP TABLE _tmpChildReportContainer (AccountKindId Integer, ContainerId Integer, AccountId Integer) ON COMMIT DROP;
-     -- таблица - 
+     -- таблица - Проводки
      CREATE TEMP TABLE _tmpMIContainer_insert (Id Integer, DescId Integer, MovementId Integer, MovementItemId Integer, ContainerId Integer, ParentId Integer, Amount TFloat, OperDate TDateTime, IsActive Boolean) ON COMMIT DROP;
 
      -- таблица - количественный остаток

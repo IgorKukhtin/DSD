@@ -130,6 +130,16 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = clAmount_ColdDistance_calc
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = clWeightTransport
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = clWeight
         end>
       DataController.Summary.FooterSummaryItems = <
         item
@@ -217,6 +227,16 @@ object Report_TransportForm: TReport_TransportForm
           Format = ',0.##'
           Kind = skSum
           Column = clAmount_ColdDistance_calc
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = clWeightTransport
+        end
+        item
+          Format = ',0.##'
+          Kind = skSum
+          Column = clWeight
         end>
       DataController.Summary.SummaryGroups = <>
       Images = dmMain.SortImageList
@@ -248,7 +268,7 @@ object Report_TransportForm: TReport_TransportForm
         Options.Editing = False
         Width = 37
       end
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object clFuelName: TcxGridDBColumn
         Caption = #1042#1080#1076' '#1090#1086#1087#1083#1080#1074#1072
         DataBinding.FieldName = 'FuelName'
         HeaderAlignmentHorz = taCenter
@@ -300,6 +320,20 @@ object Report_TransportForm: TReport_TransportForm
         HeaderAlignmentVert = vaCenter
         Options.Editing = False
         Width = 57
+      end
+      object clWeight: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1088#1072#1079#1075#1088#1091#1079#1082#1072')'
+        DataBinding.FieldName = 'Weight'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
+      end
+      object clWeightTransport: TcxGridDBColumn
+        Caption = #1042#1077#1089' '#1075#1088#1091#1079#1072', '#1082#1075' ('#1087#1077#1088#1077#1074#1077#1079#1077#1085#1086')'
+        DataBinding.FieldName = 'WeightTransport'
+        HeaderAlignmentHorz = taCenter
+        HeaderAlignmentVert = vaCenter
+        Width = 60
       end
       object clStartOdometre: TcxGridDBColumn
         Caption = #1053#1072#1095'. '#1087#1086#1082#1072#1079'.'#1082#1084

@@ -84,3 +84,34 @@
        HAVING SUM (tmpAll.AmountPartner) <> SUM (tmpAll.AmountPartnerNew)
 --           OR MAX (tmpAll.OperDate) <> MIN (tmpAll.OperDate)
        ORDER BY tmpAll.MovementId, tmpAll.InvNumber, tmpAll.GoodsId
+
+/*
+-- select lpInsert_MovementItemProtocol (a.MovementItemId , 9457 , false) from (select MovementItemId from MovementItemProtocol  where MovementItemProtocol.UserId =  81238 and MovementItemProtocol.OperDate between '01.06.2014' and '08.07.2014' group by MovementItemId) as a
+with aaa as
+(select MovementItemProtocol.Id, MovementItemProtocol2.Id as Id2
+      , MovementItemProtocol.MovementItemId
+      , MovementItemProtocol.ProtocolData as oldProtocolData, MovementItemProtocol2.ProtocolData as newProtocolData
+from (select max (Id) as id from MovementItemProtocol  where MovementItemProtocol.UserId =  81238 and MovementItemProtocol.OperDate between '01.06.2014' and '08.07.2014' group by MovementItemId
+      ) as a
+     left join MovementItemProtocol  on MovementItemProtocol .Id = a.Id
+     left join MovementItemProtocol as MovementItemProtocol2  on MovementItemProtocol2.MovementItemId = MovementItemProtocol.MovementItemId
+                                   and MovementItemProtocol2.UserId =  9457
+                                   and MovementItemProtocol2.OperDate between '08.07.2014' and '10.07.2014'
+ where MovementItemProtocol.ProtocolData <> MovementItemProtocol2.ProtocolData
+)
+-- select * from aaa
+
+select 1 as x, aaa.MovementItemId, Movement.OperDate, Movement.InvNumber,  Movement.DescId, oldProtocolData
+from aaa
+     left join MovementItemProtocol  on MovementItemProtocol.Id = aaa.Id
+     left join MovementItem  on MovementItem.Id = aaa.MovementItemId
+     left join Movement on Movement.Id = MovementItem.MovementId
+union all
+select 2  as x, aaa.MovementItemId, Movement.OperDate, Movement.InvNumber,  Movement.DescId, newProtocolData
+from aaa
+     left join MovementItemProtocol  on MovementItemProtocol.Id = aaa.Id2
+     left join MovementItem  on MovementItem.Id = aaa.MovementItemId
+     left join Movement on Movement.Id = MovementItem.MovementId
+
+  order by 4, 2, 1
+*/

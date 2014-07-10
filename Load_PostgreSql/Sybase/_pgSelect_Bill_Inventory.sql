@@ -1,4 +1,4 @@
-create PROCEDURE "DBA"."_pgSelect_Bill_Inventory" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
+alter PROCEDURE "DBA"."_pgSelect_Bill_Inventory" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, InvNumber integer, OperDate Date, FromId_Postgres Integer, ToId_Postgres Integer, isCar smallint, Id_Postgres Integer)
 begin
   -- 
@@ -64,8 +64,8 @@ begin
 
 
   -- Create Bill
-  insert into dba.Bill (BillDate, BillNumber, BillKind, FromID, ToID, Nds, IsNds, MoneyKindID, DiscountFromOperCount, DiscountTax, IsChangeDolg, IsCalculateProduction, isByMinusDiscountTax, BillSummIn, BillSumm, BillSummOperCount, isRemains) 
-     select @inEndDate, 0, zc_bkProductionInFromReceipt(), UnitId, UnitId, 0 as Nds, zc_rvUn() as IsNds, zc_mkNal() as MoneyKindID, 0 as DiscountFromOperCount, 0 as DiscountTax, zc_rvUn() as IsChangeDolg, zc_rvUn() as IsCalculateProduction, zc_rvUn() as isByMinusDiscountTax, 0, 0, 0, zc_rvYes() as isRemains
+  insert into dba.Bill (BillDate, BillNumber, BillKind, FromID, ToID, Nds, IsNds, MoneyKindID, DiscountFromOperCount, DiscountTax, IsChangeDolg, IsCalculateProduction, isByMinusDiscountTax, BillSummIn, BillSumm, BillSummOperCount, isRemains, Id_Postgres) 
+     select @inEndDate, 0, zc_bkProductionInFromReceipt(), UnitId, UnitId, 0 as Nds, zc_rvUn() as IsNds, zc_mkNal() as MoneyKindID, 0 as DiscountFromOperCount, 0 as DiscountTax, zc_rvUn() as IsChangeDolg, zc_rvUn() as IsCalculateProduction, zc_rvUn() as isByMinusDiscountTax, 0, 0, 0, zc_rvYes() as isRemains, 0 as Id_Postgres
      from _tmpList
      where BillId = 0;
 
@@ -74,7 +74,7 @@ begin
     select (Bill.Id) as ObjectId
          , (Bill.BillNumber) as InvNumber
          , @inEndDate as OperDate
-         , isnull (pgPersonalFrom.Id2_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
+         , isnull (pgPersonalFrom.Id_Postgres, pgUnitFrom.Id_Postgres) as FromId_Postgres
          , FromId_Postgres as ToId_Postgres
          , zc_rvNo() as isCar
          , (Bill.Id_Postgres) as Id_Postgres
@@ -90,5 +90,5 @@ begin
 
 end
 //
--- call dba._pgSelect_Bill_Inventory (zc_rvNo(), '2012-12-01', '2012-12-31')
+-- call dba._pgSelect_Bill_Inventory (zc_rvNo(), '2013-12-01', '2013-12-31')
 -- call dba._pgSelect_Bill_Inventory (zc_rvYes(), '2013-09-01', '2013-09-30')
