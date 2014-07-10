@@ -14,7 +14,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     TabOrder = 3
     ExplicitTop = 82
     ExplicitWidth = 1055
-    ExplicitHeight = 257
+    ExplicitHeight = 305
     ClientRectBottom = 301
     ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
@@ -25,6 +25,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         Width = 1049
         Height = 299
         ExplicitWidth = 1049
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
