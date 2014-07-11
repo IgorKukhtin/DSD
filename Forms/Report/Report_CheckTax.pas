@@ -34,6 +34,9 @@ type
     cxLabel4: TcxLabel;
     edDocumentTaxKind: TcxButtonEdit;
     DocumentTaxKindGuides: TdsdGuides;
+    clSumm_Sale: TcxGridDBColumn;
+    clSumm_Tax: TcxGridDBColumn;
+    clSumm_Diff: TcxGridDBColumn;
   private
     { Private declarations }
   public

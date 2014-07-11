@@ -18,6 +18,9 @@ RETURNS TABLE (InvNumber_Sale TVarChar, InvNumber_Tax TVarChar
              , Price TFloat
              , Amount_Sale TFloat
              , Amount_Tax TFloat
+             , Summ_Sale TFloat
+             , Summ_Tax TFloat
+             , Summ_Diff TFloat
              , Difference Boolean
               )  
 AS
@@ -46,6 +49,35 @@ BEGIN
          , tmpGroupMovement.Amount_Sale :: TFloat AS Amount_Sale
          , tmpGroupMovement.Amount_Tax :: TFloat AS Amount_Tax
         
+           -- сумма
+         , CASE WHEN tmpGroupMovement.PriceWithVAT OR tmpGroupMovement.VATPercent = 0
+                     -- если цены с НДС или %НДС=0
+                     THEN tmpGroupMovement.Summ_Sale
+                ELSE -- если цены без НДС
+                     CAST ( (1 + tmpGroupMovement.VATPercent / 100) * tmpGroupMovement.Summ_Sale AS NUMERIC (16, 2))
+           END :: TFloat AS Summ_Sale
+           -- сумма
+         , CASE WHEN tmpGroupMovement.PriceWithVAT OR tmpGroupMovement.VATPercent = 0
+                     -- если цены с НДС или %НДС=0
+                     THEN tmpGroupMovement.Summ_Tax
+                ELSE -- если цены без НДС
+                     CAST ( (1 + tmpGroupMovement.VATPercent / 100) * tmpGroupMovement.Summ_Tax AS NUMERIC (16, 2))
+           END :: TFloat AS Summ_Tax
+
+           -- сумма Diff
+         , CASE WHEN tmpGroupMovement.PriceWithVAT OR tmpGroupMovement.VATPercent = 0
+                     -- если цены с НДС или %НДС=0
+                     THEN tmpGroupMovement.Summ_Sale
+                ELSE -- если цены без НДС
+                     CAST ( (1 + tmpGroupMovement.VATPercent / 100) * tmpGroupMovement.Summ_Sale AS NUMERIC (16, 2))
+           END :: TFloat
+         - CASE WHEN tmpGroupMovement.PriceWithVAT OR tmpGroupMovement.VATPercent = 0
+                     -- если цены с НДС или %НДС=0
+                     THEN tmpGroupMovement.Summ_Tax
+                ELSE -- если цены без НДС
+                     CAST ( (1 + tmpGroupMovement.VATPercent / 100) * tmpGroupMovement.Summ_Tax AS NUMERIC (16, 2))
+           END :: TFloat AS Summ_Diff
+
          , CASE WHEN tmpGroupMovement.Amount_Sale <> tmpGroupMovement.Amount_Tax
                      THEN TRUE 
                 ELSE FALSE
@@ -53,6 +85,8 @@ BEGIN
 
     FROM (SELECT tmpMovement.FromId
                , tmpMovement.ToId
+               , tmpMovement.PriceWithVAT
+               , tmpMovement.VATPercent
                , tmpMovement.ContractId
                , tmpMovement.DocumentTaxKindId
                , tmpMovement.PartnerId
@@ -63,10 +97,14 @@ BEGIN
                , tmpMovement.Price
                , CASE WHEN SUM (tmpMovement.Amount_Sale) > 0 THEN SUM (tmpMovement.Amount_Sale) ELSE 0 END AS Amount_Sale
                , SUM (tmpMovement.Amount_Tax)  AS Amount_Tax
+               , CASE WHEN SUM (tmpMovement.Amount_Sale) > 0 THEN SUM (CAST (tmpMovement.Amount_Sale * tmpMovement.Price / tmpMovement.CountForPrice AS NUMERIC (16, 2))) ELSE 0 END AS Summ_Sale
+               , SUM (CAST (tmpMovement.Amount_Tax * tmpMovement.Price / tmpMovement.CountForPrice AS NUMERIC (16, 2))) AS Summ_Tax
           FROM  -- Возврат от покупателя
-               (SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
-                     , ObjectLink_Partner_Juridical.ChildObjectId       AS ToId
-                     , MovementLinkObject_Contract.ObjectId             AS ContractId
+               (SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS FromId
+                     , ObjectLink_Partner_Juridical.ChildObjectId        AS ToId
+                     , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
+                     , MovementFloat_VATPercent.ValueData                AS VATPercent
+                     , MovementLinkObject_Contract.ObjectId              AS ContractId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectiveSummaryJuridicalSR()
                                  THEN zc_Enum_DocumentTaxKind_TaxSummaryJuridicalSR()
                             WHEN MovementLO_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR()
@@ -84,6 +122,7 @@ BEGIN
                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                             ELSE MIFloat_Price.ValueData
                        END AS Price
+                     , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , -1 * SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -98,6 +137,9 @@ BEGIN
                                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                                  AND MIFloat_Price.ValueData <> 0
+                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -106,6 +148,13 @@ BEGIN
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                                      
+                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -131,6 +180,8 @@ BEGIN
 
                 GROUP BY ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , ObjectLink_Partner_Juridical.ChildObjectId
+                       , MovementBoolean_PriceWithVAT.ValueData
+                       , MovementFloat_VATPercent.ValueData
                        , MovementLinkObject_Contract.ObjectId
                        , MovementLO_DocumentTaxKind.ObjectId
                        , CASE WHEN MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_CorrectiveSummaryPartnerSR())
@@ -140,13 +191,16 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MIFloat_CountForPrice.ValueData
                        , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Продажа покупателю
-                SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
-                     , ObjectLink_Partner_Juridical.ChildObjectId       AS ToId
-                     , MovementLinkObject_Contract.ObjectId             AS ContractId
-                     , MovementLO_DocumentTaxKind.ObjectId              AS DocumentTaxKindId
+                SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS FromId
+                     , ObjectLink_Partner_Juridical.ChildObjectId        AS ToId
+                     , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
+                     , MovementFloat_VATPercent.ValueData                AS VATPercent
+                     , MovementLinkObject_Contract.ObjectId              AS ContractId
+                     , MovementLO_DocumentTaxKind.ObjectId               AS DocumentTaxKindId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                  THEN COALESCE (MovementLinkObject_To.ObjectId, 0)
                             ELSE 0
@@ -159,6 +213,7 @@ BEGIN
                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                             ELSE MIFloat_Price.ValueData
                        END AS Price
+                     , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -178,6 +233,9 @@ BEGIN
                                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price() 
                                                  AND MIFloat_Price.ValueData <> 0
+                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                      LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
                                                  ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
                                                 AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
@@ -186,6 +244,13 @@ BEGIN
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
                                                      
+                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -211,6 +276,8 @@ BEGIN
 
                 GROUP BY ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , ObjectLink_Partner_Juridical.ChildObjectId
+                       , MovementBoolean_PriceWithVAT.ValueData
+                       , MovementFloat_VATPercent.ValueData
                        , MovementLinkObject_Contract.ObjectId
                        , MovementLO_DocumentTaxKind.ObjectId
                        , CASE WHEN MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
@@ -222,13 +289,16 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MIFloat_CountForPrice.ValueData
                        , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Перевод долга (расход)
-                SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId AS FromId
-                     , MovementLinkObject_To.ObjectId                   AS ToId
-                     , MovementLinkObject_Contract.ObjectId             AS ContractId
-                     , MovementLO_DocumentTaxKind.ObjectId              AS DocumentTaxKindId
+                SELECT ObjectLink_Contract_JuridicalBasis.ChildObjectId  AS FromId
+                     , MovementLinkObject_To.ObjectId                    AS ToId
+                     , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
+                     , MovementFloat_VATPercent.ValueData                AS VATPercent
+                     , MovementLinkObject_Contract.ObjectId              AS ContractId
+                     , MovementLO_DocumentTaxKind.ObjectId               AS DocumentTaxKindId
                      , CASE WHEN MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
                                  THEN COALESCE (MovementLinkObject_Partner.ObjectId, 0)
                             ELSE 0
@@ -241,6 +311,7 @@ BEGIN
                                  THEN CAST ( (1 + MovementFloat_ChangePercent.ValueData / 100) * MIFloat_Price.ValueData AS NUMERIC (16, 2))
                             ELSE MIFloat_Price.ValueData
                        END AS Price
+                     , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , SUM (MovementItem.Amount)            AS Amount_Sale
                      , 0 AS Amount_Tax
                 FROM Movement 
@@ -260,15 +331,24 @@ BEGIN
                                                   ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                  AND MIFloat_Price.DescId = zc_MIFloat_Price() 
                                                  AND MIFloat_Price.ValueData <> 0
+                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                                                  
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
+                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
                                                   ON MovementLinkObject_Partner.MovementId = Movement.Id
                                                  AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
@@ -291,6 +371,8 @@ BEGIN
 
                 GROUP BY ObjectLink_Contract_JuridicalBasis.ChildObjectId
                        , MovementLinkObject_To.ObjectId
+                       , MovementBoolean_PriceWithVAT.ValueData
+                       , MovementFloat_VATPercent.ValueData
                        , MovementLinkObject_Contract.ObjectId
                        , MovementLO_DocumentTaxKind.ObjectId
                        , CASE WHEN MovementLO_DocumentTaxKind.ObjectId IN (zc_Enum_DocumentTaxKind_Tax(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerS(), zc_Enum_DocumentTaxKind_TaxSummaryPartnerSR())
@@ -302,12 +384,15 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MIFloat_CountForPrice.ValueData
                        , MovementFloat_ChangePercent.ValueData
                UNION ALL
                 -- Налоговые
-                SELECT MovementLinkObject_From.ObjectId     AS FromId
-                     , MovementLinkObject_To.ObjectId       AS ToId
-                     , MovementLinkObject_Contract.ObjectId AS ContractId
+                SELECT MovementLinkObject_From.ObjectId                  AS FromId
+                     , MovementLinkObject_To.ObjectId                    AS ToId
+                     , MovementBoolean_PriceWithVAT.ValueData            AS PriceWithVAT
+                     , MovementFloat_VATPercent.ValueData                AS VATPercent
+                     , MovementLinkObject_Contract.ObjectId              AS ContractId
                      , MovementLO_DocumentTaxKind.ObjectId  AS DocumentTaxKindId
                      , COALESCE (MovementLinkObject_Partner.ObjectId, 0) AS PartnerId
                      , COALESCE (MovementLinkMovement.MovementId, 0) AS MovementId_Sale
@@ -315,6 +400,7 @@ BEGIN
                      , MovementItem.ObjectId AS GoodsId
                      , COALESCE (MILinkObject_GoodsKind.ObjectId, 0) AS GoodsKindId
                      , MIFloat_Price.ValueData AS Price
+                     , CASE WHEN MIFloat_CountForPrice.ValueData <> 1 THEN MIFloat_CountForPrice.ValueData ELSE 1 END AS CountForPrice
                      , 0 AS Amount_Sale
                      , SUM (MovementItem.Amount) AS Amount_Tax
                 FROM Movement
@@ -335,14 +421,23 @@ BEGIN
                      LEFT JOIN MovementItemFloat AS MIFloat_Price
                                                  ON MIFloat_Price.MovementItemId = MovementItem.Id
                                                 AND MIFloat_Price.DescId = zc_MIFloat_Price()    
+                     LEFT JOIN MovementItemFloat AS MIFloat_CountForPrice
+                                                 ON MIFloat_CountForPrice.MovementItemId = MovementItem.Id
+                                                AND MIFloat_CountForPrice.DescId = zc_MIFloat_CountForPrice()
                      LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
                                                       ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
                                                      AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
 
+                     LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
+                                               ON MovementBoolean_PriceWithVAT.MovementId =  Movement.Id
+                                              AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
+                     LEFT JOIN MovementFloat AS MovementFloat_VATPercent
+                                             ON MovementFloat_VATPercent.MovementId =  Movement.Id
+                                            AND MovementFloat_VATPercent.DescId = zc_MovementFloat_VATPercent()
+
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                                   ON MovementLinkObject_From.MovementId = Movement.Id
                                                  AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
-
                      LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                                   ON MovementLinkObject_To.MovementId = Movement.Id
                                                  AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -355,9 +450,12 @@ BEGIN
                   AND Movement.StatusId = zc_Enum_Status_Complete() 
                   AND Movement.OperDate BETWEEN inStartDate AND inEndDate
                   AND (MovementLO_DocumentTaxKind.ObjectId = inDocumentTaxKindId OR COALESCE (inDocumentTaxKindId, 0) = 0)
+                  AND MovementLO_DocumentTaxKind.ObjectId NOT IN (zc_Enum_DocumentTaxKind_CorrectivePrice(), zc_Enum_DocumentTaxKind_Prepay())
                   
                 GROUP BY MovementLinkObject_From.ObjectId
                        , MovementLinkObject_To.ObjectId
+                       , MovementBoolean_PriceWithVAT.ValueData
+                       , MovementFloat_VATPercent.ValueData
                        , MovementLinkObject_Contract.ObjectId
                        , MovementLO_DocumentTaxKind.ObjectId
                        , MovementLinkObject_Partner.ObjectId
@@ -366,10 +464,13 @@ BEGIN
                        , MovementItem.ObjectId
                        , MILinkObject_GoodsKind.ObjectId
                        , MIFloat_Price.ValueData
+                       , MIFloat_CountForPrice.ValueData
 
           ) AS tmpMovement 
           GROUP BY tmpMovement.FromId
                  , tmpMovement.ToId
+                 , tmpMovement.PriceWithVAT
+                 , tmpMovement.VATPercent
                  , tmpMovement.ContractId
                  , tmpMovement.DocumentTaxKindId
                  , tmpMovement.PartnerId
