@@ -3,26 +3,29 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1036
-  ExplicitHeight = 429
+  ExplicitWidth = 1028
+  ExplicitHeight = 428
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 337
+    Height = 335
     TabOrder = 3
+    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 337
-    ClientRectBottom = 337
-    ClientRectRight = 1020
+    ExplicitHeight = 335
+    ClientRectBottom = 331
+    ClientRectRight = 1016
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 337
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1014
+      ExplicitHeight = 329
       inherited cxGrid: TcxGrid
-        Width = 1020
-        Height = 337
-        ExplicitWidth = 1020
-        ExplicitHeight = 337
+        Width = 1014
+        Height = 329
+        ExplicitWidth = 1014
+        ExplicitHeight = 329
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -429,7 +432,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 47
+      ExplicitWidth = 48
     end
     inherited cxLabel2: TcxLabel
       Left = 880
@@ -1066,6 +1069,34 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1048#1090#1086#1075' '#1087#1086' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102' (c '#1086#1090#1089#1088#1086#1095#1082#1086#1081'-'#1085#1072#1082#1083#1072#1076#1085#1099#1077' '#1088#1077#1072#1083#1080#1079#1072#1094#1080#1103')'
       ReportNameParam.DataType = ftString
     end
+    object actPrint_byJuridical: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
+      ImageIndex = 19
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'JuridicalName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end>
+      ReportName = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
+      ReportNameParam.Value = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
+      ReportNameParam.DataType = ftString
+    end
   end
   inherited MasterDS: TDataSource
     Top = 155
@@ -1106,14 +1137,15 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Top = 155
+    Left = 112
+    Top = 187
   end
   inherited BarManager: TdxBarManager
     Top = 155
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -1171,6 +1203,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         end
         item
           Visible = True
+          ItemName = 'bbPrint_byJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbGridToExcel'
         end
         item
@@ -1206,11 +1246,17 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
       Action = actPrintSale
       Category = 0
     end
+    object bbPrint_byJuridical: TdxBarButton
+      Action = actPrint_byJuridical
+      Category = 0
+      ImageIndex = 20
+    end
   end
   inherited PeriodChoice: TPeriodChoice
     DateStart = nil
     DateEnd = nil
-    Top = 171
+    Left = 32
+    Top = 211
   end
   inherited RefreshDispatcher: TRefreshDispatcher
     ComponentList = <
