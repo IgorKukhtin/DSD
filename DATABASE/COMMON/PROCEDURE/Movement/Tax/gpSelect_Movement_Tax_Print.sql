@@ -21,6 +21,7 @@ $BODY$
 
     DECLARE vbMovementId_Sale Integer;
     DECLARE vbMovementId_Tax Integer;
+    DECLARE vbDocumentTaxKindId Integer;
 
     DECLARE vbPriceWithVAT Boolean;
     DECLARE vbVATPercent TFloat;
@@ -31,11 +32,12 @@ BEGIN
 
      -- ÓÔÂ‰ÂÎˇÂÚÒˇ <Õ‡ÎÓ„Ó‚˚È ‰ÓÍÛÏÂÌÚ> Ë Â„Ó Ô‡‡ÏÂÚ˚ 
      SELECT COALESCE (tmpMovement.MovementId_Tax, 0) AS MovementId_Tax
+          , MovementLinkObject_DocumentTaxKind.ObjectId AS DocumentTaxKindId
           , COALESCE (MovementBoolean_PriceWithVAT.ValueData, TRUE) AS PriceWithVAT
           , COALESCE (MovementFloat_VATPercent.ValueData, 0) AS VATPercent
           , ObjectLink_Juridical_GoodsProperty.ChildObjectId AS GoodsPropertyId
           , ObjectLink_JuridicalBasis_GoodsProperty.ChildObjectId AS GoodsPropertyId_basis
-            INTO vbMovementId_Tax, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
+            INTO vbMovementId_Tax, vbDocumentTaxKindId, vbPriceWithVAT, vbVATPercent, vbGoodsPropertyId, vbGoodsPropertyId_basis
      FROM (SELECT CASE WHEN Movement.DescId = zc_Movement_Tax()
                             THEN inMovementId
                        ELSE MovementLinkMovement_Master.MovementChildId
@@ -46,6 +48,9 @@ BEGIN
                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
            WHERE Movement.Id = inMovementId
           ) AS tmpMovement
+          LEFT JOIN MovementLinkObject AS MovementLinkObject_DocumentTaxKind
+                                       ON MovementLinkObject_DocumentTaxKind.MovementId = tmpMovement.MovementId_Tax
+                                      AND MovementLinkObject_DocumentTaxKind.DescId = zc_MovementLinkObject_DocumentTaxKind()
           LEFT JOIN MovementBoolean AS MovementBoolean_PriceWithVAT
                                     ON MovementBoolean_PriceWithVAT.MovementId = tmpMovement.MovementId_Tax
                                    AND MovementBoolean_PriceWithVAT.DescId = zc_MovementBoolean_PriceWithVAT()
@@ -233,7 +238,8 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
-           , (COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData)) || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END) :: TVarChar AS GoodsName
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ' ELSE COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END)) END) :: TVarChar AS GoodsName
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ' ELSE COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData)) END) :: TVarChar AS GoodsName_two
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 

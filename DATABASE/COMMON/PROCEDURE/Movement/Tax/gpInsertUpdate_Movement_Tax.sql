@@ -41,7 +41,7 @@ BEGIN
 
      -- создаем "виртуальный элемент"
      IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
-       AND NOT EXISTS (SELECT FROM MovementItem WHERE MovementId = ioId AND ObjectId = inDocumentTaxKindId)
+       AND NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND ObjectId = inDocumentTaxKindId)
      THEN
          PERFORM lpInsertUpdate_MovementItem_Tax (ioId                 := 0
                                                 , inMovementId         := ioId
@@ -51,7 +51,7 @@ BEGIN
                                                 , ioCountForPrice      := 1
                                                 , inGoodsKindId        := NULL
                                                 , inUserId             := vbUserId
-                                                 )
+                                                 );
      END IF;
 
 END;
