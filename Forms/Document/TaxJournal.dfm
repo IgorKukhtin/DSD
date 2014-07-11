@@ -1013,7 +1013,7 @@ inherited TaxJournalForm: TTaxJournalForm
     Top = 312
   end
   object spChecked: TdsdStoredProc
-    StoredProcName = 'gpCheckMovement_Checked'
+    StoredProcName = 'gpUpdateMovement_Checked'
     DataSets = <>
     OutputType = otResult
     Params = <

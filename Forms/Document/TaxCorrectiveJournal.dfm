@@ -913,7 +913,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     Top = 362
   end
   object spChecked: TdsdStoredProc
-    StoredProcName = 'gpCheckMovement_Checked'
+    StoredProcName = 'gpUpdateMovement_Checked'
     DataSets = <>
     OutputType = otResult
     Params = <

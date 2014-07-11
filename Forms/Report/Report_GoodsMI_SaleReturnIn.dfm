@@ -1,30 +1,31 @@
 inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
-  ClientHeight = 339
+  ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1071
-  ExplicitHeight = 374
+  ExplicitWidth = 1063
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 82
     Width = 1055
-    Height = 259
+    Height = 305
     TabOrder = 3
-    ExplicitTop = 80
-    ExplicitWidth = 1020
-    ExplicitHeight = 259
-    ClientRectBottom = 259
-    ClientRectRight = 1055
+    ExplicitTop = 82
+    ExplicitWidth = 1055
+    ExplicitHeight = 305
+    ClientRectBottom = 301
+    ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 259
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1049
       inherited cxGrid: TcxGrid
-        Width = 1055
-        Height = 259
-        ExplicitWidth = 1020
-        ExplicitHeight = 259
+        Width = 1049
+        Height = 299
+        ExplicitWidth = 1049
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -343,7 +344,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   inherited Panel: TPanel
     Width = 1055
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1055
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -471,11 +472,50 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
           'TextValue')
       end>
   end
+  inherited ActionList: TActionList
+    Left = 87
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1055#1077#1095#1072#1090#1100
+      Hint = #1055#1077#1095#1072#1090#1100
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
+      ReportNameParam.DataType = ftString
+    end
+  end
   inherited MasterDS: TDataSource
     Left = 72
     Top = 208
   end
   inherited MasterCDS: TClientDataSet
+    IndexFieldNames = 'GoodsGroupName;GoodsName'
     Left = 40
     Top = 208
   end
@@ -524,21 +564,59 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 112
+    Left = 120
     Top = 208
   end
   inherited BarManager: TdxBarManager
-    Left = 160
+    Left = 200
     Top = 208
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 232
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 112
