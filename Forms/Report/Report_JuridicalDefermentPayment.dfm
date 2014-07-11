@@ -124,7 +124,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
-          object colAccountName: TcxGridDBColumn
+          object clAccountName: TcxGridDBColumn
             Caption = #1057#1095#1077#1090
             DataBinding.FieldName = 'AccountName'
             Visible = False
@@ -132,21 +132,27 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 70
           end
-          object colAreaName: TcxGridDBColumn
+          object clAreaName: TcxGridDBColumn
             Caption = #1056#1077#1075#1080#1086#1085
             DataBinding.FieldName = 'AreaName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 60
           end
-          object colJuridicalName: TcxGridDBColumn
+          object clRetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 80
           end
-          object colOKPO: TcxGridDBColumn
+          object clOKPO: TcxGridDBColumn
             Caption = #1054#1050#1055#1054
             DataBinding.FieldName = 'OKPO'
             Visible = False
@@ -154,7 +160,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 55
           end
-          object colPaidKindName: TcxGridDBColumn
+          object clPaidKindName: TcxGridDBColumn
             Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
             DataBinding.FieldName = 'PaidKindName'
             HeaderAlignmentVert = vaCenter
@@ -217,7 +223,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 60
           end
-          object colStartDate: TcxGridDBColumn
+          object clStartDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1089
             DataBinding.FieldName = 'StartDate'
             Visible = False
@@ -226,7 +232,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 60
           end
-          object colEndDate: TcxGridDBColumn
+          object clEndDate: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088' '#1076#1086
             DataBinding.FieldName = 'EndDate'
             Visible = False
@@ -252,7 +258,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 60
           end
-          object colInfoMoneyCode: TcxGridDBColumn
+          object clInfoMoneyCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1059#1055
             DataBinding.FieldName = 'InfoMoneyCode'
             Visible = False
@@ -260,7 +266,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 55
           end
-          object colInfoMoneyGroupName: TcxGridDBColumn
+          object clInfoMoneyGroupName: TcxGridDBColumn
             Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyGroupName'
             Visible = False
@@ -268,7 +274,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyDestinationName: TcxGridDBColumn
+          object clInfoMoneyDestinationName: TcxGridDBColumn
             Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
             DataBinding.FieldName = 'InfoMoneyDestinationName'
             Visible = False
@@ -276,7 +282,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Options.Editing = False
             Width = 70
           end
-          object colInfoMoneyName: TcxGridDBColumn
+          object clInfoMoneyName: TcxGridDBColumn
             Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
             DataBinding.FieldName = 'InfoMoneyName'
             HeaderAlignmentVert = vaCenter

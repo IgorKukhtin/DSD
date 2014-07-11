@@ -3,29 +3,28 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1063
-  ExplicitHeight = 421
+  ExplicitWidth = 1071
+  ExplicitHeight = 422
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 82
+    Top = 80
     Width = 1055
-    Height = 305
+    Height = 307
     TabOrder = 3
-    ExplicitTop = 82
+    ExplicitTop = 80
     ExplicitWidth = 1055
-    ExplicitHeight = 305
-    ClientRectBottom = 301
-    ClientRectRight = 1051
+    ExplicitHeight = 307
+    ClientRectBottom = 307
+    ClientRectRight = 1055
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1049
+      ExplicitWidth = 1055
+      ExplicitHeight = 307
       inherited cxGrid: TcxGrid
-        Width = 1049
-        Height = 299
-        ExplicitWidth = 1049
-        ExplicitHeight = 299
+        Width = 1055
+        Height = 307
+        ExplicitWidth = 1055
+        ExplicitHeight = 307
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -139,12 +138,25 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clRetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            Visible = False
+            Width = 55
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -482,8 +494,8 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         item
           StoredProc = spSelect
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
       ImageIndex = 18
       ShortCut = 16464
       DataSets = <
@@ -573,7 +585,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <

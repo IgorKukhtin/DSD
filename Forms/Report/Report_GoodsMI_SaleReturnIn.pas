@@ -52,6 +52,8 @@ type
     clMeasureName: TcxGridDBColumn;
     actPrint: TdsdPrintAction;
     bbPrint: TdxBarButton;
+    clRetailName: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
   private
     { Private declarations }
   public

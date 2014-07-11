@@ -17,7 +17,7 @@ uses
 
 type
   TReport_JuridicalDefermentPayment = class(TAncestorReportForm)
-    colJuridicalName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
     colContractNumber: TcxGridDBColumn;
     colKreditRemains: TcxGridDBColumn;
     colDebetRemains: TcxGridDBColumn;
@@ -28,7 +28,7 @@ type
     colSaleSumm3: TcxGridDBColumn;
     colSaleSumm4: TcxGridDBColumn;
     colSaleSumm5: TcxGridDBColumn;
-    colAccountName: TcxGridDBColumn;
+    clAccountName: TcxGridDBColumn;
     colCondition: TcxGridDBColumn;
     edAccount: TcxButtonEdit;
     cxLabel3: TcxLabel;
@@ -47,16 +47,16 @@ type
     bbOther: TdxBarButton;
     actPrint: TdsdPrintAction;
     bbPribt: TdxBarButton;
-    colOKPO: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
     colContractCode: TcxGridDBColumn;
-    colInfoMoneyCode: TcxGridDBColumn;
-    colInfoMoneyGroupName: TcxGridDBColumn;
-    colInfoMoneyDestinationName: TcxGridDBColumn;
-    colInfoMoneyName: TcxGridDBColumn;
-    colPaidKindName: TcxGridDBColumn;
-    colAreaName: TcxGridDBColumn;
-    colStartDate: TcxGridDBColumn;
-    colEndDate: TcxGridDBColumn;
+    clInfoMoneyCode: TcxGridDBColumn;
+    clInfoMoneyGroupName: TcxGridDBColumn;
+    clInfoMoneyDestinationName: TcxGridDBColumn;
+    clInfoMoneyName: TcxGridDBColumn;
+    clPaidKindName: TcxGridDBColumn;
+    clAreaName: TcxGridDBColumn;
+    clStartDate: TcxGridDBColumn;
+    clEndDate: TcxGridDBColumn;
     actPrintSale: TdsdPrintAction;
     spReport_JuridicalSaleDocument: TdsdStoredProc;
     bbSale: TdxBarButton;
@@ -64,6 +64,7 @@ type
     edPaidKind: TcxButtonEdit;
     PaidKindGuides: TdsdGuides;
     clStartContractDate: TcxGridDBColumn;
+    clRetailName: TcxGridDBColumn;
   private
     { Private declarations }
   public

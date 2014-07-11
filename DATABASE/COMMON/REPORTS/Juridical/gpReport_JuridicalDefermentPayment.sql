@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- сессия пользователя
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
@@ -36,7 +36,7 @@ BEGIN
 
   RETURN QUERY  
 
- select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindId, a.PaidKindName
+ select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagName TVarChar, a.ContractStateKindCode
              , a.PersonalName
@@ -53,6 +53,7 @@ from (
      Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
+   , Object_Retail.ValueData    AS RetailName
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
@@ -253,6 +254,11 @@ from (
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
 ) as a
 where a.DebetRemains <> 0 or a.KreditRemains <> 0
              or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
@@ -270,6 +276,7 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 11.07.14                                        * add RetailName
  05.07.14                                        * add zc_Movement_TransferDebtOut
  02.06.14                                        * change DefermentPaymentRemains
  20.05.14                                        * add Object_Contract_View
