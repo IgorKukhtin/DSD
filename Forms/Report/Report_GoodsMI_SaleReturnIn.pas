@@ -54,6 +54,8 @@ type
     bbPrint: TdxBarButton;
     clRetailName: TcxGridDBColumn;
     clOKPO: TcxGridDBColumn;
+    actPrint_byJuridical: TdsdPrintAction;
+    bbPrint_byJuridical: TdxBarButton;
   private
     { Private declarations }
   public

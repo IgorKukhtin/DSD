@@ -72,6 +72,11 @@ begin
   LoadReportFromFile('Обороты из акта сверки', ReportPath + '\Отчеты (финансы)\Обороты из акта сверки.fr3');
   LoadReportFromFile('Обороты по счету', ReportPath + '\Отчеты (финансы)\Обороты по счету.fr3');
   LoadReportFromFile('Продажа и возврат', ReportPath + '\Отчеты (товарные)\Продажа и возврат.fr3');
+  LoadReportFromFile('Продажа и возврат по юрлицам', ReportPath + '\Отчеты (товарные)\Продажа и возврат по юрлицам.fr3');
+
+  LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (финансы)\Отчет по просрочке.fr3');
+
+
 
   // Печатные формы накладных
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
