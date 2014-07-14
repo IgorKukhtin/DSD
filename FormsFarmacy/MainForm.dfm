@@ -2,7 +2,7 @@ inherited MainForm: TMainForm
   ClientHeight = 151
   ClientWidth = 689
   ExplicitWidth = 697
-  ExplicitHeight = 185
+  ExplicitHeight = 178
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
@@ -11,6 +11,25 @@ inherited MainForm: TMainForm
       0
       26
       0)
+    inherited dxBar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbGuides'
+        end
+        item
+          Visible = True
+          ItemName = 'bbLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbService'
+        end
+        item
+          Visible = True
+          ItemName = 'bbExit'
+        end>
+    end
     inherited bbService: TdxBarSubItem
       ItemLinks = <
         item
@@ -144,6 +163,20 @@ inherited MainForm: TMainForm
     end
     object bbExtraChargeCategories: TdxBarButton [25]
       Action = actExtraChargeCategories
+      Category = 0
+    end
+    object bbLoad: TdxBarSubItem
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1080
+      Category = 0
+      Visible = ivAlways
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbPriceListLoad'
+        end>
+    end
+    object bbPriceListLoad: TdxBarButton
+      Action = actPriceListLoad
       Category = 0
     end
   end
@@ -362,6 +395,16 @@ inherited MainForm: TMainForm
       Caption = #1041#1072#1083#1072#1085#1089
       FormName = 'TBalanceForm'
       FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actPriceListLoad: TdsdOpenForm
+      Category = #1047#1072#1075#1088#1091#1079#1082#1080
+      MoveParams = <>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
+      FormName = 'TPriceListLoadForm'
+      FormNameParam.Value = 'TPriceListLoadForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

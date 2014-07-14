@@ -92,9 +92,12 @@ uses
   Retail in '..\..\Forms\Guides\Retail.pas' {RetailForm: TParentForm},
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
-  JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm};
+  JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm};
 
 {$R *.res}
+{$R DevExpressRus.res}
 
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';

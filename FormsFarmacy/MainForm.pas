@@ -3,9 +3,10 @@ unit MainForm;
 interface
 
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
-  frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn, cxLocalization,
+  frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
-  DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter;
+  DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
+  cxLocalization;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -49,6 +50,9 @@ type
     bbBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
     bbExtraChargeCategories: TdxBarButton;
+    actPriceListLoad: TdsdOpenForm;
+    bbLoad: TdxBarSubItem;
+    bbPriceListLoad: TdxBarButton;
   private
     { Private declarations }
   public

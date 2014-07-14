@@ -271,13 +271,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical.pas">
 				<Form>JuridicalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
 				<Form>JuridicalEditForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
+				<Form>MainForm</Form>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

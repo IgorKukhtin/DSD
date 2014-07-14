@@ -63,6 +63,8 @@ begin
 
   TUpdater.AutomaticUpdateProgram;
 
+  Application.CreateForm(TdmMain, dmMain);
   Application.CreateForm(TMainForm, MainFormInstance);
+
   Application.Run;
 end.

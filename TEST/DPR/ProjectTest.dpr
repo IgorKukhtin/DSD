@@ -476,6 +476,7 @@ uses
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
 
 {$R *.RES}
+{$R DevExpressRus.res}
 
 begin
   Application.Initialize;

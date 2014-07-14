@@ -20,6 +20,7 @@ CREATE TABLE LoadMovement
   JuridicalId	Integer , -- Юридические лица
   UnitId        Integer , -- Подразделения
   NDSKindId	Integer ,  -- Типы НДС
+  isAllGoodsConcat Boolean, -- Все ли товары имеют связь
   CONSTRAINT fk_LoadMovement_JuridicalId FOREIGN KEY (JuridicalId)    REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_UnitId      FOREIGN KEY (UnitId)         REFERENCES Object (id),
   CONSTRAINT fk_LoadMovement_NDSKindId   FOREIGN KEY (NDSKindId)      REFERENCES Object (id)
