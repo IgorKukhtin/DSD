@@ -2,20 +2,22 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1055#1088#1086#1076#1072#1078#1072' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1102'>'
   ClientHeight = 535
   ClientWidth = 1110
-  ExplicitTop = -143
   ExplicitWidth = 1118
-  ExplicitHeight = 562
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1110
     Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1110
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1110
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1110
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -468,11 +470,23 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
     end
+    object actChecked: TdsdExecStoredProc [4]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1084#1077#1090#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1074#1077#1088#1077#1085
+      ImageIndex = 10
+    end
     inherited actUpdate: TdsdInsertUpdateAction
       FormName = 'TSale_PartnerForm'
       FormNameParam.Value = 'TSale_PartnerForm'
     end
-    object actMovementCheck: TdsdOpenForm [12]
+    object actMovementCheck: TdsdOpenForm [13]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -895,6 +909,14 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbactChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrint'
         end
         item
@@ -954,6 +976,10 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
       Action = actMovementCheck
       Category = 0
       ImageIndex = 43
+    end
+    object bbactChecked: TdxBarButton
+      Action = actChecked
+      Category = 0
     end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
@@ -1291,5 +1317,26 @@ inherited Sale_PartnerJournalForm: TSale_PartnerJournalForm
     Params = <>
     Left = 628
     Top = 294
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 435
   end
 end

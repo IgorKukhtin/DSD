@@ -9,7 +9,7 @@ inherited MainForm: TMainForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited dxBar: TdxBar
       ItemLinks = <
@@ -19,7 +19,12 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+
           ItemName = 'bbLoad'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDocuments'
         end
         item
           Visible = True
@@ -57,6 +62,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbContract'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -80,6 +89,18 @@ inherited MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbIncome'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderExtrnal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbOrderInternal'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPriceList'
         end>
     end
     object bbMeasure: TdxBarButton [7]
@@ -177,10 +198,35 @@ inherited MainForm: TMainForm
     end
     object bbPriceListLoad: TdxBarButton
       Action = actPriceListLoad
+    end
+    object bbContract: TdxBarButton
+      Action = actContract
+      Category = 0
+    end
+    object bbOrderExtrnal: TdxBarButton
+      Action = actOrderExternal
+      Category = 0
+    end
+    object bbPriceList: TdxBarButton
+      Action = actPriceList
+      Category = 0
+    end
+    object bbOrderInternal: TdxBarButton
+      Action = actOrderInternal
       Category = 0
     end
   end
   inherited ActionList: TActionList
+    object actPriceList: TdsdOpenForm [0]
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1055#1088#1072#1081#1089'-'#1083#1080#1089#1090
+      FormName = 'TPriceListJournalForm'
+      FormNameParam.Value = 'TPriceListJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
     object actMeasure: TdsdOpenForm
       Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
       MoveParams = <>
@@ -405,6 +451,37 @@ inherited MainForm: TMainForm
       Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1087#1088#1072#1081#1089'-'#1083#1080#1089#1090#1086#1074
       FormName = 'TPriceListLoadForm'
       FormNameParam.Value = 'TPriceListLoadForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+  end  
+  object actContract: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = #1044#1086#1075#1086#1074#1086#1088#1072
+      Hint = #1044#1086#1075#1086#1074#1086#1088#1072
+      FormName = 'TContractForm'
+      FormNameParam.Value = 'TContractForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderExternal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1077#1096#1085#1080#1077
+      FormName = 'TOrderExternalJournalForm'
+      FormNameParam.Value = 'TOrderExternalJournalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actOrderInternal: TdsdOpenForm
+      Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
+      MoveParams = <>
+      Caption = #1047#1072#1103#1074#1082#1080' '#1074#1085#1091#1090#1088#1077#1085#1085#1080#1077
+      FormName = 'TOrderInternalJournalForm'
+      FormNameParam.Value = 'TOrderInternalJournalForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False

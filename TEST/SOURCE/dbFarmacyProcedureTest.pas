@@ -222,6 +222,7 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpInsertUpdate_Object_Contract.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpSelect_Object_Contract.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpGet_Object_Contract.sql', ZQuery);
+  ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpSelect_Object_ContractJuridical.sql', ZQuery);
 
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpInsertUpdate_Object_Juridical.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
@@ -238,6 +239,13 @@ begin
   ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpInsertUpdate_Object_Retail.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpGet_Object_Retail.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpSelect_Object_Retail.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'OBJECTS\Contract—onditionKind\gpSelect_Object_Contract—onditionKind.sql', ZQuery);
+
+  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpSelect_ObjectHistory_JuridicalDetails.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpGet_JuridicalDetails_ClearDefault.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpGet_ObjectHistory_JuridicalDetails.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'ObjectHistory\JuridicalDetails\gpInsertUpdate_ObjectHistory_JuridicalDetails.sql', ZQuery);
 
 end;
 

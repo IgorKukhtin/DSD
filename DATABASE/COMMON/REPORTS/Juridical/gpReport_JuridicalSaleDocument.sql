@@ -41,23 +41,34 @@ BEGIN
             , View_Contract_InvNumber.InvNumber AS ContractNumber
             , View_Contract_InvNumber.ContractTagName
             , Object_PaidKind.ValueData  AS PaidKindName
-         FROM Movement 
+         FROM (SELECT zc_Movement_Sale() AS DescId, zc_MovementLinkObject_Contract() AS DescId_Contract, zc_MovementLinkObject_PaidKind() AS DescId_PaidKind
+              UNION ALL
+               SELECT zc_Movement_TransferDebtOut() AS DescId, zc_MovementLinkObject_ContractTo() AS DescId_Contract, zc_MovementLinkObject_PaidKindTo() AS DescId_PaidKind
+              ) AS tmpDesc
+              INNER JOIN Movement ON Movement.DescId = tmpDesc.DescId
+                                 AND Movement.StatusId = zc_Enum_Status_Complete()
+                                 AND Movement.OperDate >= inStartDate 
+                                 AND Movement.OperDate < inEndDate
+
               INNER JOIN MovementLinkObject AS MovementLinkObject_To
                                             ON MovementLinkObject_To.MovementId = Movement.Id
                                            AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-              LEFT JOIN Object AS Object_To ON Object_To.Id = MovementLinkObject_To.ObjectId
-              INNER JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                                    ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-                                   AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_Partner
+                                           ON MovementLinkObject_Partner.MovementId = Movement.Id
+                                          AND MovementLinkObject_Partner.DescId = zc_MovementLinkObject_Partner()
+              LEFT JOIN Object AS Object_To ON Object_To.Id = COALESCE (MovementLinkObject_Partner.ObjectId, MovementLinkObject_To.ObjectId)
+              LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
+                                   ON ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
+                                  AND ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical()
 
-              INNER JOIN MovementLinkObject AS MovementLinkObject_PaidKind
-                                            ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                           AND MovementLinkObject_PaidKind.DescId = zc_MovementLinkObject_PaidKind()
+              LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
+                                           ON MovementLinkObject_PaidKind.MovementId = Movement.Id
+                                          AND MovementLinkObject_PaidKind.DescId = tmpDesc.DescId_PaidKind
               LEFT JOIN Object AS Object_PaidKind ON Object_PaidKind.Id = MovementLinkObject_PaidKind.ObjectId
 
               LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                            ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                          AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
+                                          AND MovementLinkObject_Contract.DescId = tmpDesc.DescId_Contract
               -- !!!Ãðóïïèðóåì Äîãîâîðà!!!
               LEFT JOIN _tmpContract ON _tmpContract.ContractId = MovementLinkObject_Contract.ObjectId
               LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
@@ -71,13 +82,9 @@ BEGIN
                                       ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                      AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
-        WHERE Movement.DescId = zc_Movement_Sale()
-          AND Movement.StatusId = zc_enum_status_complete()
-          AND (_tmpContract.ContractId > 0 OR inContractId = 0)
+        WHERE (_tmpContract.ContractId > 0 OR inContractId = 0)
           AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR inPaidKindId = 0)
-          AND Movement.OperDate >= inStartDate 
-          AND Movement.OperDate < inEndDate
-          AND ObjectLink_Partner_Juridical.ChildObjectId = inJuridicalId 
+          AND COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, MovementLinkObject_To.ObjectId) = inJuridicalId 
     ORDER BY OperDate;
     
           
@@ -93,6 +100,7 @@ ALTER FUNCTION gpReport_JuridicalSaleDocument (TDateTime, TDateTime, Integer, In
 /*-------------------------------------------------------------------------------
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.
+ 05.07.14                                        * add zc_Movement_TransferDebtOut
  05.05.14                                        * add inPaidKindId
  26.04.14                                        * add Object_Contract_ContractKey_View
  17.04.14                          * 

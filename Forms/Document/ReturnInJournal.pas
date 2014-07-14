@@ -79,6 +79,11 @@ type
     spGetReportName: TdsdStoredProc;
     actSPPrintProcName: TdsdExecStoredProc;
     mactPrint: TMultiAction;
+    actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
+    bbPrint_Return_By_TaxCorrective: TdxBarButton;
+    spChecked: TdsdStoredProc;
+    actChecked: TdsdExecStoredProc;
+    bbactChecked: TdxBarButton;
   private
     { Private declarations }
   public

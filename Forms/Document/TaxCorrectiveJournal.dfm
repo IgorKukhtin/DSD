@@ -2,19 +2,22 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1050#1086#1088#1088#1077#1082#1090#1080#1088#1086#1074#1082#1072' '#1082' '#1085#1072#1083#1086#1075#1086#1074#1086#1081' '#1085#1072#1082#1083#1072#1076#1085#1086#1081'>'
   ClientHeight = 535
   ClientWidth = 1118
-  ExplicitWidth = 1134
-  ExplicitHeight = 570
+  ExplicitWidth = 1126
+  ExplicitHeight = 569
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1118
     Height = 478
     TabOrder = 3
+    ExplicitTop = 57
     ExplicitWidth = 1118
     ExplicitHeight = 478
     ClientRectBottom = 478
     ClientRectRight = 1118
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 0
       ExplicitWidth = 1118
       ExplicitHeight = 478
       inherited cxGrid: TcxGrid
@@ -370,6 +373,18 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
   end
   inherited ActionList: TActionList
     Left = 471
+    object actChecked: TdsdExecStoredProc [2]
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spChecked
+      StoredProcList = <
+        item
+          StoredProc = spChecked
+        end>
+      Caption = #1055#1088#1086#1074#1077#1088#1077#1085' '#1044#1072'/'#1053#1077#1090
+      Hint = #1048#1079#1084#1077#1085#1080#1090#1100' '#1087#1086#1084#1077#1090#1082#1091' '#1076#1086#1082#1091#1084#1077#1085#1090#1072' '#1055#1088#1086#1074#1077#1088#1077#1085
+      ImageIndex = 10
+    end
     inherited actInsert: TdsdInsertUpdateAction
       FormName = 'TTaxCorrectiveForm'
       FormNameParam.Name = 'TTaxCorrectiveForm'
@@ -380,7 +395,7 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       FormNameParam.Name = 'TTaxCorrectiveForm'
       FormNameParam.Value = 'TTaxCorrectiveForm'
     end
-    object actMovementCheck: TdsdOpenForm [7]
+    object actMovementCheck: TdsdOpenForm [8]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = #1054#1096#1080#1073#1082#1080
@@ -656,6 +671,14 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
         end
         item
           Visible = True
+          ItemName = 'bbactChecked'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
           ItemName = 'bbPrintTaxCorrective_Client'
         end
         item
@@ -710,6 +733,10 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
     end
     object bbMeDoc: TdxBarButton
       Action = mactMeDoc
+      Category = 0
+    end
+    object bbactChecked: TdxBarButton
+      Action = actChecked
       Category = 0
     end
   end
@@ -884,5 +911,26 @@ inherited TaxCorrectiveJournalForm: TTaxCorrectiveJournalForm
       end>
     Left = 674
     Top = 362
+  end
+  object spChecked: TdsdStoredProc
+    StoredProcName = 'gpUpdateMovement_Checked'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'ioId '
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inChecked'
+        Component = MasterCDS
+        ComponentItem = 'Checked'
+        DataType = ftBoolean
+        ParamType = ptInputOutput
+      end>
+    Left = 320
+    Top = 435
   end
 end

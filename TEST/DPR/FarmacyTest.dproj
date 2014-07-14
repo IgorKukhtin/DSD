@@ -256,7 +256,6 @@
 			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
 				<Form>PriceListLoadForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
@@ -280,6 +279,47 @@
 			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
 				<Form>MainForm</Form>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
+				<Form>ContractForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\ContractEdit.pas">
+				<Form>ContractEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\Income.pas">
+				<Form>IncomeForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\IncomeJournal.pas">
+				<Form>IncomeJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceList.pas">
+				<Form>PriceListForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\PriceListJournal.pas">
+				<Form>PriceListJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternal.pas">
+				<Form>OrderExternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderExternalJournal.pas">
+				<Form>OrderExternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternal.pas">
+				<Form>OrderInternalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
+				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>

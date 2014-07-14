@@ -8,35 +8,26 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-select '171200' as InvNumber, 4690 as FromId, 0 as ToId
-union select '171041' as InvNumber, 4690 as FromId, 0 as ToId
-union select '171049' as InvNumber, 4690 as FromId, 0 as ToId
-union select '171232' as InvNumber, 4690 as FromId, 0 as ToId
-
-union select '171010' as InvNumber, 4690 as FromId, 0 as ToId
-union select '170992' as InvNumber, 4690 as FromId, 0 as ToId
-union select '171012' as InvNumber, 4690 as FromId, 0 as ToId
-union select '170969' as InvNumber, 4690 as FromId, 0 as ToId
-
-Е. 30.06.2014
-
-170967 Е.28.06.2014
-
-171203 Е29.06.2014
-
-171201 Е29.06.2014
-
-171010 Е27.06.2014
-
-170992 Е27.06.2014
-
-171012 Е27.06.2014
-
-170969 Е28.06.2014
+select '171972' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- —клад реализации
+union select '171781' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- —клад реализации
 
 
+union select '4065' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- —клад реализации
+ от 28.06,, 
+      select '167668' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
+union select '167673' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
+union select '167790' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
+union select '168584' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
+union select '168585' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
+union select '168586' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
+union select '169989' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
+union select '169995' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
 
 
+union select '111' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- —клад реализации
+union select '222' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- —клад ќ’Ћј∆ƒ≈Ќ ј
+union select '333' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- —клад ћ»Ќ”—ќ¬ ј
+union select '444' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- —клад реализации м€со
 
 
 

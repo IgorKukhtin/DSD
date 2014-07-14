@@ -19,6 +19,7 @@ type
     clName: TcxGridDBColumn;
     clisCorporate: TcxGridDBColumn;
     clRetailName: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
   private
     { Private declarations }
   public

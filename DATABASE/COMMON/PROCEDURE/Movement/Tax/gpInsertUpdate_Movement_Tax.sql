@@ -39,6 +39,21 @@ BEGIN
                                      , inFromId, inToId, inPartnerId, inContractId, inDocumentTaxKindId, vbUserId
                                       ) AS tmp;
 
+     -- создаем "виртуальный элемент"
+     IF inDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+       AND NOT EXISTS (SELECT MovementId FROM MovementItem WHERE MovementId = ioId AND ObjectId = inDocumentTaxKindId)
+     THEN
+         PERFORM lpInsertUpdate_MovementItem_Tax (ioId                 := 0
+                                                , inMovementId         := ioId
+                                                , inGoodsId            := inDocumentTaxKindId
+                                                , inAmount             := 0
+                                                , inPrice              := 0
+                                                , ioCountForPrice      := 1
+                                                , inGoodsKindId        := NULL
+                                                , inUserId             := vbUserId
+                                                 );
+     END IF;
+
 END;
 $BODY$
   LANGUAGE plpgsql VOLATILE;
@@ -46,6 +61,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 10.07.14                                        * add zc_Enum_DocumentTaxKind_Prepay
  02.05.14                                        * add io...
  24.04.14                                                       * add ioInvNumberBranch
  30.03.14                                        * add ioInvNumberPartner

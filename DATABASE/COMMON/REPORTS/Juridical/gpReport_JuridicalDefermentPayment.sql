@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpReport_JuridicalDefermentPayment(
     IN inPaidKindId       Integer   , --
     IN inSession          TVarChar    -- ÒÂÒÒËˇ ÔÓÎ¸ÁÓ‚‡ÚÂÎˇ
 )
-RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
+RETURNS TABLE (AccountName TVarChar, JuridicalId Integer, JuridicalName TVarChar, RetailName TVarChar, OKPO TVarChar, PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractCode Integer, ContractNumber TVarChar
              , ContractTagName TVarChar, ContractStateKindCode Integer
              , PersonalName TVarChar
@@ -36,7 +36,7 @@ BEGIN
 
   RETURN QUERY  
 
- select a.AccountName, a.JuridicalId, a.JuridicalName, a.OKPO, a.PaidKindId, a.PaidKindName
+ select a.AccountName, a.JuridicalId, a.JuridicalName, a.RetailName, a.OKPO, a.PaidKindId, a.PaidKindName
              , a.ContractId, a.ContractCode, a.ContractNumber
              , a.ContractTagName TVarChar, a.ContractStateKindCode
              , a.PersonalName
@@ -53,6 +53,7 @@ from (
      Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
+   , Object_Retail.ValueData    AS RetailName
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName
@@ -157,11 +158,11 @@ from (
              , View_Contract_ContractKey.ContractId_Key AS ContractId -- CLO_Contract.ObjectId AS ContractId
              , CLO_Juridical.ObjectId AS JuridicalId 
              , Container.Amount - COALESCE(SUM (CASE WHEN MIContainer.OperDate >= inOperDate THEN MIContainer.Amount ELSE 0 END), 0) AS Remains
-             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate) AND (MIContainer.OperDate >= ContractDate) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate AND MIContainer.OperDate >= ContractDate - vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm1
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm2
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm3
-             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId = zc_Movement_Sale() THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
+             , SUM (CASE WHEN (MIContainer.OperDate < inOperDate)                 AND (MIContainer.OperDate >= ContractDate)               AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate                AND MIContainer.OperDate >= ContractDate - vbLenght)     AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm1
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - vbLenght     AND MIContainer.OperDate >= ContractDate - 2 * vbLenght) AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm2
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 2 * vbLenght AND MIContainer.OperDate >= ContractDate - 3 * vbLenght) AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm3
+             , SUM (CASE WHEN (MIContainer.OperDate < ContractDate - 3 * vbLenght AND MIContainer.OperDate >= ContractDate - 4 * vbLenght) AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_TransferDebtOut()) THEN MIContainer.Amount ELSE 0 END) AS SaleSumm4
              , ContractCondition_DefermentPayment.ContractConditionKindId
              , COALESCE (ContractCondition_DefermentPayment.DayCount, 0) AS DayCount
              , COALESCE (ContractCondition_CreditLimit.DelayCreditLimit, 0) AS DelayCreditLimit
@@ -253,6 +254,11 @@ from (
                                AND ObjectLink_Contract_Area.DescId = zc_ObjectLink_Contract_Area()
            LEFT JOIN Object AS Object_Area ON Object_Area.Id = ObjectLink_Contract_Area.ChildObjectId
 
+           LEFT JOIN ObjectLink AS ObjectLink_Juridical_Retail
+                                ON ObjectLink_Juridical_Retail.ObjectId = Object_Juridical.Id
+                               AND ObjectLink_Juridical_Retail.DescId = zc_ObjectLink_Juridical_Retail()
+           LEFT JOIN Object AS Object_Retail ON Object_Retail.Id = ObjectLink_Juridical_Retail.ChildObjectId
+
 ) as a
 where a.DebetRemains <> 0 or a.KreditRemains <> 0
              or  a.SaleSumm <> 0 or a.DefermentPaymentRemains <> 0
@@ -270,6 +276,8 @@ ALTER FUNCTION gpReport_JuridicalDefermentPayment (TDateTime, TDateTime, Integer
 /*-------------------------------------------------------------------------------
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».
+ 11.07.14                                        * add RetailName
+ 05.07.14                                        * add zc_Movement_TransferDebtOut
  02.06.14                                        * change DefermentPaymentRemains
  20.05.14                                        * add Object_Contract_View
  12.05.14                                        * add RESULT.DelayCreditLimit

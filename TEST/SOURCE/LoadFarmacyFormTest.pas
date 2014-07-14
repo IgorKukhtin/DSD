@@ -21,9 +21,9 @@ type
 (*    procedure LoadBankFormTest;
     procedure LoadBankAccountFormTest;
     procedure LoadBusinessFormTest;
-    procedure LoadCashFormTest;
+    procedure LoadCashFormTest;  *)
     procedure LoadContractFormTest;
-    procedure LoadContractKindFormTest;
+ (*   procedure LoadContractKindFormTest;
     procedure LoadCurrencyFormTest;
     procedure LoadExtraChargeCategoriesFormTest; *)
     procedure LoadGoodsGroupFormTest;
@@ -38,13 +38,16 @@ type
     procedure LoadJuridicalFormTest;
    (* procedure LoadMeasureFormTest;
     procedure LoadPartnerFormTest;
-    procedure LoadPaidKindFormTest;
-    procedure LoadPriceListFormTest; *)
+    procedure LoadPaidKindFormTest;*)
     procedure LoadRetailFormTest;
   (*procedure LoadIncomeFormTest;
     procedure LoadUnitGroupFormTest; *)
     procedure LoadUnitFormTest;
   (*  procedure LoadReportFormTest;*)
+    procedure LoadOrderInternalFormTest;
+    procedure LoadOrderExternalFormTest;
+    procedure LoadIncomeFormTest;
+    procedure LoadPriceListFormTest;
   end;
 
 implementation
@@ -102,7 +105,37 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCashEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
+end;   *)
+
+procedure TLoadFormTest.MainFormTest;
+var ActionDataSet: TClientDataSet;
+    StoredProc: TdsdStoredProc;
+    i: integer;
+    Action: ActionTest.TAction;
+begin
+  // Здесь мы заполняем справочник Action
+  // Получаем все Action из базы
+  ActionDataSet := TClientDataSet.Create(nil);
+  StoredProc := TdsdStoredProc.Create(nil);
+  MainFormInstance := TMainForm.Create(nil);
+  Action := ActionTest.TAction.Create;
+  try
+    StoredProc.DataSet := ActionDataSet;
+    StoredProc.StoredProcName := 'gpSelect_Object_Action';
+    StoredProc.Execute;
+    // добавим тех, что нет
+    with MainFormInstance.ActionList do
+      for I := 0 to ActionCount - 1 do
+          if not ActionDataSet.Locate('Name', Actions[i].Name, []) then
+             Action.InsertUpdateAction(0, 0, Actions[i].Name);
+  finally
+    Action.Free;
+    StoredProc.Free;
+    ActionDataSet.Free;
+    MainFormInstance.Free;
+  end;
 end;
+
 
 procedure TLoadFormTest.LoadContractFormTest;
 begin
@@ -111,7 +144,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TContractEditForm');
 end;
-
+(*
 procedure TLoadFormTest.LoadContractKindFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TContractKindForm'));
@@ -341,6 +374,42 @@ begin
     TempStream.Free;
   end;*)
 end;
+
+
+procedure TLoadFormTest.LoadOrderInternalFormTest;
+begin
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderInternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderInternalJournalForm');
+
+end;
+
+procedure TLoadFormTest.LoadOrderExternalFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TOrderExternalJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TOrderExternalJournalForm');
+end;
+
+procedure TLoadFormTest.LoadIncomeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+end;
+
+procedure TLoadFormTest.LoadPriceListFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListJournalForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListJournalForm');
+end;
+
 
 initialization
   TestFramework.RegisterTest('Загрузка форм', TLoadFormTest.Suite);

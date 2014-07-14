@@ -33,6 +33,21 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_TaxCorrective
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Diff
             end>
           DataController.Summary.FooterSummaryItems = <
             item
@@ -44,6 +59,21 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
               Format = ',0.####'
               Kind = skSum
               Column = clAmount_TaxCorrective
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Sale
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Tax
+            end
+            item
+              Format = ',0.####'
+              Kind = skSum
+              Column = clSumm_Diff
             end>
           OptionsData.Editing = False
           OptionsView.GroupByBox = True
@@ -197,13 +227,75 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Options.Editing = False
             Width = 53
           end
+          object clSumm_Sale: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1074#1086#1079#1074#1088#1072#1090')'
+            DataBinding.FieldName = 'Summ_Sale'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clSumm_Tax: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1082#1086#1088#1088'.)'
+            DataBinding.FieldName = 'Summ_Tax'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
+          object clSumm_Diff: TcxGridDBColumn
+            Caption = #1057#1091#1084#1084#1072' ('#1088#1072#1079#1085#1080#1094#1072')'
+            DataBinding.FieldName = 'Summ_Diff'
+            PropertiesClassName = 'TcxCurrencyEditProperties'
+            Properties.DecimalPlaces = 4
+            Properties.DisplayFormat = ',0.####;-,0.####'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 60
+          end
           object clDifference: TcxGridDBColumn
             Caption = #1056#1072#1079#1085#1080#1094#1072
             DataBinding.FieldName = 'Difference'
+            Visible = False
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Options.Editing = False
             Width = 42
+          end
+          object clInfoMoneyCode: TcxGridDBColumn
+            Caption = #1050#1086#1076' '#1059#1055
+            DataBinding.FieldName = 'InfoMoneyCode'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 55
+          end
+          object clInfoMoneyGroupName: TcxGridDBColumn
+            Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyGroupName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyDestinationName: TcxGridDBColumn
+            Caption = #1059#1055' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1077
+            DataBinding.FieldName = 'InfoMoneyDestinationName'
+            Visible = False
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
+          end
+          object clInfoMoneyName: TcxGridDBColumn
+            Caption = #1059#1055' '#1089#1090#1072#1090#1100#1103' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
+            DataBinding.FieldName = 'InfoMoneyName'
+            HeaderAlignmentVert = vaCenter
+            Options.Editing = False
+            Width = 70
           end
         end
       end

@@ -82,6 +82,9 @@ type
     actMovementCheck: TdsdOpenForm;
     bbMovementCheck: TdxBarButton;
     colCOMDOC: TcxGridDBColumn;
+    spChecked: TdsdStoredProc;
+    bbspChecked: TdxBarButton;
+    actChecked: TdsdExecStoredProc;
   private
     { Private declarations }
   public

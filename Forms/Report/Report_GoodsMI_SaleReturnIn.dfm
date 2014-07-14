@@ -1,30 +1,32 @@
 inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   Caption = #1054#1090#1095#1077#1090' < '#1055#1088#1086#1076#1072#1078#1072' / '#1042#1086#1079#1074#1088#1072#1090' '#1090#1086#1074#1072#1088#1086#1074' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1077#1081'> '
-  ClientHeight = 339
+  ClientHeight = 387
   ClientWidth = 1055
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1071
-  ExplicitHeight = 374
+  ExplicitWidth = 1063
+  ExplicitHeight = 421
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 80
+    Top = 82
     Width = 1055
-    Height = 259
+    Height = 305
     TabOrder = 3
-    ExplicitTop = 80
-    ExplicitWidth = 1020
-    ExplicitHeight = 259
-    ClientRectBottom = 259
-    ClientRectRight = 1055
+    ExplicitTop = 82
+    ExplicitWidth = 1055
+    ExplicitHeight = 305
+    ClientRectBottom = 301
+    ClientRectRight = 1051
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1020
-      ExplicitHeight = 259
+      ExplicitLeft = 2
+      ExplicitTop = 2
+      ExplicitWidth = 1049
+      ExplicitHeight = 299
       inherited cxGrid: TcxGrid
-        Width = 1055
-        Height = 259
-        ExplicitWidth = 1020
-        ExplicitHeight = 259
+        Width = 1049
+        Height = 299
+        ExplicitWidth = 1049
+        ExplicitHeight = 299
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -138,12 +140,25 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
           Styles.Selection = nil
           Styles.Footer = nil
           Styles.Header = nil
+          object clRetailName: TcxGridDBColumn
+            Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
+            DataBinding.FieldName = 'RetailName'
+            HeaderAlignmentHorz = taCenter
+            HeaderAlignmentVert = vaCenter
+            Width = 90
+          end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086
             DataBinding.FieldName = 'JuridicalName'
             HeaderAlignmentHorz = taCenter
             HeaderAlignmentVert = vaCenter
             Width = 100
+          end
+          object clOKPO: TcxGridDBColumn
+            Caption = #1054#1050#1055#1054
+            DataBinding.FieldName = 'OKPO'
+            Visible = False
+            Width = 55
           end
           object colContractCode: TcxGridDBColumn
             Caption = #1050#1086#1076' '#1076#1086#1075'.'
@@ -343,7 +358,7 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   inherited Panel: TPanel
     Width = 1055
     Height = 54
-    ExplicitWidth = 1020
+    ExplicitWidth = 1055
     ExplicitHeight = 54
     inherited deStart: TcxDateEdit
       Left = 118
@@ -471,9 +486,82 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
           'TextValue')
       end>
   end
+  inherited ActionList: TActionList
+    Left = 87
+    object actPrint_byJuridical: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084' ('#1080#1090#1086#1075#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1102#1088'.'#1083#1080#1094#1072#1084
+      ImageIndex = 19
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'juridicalname;partnername'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1102#1088#1083#1080#1094#1072#1084
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090' '#1087#1086' '#1102#1088#1083#1080#1094#1072#1084
+      ReportNameParam.DataType = ftString
+    end
+    object actPrint: TdsdPrintAction
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelect
+      StoredProcList = <
+        item
+          StoredProc = spSelect
+        end>
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1090#1086#1074#1072#1088#1072#1084' ('#1080#1090#1086#1075#1080')'
+      ImageIndex = 18
+      ShortCut = 16464
+      DataSets = <
+        item
+          DataSet = MasterCDS
+          UserName = 'frxDBDMaster'
+          IndexFieldNames = 'GoodsGroupName;GoodsName'
+        end>
+      Params = <
+        item
+          Name = 'StartDate'
+          Value = 41640d
+          Component = deStart
+          DataType = ftDateTime
+        end
+        item
+          Name = 'EndDate'
+          Value = 41640d
+          Component = deEnd
+          DataType = ftDateTime
+        end>
+      ReportName = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
+      ReportNameParam.Value = #1055#1088#1086#1076#1072#1078#1072' '#1080' '#1074#1086#1079#1074#1088#1072#1090
+      ReportNameParam.DataType = ftString
+    end
+  end
   inherited MasterDS: TDataSource
-    Left = 72
-    Top = 208
+    Left = 112
+    Top = 200
   end
   inherited MasterCDS: TClientDataSet
     Left = 40
@@ -481,6 +569,14 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
   end
   inherited spSelect: TdsdStoredProc
     StoredProcName = 'gpReport_GoodsMI_SaleReturnIn'
+    DataSets = <
+      item
+        DataSet = MasterCDS
+      end
+      item
+      end
+      item
+      end>
     Params = <
       item
         Name = 'inStartDate'
@@ -524,21 +620,67 @@ inherited Report_GoodsMI_SaleReturnInForm: TReport_GoodsMI_SaleReturnInForm
         ComponentItem = 'Key'
         ParamType = ptInput
       end>
-    Left = 112
-    Top = 208
+    Left = 176
+    Top = 200
   end
   inherited BarManager: TdxBarManager
-    Left = 160
+    Left = 200
     Top = 208
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint'
+        end
+        item
+          Visible = True
+          ItemName = 'bbPrint_byJuridical'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbPrint: TdxBarButton
+      Action = actPrint
+      Category = 0
+    end
+    object bbPrint_byJuridical: TdxBarButton
+      Action = actPrint_byJuridical
+      Category = 0
+    end
   end
   inherited DBViewAddOn: TdsdDBViewAddOn
     Left = 320
     Top = 232
+  end
+  inherited PopupMenu: TPopupMenu
+    Left = 144
   end
   inherited PeriodChoice: TPeriodChoice
     Left = 112

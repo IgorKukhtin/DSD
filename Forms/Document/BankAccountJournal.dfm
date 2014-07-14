@@ -2,26 +2,26 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
   Caption = #1046#1091#1088#1085#1072#1083' '#1076#1086#1082#1091#1084#1077#1085#1090#1086#1074' <'#1056#1072#1089#1095#1077#1090#1085#1099#1081' '#1089#1095#1077#1090', '#1087#1088#1080#1093#1086#1076'/'#1088#1072#1089#1093#1086#1076'>'
   ClientHeight = 377
   ClientWidth = 1056
-  ExplicitWidth = 1064
-  ExplicitHeight = 411
+  ExplicitWidth = 1072
+  ExplicitHeight = 412
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1056
-    Height = 318
+    Height = 320
     TabOrder = 3
     ExplicitWidth = 1056
-    ExplicitHeight = 318
-    ClientRectBottom = 314
-    ClientRectRight = 1052
+    ExplicitHeight = 320
+    ClientRectBottom = 320
+    ClientRectRight = 1056
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 1050
-      ExplicitHeight = 312
+      ExplicitWidth = 1056
+      ExplicitHeight = 320
       inherited cxGrid: TcxGrid
-        Width = 1050
-        Height = 312
-        ExplicitWidth = 1050
-        ExplicitHeight = 312
+        Width = 1056
+        Height = 320
+        ExplicitWidth = 1056
+        ExplicitHeight = 320
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -321,8 +321,8 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           StoredProc = spSelectPrint
         end>
-      Caption = #1055#1077#1095#1072#1090#1100
-      Hint = #1055#1077#1095#1072#1090#1100
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1088'/'#1089#1095#1077#1090#1072#1084
       ImageIndex = 3
       ShortCut = 16464
       DataSets = <
@@ -349,7 +349,7 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -410,6 +410,10 @@ inherited BankAccountJournalForm: TBankAccountJournalForm
         item
           Visible = True
           ItemName = 'bbMovementItemContainer'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
         end
         item
           Visible = True

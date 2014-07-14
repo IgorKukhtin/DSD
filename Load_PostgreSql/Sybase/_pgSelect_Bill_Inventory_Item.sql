@@ -1,4 +1,4 @@
-create PROCEDURE "DBA"."_pgSelect_Bill_Inventory_Item" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
+alter PROCEDURE "DBA"."_pgSelect_Bill_Inventory_Item" (in @inIsGlobalLoad smallint, in @inStartDate date, in @inEndDate date)
 result(ObjectId Integer, MovementId Integer, BillNumber TVarCharShort, BillDate Date, UnitId Integer, GoodsId Integer, Amount TSumm, PartionGoodsDate date, Summ TSumm, HeadCount TSumm, myCount TSumm, PartionGoods TVarCharMedium, GoodsKindId Integer, AssetId Integer, isCar smallint, Id_Postgres Integer)
 begin
   --
@@ -184,7 +184,7 @@ begin
          , GoodsProperty.Id_Postgres as GoodsId
          , sum (EndCount) as Amount
          , _tmpList_Remains_byKindPackage.PartionDate as PartionGoodsDate
-         , sum (case when Goods.ParentId=686 and inEndDate>='2013-01-01' then 0 else EndSummIn end) as Summ
+         , sum (case when Goods.ParentId=686 and @inEndDate>='2013-01-01' then 0 else EndSummIn end) as Summ
          , 0 as HeadCount
          , 0 as myCount
          , '' as PartionGoods
@@ -198,7 +198,7 @@ begin
                                left outer join dba.Unit AS UnitFrom on UnitFrom.Id = Bill.FromId
                                left outer join dba._pgUnit as pgUnitFrom on pgUnitFrom.Id = UnitFrom.pgUnitId
                                left outer join dba._pgPersonal as pgPersonalFrom on pgPersonalFrom.Id = UnitFrom.PersonalId_Postgres
-                                                                                and pgPersonalFrom.Id2_Postgres > 0
+                                                                                and pgPersonalFrom.Id_Postgres > 0
                                left outer join dba.Unit AS Unit_find on Unit_find.pgUnitId = pgUnitFrom.Id or Unit_find.PersonalId_Postgres = pgPersonalFrom.Id
                           where Bill.BillDate = @inEndDate
                             and Bill.BillKind in (zc_bkProductionInFromReceipt())
