@@ -107,34 +107,6 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCashEditForm');
 end;   *)
 
-procedure TLoadFormTest.MainFormTest;
-var ActionDataSet: TClientDataSet;
-    StoredProc: TdsdStoredProc;
-    i: integer;
-    Action: ActionTest.TAction;
-begin
-  // Здесь мы заполняем справочник Action
-  // Получаем все Action из базы
-  ActionDataSet := TClientDataSet.Create(nil);
-  StoredProc := TdsdStoredProc.Create(nil);
-  MainFormInstance := TMainForm.Create(nil);
-  Action := ActionTest.TAction.Create;
-  try
-    StoredProc.DataSet := ActionDataSet;
-    StoredProc.StoredProcName := 'gpSelect_Object_Action';
-    StoredProc.Execute;
-    // добавим тех, что нет
-    with MainFormInstance.ActionList do
-      for I := 0 to ActionCount - 1 do
-          if not ActionDataSet.Locate('Name', Actions[i].Name, []) then
-             Action.InsertUpdateAction(0, 0, Actions[i].Name);
-  finally
-    Action.Free;
-    StoredProc.Free;
-    ActionDataSet.Free;
-    MainFormInstance.Free;
-  end;
-end;
 
 
 procedure TLoadFormTest.LoadContractFormTest;

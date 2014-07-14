@@ -2,6 +2,7 @@ program Farmacy;
 
 uses
   Vcl.Forms,
+  SysUtils,
   DataModul in '..\SOURCE\DataModul.pas' {dmMain: TDataModule},
   dsdAction in '..\SOURCE\COMPONENT\dsdAction.pas',
   dsdAddOn in '..\SOURCE\COMPONENT\dsdAddOn.pas',
@@ -58,6 +59,7 @@ uses
 begin
   Application.Initialize;
   Application.MainFormOnTaskbar := True;
+  Logger.Enabled := FindCmdLineSwitch('log');
   ConnectionPath := '..\INIT\farmacy_init.php';
   TAuthentication.CheckLogin(TStorageFactory.GetStorage, 'Админ', 'Админ', gc_User);
 

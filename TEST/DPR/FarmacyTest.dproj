@@ -296,7 +296,6 @@
 				<Form>IncomeJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\PriceList.pas">
 				<Form>PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
