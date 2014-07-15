@@ -9,7 +9,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Movement_OrderExternal(
     IN inSession       TVarChar    -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
-             , TotalCount TFloat, TotalSum TVarChar
+             , TotalCount TFloat, TotalSumm TFloat
              , FromId Integer, FromName TVarChar
              , ToId Integer, ToName TVarChar
               )
@@ -43,7 +43,7 @@ BEGIN
            , Object_Status.ObjectCode                   AS StatusCode
            , Object_Status.ValueData                    AS StatusName
            , MovementFloat_TotalCount.ValueData         AS TotalCount
-           , MovementFloat_TotalSum.ValueData           AS TotalSum
+           , MovementFloat_TotalSumm.ValueData           AS TotalSum
            , Object_From.Id                             AS FromId
            , Object_From.ValueData                      AS FromName
            , Object_To.Id                               AS ToId
@@ -65,9 +65,9 @@ BEGIN
                                     ON MovementFloat_TotalCount.MovementId =  Movement.Id
                                    AND MovementFloat_TotalCount.DescId = zc_MovementFloat_TotalCount()
 
-            LEFT JOIN MovementFloat AS MovementFloat_TotalSum
-                                    ON MovementFloat_TotalSum.MovementId =  Movement.Id
-                                   AND MovementFloat_TotalSum.DescId = zc_MovementFloat_TotalSum()
+            LEFT JOIN MovementFloat AS MovementFloat_TotalSumm
+                                    ON MovementFloat_TotalSumm.MovementId =  Movement.Id
+                                   AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
@@ -92,6 +92,7 @@ ALTER FUNCTION gpSelect_Movement_OrderExternal (TDateTime, TDateTime, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.07.14                                                        *
  01.07.14                                                        *
 
 */

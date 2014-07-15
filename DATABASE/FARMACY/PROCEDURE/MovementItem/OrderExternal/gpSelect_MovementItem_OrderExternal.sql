@@ -38,7 +38,7 @@ BEGIN
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
              FROM Object AS Object_Goods
-             WHERE Object_Goods.DescId = zc_Object_Goods AND Object_Goods.isErased = FALSE
+             WHERE Object_Goods.DescId = zc_Object_Goods() AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
@@ -107,6 +107,7 @@ ALTER FUNCTION gpSelect_MovementItem_OrderExternal (Integer, Boolean, Boolean, T
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 15.07.14                                                       *
  01.07.14                                                       *
 
 */

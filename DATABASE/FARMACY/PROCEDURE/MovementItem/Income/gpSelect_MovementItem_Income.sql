@@ -40,7 +40,7 @@ BEGIN
                   , Object_Goods.ObjectCode                                           AS GoodsCode
                   , Object_Goods.ValueData                                            AS GoodsName
              FROM Object AS Object_Goods
-             WHERE Object_Goods.DescId = zc_Object_Goods AND Object_Goods.isErased = FALSE
+             WHERE Object_Goods.DescId = zc_Object_Goods() AND Object_Goods.isErased = FALSE
             ) AS tmpGoods
 
             LEFT JOIN (SELECT MovementItem.ObjectId                         AS GoodsId
