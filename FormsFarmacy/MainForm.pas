@@ -61,6 +61,14 @@ type
     actPriceList: TdsdOpenForm;
     bbPriceList: TdxBarButton;
     bbOrderInternal: TdxBarButton;
+    bbNDSKind: TdxBarButton;
+    actNDSKind: TdsdOpenForm;
+    actRetail: TdsdOpenForm;
+    bbRetail: TdxBarButton;
+    actUser: TdsdOpenForm;
+    actRole: TdsdOpenForm;
+    bbUser: TdxBarButton;
+    bbRole: TdxBarButton;
   private
     { Private declarations }
   public

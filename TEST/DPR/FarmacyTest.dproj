@@ -195,7 +195,7 @@
 				<Form>CountryEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Enum\NDSKind.pas">
+			<DCCReference Include="..\..\Forms\Enum\NDSKind.pas">
 				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -320,6 +320,25 @@
 				<Form>OrderInternalJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
+			<DCCReference Include="..\..\Forms\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Role.pas">
+				<Form>RoleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
 			<BuildConfiguration Include="Release">
 				<Key>Cfg_2</Key>
 				<CfgParent>Base</CfgParent>

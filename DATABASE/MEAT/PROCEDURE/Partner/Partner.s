@@ -8,6 +8,8 @@ delete from partner where (kodbranch ='' and namebranch = ''  and juridicalname 
 -- обнуляем ссылку на Контрагента
 --UPDATE partner SET PartnerId = null;
 
+UPDATE partner SET CityName = trim(CityName);
+
 -- устанавливаем ссылку на Контрагента
 UPDATE partner SET PartnerId = Object_Partner.Id, ContractOldId = ObjectLink_Partner1CLink_Contract.ChildObjectId
 
@@ -295,6 +297,7 @@ SELECT partner.PartnerId
 );
 
 
+DELETE FROM partner;
 
 END $$;
 
