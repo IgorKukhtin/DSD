@@ -69,6 +69,8 @@ type
     actRole: TdsdOpenForm;
     bbUser: TdxBarButton;
     bbRole: TdxBarButton;
+    actImportType: TdsdOpenForm;
+    bbImportType: TdxBarButton;
   private
     { Private declarations }
   public

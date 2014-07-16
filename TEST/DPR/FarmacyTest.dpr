@@ -112,7 +112,8 @@ uses
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
   ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
   ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
-  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm};
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
