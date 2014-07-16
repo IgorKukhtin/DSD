@@ -32,6 +32,7 @@ inherited ImportTypeForm: TImportTypeForm
           object clCode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            Visible = False
             HeaderAlignmentVert = vaCenter
             Width = 34
           end
@@ -90,6 +91,7 @@ inherited ImportTypeForm: TImportTypeForm
           object clICode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
+            Visible = False
             Width = 30
           end
           object clIName: TcxGridDBColumn
