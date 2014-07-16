@@ -1045,7 +1045,7 @@ inherited OrderInternalForm: TOrderInternalForm
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'ClientGridDataSet'
     Params = <
       item
         Name = 'Key'
