@@ -1,7 +1,7 @@
 object UnitForm: TUnitForm
   Left = 0
   Top = 0
-  Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1103'>'
   ClientHeight = 515
   ClientWidth = 710
   Color = clBtnFace
@@ -12,6 +12,10 @@ object UnitForm: TUnitForm
   Font.Style = []
   KeyPreview = True
   OldCreateOrder = False
+  AddOnFormData.isAlwaysRefresh = False
+  AddOnFormData.RefreshAction = actRefresh
+  AddOnFormData.ChoiceAction = dsdChoiceGuides
+  AddOnFormData.Params = dsdFormParams
   PixelsPerInch = 96
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
@@ -67,22 +71,32 @@ object UnitForm: TUnitForm
       DataController.Summary.DefaultGroupSummaryItems = <>
       DataController.Summary.FooterSummaryItems = <>
       DataController.Summary.SummaryGroups = <>
+      OptionsData.Editing = False
       OptionsView.ColumnAutoWidth = True
-      object cxGridDBTableViewColumn1: TcxGridDBColumn
+      object clCode: TcxGridDBColumn
         Caption = #1050#1086#1076
         DataBinding.FieldName = 'Code'
+        Width = 27
       end
-      object cxGridDBTableViewColumn2: TcxGridDBColumn
+      object clName: TcxGridDBColumn
         Caption = #1053#1072#1079#1074#1072#1085#1080#1077
         DataBinding.FieldName = 'Name'
+        Width = 145
       end
-      object cxGridDBTableViewColumn3: TcxGridDBColumn
-        Caption = #1060#1080#1083#1080#1072#1083
-        DataBinding.FieldName = 'BranchName'
+      object clParentName: TcxGridDBColumn
+        Caption = #1055#1086#1076#1088#1072#1079#1076#1077#1083#1077#1085#1080#1077
+        DataBinding.FieldName = 'ParentName'
+        Width = 105
       end
-      object cxGridDBTableViewColumn4: TcxGridDBColumn
+      object clJuridicalName: TcxGridDBColumn
+        Caption = #1070#1088'.'#1083#1080#1094#1086
+        DataBinding.FieldName = 'JuridicalName'
+        Width = 90
+      end
+      object clisErased: TcxGridDBColumn
         Caption = #1059#1076#1072#1083#1077#1085
         DataBinding.FieldName = 'isErased'
+        Width = 20
       end
     end
     object cxGridLevel: TcxGridLevel
@@ -221,7 +235,7 @@ object UnitForm: TUnitForm
       Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
       Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 116
-      RefreshOnTabSetChanges = False
+      RefreshOnTabSetChanges = True
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -229,7 +243,7 @@ object UnitForm: TUnitForm
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TUnitEditForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TUnitEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -247,7 +261,7 @@ object UnitForm: TUnitForm
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TUnitEditForm'
-      FormNameParam.Value = ''
+      FormNameParam.Value = 'TUnitEditForm'
       FormNameParam.DataType = ftString
       GuiParams = <
         item
@@ -257,7 +271,7 @@ object UnitForm: TUnitForm
         end>
       isShowModal = True
       ActionType = acUpdate
-      DataSource = TreeDS
+      DataSource = GridDS
       DataSetRefresh = actRefresh
       IdFieldName = 'Id'
     end
@@ -265,11 +279,10 @@ object UnitForm: TUnitForm
       Category = 'DSDLib'
       MoveParams = <>
       StoredProcList = <>
-      Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
-      Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
+      Caption = #1059#1076#1072#1083#1080#1090#1100
+      Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
       ShortCut = 46
       ErasedFieldName = 'isErased'
-      isSetErased = False
       DataSource = TreeDS
     end
     object dsdSetUnErased: TdsdUpdateErased

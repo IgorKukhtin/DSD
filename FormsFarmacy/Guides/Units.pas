@@ -42,14 +42,15 @@ type
     GridDS: TDataSource;
     ClientGridDataSet: TClientDataSet;
     spGrid: TdsdStoredProc;
-    cxGridDBTableViewColumn1: TcxGridDBColumn;
-    cxGridDBTableViewColumn2: TcxGridDBColumn;
-    cxGridDBTableViewColumn3: TcxGridDBColumn;
-    cxGridDBTableViewColumn4: TcxGridDBColumn;
+    clCode: TcxGridDBColumn;
+    clName: TcxGridDBColumn;
+    clParentName: TcxGridDBColumn;
+    clisErased: TcxGridDBColumn;
     dsdDBTreeAddOn: TdsdDBTreeAddOn;
     dsdChoiceGuides: TdsdChoiceGuides;
     dsdFormParams: TdsdFormParams;
     bbChoice: TdxBarButton;
+    clJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

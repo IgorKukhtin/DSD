@@ -233,9 +233,9 @@
   object ParentGuides: TdsdGuides
     KeyField = 'Id'
     LookupControl = ceParent
-    FormNameParam.Value = 'TUnitForm'
+    FormNameParam.Value = 'TUnit_ObjectForm'
     FormNameParam.DataType = ftString
-    FormName = 'TUnitForm'
+    FormName = 'TUnit_ObjectForm'
     PositionDataSet = 'ClientDataSet'
     Params = <
       item
@@ -262,7 +262,7 @@
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
