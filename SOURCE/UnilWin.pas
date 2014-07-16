@@ -24,7 +24,7 @@
 unit UnilWin;
 
 interface
-uses Windows;
+uses Windows, Classes;
 
 type
 
@@ -42,10 +42,49 @@ function FileReadString(const FileName: String): AnsiString;
 procedure FileWriteString(const FileName: String; Data: AnsiString);
 {запускаем приложение}
 function Execute(const CommandLine, WorkingDirectory : string) : integer;
+{ищем файлы в директории}
+function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
 
 implementation
 
 uses SysUtils;
+
+function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
+var
+  sr: TSearchRec;
+begin
+  try
+    if FindFirst(sDirPath + sMask, faAnyFile, sr) = 0 then
+    begin
+      repeat
+        if  (sr.Name <> '.') and (sr.Name <> '..') and (sr.Attr and faDirectory = 0) then
+        begin
+          Inc(iFilesCount);
+          if saFound <> nil then
+             if saFound.IndexOf(sDirPath + sr.Name) < 0 then
+                saFound.Add(sDirPath + sr.Name);
+        end
+      until
+        FindNext(sr) <> 0;
+      end;
+    FindClose(sr);
+    // ≈сли надо идти по поддиректори€м, то снимаем маску и запускаем еще разок
+    if bRecurse then begin
+      if FindFirst(sDirPath + '*' , faAnyFile, sr) = 0 then
+      begin
+        repeat
+          if  (sr.Name <> '.') and (sr.Name <> '..') and (sr.Attr and faDirectory <> 0) then
+              FilesInDir(sMask,sDirPath + sr.name + '\',iFilesCount,saFound,bRecurse);
+        until
+          FindNext(sr) <> 0;
+        end;
+      FindClose(sr);
+    end;
+  except
+    Result := -1;
+  end;
+end;
+
 
 function Execute(const CommandLine, WorkingDirectory : string) : integer;
 var
@@ -81,7 +120,6 @@ begin
            raise Exception.Create(S);
    end
 end;
-
 
 procedure FileWriteString(const FileName: String; Data: AnsiString);
 var

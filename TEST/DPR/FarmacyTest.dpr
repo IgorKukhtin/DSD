@@ -111,7 +111,8 @@ uses
   RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm: TParentForm},
   RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
   ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
-  ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas';
+  ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
+  ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas';
 
 {$R *.res}
 {$R DevExpressRus.res}

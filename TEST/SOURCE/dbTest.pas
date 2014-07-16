@@ -36,45 +36,8 @@ type
 
 implementation
 
-uses zLibUtil, SysUtils, ObjectTest;
+uses zLibUtil, SysUtils, ObjectTest, UnilWin;
 { TdbTest }
-
-function FilesInDir(sMask, sDirPath: String; var iFilesCount: Integer; var saFound: TStrings; bRecurse: Boolean = True): Integer;
-var
-  sr: TSearchRec;
-begin
-  try
-    if FindFirst(sDirPath + sMask, faAnyFile, sr) = 0 then
-    begin
-      repeat
-        if  (sr.Name <> '.') and (sr.Name <> '..') and (sr.Attr and faDirectory = 0) then
-        begin
-          Inc(iFilesCount);
-          if saFound <> nil then
-             if saFound.IndexOf(sDirPath + sr.Name) < 0 then
-                saFound.Add(sDirPath + sr.Name);
-        end
-      until
-        FindNext(sr) <> 0;
-      end;
-    FindClose(sr);
-    // Если надо идти по поддиректориям, то снимаем маску и запускаем еще разок
-    if bRecurse then begin
-      if FindFirst(sDirPath + '*' , faAnyFile, sr) = 0 then
-      begin
-        repeat
-          if  (sr.Name <> '.') and (sr.Name <> '..') and (sr.Attr and faDirectory <> 0) then
-              FilesInDir(sMask,sDirPath + sr.name + '\',iFilesCount,saFound,bRecurse);
-        until
-          FindNext(sr) <> 0;
-        end;
-      FindClose(sr);
-    end;
-  except
-    Result := -1;
-  end;
-end;
-
 
 procedure TdbTest.SetUp;
 begin

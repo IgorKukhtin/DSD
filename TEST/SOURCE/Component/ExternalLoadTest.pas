@@ -13,27 +13,22 @@ type
     // подготавливаем данные для тестирования
     procedure SetUp; override;
   published
-    procedure Load1CSaleTest;
+    procedure LoadPriceListTest;
   end;
 
 implementation
 
-uses Storage, Authentication, ExternalDocumentLoad, SysUtils, CommonData;
+uses Storage, Authentication, ExternalLoad, SysUtils, CommonData;
 
 { TExternalLoadTest }
 
-procedure TExternalLoadTest.Load1CSaleTest;
+procedure TExternalLoadTest.LoadPriceListTest;
+var ImportSettings: TImportSettings;
 begin
-  with TSale1CLoadAction.Create(nil) do begin
-    try
-      FileName := '..\TEST\DATA\01-06.01.DBF';
-      StartDateParam.Value := StrToDate('01.01.2014');
-      EndDateParam.Value := StrToDate('01.01.2015');
-      Execute;
-    finally
-      Free;
-    end;
-  end;
+  ImportSettings := TImportSettings.Create(TImportSettingsItems);
+  ImportSettings.FileType := dtXLS;
+  ImportSettings.Directory := '..\DOC\Управление заказами в аптеках\Прайсы\БАДМ\';
+  TExecuteImportSettings.Create.Execute(ImportSettings);
 end;
 
 procedure TExternalLoadTest.SetUp;

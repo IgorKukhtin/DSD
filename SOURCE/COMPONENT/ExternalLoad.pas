@@ -23,8 +23,9 @@ type
     FAdoConnection: TADOConnection;
     FFileExtension: string;
     FFileFilter: string;
+    FExtendedProperties: string;
   public
-    constructor Create(DataSetType: TDataSetType = dtDBF);
+    constructor Create(DataSetType: TDataSetType = dtDBF; ExtendedProperties: string = '');
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
@@ -48,9 +49,39 @@ type
     property InitializeDirectory: string read FInitializeDirectory write FInitializeDirectory;
   end;
 
+  TImportSettingsItems = class (TCollectionItem)
+  public
+    ItemName: string;
+    Param: TdsdParam;
+  end;
+
+  TImportSettings = class (TCollection)
+  public
+    JuridicalId: Integer;
+    ContractId: Integer;
+    FileType: TDataSetType;
+    StoredProc: TdsdStoredProc;
+    StartRow: integer;
+    Directory: string;
+  end;
+
+  TExecuteProcedureFromFile = class
+  private
+    FExternalLoad: TFileExternalLoad;
+    FImportSettings: TImportSettings;
+    procedure ProcessingOneRow(AExternalLoad: TExternalLoad; AImportSettings: TImportSettings);
+  public
+    constructor Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+    procedure Load;
+  end;
+
+  TExecuteImportSettings = class
+    procedure Execute(ImportSettings: TImportSettings);
+  end;
+
 implementation
 
-uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet;
+uses SysUtils, Dialogs, SimpleGauge, VKDBFDataSet, UnilWin;
 
 { TFileExternalLoad }
 
@@ -115,11 +146,12 @@ begin
   end;
 end;
 
-constructor TFileExternalLoad.Create(DataSetType: TDataSetType);
+constructor TFileExternalLoad.Create(DataSetType: TDataSetType; ExtendedProperties: string);
 begin
   inherited Create;
   FOEM := true;
   FDataSetType := DataSetType;
+  FExtendedProperties := ExtendedProperties;
   case FDataSetType of
     dtDBF: begin
              FFileExtension := '*.dbf';
@@ -164,7 +196,7 @@ begin
     dtXLS: begin
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
                'Data Source=' + FileName + ';' +
-               'Extended Properties=Excel 8.0;';
+               'Extended Properties=Excel 8.0;' + FExtendedProperties;
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;
@@ -186,6 +218,67 @@ begin
   end;
   First;
   FActive := FDataSet.Active;
+end;
+
+{ TExecuteProcedureFromFile }
+
+constructor TExecuteProcedureFromFile.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
+begin
+  FImportSettings := ImportSettings;
+  FExternalLoad := TFileExternalLoad.Create(FileType);
+  FExternalLoad.Open();
+end;
+
+procedure TExecuteProcedureFromFile.Load;
+begin
+  with TGaugeFactory.GetGauge('Загрузка данных', 1, FExternalLoad.RecordCount) do begin
+    Start;
+    try
+      while not FExternalLoad.EOF do begin
+        ProcessingOneRow(FExternalLoad, FImportSettings);
+        IncProgress;
+        FExternalLoad.Next;
+      end;
+    finally
+     Finish
+    end;
+  end;
+end;
+
+procedure TExecuteProcedureFromFile.ProcessingOneRow(AExternalLoad: TExternalLoad;
+  AImportSettings: TImportSettings);
+var i: integer;
+begin
+  with AImportSettings do begin
+    for i := 0 to Count - 1 do
+        TImportSettingsItems(Items[i]).Param.Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
+    StoredProc.Execute;
+  end;
+end;
+
+{ TExecuteImportSettings }
+
+procedure TExecuteImportSettings.Execute(ImportSettings: TImportSettings);
+var iFilesCount: Integer;
+    saFound: TStrings;
+    i: integer;
+begin
+  saFound := TStringList.Create;
+  try
+    if ImportSettings.FileType = dtXLS then
+       FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound);
+    TStringList(saFound).Sort;
+    for I := 0 to saFound.Count - 1 do
+        with TExecuteProcedureFromFile.Create(ImportSettings) do
+          try
+            Load;
+          finally
+            Free;
+          end;
+  finally
+    saFound.Free
+  end;
+
 end;
 
 end.
