@@ -143,7 +143,7 @@ begin
        FInsertEDIEvents.Execute;
     end;
     // перекинуть на FTP
-    PutFileToFTP(P7SFileName, '/error');
+    PutFileToFTP(P7SFileName, '/outbox');
     if HeaderDataSet.FieldByName('EDIId').asInteger <> 0 then begin
        FInsertEDIEvents.ParamByName('inMovementId').Value := HeaderDataSet.FieldByName('EDIId').asInteger;
        FInsertEDIEvents.ParamByName('inEDIEvent').Value   := 'Документ отправлен на FTP';

@@ -15,6 +15,7 @@ CREATE TABLE LoadPriceListItem
   Id              serial        NOT NULL PRIMARY KEY,
   GoodsCode       TVarChar , -- Код товара поставщика
   GoodsName	  TVarChar , -- Наименование товара поставщика
+  GoodsNDS	  TVarChar, -- НДС товара
   GoodsId         Integer  , -- Товары
   LoadPriceListId Integer  , -- Ссылка на прайс-лист
   Price           TFloat   , -- Цена

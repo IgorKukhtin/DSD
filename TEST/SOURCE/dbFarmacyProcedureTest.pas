@@ -182,7 +182,7 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpSelect_Object_Unit.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Unit\gpGet_Object_Unit.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\NDSKind\gpSelect_Object_NDSKind.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\NDSKind\gpSelect_Object_NDSKind.sql', ZQuery);
 
   ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpInsertUpdate_Object_GoodsGroup.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\GoodsGroup\gpGet_Object_GoodsGroup.sql', ZQuery);
@@ -200,17 +200,17 @@ begin
   ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpGet_Object_Country.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\Country\gpSelect_Object_Country.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\FileTypeKind\gpInsertUpdate_Object_FileTypeKind.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\FileTypeKind\gpSelect_Object_FileTypeKind.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\FileTypeKind\gpGet_Object_FileTypeKind.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpInsertUpdate_Object_FileTypeKind.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpSelect_Object_FileTypeKind.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\FileTypeKind\gpGet_Object_FileTypeKind.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportTypeItems\gpInsertUpdate_Object_ImportTypeItems.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportTypeItems\gpSelect_Object_ImportTypeItems.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportTypeItems\gpGet_Object_ImportTypeItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpInsertUpdate_Object_ImportTypeItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpSelect_Object_ImportTypeItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportTypeItems\gpGet_Object_ImportTypeItems.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportType\gpInsertUpdate_Object_ImportType.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportType\gpSelect_Object_ImportType.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportType\gpGet_Object_ImportType.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpInsertUpdate_Object_ImportType.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpSelect_Object_ImportType.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportType\gpGet_Object_ImportType.sql', ZQuery);
 
   ExecFile(FarmacyProcedurePath + 'OBJECTS\JuridicalGoodsCode\gpInsertUpdate_Object_JuridicalGoodsCode.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\JuridicalGoodsCode\gpSelect_Object_JuridicalGoodsCode.sql', ZQuery);
@@ -218,7 +218,7 @@ begin
 
   ExecFile(FarmacyProcedurePath + 'OBJECTS\AlternativeGoodsCode\gpInsertUpdate_Object_AlternativeGoodsCode.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\AlternativeGoodsCode\gpSelect_Object_AlternativeGoodsCode.sql', ZQuery);
- 
+
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpInsertUpdate_Object_Contract.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpSelect_Object_Contract.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Contract\gpGet_Object_Contract.sql', ZQuery);
@@ -228,13 +228,13 @@ begin
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpSelect_Object_Juridical.sql', ZQuery);
   ExecFile(FarmacyProcedurePath + 'OBJECTS\Juridical\gpGet_Object_Juridical.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpInsertUpdate_Object_ImportSettings.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpSelect_Object_ImportSettings.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettings\gpGet_Object_ImportSettings.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpInsertUpdate_Object_ImportSettings.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpSelect_Object_ImportSettings.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettings\gpGet_Object_ImportSettings.sql', ZQuery);
 
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpInsertUpdate_Object_ImportSettingsItems.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpSelect_Object_ImportSettingsItems.sql', ZQuery);
-  ExecFile(FarmacyProcedurePath + 'OBJECTS\ImportSettingsItems\gpGet_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpInsertUpdate_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpSelect_Object_ImportSettingsItems.sql', ZQuery);
+  ExecFile(CommonProcedurePath + 'OBJECTS\ImportSettingsItems\gpGet_Object_ImportSettingsItems.sql', ZQuery);
 
   ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpInsertUpdate_Object_Retail.sql', ZQuery);
   ExecFile(CommonProcedurePath + 'OBJECTS\Retail\gpGet_Object_Retail.sql', ZQuery);

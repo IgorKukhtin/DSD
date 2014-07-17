@@ -24,6 +24,8 @@ type
     FFileExtension: string;
     FFileFilter: string;
     FExtendedProperties: string;
+  protected
+    procedure First; override;
   public
     constructor Create(DataSetType: TDataSetType = dtDBF; ExtendedProperties: string = '');
     destructor Destroy; override;
@@ -173,6 +175,12 @@ begin
   inherited;
 end;
 
+procedure TFileExternalLoad.First;
+begin
+  inherited;
+  FDataSet.First
+end;
+
 procedure TFileExternalLoad.Open(FileName: string);
 var strConn :  widestring;
     List: TStringList;
@@ -226,7 +234,7 @@ constructor TExecuteProcedureFromFile.Create(FileType: TDataSetType; FileName: s
 begin
   FImportSettings := ImportSettings;
   FExternalLoad := TFileExternalLoad.Create(FileType);
-  FExternalLoad.Open();
+  FExternalLoad.Open(FileName);
 end;
 
 procedure TExecuteProcedureFromFile.Load;
@@ -249,6 +257,7 @@ procedure TExecuteProcedureFromFile.ProcessingOneRow(AExternalLoad: TExternalLoa
   AImportSettings: TImportSettings);
 var i: integer;
 begin
+  exit;
   with AImportSettings do begin
     for i := 0 to Count - 1 do
         TImportSettingsItems(Items[i]).Param.Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
@@ -269,7 +278,7 @@ begin
        FilesInDir('*.xls', ImportSettings.Directory, iFilesCount, saFound);
     TStringList(saFound).Sort;
     for I := 0 to saFound.Count - 1 do
-        with TExecuteProcedureFromFile.Create(ImportSettings) do
+        with TExecuteProcedureFromFile.Create(ImportSettings.FileType, saFound[i], ImportSettings) do
           try
             Load;
           finally
