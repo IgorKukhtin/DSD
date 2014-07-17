@@ -1,13 +1,13 @@
 -- Function: gpInsertUpdate_Object_Juridical()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Integer, Boolean, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Juridical(
  INOUT ioId                      Integer   ,   	-- ключ объекта <Подразделение>
     IN inCode                    Integer   ,    -- Код объекта <Подразделение>
     IN inName                    TVarChar  ,    -- Название объекта <Подразделение>
-    IN inRetailId                Integer   ,    -- ссылка на подразделение
     IN inisCorporate             Boolean   ,    -- Признак наша ли собственность это юридическое лицо 
+    IN inRetailId                Integer   ,    -- ссылка на подразделение
     IN inSession                 TVarChar       -- сессия пользователя
 )
   RETURNS Integer AS
@@ -42,7 +42,7 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Integer, Boolean, tvarchar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_Juridical (Integer, Integer, TVarChar, Boolean, Integer, tvarchar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

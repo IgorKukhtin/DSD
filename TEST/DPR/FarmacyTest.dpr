@@ -114,8 +114,10 @@ uses
   ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
   ExternalLoadTest in '..\SOURCE\Component\ExternalLoadTest.pas',
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
-  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm};
-
+  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
+  JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
+  CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
+  PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {AncestorDBGridForm1: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -127,6 +129,7 @@ begin
 
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TAncestorDBGridForm1, AncestorDBGridForm1);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

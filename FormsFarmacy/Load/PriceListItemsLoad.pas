@@ -1,4 +1,4 @@
-unit PriceListLoad;
+unit PriceListItemsLoad;
 
 interface
 
@@ -13,22 +13,18 @@ uses
   cxGrid, cxPC;
 
 type
-  TPriceListLoadForm = class(TAncestorDBGridForm)
-    colOperDate: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
-    dsdInsertUpdateAction1: TdsdInsertUpdateAction;
-    col: TcxGridDBColumn;
+  TAncestorDBGridForm1 = class(TAncestorDBGridForm)
   private
     { Private declarations }
   public
     { Public declarations }
   end;
 
+var
+  AncestorDBGridForm1: TAncestorDBGridForm1;
+
 implementation
 
 {$R *.dfm}
-
-initialization
-  RegisterClass(TPriceListLoadForm);
 
 end.

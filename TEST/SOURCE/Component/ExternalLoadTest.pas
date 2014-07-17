@@ -18,16 +18,43 @@ type
 
 implementation
 
-uses Storage, Authentication, ExternalLoad, SysUtils, CommonData;
+uses Storage, Authentication, ExternalLoad, SysUtils, CommonData, JuridicalTest,
+     dsdDB, DB, Variants;
 
 { TExternalLoadTest }
 
 procedure TExternalLoadTest.LoadPriceListTest;
 var ImportSettings: TImportSettings;
+    JuridicalId: Integer;
 begin
   ImportSettings := TImportSettings.Create(TImportSettingsItems);
   ImportSettings.FileType := dtXLS;
   ImportSettings.Directory := '..\DOC\Управление заказами в аптеках\Прайсы\БАДМ\';
+  JuridicalId := 0;
+  try
+    JuridicalId := TJuridical.Create.GetDataSet.FieldByName('Id').AsInteger;
+  except
+
+  end;
+  if JuridicalId = 0 then exit;
+
+  ImportSettings.JuridicalId := JuridicalId;
+
+  ImportSettings.StoredProc.StoredProcName := 'gpInsertUpdate_Movement_LoadPriceList';
+  ImportSettings.StoredProc.Params.AddParam('inJuridicalId', ftInteger, ptInput, JuridicalId);
+  ImportSettings.StoredProc.Params.AddParam('inGoodsCode', ftString, ptInput, null);
+  ImportSettings.StoredProc.Params.AddParam('inGoodsName', ftString, ptInput, null);
+  ImportSettings.StoredProc.Params.AddParam('inGoodsNDS', ftString, ptInput, null);
+  ImportSettings.StoredProc.Params.AddParam('inPrice', ftFloat, ptInput, 0);
+  ImportSettings.StoredProc.Params.AddParam('inRemains', ftFloat, ptInput, 0);
+  ImportSettings.StoredProc.Params.AddParam('inExpirationDate', ftDateTime, ptInput, Date);
+  ImportSettings.StartRow := 4;
+
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Код';
+    Param := ImportSettings.StoredProc.ParamByName('inGoodsCode')
+  end;
+
   TExecuteImportSettings.Create.Execute(ImportSettings);
 end;
 

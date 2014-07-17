@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_LoadPriceList()
 
-DROP IF EXISTS FUNCTION gpInsertUpdate_Movement_LoadPriceList (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inExpirationDate      TDateTime , -- Срок годности
     IN inSession             TVarChar    -- сессия пользователя
 )
-RETURNS Integer AS
+RETURNS VOID AS
 $BODY$
    DECLARE vbLoadPriceListId Integer;
 BEGIN

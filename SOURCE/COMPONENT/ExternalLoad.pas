@@ -24,10 +24,11 @@ type
     FFileExtension: string;
     FFileFilter: string;
     FExtendedProperties: string;
+    FStartRecord: integer;
   protected
     procedure First; override;
   public
-    constructor Create(DataSetType: TDataSetType = dtDBF; ExtendedProperties: string = '');
+    constructor Create(DataSetType: TDataSetType = dtDBF; StartRecord: integer = 1; ExtendedProperties: string = '');
     destructor Destroy; override;
     procedure Open(FileName: string);
     procedure Activate; override;
@@ -65,6 +66,8 @@ type
     StoredProc: TdsdStoredProc;
     StartRow: integer;
     Directory: string;
+    constructor Create(ItemClass: TCollectionItemClass);
+    destructor Destroy; override;
   end;
 
   TExecuteProcedureFromFile = class
@@ -148,12 +151,13 @@ begin
   end;
 end;
 
-constructor TFileExternalLoad.Create(DataSetType: TDataSetType; ExtendedProperties: string);
+constructor TFileExternalLoad.Create(DataSetType: TDataSetType; StartRecord: integer; ExtendedProperties: string);
 begin
   inherited Create;
   FOEM := true;
   FDataSetType := DataSetType;
   FExtendedProperties := ExtendedProperties;
+  FStartRecord := StartRecord;
   case FDataSetType of
     dtDBF: begin
              FFileExtension := '*.dbf';
@@ -204,7 +208,7 @@ begin
     dtXLS: begin
       strConn:='Provider=Microsoft.Jet.OLEDB.4.0;' +
                'Data Source=' + FileName + ';' +
-               'Extended Properties=Excel 8.0;' + FExtendedProperties;
+               'Extended Properties=Excel 8.0' + FExtendedProperties + ';';
       if not Assigned(FAdoConnection) then begin
          FAdoConnection := TAdoConnection.Create(nil);
          FAdoConnection.LoginPrompt := false;
@@ -217,7 +221,8 @@ begin
       List := TStringList.Create;
       try
         FAdoConnection.GetTableNames(List, True);
-        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0] + ']';
+        TADOQuery(FDataSet).ParamCheck := false;
+        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0]  + 'A' + IntToStr(FStartRecord)+ ':A65000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);
@@ -233,7 +238,7 @@ end;
 constructor TExecuteProcedureFromFile.Create(FileType: TDataSetType; FileName: string; ImportSettings: TImportSettings);
 begin
   FImportSettings := ImportSettings;
-  FExternalLoad := TFileExternalLoad.Create(FileType);
+  FExternalLoad := TFileExternalLoad.Create(FileType, ImportSettings.StartRow);
   FExternalLoad.Open(FileName);
 end;
 
@@ -257,7 +262,6 @@ procedure TExecuteProcedureFromFile.ProcessingOneRow(AExternalLoad: TExternalLoa
   AImportSettings: TImportSettings);
 var i: integer;
 begin
-  exit;
   with AImportSettings do begin
     for i := 0 to Count - 1 do
         TImportSettingsItems(Items[i]).Param.Value := AExternalLoad.FDataSet.FieldByName(TImportSettingsItems(Items[i]).ItemName).Value;
@@ -288,6 +292,21 @@ begin
     saFound.Free
   end;
 
+end;
+
+{ TImportSettings }
+
+constructor TImportSettings.Create(ItemClass: TCollectionItemClass);
+begin
+  inherited;
+  StoredProc := TdsdStoredProc.Create(nil);
+  StoredProc.OutputType := otResult;
+end;
+
+destructor TImportSettings.Destroy;
+begin
+  FreeAndNil(StoredProc);
+  inherited;
 end;
 
 end.

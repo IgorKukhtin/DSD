@@ -1,9 +1,9 @@
 ﻿inherited JuridicalEditForm: TJuridicalEditForm
   Caption = #1044#1086#1073#1072#1074#1080#1090#1100'/'#1048#1079#1084#1077#1085#1080#1090#1100' <'#1070#1088#1080#1076#1080#1095#1077#1089#1082#1086#1077' '#1083#1080#1094#1086'>'
-  ClientHeight = 304
+  ClientHeight = 310
   ClientWidth = 981
   ExplicitWidth = 987
-  ExplicitHeight = 336
+  ExplicitHeight = 335
   PixelsPerInch = 96
   TextHeight = 13
   inherited bbOk: TcxButton
@@ -57,33 +57,27 @@
     Left = 304
     Top = 0
     Width = 677
-    Height = 304
+    Height = 310
     Align = alRight
     BevelEdges = [beLeft]
     BevelKind = bkTile
     BevelOuter = bvNone
     TabOrder = 7
-    ExplicitLeft = 448
-    ExplicitHeight = 290
     object PageControl: TcxPageControl
       Left = 0
       Top = 0
       Width = 675
-      Height = 304
+      Height = 310
       Align = alClient
       TabOrder = 0
-      Properties.ActivePage = ContractTS
+      Properties.ActivePage = JuridicalDetailTS
       Properties.CustomButtons.Buttons = <>
-      ExplicitWidth = 841
-      ExplicitHeight = 312
-      ClientRectBottom = 304
+      ClientRectBottom = 310
       ClientRectRight = 675
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
-        ExplicitWidth = 801
-        ExplicitHeight = 260
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -211,71 +205,9 @@
           Width = 193
         end
       end
-      object PartnerTS: TcxTabSheet
-        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
-        ImageIndex = 1
-        ExplicitWidth = 841
-        ExplicitHeight = 288
-        object PartnerDockControl: TdxBarDockControl
-          Left = 0
-          Top = 0
-          Width = 675
-          Height = 26
-          Align = dalTop
-          BarManager = dxBarManager
-          ExplicitWidth = 841
-        end
-        object PartnerGrid: TcxGrid
-          Left = 0
-          Top = 26
-          Width = 675
-          Height = 254
-          Align = alClient
-          TabOrder = 0
-          ExplicitWidth = 841
-          ExplicitHeight = 262
-          object PartnerGridDBTableView: TcxGridDBTableView
-            Navigator.Buttons.CustomButtons = <>
-            DataController.DataSource = PartnerDS
-            DataController.Filter.Options = [fcoCaseInsensitive]
-            DataController.Summary.DefaultGroupSummaryItems = <>
-            DataController.Summary.FooterSummaryItems = <>
-            DataController.Summary.SummaryGroups = <>
-            OptionsData.Deleting = False
-            OptionsData.DeletingConfirmation = False
-            OptionsData.Editing = False
-            OptionsData.Inserting = False
-            OptionsView.ColumnAutoWidth = True
-            OptionsView.GroupByBox = False
-            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-            object colPartnerCode: TcxGridDBColumn
-              Caption = #1050#1086#1076
-              DataBinding.FieldName = 'Code'
-              Options.Editing = False
-            end
-            object colPartnerAddress: TcxGridDBColumn
-              Caption = #1040#1076#1088#1077#1089
-              DataBinding.FieldName = 'Address'
-              Options.Editing = False
-              Width = 423
-            end
-            object colPartnerisErased: TcxGridDBColumn
-              Caption = #1059#1076#1072#1083#1077#1085
-              DataBinding.FieldName = 'isErased'
-              Visible = False
-              Options.Editing = False
-            end
-          end
-          object PartnerGridLevel: TcxGridLevel
-            GridView = PartnerGridDBTableView
-          end
-        end
-      end
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
-        ExplicitWidth = 841
-        ExplicitHeight = 288
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
@@ -283,18 +215,14 @@
           Height = 26
           Align = dalTop
           BarManager = dxBarManager
-          ExplicitWidth = 841
         end
         object ContractGrid: TcxGrid
           Left = 0
           Top = 26
           Width = 675
-          Height = 254
+          Height = 260
           Align = alClient
           TabOrder = 0
-          ExplicitLeft = -32
-          ExplicitTop = 18
-          ExplicitHeight = 240
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -546,72 +474,6 @@
       DataSetRefresh = actContractRefresh
       IdFieldName = 'Id'
     end
-    object actPartnerInsert: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ShortCut = 45
-      ImageIndex = 0
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Value = Null
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      isShowModal = False
-      DataSource = PartnerDS
-      DataSetRefresh = actPartnerRefresh
-      IdFieldName = 'Id'
-    end
-    object actPartnerUpdate: TdsdInsertUpdateAction
-      Category = 'DSDLib'
-      MoveParams = <>
-      Caption = #1048#1079#1084#1077#1085#1080#1090#1100
-      ShortCut = 115
-      ImageIndex = 1
-      FormName = 'TPartnerEditForm'
-      FormNameParam.Value = 'TPartnerEditForm'
-      FormNameParam.DataType = ftString
-      GuiParams = <
-        item
-          Name = 'Id'
-          Component = PartnerCDS
-          ComponentItem = 'Id'
-          ParamType = ptInput
-        end
-        item
-          Name = 'JuridicalId'
-          Value = Null
-          Component = FormParams
-          ComponentItem = 'Id'
-        end>
-      isShowModal = False
-      ActionType = acUpdate
-      DataSource = PartnerDS
-      DataSetRefresh = actPartnerRefresh
-      IdFieldName = 'Id'
-    end
-    object actPartnerRefresh: TdsdDataSetRefresh
-      Category = 'DSDLib'
-      TabSheet = PartnerTS
-      MoveParams = <>
-      StoredProcList = <
-        item
-        end>
-      Caption = #1055#1077#1088#1077#1095#1080#1090#1072#1090#1100
-      Hint = #1054#1073#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
-      ImageIndex = 4
-      ShortCut = 116
-      RefreshOnTabSetChanges = False
-    end
     object actContractRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
       TabSheet = ContractTS
@@ -681,21 +543,6 @@
         end
         item
           Action = actContractInsert
-        end>
-      Caption = #1044#1086#1073#1072#1074#1080#1090#1100
-      ImageIndex = 0
-      ShortCut = 45
-    end
-    object actMultiPartnerInsert: TMultiAction
-      Category = 'DSDLib'
-      TabSheet = PartnerTS
-      MoveParams = <>
-      ActionList = <
-        item
-          Action = actSave
-        end
-        item
-          Action = actPartnerInsert
         end>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ImageIndex = 0
@@ -828,44 +675,6 @@
       0
       0
       0)
-    object PartnerBar: TdxBar
-      Caption = 'Custom'
-      CaptionButtons = <>
-      DockControl = PartnerDockControl
-      DockedDockControl = PartnerDockControl
-      DockedLeft = 0
-      DockedTop = 0
-      FloatLeft = 528
-      FloatTop = 285
-      FloatClientWidth = 51
-      FloatClientHeight = 22
-      ItemLinks = <
-        item
-          Visible = True
-          ItemName = 'bbPartnerInsert'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerEdit'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end
-        item
-          Visible = True
-          ItemName = 'bbPartnerRefresh'
-        end
-        item
-          Visible = True
-          ItemName = 'bbStatic'
-        end>
-      OneOnRow = True
-      Row = 0
-      UseOwnFont = False
-      Visible = True
-      WholeRow = False
-    end
     object ContractBar: TdxBar
       Caption = 'ContractBar'
       CaptionButtons = <>
@@ -892,10 +701,6 @@
         end
         item
           Visible = True
-          ItemName = 'bbContractRefresh'
-        end
-        item
-          Visible = True
           ItemName = 'bbStatic'
         end>
       OneOnRow = True
@@ -903,22 +708,6 @@
       UseOwnFont = False
       Visible = True
       WholeRow = False
-    end
-    object bbPartnerRefresh: TdxBarButton
-      Action = actPartnerRefresh
-      Category = 0
-    end
-    object bbPartnerInsert: TdxBarButton
-      Action = actMultiPartnerInsert
-      Category = 0
-    end
-    object bbPartnerEdit: TdxBarButton
-      Action = actPartnerUpdate
-      Category = 0
-    end
-    object bbContractRefresh: TdxBarButton
-      Action = actContractRefresh
-      Category = 0
     end
     object bbStatic: TdxBarStatic
       Caption = '   '
@@ -945,17 +734,6 @@
     Params = <>
     Left = 256
     Top = 256
-  end
-  object PartnerDS: TDataSource
-    DataSet = PartnerCDS
-    Left = 880
-    Top = 72
-  end
-  object PartnerCDS: TClientDataSet
-    Aggregates = <>
-    Params = <>
-    Left = 816
-    Top = 216
   end
   object ContractDS: TDataSource
     DataSet = ContractCDS
@@ -1033,27 +811,6 @@
     Left = 184
     Top = 48
   end
-  object PartnerAddOn: TdsdDBViewAddOn
-    ErasedFieldName = 'isErased'
-    View = PartnerGridDBTableView
-    OnDblClickActionList = <
-      item
-        Action = actPartnerUpdate
-      end>
-    ActionItemList = <
-      item
-        Action = actPartnerUpdate
-        ShortCut = 13
-      end>
-    SortImages = dmMain.SortImageList
-    OnlyEditingCellOnEnter = False
-    ColorRuleList = <>
-    ColumnAddOnList = <>
-    ColumnEnterList = <>
-    SummaryItemList = <>
-    Left = 832
-    Top = 160
-  end
   object ContractAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
     View = ContractGridDBTableView
@@ -1084,6 +841,17 @@
         Value = Null
         Component = FormParams
         ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inOperDate'
+        Value = Null
+        DataType = ftDateTime
+        ParamType = ptInput
+      end
+      item
+        Name = 'inBankId'
+        Value = Null
         ParamType = ptInput
       end
       item

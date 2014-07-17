@@ -1,8 +1,9 @@
 inherited MainForm: TMainForm
+  Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
   ClientHeight = 151
   ClientWidth = 689
   ExplicitWidth = 697
-  ExplicitHeight = 185
+  ExplicitHeight = 178
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
