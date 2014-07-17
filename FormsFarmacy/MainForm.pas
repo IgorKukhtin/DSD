@@ -71,6 +71,8 @@ type
     bbRole: TdxBarButton;
     actImportType: TdsdOpenForm;
     bbImportType: TdxBarButton;
+    actImportSettings: TdsdOpenForm;
+    bbImportSettings: TdxBarButton;
   private
     { Private declarations }
   public

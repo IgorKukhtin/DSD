@@ -16,18 +16,19 @@ $BODY$
 
 BEGIN
    -- проверка прав пользователя на вызов процедуры
-   vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
+   --vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
+   vbUserId := lpGetUserBySession (inSession); 
 
    -- проверка уникальности <Наименование>
-   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportTypeItems(), inName);
+   PERFORM lpCheckUnique_Object_ValueData (ioId, zc_Object_ImportSettingsItems(), inName);
    
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportTypeItems(), 0, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportSettingsItems(), 0, inName);
    
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportTypeItems_ImportSettings(), ioId, inImportSettingsId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettingsItems_ImportSettings(), ioId, inImportSettingsId);
    -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportTypeItems_ImportTypeItems(), ioId, inImportTypeItemsId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportSettingsItems_ImportTypeItems(), ioId, inImportTypeItemsId);
      
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
@@ -46,4 +47,4 @@ ALTER FUNCTION gpInsertUpdate_Object_ImportSettingsItems (Integer, TVarChar, Int
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_Object_ImportSettingsItems ()                            
+--select * from gpInsertUpdate_Object_ImportSettingsItems(ioId := 0 , inName := 'sfd' , inImportSettingsId := 329 , inImportTypeItemsId := 0 ,  inSession := '8');                            

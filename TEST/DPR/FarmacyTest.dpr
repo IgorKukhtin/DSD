@@ -113,7 +113,9 @@ uses
   ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
   ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
   Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
-  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm};
+  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
+  ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}

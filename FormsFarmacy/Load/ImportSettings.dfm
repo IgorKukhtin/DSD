@@ -1,26 +1,28 @@
-inherited ImportTypeForm: TImportTypeForm
-  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
+inherited ImportSettingsForm: TImportSettingsForm
+  Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
-  ClientWidth = 743
-  ExplicitWidth = 751
+  ClientWidth = 921
+  ExplicitWidth = 929
   ExplicitHeight = 373
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Width = 743
+    Width = 921
     Height = 313
     ExplicitWidth = 743
     ExplicitHeight = 313
     ClientRectBottom = 313
-    ClientRectRight = 743
+    ClientRectRight = 921
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 743
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 369
+        Width = 593
         Height = 313
         Align = alLeft
-        ExplicitWidth = 369
+        ExplicitLeft = 48
+        ExplicitTop = 3
+        ExplicitWidth = 593
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -40,30 +42,93 @@ inherited ImportTypeForm: TImportTypeForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            Width = 113
+            Width = 95
           end
-          object clProcedureName: TcxGridDBColumn
-            Caption = #1053#1072#1079#1074#1072#1085#1080#1077' '#1087#1088#1086#1094#1077#1076#1091#1088#1099' '#1080#1084#1087#1086#1088#1090#1072
-            DataBinding.FieldName = 'ProcedureName'
+          object clDirectory: TcxGridDBColumn
+            Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' '#1079#1072#1075#1088#1091#1079#1082#1080
+            DataBinding.FieldName = 'Directory'
             HeaderAlignmentVert = vaCenter
-            Width = 124
+            Width = 83
+          end
+          object clJuridicalName: TcxGridDBColumn
+            Caption = #1070#1088'.'#1083#1080#1094#1086
+            DataBinding.FieldName = 'JuridicalName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = JuridicalChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 71
+          end
+          object clContractName: TcxGridDBColumn
+            Caption = #1044#1086#1075#1086#1074#1086#1088
+            DataBinding.FieldName = 'ContractName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ContractChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = True
+            HeaderAlignmentVert = vaCenter
+            Width = 70
+          end
+          object clFileTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1092#1072#1081#1083#1072
+            DataBinding.FieldName = 'FileTypeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = FileTypeKindChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            HeaderAlignmentVert = vaCenter
+            Width = 78
+          end
+          object clImportTypeName: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1080#1084#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'ImportTypeName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ImportTypeItemsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
+            Properties.ReadOnly = False
+            HeaderAlignmentVert = vaCenter
+            Width = 81
+          end
+          object clStartRow: TcxGridDBColumn
+            Caption = #1055#1077#1088#1074#1072#1103' '#1089#1090#1088#1086#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1076#1083#1103' Excel'
+            DataBinding.FieldName = 'StartRow'
+            HeaderAlignmentVert = vaCenter
+            Width = 81
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentVert = vaCenter
-            Width = 52
+            Width = 26
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 369
+        Left = 593
         Top = 0
-        Width = 374
+        Width = 328
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 369
+        ExplicitWidth = 374
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -86,15 +151,21 @@ inherited ImportTypeForm: TImportTypeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
-          object clICode: TcxGridDBColumn
-            Caption = #1050#1086#1076
-            DataBinding.FieldName = 'Code'
-            Visible = False
-            Width = 30
-          end
           object clIName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'Name'
+            Width = 100
+          end
+          object clImportTypeItemsName: TcxGridDBColumn
+            Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
+            DataBinding.FieldName = 'ImportTypeItemsName'
+            PropertiesClassName = 'TcxButtonEditProperties'
+            Properties.Buttons = <
+              item
+                Action = ImportTypeItemsChoiceForm
+                Default = True
+                Kind = bkEllipsis
+              end>
             Width = 100
           end
           object clIisErased: TcxGridDBColumn
@@ -207,12 +278,33 @@ inherited ImportTypeForm: TImportTypeForm
       isSetErased = False
       DataSource = MasterDS
     end
+    object ImportTypeItemsChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'ImportTypeItemsChoiceForm'
+      FormName = 'TImportTypeForm'
+      FormNameParam.Value = 'TImportTypeForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'ImportTypeItemsId'
+          Component = ChildCDS
+          ComponentItem = 'ImportTypeItemsId'
+        end
+        item
+          Name = 'ImportTypeItemsName'
+          Component = ChildCDS
+          ComponentItem = 'ImportTypeItemsName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
       MoveParams = <>
       Params = <
         item
-          Name = 'key'
+          Name = 'Key'
           Component = MasterCDS
           ComponentItem = 'Id'
         end
@@ -220,20 +312,84 @@ inherited ImportTypeForm: TImportTypeForm
           Name = 'TextValue'
           Component = MasterCDS
           ComponentItem = 'Name'
+          DataType = ftString
         end
         item
-          Name = 'ImportTypeItemsId'
+          Name = 'ImportSettingsItemsId'
           Component = ChildCDS
           ComponentItem = 'Id'
         end
         item
-          Name = 'ImportTypeItemsName'
+          Name = 'ImportSettingsItemsName'
           Component = ChildCDS
           ComponentItem = 'Name'
         end>
       Caption = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       Hint = #1042#1099#1073#1086#1088' '#1080#1079' '#1089#1087#1088#1072#1074#1086#1095#1085#1080#1082#1072
       ImageIndex = 7
+    end
+    object FileTypeKindChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'FileTypeKindChoiceForm'
+      FormName = 'TFileTypeKindForm'
+      FormNameParam.Value = 'TFileTypeKindForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = MasterCDS
+          ComponentItem = 'FileTypeKindId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'FileTypeKindName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object ContractChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'JuridicalChoiceForm'
+      FormName = 'TContractForm'
+      FormNameParam.Value = 'TContractForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = MasterCDS
+          ComponentItem = 'ContractId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'ContractName'
+          DataType = ftString
+        end>
+      isShowModal = True
+    end
+    object JuridicalChoiceForm: TOpenChoiceForm
+      Category = 'DSDLib'
+      MoveParams = <>
+      Caption = 'JuridicalChoiceForm'
+      FormName = 'TJuridicalForm'
+      FormNameParam.Value = 'TJuridicalForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <
+        item
+          Name = 'key'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'JuridicalName'
+          DataType = ftString
+        end>
+      isShowModal = True
     end
   end
   inherited MasterDS: TDataSource
@@ -244,7 +400,7 @@ inherited ImportTypeForm: TImportTypeForm
     Top = 96
   end
   inherited spSelect: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ImportType'
+    StoredProcName = 'gpSelect_Object_ImportSettings'
     Left = 104
     Top = 64
   end
@@ -292,7 +448,7 @@ inherited ImportTypeForm: TImportTypeForm
         end
         item
           Visible = True
-          ItemName = 'bbdsdChoiceGuides'
+          ItemName = 'bbChoiceGuides'
         end
         item
           Visible = True
@@ -327,7 +483,7 @@ inherited ImportTypeForm: TImportTypeForm
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1087#1072#1088#1072#1084#1077#1090#1088
       Category = 0
     end
-    object bbdsdChoiceGuides: TdxBarButton
+    object bbChoiceGuides: TdxBarButton
       Action = dsdChoiceGuides
       Category = 0
     end
@@ -337,7 +493,7 @@ inherited ImportTypeForm: TImportTypeForm
     Top = 192
   end
   object spInsertUpdateImportType: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ImportType'
+    StoredProcName = 'gpInsertUpdate_Object_ImportSettings'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -361,9 +517,40 @@ inherited ImportTypeForm: TImportTypeForm
         ParamType = ptInput
       end
       item
-        Name = 'inProcedureName'
+        Name = 'inJuridicalId'
         Component = MasterCDS
-        ComponentItem = 'ProcedureName'
+        ComponentItem = 'JuridicalId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inContractId'
+        Component = MasterCDS
+        ComponentItem = 'ContractId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inFileTypeId'
+        Component = MasterCDS
+        ComponentItem = 'FileTypeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inImportTypeId'
+        Component = MasterCDS
+        ComponentItem = 'ImportTypeId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inStartRow'
+        Component = MasterCDS
+        ComponentItem = 'StartRow'
+        DataType = ftFloat
+        ParamType = ptInput
+      end
+      item
+        Name = 'inDirectory'
+        Component = MasterCDS
+        ComponentItem = 'Directory'
         DataType = ftString
         ParamType = ptInput
       end>
@@ -372,32 +559,32 @@ inherited ImportTypeForm: TImportTypeForm
   end
   object ChildDS: TDataSource
     DataSet = ChildCDS
-    Left = 456
-    Top = 80
+    Left = 624
+    Top = 64
   end
   object ChildCDS: TClientDataSet
     Aggregates = <>
-    IndexFieldNames = 'ImportTypeId '
+    IndexFieldNames = 'ImportSettingsId '
     MasterFields = 'Id'
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 536
-    Top = 80
+    Left = 688
+    Top = 72
   end
   object spSelectItems: TdsdStoredProc
-    StoredProcName = 'gpSelect_Object_ImportTypeItems'
+    StoredProcName = 'gpSelect_Object_ImportSettingsItems'
     DataSet = ChildCDS
     DataSets = <
       item
         DataSet = ChildCDS
       end>
     Params = <>
-    Left = 608
-    Top = 72
+    Left = 784
+    Top = 80
   end
   object spInsertUpdateImportTypeItems: TdsdStoredProc
-    StoredProcName = 'gpInsertUpdate_Object_ImportTypeItems'
+    StoredProcName = 'gpInsertUpdate_Object_ImportSettingsItems'
     DataSets = <>
     OutputType = otResult
     Params = <
@@ -408,12 +595,6 @@ inherited ImportTypeForm: TImportTypeForm
         ParamType = ptInputOutput
       end
       item
-        Name = 'inCode'
-        Component = ChildCDS
-        ComponentItem = 'Code'
-        ParamType = ptInput
-      end
-      item
         Name = 'inName'
         Component = ChildCDS
         ComponentItem = 'Name'
@@ -421,13 +602,19 @@ inherited ImportTypeForm: TImportTypeForm
         ParamType = ptInput
       end
       item
-        Name = 'inImportTypeId'
+        Name = 'inImportSettingsId'
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInput
+      end
+      item
+        Name = 'inImportTypeItemsId'
+        Component = ChildCDS
+        ComponentItem = 'ImportTypeItemsId'
+        ParamType = ptInput
       end>
-    Left = 632
-    Top = 147
+    Left = 792
+    Top = 155
   end
   object dsdDBViewAddOnItems: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -440,8 +627,8 @@ inherited ImportTypeForm: TImportTypeForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 464
-    Top = 200
+    Left = 648
+    Top = 192
   end
   object spErasedUnErased: TdsdStoredProc
     StoredProcName = 'gpUpdateObjectIsErased'
@@ -468,7 +655,7 @@ inherited ImportTypeForm: TImportTypeForm
         ComponentItem = 'Id'
         ParamType = ptInput
       end>
-    Left = 456
+    Left = 632
     Top = 136
   end
 end
