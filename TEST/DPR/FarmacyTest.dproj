@@ -352,8 +352,16 @@
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListItemsLoad.pas">
-				<Form>AncestorDBGridForm1</Form>
+				<Form>PriceListItemsForm</Form>
 				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Enum\FileTypeKind.pas">
+				<Form>FileTypeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

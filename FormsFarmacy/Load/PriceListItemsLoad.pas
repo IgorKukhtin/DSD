@@ -10,18 +10,17 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC;
+  cxGrid, cxPC, Vcl.ExtCtrls;
 
 type
-  TAncestorDBGridForm1 = class(TAncestorDBGridForm)
+  TPriceListItemsForm = class(TAncestorDBGridForm)
+    FormParams: TdsdFormParams;
+    Panel1: TPanel;
   private
     { Private declarations }
   public
     { Public declarations }
   end;
-
-var
-  AncestorDBGridForm1: TAncestorDBGridForm1;
 
 implementation
 

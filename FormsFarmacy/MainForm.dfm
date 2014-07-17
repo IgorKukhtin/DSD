@@ -67,6 +67,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbImportSettings'
+        end
+        item
+          Visible = True
           ItemName = 'dxBarSeparator1'
         end
         item
@@ -264,6 +268,10 @@ inherited MainForm: TMainForm
       Action = actImportType
       Category = 0
     end
+    object bbImportSettings: TdxBarButton
+      Action = actImportSettings
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPriceList: TdsdOpenForm [0]
@@ -286,7 +294,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [4]
+    object actImportSettings: TdsdOpenForm [4]
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
+      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      FormName = 'TImportSettingsForm'
+      FormNameParam.Value = 'TImportSettingsForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actUser: TdsdOpenForm [5]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080

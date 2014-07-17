@@ -1,4 +1,4 @@
-unit ImportType;
+unit ImportSettings;
 
 interface
 
@@ -14,15 +14,14 @@ uses
   cxGrid, cxPC, cxButtonEdit;
 
 type
-  TImportTypeForm = class(TAncestorDBGridForm)
+  TImportSettingsForm = class(TAncestorDBGridForm)
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
-    clICode: TcxGridDBColumn;
     clIName: TcxGridDBColumn;
     clIisErased: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
-    clProcedureName: TcxGridDBColumn;
+    clDirectory: TcxGridDBColumn;
     clName: TcxGridDBColumn;
     clisErased: TcxGridDBColumn;
     spInsertUpdateImportType: TdsdStoredProc;
@@ -43,8 +42,18 @@ type
     dsdUnErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     bbUnErasedChild: TdxBarButton;
+    clImportTypeItemsName: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clContractName: TcxGridDBColumn;
+    clFileTypeName: TcxGridDBColumn;
+    clImportTypeName: TcxGridDBColumn;
+    clStartRow: TcxGridDBColumn;
+    JuridicalChoiceForm: TOpenChoiceForm;
+    ImportTypeItemsChoiceForm: TOpenChoiceForm;
     dsdChoiceGuides: TdsdChoiceGuides;
-    bbdsdChoiceGuides: TdxBarButton;
+    bbChoiceGuides: TdxBarButton;
+    ContractChoiceForm: TOpenChoiceForm;
+    FileTypeKindChoiceForm: TOpenChoiceForm;
   private
     { Private declarations }
   public
@@ -55,6 +64,6 @@ implementation
 
 {$R *.dfm}
 initialization
-  RegisterClass(TImportTypeForm);
+  RegisterClass(TImportSettingsForm);
 
 end.
