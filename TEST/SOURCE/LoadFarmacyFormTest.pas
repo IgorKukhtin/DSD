@@ -18,6 +18,7 @@ type
     procedure LoadContractFormTest;
     procedure LoadGoodsGroupFormTest;
     procedure LoadGoodsFormTest;
+    procedure LoadImportTypeFormTest;
     procedure LoadIncomeFormTest;
     procedure LoadJuridicalFormTest;
     procedure LoadLoadFormTest;
@@ -98,12 +99,23 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TJuridicalEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TJuridicalEditForm');
 end;
+
+procedure TLoadFormTest.LoadImportTypeFormTest;
+begin
+  //Типы импорта
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TImportTypeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TImportTypeForm');
+end;
+
 procedure TLoadFormTest.LoadUnitFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnitEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TUnitEditForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TUnit_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TUnit_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadUnumFormTest;

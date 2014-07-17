@@ -2,7 +2,7 @@ inherited MainForm: TMainForm
   ClientHeight = 151
   ClientWidth = 689
   ExplicitWidth = 697
-  ExplicitHeight = 178
+  ExplicitHeight = 185
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
@@ -55,6 +55,14 @@ inherited MainForm: TMainForm
         item
           Visible = True
           ItemName = 'bbRetail'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarSeparator1'
+        end
+        item
+          Visible = True
+          ItemName = 'bbImportType'
         end
         item
           Visible = True
@@ -251,6 +259,10 @@ inherited MainForm: TMainForm
       Action = actRole
       Category = 0
     end
+    object bbImportType: TdxBarButton
+      Action = actImportType
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPriceList: TdsdOpenForm [0]
@@ -279,6 +291,17 @@ inherited MainForm: TMainForm
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
       FormName = 'TUserForm'
       FormNameParam.Value = 'TUserForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actImportType: TdsdOpenForm
+      Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
+      MoveParams = <>
+      Caption = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      Hint = #1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072
+      FormName = 'TImportTypeForm'
+      FormNameParam.Value = 'TImportTypeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
@@ -562,6 +585,16 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
+  end
+  inherited cxLocalizer: TcxLocalizer
+    Top = 40
+  end
+  inherited StoredProc: TdsdStoredProc
+    Left = 48
+  end
+  inherited ClientDataSet: TClientDataSet
+    Left = 104
+    Top = 104
   end
   object bbPriceListLoad: TdxBarButton
     Action = actPriceListLoad
