@@ -76,8 +76,6 @@ begin
 
   LoadReportFromFile('Отчет по просрочке', ReportPath + '\Отчеты (финансы)\Отчет по просрочке.fr3');
 
-
-
   // Печатные формы накладных
   LoadReportFromFile('PrintMovement_TransferDebtOut', ReportPath + '\Товарный Учет\PrintMovement_TransferDebtOut.fr3');
   LoadReportFromFile('PrintMovement_Sale1', ReportPath + '\Товарный Учет\PrintMovement_Sale1.fr3');

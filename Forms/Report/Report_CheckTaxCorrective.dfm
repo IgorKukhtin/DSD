@@ -37,12 +37,12 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Sale
+              Column = clSumm_ReturnIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Tax
+              Column = clSumm_TaxCorrective
             end
             item
               Format = ',0.####'
@@ -63,12 +63,12 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Sale
+              Column = clSumm_ReturnIn
             end
             item
               Format = ',0.####'
               Kind = skSum
-              Column = clSumm_Tax
+              Column = clSumm_TaxCorrective
             end
             item
               Format = ',0.####'
@@ -227,9 +227,9 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             Options.Editing = False
             Width = 53
           end
-          object clSumm_Sale: TcxGridDBColumn
+          object clSumm_ReturnIn: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1074#1086#1079#1074#1088#1072#1090')'
-            DataBinding.FieldName = 'Summ_Sale'
+            DataBinding.FieldName = 'Summ_ReturnIn'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####'
@@ -237,9 +237,9 @@ inherited Report_CheckTaxCorrectiveForm: TReport_CheckTaxCorrectiveForm
             HeaderAlignmentVert = vaCenter
             Width = 60
           end
-          object clSumm_Tax: TcxGridDBColumn
+          object clSumm_TaxCorrective: TcxGridDBColumn
             Caption = #1057#1091#1084#1084#1072' ('#1082#1086#1088#1088'.)'
-            DataBinding.FieldName = 'Summ_Tax'
+            DataBinding.FieldName = 'Summ_TaxCorrective'
             PropertiesClassName = 'TcxCurrencyEditProperties'
             Properties.DecimalPlaces = 4
             Properties.DisplayFormat = ',0.####;-,0.####'

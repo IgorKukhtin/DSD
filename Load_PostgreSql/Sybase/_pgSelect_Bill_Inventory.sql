@@ -17,6 +17,8 @@ begin
   -- !!!start @inIsGlobalLoad!!!
   if @inIsGlobalLoad=zc_rvYes()
   then
+      raiserror 21000 '@inIsGlobalLoad=zc_rvYes()';
+      --
       select (_pgCar.Id) as ObjectId
            , (_pgCar.Id) as InvNumber
            , @inEndDate as OperDate
