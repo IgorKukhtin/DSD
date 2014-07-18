@@ -14,6 +14,8 @@ uses
 
 type
   TPriceListLoadForm = class(TAncestorDBGridForm)
+    colOperDate: TcxGridDBColumn;
+    colJuridicalName: TcxGridDBColumn;
   private
     { Private declarations }
   public

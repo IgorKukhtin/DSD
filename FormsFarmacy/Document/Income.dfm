@@ -1151,7 +1151,7 @@ inherited IncomeForm: TIncomeForm
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1177,7 +1177,7 @@ inherited IncomeForm: TIncomeForm
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'ClientGridDataSet'
     Params = <
       item
         Name = 'Key'

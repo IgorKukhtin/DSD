@@ -3,20 +3,10 @@ unit MainForm;
 interface
 
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
-  frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn, cxLocalization,
+  frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
   DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
-  dxSkinBlack, dxSkinBlue, dxSkinBlueprint, dxSkinCaramel, dxSkinCoffee,
-  dxSkinDarkRoom, dxSkinDarkSide, dxSkinDevExpressDarkStyle,
-  dxSkinDevExpressStyle, dxSkinFoggy, dxSkinGlassOceans, dxSkinHighContrast,
-  dxSkiniMaginary, dxSkinLilian, dxSkinLiquidSky, dxSkinLondonLiquidSky,
-  dxSkinMcSkin, dxSkinMoneyTwins, dxSkinOffice2007Black, dxSkinOffice2007Blue,
-  dxSkinOffice2007Green, dxSkinOffice2007Pink, dxSkinOffice2007Silver,
-  dxSkinOffice2010Black, dxSkinOffice2010Blue, dxSkinOffice2010Silver,
-  dxSkinPumpkin, dxSkinSeven, dxSkinSevenClassic, dxSkinSharp, dxSkinSharpPlus,
-  dxSkinSilver, dxSkinSpringTime, dxSkinStardust, dxSkinSummer2008,
-  dxSkinTheAsphaltWorld, dxSkinValentine, dxSkinVS2010, dxSkinWhiteprint,
-  dxSkinXmas2008Blue;
+  cxLocalization;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -60,6 +50,9 @@ type
     bbBalance: TdxBarButton;
     bbReports: TdxBarSubItem;
     bbExtraChargeCategories: TdxBarButton;
+    actPriceListLoad: TdsdOpenForm;
+    bbLoad: TdxBarSubItem;
+    bbPriceListLoad: TdxBarButton;
     actContract: TdsdOpenForm;
     bbContract: TdxBarButton;
     actOrderExternal: TdsdOpenForm;
@@ -68,6 +61,18 @@ type
     actPriceList: TdsdOpenForm;
     bbPriceList: TdxBarButton;
     bbOrderInternal: TdxBarButton;
+    bbNDSKind: TdxBarButton;
+    actNDSKind: TdsdOpenForm;
+    actRetail: TdsdOpenForm;
+    bbRetail: TdxBarButton;
+    actUser: TdsdOpenForm;
+    actRole: TdsdOpenForm;
+    bbUser: TdxBarButton;
+    bbRole: TdxBarButton;
+    actImportType: TdsdOpenForm;
+    bbImportType: TdxBarButton;
+    actImportSettings: TdsdOpenForm;
+    bbImportSettings: TdxBarButton;
   private
     { Private declarations }
   public

@@ -1070,7 +1070,7 @@ inherited OrderExternalForm: TOrderExternalForm
     FormNameParam.Value = 'TJuridicalForm'
     FormNameParam.DataType = ftString
     FormName = 'TJuridicalForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'MasterCDS'
     Params = <
       item
         Name = 'Key'
@@ -1096,7 +1096,7 @@ inherited OrderExternalForm: TOrderExternalForm
     FormNameParam.Value = 'TUnitForm'
     FormNameParam.DataType = ftString
     FormName = 'TUnitForm'
-    PositionDataSet = 'ClientDataSet'
+    PositionDataSet = 'ClientGridDataSet'
     Params = <
       item
         Name = 'Key'

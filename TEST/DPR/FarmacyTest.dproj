@@ -195,7 +195,7 @@
 				<Form>CountryEditForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\Enum\NDSKind.pas">
+			<DCCReference Include="..\..\Forms\Enum\NDSKind.pas">
 				<Form>NDSKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
@@ -270,13 +270,15 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Juridical.pas">
 				<Form>JuridicalForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\JuridicalEdit.pas">
 				<Form>JuridicalEditForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
+				<Form>MainForm</Form>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Guides\Contract.pas">
 				<Form>ContractForm</Form>
@@ -294,10 +296,6 @@
 				<Form>IncomeJournalForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
-			<DCCReference Include="..\..\FormsFarmacy\MainForm.pas">
-				<Form>MainForm</Form>
-			</DCCReference>
-			<DCCReference Include="..\SOURCE\Objects\All\ActionTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Document\PriceList.pas">
 				<Form>PriceListForm</Form>
 				<DesignClass>TParentForm</DesignClass>
@@ -320,6 +318,42 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Document\OrderInternalJournal.pas">
 				<Form>OrderInternalJournalForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\User.pas">
+				<Form>UserForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\UserEdit.pas">
+				<Form>UserEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Role.pas">
+				<Form>RoleForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\RoleEdit.pas">
+				<Form>RoleEditForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\SOURCE\Objects\All\RoleTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeTest.pas"/>
+			<DCCReference Include="..\SOURCE\Objects\All\ImportTypeItemsTest.pas"/>
+			<DCCReference Include="..\..\FormsFarmacy\Guides\Unit_Object.pas">
+				<Form>Unit_ObjectForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\ImportType.pas">
+				<Form>ImportTypeForm</Form>
+				<FormType>dfm</FormType>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
+				<Form>ImportSettingsForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\Forms\Enum\FileTypeKind.pas">
+				<Form>FileTypeKindForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">

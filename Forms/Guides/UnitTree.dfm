@@ -177,8 +177,8 @@ object UnitTreeForm: TUnitTreeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -305,6 +305,7 @@ object UnitTreeForm: TUnitTreeForm
     Top = 176
     object actRefresh: TdsdDataSetRefresh
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProc = spTree
       StoredProcList = <
         item
@@ -320,9 +321,12 @@ object UnitTreeForm: TUnitTreeForm
     end
     object actInsert: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1044#1086#1073#1072#1074#1080#1090#1100
       ShortCut = 45
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -331,12 +335,16 @@ object UnitTreeForm: TUnitTreeForm
       isShowModal = True
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = #1048#1079#1084#1077#1085#1080#1090#1100
       ShortCut = 115
       FormName = 'TUnitEditForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <
         item
           Name = 'Id'
@@ -348,9 +356,11 @@ object UnitTreeForm: TUnitTreeForm
       ActionType = acUpdate
       DataSource = GridDS
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1059#1076#1072#1083#1080#1090#1100
       Hint = #1059#1076#1072#1083#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -360,6 +370,7 @@ object UnitTreeForm: TUnitTreeForm
     end
     object dsdChoiceGuides: TdsdChoiceGuides
       Category = 'DSDLib'
+      MoveParams = <>
       Params = <
         item
           Name = 'Key'
@@ -386,6 +397,7 @@ object UnitTreeForm: TUnitTreeForm
     end
     object dsdSetUnErased: TdsdUpdateErased
       Category = 'DSDLib'
+      MoveParams = <>
       StoredProcList = <>
       Caption = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100
       Hint = #1042#1086#1089#1089#1090#1072#1085#1086#1074#1080#1090#1100' '#1076#1072#1085#1085#1099#1077
@@ -396,8 +408,11 @@ object UnitTreeForm: TUnitTreeForm
     end
     object dsdOpenUnitForm: TdsdOpenForm
       Category = 'DSDLib'
+      MoveParams = <>
       Caption = 'dsdOpenUnitForm'
       FormName = 'TUnitForm'
+      FormNameParam.Value = ''
+      FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
     end
@@ -490,6 +505,10 @@ object UnitTreeForm: TUnitTreeForm
       end>
     SortImages = dmMain.SortImageList
     OnlyEditingCellOnEnter = False
+    ColorRuleList = <>
+    ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 432
     Top = 240
   end

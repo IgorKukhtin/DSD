@@ -21,7 +21,7 @@ type
 
 implementation
 
-uses DB, UtilConst, TestFramework, SysUtils, JuridicalTest;
+uses DB, UtilConst, TestFramework, SysUtils;
 
 { TdbUnitTest }
 

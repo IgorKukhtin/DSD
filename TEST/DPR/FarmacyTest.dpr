@@ -70,7 +70,7 @@ uses
   MakerEdit in '..\..\Forms\Guides\MakerEdit.pas' {MakerEditForm: TParentForm},
   Country in '..\..\Forms\Guides\Country.pas' {CountryForm: TParentForm},
   CountryEdit in '..\..\Forms\Guides\CountryEdit.pas' {CountryEditForm: TParentForm},
-  NDSKind in '..\..\FormsFarmacy\Enum\NDSKind.pas' {NDSKindForm: TParentForm},
+  NDSKind in '..\..\Forms\Enum\NDSKind.pas' {NDSKindForm: TParentForm},
   UnitEdit in '..\..\FormsFarmacy\Guides\UnitEdit.pas' {UnitEditForm: TParentForm},
   AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
   AncestorData in '..\..\Forms\Ancestor\AncestorData.pas' {AncestorDataForm: TParentForm},
@@ -93,20 +93,32 @@ uses
   RetailEdit in '..\..\Forms\Guides\RetailEdit.pas' {RetailEditForm: TParentForm},
   Juridical in '..\..\FormsFarmacy\Guides\Juridical.pas' {JuridicalForm: TParentForm},
   JuridicalEdit in '..\..\FormsFarmacy\Guides\JuridicalEdit.pas' {JuridicalEditForm: TParentForm},
+  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
+  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
   Contract in '..\..\FormsFarmacy\Guides\Contract.pas' {ContractForm: TParentForm},
   ContractEdit in '..\..\FormsFarmacy\Guides\ContractEdit.pas' {ContractEditForm: TParentForm},
   Income in '..\..\FormsFarmacy\Document\Income.pas' {IncomeForm: TParentForm},
   IncomeJournal in '..\..\FormsFarmacy\Document\IncomeJournal.pas' {IncomeJournalForm: TParentForm},
-  MainForm in '..\..\FormsFarmacy\MainForm.pas' {MainForm},
-  ActionTest in '..\SOURCE\Objects\All\ActionTest.pas',
   PriceList in '..\..\FormsFarmacy\Document\PriceList.pas' {PriceListForm: TParentForm},
   PriceListJournal in '..\..\FormsFarmacy\Document\PriceListJournal.pas' {PriceListJournalForm: TParentForm},
   OrderExternal in '..\..\FormsFarmacy\Document\OrderExternal.pas' {OrderExternalForm: TParentForm},
   OrderExternalJournal in '..\..\FormsFarmacy\Document\OrderExternalJournal.pas' {OrderExternalJournalForm: TParentForm},
   OrderInternal in '..\..\FormsFarmacy\Document\OrderInternal.pas' {OrderInternalForm: TParentForm},
-  OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm};
+  OrderInternalJournal in '..\..\FormsFarmacy\Document\OrderInternalJournal.pas' {OrderInternalJournalForm: TParentForm},
+  User in '..\..\Forms\User.pas' {UserForm: TParentForm},
+  UserEdit in '..\..\Forms\UserEdit.pas' {UserEditForm: TParentForm},
+  Role in '..\..\Forms\Role.pas' {RoleForm: TParentForm},
+  RoleEdit in '..\..\Forms\RoleEdit.pas' {RoleEditForm: TParentForm},
+  RoleTest in '..\SOURCE\Objects\All\RoleTest.pas',
+  ImportTypeTest in '..\SOURCE\Objects\All\ImportTypeTest.pas',
+  ImportTypeItemsTest in '..\SOURCE\Objects\All\ImportTypeItemsTest.pas',
+  Unit_Object in '..\..\FormsFarmacy\Guides\Unit_Object.pas' {Unit_ObjectForm: TParentForm},
+  ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
+  ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
+  FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm};
 
 {$R *.res}
+{$R DevExpressRus.res}
 
 begin
   ConnectionPath := '..\INIT\farmacy_init.php';
