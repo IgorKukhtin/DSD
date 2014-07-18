@@ -181,6 +181,7 @@ type
     function fOpenSqToQuery (mySql:String):Boolean;
     function fExecSqToQuery (mySql:String):Boolean;
     function fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
+    function fFindIncome_ContractId_pg(JuridicalId,IMCode,InfoMoneyId:Integer;OperDate:TdateTime):Integer;
 
     procedure pSetNullGuide_Id_Postgres;
     procedure pSetNullDocument_Id_Postgres;
@@ -334,6 +335,142 @@ var
 implementation
 uses Authentication, CommonData, Storage, SysUtils, Dialogs, Graphics;
 {$R *.dfm}
+//----------------------------------------------------------------------------------------------------------------------------------------------------
+function TMainForm.fFindIncome_ContractId_pg(JuridicalId,IMCode,InfoMoneyId:Integer;OperDate:TdateTime):Integer;
+begin
+             Result:=0;
+             //1.1. находим договор: статья + по дате + не "закрыт" + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(OperDate))+' between StartDate and EndDate'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //1.2. если не нашли, находим договор: статья + без условия даты + не "закрыт" + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 //+'   and '+FormatToVarCharServer_notNULL(OperDate)+' between StartDate and EndDate'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //1.3. если не нашли, находим договор: статья + без условия даты + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and InfoMoneyId='+IntToStr(InfoMoneyId)
+                                 //+'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 //+'   and '+FormatToVarCharServer_notNULL(OperDate)+' between StartDate and EndDate'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+
+             //2.1. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "закрыт" + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+              and ((IMCode = 10101)
+                or (IMCode = 10102)
+                or (IMCode = 10103)
+                or (IMCode = 10104)
+                or (IMCode = 10105))
+             then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //2.2. если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+              and ((IMCode = 10101)
+                or (IMCode = 10102)
+                or (IMCode = 10103)
+                or (IMCode = 10104)
+                or (IMCode = 10105))
+             then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 //+'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+
+             //3.1. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "закрыт" + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+              and ((IMCode = 10201)
+                or (IMCode = 10202)
+                or (IMCode = 10203)
+                or (IMCode = 10204))
+             then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+             //3.2. если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+              and ((IMCode = 10201)
+                or (IMCode = 10202)
+                or (IMCode = 10203)
+                or (IMCode = 10204))
+             then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
+                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 //+'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+
+             //4. если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!! + не "удален"
+             if (JuridicalId<>0)and(InfoMoneyId<>0)and(Result=0)
+             then
+             begin
+                  fOpenSqToQuery (' select max(ContractId) as ContractId'
+                                 +' from Object_Contract_View'
+                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
+                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
+                                 +' where JuridicalId='+IntToStr(JuridicalId)
+                                 +'   and Object_Contract_View.isErased = FALSE'
+                                 //+'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
+                                 );
+                  Result:=toSqlQuery.FieldByName('ContractId').AsInteger;
+             end;
+end;
 //----------------------------------------------------------------------------------------------------------------------------------------------------
 function TMainForm.fFind_ContractId_pg(PartnerId,IMCode,IMCode_two:Integer;myContractNumber:String):Integer;
 begin
@@ -1332,7 +1469,9 @@ begin
                      +'        when Goods.Id in (1063) then 30101' // !!!колбаса в ассортименте!!! - 30101	Доходы	Продукция	Готовая продукция
                      +'        when fCheckGoodsParentID(7574,Goods.ParentId) =zc_rvYes() then 20401' // ГСМ  - 20401	Общефирменные ГСМ ГСМ
 
-                     +'        when fCheckGoodsParentID(8778,Goods.ParentId) =zc_rvYes() then 20302' // компьютеры  - 20401	Общефирменные Прочие основные ср-ва Комп. и оргтехника
+                     +'        when fCheckGoodsParentID(9323,Goods.ParentId) =zc_rvYes() then 20701' // ТОВАРЫ ПАВИЛЬОНЫ  - 20701	Общефирменные Товары Прочие товары
+
+                     +'        when fCheckGoodsParentID(8778,Goods.ParentId) =zc_rvYes() then 20302' // компьютеры  - 20302	Общефирменные Прочие основные ср-ва Комп. и оргтехника
                      +'        when fCheckGoodsParentID(7580,Goods.ParentId) =zc_rvYes() then 20101' // Запчасти автомобили  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(7581,Goods.ParentId) =zc_rvYes() then 20101' // РЕЗИНА  - 20101	Общефирменные Запчасти и Ремонты Запчасти и Ремонты
                      +'        when fCheckGoodsParentID(8709,Goods.ParentId) =zc_rvYes() then 20102' // СТРОЙКА  - 20102	Запчасти и Ремонты Общефирменные Строительные
@@ -7447,83 +7586,8 @@ begin
                   //
                   PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
              end;
-             //находим договор
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
-                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)
-              and ((FieldByName('CodeIM').AsInteger = 10101)
-                or (FieldByName('CodeIM').AsInteger = 10102)
-                or (FieldByName('CodeIM').AsInteger = 10103)
-                or (FieldByName('CodeIM').AsInteger = 10104)
-                or (FieldByName('CodeIM').AsInteger = 10105))
-             then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
-                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)
-              and ((FieldByName('CodeIM').AsInteger = 10201)
-                or (FieldByName('CodeIM').AsInteger = 10202)
-                or (FieldByName('CodeIM').AsInteger = 10203)
-                or (FieldByName('CodeIM').AsInteger = 10204))
-             then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
-                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!!
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
              //
+
              // !!!не меняем договор!!! если в документе установили "свой" договор, и он не "закрыт" и не "удален"
              if (not cbUpdateConrtact.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)then
              begin
@@ -7536,8 +7600,12 @@ begin
                                  +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
                                  );
                   if toSqlQuery.FieldByName('ContractId').AsInteger<>0
-                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger
+                  else //находим договор
+                       ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,FieldByName('OperDate').AsDateTime);
+             end
+             else //находим договор
+                  ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,FieldByName('OperDate').AsDateTime);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-от кого:'+FieldByName('UnitNameFrom').AsString
@@ -10807,83 +10875,7 @@ begin
                   //
                   PartnerId_pg:=toStoredProc_two.Params.ParamByName('ioId').Value;
              end;
-             //находим договор
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
-                                 +'   and '+FormatToVarCharServer_notNULL(DateToStr(FieldByName('OperDate').AsDateTime))+' between StartDate and EndDate'
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор с "похожими" на "Мясное сырье" статьями и без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)
-              and ((FieldByName('CodeIM').AsInteger = 10101)
-                or (FieldByName('CodeIM').AsInteger = 10102)
-                or (FieldByName('CodeIM').AsInteger = 10103)
-                or (FieldByName('CodeIM').AsInteger = 10104)
-                or (FieldByName('CodeIM').AsInteger = 10105))
-             then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()'
-                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим договор с "похожими" на "Прочее сырье" статьями и без условия даты
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)
-              and ((FieldByName('CodeIM').AsInteger = 10201)
-                or (FieldByName('CodeIM').AsInteger = 10202)
-                or (FieldByName('CodeIM').AsInteger = 10203)
-                or (FieldByName('CodeIM').AsInteger = 10204))
-             then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10200()'
-                                 +' where Object_Contract_View.JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and Object_Contract_View.InfoMoneyId='+IntToStr(FieldByName('InfoMoneyId_pg').AsInteger)
-                                 +'   and Object_Contract_View.ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
-             //если не нашли, находим хоть один договор !!!у поставщика и если это не услуги!!!
-             if (JuridicalId_pg<>0)and(FieldByName('InfoMoneyId_pg').AsInteger<>0)and(ContractId_pg=0)then
-             begin
-                  fOpenSqToQuery (' select max(ContractId) as ContractId'
-                                 +' from Object_Contract_View'
-                                 +'      join Object_InfoMoney_View on Object_InfoMoney_View.InfoMoneyId = Object_Contract_View.InfoMoneyId'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationId not in'+'(zc_Enum_InfoMoneyDestination_21400(), zc_Enum_InfoMoneyDestination_21500(), zc_Enum_InfoMoneyDestination_21600(), zc_Enum_InfoMoneyDestination_30400(), zc_Enum_InfoMoneyDestination_30500())'
-                                 +'                                and Object_InfoMoney_View.InfoMoneyDestinationCode < 40000'
-                                 +' where JuridicalId='+IntToStr(JuridicalId_pg)
-                                 +'   and ContractStateKindId <> zc_Enum_ContractStateKind_Close()'
-                                 +'   and Object_Contract_View.isErased = FALSE'
-                                 );
-                  ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+
              // !!!не меняем договор!!! если в документе установили "свой" договор, и он не "закрыт" и не "удален"
              if (not cbUpdateConrtact.Checked)and(FieldByName('Id_Postgres').AsInteger<>0)then
              begin
@@ -10896,8 +10888,12 @@ begin
                                  +'   and MovementLinkObject.DescId=zc_MovementLinkObject_Contract()'
                                  );
                   if toSqlQuery.FieldByName('ContractId').AsInteger<>0
-                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger;
-             end;
+                  then ContractId_pg:=toSqlQuery.FieldByName('ContractId').AsInteger
+                  else //находим договор
+                       ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,FieldByName('OperDate').AsDateTime);
+             end
+             else //находим договор
+                  ContractId_pg:=fFindIncome_ContractId_pg(JuridicalId_pg,FieldByName('CodeIM').AsInteger,FieldByName('InfoMoneyId_pg').AsInteger,FieldByName('OperDate').AsDateTime);
              //
              toStoredProc.Params.ParamByName('ioId').Value:=FieldByName('Id_Postgres').AsInteger;
              if JuridicalId_pg=0 then toStoredProc.Params.ParamByName('inInvNumber').Value:=FieldByName('InvNumber_all').AsString+'-ошибка-кому:'+FieldByName('UnitNameTo').AsString

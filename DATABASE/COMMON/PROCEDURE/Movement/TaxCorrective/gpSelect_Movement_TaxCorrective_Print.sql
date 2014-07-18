@@ -68,7 +68,8 @@ BEGIN
              AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
      , tmpObject_GoodsPropertyValue AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
+       (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectString_BarCode.ValueData       AS BarCode
@@ -91,6 +92,13 @@ BEGIN
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsKind
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
+       )
+     , tmpObject_GoodsPropertyValueGroup AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Article
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
        )
      , tmpObject_GoodsPropertyValue_basis AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
@@ -171,7 +179,7 @@ BEGIN
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId = zc_Enum_DocumentTaxKind_Prepay() THEN 'ПРЕДОПЛАТА ЗА КОЛБ.ИЗДЕЛИЯ' WHEN tmpObject_GoodsPropertyValue.Name <> '' THEN tmpObject_GoodsPropertyValue.Name WHEN tmpObject_GoodsPropertyValue_basis.Name <> '' THEN tmpObject_GoodsPropertyValue_basis.Name ELSE Object_Goods.ValueData END AS GoodsName_two
            , Object_GoodsKind.ValueData                             AS GoodsKindName
            , Object_Measure.ValueData                               AS MeasureName
-           , COALESCE (tmpObject_GoodsPropertyValue.Article, '')    AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, ''))    AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
 
            , CASE WHEN MovementLinkObject_DocumentTaxKind.ObjectId <> zc_Enum_DocumentTaxKind_CorrectivePrice()
@@ -230,6 +238,8 @@ BEGIN
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
                                                   -- AND tmpObject_GoodsPropertyValue.Name <> ''
@@ -334,35 +344,47 @@ BEGIN
 
      -- Данные по разнице Возвратов и Всех корректировок
      OPEN Cursor2 FOR
-     WITH
-          tmpMovementTaxCount AS
-          (SELECT COALESCE (COUNT (MovementLinkMovement_Child.MovementChildId), 0) AS CountTaxId
-                , MAX (Movement.DescId) AS DescId
-           FROM MovementLinkMovement AS MovementLinkMovement_Master
-                INNER JOIN Movement ON Movement.Id = inMovementId
-                                   AND Movement.Id = MovementLinkMovement_Master.MovementChildId
-                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
-                INNER JOIN MovementLinkMovement AS MovementLinkMovement_Child
-                                                ON MovementLinkMovement_Child.DescId = zc_MovementLinkMovement_Child()
-                                               AND MovementLinkMovement_Child.MovementId = MovementLinkMovement_Master.MovementId
-           WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+     WITH tmpMovement AS
+          (SELECT Movement_find.Id
+                , MovementLinkMovement_Master.MovementChildId AS MovementId_Return
+           FROM Movement
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                               ON MovementLinkMovement_Master.MovementId = Movement.Id
+                                              AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                -- печатаем всегда все корректировки
+                LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Master_find
+                                               ON MovementLinkMovement_Master_find.MovementChildId = MovementLinkMovement_Master.MovementChildId
+                                              AND MovementLinkMovement_Master_find.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_find ON Movement_find.Id  = COALESCE (MovementLinkMovement_Master_find.MovementId, Movement.Id)
+                                                    AND Movement_find.StatusId = zc_Enum_Status_Complete()
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId = zc_Movement_TaxCorrective()
+          UNION
+           SELECT MovementLinkMovement_Master.MovementId AS Id
+                , Movement.Id AS MovementId_Return
+           FROM Movement
+                INNER JOIN MovementLinkMovement AS MovementLinkMovement_Master
+                                                ON MovementLinkMovement_Master.MovementChildId = Movement.Id
+                                               AND MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
+                INNER JOIN Movement AS Movement_Master ON Movement_Master.Id  = MovementLinkMovement_Master.MovementId
+                                                      AND Movement_Master.StatusId = zc_Enum_Status_Complete()
+           WHERE Movement.Id = inMovementId
+             AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
           )
+        , tmpMovementTaxCorrectiveCount AS
+          (SELECT COALESCE (COUNT (*), 0) AS CountTaxId FROM tmpMovement)
         , tmpMovementTaxCorrective AS
-          (SELECT MovementLinkMovement_Master.MovementId AS Id --CASE WHEN tmpMovementTaxCount<1
+          (SELECT tmpMovement.Id
                 , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummVAT
                 , COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TotalSummMVAT
                 , COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) AS TotalSummPVAT
-           FROM MovementLinkMovement AS MovementLinkMovement_Master
-                INNER JOIN Movement ON Movement.Id = inMovementId
-                                   AND Movement.Id = MovementLinkMovement_Master.MovementChildId
-                                   AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+           FROM tmpMovement
                 LEFT JOIN MovementFloat AS MovementFloat_TotalSummMVAT
-                                        ON MovementFloat_TotalSummMVAT.MovementId =  MovementLinkMovement_Master.MovementId
+                                        ON MovementFloat_TotalSummMVAT.MovementId =  tmpMovement.Id
                                        AND MovementFloat_TotalSummMVAT.DescId = zc_MovementFloat_TotalSummMVAT()
                 LEFT JOIN MovementFloat AS MovementFloat_TotalSummPVAT
-                                        ON MovementFloat_TotalSummPVAT.MovementId =  MovementLinkMovement_Master.MovementId
+                                        ON MovementFloat_TotalSummPVAT.MovementId =  tmpMovement.Id
                                        AND MovementFloat_TotalSummPVAT.DescId = zc_MovementFloat_TotalSummPVAT()
-           WHERE MovementLinkMovement_Master.DescId = zc_MovementLinkMovement_Master()
           )
         , tmpReturnIn AS
           (SELECT MovementItem.ObjectId     			        AS GoodsId
@@ -374,9 +396,13 @@ BEGIN
                                  THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                  ELSE MovementItem.Amount
                        END) AS Amount
-           FROM MovementItem
-                INNER JOIN Movement ON Movement.Id = MovementItem.MovementId
+           FROM (SELECT MovementId_Return AS MovementId FROM tmpMovement GROUP BY MovementId_Return) AS tmpMovement
+                INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
                                    AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
+                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
+                                       AND MovementItem.DescId     = zc_MI_Master()
+                                       AND MovementItem.isErased   = FALSE
                 INNER JOIN MovementItemFloat AS MIFloat_Price
                                              ON MIFloat_Price.MovementItemId = MovementItem.Id
                                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
@@ -387,9 +413,6 @@ BEGIN
                 LEFT JOIN MovementFloat AS MovementFloat_ChangePercent
                                         ON MovementFloat_ChangePercent.MovementId = MovementItem.MovementId
                                        AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
-           WHERE MovementItem.MovementId = inMovementId
-             AND MovementItem.DescId     = zc_MI_Master()
-             AND MovementItem.isErased   = FALSE
            GROUP BY MovementItem.ObjectId
                   , MIFloat_Price.ValueData
                   , MovementFloat_ChangePercent.ValueData
@@ -409,15 +432,13 @@ BEGIN
                                    ON MIFloat_Price.MovementItemId = MovementItem.Id
                                   AND MIFloat_Price.DescId = zc_MIFloat_Price()
                                   AND MIFloat_Price.ValueData <> 0
-            JOIN Movement ON Movement.Id = MovementItem.MovementId
-                         AND Movement.StatusId <> zc_Enum_Status_Erased()
        GROUP BY MovementItem.ObjectId
               , MIFloat_Price.ValueData
 
        )
        -- сам запрос
        SELECT COALESCE (tmp.GoodsId, 1) AS GoodsId
-            , CAST (tmpMovementTaxCount.CountTaxId AS Integer) AS CountTaxId
+            , CAST (tmpMovementTaxCorrectiveCount.CountTaxId AS Integer) AS CountTaxId
             , Object_Goods.ObjectCode         AS GoodsCode
             , Object_Goods.ValueData          AS GoodsName
             , tmp.Price
@@ -463,7 +484,7 @@ BEGIN
                        HAVING SUM (tmp.ReturnInAmount) <>  SUM (tmp.TaxCorrectiveAmount)
                       ) AS tmp ON 1 = 1
             LEFT JOIN Object AS Object_Goods ON Object_Goods.Id = tmp.GoodsId
-            LEFT JOIN tmpMovementTaxCount ON 1 = 1
+            LEFT JOIN tmpMovementTaxCorrectiveCount ON 1 = 1
        -- !!! print all !!!
        -- WHERE tmpMovementTaxCount.DescId NOT IN (zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective()) OR tmp.GoodsId IS NOT NULL
      ;
@@ -477,6 +498,7 @@ ALTER FUNCTION gpSelect_Movement_TaxCorrective_Print (Integer, Boolean, TVarChar
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 16.07.14                                        * add tmpObject_GoodsPropertyValueGroup
  09.07.14                                                       *
  27.06.14                                        * !!! print all !!!
  05.06.14                                        * restore ContractSigningDate

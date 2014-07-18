@@ -1,10 +1,12 @@
 -- UPDATE _testMI_afterLoad SET OperDate = DATE_TRUNC ('DAY', OperDate) WHERE OperDate <> DATE_TRUNC ('DAY', OperDate)
 -- SELECT * FROM _testMI_afterLoad WHERE MovementItemId = 2439838
+-- update _testMI_afterLoad set StatusId = zc_Enum_Status_Complete() WHERE MovementId in (327959, 328502) and SessionId = 13 and StatusId = zc_Enum_Status_UnComplete()
 
        SELECT MAX (SessionId) AS SessionId
             , MAX (SessionId_min) AS SessionId_min
             , tmpAll.MovementId
             , tmpAll.InvNumber
+            , tmpAll.OperDate
             , tmpAll.MovementItemId
             , tmpAll.GoodsId
             , SUM (tmpAll.AmountPartner) AS AmountPartner
@@ -26,9 +28,9 @@
                   , Amount
                   , 0 AS AmountNew
                   , Price
-             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDate BETWEEN '01.05.2014' AND '05.06.2014') as tmpSession
+             FROM (SELECT MAX (SessionId) AS Id, MIN (SessionId) AS minId FROM _testMI_afterLoad WHERE OperDate BETWEEN '01.06.2014' AND '09.07.2014') as tmpSession
                   INNER JOIN _testMI_afterLoad ON _testMI_afterLoad.SessionId = tmpSession.Id
-             WHERE _testMI_afterLoad.OperDate BETWEEN '01.05.2014' AND '05.06.2014'
+             WHERE _testMI_afterLoad.OperDate BETWEEN '01.06.2014' AND '09.07.2014'
                AND _testMI_afterLoad.DescId = zc_Movement_Sale()
                AND _testMI_afterLoad.StatusId = zc_Enum_Status_Complete()
                AND _testMI_afterLoad.isErased = FALSE
@@ -71,13 +73,14 @@
 
              WHERE Movement.DescId = zc_Movement_Sale() -- IN (zc_Movement_Tax(), zc_Movement_Sale()) zc_Movement_ReturnIn())
                AND Movement.StatusId = zc_Enum_Status_Complete()
-               AND Movement.OperDate BETWEEN '01.05.2014' AND '05.06.2014'
+               AND Movement.OperDate BETWEEN '01.06.2014' AND '09.07.2014'
                AND MovementLinkObject_From.ObjectId = 8459 -- Склад Реализации
 --               AND MovementItem.Id = 2439838
 
             ) AS tmpAll
        GROUP BY tmpAll.MovementId
               , tmpAll.InvNumber
+              , tmpAll.OperDate
               , tmpAll.MovementItemId
               , tmpAll.GoodsId
               , tmpAll.Price
