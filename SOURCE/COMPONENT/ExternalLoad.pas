@@ -222,7 +222,7 @@ begin
       try
         FAdoConnection.GetTableNames(List, True);
         TADOQuery(FDataSet).ParamCheck := false;
-        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0]  + 'A' + IntToStr(FStartRecord)+ ':A65000]';
+        TADOQuery(FDataSet).SQL.Text := 'SELECT * FROM [' + List[0]  + 'A' + IntToStr(FStartRecord)+ ':Z65000]';
         TADOQuery(FDataSet).Open;
       finally
         FreeAndNil(List);

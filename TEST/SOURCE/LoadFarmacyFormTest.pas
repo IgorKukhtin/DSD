@@ -83,6 +83,8 @@ procedure TLoadFormTest.LoadLoadFormTest;
 begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;

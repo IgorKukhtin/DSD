@@ -4,7 +4,7 @@ inherited GoodsForm: TGoodsForm
   ClientWidth = 782
   AddOnFormData.ChoiceAction = dsdChoiceGuides
   ExplicitWidth = 790
-  ExplicitHeight = 457
+  ExplicitHeight = 450
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -95,6 +95,25 @@ inherited GoodsForm: TGoodsForm
       FormName = 'TGoodsEditForm'
       FormNameParam.Value = 'TGoodsEditForm'
       isShowModal = True
+    end
+    inherited dsdChoiceGuides: TdsdChoiceGuides
+      Params = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Component = MasterCDS
+          ComponentItem = 'Code'
+        end>
     end
   end
   inherited MasterDS: TDataSource

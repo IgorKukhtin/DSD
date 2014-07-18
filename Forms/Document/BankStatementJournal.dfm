@@ -130,46 +130,71 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankPrivatLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbPrivatBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbPrivatBank
     end
     object BankForumLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbForum
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbForum
     end
     object BankPireusLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbPireusBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbPireusBank
     end
     object BankOTPLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbOTPBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbOTPBank
+    end
+    object BankPireusDBFLoad: TClientBankLoadAction
+      Category = 'Load'
+      MoveParams = <>
+      ClientBankType = cbPireusBankDBF
+      StartDateParam.Value = 41640d
+      StartDateParam.Component = deStart
+      StartDateParam.DataType = ftDateTime
+      EndDateParam.Value = 41640d
+      EndDateParam.Component = deEnd
+      EndDateParam.DataType = ftDateTime
+    end
+    object BankPireusDBF: TMultiAction
+      Category = 'Load'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = BankPireusDBFLoad
+        end
+        item
+          Action = actRefresh
+        end>
+      Caption = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1080#1088#1077#1091#1089' '#1073#1072#1085#1082#1072' (dbf)'
+      Hint = #1047#1072#1075#1088#1091#1079#1082#1072' '#1055#1080#1088#1077#1091#1089' '#1073#1072#1085#1082#1072' (dbf)'
+      ImageIndex = 70
     end
     object BankPireus: TMultiAction
       Category = 'Load'
@@ -202,24 +227,24 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     object BankVostokLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbVostok
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbVostok
     end
     object BankFidoLoad: TClientBankLoadAction
       Category = 'Load'
       MoveParams = <>
+      ClientBankType = cbFidoBank
       StartDateParam.Value = 41640d
       StartDateParam.Component = deStart
       StartDateParam.DataType = ftDateTime
       EndDateParam.Value = 41640d
       EndDateParam.Component = deEnd
       EndDateParam.DataType = ftDateTime
-      ClientBankType = cbFidoBank
     end
     object BankPrivat: TMultiAction
       Category = 'Load'
@@ -322,6 +347,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
           ItemName = 'bbPireus'
         end
         item
+          Visible = True
+          ItemName = 'bbPireusDBFLoad'
+        end
+        item
           BeginGroup = True
           Visible = True
           ItemName = 'dxBarStatic'
@@ -373,6 +402,10 @@ inherited BankStatementJournalForm: TBankStatementJournalForm
     end
     object bbPireus: TdxBarButton
       Action = BankPireus
+      Category = 0
+    end
+    object bbPireusDBFLoad: TdxBarButton
+      Action = BankPireusDBF
       Category = 0
     end
   end

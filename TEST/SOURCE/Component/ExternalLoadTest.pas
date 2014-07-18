@@ -48,11 +48,37 @@ begin
   ImportSettings.StoredProc.Params.AddParam('inPrice', ftFloat, ptInput, 0);
   ImportSettings.StoredProc.Params.AddParam('inRemains', ftFloat, ptInput, 0);
   ImportSettings.StoredProc.Params.AddParam('inExpirationDate', ftDateTime, ptInput, Date);
+  ImportSettings.StoredProc.Params.AddParam('inPackCount', ftInteger, ptInput, 0);
+  ImportSettings.StoredProc.Params.AddParam('inProducerName', ftString, ptInput, '');
   ImportSettings.StartRow := 4;
 
   with TImportSettingsItems(ImportSettings.Add) do begin
     ItemName := 'Код';
     Param := ImportSettings.StoredProc.ParamByName('inGoodsCode')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Назва';
+    Param := ImportSettings.StoredProc.ParamByName('inGoodsName')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Признак НДС';
+    Param := ImportSettings.StoredProc.ParamByName('inGoodsNDS')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Факт';
+    Param := ImportSettings.StoredProc.ParamByName('inPrice')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Кол-во в упаковке';
+    Param := ImportSettings.StoredProc.ParamByName('inPackCount')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Срок годности';
+    Param := ImportSettings.StoredProc.ParamByName('inExpirationDate')
+  end;
+  with TImportSettingsItems(ImportSettings.Add) do begin
+    ItemName := 'Производитель';
+    Param := ImportSettings.StoredProc.ParamByName('inProducerName')
   end;
 
   TExecuteImportSettings.Create.Execute(ImportSettings);

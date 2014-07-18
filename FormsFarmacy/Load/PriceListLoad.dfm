@@ -47,13 +47,20 @@ inherited PriceListLoadForm: TPriceListLoadForm
     end
   end
   inherited ActionList: TActionList
-    object dsdInsertUpdateAction1: TdsdInsertUpdateAction
+    object actOpenPriceList: TdsdInsertUpdateAction
       Category = 'DSDLib'
       MoveParams = <>
-      Caption = 'dsdInsertUpdateAction1'
-      FormNameParam.Value = ''
+      Caption = #1054#1090#1082#1088#1099#1090#1100
+      ImageIndex = 1
+      FormName = 'TPriceListItemsLoadForm'
+      FormNameParam.Value = 'TPriceListItemsLoadForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Id'
+          Component = MasterCDS
+          ComponentItem = 'Id'
+        end>
       isShowModal = False
       ActionType = acUpdate
       IdFieldName = 'Id'
@@ -76,5 +83,36 @@ inherited PriceListLoadForm: TPriceListLoadForm
       0
       26
       0)
+    inherited Bar: TdxBar
+      ItemLinks = <
+        item
+          Visible = True
+          ItemName = 'bbOpen'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbRefresh'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end
+        item
+          Visible = True
+          ItemName = 'bbGridToExcel'
+        end
+        item
+          Visible = True
+          ItemName = 'dxBarStatic'
+        end>
+    end
+    object bbOpen: TdxBarButton
+      Action = actOpenPriceList
+      Category = 0
+    end
   end
 end

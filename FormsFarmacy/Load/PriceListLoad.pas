@@ -16,8 +16,9 @@ type
   TPriceListLoadForm = class(TAncestorDBGridForm)
     colOperDate: TcxGridDBColumn;
     colJuridicalName: TcxGridDBColumn;
-    dsdInsertUpdateAction1: TdsdInsertUpdateAction;
+    actOpenPriceList: TdsdInsertUpdateAction;
     col: TcxGridDBColumn;
+    bbOpen: TdxBarButton;
   private
     { Private declarations }
   public

@@ -117,7 +117,7 @@ uses
   ImportType in '..\..\FormsFarmacy\Load\ImportType.pas' {ImportTypeForm: TParentForm},
   JuridicalTest in '..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas',
   CommonObjectHistoryProcedureTest in '..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas',
-  PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsForm: TParentForm},
+  PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
   ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm};
 

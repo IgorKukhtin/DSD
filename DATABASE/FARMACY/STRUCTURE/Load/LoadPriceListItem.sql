@@ -20,6 +20,8 @@ CREATE TABLE LoadPriceListItem
   LoadPriceListId Integer  , -- Ссылка на прайс-лист
   Price           TFloat   , -- Цена
   ExpirationDate  TDateTime, -- Срок годности
+  ProduсerName    TVarChar , -- Производитель     
+  PackCount       Integer  , -- Количество в упаковке
   CONSTRAINT fk_LoadPriceListItem_LoadMovementId FOREIGN KEY (LoadPriceListId)  REFERENCES LoadPriceList (id),
   CONSTRAINT fk_LoadPriceListItem_GoodsId        FOREIGN KEY (GoodsId)          REFERENCES Object (id))
 WITH (

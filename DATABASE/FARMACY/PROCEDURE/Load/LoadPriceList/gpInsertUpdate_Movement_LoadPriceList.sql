@@ -1,6 +1,6 @@
 -- Function: gpInsertUpdate_Movement_LoadPriceList()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_LoadPriceList (Integer, TVarChar, TVarChar, TVarChar, TFloat, TFloat, TDateTime, Integer, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inJuridicalId         Integer   , -- Юридические лица
@@ -10,11 +10,14 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_LoadPriceList(
     IN inPrice               TFloat    ,  
     IN inRemains             TFloat    ,  
     IN inExpirationDate      TDateTime , -- Срок годности
+    IN inPackCount           Integer   ,  
+    IN inProducerName        TVarChar  , 
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS VOID AS
 $BODY$
    DECLARE vbLoadPriceListId Integer;
+   DECLARE vbLoadPriceListItemsId Integer;
 BEGIN
 
   SELECT Id INTO vbLoadPriceListId 
@@ -26,31 +29,19 @@ BEGIN
              VALUES(inJuridicalId, Current_Date);
   END IF;
 
-/*CREATE TABLE LoadPriceList
-(
-  Id            serial    NOT NULL PRIMARY KEY,
-  OperDate	TDateTime, -- Дата документа
-  JuridicalId	Integer , -- Юридические лица
-  isAllGoodsConcat Boolean, -- Все ли товары имеют связь
+  SELECT Id INTO vbLoadPriceListItemsId 
+    FROM LoadPriceListItem 
+   WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
-CREATE TABLE LoadPriceListItem
-(
-  Id              serial        NOT NULL PRIMARY KEY,
-  GoodsCode       TVarChar , -- Код товара поставщика
-  GoodsName	  TVarChar , -- Наименование товара поставщика
-  GoodsNDS	  TVarChar, -- НДС товара
-  GoodsId         Integer  , -- Товары
-  LoadPriceListId Integer  , -- Ссылка на прайс-лист
-  Price           TFloat   , -- Цена
-  ExpirationDate  TDateTime, -- Срок годности
+  IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
+     INSERT INTO LoadPriceListItem (LoadPriceListId, GoodsCode, GoodsName, GoodsNDS, Price, ExpirationDate, PackCount, ProducerName)
+             VALUES(vbLoadPriceListId, inGoodsCode, inGoodsName, inGoodsNDS, inPrice, inExpirationDate, inPackCount, inProducerName);
+  ELSE
+     UPDATE LoadPriceListItem SET GoodsName = inGoodsName, GoodsNDS = inGoodsNDS, Price = inPrice, 
+                                  ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
+      WHERE Id = vbLoadPriceListItemsId;
+  END IF;
 
-        INSERT INTO Sale1C (UnitId, VidDoc, InvNumber, OperDate, ClientCode, ClientName, GoodsCode,   
-                            GoodsName, OperCount, OperPrice, Tax, 
-                            Suma, PDV, SumaPDV, ClientINN, ClientOKPO, InvNalog)
-             VALUES(inUnitId, inVidDoc, inInvNumber, inOperDate, inClientCode, inClientName, inGoodsCode,   
-                    inGoodsName, inOperCount, inOperPrice, inTax, 
-                    inSuma, inPDV, inSumaPDV, inClientINN, inClientOKPO, inInvNalog);
-*/
 END;
 $BODY$
 LANGUAGE PLPGSQL VOLATILE;

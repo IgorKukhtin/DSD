@@ -40,6 +40,9 @@ type
     bbPireus: TdxBarButton;
     BankPireus: TMultiAction;
     BankPireusLoad: TClientBankLoadAction;
+    BankPireusDBF: TMultiAction;
+    BankPireusDBFLoad: TClientBankLoadAction;
+    bbPireusDBFLoad: TdxBarButton;
   private
     { Private declarations }
   public

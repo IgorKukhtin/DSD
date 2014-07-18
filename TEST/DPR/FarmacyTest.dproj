@@ -352,7 +352,7 @@
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
 			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListItemsLoad.pas">
-				<Form>PriceListItemsForm</Form>
+				<Form>PriceListItemsLoadForm</Form>
 				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
