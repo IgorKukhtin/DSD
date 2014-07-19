@@ -1,8 +1,8 @@
 -- Function: gpInsertUpdate_Object_Goods()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Integer, Integer, TVarChar);
 
-CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_Goods(
+CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLink(
  INOUT ioId                  Integer   ,    -- ключ объекта <Товар>
     IN inCode                TVarChar  ,    -- Код объекта <Товар>
     IN inName                TVarChar  ,    -- Название объекта <Товар>
@@ -28,12 +28,12 @@ BEGIN
 
    -- сохранили <Объект>
    ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), 0, inName);
-   -- сохранили связь с <Группа>
+   -- Строковый код
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
+   -- сохранили связь с <Главным товаром>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), ioId, inGoodsMainId);
-   -- сохранили связь с <>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
-   -- сохранили свойство <НДС>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
+   -- сохранили свойство <связи чьи товары>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
   
 
    -- сохранили протокол
@@ -42,17 +42,16 @@ BEGIN
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_Goods(Integer, TVarChar, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_GoodsLink(Integer, TVarChar, TVarChar, Integer, Integer, TVarChar) OWNER TO postgres;
 
   
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
- 26.06.14                        *
- 24.06.14         *
- 19.06.13                        * 
+ 19.07.14                        *
 
-*/
+*/                                          
 
 -- тест
 -- SELECT * FROM gpInsertUpdate_Object_Goods
+                                           

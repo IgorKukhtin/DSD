@@ -148,8 +148,36 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       FormName = 'TGoodsForm'
       FormNameParam.Value = 'TGoodsForm'
       FormNameParam.DataType = ftString
-      GuiParams = <>
+      GuiParams = <
+        item
+          Name = 'Key'
+          Component = MasterCDS
+          ComponentItem = 'GoodsId'
+        end
+        item
+          Name = 'TextValue'
+          Component = MasterCDS
+          ComponentItem = 'Name'
+          DataType = ftString
+        end
+        item
+          Name = 'Code'
+          Component = MasterCDS
+          ComponentItem = 'Code'
+          ParamType = ptInput
+        end>
       isShowModal = False
+    end
+    object actUpdate: TdsdUpdateDataSet
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spUpdate
+      StoredProcList = <
+        item
+          StoredProc = spUpdate
+        end>
+      Caption = 'actUpdate'
+      DataSource = MasterDS
     end
   end
   inherited MasterDS: TDataSource
@@ -247,5 +275,13 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       end>
     Left = 352
     Top = 32
+  end
+  object spUpdate: TdsdStoredProc
+    StoredProcName = 'gpInsertUpdate_Object_GoodsLink'
+    DataSets = <>
+    OutputType = otResult
+    Params = <>
+    Left = 176
+    Top = 272
   end
 end

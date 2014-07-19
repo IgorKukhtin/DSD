@@ -32,6 +32,8 @@ type
     edFrom: TcxButtonEdit;
     spGet: TdsdStoredProc;
     GuidesFrom: TdsdGuides;
+    actUpdate: TdsdUpdateDataSet;
+    spUpdate: TdsdStoredProc;
   private
     { Private declarations }
   public
