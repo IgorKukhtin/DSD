@@ -16,6 +16,8 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     ClientRectBottom = 542
     ClientRectRight = 1108
     inherited tsMain: TcxTabSheet
+      ExplicitLeft = 0
+      ExplicitTop = 24
       ExplicitWidth = 1108
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
@@ -289,9 +291,9 @@ inherited Sale_PartnerForm: TSale_PartnerForm
     inherited ceStatus: TcxButtonEdit
       Top = 63
       ExplicitTop = 63
-      ExplicitWidth = 218
+      ExplicitWidth = 161
       ExplicitHeight = 22
-      Width = 218
+      Width = 161
     end
     object cxLabel3: TcxLabel
       Left = 340
@@ -495,6 +497,14 @@ inherited Sale_PartnerForm: TSale_PartnerForm
       Enabled = False
       TabOrder = 33
       Width = 114
+    end
+    object cbCOMDOC: TcxCheckBox
+      Left = 166
+      Top = 63
+      Caption = 'COMDOC'
+      Enabled = False
+      TabOrder = 34
+      Width = 68
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
@@ -1263,6 +1273,12 @@ inherited Sale_PartnerForm: TSale_PartnerForm
         Value = ''
         Component = edTax
         DataType = ftString
+      end
+      item
+        Name = 'isCOMDOC'
+        Value = 'False'
+        Component = cbCOMDOC
+        DataType = ftBoolean
       end>
     Left = 216
     Top = 248

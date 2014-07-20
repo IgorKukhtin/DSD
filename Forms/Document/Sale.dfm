@@ -3,8 +3,8 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1115
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1123
-  ExplicitHeight = 695
+  ExplicitWidth = 1131
+  ExplicitHeight = 703
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -499,6 +499,7 @@ inherited SaleForm: TSaleForm
       Left = 166
       Top = 63
       Caption = 'COMDOC'
+      Enabled = False
       TabOrder = 34
       Width = 68
     end
@@ -902,12 +903,16 @@ inherited SaleForm: TSaleForm
     object EDIDeclar: TEDIAction
       Category = 'EDI'
       MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
       EDI = EDI
       EDIDocType = ediOrder
     end
     object EDIComdoc: TEDIAction
       Category = 'EDI'
       MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
       EDI = EDI
       EDIDocType = ediComDocSave
       HeaderDataSet = PrintHeaderCDS

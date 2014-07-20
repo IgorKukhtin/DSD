@@ -99,7 +99,7 @@ BEGIN
                                      , inSession        := inSession);
 
      -- сохранили протокол
-     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ <Продажа покупателю>.', vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ "Продажа покупателю".', vbUserId);
 
 
 END;

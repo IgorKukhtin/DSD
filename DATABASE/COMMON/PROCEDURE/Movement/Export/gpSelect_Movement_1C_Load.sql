@@ -30,12 +30,16 @@ BEGIN
              '0' :: TVarChar                                           AS UnitId
            , CASE WHEN Movement.DescId IN (zc_Movement_Sale())
                        THEN 2
+                  WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) AND MIFloat_Price.ValueData < 0
+                       THEN 2
                   WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND View_Contract_InvNumber.InfoMoneyId <> zc_Enum_InfoMoney_20901() -- »Ì‡
                        THEN 2
                   WHEN Movement.DescId IN (zc_Movement_TransferDebtOut()) AND View_Contract_InvNumber.InfoMoneyId = zc_Enum_InfoMoney_20901() -- »Ì‡
                        THEN 8
 
                   WHEN Movement.DescId IN (zc_Movement_ReturnIn())
+                       THEN 4
+                  WHEN Movement.DescId IN (zc_Movement_PriceCorrective()) AND MIFloat_Price.ValueData >= 0
                        THEN 4
                   WHEN Movement.DescId IN (zc_Movement_TransferDebtIn()) AND View_Contract_InvNumber.InfoMoneyId <> zc_Enum_InfoMoney_20901() -- »Ì‡
                        THEN 4
@@ -135,7 +139,7 @@ BEGIN
        FROM Movement
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
-                                        AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                        AND MovementLinkObject_Contract.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective())
                                                                                            THEN zc_MovementLinkObject_Contract()
                                                                                       WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
                                                                                            THEN zc_MovementLinkObject_ContractTo()
@@ -146,7 +150,7 @@ BEGIN
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_PaidKind
                                          ON MovementLinkObject_PaidKind.MovementId = Movement.Id
-                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                                        AND MovementLinkObject_PaidKind.DescId = CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective())
                                                                                            THEN zc_MovementLinkObject_PaidKind()
                                                                                       WHEN Movement.DescId IN (zc_Movement_TransferDebtOut())
                                                                                            THEN zc_MovementLinkObject_PaidKindTo()
@@ -225,7 +229,7 @@ BEGIN
                                        AND MIFloat_Price.DescId = zc_MIFloat_Price()
 
       WHERE Movement.OperDate BETWEEN inStartDate AND inEndDate 
-        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
+        AND Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_PriceCorrective(), zc_Movement_TransferDebtOut(), zc_Movement_TransferDebtIn())
         AND Movement.StatusId = zc_Enum_Status_Complete()
         AND (View_Contract_InvNumber.InfoMoneyId = inInfoMoneyId OR COALESCE (inInfoMoneyId, 0) = 0)
         AND (MovementLinkObject_PaidKind.ObjectId = inPaidKindId OR COALESCE (inPaidKindId, 0) = 0)
@@ -243,6 +247,7 @@ ALTER FUNCTION gpSelect_Movement_1C_Load (TDateTime, TDateTime, Integer, Integer
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 20.07.14                                        * add zc_Movement_PriceCorrective
  02.06.14                                        * add isErased = FALSE
  30.05.14                                        * add 0 <> 
  19.05.14                                        * all
