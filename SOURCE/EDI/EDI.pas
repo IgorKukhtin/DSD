@@ -207,6 +207,13 @@ begin
                          // загружаем в базенку
                          InsertUpdateComDoc(≈лектроннийƒокумент, spHeader, spList);
                     end;
+                    // теперь перенесли файл в директроию Archive
+                    try
+                      FIdFTP.ChangeDir('/archive');
+                      FIdFTP.Put(Stream, List[i]);
+                    finally
+                      FIdFTP.ChangeDir(Directory);
+                    end;
                   end;
                end;
                IncProgress;
