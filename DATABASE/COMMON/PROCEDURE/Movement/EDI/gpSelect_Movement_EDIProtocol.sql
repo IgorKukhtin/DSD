@@ -11,7 +11,6 @@ RETURNS TABLE (MovementId Integer, OperDate TDateTime, ProtocolText TVarChar, Us
 AS
 $BODY$
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
      -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_ZakazInternal());
 
@@ -21,25 +20,32 @@ BEGIN
          , MovementProtocolData.OperDate
          , MovementProtocolData.ProtocolText::TVarChar
          , Object_User.ValueData              AS UserName
-        FROM (SELECT MovementProtocolData.Id, x[1] AS ProtocolText, MovementProtocolData.OperDate, UserId 
-               FROM (SELECT Movement.Id, xpath('/XML/EDIEvent/@Value', protocolData::xml) AS x, MovementProtocol.OperDate, UserId 
-                       FROM MovementProtocol
-                       JOIN Movement ON Movement.DescId = zc_Movement_EDI()
-                                    AND Movement.OperDate BETWEEN inStartDate AND inEndDate
-                                    AND Movement.Id = MovementProtocol.MovementId) AS MovementProtocolData) AS MovementProtocolData 
-   LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocolData.UserId; 
+        FROM (SELECT MovementProtocolData.Id
+                   , x[1] AS ProtocolText
+                   , MovementProtocolData.OperDate
+                   , MovementProtocol.UserId
+              FROM (SELECT Movement.Id
+                         , XPATH ('/XML/EDIEvent/@Value', MovementProtocol.ProtocolData :: XML) AS X
+                         , MovementProtocol.OperDate
+                         , MovementProtocol.UserId
+                    FROM MovementProtocol
+                         JOIN Movement ON Movement.DescId = zc_Movement_EDI()
+                                      AND Movement.OperDate BETWEEN inStartDate AND inEndDate
+                                      AND Movement.Id = MovementProtocol.MovementId
+                    WHERE MovementProtocol.isInsert IS NULL
+                   ) AS MovementProtocolData
+             ) AS MovementProtocolData
+             LEFT JOIN Object AS Object_User ON Object_User.Id = MovementProtocolData.UserId; 
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION gpSelect_Movement_EDIProtocol (TDateTime, TDateTime, TVarChar) OWNER TO postgres;
-
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
  02.06.14                         *
-
 */
 
 -- тест

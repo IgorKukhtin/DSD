@@ -52,15 +52,15 @@ INSERT INTO MovementStringDesc (Code, ItemName)
 
 CREATE OR REPLACE FUNCTION zc_MovementString_GLNCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_GLNCode', 'GLN код' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNCode');
+  SELECT 'zc_MovementString_GLNCode', 'GLN код юр.лица' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNCode');
 
 CREATE OR REPLACE FUNCTION zc_MovementString_GLNPlaceCode() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNPlaceCode'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_GLNPlaceCode', 'GLN код' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNPlaceCode');
+  SELECT 'zc_MovementString_GLNPlaceCode', 'GLN код контрагента' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_GLNPlaceCode');
 
-CREATE OR REPLACE FUNCTION zc_MovementString_SaleInvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_SaleInvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO MovementStringDesc (Code, ItemName)
-  SELECT 'zc_MovementString_SaleInvNumber', 'SaleInvNumber' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_SaleInvNumber');
+-- CREATE OR REPLACE FUNCTION zc_MovementString_SaleInvNumber() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_SaleInvNumber'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- INSERT INTO MovementStringDesc (Code, ItemName)
+--   SELECT 'zc_MovementString_SaleInvNumber', 'SaleInvNumber' WHERE NOT EXISTS (SELECT * FROM MovementStringDesc WHERE Code = 'zc_MovementString_SaleInvNumber');
 
 CREATE OR REPLACE FUNCTION zc_MovementString_InvNumberPartner() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementStringDesc WHERE Code = 'zc_MovementString_InvNumberPartner'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
 INSERT INTO MovementStringDesc (Code, ItemName)
@@ -74,6 +74,7 @@ INSERT INTO MovementStringDesc (Code, ItemName)
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 19.07.14                                        * del zc_MovementString_SaleInvNumber
  17.06.14         * add zc_MovementString_InvNumberPartner() 
                       , zc_MovementString_InvNumberMark() 
  24.04.14                                                       * add zc_MovementString_InvNumberBranch

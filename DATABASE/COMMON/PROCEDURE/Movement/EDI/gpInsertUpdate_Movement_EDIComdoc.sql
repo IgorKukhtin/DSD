@@ -3,78 +3,88 @@
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_EDIComdoc (TVarChar, TDateTime, TVarChar, TDateTime, TVarChar, TVarChar, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_EDIComdoc(
-    IN inOrderInvNumber      TVarChar  , -- Номер документа
-    IN inOrderOperDate       TDateTime , -- Дата документа
-    IN inSaleInvNumber       TVarChar  , -- Номер документа
-    IN inSaleOperDate        TDateTime , -- Дата документа
-
-    IN inOKPO                TVarChar   , -- 
-    IN inJuridicalName       TVarChar   , --
+    IN inOrderInvNumber      TVarChar  , -- Номер заявки контрагента
+    IN inOrderOperDate       TDateTime , -- Дата заявки контрагента
+    IN inSaleInvNumber       TVarChar  , -- Номер накладной у контрагента
+    IN inSaleOperDate        TDateTime , -- Дата накладной у контрагента
+    IN inOKPO                TVarChar  , -- 
+    IN inJurIdicalName       TVarChar  , --
     IN inSession             TVarChar    -- сессия пользователя
 )                              
-RETURNS TABLE (MovementId Integer, GoodsPropertyID Integer) -- Классификатор товаров) 
+RETURNS TABLE (MovementId Integer, GoodsPropertyId Integer) -- Классификатор товаров
 AS
 $BODY$
-   DECLARE vbMovementId INTEGER;
-   DECLARE vbGoodsPropertyId INTEGER;
+   DECLARE vbMovementId      Integer;
+   DECLARE vbGoodsPropertyId Integer;
+
+   DECLARE vbIsInsert Boolean;
    DECLARE vbUserId Integer;
-   DECLARE vbJuridicalId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
-     vbUserId := inSession;
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDIComdoc());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     vbMovementId := null;
+     -- Поиск документа в журнале EDI
+     vbMovementId:= (SELECT Movement.Id
+                     FROM Movement
+                          INNER JOIN MovementString AS MovementString_OKPO
+                                                    ON MovementString_OKPO.MovementId =  Movement.Id
+                                                   AND MovementString_OKPO.DescId = zc_MovementString_OKPO()
+                                                   AND MovementString_OKPO.ValueData = inOKPO
+                     WHERE Movement.DescId = zc_Movement_EDI() 
+                       AND Movement.InvNumber = inOrderInvNumber
+                       AND Movement.OperDate BETWEEN (inSaleOperDate - (INTERVAL '7 DAY')) AND (inSaleOperDate + (INTERVAL '7 DAY'))
+                    );
 
-     SELECT Id INTO vbMovementId 
-       FROM Movement WHERE DescId = zc_Movement_EDI() 
-        AND OperDate BETWEEN (inSaleOperDate - (interval '3 DAY')) AND (inSaleOperDate + (interval '3 DAY'))  AND InvNumber = inOrderInvNumber;
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (vbMovementId, 0) = 0;
 
-     -- сохранили <Документ>
-     IF COALESCE(vbMovementId, 0) = 0 THEN
-        vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), inOrderInvNumber, inOrderOperDate, NULL);
+     IF COALESCE (vbMovementId, 0) = 0
+     THEN
+          -- сохранили <Документ>
+          vbMovementId := lpInsertUpdate_Movement (vbMovementId, zc_Movement_EDI(), inOrderInvNumber, inOrderOperDate, NULL);
+          -- сохранили <ОКПО>
+          PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), vbMovementId, inOKPO);
+
      END IF;
 
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_SaleInvNumber(), vbMovementId, inSaleInvNumber);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_OperDatePartner(), vbMovementId, inSaleOperDate);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberPartner(), vbMovementId, inSaleInvNumber);
+     -- сохранили
+     PERFORM lpInsertUpdate_MovementString (zc_MovementString_JurIdicalName(), vbMovementId, inJurIdicalName);
 
-     PERFORM lpInsertUpdate_MovementDate (zc_MovementDate_SaleOperDate(), vbMovementId, inSaleOperDate);
-    
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_OKPO(), vbMovementId, inOKPO);
+     -- сохранили расчетные параметры
+     vbGoodsPropertyId:= lpUpdate_Movement_EDIComdoc_Params (inMovementId    := vbMovementId
+                                                           , inSaleOperDate  := inSaleOperDate
+                                                           , inOrderInvNumber:= inOrderInvNumber
+                                                           , inOKPO          := inOKPO
+                                                           , inUserId        := vbUserId);
 
-     PERFORM lpInsertUpdate_MovementString (zc_MovementString_JuridicalName(), vbMovementId, inJuridicalName);
 
-     -- Находим Юр лицо по OKPO
-     IF (inOKPO <> '') AND (COALESCE(vbJuridicalId, 0) = 0) THEN
-        vbJuridicalId := COALESCE((SELECT JuridicalId FROM ObjectHistory_JuridicalDetails_ViewByDate
-                         WHERE CURRENT_DATE BETWEEN StartDate AND EndDate
-                           AND OKPO = inOKPO), 0);
-     END IF;
-
-     IF COALESCE(vbJuridicalId, 0) <> 0 THEN
-        PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Juridical(), vbMovementId, vbJuridicalId);
-        -- Возвращаем ссылку на классификатор товаров
-        vbGoodsPropertyID := (SELECT ChildObjectId FROM ObjectLink WHERE DescId = zc_ObjectLink_Juridical_GoodsProperty() AND ObjectId = vbJuridicalId);
-     END IF;
-
-     PERFORM lpInsert_Movement_EDIEvents(vbMovementId, 'Загрузка COMDOC из EDI', vbUserId);
-
-     RETURN QUERY 
-     SELECT vbMovementId, vbGoodsPropertyID;
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (vbMovementId);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId, 'Загрузка COMDOC из EDI', vbUserId);
+
+     -- сохранили протокол
+     PERFORM lpInsert_MovementProtocol (vbMovementId, vbUserId, vbIsInsert);
+
+     -- Результат
+     RETURN QUERY 
+     SELECT vbMovementId, vbGoodsPropertyId;
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.14                                        * ALL
  29.05.14                         *
-
 */
 
 -- тест

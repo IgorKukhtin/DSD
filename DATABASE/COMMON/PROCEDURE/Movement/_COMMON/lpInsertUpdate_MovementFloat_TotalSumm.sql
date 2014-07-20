@@ -217,8 +217,8 @@ BEGIN
                                END AS Price
                              , COALESCE (MIFloat_CountForPrice.ValueData, 0) AS CountForPrice
 
-                               -- очень важное кол-во, для него расчет сумм
-                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn())
+                               -- !!!очень важное кол-во, для него расчет сумм!!!
+                             , SUM (CASE WHEN Movement.DescId IN (zc_Movement_Sale(), zc_Movement_ReturnIn(), zc_Movement_EDI())
                                               THEN COALESCE (MIFloat_AmountPartner.ValueData, 0)
                                          ELSE MovementItem.Amount
                                     END) AS OperCount_calc
@@ -228,7 +228,7 @@ BEGIN
                              , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS OperCount_Partner
                              , SUM (COALESCE (MIFloat_AmountPacker.ValueData, 0))  AS OperCount_Packer
 
-                             , SUM (COALESCE (MIFloat_Summ.ValueData, 0)) as OperSumm_Inventory
+                             , SUM (COALESCE (CASE WHEN Movement.DescId <> zc_Movement_EDI() THEN MIFloat_Summ.ValueData ELSE 0 END, 0)) as OperSumm_Inventory
                         FROM Movement
                              INNER JOIN MovementItem ON MovementItem.MovementId = Movement.Id
                                                     AND MovementItem.isErased = FALSE
@@ -315,6 +315,7 @@ ALTER FUNCTION lpInsertUpdate_MovementFloat_TotalSumm (Integer) OWNER TO postgre
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.07.14                                        * add zc_Movement_EDI
  22.05.14                                        * modify - очень важное кол-во, для него расчет сумм
  08.05.14                                        * all
  03.05.14                                        * add zc_Movement_TransferDebtIn and zc_Movement_TransferDebtOut

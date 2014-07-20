@@ -37,12 +37,14 @@ BEGIN
 
 
    -- 1. Найти счет от кого и кому в справочнике счетов. 
-   SELECT Object_BankAccount.Id INTO vbMainBankAccountId
-     FROM Object AS Object_BankAccount 
-    WHERE Object_BankAccount.DescId = zc_Object_BankAccount() AND Object_BankAccount.ValueData = TRIM (inBankAccountMain);
+   vbMainBankAccountId:= (SELECT View_BankAccount.Id
+                          FROM Object_BankAccount_View AS View_BankAccount
+                          WHERE View_BankAccount.Name = TRIM (inBankAccountMain)
+                            AND View_BankAccount.JuridicalId = zc_Juridical_Basis()
+                         );
 
    -- 2. Если такого счета нет, то выдать сообщение об ошибке и прервать выполнение загрузки
-   IF COALESCE(vbMainBankAccountId, 0) = 0  THEN
+   IF COALESCE (vbMainBankAccountId, 0) = 0  THEN
       RAISE EXCEPTION 'Счет "%" не указан в справочнике счетов.% Загрузка не возможна', TRIM (inBankAccountMain), chr(13);
    END IF;
 
@@ -320,6 +322,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 19.07.14                                        * add Object_BankAccount_View
  17.06.14                        * Если OKPO пустой
  29.05.14                                        * add TRIM
  13.05.14                                        * other find vbContractId

@@ -13,14 +13,14 @@ uses
   cxGrid, cxPC, cxContainer, Vcl.ComCtrls, dxCore, cxDateUtils, cxLabel,
   cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar, Vcl.ExtCtrls, EDI,
   cxSplitter, ChoicePeriod, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, dxSkinsdxBarPainter;
+  dxSkinscxPCPainter, dxSkinsdxBarPainter, cxCurrencyEdit;
 
 type
   TEDIJournalForm = class(TAncestorDBGridForm)
-    colOperDate: TcxGridDBColumn;
-    colInvNumber: TcxGridDBColumn;
-    colSaleInvNumber: TcxGridDBColumn;
-    colSaleOperDate: TcxGridDBColumn;
+    clOperDate: TcxGridDBColumn;
+    clInvNumber: TcxGridDBColumn;
+    clInvNumberPartner: TcxGridDBColumn;
+    clOperDatePartner: TcxGridDBColumn;
     Panel: TPanel;
     deStart: TcxDateEdit;
     deEnd: TcxDateEdit;
@@ -33,35 +33,35 @@ type
     Splitter: TcxSplitter;
     cxChildGrid: TcxGrid;
     cxChildGridDBTableView: TcxGridDBTableView;
-    colGoodsName: TcxGridDBColumn;
-    colGoodsCode: TcxGridDBColumn;
+    clGoodsName: TcxGridDBColumn;
+    clGoodsCode: TcxGridDBColumn;
     colAmountOrder: TcxGridDBColumn;
     colAmountPartner: TcxGridDBColumn;
     cxGridLevel1: TcxGridLevel;
-    colPricePartner: TcxGridDBColumn;
-    colGoodsKind: TcxGridDBColumn;
+    clPrice: TcxGridDBColumn;
+    clGoodsKind: TcxGridDBColumn;
     spClient: TdsdStoredProc;
     ClientDS: TDataSource;
     ClientCDS: TClientDataSet;
     PeriodChoice: TPeriodChoice;
     RefreshDispatcher: TRefreshDispatcher;
-    colGLNCode: TcxGridDBColumn;
-    colOKPO: TcxGridDBColumn;
-    colPartnerName: TcxGridDBColumn;
-    colJuridicalName: TcxGridDBColumn;
+    clGLNCode: TcxGridDBColumn;
+    clOKPO: TcxGridDBColumn;
+    clPartnerNameFind: TcxGridDBColumn;
+    clJuridicalNameFind: TcxGridDBColumn;
     maEDIComDocLoad: TMultiAction;
-    colGoodsGLNCode: TcxGridDBColumn;
-    colEDIGoodsName: TcxGridDBColumn;
-    colSummPartner: TcxGridDBColumn;
+    clGoodsGLNCode: TcxGridDBColumn;
+    clGoodsNameEDI: TcxGridDBColumn;
+    clSummPartner: TcxGridDBColumn;
     EDI: TEDI;
     maEDIOrdersLoad: TMultiAction;
     EDIActionOrdersLoad: TEDIAction;
     bbLoadOrder: TdxBarButton;
-    colLoadJuridicalName: TcxGridDBColumn;
-    colGLNPlaceCode: TcxGridDBColumn;
-    colIsOrder: TcxGridDBColumn;
-    colIsSale: TcxGridDBColumn;
-    colIsTax: TcxGridDBColumn;
+    clJuridicalName: TcxGridDBColumn;
+    clGLNPlaceCode: TcxGridDBColumn;
+    clInvNumber_Order: TcxGridDBColumn;
+    clInvNumber_Sale: TcxGridDBColumn;
+    clInvNumberPartner_Tax: TcxGridDBColumn;
     spHeaderComDoc: TdsdStoredProc;
     spListComDoc: TdsdStoredProc;
     BottomPanel: TPanel;
@@ -81,8 +81,20 @@ type
     FormParams: TdsdFormParams;
     actSetDefaults: TdsdExecStoredProc;
     actOpenSaleForm: TdsdOpenForm;
-    dsdOpenForm2: TdsdOpenForm;
     bbGotoSale: TdxBarButton;
+    clOperDate_Order: TcxGridDBColumn;
+    clOperDate_Tax: TcxGridDBColumn;
+    clOperDatePartner_Sale: TcxGridDBColumn;
+    clAmountPartnerEDI: TcxGridDBColumn;
+    clSummPartnerEDI: TcxGridDBColumn;
+    clIsCheck: TcxGridDBColumn;
+    clmovIsCheck: TcxGridDBColumn;
+    spInsertUpdate_SaleLinkEDI: TdsdStoredProc;
+    spUpdate_EDIComdoc_Params: TdsdStoredProc;
+    actUpdate_EDIComdoc_Params: TdsdExecStoredProc;
+    actUpdateMI_EDIComdoc: TdsdExecStoredProc;
+    bbUpdate_EDIComdoc_Params: TdxBarButton;
+    bbInsertUpdate_SaleLinkEDI: TdxBarButton;
   private
     { Private declarations }
   public

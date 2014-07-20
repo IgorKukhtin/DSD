@@ -399,7 +399,7 @@ BEGIN
            FROM (SELECT MovementId_Return AS MovementId FROM tmpMovement GROUP BY MovementId_Return) AS tmpMovement
                 INNER JOIN Movement ON Movement.Id = tmpMovement.MovementId
                                    AND Movement.DescId IN (zc_Movement_ReturnIn(), zc_Movement_TransferDebtIn(), zc_Movement_PriceCorrective())
-                                   AND Movement.StatusId = zc_Enum_Status_Complete()
+                                   AND Movement.StatusId <> zc_Enum_Status_Erased() -- не проведенные должны учавствовать
                 INNER JOIN MovementItem ON MovementItem.MovementId = tmpMovement.MovementId
                                        AND MovementItem.DescId     = zc_MI_Master()
                                        AND MovementItem.isErased   = FALSE

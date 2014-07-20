@@ -10,96 +10,107 @@ RETURNS VOID
 AS
 $BODY$
 DECLARE
-   vbJuridicalId Integer;
-   vbInvNumberOrder TVarChar;
-   vbOperDate TDateTime;
-   vbEDIId Integer;
-   vbUserId INTEGER;
+   vbMovementId_EDI Integer;
+   vbUserId Integer;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_EDI());
-     vbUserId := inSession;
+     -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Movement_SaleLinkEDI());
+     vbUserId:= lpGetUserBySession (inSession);
 
-     -- Выбираем данные из текущего документа
 
-     SELECT MovementString_InvNumberOrder.ValueData
-          , ObjectLink_Partner_Juridical.ChildObjectId 
-          , Movement.OperDate 
-              INTO vbInvNumberOrder, vbJuridicalId, vbOperDate
-     FROM Movement 
-     JOIN MovementString AS MovementString_InvNumberOrder
-                         ON MovementString_InvNumberOrder.DescId = zc_MovementString_InvNumberOrder() 
-                        AND MovementString_InvNumberOrder.MovementId = Movement.Id
-     JOIN MovementLinkObject AS MovementLinkObject_To
-                             ON MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
-                            AND MovementLinkObject_To.MovementId = Movement.Id
-     JOIN ObjectLink AS ObjectLink_Partner_Juridical
-                     ON ObjectLink_Partner_Juridical.DescId = zc_ObjectLink_Partner_Juridical() 
-                    AND ObjectLink_Partner_Juridical.ObjectId = MovementLinkObject_To.ObjectId
-    WHERE Movement.Id = inMovementId;  
-
-     SELECT Id INTO vbEDIId 
-       FROM Movement 
-       JOIN MovementLinkObject AS MovementLinkObject_Juridical 
-                               ON MovementLinkObject_Juridical.DescId = zc_MovementLinkObject_Juridical()
-                              AND MovementLinkObject_Juridical.MovementId = Movement.Id
-                              AND MovementLinkObject_Juridical.ObjectId = vbJuridicalId
-      WHERE Movement.DescId = zc_Movement_EDI() 
-        AND Movement.OperDate BETWEEN (vbOperDate - INTERVAL '3 DAY') AND (vbOperDate + INTERVAL '3 DAY') 
-        AND Movement.InvNumber = vbInvNumberOrder;
-
-     IF COALESCE(vbEDIId, 0) = 0 THEN
-        RAISE EXCEPTION 'Для данного документа не загружен документ COMDOC';
+     -- Поиск документа EDI
+     vbMovementId_EDI:= (SELECT MovementChildId  FROM MovementLinkMovement WHERE MovementId = inMovementId AND DescId = zc_MovementLinkMovement_Sale());
+     -- Проверка
+     IF COALESCE (vbMovementId_EDI, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.Документ <Продажа покупателю> не связан с документом <EDI>.';
      END IF;
 
-     PERFORM lpInsertUpdate_MovementLinkMovement (zc_MovementLinkMovement_Sale(), vbEDIId, inMovementId);
 
-     -- Распроводим документ
-     PERFORM gpUnComplete_Movement_Sale(inMovementId, inSession);
+     -- Распроводим Документ
+     PERFORM lpUnComplete_Movement (inMovementId := inMovementId
+                                  , inUserId     := vbUserId);
 
-     -- Устанавливаем количество у покупателя в 0
+     -- Обнуление количества у покупателя
      PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), MovementItem.Id, 0)
-        FROM MovementItem WHERE MovementItem.DescId     = zc_MI_Master()
-                            AND MovementItem.isErased   = false
-                            AND MovementItem.MovementId = inMovementId;
+     FROM MovementItem
+     WHERE MovementItem.DescId     = zc_MI_Master()
+       AND MovementItem.isErased   = FALSE
+       AND MovementItem.MovementId = inMovementId;
 
-     PERFORM lpInsertUpdate_MI_SaleCOMDOC(inMovementId, MovementItem.ObjectId, MILinkObject_GoodsKind.ObjectId, 
-                                          MIFloat_AmountPartner.ValueData, MIFloat_PricePartner.ValueData)
-        FROM MovementItem 
 
-            LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
-                                        ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+     -- перенос данных из ComDoc в документ
+     PERFORM lpInsertUpdate_MI_SaleCOMDOC (inMovementId    := inMovementId
+                                         , inMovementItemId:= tmpMI.MovementItemId
+                                         , inGoodsId       := tmpMI_EDI.GoodsId
+                                         , inGoodsKindId   := tmpMI_EDI.GoodsKindId
+                                         , inAmountPartner := tmpMI_EDI.AmountPartner
+                                         , inPrice         := tmpMI_EDI.Price
+                                         , inUserId        := vbUserId
+                                          )
+     FROM (SELECT MovementItem.ObjectId                               AS GoodsId
+                , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                , SUM (COALESCE (MIFloat_AmountPartner.ValueData, 0)) AS AmountPartner
+           FROM MovementItem
+                LEFT JOIN MovementItemFloat AS MIFloat_AmountPartner
+                                            ON MIFloat_AmountPartner.MovementItemId = MovementItem.Id
+                                             AND MIFloat_AmountPartner.DescId = zc_MIFloat_AmountPartner()
+                LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                            ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                           AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                 ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+           WHERE MovementItem.MovementId = vbMovementId_EDI
+             AND MovementItem.DescId =  zc_MI_Master()
+           GROUP BY MovementItem.ObjectId
+                  , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                  , COALESCE (MIFloat_Price.ValueData, 0)
+          ) AS tmpMI_EDI
+          LEFT JOIN (SELECT MAX (MovementItem.Id)                               AS MovementItemId
+                          , MovementItem.ObjectId                               AS GoodsId
+                          , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)       AS GoodsKindId
+                          , COALESCE (MIFloat_Price.ValueData, 0)               AS Price
+                     FROM MovementItem
+                          LEFT JOIN MovementItemFloat AS MIFloat_Price
+                                                      ON MIFloat_Price.MovementItemId = MovementItem.Id
+                                                     AND MIFloat_Price.DescId = zc_MIFloat_Price()
+                          LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
+                                                           ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
+                                                          AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
+                     WHERE MovementItem.MovementId = inMovementId
+                       AND MovementItem.DescId = zc_MI_Master()
+                       AND MovementItem.isErased = FALSE
+                     GROUP BY MovementItem.ObjectId
+                            , COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+                            , COALESCE (MIFloat_Price.ValueData, 0)
+                    ) AS tmpMI ON tmpMI.GoodsId = tmpMI_EDI.GoodsId
+                              AND tmpMI.GoodsKindId = tmpMI_EDI.GoodsKindId
+                              AND tmpMI.Price = tmpMI_EDI.Price
+      ;
 
-            LEFT JOIN MovementItemFloat AS MIFloat_PricePartner
-                                        ON MIFloat_PricePartner.MovementItemId = MovementItem.Id
-                                       AND MIFloat_PricePartner.DescId = zc_MIFloat_Price()
+     -- пересчитали Итоговые суммы по накладной
+     PERFORM lpInsertUpdate_MovementFloat_TotalSumm (inMovementId);
 
-            LEFT JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                             ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                            AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-
-   WHERE MovementItem.MovementId = vbEDIId
-     AND COALESCE(MovementItem.ObjectId, 0) <> 0
-     AND MovementItem.DescId =  zc_MI_Master();
-
-     PERFORM lpInsert_Movement_EDIEvents(vbEDIId, 'Установлена связь с расходной накладной', vbUserId);
-
+     -- Проводим Документ
+     PERFORM gpComplete_Movement_Sale (inMovementId     := inMovementId
+                                     , inIsLastComplete := FALSE
+                                     , inSession        := inSession);
 
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementProtocol (ioId, vbUserId);
+     PERFORM lpInsert_Movement_EDIEvents (vbMovementId_EDI, 'Завершен перенос данных из ComDoc в документ "Продажа покупателю".', vbUserId);
+
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.14                                        * ALL
  13.05.14                         *
-
 */
 
 -- тест

@@ -28,8 +28,10 @@ BEGIN
      -- проверка прав пользователя на вызов процедуры
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Report_Account());
 --     vbUserId:= lpGetUserBySession (inSession);
-    inAccountGroupId = 9017;
-    inAccountDirectionId = 9046;
+
+    -- !!!криво!!!
+    inAccountGroupId = zc_Enum_AccountGroup_40000(); -- Денежные средства
+    inAccountDirectionId = zc_Enum_AccountDirection_40300(); -- рассчетный счет
 
      OPEN Cursor1 FOR
        SELECT

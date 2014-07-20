@@ -106,6 +106,7 @@ type
     bbPrint_Bill: TdxBarButton;
     colMeasureName: TcxGridDBColumn;
     PrintItemsSverkaCDS: TClientDataSet;
+    cbCOMDOC: TcxCheckBox;
   private
     { Private declarations }
   public
