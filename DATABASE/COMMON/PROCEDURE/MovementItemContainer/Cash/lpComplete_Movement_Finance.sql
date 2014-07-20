@@ -19,8 +19,6 @@ BEGIN
      UPDATE _tmpItem SET AccountDirectionId =    CASE WHEN _tmpItem.AccountId <> 0
                                                            THEN _tmpItem.AccountDirectionId
 
-                                                      WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount() AND _tmpItem.ObjectId = 76977 -- 26009000250571 ПУАТ "ФІДОБАНК"
-                                                           THEN zc_Enum_AccountDirection_40500() -- овердрафт
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_BankAccount()
                                                            THEN zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                       WHEN _tmpItem.ObjectDescId = zc_Object_Cash() AND ObjectLink_Cash_Branch.ChildObjectId IS NOT NULL
@@ -124,8 +122,8 @@ BEGIN
                                                          WHEN zc_Enum_InfoMoney_21151() = (SELECT ChildObjectId AS InfoMoneyId FROM ObjectLink WHERE ObjectId = _tmpItem.ObjectId AND DescId = zc_ObjectLink_Juridical_InfoMoney())
                                                               THEN zc_Enum_Account_30205() -- ЕКСПЕРТ-АГРОТРЕЙД
                                                     END
-                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40500() -- овердрафт
-                                               THEN zc_Enum_Account_40501() -- овердрафт
+                                          WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() AND _tmpItem.ObjectId = 76977 -- рассчетный счет AND 26009000250571 ПУАТ "ФІДОБАНК"
+                                               THEN zc_Enum_Account_40302() -- рассчетный овердрафт
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40300() -- рассчетный счет
                                                THEN zc_Enum_Account_40301() -- рассчетный счет
                                           WHEN _tmpItem.AccountDirectionId = zc_Enum_AccountDirection_40200() -- касса филиалов
@@ -373,8 +371,9 @@ END;$BODY$
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 19.07.14                                        * modify zc_Enum_Account_40302
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
- 04.05.14                                        * add zc_Enum_AccountDirection_40500
+ 04.05.14                                        * add zc_Enum_Account_40302
  04.05.14                                        * change zc_Enum_AccountDirection_30100
  19.04.14                                        * del zc_Enum_InfoMoneyDestination_40900
  04.04.14                                        * add ЕКСПЕРТ-АГРОТРЕЙД

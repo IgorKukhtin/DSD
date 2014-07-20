@@ -1,60 +1,55 @@
--- Function: gpInsertUpdate_MI_EDI()
+-- Function: lpInsertUpdate_MI_SaleCOMDOC()
 
-DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SaleCOMDOC(Integer, Integer, Integer, TFloat, TFloat);
+DROP FUNCTION IF EXISTS lpInsertUpdate_MI_SaleCOMDOC (Integer, Integer, Integer, Integer, TFloat, TFloat, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_MI_SaleCOMDOC(
     IN inMovementId          Integer   , -- Ключ объекта <Документ>
-    IN inGoodsId             Integer   , 
-    IN inGoodsKindId         Integer   , -- Товар
+    IN inMovementItemId      Integer   , -- Ключ объекта 
+    IN inGoodsId             Integer   , -- Товар
+    IN inGoodsKindId         Integer   , -- 
     IN inAmountPartner       TFloat    , -- Количество
-    IN inPricePartner        TFloat      -- Цена
+    IN inPrice               TFloat    , -- Цена
+    IN inUserId              Integer     -- пользователь
 )                              
 RETURNS VOID AS
 $BODY$
-   DECLARE vbMovementItemId Integer;
+   DECLARE vbIsInsert Boolean;
 BEGIN
-
-     vbMovementItemId := COALESCE((SELECT Id  
-       FROM MovementItem 
-       JOIN MovementItemLinkObject AS MILinkObject_GoodsKind
-                                   ON MILinkObject_GoodsKind.MovementItemId = MovementItem.Id
-                                  AND MILinkObject_GoodsKind.DescId = zc_MILinkObject_GoodsKind()
-                                  AND MILinkObject_GoodsKind.ObjectId = inGoodsKindId
-  LEFT JOIN MovementItemFloat AS MIFloat_Price
-                              ON MIFloat_Price.MovementItemId = MovementItem.Id
-                             AND MIFloat_Price.DescId = zc_MIFloat_Price()
-      WHERE MovementItem.MovementId = inMovementId
-        AND MovementItem.ObjectId = inGoodsId
-        AND MovementItem.DescId = zc_MI_Master() 
-        AND ((MIFloat_Price.ValueData = inPricePartner) OR (COALESCE(inPricePartner,0) = 0))
-         ), 0);
-
-     IF COALESCE(vbMovementItemId, 0) = 0 THEN 
-        -- сохранили <Элемент документа>
-        vbMovementItemId := lpInsertUpdate_MovementItem (vbMovementItemId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
-        -- сохранили связь с <Виды товаров>
-        PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), vbMovementItemId, inGoodsKindId);
+     -- Проверка
+     IF COALESCE (inGoodsId, 0) = 0
+     THEN
+         RAISE EXCEPTION 'Ошибка.У элемента документа нет связи с товаром <EDI>.';
      END IF;
+
+     -- определяем признак Создание/Корректировка
+     vbIsInsert:= COALESCE (inMovementItemId, 0) = 0;
+
+     IF COALESCE (inMovementItemId, 0) = 0
+     THEN 
+         -- сохранили <Элемент документа>
+         inMovementItemId := lpInsertUpdate_MovementItem (inMovementItemId, zc_MI_Master(), inGoodsId, inMovementId, 0, NULL);
+         -- сохранили связь с <Виды товаров>
+         PERFORM lpInsertUpdate_MovementItemLinkObject (zc_MILinkObject_GoodsKind(), inMovementItemId, inGoodsKindId);
+         -- сохранили свойство <Цена>
+         PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), inMovementItemId, inPrice);
+     END IF;
+
      -- сохранили свойство <Количество у контрагента>
-     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), vbMovementItemId, inAmountPartner);
-     IF COALESCE(inPricePartner, 0) <> 0 THEN
-        -- сохранили свойство <Цена>
-        PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_Price(), vbMovementItemId, inPricePartner);
-     END IF; 
+     PERFORM lpInsertUpdate_MovementItemFloat (zc_MIFloat_AmountPartner(), inMovementItemId, inAmountPartner);
+
      -- сохранили протокол
-     -- PERFORM lpInsert_MovementItemProtocol (ioId, vbUserId);
+     PERFORM lpInsert_MovementItemProtocol (inMovementItemId, inUserId, vbIsInsert);
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
-
+  LANGUAGE plpgsql VOLATILE;
 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 20.07.14                                        * ALL
  29.05.14                         * 
-
 */
 
 -- тест
--- SELECT * FROM gpInsertUpdate_MI_EDI (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')
+-- SELECT * FROM lpInsertUpdate_MI_SaleCOMDOC (ioId:= 0, inMovementId:= 10, inGoodsId:= 1, inAmount:= 0, inAmountSecond:= 0, inGoodsKindId:= 0, inSession:= '2')

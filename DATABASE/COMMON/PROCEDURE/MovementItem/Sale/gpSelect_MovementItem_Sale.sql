@@ -23,9 +23,8 @@ AS
 $BODY$
 --  DECLARE vbOperDate TDateTime;
 BEGIN
-
      -- проверка прав пользователя на вызов процедуры
-     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MovementItem_Sale());
+     -- PERFORM lpCheckRight (inSession, zc_Enum_Process_Select_MI_Sale());
 
      -- inShowAll:= TRUE;
 

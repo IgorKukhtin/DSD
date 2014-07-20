@@ -46,13 +46,15 @@ CREATE OR REPLACE FUNCTION zc_MovementDate_EndWeighing() RETURNS Integer AS $BOD
 INSERT INTO MovementDateDesc (Code, ItemName)
   SELECT 'zc_MovementDate_EndWeighing', 'Протокол окончание взвешивания' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_EndWeighing');
 
-CREATE OR REPLACE FUNCTION zc_MovementDate_SaleOperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SaleOperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
-INSERT INTO MovementDateDesc (Code, ItemName)
-  SELECT 'zc_MovementDate_SaleOperDate', 'SaleOperDate' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SaleOperDate');
+-- CREATE OR REPLACE FUNCTION zc_MovementDate_SaleOperDate() RETURNS Integer AS $BODY$BEGIN RETURN (SELECT Id FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SaleOperDate'); END; $BODY$ LANGUAGE PLPGSQL IMMUTABLE;
+-- INSERT INTO MovementDateDesc (Code, ItemName)
+--   SELECT 'zc_MovementDate_SaleOperDate', 'SaleOperDate' WHERE NOT EXISTS (SELECT * FROM MovementDateDesc WHERE Code = 'zc_MovementDate_SaleOperDate');
+
 
 /*-------------------------------------------------------------------------------
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д. А.
+ 19.07.14                                        * del zc_MovementDate_SaleOperDate
  11.03.14         * add startweighing, EndWeighing
  09.02.14                                                           * add  zc_MovementDate_DateRegistered
  25.09.13         * del zc_MovementDate_WorkTime; add  StartRunPlan, EndRunPlan, StartRun, EndRun
