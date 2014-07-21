@@ -4,7 +4,8 @@ CREATE OR REPLACE VIEW Object_Contract_InvNumber_View
 AS
   SELECT Object_Contract.Id                            AS ContractId
        , Object_Contract.ObjectCode                    AS ContractCode  
-       , CAST(CASE WHEN Object_Contract.ValueData <> '' THEN Object_Contract.ValueData ELSE '**уп' || CAST (Object_InfoMoney.ObjectCode AS TVarChar) END AS TVarChar) AS InvNumber
+       -- , CAST(CASE WHEN Object_Contract.ValueData <> '' THEN Object_Contract.ValueData ELSE '**уп' || CAST (Object_InfoMoney.ObjectCode AS TVarChar) END AS TVarChar) AS InvNumber
+       , Object_Contract.ValueData                     AS InvNumber
        , ObjectLink_Contract_InfoMoney.ChildObjectId   AS InfoMoneyId
        , Object_ContractTag.Id                         AS ContractTagId
        , Object_ContractTag.ObjectCode                 AS ContractTagCode
@@ -39,6 +40,7 @@ ALTER TABLE Object_Contract_InvNumber_View  OWNER TO postgres;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 21.07.14                                        * no calc InvNumber
  26.04.14                                        * del ContractKeyId
  25.04.14                                        * add ContractKeyId
  24.04.14                                        * all

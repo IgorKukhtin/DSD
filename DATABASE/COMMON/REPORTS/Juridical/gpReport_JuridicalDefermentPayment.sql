@@ -53,7 +53,7 @@ from (
      Object_Account_View.AccountName_all AS AccountName
    , Object_Juridical.Id        AS JuridicalId
    , Object_Juridical.Valuedata AS JuridicalName
-   , Object_Retail.ValueData    AS RetailName
+   , COALESCE (Object_Retail.ValueData, 'прочие') :: TVarChar AS RetailName
    , ObjectHistory_JuridicalDetails_View.OKPO
    , Object_PaidKind.Id         AS PaidKindId
    , Object_PaidKind.ValueData  AS PaidKindName

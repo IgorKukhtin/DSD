@@ -68,6 +68,12 @@ BEGIN
    -- проверка уникальности <Код>
    PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Contract(), vbCode);
 
+   -- проверка <Номер договора>
+   IF TRIM (COALESCE (inInvNumber, '')) = '' 
+   THEN
+       RAISE EXCEPTION 'Ошибка. Значение <Номер договора> должно быть установлено.';
+  END IF;
+
    -- проверка уникальности для свойства <Номер договора>
    -- PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Contract(), inInvNumber);
 
@@ -221,6 +227,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 21.07.14                                        * add проверка <Номер договора>
  22.05.14         * add zc_ObjectBoolean_Contract_Personal
                         zc_ObjectBoolean_Contract_Unique
  08.05.14                                        * add lpCheckRight

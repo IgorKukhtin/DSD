@@ -123,6 +123,8 @@ type
     clContractKeyId: TcxGridDBColumn;
     clIsPersonal: TcxGridDBColumn;
     clIsUnique: TcxGridDBColumn;
+    clDocumentCount: TcxGridDBColumn;
+    clDateDocument: TcxGridDBColumn;
   private
     { Private declarations }
   public
