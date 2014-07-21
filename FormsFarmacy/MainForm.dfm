@@ -2,11 +2,13 @@ inherited MainForm: TMainForm
   Caption = #1056#1072#1073#1086#1090#1072' '#1089' '#1079#1072#1082#1072#1079#1072#1084#1080
   ClientHeight = 151
   ClientWidth = 689
-  ExplicitWidth = 697
-  ExplicitHeight = 178
+  ExplicitWidth = 705
+  ExplicitHeight = 190
   PixelsPerInch = 96
   TextHeight = 13
   inherited dxBarManager: TdxBarManager
+    Left = 152
+    Top = 56
     DockControlHeights = (
       0
       0
@@ -229,6 +231,10 @@ inherited MainForm: TMainForm
       ItemLinks = <
         item
           Visible = True
+          ItemName = 'bbMovementLoad'
+        end
+        item
+          Visible = True
           ItemName = 'bbPriceListLoad'
         end>
     end
@@ -272,6 +278,10 @@ inherited MainForm: TMainForm
       Action = actImportSettings
       Category = 0
     end
+    object bbMovementLoad: TdxBarButton
+      Action = actMovementLoad
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
     object actPriceList: TdsdOpenForm [0]
@@ -284,7 +294,18 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actRetail: TdsdOpenForm [2]
+    object actMovementLoad: TdsdOpenForm [2]
+      Category = #1047#1072#1075#1088#1091#1079#1082#1080
+      MoveParams = <>
+      Caption = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
+      Hint = #1044#1086#1082#1091#1084#1077#1085#1090' '#1079#1072#1075#1088#1091#1079#1082#1080
+      FormName = 'MovementLoadForm'
+      FormNameParam.Value = 'MovementLoadForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actRetail: TdsdOpenForm [3]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1058#1086#1088#1075#1086#1074#1099#1077' '#1089#1077#1090#1080
@@ -294,7 +315,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actImportSettings: TdsdOpenForm [4]
+    object actImportSettings: TdsdOpenForm [5]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1053#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
@@ -305,7 +326,7 @@ inherited MainForm: TMainForm
       GuiParams = <>
       isShowModal = False
     end
-    object actUser: TdsdOpenForm [5]
+    object actUser: TdsdOpenForm [6]
       Category = #1057#1083#1091#1078#1077#1073#1085#1099#1077
       MoveParams = <>
       Caption = #1055#1086#1083#1100#1079#1086#1074#1072#1090#1077#1083#1080
@@ -609,6 +630,10 @@ inherited MainForm: TMainForm
   inherited cxLocalizer: TcxLocalizer
     Top = 40
   end
+  inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
+    Left = 488
+    Top = 48
+  end
   inherited StoredProc: TdsdStoredProc
     Left = 48
   end
@@ -619,5 +644,7 @@ inherited MainForm: TMainForm
   object bbPriceListLoad: TdxBarButton
     Action = actPriceListLoad
     Category = -1
+    Left = 16
+    Top = 64
   end
 end

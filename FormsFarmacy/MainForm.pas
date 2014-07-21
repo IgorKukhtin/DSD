@@ -73,6 +73,8 @@ type
     bbImportType: TdxBarButton;
     actImportSettings: TdsdOpenForm;
     bbImportSettings: TdxBarButton;
+    actMovementLoad: TdsdOpenForm;
+    bbMovementLoad: TdxBarButton;
   private
     { Private declarations }
   public

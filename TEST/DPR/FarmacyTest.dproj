@@ -254,8 +254,8 @@
 				<Form>AboutBox</Form>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Load\dbLoadTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
-				<Form>PriceListLoadForm</Form>
+			<DCCReference Include="..\..\FormsFarmacy\Load\MovementLoad.pas">
+				<Form>MovementLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Component\UpdaterTest.pas"/>
@@ -346,14 +346,12 @@
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Load\ImportType.pas">
 				<Form>ImportTypeForm</Form>
-				<FormType>dfm</FormType>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\SOURCE\Objects\All\Farmacy\JuridicalTest.pas"/>
 			<DCCReference Include="..\SOURCE\ObjectHistory\CommonObjectHistoryProcedureTest.pas"/>
-			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListItemsLoad.pas">
-				<Form>PriceListItemsLoadForm</Form>
-				<FormType>dfm</FormType>
+			<DCCReference Include="..\..\FormsFarmacy\Load\MovementItemsLoad.pas">
+				<Form>MovementItemsLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<DCCReference Include="..\..\FormsFarmacy\Load\ImportSettings.pas">
@@ -362,6 +360,14 @@
 			</DCCReference>
 			<DCCReference Include="..\..\Forms\Enum\FileTypeKind.pas">
 				<Form>FileTypeKindForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListItemsLoad.pas">
+				<Form>PriceListItemsLoadForm</Form>
+				<DesignClass>TParentForm</DesignClass>
+			</DCCReference>
+			<DCCReference Include="..\..\FormsFarmacy\Load\PriceListLoad.pas">
+				<Form>PriceListLoadForm</Form>
 				<DesignClass>TParentForm</DesignClass>
 			</DCCReference>
 			<BuildConfiguration Include="Release">
