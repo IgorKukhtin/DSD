@@ -3,9 +3,8 @@ inherited EDIJournalForm: TEDIJournalForm
   ClientHeight = 424
   ClientWidth = 1102
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitLeft = 0
-  ExplicitWidth = 1118
-  ExplicitHeight = 459
+  ExplicitWidth = 1110
+  ExplicitHeight = 451
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -13,18 +12,18 @@ inherited EDIJournalForm: TEDIJournalForm
     Width = 1102
     Height = 367
     ExplicitTop = 57
-    ExplicitWidth = 980
+    ExplicitWidth = 1102
     ExplicitHeight = 367
     ClientRectBottom = 367
     ClientRectRight = 1102
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 980
+      ExplicitWidth = 1102
       ExplicitHeight = 367
       inherited cxGrid: TcxGrid
         Width = 1102
         Height = 209
         Align = alTop
-        ExplicitWidth = 980
+        ExplicitWidth = 1102
         ExplicitHeight = 209
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -279,7 +278,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Height = 3
         AlignSplitter = salTop
         Control = cxGrid
-        ExplicitWidth = 980
       end
       object BottomPanel: TPanel
         Left = 0
@@ -289,7 +287,6 @@ inherited EDIJournalForm: TEDIJournalForm
         Align = alClient
         BevelOuter = bvNone
         TabOrder = 2
-        ExplicitWidth = 980
         object cxChildGrid: TcxGrid
           Left = 0
           Top = 0
@@ -477,9 +474,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Align = alClient
           PopupMenu = PopupMenu
           TabOrder = 1
-          ExplicitLeft = 607
-          ExplicitTop = 3
-          ExplicitWidth = 378
           object cxProtocolGridView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ProtocolDS
@@ -540,7 +534,6 @@ inherited EDIJournalForm: TEDIJournalForm
           Width = 1
           Height = 155
           Control = cxChildGrid
-          ExplicitLeft = 601
         end
       end
     end
@@ -552,7 +545,6 @@ inherited EDIJournalForm: TEDIJournalForm
     Height = 31
     Align = alTop
     TabOrder = 5
-    ExplicitWidth = 980
     object deStart: TcxDateEdit
       Left = 107
       Top = 5
@@ -706,6 +698,16 @@ inherited EDIJournalForm: TEDIJournalForm
       spList = spListOrder
       Directory = '/inbox'
     end
+    object actStoredProcTaxPrint: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectTax_Client
+      StoredProcList = <
+        item
+          StoredProc = spSelectTax_Client
+        end>
+      Caption = 'actExecPrintStoredProc'
+    end
     object actSetDefaults: TdsdExecStoredProc
       Category = 'DSDLib'
       MoveParams = <>
@@ -768,6 +770,62 @@ inherited EDIJournalForm: TEDIJournalForm
       ImageIndex = 42
       QuestionBeforeExecute = #1044#1077#1081#1089#1090#1074#1080#1090#1077#1083#1100#1085#1086' '#1087#1077#1088#1077#1085#1077#1089#1090#1080' '#1076#1072#1085#1085#1099#1077' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090'?'
       InfoAfterExecute = #1047#1072#1074#1077#1088#1096#1077#1085' '#1087#1077#1088#1077#1085#1086#1089' '#1076#1072#1085#1085#1099#1093' '#1080#1079' ComDoc '#1074' '#1076#1086#1082#1091#1084#1077#1085#1090
+    end
+    object mactCOMDOC: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actExecPrintStoredProc
+        end
+        item
+          Action = EDIComdoc
+        end>
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
+      Caption = 'mactCOMDOC'
+    end
+    object EDIComdoc: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediComDocSave
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object mactDECLAR: TMultiAction
+      Category = 'EDI'
+      MoveParams = <>
+      ActionList = <
+        item
+          Action = actStoredProcTaxPrint
+        end
+        item
+          Action = EDIDeclar
+        end>
+      InfoAfterExecute = #1044#1086#1082#1091#1084#1077#1085#1090' '#1086#1090#1087#1088#1072#1074#1083#1077#1085' '#1074' EDI'
+      Caption = 'mactDECLAR'
+    end
+    object EDIDeclar: TEDIAction
+      Category = 'EDI'
+      MoveParams = <>
+      StartDateParam.Value = Null
+      EndDateParam.Value = Null
+      EDI = EDI
+      EDIDocType = ediDeclar
+      HeaderDataSet = PrintHeaderCDS
+      ListDataSet = PrintItemsCDS
+    end
+    object actExecPrintStoredProc: TdsdExecStoredProc
+      Category = 'DSDLib'
+      MoveParams = <>
+      StoredProc = spSelectPrint
+      StoredProcList = <
+        item
+          StoredProc = spSelectPrint
+        end>
+      Caption = 'actExecPrintStoredProc'
     end
   end
   inherited MasterDS: TDataSource
@@ -847,6 +905,15 @@ inherited EDIJournalForm: TEDIJournalForm
           ItemName = 'dxBarStatic'
         end
         item
+          BeginGroup = True
+          Visible = True
+          ItemName = 'bb_mactComDoc'
+        end
+        item
+          Visible = True
+          ItemName = 'bbDeclar'
+        end
+        item
           Visible = True
           ItemName = 'dxBarStatic'
         end
@@ -885,6 +952,14 @@ inherited EDIJournalForm: TEDIJournalForm
     end
     object bbInsertUpdate_SaleLinkEDI: TdxBarButton
       Action = actUpdateMI_EDIComdoc
+      Category = 0
+    end
+    object bb_mactComDoc: TdxBarButton
+      Action = mactCOMDOC
+      Category = 0
+    end
+    object bbDeclar: TdxBarButton
+      Action = mactDECLAR
       Category = 0
     end
   end
@@ -1165,12 +1240,12 @@ inherited EDIJournalForm: TEDIJournalForm
     MasterSource = MasterDS
     PacketRecords = 0
     Params = <>
-    Left = 616
+    Left = 880
     Top = 296
   end
   object ProtocolDS: TDataSource
     DataSet = ProtocolCDS
-    Left = 648
+    Left = 808
     Top = 296
   end
   object spProtocol: TdsdStoredProc
@@ -1195,8 +1270,8 @@ inherited EDIJournalForm: TEDIJournalForm
         DataType = ftDateTime
         ParamType = ptInput
       end>
-    Left = 680
-    Top = 296
+    Left = 840
+    Top = 304
   end
   object DBProtocolViewAddOn: TdsdDBViewAddOn
     ErasedFieldName = 'isErased'
@@ -1209,7 +1284,7 @@ inherited EDIJournalForm: TEDIJournalForm
     ColumnAddOnList = <>
     ColumnEnterList = <>
     SummaryItemList = <>
-    Left = 752
+    Left = 808
     Top = 328
   end
   object spGetDefaultEDI: TdsdStoredProc
@@ -1288,5 +1363,65 @@ inherited EDIJournalForm: TEDIJournalForm
       end>
     Left = 584
     Top = 176
+  end
+  object spSelectPrint: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Sale_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+      end>
+    Left = 679
+    Top = 16
+  end
+  object PrintHeaderCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 724
+    Top = 17
+  end
+  object PrintItemsCDS: TClientDataSet
+    Aggregates = <>
+    Params = <>
+    Left = 732
+    Top = 62
+  end
+  object spSelectTax_Client: TdsdStoredProc
+    StoredProcName = 'gpSelect_Movement_Tax_Print'
+    DataSet = PrintHeaderCDS
+    DataSets = <
+      item
+        DataSet = PrintHeaderCDS
+      end
+      item
+        DataSet = PrintItemsCDS
+      end>
+    OutputType = otMultiDataSet
+    Params = <
+      item
+        Name = 'inMovementId'
+        Component = MasterCDS
+        ComponentItem = 'MovementId_Sale'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inisClientCopy'
+        Value = True
+        DataType = ftBoolean
+        ParamType = ptInput
+      end>
+    Left = 679
+    Top = 72
   end
 end

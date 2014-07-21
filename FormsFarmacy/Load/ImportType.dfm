@@ -3,7 +3,7 @@ inherited ImportTypeForm: TImportTypeForm
   ClientHeight = 339
   ClientWidth = 743
   ExplicitWidth = 751
-  ExplicitHeight = 373
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -17,10 +17,10 @@ inherited ImportTypeForm: TImportTypeForm
       ExplicitWidth = 743
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 369
+        Width = 465
         Height = 313
         Align = alLeft
-        ExplicitWidth = 369
+        ExplicitWidth = 465
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -57,13 +57,15 @@ inherited ImportTypeForm: TImportTypeForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 369
+        Left = 465
         Top = 0
-        Width = 374
+        Width = 278
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitLeft = 369
+        ExplicitWidth = 374
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS

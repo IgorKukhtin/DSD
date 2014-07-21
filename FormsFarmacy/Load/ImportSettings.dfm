@@ -3,26 +3,24 @@ inherited ImportSettingsForm: TImportSettingsForm
   ClientHeight = 339
   ClientWidth = 921
   ExplicitWidth = 929
-  ExplicitHeight = 373
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 921
     Height = 313
-    ExplicitWidth = 743
+    ExplicitWidth = 921
     ExplicitHeight = 313
     ClientRectBottom = 313
     ClientRectRight = 921
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 743
+      ExplicitWidth = 921
       ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 593
+        Width = 633
         Height = 313
         Align = alLeft
-        ExplicitLeft = 48
-        ExplicitTop = 3
-        ExplicitWidth = 593
+        ExplicitWidth = 633
         ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
@@ -42,13 +40,13 @@ inherited ImportSettingsForm: TImportSettingsForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077
             DataBinding.FieldName = 'Name'
             HeaderAlignmentVert = vaCenter
-            Width = 95
+            Width = 101
           end
           object clDirectory: TcxGridDBColumn
             Caption = #1044#1080#1088#1077#1082#1090#1086#1088#1080#1103' '#1079#1072#1075#1088#1091#1079#1082#1080
             DataBinding.FieldName = 'Directory'
             HeaderAlignmentVert = vaCenter
-            Width = 83
+            Width = 87
           end
           object clJuridicalName: TcxGridDBColumn
             Caption = #1070#1088'.'#1083#1080#1094#1086
@@ -62,7 +60,7 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 71
+            Width = 75
           end
           object clContractName: TcxGridDBColumn
             Caption = #1044#1086#1075#1086#1074#1086#1088
@@ -76,7 +74,7 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = True
             HeaderAlignmentVert = vaCenter
-            Width = 70
+            Width = 75
           end
           object clFileTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1092#1072#1081#1083#1072
@@ -89,7 +87,7 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Kind = bkEllipsis
               end>
             HeaderAlignmentVert = vaCenter
-            Width = 78
+            Width = 44
           end
           object clImportTypeName: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1080#1084#1087#1086#1088#1090#1072
@@ -103,32 +101,32 @@ inherited ImportSettingsForm: TImportSettingsForm
               end>
             Properties.ReadOnly = False
             HeaderAlignmentVert = vaCenter
-            Width = 81
+            Width = 73
           end
           object clStartRow: TcxGridDBColumn
             Caption = #1055#1077#1088#1074#1072#1103' '#1089#1090#1088#1086#1082#1072' '#1079#1072#1075#1088#1091#1079#1082#1080' '#1076#1083#1103' Excel'
             DataBinding.FieldName = 'StartRow'
             HeaderAlignmentVert = vaCenter
-            Width = 81
+            Width = 124
           end
           object clisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
             HeaderAlignmentVert = vaCenter
-            Width = 26
+            Width = 40
           end
         end
       end
       object cxGrid1: TcxGrid
-        Left = 593
+        Left = 633
         Top = 0
-        Width = 328
+        Width = 288
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 369
-        ExplicitWidth = 374
+        ExplicitLeft = 616
+        ExplicitWidth = 305
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -154,7 +152,7 @@ inherited ImportSettingsForm: TImportSettingsForm
           object clIName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'Name'
-            Width = 100
+            Width = 98
           end
           object clImportTypeItemsName: TcxGridDBColumn
             Caption = #1069#1083#1077#1084#1077#1085#1090' '#1085#1072#1089#1090#1088#1086#1081#1082#1080' '#1080#1084#1087#1086#1088#1090#1072
@@ -166,12 +164,12 @@ inherited ImportSettingsForm: TImportSettingsForm
                 Default = True
                 Kind = bkEllipsis
               end>
-            Width = 100
+            Width = 124
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            Width = 30
+            Width = 52
           end
         end
         object cxGridLevel1: TcxGridLevel
