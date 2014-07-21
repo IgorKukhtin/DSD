@@ -7,12 +7,14 @@ inherited NDSKindForm: TNDSKindForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 261
-    ClientRectRight = 261
+    ExplicitWidth = 261
+    ClientRectRight = 257
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 575
       ExplicitHeight = 282
       inherited cxGrid: TcxGrid
         Width = 261
+        ExplicitWidth = 261
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -40,7 +42,7 @@ inherited NDSKindForm: TNDSKindForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
 end

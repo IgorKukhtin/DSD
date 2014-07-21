@@ -11,8 +11,8 @@ uses
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, cxContainer, Vcl.ComCtrls, dxCore,
   cxDateUtils, cxLabel, cxTextEdit, cxMaskEdit, cxDropDownEdit, cxCalendar,
-  Vcl.ExtCtrls, ChoicePeriod, dxSkinsCore, dxSkinsDefaultPainters,
-  dxSkinscxPCPainter, cxPCdxBarPopupMenu, dxSkinsdxBarPainter, cxPC, Vcl.Menus;
+  Vcl.ExtCtrls, ChoicePeriod, dxSkinsCore, dxSkinsDefaultPainters, Vcl.Menus,
+  cxPC;
 
 type
   TAncestorReportForm = class(TAncestorDBGridForm)

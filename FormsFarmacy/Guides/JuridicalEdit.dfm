@@ -74,10 +74,18 @@
       Properties.CustomButtons.Buttons = <>
       ClientRectBottom = 310
       ClientRectRight = 675
+      ExplicitWidth = 841
+      ExplicitHeight = 312
+      ClientRectBottom = 300
+      ClientRectLeft = 4
+      ClientRectRight = 671
       ClientRectTop = 24
       object JuridicalDetailTS: TcxTabSheet
         Caption = #1056#1077#1082#1074#1080#1079#1080#1090#1099
         ImageIndex = 0
+        ExplicitLeft = 0
+        ExplicitWidth = 675
+        ExplicitHeight = 280
         object edFullName: TcxDBTextEdit
           Left = 16
           Top = 19
@@ -205,14 +213,72 @@
           Width = 193
         end
       end
+      object PartnerTS: TcxTabSheet
+        Caption = #1050#1086#1085#1090#1088#1072#1075#1077#1085#1090#1099
+        ImageIndex = 1
+        object PartnerDockControl: TdxBarDockControl
+          Left = 0
+          Top = 0
+          Width = 667
+          Height = 28
+          Align = dalTop
+          BarManager = dxBarManager
+        end
+        object PartnerGrid: TcxGrid
+          Left = 0
+          Top = 28
+          Width = 667
+          Height = 248
+          Align = alClient
+          TabOrder = 0
+          ExplicitTop = 26
+          ExplicitWidth = 841
+          ExplicitHeight = 262
+          object PartnerGridDBTableView: TcxGridDBTableView
+            Navigator.Buttons.CustomButtons = <>
+            DataController.DataSource = PartnerDS
+            DataController.Filter.Options = [fcoCaseInsensitive]
+            DataController.Summary.DefaultGroupSummaryItems = <>
+            DataController.Summary.FooterSummaryItems = <>
+            DataController.Summary.SummaryGroups = <>
+            OptionsData.Deleting = False
+            OptionsData.DeletingConfirmation = False
+            OptionsData.Editing = False
+            OptionsData.Inserting = False
+            OptionsView.ColumnAutoWidth = True
+            OptionsView.GroupByBox = False
+            Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+            object colPartnerCode: TcxGridDBColumn
+              Caption = #1050#1086#1076
+              DataBinding.FieldName = 'Code'
+              Options.Editing = False
+            end
+            object colPartnerAddress: TcxGridDBColumn
+              Caption = #1040#1076#1088#1077#1089
+              DataBinding.FieldName = 'Address'
+              Options.Editing = False
+              Width = 423
+            end
+            object colPartnerisErased: TcxGridDBColumn
+              Caption = #1059#1076#1072#1083#1077#1085
+              DataBinding.FieldName = 'isErased'
+              Visible = False
+              Options.Editing = False
+            end
+          end
+          object PartnerGridLevel: TcxGridLevel
+            GridView = PartnerGridDBTableView
+          end
+        end
+      end
       object ContractTS: TcxTabSheet
         Caption = #1044#1086#1075#1086#1074#1086#1088#1072
         ImageIndex = 2
         object ContractDockControl: TdxBarDockControl
           Left = 0
           Top = 0
-          Width = 675
-          Height = 26
+          Width = 667
+          Height = 28
           Align = dalTop
           BarManager = dxBarManager
         end
@@ -223,6 +289,15 @@
           Height = 260
           Align = alClient
           TabOrder = 0
+          Top = 28
+          Width = 667
+          Height = 248
+          Align = alClient
+          TabOrder = 0
+          ExplicitLeft = -32
+          ExplicitTop = 18
+          ExplicitWidth = 675
+          ExplicitHeight = 240
           object ContractGridDBTableView: TcxGridDBTableView
             Navigator.Buttons.CustomButtons = <>
             DataController.DataSource = ContractDS
@@ -656,8 +731,8 @@
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')

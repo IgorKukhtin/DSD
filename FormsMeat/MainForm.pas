@@ -9,7 +9,7 @@ uses
   Vcl.StdActns, Vcl.StdCtrls, Vcl.PlatformDefaultStyleActnCtrls, Vcl.ActnMan,
   dsdAction, cxLocalization, frxExportRTF, frxExportXML, frxClass, frxExportXLS,
   Data.DB, Datasnap.DBClient, dsdDB, cxPropertiesStore, dsdAddOn, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinsdxBarPainter, AncestorMain;
+  dxSkinsDefaultPainters, AncestorMain;
 
 type
   TMainForm = class(TAncestorMainForm)
@@ -356,7 +356,6 @@ type
     bbStreet: TdxBarButton;
     actPartnerAddress: TdsdOpenForm;
     bbPartnerAddress: TdxBarButton;
-    procedure FormCreate(Sender: TObject);
   public
     { Public declarations }
   end;
@@ -367,11 +366,5 @@ var
 implementation
 
 {$R *.dfm}
-
-procedure TMainForm.FormCreate(Sender: TObject);
-begin
-  inherited;
-
-end;
 
 end.

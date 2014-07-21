@@ -2,11 +2,11 @@ inherited AncestorReportForm: TAncestorReportForm
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
-    Top = 57
-    Height = 251
+    Top = 59
+    Height = 249
     ExplicitTop = 57
     ExplicitHeight = 251
-    ClientRectBottom = 251
+    ClientRectBottom = 245
     inherited tsMain: TcxTabSheet
       ExplicitHeight = 251
       inherited cxGrid: TcxGrid
@@ -101,7 +101,7 @@ inherited AncestorReportForm: TAncestorReportForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
   object PeriodChoice: TPeriodChoice
