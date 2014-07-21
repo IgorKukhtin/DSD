@@ -10,8 +10,7 @@ uses
   dxBar, cxClasses, dsdDB, Datasnap.DBClient, dsdAction, Vcl.ActnList,
   cxPropertiesStore, cxGridLevel, cxGridCustomView, cxGridCustomTableView,
   cxGridTableView, cxGridDBTableView, cxGrid, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, cxPCdxBarPopupMenu,
-  dxSkinsdxBarPainter, cxPC, Vcl.Menus;
+  dxSkinsDefaultPainters, cxPC, Vcl.Menus;
 
 type
   TAncestorGuidesForm = class(TAncestorDBGridForm)

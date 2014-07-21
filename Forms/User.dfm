@@ -19,13 +19,15 @@ object UserForm: TUserForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 315
-    Height = 331
+    Height = 329
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 331
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -78,18 +80,22 @@ object UserForm: TUserForm
   end
   object cxSplitter: TcxSplitter
     Left = 315
-    Top = 26
+    Top = 28
     Width = 2
-    Height = 331
+    Height = 329
     Control = cxGrid
+    ExplicitTop = 26
+    ExplicitHeight = 331
   end
   object Panel: TPanel
     Left = 317
-    Top = 26
+    Top = 28
     Width = 478
-    Height = 331
+    Height = 329
     Align = alClient
     TabOrder = 2
+    ExplicitTop = 26
+    ExplicitHeight = 331
     object RoleGrid: TcxGrid
       Left = 1
       Top = 1
@@ -271,7 +277,7 @@ object UserForm: TUserForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -406,6 +412,7 @@ object UserForm: TUserForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -428,6 +435,7 @@ object UserForm: TUserForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -605,6 +613,8 @@ object UserForm: TUserForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 232
   end
@@ -634,6 +644,8 @@ object UserForm: TUserForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 448
     Top = 32
   end
@@ -713,6 +725,8 @@ object UserForm: TUserForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 472
     Top = 216
   end

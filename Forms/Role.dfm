@@ -19,13 +19,15 @@ object RoleForm: TRoleForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 26
+    Top = 28
     Width = 385
-    Height = 501
+    Height = 499
     Align = alLeft
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 26
+    ExplicitHeight = 501
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -73,19 +75,23 @@ object RoleForm: TRoleForm
   end
   object cxLeftSplitter: TcxSplitter
     Left = 385
-    Top = 26
+    Top = 28
     Width = 8
-    Height = 501
+    Height = 499
     Control = cxGrid
+    ExplicitTop = 26
+    ExplicitHeight = 501
   end
   object Panel1: TPanel
     Left = 393
-    Top = 26
+    Top = 28
     Width = 372
-    Height = 501
+    Height = 499
     Align = alClient
     BevelOuter = bvNone
     TabOrder = 6
+    ExplicitTop = 26
+    ExplicitHeight = 501
     object UserGrid: TcxGrid
       Left = 0
       Top = 248
@@ -351,7 +357,7 @@ object RoleForm: TRoleForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'
@@ -492,6 +498,7 @@ object RoleForm: TRoleForm
       isShowModal = False
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object actUpdate: TdsdInsertUpdateAction
       Category = 'DSDLib'
@@ -514,6 +521,7 @@ object RoleForm: TRoleForm
       ActionType = acUpdate
       DataSource = DataSource
       DataSetRefresh = actRefresh
+      IdFieldName = 'Id'
     end
     object dsdSetErased: TdsdUpdateErased
       Category = 'DSDLib'
@@ -737,6 +745,8 @@ object RoleForm: TRoleForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 248
     Top = 272
   end
@@ -783,6 +793,8 @@ object RoleForm: TRoleForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 432
     Top = 208
   end
@@ -822,6 +834,8 @@ object RoleForm: TRoleForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 448
     Top = 32
   end
@@ -872,6 +886,8 @@ object RoleForm: TRoleForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 416
     Top = 320
   end
@@ -962,6 +978,8 @@ object RoleForm: TRoleForm
     OnlyEditingCellOnEnter = False
     ColorRuleList = <>
     ColumnAddOnList = <>
+    ColumnEnterList = <>
+    SummaryItemList = <>
     Left = 600
     Top = 464
   end

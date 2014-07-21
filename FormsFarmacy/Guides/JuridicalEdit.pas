@@ -11,8 +11,7 @@ uses
   cxCustomData, cxFilter, cxData, cxDataStorage, Data.DB, cxDBData, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
   cxGrid, Datasnap.DBClient, dxBarExtItems, cxCalendar, dxSkinsCore,
-  dxSkinsDefaultPainters, dxSkinscxPCPainter, dxSkinsdxBarPainter, Vcl.ComCtrls,
-  dxCore, cxDateUtils, cxDropDownEdit, cxImageComboBox;
+  dxSkinsDefaultPainters, cxImageComboBox;
 
 type
   TJuridicalEditForm = class(TAncestorDialogForm)

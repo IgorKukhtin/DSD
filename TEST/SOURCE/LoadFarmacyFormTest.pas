@@ -85,6 +85,11 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TPriceListLoadForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TPriceListItemsLoadForm'));
   TdsdFormStorageFactory.GetStorage.Load('TPriceListItemsLoadForm');
+
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementLoadForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovenentLoadForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TMovementItemsLoadForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TMovementItemsLoadForm');
 end;
 
 procedure TLoadFormTest.LoadRetailFormTest;
@@ -136,6 +141,7 @@ begin
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TFileTypeKindForm'));
   TdsdFormStorageFactory.GetStorage.Load('TFileTypeKindForm');
 end;
+
 
 procedure TLoadFormTest.MainFormTest;
 var ActionDataSet: TClientDataSet;

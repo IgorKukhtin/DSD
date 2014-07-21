@@ -66,7 +66,7 @@ inherited JuridicalForm: TJuridicalForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
 end

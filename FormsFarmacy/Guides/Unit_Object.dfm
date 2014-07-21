@@ -20,18 +20,22 @@ object Unit_ObjectForm: TUnit_ObjectForm
   TextHeight = 13
   object cxSplitter1: TcxSplitter
     Left = 0
-    Top = 26
+    Top = 28
     Width = 8
-    Height = 394
+    Height = 392
     ExplicitLeft = 8
+    ExplicitTop = 26
+    ExplicitHeight = 394
   end
   object cxGrid: TcxGrid
     Left = 8
-    Top = 26
+    Top = 28
     Width = 432
-    Height = 394
+    Height = 392
     Align = alClient
     TabOrder = 1
+    ExplicitTop = 26
+    ExplicitHeight = 394
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -110,8 +114,8 @@ object Unit_ObjectForm: TUnit_ObjectForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -129,7 +133,7 @@ object Unit_ObjectForm: TUnit_ObjectForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

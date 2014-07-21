@@ -18,13 +18,15 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   TextHeight = 13
   object cxGrid: TcxGrid
     Left = 0
-    Top = 63
+    Top = 65
     Width = 497
-    Height = 335
+    Height = 333
     Align = alClient
     TabOrder = 0
     LookAndFeel.NativeStyle = True
     LookAndFeel.SkinName = 'UserSkin'
+    ExplicitTop = 63
+    ExplicitHeight = 335
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = DataSource
@@ -72,12 +74,13 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   end
   object Panel: TPanel
     Left = 0
-    Top = 26
+    Top = 28
     Width = 497
     Height = 37
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 1
+    ExplicitTop = 26
     object cxLabel1: TcxLabel
       Left = 4
       Top = 9
@@ -140,8 +143,8 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -159,7 +162,7 @@ object PriceListGoodsItemForm: TPriceListGoodsItemForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

@@ -5,7 +5,7 @@ interface
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
-  DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
+  DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization;
 
 type
@@ -73,6 +73,8 @@ type
     bbImportType: TdxBarButton;
     actImportSettings: TdsdOpenForm;
     bbImportSettings: TdxBarButton;
+    actMovementLoad: TdsdOpenForm;
+    bbMovementLoad: TdxBarButton;
   private
     { Private declarations }
   public
