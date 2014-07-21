@@ -110,7 +110,7 @@ inherited AncestorGuidesForm: TAncestorGuidesForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <

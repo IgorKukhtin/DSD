@@ -5,7 +5,7 @@ interface
 uses AncestorMain, dsdAction, frxExportXML, frxExportXLS, frxClass,
   frxExportRTF, Data.DB, Datasnap.DBClient, dsdDB, dsdAddOn,
   Vcl.ActnList, System.Classes, Vcl.StdActns, dxBar, cxClasses,
-  DataModul, dxSkinsCore, dxSkinsDefaultPainters, dxSkinsdxBarPainter,
+  DataModul, dxSkinsCore, dxSkinsDefaultPainters,
   cxLocalization;
 
 type

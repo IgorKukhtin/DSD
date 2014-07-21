@@ -20,9 +20,9 @@ object UnitForm: TUnitForm
   TextHeight = 13
   object cxDBTreeList: TcxDBTreeList
     Left = 0
-    Top = 26
+    Top = 28
     Width = 313
-    Height = 489
+    Height = 487
     Align = alLeft
     Bands = <
       item
@@ -40,6 +40,8 @@ object UnitForm: TUnitForm
     OptionsView.TreeLineStyle = tllsSolid
     RootValue = -1
     TabOrder = 1
+    ExplicitTop = 26
+    ExplicitHeight = 489
     object cxDBTreeListcxDBTreeListColumn2: TcxDBTreeListColumn
       Caption.Text = #1043#1088#1091#1087#1087#1072
       DataBinding.FieldName = 'Name'
@@ -53,18 +55,22 @@ object UnitForm: TUnitForm
   end
   object cxSplitter1: TcxSplitter
     Left = 313
-    Top = 26
+    Top = 28
     Width = 8
-    Height = 489
+    Height = 487
     Control = cxDBTreeList
+    ExplicitTop = 26
+    ExplicitHeight = 489
   end
   object cxGrid: TcxGrid
     Left = 321
-    Top = 26
+    Top = 28
     Width = 389
-    Height = 489
+    Height = 487
     Align = alClient
     TabOrder = 6
+    ExplicitTop = 26
+    ExplicitHeight = 489
     object cxGridDBTableView: TcxGridDBTableView
       Navigator.Buttons.CustomButtons = <>
       DataController.DataSource = GridDS
@@ -123,8 +129,8 @@ object UnitForm: TUnitForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -11
-    Font.Name = 'Tahoma'
+    Font.Height = -12
+    Font.Name = 'Segoe UI'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -141,7 +147,7 @@ object UnitForm: TUnitForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     object dxBarManagerBar1: TdxBar
       Caption = 'Custom'

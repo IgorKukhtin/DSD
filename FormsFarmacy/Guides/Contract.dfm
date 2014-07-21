@@ -8,7 +8,7 @@ inherited ContractForm: TContractForm
   inherited PageControl: TcxPageControl
     Width = 707
     ExplicitWidth = 707
-    ClientRectRight = 707
+    ClientRectRight = 703
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 707
       ExplicitHeight = 282
@@ -82,7 +82,7 @@ inherited ContractForm: TContractForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
 end

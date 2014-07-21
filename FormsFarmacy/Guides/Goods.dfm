@@ -9,11 +9,11 @@ inherited GoodsForm: TGoodsForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 782
-    Height = 397
+    Height = 395
     ExplicitWidth = 782
     ExplicitHeight = 397
-    ClientRectBottom = 397
-    ClientRectRight = 782
+    ClientRectBottom = 391
+    ClientRectRight = 778
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 782
       ExplicitHeight = 397
@@ -134,7 +134,7 @@ inherited GoodsForm: TGoodsForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
 end

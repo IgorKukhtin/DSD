@@ -8,11 +8,11 @@ inherited FileTypeKindForm: TFileTypeKindForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 334
-    Height = 207
+    Height = 205
     ExplicitWidth = 334
     ExplicitHeight = 207
-    ClientRectBottom = 207
-    ClientRectRight = 334
+    ClientRectBottom = 201
+    ClientRectRight = 330
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 334
       ExplicitHeight = 207
@@ -56,7 +56,7 @@ inherited FileTypeKindForm: TFileTypeKindForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
   end
 end

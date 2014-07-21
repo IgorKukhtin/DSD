@@ -8,11 +8,11 @@ inherited ImportTypeForm: TImportTypeForm
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 313
+    Height = 311
     ExplicitWidth = 743
     ExplicitHeight = 313
-    ClientRectBottom = 313
-    ClientRectRight = 743
+    ClientRectBottom = 307
+    ClientRectRight = 739
     inherited tsMain: TcxTabSheet
       ExplicitWidth = 743
       ExplicitHeight = 313
@@ -254,7 +254,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      26
+      28
       0)
     inherited Bar: TdxBar
       ItemLinks = <
