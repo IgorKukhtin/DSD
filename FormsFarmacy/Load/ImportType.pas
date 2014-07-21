@@ -44,6 +44,7 @@ type
     bbUnErasedChild: TdxBarButton;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbdsdChoiceGuides: TdxBarButton;
+    clParamType: TcxGridDBColumn;
   private
     { Private declarations }
   public

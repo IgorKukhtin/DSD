@@ -2,26 +2,29 @@ inherited ImportTypeForm: TImportTypeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 743
-  ExplicitWidth = 751
-  ExplicitHeight = 373
+  ExplicitWidth = 759
+  ExplicitHeight = 378
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
     Height = 311
+    ExplicitTop = 28
     ExplicitWidth = 743
-    ExplicitHeight = 313
+    ExplicitHeight = 311
     ClientRectBottom = 307
     ClientRectRight = 739
     inherited tsMain: TcxTabSheet
-      ExplicitWidth = 743
-      ExplicitHeight = 313
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 735
+      ExplicitHeight = 303
       inherited cxGrid: TcxGrid
         Width = 369
-        Height = 313
+        Height = 303
         Align = alLeft
         ExplicitWidth = 369
-        ExplicitHeight = 313
+        ExplicitHeight = 303
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -59,8 +62,8 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 369
         Top = 0
-        Width = 374
-        Height = 313
+        Width = 366
+        Height = 303
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
@@ -96,6 +99,11 @@ inherited ImportTypeForm: TImportTypeForm
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'Name'
             Width = 100
+          end
+          object clParamType: TcxGridDBColumn
+            Caption = #1058#1080#1087' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
+            DataBinding.FieldName = 'ParamType'
+            HeaderAlignmentVert = vaCenter
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
