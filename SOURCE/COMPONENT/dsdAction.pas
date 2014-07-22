@@ -417,6 +417,7 @@ type
   TdsdFormClose = class(TdsdCustomAction)
   protected
     function LocalExecute: boolean; override;
+    constructor Create(AOwner: TComponent); override;
   published
     property Caption;
     property Hint;
@@ -748,6 +749,12 @@ begin
 end;
 
 { TdsdFormClose }
+
+constructor TdsdFormClose.Create(AOwner: TComponent);
+begin
+  inherited;
+  FPostDataSetBeforeExecute := false;
+end;
 
 function TdsdFormClose.LocalExecute: boolean;
 var i: integer;
@@ -1475,8 +1482,10 @@ begin
   for I := 0 to MoveParams.Count - 1 do
       TParamMoveItem(MoveParams.Items[i]).ToParam.Value := TParamMoveItem(MoveParams.Items[i]).FromParam.Value;
   result := LocalExecute;
-  if result and (InfoAfterExecute <> '') then
+  if result and (InfoAfterExecute <> '') then begin
+     Application.ProcessMessages;
      ShowMessage(InfoAfterExecute);
+  end;
 end;
 
 procedure TdsdCustomAction.Notification(AComponent: TComponent;

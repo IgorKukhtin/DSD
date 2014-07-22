@@ -2,23 +2,20 @@ inherited ImportTypeForm: TImportTypeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 743
-  ExplicitWidth = 759
-  ExplicitHeight = 378
+  ExplicitWidth = 751
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 311
-    ExplicitTop = 28
+    Height = 313
     ExplicitWidth = 743
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 739
+    ExplicitHeight = 313
+    ClientRectBottom = 313
+    ClientRectRight = 743
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 735
-      ExplicitHeight = 303
+      ExplicitWidth = 743
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
         Width = 465
         Height = 313
@@ -62,13 +59,11 @@ inherited ImportTypeForm: TImportTypeForm
       object cxGrid1: TcxGrid
         Left = 465
         Top = 0
-        Width = 366
-        Height = 303
+        Width = 278
+        Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 369
-        ExplicitWidth = 374
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -264,7 +259,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -352,7 +347,7 @@ inherited ImportTypeForm: TImportTypeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput

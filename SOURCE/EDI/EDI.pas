@@ -113,15 +113,19 @@ begin
 
   with ЕлектроннийДокумент.Сторони.Add do begin
        СтатусКонтрагента := 'Продавець';
+       ВидОсоби := 'Юридична';
        НазваКонтрагента :=  HeaderDataSet.FieldByName('JuridicalName_From').asString;
        КодКонтрагента :=    HeaderDataSet.FieldByName('OKPO_From').asString;
        ІПН :=               HeaderDataSet.FieldByName('INN_From').asString;
+       GLN :=               HeaderDataSet.FieldByName('SupplierGLNCode').asString;
   end;
   with ЕлектроннийДокумент.Сторони.Add do begin
        СтатусКонтрагента := 'Покупець';
+       ВидОсоби := 'Юридична';
        НазваКонтрагента :=  HeaderDataSet.FieldByName('JuridicalName_To').asString;
        КодКонтрагента :=    HeaderDataSet.FieldByName('OKPO_To').asString;
        ІПН :=               HeaderDataSet.FieldByName('INN_To').asString;
+       GLN :=               HeaderDataSet.FieldByName('BuyerGLNCode').asString;
   end;
 
   i := 1;
@@ -130,8 +134,8 @@ begin
     with ЕлектроннийДокумент.Таблиця.Add do begin
          ІД := i;
          НомПоз := i;
-         Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
          АртикулПокупця := ItemsDataSet.FieldByName('ArticleGLN_Juridical').asString;
+         Найменування := ItemsDataSet.FieldByName('GoodsName').asString;
          ПрийнятаКількість := gfFloatToStr(ItemsDataSet.FieldByName('AmountPartner').AsFloat);
          Ціна := gfFloatToStr(ItemsDataSet.FieldByName('PriceWVAT').AsFloat);
          inc(i);
@@ -286,7 +290,8 @@ begin
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
   DECLAR.DECLARBODY.HNSPDVSEL := HeaderDataSet.FieldByName('INN_From').asString;
   DECLAR.DECLARBODY.HNSPDVBUY := HeaderDataSet.FieldByName('INN_To').asString;
-  DECLAR.DECLARBODY.H01G1S := 'Договір;COMDOC:' + НомерКомдока + ';DATE:' + ДатаКомдока;;
+
+  DECLAR.DECLARBODY.H01G1S := 'Договір;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + HeaderDataSet.FieldByName('OperDatePartnerEDI').asString;
   DECLAR.DECLARBODY.H01G2D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
   DECLAR.DECLARBODY.H01G3S := HeaderDataSet.FieldByName('ContractName').AsString;
   DECLAR.DECLARBODY.H02G1S := 'Оплата з поточного рахунка';
@@ -594,9 +599,10 @@ begin
       ComSigner.ResetPrivateKey;
       ComSigner.ResetCryptToCert;
       //Установка сетификатов
-      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Неграш О.В..cer');
-      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН1.cer');
-      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН.cer');
+      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Exite_Для Шифрования.cer');
+//      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Неграш О.В..cer');
+//      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН1.cer');
+//      ComSigner.SetCryptToCertCert(ExtractFilePath(ParamStr(0)) + 'Товариство з обмеженою відповідальністю АЛАН.cer');
 
       // Установка ключей
       ComSigner.SetPrivateKey(ExtractFilePath(ParamStr(0)) + 'Ключ - Неграш О.В..ZS2', '24447183', 1); //бухгалтер

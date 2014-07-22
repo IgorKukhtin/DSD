@@ -133,8 +133,8 @@ BEGIN
            , OH_JuridicalDetails_From.Phone             AS Phone_From
            , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
 
---           , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
-
+           , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
+           , MovementDate_OperDatePartnerEDI.ValueData     AS OperDatePartnerEDI
 
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
@@ -144,7 +144,21 @@ BEGIN
                   THEN 'X' ELSE '' END                  AS ERPN
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
 
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
+
        FROM Movement
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                           ON MovementLinkMovement_Sale.MovementId = inMovementId
+                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
+                                   ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                  AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartnerEDI
+                                     ON MovementString_InvNumberPartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                    AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
