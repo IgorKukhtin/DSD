@@ -41,6 +41,8 @@ RETURNS TABLE (Id Integer, Code Integer
              , isPersonal Boolean
              , isUnique Boolean
 
+             , DocumentCount TFloat, DateDocument TDateTime
+
              , isErased Boolean 
               )
 AS
@@ -132,6 +134,9 @@ BEGIN
        , COALESCE (ObjectBoolean_Personal.ValueData, False) AS isPersonal
        , COALESCE (ObjectBoolean_Unique.ValueData, False)   AS isUnique
        
+       , ObjectFloat_DocumentCount.ValueData AS DocumentCount
+       , ObjectDate_Document.ValueData AS DateDocument
+
        , Object_Contract_View.isErased
        
    FROM Object_Contract_View
@@ -143,6 +148,13 @@ BEGIN
                              ON ObjectLink_Contract_ContractKind.ObjectId = Object_Contract_View.ContractId
                             AND ObjectLink_Contract_ContractKind.DescId = zc_ObjectLink_Contract_ContractKind()
         LEFT JOIN Object AS Object_ContractKind ON Object_ContractKind.Id = ObjectLink_Contract_ContractKind.ChildObjectId
+
+        LEFT JOIN ObjectFloat AS ObjectFloat_DocumentCount
+                              ON ObjectFloat_DocumentCount.ObjectId = Object_Contract_View.ContractId
+                             AND ObjectFloat_DocumentCount.DescId = zc_ObjectFloat_Contract_DocumentCount()
+        LEFT JOIN ObjectDate AS ObjectDate_Document
+                             ON ObjectDate_Document.ObjectId = Object_Contract_View.ContractId
+                            AND ObjectDate_Document.DescId = zc_ObjectDate_Contract_Document()
 
         LEFT JOIN ObjectString AS ObjectString_InvNumberArchive
                                ON ObjectString_InvNumberArchive.ObjectId = Object_Contract_View.ContractId
@@ -262,6 +274,27 @@ ALTER FUNCTION gpSelect_Object_Contract (TVarChar) OWNER TO postgres;
  22.07.13         * add  SigningDate, StartDate, EndDate               
  11.06.13         *
  12.04.13                                        *
+*/
+/*
+-- 1.ObjectDate
+select lpInsertUpdate_ObjectDate (zc_ObjectDate_Contract_Document(), ObjectId , OperDate)
+from (
+select MovementLinkObject.ObjectId, count(*) as Count, max (Movement.OperDate) as OperDate
+from (select zc_MovementLinkObject_Contract() as DescId union select zc_MovementLinkObject_ContractFrom()  union select zc_MovementLinkObject_ContractTo()) as tmpDesc
+      inner join MovementLinkObject on MovementLinkObject.DescId = tmpDesc.DescId
+      inner join Movement on Movement.Id = MovementLinkObject.MovementId
+                         and Movement.StatusId = zc_Enum_Status_Complete()
+group by MovementLinkObject.ObjectId) as xx
+-- 2.ObjectFloat
+select lpInsertUpdate_ObjectFloat (zc_ObjectFloat_Contract_DocumentCount(), ObjectId , Count)
+from (
+select MovementLinkObject.ObjectId, count(*) as Count, max (Movement.OperDate) as OperDate
+from (select zc_MovementLinkObject_Contract() as DescId union select zc_MovementLinkObject_ContractFrom()  union select zc_MovementLinkObject_ContractTo()) as tmpDesc
+      inner join MovementLinkObject on MovementLinkObject.DescId = tmpDesc.DescId
+                                   and MovementLinkObject.ObjectId >0
+      inner join Movement on Movement.Id = MovementLinkObject.MovementId
+                         and Movement.StatusId = zc_Enum_Status_Complete()
+group by MovementLinkObject.ObjectId) as xx
 */
 
 -- тест

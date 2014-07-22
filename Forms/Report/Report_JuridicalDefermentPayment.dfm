@@ -3,29 +3,26 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
   ClientHeight = 394
   ClientWidth = 1020
   AddOnFormData.Params = FormParams
-  ExplicitWidth = 1028
-  ExplicitHeight = 428
+  ExplicitWidth = 1036
+  ExplicitHeight = 429
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 1020
-    Height = 335
+    Height = 337
     TabOrder = 3
-    ExplicitTop = 59
     ExplicitWidth = 1020
-    ExplicitHeight = 335
-    ClientRectBottom = 331
-    ClientRectRight = 1016
+    ExplicitHeight = 337
+    ClientRectBottom = 337
+    ClientRectRight = 1020
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 2
-      ExplicitTop = 2
-      ExplicitWidth = 1014
-      ExplicitHeight = 329
+      ExplicitWidth = 1020
+      ExplicitHeight = 337
       inherited cxGrid: TcxGrid
-        Width = 1014
-        Height = 329
-        ExplicitWidth = 1014
-        ExplicitHeight = 329
+        Width = 1020
+        Height = 337
+        ExplicitWidth = 1020
+        ExplicitHeight = 337
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
             item
@@ -146,6 +143,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
             Caption = #1058#1086#1088#1075#1086#1074#1072#1103' '#1089#1077#1090#1100
             DataBinding.FieldName = 'RetailName'
             HeaderAlignmentVert = vaCenter
+            Options.Editing = False
             Width = 70
           end
           object clJuridicalName: TcxGridDBColumn
@@ -432,7 +430,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     end
     inherited cxLabel1: TcxLabel
       Caption = #1085#1072' '#1076#1072#1090#1091':'
-      ExplicitWidth = 48
+      ExplicitWidth = 47
     end
     inherited cxLabel2: TcxLabel
       Left = 880
@@ -1077,14 +1075,14 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
         item
           StoredProc = spSelect
         end>
-      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
-      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1087#1088#1086#1089#1088#1086#1095#1082#1077
+      Caption = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
+      Hint = #1054#1090#1095#1077#1090' '#1087#1086' '#1089#1077#1090#1103#1084
       ImageIndex = 19
       DataSets = <
         item
           DataSet = MasterCDS
           UserName = 'frxDBDMaster'
-          IndexFieldNames = 'JuridicalName'
+          IndexFieldNames = 'RetailName'
         end>
       Params = <
         item
@@ -1145,7 +1143,7 @@ inherited Report_JuridicalDefermentPayment: TReport_JuridicalDefermentPayment
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
