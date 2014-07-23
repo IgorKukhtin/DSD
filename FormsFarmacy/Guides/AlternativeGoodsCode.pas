@@ -45,11 +45,11 @@ type
     { Public declarations }
   end;
 
-var
-  AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm;
 
 implementation
 
 {$R *.dfm}
+initialization
+  RegisterClass(TAlternativeGoodsCodeForm);
 
 end.

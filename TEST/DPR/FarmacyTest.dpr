@@ -134,7 +134,6 @@ begin
 
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
-  Application.CreateForm(TAlternativeGoodsCodeForm, AlternativeGoodsCodeForm);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

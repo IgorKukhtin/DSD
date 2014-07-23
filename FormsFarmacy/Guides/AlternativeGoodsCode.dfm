@@ -1,21 +1,20 @@
 inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
   Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
   ClientWidth = 798
-  ExplicitLeft = 1
   ExplicitWidth = 814
   ExplicitHeight = 347
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 798
-    ExplicitLeft = 8
     ExplicitTop = 28
+    ExplicitWidth = 798
     ExplicitHeight = 280
     ClientRectRight = 794
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 5
-      ExplicitTop = 5
-      ExplicitWidth = 766
+      ExplicitLeft = 4
+      ExplicitTop = 4
+      ExplicitWidth = 790
       ExplicitHeight = 272
       inherited cxGrid: TcxGrid
         Width = 310
@@ -62,7 +61,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitLeft = 8
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -118,8 +116,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 2
-        ExplicitLeft = 310
-        ExplicitWidth = 228
         object cxGridDBTableView2: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -172,7 +168,7 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Top = 0
         Width = 3
         Height = 272
-        ExplicitLeft = 297
+        Control = cxGrid
       end
       object cxGrid2: TcxGrid
         Left = 558
@@ -182,7 +178,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Align = alRight
         PopupMenu = PopupMenu
         TabOrder = 4
-        ExplicitLeft = 547
         object cxGridDBTableView3: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.Filter.Options = [fcoCaseInsensitive]
@@ -236,7 +231,6 @@ inherited AlternativeGoodsCodeForm: TAlternativeGoodsCodeForm
         Width = 3
         Height = 272
         AlignSplitter = salRight
-        ExplicitLeft = 542
       end
     end
   end
