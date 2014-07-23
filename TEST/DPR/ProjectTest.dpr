@@ -473,7 +473,8 @@ uses
   dbObjectMeatTest in '..\SOURCE\dbObjectMeatTest.pas',
   MainForm in '..\..\FormsMeat\MainForm.pas' {MainForm},
   AncestorMain in '..\..\Forms\Ancestor\AncestorMain.pas' {AncestorMainForm},
-  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm};
+  AncestorBase in '..\..\Forms\Ancestor\AncestorBase.pas' {AncestorBaseForm: TParentForm},
+  Currency_Object in '..\..\Forms\Guides\Currency_Object.pas' {Currency_ObjectForm: TParentForm};
 
 {$R *.RES}
 {$R DevExpressRus.res}

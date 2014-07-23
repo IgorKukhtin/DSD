@@ -157,6 +157,14 @@ type
     colMeasureName: TcxGridDBColumn;
     GuidesFrom: TdsdGuides;
     spGetTotalSumm: TdsdStoredProc;
+    cxLabel12: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel14: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    CurrencyDocumentGuides: TdsdGuides;
+    cxLabel15: TcxLabel;
+    edCurrencyPartner: TcxButtonEdit;
+    CurrencyPartnerGuides: TdsdGuides;
   private
   public
   end;

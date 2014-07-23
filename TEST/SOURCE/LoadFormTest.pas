@@ -264,6 +264,9 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrencyEditForm'));
   TdsdFormStorageFactory.GetStorage.Load('TCurrencyEditForm');
+  // форма для просмотра
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TCurrency_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TCurrency_ObjectForm');
 end;
 
 procedure TLoadFormTest.LoadDefaultFormTest;

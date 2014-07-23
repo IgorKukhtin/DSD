@@ -57,7 +57,7 @@ BEGIN
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
 
-           , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
+           , CAST (COALESCE (MovementFloat_CurrencyValue.ValueData, 0) AS TFloat)  AS CurrencyValue
 
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
