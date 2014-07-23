@@ -19,6 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Income(
     IN inPaidKindId          Integer   , -- Виды форм оплаты 
     IN inContractId          Integer   , -- Договора
     IN inPersonalPackerId    Integer   , -- Сотрудник (заготовитель)
+    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inSession             TVarChar    -- сессия пользователя
 )                              
 RETURNS Integer AS
@@ -62,6 +64,9 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
+     -- сохранили свойство <Курс для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, 0);   
+
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
@@ -74,6 +79,11 @@ BEGIN
 
      -- сохранили связь с <Сотрудник (заготовитель)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PersonalPacker(), ioId, inPersonalPackerId);
+
+     -- сохранили связь с <Валюта (документа)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     -- сохранили связь с <Валюта (контрагента) >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
 
      -- пересчитали Итоговые суммы по накладной
@@ -89,6 +99,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 23.07.14         * add inCurrencyDocumentId
+                        inCurrencyPartnerId
  10.02.14                                        * add lpGetAccessKey
  07.10.13                                        * add lpCheckRight
  06.10.13                                        * add lfCheck_Movement_Parent

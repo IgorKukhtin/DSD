@@ -9,9 +9,12 @@ CREATE OR REPLACE FUNCTION gpGet_Movement_Income(
 RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode Integer, StatusName TVarChar
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
+             , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar, ToParentId Integer
              , PaidKindId Integer, PaidKindName TVarChar, ContractId Integer, ContractName TVarChar
              , PersonalPackerId Integer, PersonalPackerName TVarChar
+             , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
+             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
               )
 AS
 $BODY$
@@ -37,6 +40,8 @@ BEGIN
              , CAST (False as Boolean)               AS PriceWithVAT
              , CAST (20 as TFloat)                   AS VATPercent
              , CAST (0 as TFloat)                    AS ChangePercent
+             
+             , CAST (0 as TFloat)                    AS CurrencyValue
 
              , 0                     AS FromId
              , CAST ('' as TVarChar) AS FromName
@@ -49,6 +54,12 @@ BEGIN
              , CAST ('' as TVarChar) AS ContractName
              , 0                     AS PersonalPackerId
              , CAST ('' as TVarChar) AS PersonalPackerName
+
+             , 0                     AS CurrencyDocumentId
+             , CAST ('' as TVarChar) AS CurrencyDocumentName
+             , 0                     AS CurrencyPartnerId
+             , CAST ('' as TVarChar) AS CurrencyPartnerName
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
        RETURN QUERY 
@@ -66,6 +77,8 @@ BEGIN
              , MovementFloat_VATPercent.ValueData          AS VATPercent
              , MovementFloat_ChangePercent.ValueData       AS ChangePercent
 
+             , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
+
              , Object_From.Id                        AS FromId
              , Object_From.ValueData                 AS FromName
              , Object_To.Id                          AS ToId
@@ -77,6 +90,12 @@ BEGIN
              , View_Contract_InvNumber.InvNumber     AS ContractName
              , View_PersonalPacker.PersonalId        AS PersonalPackerId
              , View_PersonalPacker.PersonalName      AS PersonalPackerName
+
+             , Object_CurrencyDocument.Id            AS CurrencyDocumentId
+             , Object_CurrencyDocument.ValueData     AS CurrencyDocumentName
+             , Object_CurrencyPartner.Id             AS CurrencyPartnerId
+             , Object_CurrencyPartner.ValueData      AS CurrencyPartnerName
+
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -97,10 +116,15 @@ BEGIN
                                     ON MovementFloat_ChangePercent.MovementId =  Movement.Id
                                    AND MovementFloat_ChangePercent.DescId = zc_MovementFloat_ChangePercent()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
             LEFT JOIN Object AS Object_From ON Object_From.Id = MovementLinkObject_From.ObjectId
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_To
                                          ON MovementLinkObject_To.MovementId = Movement.Id
                                         AND MovementLinkObject_To.DescId = zc_MovementLinkObject_To()
@@ -122,6 +146,16 @@ BEGIN
                                         AND MovementLinkObject_PersonalPacker.DescId = zc_MovementLinkObject_PersonalPacker()
             LEFT JOIN Object_Personal_View AS View_PersonalPacker ON View_PersonalPacker.PersonalId = MovementLinkObject_PersonalPacker.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
        WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_Income();
      END IF;
@@ -133,6 +167,9 @@ ALTER FUNCTION gpGet_Movement_Income (Integer, TVarChar) OWNER TO postgres;
 /*
  ÈÑÒÎÐÈß ÐÀÇÐÀÁÎÒÊÈ: ÄÀÒÀ, ÀÂÒÎÐ
                Ôåëîíþê È.Â.   Êóõòèí È.Â.   Êëèìåíòüåâ Ê.È.   Ìàíüêî Ä.
+ 23.07.14         * add zc_MovementFloat_CurrencyValue
+                        zc_MovementLinkObject_CurrencyDocument
+                        zc_MovementLinkObject_CurrencyPartner
  09.02.14                                        * add Object_Contract_InvNumber_View
  23.10.13                                        * add NEXTVAL
  20.10.13                                        * CURRENT_TIMESTAMP -> CURRENT_DATE

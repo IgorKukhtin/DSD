@@ -11,12 +11,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime, InvNumberPartner TVarChar
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalCountPartner TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat, TotalSummPacker TFloat, TotalSummSpending TFloat, TotalSummVAT TFloat
+             , CurrencyValue TFloat
              , FromName TVarChar, ToName TVarChar
              , PaidKindName TVarChar
              , ContractName TVarChar
              , JuridicalName_From TVarChar, OKPO_From TVarChar
              , InfoMoneyGroupName TVarChar, InfoMoneyDestinationName TVarChar, InfoMoneyCode Integer, InfoMoneyName TVarChar
              , PersonalPackerName TVarChar
+             , CurrencyDocumentName TVarChar, CurrencyPartnerName TVarChar
               )
 AS
 $BODY$
@@ -55,6 +57,7 @@ BEGIN
            , MovementFloat_TotalSummSpending.ValueData   AS TotalSummSpending
            , CAST (COALESCE (MovementFloat_TotalSummPVAT.ValueData, 0) - COALESCE (MovementFloat_TotalSummMVAT.ValueData, 0) AS TFloat) AS TotalSummVAT
 
+           , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
 
            , Object_From.ValueData             AS FromName
            , Object_To.ValueData               AS ToName
@@ -67,6 +70,10 @@ BEGIN
            , View_InfoMoney.InfoMoneyCode
            , View_InfoMoney.InfoMoneyName
            , View_PersonalPacker.PersonalName  AS PersonalPackerName
+
+           , Object_CurrencyDocument.ValueData AS CurrencyDocumentName
+           , Object_CurrencyPartner.ValueData  AS CurrencyPartnerName
+
        FROM Movement
             JOIN tmpRoleAccessKey ON tmpRoleAccessKey.AccessKeyId = Movement.AccessKeyId
 
@@ -112,6 +119,10 @@ BEGIN
                                     ON MovementFloat_TotalSummSpending.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSummSpending.DescId = zc_MovementFloat_TotalSummSpending()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -146,6 +157,16 @@ BEGIN
             LEFT JOIN Object AS Object_JuridicalFrom ON Object_JuridicalFrom.Id = COALESCE (ObjectLink_Partner_Juridical.ChildObjectId, ObjectLink_CardFuel_Juridical.ChildObjectId)
             LEFT JOIN ObjectHistory_JuridicalDetails_View ON ObjectHistory_JuridicalDetails_View.JuridicalId = Object_JuridicalFrom.Id
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
        WHERE Movement.DescId = zc_Movement_Income()
          AND Movement.OperDate BETWEEN inStartDate AND inEndDate;
   
@@ -157,6 +178,9 @@ ALTER FUNCTION gpSelect_Movement_Income (TDateTime, TDateTime, TVarChar) OWNER T
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.
+ 23.07.14         * add zc_MovementFloat_CurrencyValue
+                        zc_MovementLinkObject_CurrencyDocument
+                        zc_MovementLinkObject_CurrencyPartner
  16.03.14                                        * change OKPO_From
  12.02.14                                        * add JuridicalName_From and OKPO
  10.02.14                                        * add TotalCountPartner
