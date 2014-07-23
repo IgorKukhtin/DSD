@@ -32,6 +32,14 @@ BEGIN
      -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_Select_Movement_ReturnIn());
      vbUserId:= lpGetUserBySession (inSession);
 
+
+     -- !!!т.к. нельзя когда много данных в гриде!!!
+     IF inStartDate + (INTERVAL '100 DAY') <= inEndDate
+     THEN
+         inStartDate:= inEndDate + (INTERVAL '1 DAY');
+     END IF;
+
+
      -- Результат
      RETURN QUERY
      WITH tmpStatus AS (SELECT zc_Enum_Status_Complete()   AS StatusId

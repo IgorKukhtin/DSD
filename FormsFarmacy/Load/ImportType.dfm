@@ -57,13 +57,14 @@ inherited ImportTypeForm: TImportTypeForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 465
+        Left = 372
         Top = 0
         Width = 278
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 363
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -112,11 +113,30 @@ inherited ImportTypeForm: TImportTypeForm
           GridView = cxGridDBTableView1
         end
       end
+      object cxSplitter1: TcxSplitter
+        Left = 369
+        Top = 0
+        Width = 3
+        Height = 303
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
     Top = 168
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cxGrid
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = cxGrid1
+        Properties.Strings = (
+          'Width')
+      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh

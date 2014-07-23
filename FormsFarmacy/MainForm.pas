@@ -75,6 +75,8 @@ type
     bbImportSettings: TdxBarButton;
     actMovementLoad: TdsdOpenForm;
     bbMovementLoad: TdxBarButton;
+    actAlternativeGoodsCode: TdsdOpenForm;
+    bbAlternativeGoodsCodeForm: TdxBarButton;
   private
     { Private declarations }
   public
