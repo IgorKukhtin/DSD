@@ -121,7 +121,8 @@ uses
   ImportSettings in '..\..\FormsFarmacy\Load\ImportSettings.pas' {ImportSettingsForm: TParentForm},
   FileTypeKind in '..\..\Forms\Enum\FileTypeKind.pas' {FileTypeKindForm: TParentForm},
   PriceListItemsLoad in '..\..\FormsFarmacy\Load\PriceListItemsLoad.pas' {PriceListItemsLoadForm: TParentForm},
-  PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm};
+  PriceListLoad in '..\..\FormsFarmacy\Load\PriceListLoad.pas' {PriceListLoadForm: TParentForm},
+  AlternativeGoodsCode in '..\..\FormsFarmacy\Guides\AlternativeGoodsCode.pas' {AlternativeGoodsCodeForm: TParentForm};
 
 {$R *.res}
 {$R DevExpressRus.res}
@@ -133,6 +134,7 @@ begin
 
   Application.Initialize;
   Application.CreateForm(TdmMain, dmMain);
+  Application.CreateForm(TAlternativeGoodsCodeForm, AlternativeGoodsCodeForm);
   Application.Run;
 
   DUnitTestRunner.RunRegisteredTests;

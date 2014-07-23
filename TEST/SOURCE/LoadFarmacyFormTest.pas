@@ -31,6 +31,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadUnitFormTest;
     procedure LoadUnumFormTest;
+    procedure LoadAlternativeGoodsCodeFormTest;
   end;
 
 implementation
@@ -200,6 +201,12 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TIncomeForm');
   TdsdFormStorageFactory.GetStorage.Save(GetForm('TIncomeJournalForm'));
   TdsdFormStorageFactory.GetStorage.Load('TIncomeJournalForm');
+end;
+
+procedure TLoadFormTest.LoadAlternativeGoodsCodeFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TAlternativeGoodsCodeForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TAlternativeGoodsCodeForm');
 end;
 
 procedure TLoadFormTest.LoadPriceListFormTest;

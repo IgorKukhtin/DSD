@@ -100,6 +100,10 @@ inherited MainForm: TMainForm
         end
         item
           Visible = True
+          ItemName = 'bbAlternativeGoodsCodeForm'
+        end
+        item
+          Visible = True
           ItemName = 'bbContract'
         end
         item
@@ -282,8 +286,15 @@ inherited MainForm: TMainForm
       Action = actMovementLoad
       Category = 0
     end
+    object bbAlternativeGoodsCodeForm: TdxBarButton
+      Action = actAlternativeGoodsCode
+      Caption = #1040#1083#1100#1090#1077#1088#1085#1072#1090#1080#1074#1085#1099#1077' '#1082#1086#1076#1099
+      Category = 0
+    end
   end
   inherited ActionList: TActionList
+    Left = 240
+    Top = 56
     object actPriceList: TdsdOpenForm [0]
       Category = #1044#1086#1082#1091#1084#1077#1085#1090#1099
       MoveParams = <>
@@ -622,6 +633,16 @@ inherited MainForm: TMainForm
       Caption = #1056#1086#1083#1080
       FormName = 'TRoleForm'
       FormNameParam.Value = 'TRoleForm'
+      FormNameParam.DataType = ftString
+      GuiParams = <>
+      isShowModal = False
+    end
+    object actAlternativeGoodsCode: TdsdOpenForm
+      Category = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082#1080
+      MoveParams = <>
+      Caption = 'actAlternativeGoodsCode'
+      FormName = 'AlternativeGoodsCodeForm'
+      FormNameParam.Value = 'AlternativeGoodsCodeForm'
       FormNameParam.DataType = ftString
       GuiParams = <>
       isShowModal = False
