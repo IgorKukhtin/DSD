@@ -248,7 +248,7 @@ procedure TEDI.DeclarSave(HeaderDataSet, ItemsDataSet: TDataSet;
 const
   C_DOC = 'J12';
   C_DOC_SUB = '010';
-  C_DOC_VER = '4';
+  C_DOC_VER = '5';
   C_DOC_TYPE = '0';
   C_DOC_CNT = '1';
   C_REG = '28';
@@ -268,7 +268,8 @@ begin
   DECLAR.DECLARHEAD.C_DOC_VER := C_DOC_VER;
   DECLAR.DECLARHEAD.C_DOC_TYPE := C_DOC_TYPE;
   DECLAR.DECLARHEAD.C_DOC_CNT :=  copy(HeaderDataSet.FieldByName('InvNumber').asString, 1, 7);
-  DECLAR.DECLARHEAD.C_REG := C_RAJ;
+  DECLAR.DECLARHEAD.C_REG := C_REG;
+  DECLAR.DECLARHEAD.C_RAJ := C_RAJ;
   DECLAR.DECLARHEAD.PERIOD_MONTH := FormatDateTime('mm', HeaderDataSet.FieldByName('OperDate').asDateTime);
   DECLAR.DECLARHEAD.PERIOD_TYPE := PERIOD_TYPE;
   DECLAR.DECLARHEAD.PERIOD_YEAR := FormatDateTime('yyyy', HeaderDataSet.FieldByName('OperDate').asDateTime);
@@ -288,8 +289,6 @@ begin
   DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName('JuridicalAddress_To').asString;
   DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
-  DECLAR.DECLARBODY.HNSPDVSEL := HeaderDataSet.FieldByName('INN_From').asString;
-  DECLAR.DECLARBODY.HNSPDVBUY := HeaderDataSet.FieldByName('INN_To').asString;
 
   DECLAR.DECLARBODY.H01G1S := 'Договір;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + HeaderDataSet.FieldByName('OperDatePartnerEDI').asString;
   DECLAR.DECLARBODY.H01G2D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
@@ -303,28 +302,62 @@ begin
          ROWNUM := IntToStr(i);
          NodeValue := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('OperDate').asDateTime);
     end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
     with DECLAR.DECLARBODY.RXXXXG3S.Add do begin
          ROWNUM := IntToStr(i);
          NodeValue := ItemsDataSet.FieldByName('GoodsName').AsString + ';GTIN:' +
          ItemsDataSet.FieldByName('BarCodeGLN_Juridical').AsString + ';IDBY:' + ItemsDataSet.FieldByName('ArticleGLN_Juridical').AsString;
     end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
     with DECLAR.DECLARBODY.RXXXXG4S.Add do begin
          ROWNUM := IntToStr(i);
          NodeValue := ItemsDataSet.FieldByName('MeasureName').AsString;
     end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
     with DECLAR.DECLARBODY.RXXXXG5.Add do begin
          ROWNUM := IntToStr(i);
          NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('Amount').AsFloat);
     end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
     with DECLAR.DECLARBODY.RXXXXG6.Add do begin
          ROWNUM := IntToStr(i);
          NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('PriceNoVAT').AsFloat);
     end;
+    inc(i);
+    ItemsDataSet.Next;
+  end;
+
+  i := 1;
+  ItemsDataSet.First;
+  while not ItemsDataSet.Eof do begin
     with DECLAR.DECLARBODY.RXXXXG7.Add do begin
          ROWNUM := IntToStr(i);
-         NodeValue := gfFloatToStr(ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat);
+         NodeValue := StringReplace(FormatFloat('0.00', ItemsDataSet.FieldByName('AmountSummNoVAT').AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
     end;
-
     inc(i);
     ItemsDataSet.Next;
   end;
@@ -333,8 +366,9 @@ begin
   DECLAR.DECLARBODY.R01G11 := DECLAR.DECLARBODY.R01G7;
   DECLAR.DECLARBODY.R03G7 := gfFloatToStr(HeaderDataSet.FieldByName('SummVAT').AsFloat);
   DECLAR.DECLARBODY.R03G11 := DECLAR.DECLARBODY.R03G7;
-  DECLAR.DECLARBODY.R04G7 := gfFloatToStr(HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat);
+  DECLAR.DECLARBODY.R04G7 := StringReplace(FormatFloat('0.00', HeaderDataSet.FieldByName('TotalSummPVAT').AsFloat), DecimalSeparator, cMainDecimalSeparator, []);
   DECLAR.DECLARBODY.R04G11 := DECLAR.DECLARBODY.R04G7;
+  DECLAR.DECLARBODY.H10G1S := 'Неграш';
 
   // сохранить на диск
   XMLFileName := ExtractFilePath(ParamStr(0)) + C_REG + C_RAJ + '0024447183' +

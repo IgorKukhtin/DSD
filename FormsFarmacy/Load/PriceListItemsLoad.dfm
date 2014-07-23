@@ -11,9 +11,9 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     Top = 75
     Width = 763
     Height = 335
-    ExplicitTop = 91
+    ExplicitTop = 75
     ExplicitWidth = 763
-    ExplicitHeight = 319
+    ExplicitHeight = 335
     ClientRectBottom = 335
     ClientRectRight = 763
     inherited tsMain: TcxTabSheet
@@ -21,7 +21,7 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
         Width = 763
         Height = 335
         ExplicitWidth = 763
-        ExplicitHeight = 319
+        ExplicitHeight = 335
         inherited cxGridDBTableView: TcxGridDBTableView
           Styles.Inactive = nil
           Styles.Selection = nil
@@ -280,7 +280,19 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     StoredProcName = 'gpInsertUpdate_Object_GoodsLink'
     DataSets = <>
     OutputType = otResult
-    Params = <>
+    Params = <
+      item
+        Value = Null
+      end
+      item
+        Value = Null
+      end
+      item
+        Value = Null
+      end
+      item
+        Value = Null
+      end>
     Left = 176
     Top = 272
   end

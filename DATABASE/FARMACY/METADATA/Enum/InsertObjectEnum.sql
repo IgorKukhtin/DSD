@@ -11,33 +11,6 @@ BEGIN
    -- Добавляем роли:
    -- zc_Enum_Role_Admin
    PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Admin(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Admin'), inName:= 'Роль администратора', inEnumName:= 'zc_Enum_Role_Admin');
-   -- zc_Enum_Role_Transport
-   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Транспорт-ввод документов')
-   THEN
-       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Транспорт-ввод документов')
-                                          , inDescId := zc_Object_Role()
-                                          , inEnumName:= 'zc_Enum_Role_Transport');
-   ELSE
-       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Transport(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Transport'), inName:= 'Транспорт-ввод документов', inEnumName:= 'zc_Enum_Role_Transport');
-   END IF;
-   -- zc_Enum_Role_Bread
-   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Хлеб')
-   THEN
-       PERFORM lpUpdate_Object_Enum_byCode (inCode   := (SELECT ObjectCode FROM Object WHERE DescId = zc_Object_Role() AND ValueData = 'Хлеб')
-                                          , inDescId := zc_Object_Role()
-                                          , inEnumName:= 'zc_Enum_Role_Bread');
-   ELSE
-       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_Bread(), inDescId:= zc_Object_Role(), inCode:= lfGet_ObjectCode_byEnum ('zc_Enum_Role_Bread'), inName:= 'Хлеб', inEnumName:= 'zc_Enum_Role_Bread');
-   END IF;
-   -- zc_Enum_Role_1107
-   IF EXISTS (SELECT * FROM Object WHERE DescId = zc_Object_Role() AND ObjectCode = 1107)
-   THEN
-       PERFORM lpUpdate_Object_Enum_byCode (inCode   := 1107
-                                          , inDescId := zc_Object_Role()
-                                          , inEnumName:= 'zc_Enum_Role_1107');
-   ELSE
-       PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Role_1107(), inDescId:= zc_Object_Role(), inCode:= 1107, inName:= 'Бухг + мясо', inEnumName:= 'zc_Enum_Role_1107');
-   END IF;
 
 END $$;
 /*
@@ -107,6 +80,10 @@ BEGIN
      -- !!! формы оплаты
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_FirstForm(),  inDescId:= zc_Object_PaidKind(), inCode:= 1, inName:= 'БН', inEnumName:= 'zc_Enum_PaidKind_FirstForm');
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_PaidKind_SecondForm(), inDescId:= zc_Object_PaidKind(), inCode:= 2, inName:= 'Нал', inEnumName:= 'zc_Enum_PaidKind_SecondForm');
+
+     -- !!! Типы НДС
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_NDSKind_Common(),  inDescId:= zc_Object_NDSKind(), inCode:= 1, inName:= '20% - общее основание', inEnumName:= 'zc_Enum_NDSKind_Common');
+     -- PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_NDSKind_Medical(), inDescId:= zc_Object_NDSKind(), inCode:= 2, inName:= '7% - медикаменты', inEnumName:= 'zc_Enum_NDSKind_Medical');
 
      -- !!! Статусы документов
      PERFORM lpInsertUpdate_Object_Enum (inId:= zc_Enum_Status_UnComplete(), inDescId:= zc_Object_Status(), inCode:= zc_Enum_StatusCode_UnComplete(), inName:= 'Не проведен', inEnumName:= 'zc_Enum_Status_UnComplete');
@@ -515,63 +492,5 @@ END $$;
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
- 19.07.14                                        * change zc_Enum_Account_40302
- 19.07.14                                        * del zc_Enum_AccountDirection_40500 and zc_Enum_Account_40501
- 13.06.14                                        * add zc_Enum_Role_1107
- 21.05.14                                        * add zc_Enum_DocumentTaxKind_Prepay
- 21.05.14                                        * add zc_Enum_ContractConditionKind_DelayPrepay
- 13.05.14                                        * add zc_Enum_ProfitLossDirection_70110 and zc_Enum_ProfitLoss_70111 and zc_Enum_ProfitLoss_70112
- 07.05.14                                        * add zc_Enum_Role_Bread
- 06.05.14                                        * add zc_Enum_InfoMoney_21419
- 05.05.14                                        * del zc_Enum_ContractConditionKind_DelayDayCalendarSale and zc_Enum_ContractConditionKind_DelayDayBankSale
- 04.05.14                                        * add zc_Enum_Account_40401 and zc_Enum_Account_40501
- 04.05.14                                        * change zc_Enum_AccountDirection_40500
- 30.04.14                                        * add zc_Enum_DocumentTaxKind_CorrectivePrice
- 21.04.14                                        * add zc_Enum_ContractConditionKind_DelayCreditLimit
- 19.04.14                                        * add zc_Enum_Account_110...
- 17.04.14                                        * add zc_Enum_AccountGroup_110000
- 16.04.14                                        * add zc_Enum_InfoMoney_30201
- 08.04.14                                        * add zc_Enum_GoodsKind_Main
- 21.03.14                                        * add zc_Enum_Account_3020... and zc_Enum_InfoMoney_20...
- 09.03.14                                        * add zc_Enum_Account_50401
- 21.02.14                                        * add zc_Enum_ContractConditionKind_LimitReturn
- 09.02.14                                                       * add Типы формирования налогового документа
- 30.01.14                                        * add zc_Enum_ProfitLoss_80301
- 25.01.14                                        * add zc_Enum_ContractConditionKind_...
- 24.01.14                                        * add zc_Enum_InfoMoneyDestination_40900
- 22.12.13                                        * add zc_Enum_InfoMoneyGroup_...
- 22.12.13                                        * add zc_Enum_AccountDirection_40...
- 19.12.13                                        * add del zc_Enum_ContractConditionKind_...
- 30.11.13                                        * add del zc_Enum_StaffListSummKind_WorkHours and zc_Enum_StaffListSummKind_HoursDayConst
- 28.11.13                                        * change comment
- 28.11.13                                        * add zc_Enum_WorkTimeKind_Trainee50 and zc_Enum_WorkTimeKind_Quit and zc_Enum_WorkTimeKind_Trial
- 19.11.13                                        * add zc_Enum_StaffListSummKind_HoursPlanConst and zc_Enum_StaffListSummKind_HoursDayConst
- 18.11.13                                        * add zc_Enum_StaffListSummKind_HoursDay
- 18.11.13                                        * replace zc_Enum_StaffListSummKind_RatioHours -> zc_Enum_StaffListSummKind_HoursPlan
- 18.11.13                                        * replace zc_Enum_StaffListSummKind_Turn -> zc_Enum_StaffListSummKind_Day
- 18.11.13                                        * replace zc_Enum_StaffListSummKind_MasterStaffListHours -> zc_Enum_StaffListSummKind_WorkHours
- 09.11.13                                        * add zc_Enum_Role_Transport
- 03.11.13                                        * rename zc_Enum_ProfitLoss_40209 -> zc_Enum_ProfitLoss_40208
- 01.11.13                                        * add zc_Enum_Account_110101
- 30.10.13         * add Типы сумм для штатного расписания
- 07.10.13                                        * role...
- 03.10.13                                        * add zc_Enum_InfoMoney_20901, zc_Enum_InfoMoney_30101
- 01.10.13         * add Типы рабочего времени (6 шт)
- 30.09.13                                        * add zc_Enum_InfoMoney_21201
- 29.09.13                                        * add zc_Object_RateFuelKind
- 27.09.13                                        * add zc_Enum_InfoMoney_20401
- 26.09.13         * del zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter
- 24.09.13         * add zc_Enum_RateFuelKind_Summer, zc_Enum_RateFuelKind_Winter, zc_Enum_RouteKind_Internal, zc_Enum_RouteKind_External
- 21.09.13                                        * add zc_Enum_InfoMoney_80401
- 15.09.13                                        * add zc_Enum_AccountDirection_20900 and zc_Enum_Account_20901
- 07.09.13                                        * add zc_Enum_ProfitLossDirection_1... and zc_Enum_ProfitLossDirection_7...
- 01.09.13                                        * add zc_Enum_ProfitLossDirection_4...
- 26.08.13                                        * add ОПиУ
- 25.08.13                                        * add zc_Enum_Account_100301
- 21.08.13                        * add zc_Enum_Account_40101
- 20.07.13                                        * add zc_Enum_AccountDirection_20400
- 18.07.13                                        * add zc_Enum_AccountDirection_20500, 20600
- 02.07.13                                        * add 1-уровень Управленческих Счетов
- 01.07.13                                        * add 2-уровень Управленческих назначений
- 28.06.13                                        *
-*/
+ 23.07.14                         * Скопировано для аптек
+\*/

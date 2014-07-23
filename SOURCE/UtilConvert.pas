@@ -48,12 +48,13 @@ uses DB;
    function gfStringToDataType(inType: String): TFieldType;  //tested
    // Конвертируем строку в дату
    function gfStrFormatToDate (DateStr, Format: string): TDateTime;
+const
+  cMainDecimalSeparator = '.';
 
 implementation
 uses XSBuiltIns, SysUtils, UtilConst, variants, StrUtils;
 {-----------------------------------------------------------------------------------------------}
 const
-  cMainDecimalSeparator = '.';
   cMainDateTimeFormat = 'dd-mm-yyyy HH:MM:SS';
   cMainDateFormat = 'dd.mm.yyyy';
   {константы типов данных}

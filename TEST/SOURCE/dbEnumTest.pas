@@ -20,8 +20,7 @@ type
 
  var
 
-   EnumPath: string = '..\DATABASE\COMMON\METADATA\Enum\';
-   ProcedurePath: string = '..\DATABASE\COMMON\PROCEDURE\';
+   EnumPath: string = '..\DATABASE\FARMACY\METADATA\Enum\';
 
 implementation
 
