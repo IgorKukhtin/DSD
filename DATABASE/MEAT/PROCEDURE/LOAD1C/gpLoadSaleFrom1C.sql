@@ -58,8 +58,9 @@ BEGIN
                                , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_From Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
-
+                               , PartionGoodsId Integer
+                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
+                  
 
      -- !!!Продажи!!!
 
@@ -208,7 +209,8 @@ BEGIN
                                , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_To Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                               , PartionGoodsId Integer
+                               , Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
 
 
@@ -358,6 +360,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.14                                        * add ...Price
  30.04.14                                        * lpComplete_Movement_ReturnIn
  28.04.14                                        * err 
  24.04.14                        * по одной записи
