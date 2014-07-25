@@ -2,29 +2,26 @@ inherited ImportTypeForm: TImportTypeForm
   Caption = #1057#1087#1088#1072#1074#1086#1095#1085#1080#1082' <'#1058#1080#1087#1099' '#1080#1084#1087#1086#1088#1090#1072'>'
   ClientHeight = 339
   ClientWidth = 743
-  ExplicitWidth = 759
-  ExplicitHeight = 378
+  ExplicitWidth = 751
+  ExplicitHeight = 366
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Width = 743
-    Height = 311
-    ExplicitTop = 28
+    Height = 313
     ExplicitWidth = 743
-    ExplicitHeight = 311
-    ClientRectBottom = 307
-    ClientRectRight = 739
+    ExplicitHeight = 313
+    ClientRectBottom = 313
+    ClientRectRight = 743
     inherited tsMain: TcxTabSheet
-      ExplicitLeft = 4
-      ExplicitTop = 4
-      ExplicitWidth = 735
-      ExplicitHeight = 303
+      ExplicitWidth = 743
+      ExplicitHeight = 313
       inherited cxGrid: TcxGrid
-        Width = 369
-        Height = 303
+        Width = 465
+        Height = 313
         Align = alLeft
-        ExplicitWidth = 369
-        ExplicitHeight = 303
+        ExplicitWidth = 465
+        ExplicitHeight = 313
         inherited cxGridDBTableView: TcxGridDBTableView
           OptionsData.Appending = True
           OptionsData.Inserting = True
@@ -60,13 +57,14 @@ inherited ImportTypeForm: TImportTypeForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 369
+        Left = 372
         Top = 0
-        Width = 366
-        Height = 303
+        Width = 278
+        Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
+        ExplicitWidth = 363
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -115,11 +113,30 @@ inherited ImportTypeForm: TImportTypeForm
           GridView = cxGridDBTableView1
         end
       end
+      object cxSplitter1: TcxSplitter
+        Left = 369
+        Top = 0
+        Width = 3
+        Height = 303
+      end
     end
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 67
     Top = 168
+  end
+  inherited cxPropertiesStore: TcxPropertiesStore
+    Components = <
+      item
+        Component = cxGrid
+        Properties.Strings = (
+          'Width')
+      end
+      item
+        Component = cxGrid1
+        Properties.Strings = (
+          'Width')
+      end>
   end
   inherited ActionList: TActionList
     inherited actRefresh: TdsdDataSetRefresh
@@ -262,7 +279,7 @@ inherited ImportTypeForm: TImportTypeForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     inherited Bar: TdxBar
       ItemLinks = <
@@ -350,7 +367,7 @@ inherited ImportTypeForm: TImportTypeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'ioId'
         Component = MasterCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput

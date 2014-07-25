@@ -95,6 +95,18 @@ type
     actUpdateMI_EDIComdoc: TdsdExecStoredProc;
     bbUpdate_EDIComdoc_Params: TdxBarButton;
     bbInsertUpdate_SaleLinkEDI: TdxBarButton;
+    spSelectPrint: TdsdStoredProc;
+    PrintHeaderCDS: TClientDataSet;
+    PrintItemsCDS: TClientDataSet;
+    mactCOMDOC: TMultiAction;
+    EDIComdoc: TEDIAction;
+    bb_mactComDoc: TdxBarButton;
+    actExecPrintStoredProc: TdsdExecStoredProc;
+    spSelectTax_Client: TdsdStoredProc;
+    mactDECLAR: TMultiAction;
+    EDIDeclar: TEDIAction;
+    bbDeclar: TdxBarButton;
+    actStoredProcTaxPrint: TdsdExecStoredProc;
   private
     { Private declarations }
   public

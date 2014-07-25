@@ -109,7 +109,6 @@ type
     bbEDIComDoc: TdxBarButton;
     EDI: TEDI;
     spGetDefaultEDI: TdsdStoredProc;
-    dsdExecStoredProc1: TdsdExecStoredProc;
     actSetDefaults: TdsdExecStoredProc;
   private
     { Private declarations }

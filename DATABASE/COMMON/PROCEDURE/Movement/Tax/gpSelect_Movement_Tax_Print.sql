@@ -103,7 +103,7 @@ BEGIN
            , Object_From.ValueData             		AS FromName
            , Object_To.ValueData               		AS ToName
 
-           , View_Contract.InvNumber         		AS ContractName
+           , View_Contract.InvNumber         		AS ContractName 
            , ObjectDate_Signing.ValueData               AS ContractSigningDate
            , View_Contract.ContractKindName             AS ContractKind
 
@@ -119,6 +119,7 @@ BEGIN
            , OH_JuridicalDetails_To.BankName            AS BankName_To
            , OH_JuridicalDetails_To.MFO                 AS BankMFO_To
            , OH_JuridicalDetails_To.Phone               AS Phone_To
+           , ObjectString_BuyerGLNCode.ValueData        AS BuyerGLNCode
 
            , OH_JuridicalDetails_From.FullName          AS JuridicalName_From
            , OH_JuridicalDetails_From.JuridicalAddress  AS JuridicalAddress_From
@@ -130,6 +131,10 @@ BEGIN
            , OH_JuridicalDetails_From.BankName          AS BankName_From
            , OH_JuridicalDetails_From.MFO               AS BankMFO_From
            , OH_JuridicalDetails_From.Phone             AS Phone_From
+           , ObjectString_SupplierGLNCode.ValueData     AS SupplierGLNCode
+
+           , MovementString_InvNumberPartnerEDI.ValueData  AS InvNumberPartnerEDI
+           , MovementDate_OperDatePartnerEDI.ValueData     AS OperDatePartnerEDI
 
            , CASE WHEN inisClientCopy=TRUE
                   THEN 'X' ELSE '' END                  AS CopyForClient
@@ -139,7 +144,21 @@ BEGIN
                   THEN 'X' ELSE '' END                  AS ERPN
            , CAST (REPEAT (' ', 4 - LENGTH (MovementString_InvNumberBranch.ValueData)) || MovementString_InvNumberBranch.ValueData AS TVarChar) AS InvNumberBranch
 
+           , COALESCE(MovementLinkMovement_Sale.MovementChildId, 0) AS EDIId
+
        FROM Movement
+            LEFT JOIN MovementLinkMovement AS MovementLinkMovement_Sale
+                                           ON MovementLinkMovement_Sale.MovementId = inMovementId
+                                          AND MovementLinkMovement_Sale.DescId = zc_MovementLinkMovement_Sale()
+
+            LEFT JOIN MovementDate AS MovementDate_OperDatePartnerEDI
+                                   ON MovementDate_OperDatePartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                  AND MovementDate_OperDatePartnerEDI.DescId = zc_MovementDate_OperDatePartner()
+
+            LEFT JOIN MovementString AS MovementString_InvNumberPartnerEDI
+                                     ON MovementString_InvNumberPartnerEDI.MovementId =  MovementLinkMovement_Sale.MovementChildId
+                                    AND MovementString_InvNumberPartnerEDI.DescId = zc_MovementString_InvNumberPartner()
+
             LEFT JOIN MovementString AS MovementString_InvNumberBranch
                                      ON MovementString_InvNumberBranch.MovementId =  Movement.Id
                                     AND MovementString_InvNumberBranch.DescId = zc_MovementString_InvNumberBranch()
@@ -181,6 +200,13 @@ BEGIN
             LEFT JOIN ObjectHistory_JuridicalDetails_ViewByDate AS OH_JuridicalDetails_From
                                                                 ON OH_JuridicalDetails_From.JuridicalId = Object_From.Id
                                                                AND Movement.OperDate BETWEEN OH_JuridicalDetails_From.StartDate AND OH_JuridicalDetails_From.EndDate
+            LEFT JOIN ObjectString AS ObjectString_BuyerGLNCode
+                                   ON ObjectString_BuyerGLNCode.ObjectId = OH_JuridicalDetails_To.JuridicalId
+                                  AND ObjectString_BuyerGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
+
+            LEFT JOIN ObjectString AS ObjectString_SupplierGLNCode
+                                   ON ObjectString_SupplierGLNCode.ObjectId = OH_JuridicalDetails_From.JuridicalId
+                                  AND ObjectString_SupplierGLNCode.DescId = zc_ObjectString_Juridical_GLNCode()
 
             LEFT JOIN MovementLinkObject AS MovementLinkObject_Contract
                                          ON MovementLinkObject_Contract.MovementId = Movement.Id
@@ -198,18 +224,40 @@ BEGIN
 
      -- Данные по строчной части налоговой
      OPEN Cursor2 FOR
-     WITH
-       tmpObject_GoodsPropertyValue AS
-       (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
+     WITH tmpObject_GoodsPropertyValue AS
+       (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
+             , ObjectFloat_Amount.ValueData         AS Amount
+             , ObjectString_BarCode.ValueData       AS BarCode
+             , ObjectString_Article.ValueData       AS Article
+             , ObjectString_BarCodeGLN.ValueData    AS BarCodeGLN
+             , ObjectString_ArticleGLN.ValueData    AS ArticleGLN
         FROM (SELECT vbGoodsPropertyId AS GoodsPropertyId WHERE vbGoodsPropertyId <> 0
              ) AS tmpGoodsProperty
              INNER JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_GoodsProperty
                                    ON ObjectLink_GoodsPropertyValue_GoodsProperty.ChildObjectId = tmpGoodsProperty.GoodsPropertyId
                                   AND ObjectLink_GoodsPropertyValue_GoodsProperty.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsProperty()
-             INNER JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-                                                           AND Object_GoodsPropertyValue.ValueData <> ''
+             LEFT JOIN Object AS Object_GoodsPropertyValue ON Object_GoodsPropertyValue.Id = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+             LEFT JOIN ObjectFloat AS ObjectFloat_Amount
+                                   ON ObjectFloat_Amount.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                  AND ObjectFloat_Amount.DescId = zc_ObjectFloat_GoodsPropertyValue_Amount()
+
+             LEFT JOIN ObjectString AS ObjectString_BarCode
+                                    ON ObjectString_BarCode.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCode.DescId = zc_ObjectString_GoodsPropertyValue_BarCode()
+             LEFT JOIN ObjectString AS ObjectString_Article
+                                    ON ObjectString_Article.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_Article.DescId = zc_ObjectString_GoodsPropertyValue_Article()
+
+             LEFT JOIN ObjectString AS ObjectString_BarCodeGLN
+                                    ON ObjectString_BarCodeGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_BarCodeGLN.DescId = zc_ObjectString_GoodsPropertyValue_BarCodeGLN()
+             LEFT JOIN ObjectString AS ObjectString_ArticleGLN
+                                    ON ObjectString_ArticleGLN.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
+                                   AND ObjectString_ArticleGLN.DescId = zc_ObjectString_GoodsPropertyValue_ArticleGLN()
+
              LEFT JOIN ObjectLink AS ObjectLink_GoodsPropertyValue_Goods
                                   ON ObjectLink_GoodsPropertyValue_Goods.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_Goods.DescId = zc_ObjectLink_GoodsPropertyValue_Goods()
@@ -247,6 +295,13 @@ BEGIN
            , MovementItem.Amount                    AS AmountPartner
            , MIFloat_Price.ValueData                AS Price
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
+
+           , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.Article, '')    AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '') AS ArticleGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
+
 
            , CAST (CASE WHEN MIFloat_CountForPrice.ValueData > 0
                            THEN CAST (MovementItem.Amount * MIFloat_Price.ValueData / MIFloat_CountForPrice.ValueData AS NUMERIC (16, 2))

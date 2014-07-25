@@ -11,9 +11,12 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , OperDatePartner TDateTime
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat, TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
+             , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
+             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
              )
 AS
 $BODY$
@@ -38,14 +41,23 @@ BEGIN
              , CAST (0 as TFloat)                   AS TotalSummMVAT
              , CAST (0 as TFloat)                   AS TotalSummPVAT
              , CAST (0 as TFloat)                   AS TotalSumm
-             , 0                     				AS FromId
-             , CAST ('' as TVarChar) 			    AS FromName
-             , 0                     				AS ToId
-             , CAST ('' as TVarChar) 				AS ToName
-             , 0                     				AS PaidKindId
-             , CAST ('' as TVarChar) 				AS PaidKindName
-             , 0                     				AS ContractId
-             , CAST ('' as TVarChar) 				AS ContractName
+
+             , CAST (0 as TFloat)                   AS CurrencyValue
+
+             , 0                     		    AS FromId
+             , CAST ('' as TVarChar) 		    AS FromName
+             , 0                     		    AS ToId
+             , CAST ('' as TVarChar) 		    AS ToName
+             , 0                     		    AS PaidKindId
+             , CAST ('' as TVarChar) 		    AS PaidKindName
+             , 0                     		    AS ContractId
+             , CAST ('' as TVarChar) 		    AS ContractName
+
+             , 0                     AS CurrencyDocumentId
+             , CAST ('' as TVarChar) AS CurrencyDocumentName
+             , 0                     AS CurrencyPartnerId
+             , CAST ('' as TVarChar) AS CurrencyPartnerName
+
           FROM lfGet_Object_Status(zc_Enum_Status_UnComplete()) AS Object_Status;
      ELSE
 
@@ -64,6 +76,7 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData  AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData  AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData      AS TotalSumm
+           , MovementFloat_CurrencyValue.ValueData       AS CurrencyValue
            , Object_From.Id                    	    AS FromId
            , Object_From.ValueData             	    AS FromName
            , Object_To.Id                      	    AS ToId
@@ -72,8 +85,12 @@ BEGIN
            , Object_PaidKind.ValueData         	    AS PaidKindName
            , View_Contract_InvNumber.ContractId     AS ContractId
            , View_Contract_InvNumber.InvNumber      AS ContractName
-
-
+        
+           , Object_CurrencyDocument.Id             AS CurrencyDocumentId
+           , Object_CurrencyDocument.ValueData      AS CurrencyDocumentName
+           , Object_CurrencyPartner.Id              AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData       AS CurrencyPartnerName
+ 
        FROM Movement
             LEFT JOIN Object AS Object_Status ON Object_Status.Id = Movement.StatusId
 
@@ -109,6 +126,10 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -128,6 +149,16 @@ BEGIN
                                         AND MovementLinkObject_Contract.DescId = zc_MovementLinkObject_Contract()
             LEFT JOIN Object_Contract_InvNumber_View AS View_Contract_InvNumber ON View_Contract_InvNumber.ContractId = MovementLinkObject_Contract.ObjectId
 
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
+
          WHERE Movement.Id =  inMovementId
          AND Movement.DescId = zc_Movement_ReturnOut();
      END IF;
@@ -140,6 +171,9 @@ ALTER FUNCTION gpGet_Movement_ReturnOut (Integer, TDateTime, TVarChar) OWNER TO 
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».     Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.07.14         * add zc_MovementFloat_CurrencyValue
+                        zc_MovementLinkObject_CurrencyDocument
+                        zc_MovementLinkObject_CurrencyPartner
  10.02.14                                                            *
 */
 

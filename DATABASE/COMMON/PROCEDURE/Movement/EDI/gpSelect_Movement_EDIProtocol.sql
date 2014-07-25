@@ -23,7 +23,7 @@ BEGIN
         FROM (SELECT MovementProtocolData.Id
                    , x[1] AS ProtocolText
                    , MovementProtocolData.OperDate
-                   , MovementProtocol.UserId
+                   , MovementProtocolData.UserId
               FROM (SELECT Movement.Id
                          , XPATH ('/XML/EDIEvent/@Value', MovementProtocol.ProtocolData :: XML) AS X
                          , MovementProtocol.OperDate

@@ -13,10 +13,14 @@ RETURNS TABLE (Id Integer, InvNumber TVarChar, OperDate TDateTime, StatusCode In
              , PriceWithVAT Boolean, VATPercent TFloat, ChangePercent TFloat
              , TotalCount TFloat
              , TotalSummMVAT TFloat, TotalSummPVAT TFloat, TotalSumm TFloat
+             , CurrencyValue TFloat
              , FromId Integer, FromName TVarChar, ToId Integer, ToName TVarChar
              , PaidKindId Integer, PaidKindName TVarChar
              , ContractId Integer, ContractName TVarChar
-             , RouteSortingId Integer, RouteSortingName TVarChar, InvNumberOrder TVarChar
+             , RouteSortingId Integer, RouteSortingName TVarChar
+             , CurrencyDocumentId Integer, CurrencyDocumentName TVarChar
+             , CurrencyPartnerId Integer, CurrencyPartnerName TVarChar
+             , InvNumberOrder TVarChar
              , PriceListId Integer, PriceListName TVarChar
              , DocumentTaxKindId Integer, DocumentTaxKindName TVarChar
              , MovementId_Master Integer, InvNumberPartner_Master TVarChar
@@ -48,6 +52,7 @@ BEGIN
              , CAST (0 AS TFloat)                           AS TotalSummMVAT
              , CAST (0 AS TFloat)                           AS TotalSummPVAT
              , CAST (0 AS TFloat)                           AS TotalSumm
+             , CAST (0 as TFloat)                           AS CurrencyValue
              , 0                     		            AS FromId
              , CAST ('' AS TVarChar)                        AS FromName
              , 0                     			    AS ToId
@@ -58,6 +63,10 @@ BEGIN
              , CAST ('' AS TVarChar) 			    AS ContractName
              , 0                     			    AS RouteSortingId
              , CAST ('' AS TVarChar) 			    AS RouteSortingName
+             , 0                                            AS CurrencyDocumentId
+             , CAST ('' as TVarChar)                        AS CurrencyDocumentName
+             , 0                                            AS CurrencyPartnerId
+             , CAST ('' as TVarChar)                        AS CurrencyPartnerName
              , CAST ('' AS TVarChar) 			    AS InvNumberOrder
              , CAST (0  AS INTEGER)                         AS PriceListId
              , CAST ('' AS TVarChar) 			    AS PriceListName
@@ -87,16 +96,21 @@ BEGIN
            , MovementFloat_TotalSummMVAT.ValueData          AS TotalSummMVAT
            , MovementFloat_TotalSummPVAT.ValueData          AS TotalSummPVAT
            , MovementFloat_TotalSumm.ValueData              AS TotalSumm
-           , Object_From.Id                    			    AS FromId
-           , Object_From.ValueData             			    AS FromName
-           , Object_To.Id                      			    AS ToId
-           , Object_To.ValueData               			    AS ToName
-           , Object_PaidKind.Id                			    AS PaidKindId
-           , Object_PaidKind.ValueData         			    AS PaidKindName
-           , View_Contract_InvNumber.ContractId    		    AS ContractId
-           , View_Contract_InvNumber.InvNumber     		    AS ContractName
-           , Object_RouteSorting.Id        				    AS RouteSortingId
-           , Object_RouteSorting.ValueData 				    AS RouteSortingName
+           , MovementFloat_CurrencyValue.ValueData          AS CurrencyValue
+           , Object_From.Id                    		    AS FromId
+           , Object_From.ValueData             		    AS FromName
+           , Object_To.Id                      		    AS ToId
+           , Object_To.ValueData               		    AS ToName
+           , Object_PaidKind.Id                		    AS PaidKindId
+           , Object_PaidKind.ValueData         		    AS PaidKindName
+           , View_Contract_InvNumber.ContractId    	    AS ContractId
+           , View_Contract_InvNumber.InvNumber     	    AS ContractName
+           , Object_RouteSorting.Id        		    AS RouteSortingId
+           , Object_RouteSorting.ValueData 		    AS RouteSortingName
+           , Object_CurrencyDocument.Id                     AS CurrencyDocumentId
+           , Object_CurrencyDocument.ValueData              AS CurrencyDocumentName
+           , Object_CurrencyPartner.Id                      AS CurrencyPartnerId
+           , Object_CurrencyPartner.ValueData               AS CurrencyPartnerName
            , MovementString_InvNumberOrder.ValueData        AS InvNumberOrder
            , Object_PriceList.id                            AS PriceListId
            , Object_PriceList.valuedata                     AS PriceListName
@@ -153,6 +167,10 @@ BEGIN
                                     ON MovementFloat_TotalSumm.MovementId =  Movement.Id
                                    AND MovementFloat_TotalSumm.DescId = zc_MovementFloat_TotalSumm()
 
+            LEFT JOIN MovementFloat AS MovementFloat_CurrencyValue
+                                    ON MovementFloat_CurrencyValue.MovementId =  Movement.Id
+                                   AND MovementFloat_CurrencyValue.DescId = zc_MovementFloat_CurrencyValue()
+
             LEFT JOIN MovementLinkObject AS MovementLinkObject_From
                                          ON MovementLinkObject_From.MovementId = Movement.Id
                                         AND MovementLinkObject_From.DescId = zc_MovementLinkObject_From()
@@ -177,6 +195,16 @@ BEGIN
                                          ON MovementLinkObject_RouteSorting.MovementId = Movement.Id
                                         AND MovementLinkObject_RouteSorting.DescId = zc_MovementLinkObject_RouteSorting()
             LEFT JOIN Object AS Object_RouteSorting ON Object_RouteSorting.Id = MovementLinkObject_RouteSorting.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyDocument
+                                         ON MovementLinkObject_CurrencyDocument.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyDocument.DescId = zc_MovementLinkObject_CurrencyDocument()
+            LEFT JOIN Object AS Object_CurrencyDocument ON Object_CurrencyDocument.Id = MovementLinkObject_CurrencyDocument.ObjectId
+
+            LEFT JOIN MovementLinkObject AS MovementLinkObject_CurrencyPartner
+                                         ON MovementLinkObject_CurrencyPartner.MovementId = Movement.Id
+                                        AND MovementLinkObject_CurrencyPartner.DescId = zc_MovementLinkObject_CurrencyPartner()
+            LEFT JOIN Object AS Object_CurrencyPartner ON Object_CurrencyPartner.Id = MovementLinkObject_CurrencyPartner.ObjectId
 
             LEFT JOIN ObjectLink AS ObjectLink_Partner_Juridical
                                  ON ObjectLink_Partner_Juridical.ObjectId = Object_To.Id
@@ -257,6 +285,9 @@ ALTER FUNCTION gpGet_Movement_Sale (Integer, TDateTime, TVarChar) OWNER TO postg
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 24.07.14         * add zc_MovementFloat_CurrencyValue
+                        zc_MovementLinkObject_CurrencyDocument
+                        zc_MovementLinkObject_CurrencyPartner
  29.05.14                        * add isCOMDOC 
  17.05.14                                        * add Movement_DocumentMaster.StatusId <> zc_Enum_Status_Erased()
  23.03.14                                        * rename zc_MovementLinkMovement_Child -> zc_MovementLinkMovement_Master

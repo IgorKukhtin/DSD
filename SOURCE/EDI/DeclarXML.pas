@@ -115,6 +115,7 @@ type
     function Get_H01G2D: UnicodeString;
     function Get_H01G3S: UnicodeString;
     function Get_H02G1S: UnicodeString;
+    function Get_H10G1S: UnicodeString;
     function Get_RXXXXG2D: IXMLRXXXXG2DTypeList;
     function Get_RXXXXG3S0: IXMLRXXXXG3S0TypeList;
     function Get_RXXXXG3S1: IXMLRXXXXG3S1TypeList;
@@ -146,6 +147,7 @@ type
     procedure Set_H01G2D(Value: UnicodeString);
     procedure Set_H01G3S(Value: UnicodeString);
     procedure Set_H02G1S(Value: UnicodeString);
+    procedure Set_H10G1S(Value: UnicodeString);
     procedure Set_R01G7(Value: UnicodeString);
     procedure Set_R01G11(Value: UnicodeString);
     procedure Set_R03G7(Value: UnicodeString);
@@ -170,6 +172,7 @@ type
     property H01G2D: UnicodeString read Get_H01G2D write Set_H01G2D;
     property H01G3S: UnicodeString read Get_H01G3S write Set_H01G3S;
     property H02G1S: UnicodeString read Get_H02G1S write Set_H02G1S;
+    property H10G1S: UnicodeString read Get_H10G1S write Set_H10G1S;
     property RXXXXG2D: IXMLRXXXXG2DTypeList read Get_RXXXXG2D;
     property RXXXXG3S0: IXMLRXXXXG3S0TypeList read Get_RXXXXG3S0;
     property RXXXXG3S1: IXMLRXXXXG3S1TypeList read Get_RXXXXG3S1;
@@ -471,6 +474,7 @@ type
     function Get_H01G2D: UnicodeString;
     function Get_H01G3S: UnicodeString;
     function Get_H02G1S: UnicodeString;
+    function Get_H10G1S: UnicodeString;
     function Get_RXXXXG2D: IXMLRXXXXG2DTypeList;
     function Get_RXXXXG3S0: IXMLRXXXXG3S0TypeList;
     function Get_RXXXXG3S1: IXMLRXXXXG3S1TypeList;
@@ -502,6 +506,7 @@ type
     procedure Set_H01G2D(Value: UnicodeString);
     procedure Set_H01G3S(Value: UnicodeString);
     procedure Set_H02G1S(Value: UnicodeString);
+    procedure Set_H10G1S(Value: UnicodeString);
     procedure Set_R01G7(Value: UnicodeString);
     procedure Set_R01G11(Value: UnicodeString);
     procedure Set_R03G7(Value: UnicodeString);
@@ -1059,9 +1064,19 @@ begin
   Result := ChildNodes['H02G1S'].Text;
 end;
 
+function TXMLDECLARBODYType.Get_H10G1S: UnicodeString;
+begin
+  Result := ChildNodes['H10G1S'].Text;
+end;
+
 procedure TXMLDECLARBODYType.Set_H02G1S(Value: UnicodeString);
 begin
   ChildNodes['H02G1S'].NodeValue := Value;
+end;
+
+procedure TXMLDECLARBODYType.Set_H10G1S(Value: UnicodeString);
+begin
+  ChildNodes['H10G1S'].NodeValue := Value;
 end;
 
 function TXMLDECLARBODYType.Get_RXXXXG2D: IXMLRXXXXG2DTypeList;

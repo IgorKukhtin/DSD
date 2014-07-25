@@ -1,6 +1,7 @@
 -- Function: lpInsertUpdate_Movement_ReturnOut()
 
 DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer);
+DROP FUNCTION IF EXISTS lpInsertUpdate_Movement_ReturnOut (Integer, TVarChar, TDateTime, TDateTime, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer,Integer, Integer);
 
 CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Налоговая>
@@ -14,6 +15,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_ReturnOut(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inUserId              Integer     -- пользователь
 )
 RETURNS Integer AS
@@ -48,6 +51,9 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
+     -- сохранили свойство <Курс для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, 0);             --- пока 0))
+
      -- сохранили связь с <От кого (в документе)>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_From(), ioId, inFromId);
      -- сохранили связь с <Кому (в документе)>
@@ -57,6 +63,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_PaidKind(), ioId, inPaidKindId);
      -- сохранили связь с <Договора>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
+
+     -- сохранили связь с <Валюта (документа)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     -- сохранили связь с <Валюта (контрагента) >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
      -- пересчитали Итоговые суммы по накладной
      PERFORM lpInsertUpdate_MovementFloat_TotalSumm (ioId);
@@ -71,6 +82,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.07.14         * add inCurrencyDocumentId
+                        inCurrencyPartnerId
  10.02.14                                        * в lp-должно быть все
  10.02.14                                                       *
 */

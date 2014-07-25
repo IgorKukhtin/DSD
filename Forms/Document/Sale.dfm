@@ -3,8 +3,8 @@ inherited SaleForm: TSaleForm
   ClientHeight = 668
   ClientWidth = 1115
   AddOnFormData.OnLoadAction = actSetDefaults
-  ExplicitWidth = 1131
-  ExplicitHeight = 703
+  ExplicitWidth = 1123
+  ExplicitHeight = 695
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
@@ -527,17 +527,7 @@ inherited SaleForm: TSaleForm
     inherited actRefresh: TdsdDataSetRefresh
       RefreshOnTabSetChanges = True
     end
-    object dsdExecStoredProc1: TdsdExecStoredProc [4]
-      Category = 'DSDLib'
-      MoveParams = <>
-      StoredProc = spGetDefaultEDI
-      StoredProcList = <
-        item
-          StoredProc = spGetDefaultEDI
-        end>
-      Caption = 'actSetDefaults'
-    end
-    object mactPrint_Sale: TMultiAction [10]
+    object mactPrint_Sale: TMultiAction [9]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -551,7 +541,7 @@ inherited SaleForm: TSaleForm
       Hint = #1053#1072#1082#1083#1072#1076#1085#1072#1103
       ImageIndex = 3
     end
-    object mactPrint_Tax_Us: TMultiAction [11]
+    object mactPrint_Tax_Us: TMultiAction [10]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -565,7 +555,7 @@ inherited SaleForm: TSaleForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1088#1086#1076#1072#1074#1077#1094')'
       ImageIndex = 16
     end
-    object mactPrint_Tax_Client: TMultiAction [12]
+    object mactPrint_Tax_Client: TMultiAction [11]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -579,7 +569,7 @@ inherited SaleForm: TSaleForm
       Hint = #1053#1072#1083#1086#1075#1086#1074#1072#1103' '#1085#1072#1082#1083#1072#1076#1085#1072#1103' ('#1087#1086#1082#1091#1087#1072#1090#1077#1083#1100')'
       ImageIndex = 18
     end
-    object mactPrint_Bill: TMultiAction [13]
+    object mactPrint_Bill: TMultiAction [12]
       Category = 'DSDLib'
       MoveParams = <>
       ActionList = <
@@ -593,7 +583,7 @@ inherited SaleForm: TSaleForm
       Hint = #1057#1095#1077#1090
       ImageIndex = 21
     end
-    object actPrintTax_Us: TdsdPrintAction [14]
+    object actPrintTax_Us: TdsdPrintAction [13]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Us
@@ -632,7 +622,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.DataType = ftString
       ReportNameParam.ParamType = ptInput
     end
-    object actPrintTax_Client: TdsdPrintAction [15]
+    object actPrintTax_Client: TdsdPrintAction [14]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectTax_Client
@@ -702,7 +692,7 @@ inherited SaleForm: TSaleForm
       ReportNameParam.ComponentItem = 'ReportNameSale'
       ReportNameParam.ParamType = ptInput
     end
-    object actPrint_Bill: TdsdPrintAction [17]
+    object actPrint_Bill: TdsdPrintAction [16]
       Category = 'DSDLib'
       MoveParams = <>
       StoredProc = spSelectPrint
@@ -756,7 +746,7 @@ inherited SaleForm: TSaleForm
           StoredProc = spSelectMIContainer
         end>
     end
-    object actGoodsKindChoice: TOpenChoiceForm [21]
+    object actGoodsKindChoice: TOpenChoiceForm [20]
       Category = 'DSDLib'
       MoveParams = <>
       Caption = 'GoodsKindForm'

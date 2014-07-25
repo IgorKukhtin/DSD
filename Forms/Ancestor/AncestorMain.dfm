@@ -19,8 +19,8 @@ object AncestorMainForm: TAncestorMainForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -36,7 +36,7 @@ object AncestorMainForm: TAncestorMainForm
     DockControlHeights = (
       0
       0
-      28
+      26
       0)
     object dxBar: TdxBar
       AllowClose = False

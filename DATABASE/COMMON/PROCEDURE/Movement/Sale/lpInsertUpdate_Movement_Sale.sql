@@ -18,6 +18,8 @@ CREATE OR REPLACE FUNCTION lpInsertUpdate_Movement_Sale(
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
     IN inUserId              Integer     -- пользователь
@@ -64,6 +66,9 @@ BEGIN
      -- сохранили свойство <(-)% Скидки (+)% Наценки >
      PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_ChangePercent(), ioId, inChangePercent);
 
+     -- сохранили свойство <Курс для перевода в валюту баланса>
+     PERFORM lpInsertUpdate_MovementFloat (zc_MovementFloat_CurrencyValue(), ioId, 0); 
+
      -- сохранили свойство <Номер заявки контрагента>
      PERFORM lpInsertUpdate_MovementString (zc_MovementString_InvNumberOrder(), ioId, inInvNumberOrder);
 
@@ -78,6 +83,11 @@ BEGIN
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_Contract(), ioId, inContractId);
      -- сохранили связь с <Сортировки маршрутов>
      PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_RouteSorting(), ioId, inRouteSortingId);
+
+     -- сохранили связь с <Валюта (документа)>
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyDocument(), ioId, inCurrencyDocumentId);
+     -- сохранили связь с <Валюта (контрагента) >
+     PERFORM lpInsertUpdate_MovementLinkObject (zc_MovementLinkObject_CurrencyPartner(), ioId, inCurrencyPartnerId);
 
      -- определяем инфу для Прайса
      IF COALESCE (ioPriceListId, 0) = 0
@@ -147,6 +157,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.07.14         * add inCurrencyDocumentId
+                        inCurrencyPartnerId
  16.04.14                                        * add lpInsert_MovementProtocol
  07.04.14                                        * add проверка
  10.02.14                                        * в lp-должно быть все
