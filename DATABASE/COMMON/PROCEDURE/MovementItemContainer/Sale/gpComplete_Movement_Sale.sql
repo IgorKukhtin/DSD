@@ -39,7 +39,8 @@ BEGIN
                                , ContainerId_Partner Integer, AccountId_Partner Integer, ContainerId_Transit Integer, AccountId_Transit Integer, InfoMoneyDestinationId Integer, InfoMoneyId Integer
                                , BusinessId_From Integer
                                , isPartionCount Boolean, isPartionSumm Boolean, isTareReturning Boolean, isLossMaterials Boolean
-                               , PartionGoodsId Integer) ON COMMIT DROP;
+                               , PartionGoodsId Integer
+                               , PriceListPrice TFloat, Price TFloat, CountForPrice TFloat) ON COMMIT DROP;
 
      -- Проводим Документ
      PERFORM lpComplete_Movement_Sale (inMovementId     := inMovementId
@@ -53,6 +54,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.14                                        * add ...Price
  05.05.14                                        *
 */
 

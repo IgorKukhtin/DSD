@@ -222,7 +222,8 @@ BEGIN
                          , ContainerId_Partner, AccountId_Partner, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_From
                          , isPartionCount, isPartionSumm, isTareReturning, isLossMaterials
-                         , PartionGoodsId)
+                         , PartionGoodsId
+                         , PriceListPrice, Price, CountForPrice)
         SELECT
               _tmp.MovementItemId
             , 0 AS ContainerId_Goods
@@ -321,6 +322,11 @@ BEGIN
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
 
+
+            , _tmp.PriceListPrice
+            , _tmp.Price
+            , _tmp.CountForPrice
+
         FROM 
              (SELECT
                     tmpMI.MovementItemId
@@ -330,7 +336,9 @@ BEGIN
                   , COALESCE (MIString_PartionGoods.ValueData, '') AS PartionGoods
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
  
+                  , lfObjectHistory_PriceListItem.ValuePrice AS PriceListPrice
                   , tmpMI.Price
+                  , tmpMI.CountForPrice
                     -- количество для склада
                   , tmpMI.OperCount
                     -- количество с учетом % скидки
@@ -484,9 +492,24 @@ BEGIN
                          END
             END
             INTO vbOperSumm_PriceList, vbOperSumm_Partner, vbOperSumm_Partner_ChangePercent
-     FROM (SELECT SUM (_tmpItem.tmpOperSumm_PriceList) AS tmpOperSumm_PriceList
-                , SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
-           FROM _tmpItem
+     FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_PriceList ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.PriceListPrice AS NUMERIC (16, 2)) END) AS tmpOperSumm_PriceList
+                , SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner
+                            WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
+                                                             ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price AS NUMERIC (16, 2))
+                        END) AS tmpOperSumm_Partner
+           FROM (SELECT _tmpItem.PriceListPrice
+                      , _tmpItem.Price
+                      , _tmpItem.CountForPrice
+                      , SUM (_tmpItem.OperCount_Partner) AS OperCount_Partner
+                      , SUM (_tmpItem.tmpOperSumm_PriceList) AS tmpOperSumm_PriceList
+                      , SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
+                 FROM _tmpItem
+                 GROUP BY _tmpItem.PriceListPrice
+                        , _tmpItem.Price
+                        , _tmpItem.CountForPrice
+                        , _tmpItem.GoodsId
+                        , _tmpItem.GoodsKindId
+                ) AS _tmpItem
           ) AS _tmpItem
      ;
 
@@ -1555,6 +1578,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 22.07.14                                        * add ...Price
  25.05.14                                        * add lpComplete_Movement
  22.05.14                                        * modify lfSelect_ObjectHistory_PriceListItem ... inOperDate:= vbOperDatePartner
  16.05.14                                        * add ФИНИШ - перепроводим Налоговую

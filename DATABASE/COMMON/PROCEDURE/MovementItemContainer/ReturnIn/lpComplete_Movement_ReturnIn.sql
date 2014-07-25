@@ -216,7 +216,8 @@ BEGIN
                          , ContainerId_Partner, AccountId_Partner, ContainerId_Transit, AccountId_Transit, InfoMoneyDestinationId, InfoMoneyId
                          , BusinessId_To
                          , isPartionCount, isPartionSumm, isTareReturning
-                         , PartionGoodsId)
+                         , PartionGoodsId
+                         , Price, CountForPrice)
         SELECT
               _tmp.MovementItemId
             , 0 AS ContainerId_Goods
@@ -285,6 +286,9 @@ BEGIN
               -- Партии товара, сформируем позже
             , 0 AS PartionGoodsId
 
+            , _tmp.Price
+            , _tmp.CountForPrice
+
         FROM 
              (SELECT
                     tmpMI.MovementItemId
@@ -296,6 +300,7 @@ BEGIN
                   , COALESCE (MIDate_PartionGoods.ValueData, zc_DateEnd()) AS PartionGoodsDate
  
                   , tmpMI.Price
+                  , tmpMI.CountForPrice
                     -- количество для склада
                   , tmpMI.OperCount
                     -- количество у контрагента
@@ -423,8 +428,20 @@ BEGIN
                          END
             END
             INTO vbOperSumm_Partner
-     FROM (SELECT SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
-           FROM _tmpItem
+     FROM (SELECT SUM (CASE WHEN vbOperDatePartner < '01.07.2014' THEN _tmpItem.tmpOperSumm_Partner
+                            WHEN _tmpItem.CountForPrice <> 0 THEN CAST (_tmpItem.OperCount_Partner * _tmpItem.Price / _tmpItem.CountForPrice AS NUMERIC (16, 2))
+                                                             ELSE CAST (_tmpItem.OperCount_Partner * _tmpItem.Price AS NUMERIC (16, 2))
+                        END) AS tmpOperSumm_Partner
+           FROM (SELECT _tmpItem.Price
+                      , _tmpItem.CountForPrice
+                      , SUM (_tmpItem.OperCount_Partner) AS OperCount_Partner
+                      , SUM (_tmpItem.tmpOperSumm_Partner) AS tmpOperSumm_Partner
+                 FROM _tmpItem
+                 GROUP BY _tmpItem.Price
+                        , _tmpItem.CountForPrice
+                        , _tmpItem.GoodsId
+                        , _tmpItem.GoodsKindId
+                ) AS _tmpItem
           ) AS _tmpItem
      ;
 
@@ -1146,6 +1163,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 22.07.14                                        * add ...Price
  25.05.14                                        * add lpComplete_Movement
  10.05.14                                        * add lpInsert_MovementProtocol
  04.05.14                                        * rem zc_Enum_AccountDirection_30400
