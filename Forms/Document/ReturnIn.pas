@@ -94,6 +94,14 @@ type
     cxLabel13: TcxLabel;
     actPrint_ReturnIn_by_TaxCorrective: TdsdPrintAction;
     bbPrint_Return_By_TaxCorrective: TdxBarButton;
+    cxLabel14: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    CurrencyDocumentGuides: TdsdGuides;
+    cxLabel16: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel17: TcxLabel;
+    edCurrencyPartner: TcxButtonEdit;
+    CurrencyPartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

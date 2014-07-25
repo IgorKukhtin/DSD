@@ -84,6 +84,9 @@ type
     spChecked: TdsdStoredProc;
     actChecked: TdsdExecStoredProc;
     bbactChecked: TdxBarButton;
+    colCurrencyValue: TcxGridDBColumn;
+    colCurrencyDocumentName: TcxGridDBColumn;
+    colCurrencyPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

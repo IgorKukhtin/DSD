@@ -97,6 +97,9 @@ type
     colTotalCountPartner: TcxGridDBColumn;
     colJuridicalName_From: TcxGridDBColumn;
     colOKPO_From: TcxGridDBColumn;
+    colCurrencyValue: TcxGridDBColumn;
+    colCurrencyDocumentName: TcxGridDBColumn;
+    colCurrencyPartnerName: TcxGridDBColumn;
   private
   public
   end;
