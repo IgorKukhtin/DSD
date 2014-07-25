@@ -8,27 +8,17 @@ PRIMARY KEY (BillNumber, FromId, ToId));
 
 -- delete from dba._pgBillLoad ;
 insert into dba._pgBillLoad (BillNumber, FromId, ToId)
-select '174907' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
-union select '174950' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
-union select '174521' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
+select '176259' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
+union select '175437' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
+union select '174910' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
+union select '173445' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
 
-
-union select '4065' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
- от 28.06,, 
-      select '167668' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
-union select '167673' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
-union select '167790' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
-union select '168584' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
-union select '168585' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
-union select '168586' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
-union select '169989' as InvNumber, zc_UnitId_StoreSalePF() as FromId, 0 as ToId
-union select '169995' as InvNumber, zc_UnitId_StorePF() as FromId, 0 as ToId
-
-
+-- !!!!!!
 union select '111' as InvNumber, zc_UnitId_StoreSale()          as FromId, 0 as ToId -- Склад реализации
 union select '222' as InvNumber, zc_UnitId_StorePF()            as FromId, 0 as ToId -- Склад ОХЛАЖДЕНКА
 union select '333' as InvNumber, zc_UnitId_StoreMaterialBasis() as FromId, 0 as ToId -- Склад МИНУСОВКА
 union select '444' as InvNumber, zc_UnitId_StoreSalePF()        as FromId, 0 as ToId -- Склад реализации мясо
+-- !!!!!!
 
 select BillNumber, FromId, 0 from Bill where fromId in (zc_UnitId_StorePF(), zc_UnitId_StoreMaterialBasis(), zc_UnitId_StoreSalePF()) 
                                          -- and ToId in (select Id from dba.Unit where UnitCode in (11793, 11468))
