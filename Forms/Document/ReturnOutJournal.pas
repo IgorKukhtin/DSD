@@ -46,6 +46,9 @@ type
     colInfoMoneyDestinationName: TcxGridDBColumn;
     colInfoMoneyCode: TcxGridDBColumn;
     colInfoMoneyName: TcxGridDBColumn;
+    colCurrencyValue: TcxGridDBColumn;
+    colCurrencyDocumentName: TcxGridDBColumn;
+    colCurrencyPartnerName: TcxGridDBColumn;
   private
     { Private declarations }
   public

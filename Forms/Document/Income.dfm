@@ -26,7 +26,6 @@ object IncomeForm: TIncomeForm
     Align = alTop
     BevelOuter = bvNone
     TabOrder = 0
-    ExplicitWidth = 928
     object edInvNumber: TcxTextEdit
       Left = 8
       Top = 23
@@ -226,7 +225,7 @@ object IncomeForm: TIncomeForm
     end
     object cxLabel12: TcxLabel
       Left = 900
-      Top = 5
+      Top = 0
       Caption = #1050#1091#1088#1089
     end
     object edCurrencyValue: TcxCurrencyEdit
@@ -281,14 +280,12 @@ object IncomeForm: TIncomeForm
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
-    ExplicitWidth = 928
     ClientRectBottom = 336
     ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
       ImageIndex = 0
-      ExplicitWidth = 928
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
@@ -296,7 +293,6 @@ object IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 928
         object cxGridDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = MasterDS
@@ -560,7 +556,6 @@ object IncomeForm: TIncomeForm
     object cxTabSheetEntry: TcxTabSheet
       Caption = #1055#1088#1086#1074#1086#1076#1082#1080
       ImageIndex = 1
-      ExplicitWidth = 928
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
@@ -568,7 +563,6 @@ object IncomeForm: TIncomeForm
         Height = 312
         Align = alClient
         TabOrder = 0
-        ExplicitWidth = 928
         object cxGridEntryDBTableView: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = EntryDS
@@ -1622,10 +1616,19 @@ object IncomeForm: TIncomeForm
       end
       item
         Control = edPacker
+      end
+      item
+        Control = edCurrencyDocument
+      end
+      item
+        Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyValue
       end>
     GetStoredProc = spGet
-    Left = 296
-    Top = 217
+    Left = 264
+    Top = 201
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -2065,7 +2068,7 @@ object IncomeForm: TIncomeForm
         DataType = ftString
         ParamType = ptInput
       end>
-    Left = 824
+    Left = 840
   end
   object CurrencyPartnerGuides: TdsdGuides
     KeyField = 'Id'

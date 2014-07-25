@@ -196,14 +196,14 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'InvNumber'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
       object colOperDate: TcxGridDBColumn
         Caption = #1044#1072#1090#1072' ('#1089#1082#1083#1072#1076')'
         DataBinding.FieldName = 'OperDate'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
       object colInvNumberPartner: TcxGridDBColumn
         Caption = #8470' '#1076#1086#1082'. '#1091' '#1087#1086#1089#1090'.'
@@ -217,7 +217,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'OperDatePartner'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
       object colOKPO_From: TcxGridDBColumn
         Caption = #1054#1050#1055#1054
@@ -239,14 +239,14 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'FromName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 91
       end
       object colToName: TcxGridDBColumn
         Caption = #1050#1086#1084#1091
         DataBinding.FieldName = 'ToName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 90
+        Width = 91
       end
       object colPaidKindName: TcxGridDBColumn
         Caption = #1060#1086#1088#1084#1072' '#1086#1087#1083#1072#1090#1099
@@ -268,7 +268,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'ContractName'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 58
+        Width = 59
       end
       object colTotalCount: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1089#1082#1083#1072#1076')'
@@ -278,7 +278,7 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.####;-,0.####; ;'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
       object colTotalCountPartner: TcxGridDBColumn
         Caption = #1050#1086#1083'-'#1074#1086' ('#1091' '#1087#1086#1089#1090'.)'
@@ -329,14 +329,14 @@ object IncomeJournalForm: TIncomeJournalForm
         Properties.DisplayFormat = ',0.##;-,0.##; ;'#39
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 51
       end
       object colPriceWithVAT: TcxGridDBColumn
         Caption = #1062#1077#1085#1099' '#1089' '#1053#1044#1057' ('#1076#1072'/'#1085#1077#1090')'
         DataBinding.FieldName = 'PriceWithVAT'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 55
+        Width = 56
       end
       object colVATPercent: TcxGridDBColumn
         Caption = '% '#1053#1044#1057
@@ -383,7 +383,7 @@ object IncomeJournalForm: TIncomeJournalForm
         DataBinding.FieldName = 'InfoMoneyCode'
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
-        Width = 50
+        Width = 51
       end
       object colInfoMoneyGroupName: TcxGridDBColumn
         Caption = #1059#1055' '#1075#1088#1091#1087#1087#1072' '#1085#1072#1079#1085#1072#1095#1077#1085#1080#1103
@@ -407,6 +407,24 @@ object IncomeJournalForm: TIncomeJournalForm
         HeaderAlignmentHorz = taCenter
         HeaderAlignmentVert = vaCenter
         Width = 70
+      end
+      object colCurrencyValue: TcxGridDBColumn
+        Caption = #1050#1091#1088#1089' '#1074#1072#1083#1102#1090#1099
+        DataBinding.FieldName = 'CurrencyValue'
+        HeaderAlignmentVert = vaCenter
+        Width = 40
+      end
+      object colCurrencyDocumentName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+        DataBinding.FieldName = 'CurrencyDocumentName'
+        HeaderAlignmentVert = vaCenter
+        Width = 52
+      end
+      object colCurrencyPartnerName: TcxGridDBColumn
+        Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+        DataBinding.FieldName = 'CurrencyPartnerName'
+        HeaderAlignmentVert = vaCenter
+        Width = 54
       end
     end
     object cxGridLevel: TcxGridLevel
