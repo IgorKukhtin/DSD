@@ -27,7 +27,8 @@ $BODY$
    DECLARE vbContainerId Integer;
 BEGIN
 
-     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+     -- 10100 Мясное сырье
+     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)!Партии товара! 4)Статьи назначения 5)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -70,8 +71,8 @@ BEGIN
                                                  , inObjectId_5 := CASE WHEN inIsPartionSumm THEN inPartionGoodsId ELSE 0 END
                                                   );
      ELSE
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
-                                   , zc_Enum_InfoMoneyDestination_20400()) -- ГСМ
+     -- 20100 Запчасти и Ремонты + 20400 ГСМ
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)Основные средства(для которого закуплено ТМЦ) 4)Статьи назначения 5)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
@@ -114,10 +115,56 @@ BEGIN
                                                  , inObjectId_5 := inAssetId
                                                   );
      ELSE
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары       -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
-                                   , zc_Enum_InfoMoneyDestination_20900()  -- Ирна         -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                   , zc_Enum_InfoMoneyDestination_30100()  -- Продукция    -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
-                                   , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
+     -- 20200 Прочие ТМЦ + 20300 МНМА
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300())
+                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Сотрудник (МО) 3)Товар 4)!Партия товара! 5)Статьи назначения 6)Статьи назначения(детализация с/с)
+                           -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Автомобиль 2)Сотрудник (МО) 3)Товар 4)!Партия товара! 5)Статьи назначения 6)Статьи назначения(детализация с/с)
+     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
+                                                 , inParentId          := inContainerId_Goods
+                                                 , inObjectId          := inAccountId
+                                                 , inJuridicalId_basis := inJuridicalId_basis
+                                                 , inBusinessId        := inBusinessId
+                                                 , inObjectCostDescId  := zc_ObjectCost_Basis()
+                                                                          -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)!Подразделение! 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
+                                                                          -- <элемент с/с>: 1.)Главное Юр лицо 2.)Бизнес 3)Филиал 4)Сотрудник (МО) 5)Товар 6)Основные средства(для которого закуплено ТМЦ) 7)Статьи назначения 8)Статьи назначения(детализация с/с)
+                                                 , inObjectCostId      := lpInsertFind_ObjectCost (inObjectCostDescId:= zc_ObjectCost_Basis()
+                                                                                                 , inDescId_1   := zc_ObjectCostLink_Goods()
+                                                                                                 , inObjectId_1 := inGoodsId
+                                                                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ObjectCostLink_Unit() END
+                                                                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                                                                 , inDescId_3   := zc_ObjectCostLink_Member()
+                                                                                                 , inObjectId_3 := CASE WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inMemberId ELSE 0 END
+                                                                                                 , inDescId_4   := zc_ObjectCostLink_InfoMoneyDetail()
+                                                                                                 , inObjectId_4 := inInfoMoneyId_Detail
+                                                                                                 , inDescId_5   := zc_ObjectCostLink_InfoMoney()
+                                                                                                 , inObjectId_5 := inInfoMoneyId
+                                                                                                 , inDescId_6   := zc_ObjectCostLink_Account()
+                                                                                                 , inObjectId_6 := inAccountId
+                                                                                                 , inDescId_7   := zc_ObjectCostLink_JuridicalBasis()
+                                                                                                 , inObjectId_7 := inJuridicalId_basis
+                                                                                                 , inDescId_8   := zc_ObjectCostLink_Business()
+                                                                                                 , inObjectId_8 := inBusinessId
+                                                                                                 , inDescId_9   := zc_ObjectCostLink_Branch()
+                                                                                                 , inObjectId_9 := inBranchId
+                                                                                                 , inDescId_10  := zc_ObjectCostLink_PartionGoods()
+                                                                                                 , inObjectId_10:= inPartionGoodsId
+                                                                                                  )
+                                                 , inDescId_1   := zc_ContainerLinkObject_Goods()
+                                                 , inObjectId_1 := inGoodsId
+                                                 , inDescId_2   := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ObjectCostLink_Unit() END
+                                                 , inObjectId_2 := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inUnitId ELSE 0 END
+                                                 , inDescId_3   := zc_ObjectCostLink_Member()
+                                                 , inObjectId_3 := CASE WHEN inOperDate >= zc_DateStart_ObjectCostOnUnit() THEN inMemberId ELSE 0 END
+                                                 , inDescId_4   := zc_ContainerLinkObject_InfoMoneyDetail()
+                                                 , inObjectId_4 := inInfoMoneyId_Detail
+                                                 , inDescId_5   := zc_ContainerLinkObject_InfoMoney()
+                                                 , inObjectId_5 := inInfoMoneyId
+                                                 , inDescId_6   := zc_ObjectCostLink_PartionGoods()
+                                                 , inObjectId_6 := inPartionGoodsId
+                                                  );
+     ELSE
+     -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)!!!Партии товара!!! 4)Виды товаров 5)Статьи назначения 6)Статьи назначения(детализация с/с)
      THEN vbContainerId := CASE WHEN inPartionGoodsId <> 0
@@ -205,7 +252,8 @@ BEGIN
                                                             )
                            END;
      ELSE
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500()) -- 20500; "Оборотная тара" -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20500()
+     -- 20500 Оборотная тара
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20500())
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Товар 2)Статьи назначения 3)Статьи назначения(детализация с/с)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Summ()
                                                  , inParentId          := NULL -- !!!Суммовая проводка не связана с количественной!!!
@@ -241,6 +289,8 @@ BEGIN
                                                  , inDescId_4   := zc_ContainerLinkObject_Unit()
                                                  , inObjectId_4 := 0
                                                   );
+
+     -- !!!Other!!!
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Подразделение 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
                            -- 0.1.)Счет 0.2.)Главное Юр лицо 0.3.)Бизнес 1)Сотрудник (МО) 2)Товар 3)Статьи назначения 4)Статьи назначения(детализация с/с)
      ELSE vbContainerId := lpInsertFind_Container (inContainerDescId:= zc_Container_Summ()
@@ -282,6 +332,7 @@ BEGIN
      END IF;
      END IF;
      END IF;
+     END IF;
 
      -- Возвращаем значение
      RETURN (vbContainerId);
@@ -295,6 +346,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerSumm_Goods (TDateTime, Integer, Integer, 
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.07.14                                        * add МНМА
  05.04.14                                        * порядок аналитик ДЛЯ ОПТИМИЗАЦИИ
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
  21.12.13                                        * Personal -> Member

@@ -20,7 +20,8 @@ $BODY$
    DECLARE vbContainerId Integer;
 BEGIN
 
-     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
+     -- 10100 Мясное сырье
+     IF inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100()
           -- 0)Товар 1)Подразделение 2)!Партия товара!
           -- 0)Товар 1)Сотрудник (МО) 2)!Партия товара!
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -34,10 +35,10 @@ BEGIN
                                                  , inObjectId_1        := CASE WHEN inIsPartionCount THEN inPartionGoodsId ELSE 0 END
                                                  , inDescId_2          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_2        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
-                                                   );
+                                                  );
      ELSE
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100()  -- Запчасти и Ремонты -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20100()
-                                   , zc_Enum_InfoMoneyDestination_20400()) -- ГСМ
+     -- 20100 Запчасти и Ремонты + 20400 ГСМ
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20100(), zc_Enum_InfoMoneyDestination_20400())
           -- 0)Товар 1)Подразделение 2)Основные средства(для которого закуплено ТМЦ)
           -- 0)Товар 1)Сотрудник (МО) 2)Основные средства(для которого закуплено ТМЦ)
      THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -51,12 +52,29 @@ BEGIN
                                                  , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                  , inDescId_2          := zc_ContainerLinkObject_AssetTo()
                                                  , inObjectId_2        := inAssetId
-                                                   );
+                                                  );
      ELSE
-     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700()  -- Товары       -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20700()
-                                   , zc_Enum_InfoMoneyDestination_20900()  -- Ирна         -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20900()
-                                   , zc_Enum_InfoMoneyDestination_30100()  -- Продукция    -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100()
-                                   , zc_Enum_InfoMoneyDestination_30200()) -- Мясное сырье -- select * from lfSelect_Object_InfoMoney() where inInfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30200()
+     -- 20200 Прочие ТМЦ + 20300 МНМА
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20200(), zc_Enum_InfoMoneyDestination_20300())
+          -- 0)Товар 1)Подразделение 2)Сотрудник (МО) 3)!Партия товара!
+          -- 0)Товар 1)Автомобиль 2)Сотрудник (МО) 3)!Партия товара!
+     THEN vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
+                                                 , inParentId          := NULL
+                                                 , inObjectId          := inGoodsId
+                                                 , inJuridicalId_basis := NULL
+                                                 , inBusinessId        := NULL
+                                                 , inObjectCostDescId  := NULL
+                                                 , inObjectCostId      := NULL
+                                                 , inDescId_1          := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN zc_ContainerLinkObject_Car() ELSE zc_ContainerLinkObject_Unit() END
+                                                 , inObjectId_1        := CASE WHEN COALESCE (inCarId, 0) <> 0 THEN inCarId ELSE inUnitId END
+                                                 , inDescId_2          := zc_ContainerLinkObject_Member()
+                                                 , inObjectId_2        := inMemberId
+                                                 , inDescId_2          := zc_ContainerLinkObject_PartionGoods()
+                                                 , inObjectId_2        := inPartionGoodsId
+                                                  );
+     ELSE
+     -- 20700 Товары + 20900 Ирна + 30100 Продукция + 30200 Мясное сырье
+     IF inInfoMoneyDestinationId IN (zc_Enum_InfoMoneyDestination_20700(), zc_Enum_InfoMoneyDestination_20900(), zc_Enum_InfoMoneyDestination_30100(), zc_Enum_InfoMoneyDestination_30200())
           -- 0)Товар 1)Подразделение 2)Вид товара 3)!!!Партия товара!!!
           -- 0)Товар 1)Сотрудник (МО) 2)Вид товара 3)!!!Партия товара!!!
      THEN vbContainerId := CASE WHEN inPartionGoodsId <> 0
@@ -87,6 +105,7 @@ BEGIN
                                                            , inObjectId_2        := inGoodsKindId
                                                             )
                            END ;
+     -- !!!Other!!!
           -- 0)Товар 1)Подразделение
           -- 0)Товар 1)Сотрудник (МО)
      ELSE vbContainerId := lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
@@ -99,6 +118,8 @@ BEGIN
                                                  , inDescId_1          := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN zc_ContainerLinkObject_Member() ELSE zc_ContainerLinkObject_Unit() END
                                                  , inObjectId_1        := CASE WHEN COALESCE (inMemberId, 0) <> 0 THEN inMemberId ELSE COALESCE (inUnitId, 0) END
                                                    );
+     END IF;
+     END IF;
      END IF;
      END IF;
      END IF;
@@ -115,6 +136,7 @@ ALTER FUNCTION lpInsertUpdate_ContainerCount_Goods (TDateTime, Integer, Integer,
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.
+ 27.07.14                                        * add МНМА
  18.03.14                                        * add zc_Enum_InfoMoneyDestination_30200
  21.12.13                                        * Personal -> Member
  11.10.13                                        * add zc_Enum_InfoMoneyDestination_20400

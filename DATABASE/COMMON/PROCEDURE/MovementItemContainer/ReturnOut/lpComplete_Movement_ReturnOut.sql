@@ -396,17 +396,24 @@ BEGIN
 
 
      -- формируются Партии товара, ЕСЛИ надо ...
-     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- "Запасы"; 20200; "на складах"
+     UPDATE _tmpItem SET PartionGoodsId = CASE WHEN vbAccountDirectionId_From = zc_Enum_AccountDirection_20200() -- Запасы + на складах
                                                 AND vbOperDate >= zc_DateStart_PartionGoods()
                                                 AND (_tmpItem.isPartionCount OR _tmpItem.isPartionSumm)
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoods)
                                                WHEN vbIsPartionDate_Unit = TRUE
-                                                AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
+                                                AND _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
                                                    THEN lpInsertFind_Object_PartionGoods (_tmpItem.PartionGoodsDate)
+                                               WHEN _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+                                                 OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+                                                   THEN lpInsertFind_Object_PartionGoods (inStorageId:= NULL
+                                                                                        , inInvNumber:= NULL
+                                                                                         )
                                                ELSE lpInsertFind_Object_PartionGoods ('')
                                           END
-     WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- "Основное сырье"; 10100; "Мясное сырье"
-        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- "Доходы"; 30100; "Продукция"
+     WHERE _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_10100() -- Основное сырье + Мясное сырье
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20200() -- Общефирменные + Прочие ТМЦ
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_20300() -- Общефирменные + МНМА
+        OR _tmpItem.InfoMoneyDestinationId = zc_Enum_InfoMoneyDestination_30100() -- Доходы + Продукция
      ;
 
 
@@ -423,7 +430,6 @@ BEGIN
 
      -- 1.1.1. определяется ContainerId_GoodsPartner для проводки по количественному учету - долги Поставщика
      UPDATE _tmpItem SET ContainerId_GoodsPartner = -- 0)Товар 1)Покупатель
-                                                    -- 0)Товар 1)Физ.лицо
                                                     lpInsertFind_Container (inContainerDescId   := zc_Container_Count()
                                                                           , inParentId          := NULL
                                                                           , inObjectId          := _tmpItem.GoodsId
@@ -929,6 +935,7 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 26.07.14                                        * add МНМА
  25.05.14                                        * add lpComplete_Movement
  11.05.14                                        * set zc_ContainerLinkObject_PaidKind is last
  10.05.14                                        * add lpInsert_MovementProtocol

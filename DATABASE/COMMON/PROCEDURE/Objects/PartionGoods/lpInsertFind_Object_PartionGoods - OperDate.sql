@@ -1,6 +1,6 @@
 -- Function: lpInsertFind_Object_PartionGoods (TDateTime)
 
--- DROP FUNCTION lpInsertFind_Object_PartionGoods (TDateTime);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TDateTime);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
     IN inOperDate  TDateTime -- Дата партии
@@ -42,7 +42,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_Object_PartionGoods (TDateTime) OWNER TO postgres;
 
 

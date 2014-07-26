@@ -1,6 +1,6 @@
 -- Function: lpInsertFind_Object_PartionGoods (TVarChar)
 
--- DROP FUNCTION lpInsertFind_Object_PartionGoods (TVarChar);
+DROP FUNCTION IF EXISTS lpInsertFind_Object_PartionGoods (TVarChar);
 
 CREATE OR REPLACE FUNCTION lpInsertFind_Object_PartionGoods(
     IN inValue  TVarChar -- Полное значение партии
@@ -37,7 +37,7 @@ BEGIN
 
 END;
 $BODY$
-LANGUAGE PLPGSQL VOLATILE;
+  LANGUAGE plpgsql VOLATILE;
 ALTER FUNCTION lpInsertFind_Object_PartionGoods (TVarChar) OWNER TO postgres;
 
 
