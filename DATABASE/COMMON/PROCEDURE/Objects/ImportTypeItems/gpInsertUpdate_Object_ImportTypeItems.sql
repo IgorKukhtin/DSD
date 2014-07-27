@@ -1,11 +1,12 @@
 -- Function: gpInsertUpdate_Object_ImportTypeItems()
 
-DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportTypeItems (Integer, Integer, TVarChar, Integer, Tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Object_ImportTypeItems (Integer, Integer, TVarChar, TVarChar, Integer, Tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_ImportTypeItems(
  INOUT ioId                      Integer   ,   	-- ключ объекта <>
-    IN inCode                    Integer   ,    -- Код объекта <>
+    IN inParamNumber             Integer   ,    -- Номер параметра
     IN inName                    TVarChar  ,    -- Название объекта <>
+    IN inParamType               TVarChar  ,    -- Тип параметра
     IN inImportTypeId            Integer   ,    -- ссылка на главное юр.лицо
     IN inSession                 TVarChar       -- сессия пользователя
 )
@@ -18,21 +19,20 @@ BEGIN
    -- проверка прав пользователя на вызов процедуры
    -- vbUserId:= lpCheckRight (inSession, zc_Enum_Process_InsertUpdate_Object_ImportTypeItems());
    vbUserId := lpGetUserBySession (inSession); 
-
-   -- Если код не установлен, определяем его как последний+1 
-   vbCode:= lfGet_ObjectCode (inCode, zc_Object_ImportTypeItems());
   
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportTypeItems(), vbCode, inName);
+   ioId := lpInsertUpdate_Object (ioId, zc_Object_ImportTypeItems(), inParamNumber, inName);
    -- сохранили связь с <>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_ImportTypeItems_ImportType(), ioId, inImportTypeId);
    
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_ImportTypeItems_ParamType(), ioId, inParamType);  
+
    -- сохранили протокол
    PERFORM lpInsert_ObjectProtocol (ioId, vbUserId);
 END;$BODY$
 
 LANGUAGE plpgsql VOLATILE;
-ALTER FUNCTION gpInsertUpdate_Object_ImportTypeItems (Integer, Integer, TVarChar, Integer, TVarChar) OWNER TO postgres;
+ALTER FUNCTION gpInsertUpdate_Object_ImportTypeItems (Integer, Integer, TVarChar, TVarChar, Integer, TVarChar) OWNER TO postgres;
 
 
 /*-------------------------------------------------------------------------------*/

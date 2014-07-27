@@ -18,6 +18,7 @@ RETURNS VOID AS
 $BODY$
    DECLARE vbLoadPriceListId Integer;
    DECLARE vbLoadPriceListItemsId Integer;
+   DECLARE vbGoodsId Integer;
 BEGIN
 
   SELECT Id INTO vbLoadPriceListId 
@@ -33,11 +34,25 @@ BEGIN
     FROM LoadPriceListItem 
    WHERE LoadPriceListId = vbLoadPriceListId AND GoodsCode = inGoodsCode;
 
+     -- »щем по коду и inObjectId
+   SELECT ObjectLink_Goods_GoodsMain.ChildObjectId INTO vbGoodsId
+     FROM Object 
+     JOIN ObjectLink AS ObjectLink_Goods_Object ON ObjectLink_Goods_Object.ObjectId = Object.Id
+                    AND ObjectLink_Goods_Object.ChildObjectId = inJuridicalId
+                    AND ObjectLink_Goods_Object.DescId = zc_ObjectLink_Goods_Object()
+     JOIN ObjectString ON ObjectString.ObjectId = Object.Id
+                      AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+                      AND ObjectString.ValueData = inGoodsCode
+     JOIN ObjectLink AS ObjectLink_Goods_GoodsMain ON ObjectLink_Goods_GoodsMain.ObjectId = Object.Id
+                    AND ObjectLink_Goods_GoodsMain.DescId = zc_ObjectLink_Goods_GoodsMain()
+    WHERE Object.DescId = zc_Object_Goods();   
+
+
   IF COALESCE(vbLoadPriceListItemsId, 0) = 0 THEN
-     INSERT INTO LoadPriceListItem (LoadPriceListId, GoodsCode, GoodsName, GoodsNDS, Price, ExpirationDate, PackCount, ProducerName)
-             VALUES(vbLoadPriceListId, inGoodsCode, inGoodsName, inGoodsNDS, inPrice, inExpirationDate, inPackCount, inProducerName);
+     INSERT INTO LoadPriceListItem (LoadPriceListId, GoodsCode, GoodsName, GoodsNDS, GoodsId, Price, ExpirationDate, PackCount, ProducerName)
+             VALUES(vbLoadPriceListId, inGoodsCode, inGoodsName, inGoodsNDS, vbGoodsId, inPrice, inExpirationDate, inPackCount, inProducerName);
   ELSE
-     UPDATE LoadPriceListItem SET GoodsName = inGoodsName, GoodsNDS = inGoodsNDS, Price = inPrice, 
+     UPDATE LoadPriceListItem SET GoodsName = inGoodsName, GoodsNDS = inGoodsNDS, GoodsId = vbGoodsId, Price = inPrice, 
                                   ExpirationDate = inExpirationDate, PackCount = inPackCount, ProducerName = inProducerName
       WHERE Id = vbLoadPriceListItemsId;
   END IF;

@@ -283,14 +283,14 @@ begin
   DECLAR.DECLARBODY.HNUM := HeaderDataSet.FieldByName('InvNumber').asString;
   DECLAR.DECLARBODY.HNAMESEL := HeaderDataSet.FieldByName('JuridicalName_From').asString;
   DECLAR.DECLARBODY.HNAMEBUY := HeaderDataSet.FieldByName('JuridicalName_To').asString;
-  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('OKPO_From').asString;
-  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('OKPO_To').asString;
+  DECLAR.DECLARBODY.HKSEL := HeaderDataSet.FieldByName('INN_From').asString;
+  DECLAR.DECLARBODY.HKBUY := HeaderDataSet.FieldByName('INN_To').asString;
   DECLAR.DECLARBODY.HLOCSEL := HeaderDataSet.FieldByName('JuridicalAddress_From').asString;
   DECLAR.DECLARBODY.HLOCBUY := HeaderDataSet.FieldByName('JuridicalAddress_To').asString;
   DECLAR.DECLARBODY.HTELSEL := HeaderDataSet.FieldByName('Phone_From').asString;
   DECLAR.DECLARBODY.HTELBUY := HeaderDataSet.FieldByName('Phone_To').asString;
 
-  DECLAR.DECLARBODY.H01G1S := 'Договір;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + HeaderDataSet.FieldByName('OperDatePartnerEDI').asString;
+  DECLAR.DECLARBODY.H01G1S := 'Поставки;COMDOC:' + HeaderDataSet.FieldByName('InvNumberPartnerEDI').asString + ';DATE:' + FormatDateTime('yyyy-mm-dd', HeaderDataSet.FieldByName('OperDatePartnerEDI').asDateTime) + ';';
   DECLAR.DECLARBODY.H01G2D := FormatDateTime('ddmmyyyy', HeaderDataSet.FieldByName('ContractSigningDate').asDateTime);
   DECLAR.DECLARBODY.H01G3S := HeaderDataSet.FieldByName('ContractName').AsString;
   DECLAR.DECLARBODY.H02G1S := 'Оплата з поточного рахунка';

@@ -38,6 +38,8 @@ BEGIN
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Measure(), ioId, inMeasureId);
    -- сохранили свойство <НДС>
    PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_NDSKind(), ioId, inNDSKindId );
+   -- сохранили свойство <связи чьи товары>
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, null);
   
 
    -- сохранили протокол

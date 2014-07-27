@@ -57,14 +57,13 @@ inherited ImportTypeForm: TImportTypeForm
         end
       end
       object cxGrid1: TcxGrid
-        Left = 372
+        Left = 468
         Top = 0
-        Width = 278
+        Width = 275
         Height = 313
         Align = alClient
         PopupMenu = PopupMenu
         TabOrder = 1
-        ExplicitWidth = 363
         object cxGridDBTableView1: TcxGridDBTableView
           Navigator.Buttons.CustomButtons = <>
           DataController.DataSource = ChildDS
@@ -87,26 +86,43 @@ inherited ImportTypeForm: TImportTypeForm
           OptionsView.HeaderAutoHeight = True
           OptionsView.Indicator = True
           Styles.StyleSheet = dmMain.cxGridTableViewStyleSheet
+          object clNumber: TcxGridDBColumn
+            Caption = #8470' '#1087#1087
+            DataBinding.FieldName = 'ParamNumber'
+            HeaderAlignmentVert = vaCenter
+            Width = 39
+          end
           object clICode: TcxGridDBColumn
             Caption = #1050#1086#1076
             DataBinding.FieldName = 'Code'
             Visible = False
+            HeaderAlignmentVert = vaCenter
             Width = 30
           end
           object clIName: TcxGridDBColumn
             Caption = #1053#1072#1080#1084#1077#1085#1086#1074#1072#1085#1080#1077' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'Name'
-            Width = 100
+            HeaderAlignmentVert = vaCenter
+            Width = 114
           end
           object clParamType: TcxGridDBColumn
             Caption = #1058#1080#1087' '#1087#1072#1088#1072#1084#1077#1090#1088#1072
             DataBinding.FieldName = 'ParamType'
+            PropertiesClassName = 'TcxComboBoxProperties'
+            Properties.Items.Strings = (
+              'ftBoolean'
+              'ftDateTime'
+              'ftFloat'
+              'ftInteger'
+              'ftString')
             HeaderAlignmentVert = vaCenter
+            Width = 74
           end
           object clIisErased: TcxGridDBColumn
             Caption = #1059#1076#1072#1083#1077#1085
             DataBinding.FieldName = 'isErased'
-            Width = 30
+            HeaderAlignmentVert = vaCenter
+            Width = 34
           end
         end
         object cxGridLevel1: TcxGridLevel
@@ -114,10 +130,11 @@ inherited ImportTypeForm: TImportTypeForm
         end
       end
       object cxSplitter1: TcxSplitter
-        Left = 369
+        Left = 465
         Top = 0
         Width = 3
-        Height = 303
+        Height = 313
+        Control = cxGrid
       end
     end
   end
@@ -427,7 +444,7 @@ inherited ImportTypeForm: TImportTypeForm
     OutputType = otResult
     Params = <
       item
-        Name = 'ioId '
+        Name = 'ioId'
         Component = ChildCDS
         ComponentItem = 'Id'
         ParamType = ptInputOutput
@@ -443,6 +460,19 @@ inherited ImportTypeForm: TImportTypeForm
         Component = ChildCDS
         ComponentItem = 'Name'
         DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParamType'
+        Component = ChildCDS
+        ComponentItem = 'ParamType'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'inParamNumber'
+        Component = ChildCDS
+        ComponentItem = 'ParamNumber'
         ParamType = ptInput
       end
       item

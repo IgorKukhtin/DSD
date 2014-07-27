@@ -14,26 +14,30 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Object_GoodsLink(
 RETURNS integer AS
 $BODY$
    DECLARE UserId Integer;
+   DECLARE vbGoodsId Integer;
 BEGIN
 
    --   PERFORM lpCheckRight(inSession, zc_Enum_Process_GoodsGroup());
    UserId := inSession;
    
-   
-   -- !!! проверка уникальности <Наименование>
-   -- !!! PERFORM lpCheckUnique_Object_ValueData(ioId, zc_Object_Goods(), inName);
-
-   -- проверка уникальности <Код>
-   -- PERFORM lpCheckUnique_Object_ObjectCode (ioId, zc_Object_Goods(), vbCode);
-
+   -- Ищем по коду и inObjectId
+   SELECT Object.Id INTO vbGoodsId
+     FROM Object 
+     JOIN ObjectLink ON ObjectLink.ObjectId = Object.Id
+                    AND ObjectLink.ChildObjectId = inObjectId
+                    AND ObjectLink.DescId = zc_ObjectLink_Goods_Object()
+     JOIN ObjectString ON ObjectString.ObjectId = Object.Id
+                      AND ObjectString.DescId = zc_ObjectString_Goods_Code()
+                      AND ObjectString.ValueData = inCode
+    WHERE Object.DescId = zc_Object_Goods();   
    -- сохранили <Объект>
-   ioId := lpInsertUpdate_Object(ioId, zc_Object_Goods(), 0, inName);
+   vbGoodsId := lpInsertUpdate_Object(vbGoodsId, zc_Object_Goods(), 0, inName);
    -- Строковый код
-   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), ioId, inCode);
+   PERFORM lpInsertUpdate_ObjectString(zc_ObjectString_Goods_Code(), vbGoodsId, inCode);
    -- сохранили связь с <Главным товаром>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), ioId, inGoodsMainId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_GoodsMain(), vbGoodsId, inGoodsMainId);
    -- сохранили свойство <связи чьи товары>
-   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), ioId, inObjectId);
+   PERFORM lpInsertUpdate_ObjectLink(zc_ObjectLink_Goods_Object(), vbGoodsId, inObjectId);
   
 
    -- сохранили протокол

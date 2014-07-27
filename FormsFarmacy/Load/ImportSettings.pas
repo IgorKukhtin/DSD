@@ -10,14 +10,14 @@ uses
   Vcl.Menus, dsdAddOn, dxBarExtItems, dxBar, cxClasses, dsdDB,
   Datasnap.DBClient, dsdAction, Vcl.ActnList, cxPropertiesStore, cxGridLevel,
   cxGridCustomView, cxGridCustomTableView, cxGridTableView, cxGridDBTableView,
-  cxGrid, cxPC, cxButtonEdit, cxSplitter;
+  cxGrid, cxPC, cxButtonEdit, cxSplitter, Vcl.StdActns, cxDropDownEdit;
 
 type
   TImportSettingsForm = class(TAncestorDBGridForm)
     cxGrid1: TcxGrid;
     cxGridDBTableView1: TcxGridDBTableView;
     cxGridLevel1: TcxGridLevel;
-    clIName: TcxGridDBColumn;
+    clParamName: TcxGridDBColumn;
     clIisErased: TcxGridDBColumn;
     clCode: TcxGridDBColumn;
     clDirectory: TcxGridDBColumn;
@@ -41,19 +41,20 @@ type
     dsdUnErasedChild: TdsdUpdateErased;
     bbSetErasedChild: TdxBarButton;
     bbUnErasedChild: TdxBarButton;
-    clImportTypeItemsName: TcxGridDBColumn;
+    colParamValue: TcxGridDBColumn;
     clJuridicalName: TcxGridDBColumn;
     clContractName: TcxGridDBColumn;
     clFileTypeName: TcxGridDBColumn;
     clImportTypeName: TcxGridDBColumn;
     clStartRow: TcxGridDBColumn;
     JuridicalChoiceForm: TOpenChoiceForm;
-    ImportTypeItemsChoiceForm: TOpenChoiceForm;
     dsdChoiceGuides: TdsdChoiceGuides;
     bbChoiceGuides: TdxBarButton;
     ContractChoiceForm: TOpenChoiceForm;
     FileTypeKindChoiceForm: TOpenChoiceForm;
     cxSplitter1: TcxSplitter;
+    colParamNumber: TcxGridDBColumn;
+    FileDialogAction: TFileDialogAction;
   private
     { Private declarations }
   public

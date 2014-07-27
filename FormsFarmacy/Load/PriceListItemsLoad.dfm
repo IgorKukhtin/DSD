@@ -175,6 +175,9 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
       StoredProcList = <
         item
           StoredProc = spUpdate
+        end
+        item
+          StoredProc = spUpdatePriceListItem
         end>
       Caption = 'actUpdate'
       DataSource = MasterDS
@@ -282,18 +285,58 @@ inherited PriceListItemsLoadForm: TPriceListItemsLoadForm
     OutputType = otResult
     Params = <
       item
+        Name = 'ioId'
         Value = Null
+        ParamType = ptInput
       end
       item
-        Value = Null
+        Name = 'inCode'
+        Component = MasterCDS
+        ComponentItem = 'GoodsCode'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
-        Value = Null
+        Name = 'inName'
+        Component = MasterCDS
+        ComponentItem = 'GoodsName'
+        DataType = ftString
+        ParamType = ptInput
       end
       item
-        Value = Null
+        Name = 'inGoodsMainId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inObjectId'
+        Value = ''
+        Component = GuidesFrom
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 176
     Top = 272
+  end
+  object spUpdatePriceListItem: TdsdStoredProc
+    StoredProcName = 'gpUpdate_LoadPriceList_GoodsId'
+    DataSets = <>
+    OutputType = otResult
+    Params = <
+      item
+        Name = 'inPriceListItemId'
+        Component = MasterCDS
+        ComponentItem = 'Id'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inGoodsId'
+        Component = MasterCDS
+        ComponentItem = 'GoodsId'
+        ParamType = ptInput
+      end>
+    Left = 224
+    Top = 248
   end
 end

@@ -43,7 +43,7 @@ object MainForm: TMainForm
       Top = 43
       Width = 225
       Height = 15
-      Caption = '1.3. '#1058#1086#1074#1072#1088#1099
+      Caption = '1.2. '#1058#1086#1074#1072#1088#1099
       TabOrder = 1
     end
     object cbMeasure: TCheckBox
@@ -135,13 +135,13 @@ object MainForm: TMainForm
       Enabled = False
       TabOrder = 10
     end
-    object cbOwnedType: TCheckBox
+    object cbGoodsPartnerCode: TCheckBox
       Tag = 10
       Left = 15
-      Top = 77
+      Top = 62
       Width = 225
       Height = 17
-      Caption = '3.1. '#1042#1080#1076#1099' '#1089#1086#1073#1089#1090#1074#1077#1085#1085#1086#1089#1090#1080
+      Caption = '1.3. '#1050#1086#1076#1099' '#1087#1088#1086#1076#1072#1074#1094#1086#1074
       Color = clBtnFace
       ParentColor = False
       TabOrder = 11

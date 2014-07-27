@@ -311,6 +311,7 @@ initialization
 
   RegisterClass (TExecuteDialog);
   RegisterClass (TExternalSaveAction);
+  RegisterClass (TFileDialogAction);
   RegisterClass (TGuidesFiller);
   RegisterClass (THeaderSaver);
   RegisterClass (TInsertRecord);

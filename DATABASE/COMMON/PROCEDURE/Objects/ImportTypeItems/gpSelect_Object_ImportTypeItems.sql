@@ -6,7 +6,7 @@ CREATE OR REPLACE FUNCTION gpSelect_Object_ImportTypeItems(
     IN inSession     TVarChar       -- сессия пользователя
 )
 RETURNS TABLE (Id Integer, Code Integer, Name TVarChar,
-               ImportTypeId Integer, ImportTypeName TVarChar,
+               ImportTypeId Integer, ParamType TVarChar, ParamNumber Integer, 
                isErased boolean) AS
 $BODY$
 BEGIN
@@ -16,22 +16,14 @@ BEGIN
 
    RETURN QUERY 
        SELECT 
-             Object_ImportTypeItems.Id           AS Id
-           , Object_ImportTypeItems.ObjectCode   AS Code
-           , Object_ImportTypeItems.ValueData    AS Name
-         
-           , Object_ImportType.Id         AS ImportTypeId
-           , Object_ImportType.ValueData  AS ImportTypeName 
-     
-           , Object_ImportTypeItems.isErased           AS isErased
+             Object_ImportTypeItems_View.Id
+           , Object_ImportTypeItems_View.Code
+           , Object_ImportTypeItems_View.Name
+           , Object_ImportTypeItems_View.ImportTypeId
+           , Object_ImportTypeItems_View.ParamType
+           , Object_ImportTypeItems_View.isErased
            
-       FROM Object AS Object_ImportTypeItems
-           LEFT JOIN ObjectLink AS ObjectLink_ImportTypeItems_ImportType
-                                ON ObjectLink_ImportTypeItems_ImportType.ObjectId = Object_ImportTypeItems.Id
-                               AND ObjectLink_ImportTypeItems_ImportType.DescId = zc_ObjectLink_ImportTypeItems_ImportType()
-           LEFT JOIN Object AS Object_ImportType ON Object_ImportType.Id = ObjectLink_ImportTypeItems_ImportType.ChildObjectId
-
-       WHERE Object_ImportTypeItems.DescId = zc_Object_ImportTypeItems();
+       FROM Object_ImportTypeItems_View;
   
 END;
 $BODY$
