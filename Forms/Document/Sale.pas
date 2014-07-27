@@ -110,6 +110,14 @@ type
     EDI: TEDI;
     spGetDefaultEDI: TdsdStoredProc;
     actSetDefaults: TdsdExecStoredProc;
+    cxLabel17: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    CurrencyDocumentGuides: TdsdGuides;
+    cxLabel18: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel19: TcxLabel;
+    edCurrencyPartner: TcxButtonEdit;
+    CurrencyPartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

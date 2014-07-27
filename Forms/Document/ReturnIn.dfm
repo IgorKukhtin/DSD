@@ -1,29 +1,29 @@
 inherited ReturnInForm: TReturnInForm
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1042#1086#1079#1074#1088#1072#1090' '#1086#1090' '#1087#1086#1082#1091#1087#1072#1090#1077#1083#1103'>'
   ClientHeight = 668
-  ClientWidth = 994
-  ExplicitWidth = 1010
-  ExplicitHeight = 703
+  ClientWidth = 1144
+  ExplicitWidth = 1152
+  ExplicitHeight = 702
   PixelsPerInch = 96
   TextHeight = 13
   inherited PageControl: TcxPageControl
     Top = 126
-    Width = 994
+    Width = 1144
     Height = 542
     ExplicitTop = 126
-    ExplicitWidth = 994
+    ExplicitWidth = 1144
     ExplicitHeight = 542
     ClientRectBottom = 542
-    ClientRectRight = 994
+    ClientRectRight = 1144
     inherited tsMain: TcxTabSheet
       ExplicitLeft = 0
       ExplicitTop = 24
-      ExplicitWidth = 994
+      ExplicitWidth = 1144
       ExplicitHeight = 518
       inherited cxGrid: TcxGrid
-        Width = 994
+        Width = 1144
         Height = 518
-        ExplicitWidth = 994
+        ExplicitWidth = 1144
         ExplicitHeight = 518
         inherited cxGridDBTableView: TcxGridDBTableView
           DataController.Summary.DefaultGroupSummaryItems = <
@@ -198,12 +198,12 @@ inherited ReturnInForm: TReturnInForm
     end
     inherited tsEntry: TcxTabSheet
       ExplicitTop = 24
-      ExplicitWidth = 994
+      ExplicitWidth = 1144
       ExplicitHeight = 518
       inherited cxGridEntry: TcxGrid
-        Width = 994
+        Width = 1144
         Height = 518
-        ExplicitWidth = 994
+        ExplicitWidth = 1144
         ExplicitHeight = 518
         inherited cxGridEntryDBTableView: TcxGridDBTableView
           DataController.DataSource = EntryDS
@@ -226,10 +226,10 @@ inherited ReturnInForm: TReturnInForm
     end
   end
   inherited DataPanel: TPanel
-    Width = 994
+    Width = 1144
     Height = 100
     TabOrder = 3
-    ExplicitWidth = 994
+    ExplicitWidth = 1144
     ExplicitHeight = 100
     inherited edInvNumber: TcxTextEdit
       Left = 8
@@ -267,8 +267,8 @@ inherited ReturnInForm: TReturnInForm
       Width = 223
     end
     object cxLabel3: TcxLabel
-      Left = 525
-      Top = 5
+      Left = 520
+      Top = 0
       Caption = #1050#1086#1084#1091
     end
     object edTo: TcxButtonEdit
@@ -440,6 +440,53 @@ inherited ReturnInForm: TReturnInForm
     Left = 892
     Top = 45
     Caption = #1058#1080#1087' '#1085#1072#1083#1086#1075'. '#1076#1086#1082'.'
+  end
+  object cxLabel14: TcxLabel [4]
+    Left = 999
+    Top = 5
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+  end
+  object edCurrencyDocument: TcxButtonEdit [5]
+    Left = 999
+    Top = 23
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 9
+    Width = 77
+  end
+  object cxLabel16: TcxLabel [6]
+    Left = 1092
+    Top = 5
+    Caption = #1050#1091#1088#1089
+  end
+  object edCurrencyValue: TcxCurrencyEdit [7]
+    Left = 1092
+    Top = 23
+    Properties.Alignment.Horz = taRightJustify
+    Properties.Alignment.Vert = taVCenter
+    Properties.DecimalPlaces = 4
+    Properties.DisplayFormat = ',0.####;-,0.####; ;'
+    TabOrder = 11
+    Width = 40
+  end
+  object cxLabel17: TcxLabel [8]
+    Left = 999
+    Top = 45
+    Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+  end
+  object edCurrencyPartner: TcxButtonEdit [9]
+    Left = 999
+    Top = 63
+    Properties.Buttons = <
+      item
+        Default = True
+        Kind = bkEllipsis
+      end>
+    TabOrder = 13
+    Width = 77
   end
   inherited UserSettingsStorageAddOn: TdsdUserSettingsStorageAddOn
     Left = 171
@@ -1077,6 +1124,12 @@ inherited ReturnInForm: TReturnInForm
         DataType = ftFloat
       end
       item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
         Name = 'FromId'
         Value = ''
         Component = GuidesFrom
@@ -1123,6 +1176,32 @@ inherited ReturnInForm: TReturnInForm
         Name = 'ContractName'
         Value = ''
         Component = ContractGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyDocumentName'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+      end
+      item
+        Name = 'CurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyPartnerName'
+        Value = ''
+        Component = CurrencyPartnerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
       end
@@ -1261,6 +1340,24 @@ inherited ReturnInForm: TReturnInForm
         Component = ContractGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Value = Null
+        ParamType = ptUnknown
       end>
     Left = 162
     Top = 312
@@ -1319,6 +1416,15 @@ inherited ReturnInForm: TReturnInForm
       end
       item
         Control = edDocumentTaxKind
+      end
+      item
+        Control = edCurrencyDocument
+      end
+      item
+        Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyValue
       end>
     Left = 232
     Top = 193
@@ -1931,5 +2037,58 @@ inherited ReturnInForm: TReturnInForm
       end>
     Left = 584
     Top = 108
+  end
+  object CurrencyDocumentGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyDocument
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1024
+  end
+  object CurrencyPartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyPartner
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 1016
+    Top = 56
   end
 end

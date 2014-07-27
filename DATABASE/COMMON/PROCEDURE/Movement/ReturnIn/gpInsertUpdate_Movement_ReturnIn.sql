@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_ReturnIn()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, tvarchar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_ReturnIn (integer, tvarchar, tvarchar, tdatetime, tdatetime, boolean, boolean, tfloat, tfloat, integer, integer, integer, integer, integer, integer, tvarchar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Возврат покупателя>
@@ -17,6 +18,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_ReturnIn(
     IN inToId                Integer   , -- Кому (в документе)
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
+    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inSession             TVarChar    -- сессия пользователя
 )
 RETURNS Integer AS
@@ -42,6 +45,8 @@ BEGIN
                                       , inToId             := inToId
                                       , inPaidKindId       := inPaidKindId
                                       , inContractId       := inContractId
+                                      , inCurrencyDocumentId := inCurrencyDocumentId
+                                      , inCurrencyPartnerId  := inCurrencyPartnerId
                                       , inUserId           := vbUserId
                                        );
 
@@ -53,6 +58,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.А.
+ 24.07.14         * add inCurrencyDocumentId
+                        inCurrencyPartnerId
  23.04.14                                        * add inInvNumberMark
  26.03.14                                        * add inInvNumberPartner
  14.02.14                                                         * del DocumentTaxKind

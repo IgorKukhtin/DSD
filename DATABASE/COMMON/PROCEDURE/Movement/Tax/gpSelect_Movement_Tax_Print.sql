@@ -226,8 +226,8 @@ BEGIN
      OPEN Cursor2 FOR
      WITH tmpObject_GoodsPropertyValue AS
        (SELECT ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
-             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId      AS GoodsId
-             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0)  AS GoodsKindId
+             , ObjectLink_GoodsPropertyValue_Goods.ChildObjectId                   AS GoodsId
+             , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
              , Object_GoodsPropertyValue.ValueData  AS Name
              , ObjectFloat_Amount.ValueData         AS Amount
              , ObjectString_BarCode.ValueData       AS BarCode
@@ -265,6 +265,14 @@ BEGIN
                                   ON ObjectLink_GoodsPropertyValue_GoodsKind.ObjectId = ObjectLink_GoodsPropertyValue_GoodsProperty.ObjectId
                                  AND ObjectLink_GoodsPropertyValue_GoodsKind.DescId = zc_ObjectLink_GoodsPropertyValue_GoodsKind()
        )
+     , tmpObject_GoodsPropertyValueGroup AS
+       (SELECT tmpObject_GoodsPropertyValue.GoodsId
+             , tmpObject_GoodsPropertyValue.Article
+             , tmpObject_GoodsPropertyValue.ArticleGLN
+        FROM (SELECT MAX (tmpObject_GoodsPropertyValue.ObjectId) AS ObjectId, GoodsId FROM tmpObject_GoodsPropertyValue WHERE Article <> '' GROUP BY GoodsId
+             ) AS tmpGoodsProperty_find
+             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.ObjectId =  tmpGoodsProperty_find.ObjectId
+       )
      , tmpObject_GoodsPropertyValue_basis AS
        (SELECT ObjectLink_GoodsPropertyValue_Goods.ChildObjectId AS GoodsId
              , COALESCE (ObjectLink_GoodsPropertyValue_GoodsKind.ChildObjectId, 0) AS GoodsKindId
@@ -286,8 +294,23 @@ BEGIN
 
        SELECT
              Object_Goods.ObjectCode                AS GoodsCode
-           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ' ELSE COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END)) END) :: TVarChar AS GoodsName
-           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ' ELSE COALESCE (tmpObject_GoodsPropertyValue.Name, COALESCE (tmpObject_GoodsPropertyValue_basis.Name, Object_Goods.ValueData)) END) :: TVarChar AS GoodsName_two
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay()
+                        THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ' 
+                   ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValue.Name
+                             WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValue_basis.Name
+                             ELSE Object_Goods.ValueData || CASE WHEN COALESCE (Object_GoodsKind.Id, zc_Enum_GoodsKind_Main()) = zc_Enum_GoodsKind_Main() THEN '' ELSE ' ' || Object_GoodsKind.ValueData END
+                        END
+              END) :: TVarChar AS GoodsName
+           , (CASE WHEN vbDocumentTaxKindId = zc_Enum_DocumentTaxKind_Prepay() THEN 'œ–≈ƒŒœÀ¿“¿ «¿  ŒÀ¡.»«ƒ≈À»ﬂ'
+                   ELSE CASE WHEN tmpObject_GoodsPropertyValue.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValue.Name
+                             WHEN tmpObject_GoodsPropertyValue_basis.Name <> ''
+                                  THEN tmpObject_GoodsPropertyValue_basis.Name
+                             ELSE Object_Goods.ValueData
+                        END
+             END) :: TVarChar AS GoodsName_two
            , Object_GoodsKind.ValueData             AS GoodsKindName
            , Object_Measure.ValueData               AS MeasureName
 
@@ -297,9 +320,9 @@ BEGIN
            , MIFloat_CountForPrice.ValueData        AS CountForPrice
 
            , COALESCE (tmpObject_GoodsPropertyValue.Name, '')       AS GoodsName_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.Article, '')    AS Article_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.Article, COALESCE (tmpObject_GoodsPropertyValue.Article, '')) AS Article_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCode, '')    AS BarCode_Juridical
-           , COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '') AS ArticleGLN_Juridical
+           , COALESCE (tmpObject_GoodsPropertyValueGroup.ArticleGLN, COALESCE (tmpObject_GoodsPropertyValue.ArticleGLN, '')) AS ArticleGLN_Juridical
            , COALESCE (tmpObject_GoodsPropertyValue.BarCodeGLN, '') AS BarCodeGLN_Juridical
 
 
@@ -354,9 +377,10 @@ BEGIN
 
             LEFT JOIN tmpObject_GoodsPropertyValue ON tmpObject_GoodsPropertyValue.GoodsId = MovementItem.ObjectId
                                                   AND tmpObject_GoodsPropertyValue.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
+            LEFT JOIN tmpObject_GoodsPropertyValueGroup ON tmpObject_GoodsPropertyValueGroup.GoodsId = MovementItem.ObjectId
+                                                       AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
             LEFT JOIN tmpObject_GoodsPropertyValue_basis ON tmpObject_GoodsPropertyValue_basis.GoodsId = MovementItem.ObjectId
                                                         AND tmpObject_GoodsPropertyValue_basis.GoodsKindId = COALESCE (MILinkObject_GoodsKind.ObjectId, 0)
-                                                        AND tmpObject_GoodsPropertyValue.GoodsId IS NULL
 
        WHERE MovementItem.MovementId = vbMovementId_Tax
          AND MovementItem.DescId     = zc_MI_Master()
@@ -463,6 +487,7 @@ ALTER FUNCTION gpSelect_Movement_Tax_Print (Integer, Boolean, TVarChar) OWNER TO
 /*
  »—“Œ–»ﬂ –¿«–¿¡Œ“ »: ƒ¿“¿, ¿¬“Œ–
                ‘ÂÎÓÌ˛Í ».¬.    ÛıÚËÌ ».¬.    ÎËÏÂÌÚ¸Â‚  .».   Ã‡Ì¸ÍÓ ƒ.¿.
+ 23.07.14                                        * add tmpObject_GoodsPropertyValueGroup and ArticleGLN
  05.06.14                                        * restore ContractSigningDate
  04.06.14                                        * add tmpObject_GoodsPropertyValue.Name
  21.05.14                                        * add zc_Movement_TransferDebtOut

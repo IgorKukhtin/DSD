@@ -3,7 +3,7 @@ object IncomeForm: TIncomeForm
   Top = 0
   Caption = #1044#1086#1082#1091#1084#1077#1085#1090' <'#1055#1088#1080#1093#1086#1076'>'
   ClientHeight = 462
-  ClientWidth = 928
+  ClientWidth = 956
   Color = clBtnFace
   Font.Charset = DEFAULT_CHARSET
   Font.Color = clWindowText
@@ -21,7 +21,7 @@ object IncomeForm: TIncomeForm
   object DataPanel: TPanel
     Left = 0
     Top = 0
-    Width = 928
+    Width = 956
     Height = 100
     Align = alTop
     BevelOuter = bvNone
@@ -223,18 +223,65 @@ object IncomeForm: TIncomeForm
       TabOrder = 24
       Width = 157
     end
+    object cxLabel12: TcxLabel
+      Left = 900
+      Top = 0
+      Caption = #1050#1091#1088#1089
+    end
+    object edCurrencyValue: TcxCurrencyEdit
+      Left = 900
+      Top = 23
+      Properties.Alignment.Horz = taRightJustify
+      Properties.Alignment.Vert = taVCenter
+      Properties.DecimalPlaces = 4
+      Properties.DisplayFormat = ',0.####;-,0.####; ;'
+      TabOrder = 26
+      Width = 40
+    end
+    object cxLabel14: TcxLabel
+      Left = 807
+      Top = 5
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1076#1086#1082')'
+    end
+    object edCurrencyDocument: TcxButtonEdit
+      Left = 808
+      Top = 23
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 28
+      Width = 77
+    end
+    object cxLabel15: TcxLabel
+      Left = 808
+      Top = 45
+      Caption = #1042#1072#1083#1102#1090#1072' ('#1082#1086#1085#1090#1088#1072#1075#1077#1085#1090#1072')'
+    end
+    object edCurrencyPartner: TcxButtonEdit
+      Left = 808
+      Top = 63
+      Properties.Buttons = <
+        item
+          Default = True
+          Kind = bkEllipsis
+        end>
+      TabOrder = 30
+      Width = 77
+    end
   end
   object cxPageControl: TcxPageControl
     Left = 0
     Top = 126
-    Width = 928
+    Width = 956
     Height = 336
     Align = alClient
     TabOrder = 2
     Properties.ActivePage = cxTabSheetMain
     Properties.CustomButtons.Buttons = <>
     ClientRectBottom = 336
-    ClientRectRight = 928
+    ClientRectRight = 956
     ClientRectTop = 24
     object cxTabSheetMain: TcxTabSheet
       Caption = #1057#1090#1088#1086#1095#1085#1072#1103' '#1095#1072#1089#1090#1100
@@ -242,7 +289,7 @@ object IncomeForm: TIncomeForm
       object cxGrid: TcxGrid
         Left = 0
         Top = 0
-        Width = 928
+        Width = 956
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -512,7 +559,7 @@ object IncomeForm: TIncomeForm
       object cxGridEntry: TcxGrid
         Left = 0
         Top = 0
-        Width = 928
+        Width = 956
         Height = 312
         Align = alClient
         TabOrder = 0
@@ -809,8 +856,8 @@ object IncomeForm: TIncomeForm
   object dxBarManager: TdxBarManager
     Font.Charset = DEFAULT_CHARSET
     Font.Color = clWindowText
-    Font.Height = -12
-    Font.Name = 'Segoe UI'
+    Font.Height = -11
+    Font.Name = 'Tahoma'
     Font.Style = []
     Categories.Strings = (
       'Default')
@@ -1510,6 +1557,20 @@ object IncomeForm: TIncomeForm
         Component = PackerGuides
         ComponentItem = 'Key'
         ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyDocumentId'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
+      end
+      item
+        Name = 'inCurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        ParamType = ptInput
       end>
     Left = 378
     Top = 216
@@ -1555,10 +1616,19 @@ object IncomeForm: TIncomeForm
       end
       item
         Control = edPacker
+      end
+      item
+        Control = edCurrencyDocument
+      end
+      item
+        Control = edCurrencyPartner
+      end
+      item
+        Control = edCurrencyValue
       end>
     GetStoredProc = spGet
-    Left = 296
-    Top = 217
+    Left = 264
+    Top = 201
   end
   object spGet: TdsdStoredProc
     StoredProcName = 'gpGet_Movement_Income'
@@ -1646,6 +1716,12 @@ object IncomeForm: TIncomeForm
         DataType = ftFloat
       end
       item
+        Name = 'CurrencyValue'
+        Value = 0.000000000000000000
+        Component = edCurrencyValue
+        DataType = ftFloat
+      end
+      item
         Name = 'ContractId'
         Value = ''
         Component = ContractGuides
@@ -1683,6 +1759,18 @@ object IncomeForm: TIncomeForm
         Component = PackerGuides
         ComponentItem = 'TextValue'
         DataType = ftString
+      end
+      item
+        Name = 'CurrencyDocumentOd'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+      end
+      item
+        Name = 'CurrencyPartnerId'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
       end
       item
         Name = 'StatusCode'
@@ -1955,5 +2043,58 @@ object IncomeForm: TIncomeForm
       end>
     Left = 500
     Top = 204
+  end
+  object CurrencyDocumentGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyDocument
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyDocumentGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 840
+  end
+  object CurrencyPartnerGuides: TdsdGuides
+    KeyField = 'Id'
+    LookupControl = edCurrencyPartner
+    FormNameParam.Value = 'TCurrency_ObjectForm'
+    FormNameParam.DataType = ftString
+    FormName = 'TCurrency_ObjectForm'
+    PositionDataSet = 'ClientDataSet'
+    Params = <
+      item
+        Name = 'Key'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'Key'
+        DataType = ftString
+        ParamType = ptInput
+      end
+      item
+        Name = 'TextValue'
+        Value = ''
+        Component = CurrencyPartnerGuides
+        ComponentItem = 'TextValue'
+        DataType = ftString
+        ParamType = ptInput
+      end>
+    Left = 840
+    Top = 56
   end
 end

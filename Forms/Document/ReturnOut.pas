@@ -68,6 +68,14 @@ type
     bbPrintTax: TdxBarButton;
     PrintItemsCDS: TClientDataSet;
     colMeasureName: TcxGridDBColumn;
+    cxLabel14: TcxLabel;
+    edCurrencyDocument: TcxButtonEdit;
+    CurrencyDocumentGuides: TdsdGuides;
+    cxLabel12: TcxLabel;
+    edCurrencyValue: TcxCurrencyEdit;
+    cxLabel5: TcxLabel;
+    edCurrencyPartner: TcxButtonEdit;
+    CurrencyPartnerGuides: TdsdGuides;
   private
     { Private declarations }
   public

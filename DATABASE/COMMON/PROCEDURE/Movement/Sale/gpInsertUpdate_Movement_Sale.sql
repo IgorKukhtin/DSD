@@ -1,6 +1,7 @@
 -- Function: gpInsertUpdate_Movement_Sale()
 
 DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
+DROP FUNCTION IF EXISTS gpInsertUpdate_Movement_Sale (integer, TVarChar, TVarChar, TVarChar, TDateTime, TDateTime, Boolean, Boolean, TFloat, TFloat, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, Integer, TVarChar);
 
 CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
  INOUT ioId                  Integer   , -- Ключ объекта <Документ Перемещение>
@@ -18,6 +19,8 @@ CREATE OR REPLACE FUNCTION gpInsertUpdate_Movement_Sale(
     IN inPaidKindId          Integer   , -- Виды форм оплаты
     IN inContractId          Integer   , -- Договора
     IN inRouteSortingId      Integer   , -- Сортировки маршрутов
+    IN inCurrencyDocumentId  Integer   , -- Валюта (документа)
+    IN inCurrencyPartnerId   Integer   , -- Валюта (контрагента)
     IN inDocumentTaxKindId_inf Integer  , -- Тип формирования налогового документа
  INOUT ioPriceListId         Integer   , -- Прайс лист
    OUT outPriceListName      TVarChar  , -- Прайс лист
@@ -55,6 +58,8 @@ BEGIN
                                       , inPaidKindId       := inPaidKindId
                                       , inContractId       := inContractId
                                       , inRouteSortingId   := inRouteSortingId
+                                      , inCurrencyDocumentId := inCurrencyDocumentId
+                                      , inCurrencyPartnerId  := inCurrencyPartnerId
                                       , ioPriceListId      := ioPriceListId
                                       , inUserId           := vbUserId
                                        ) AS tmp;
@@ -91,6 +96,8 @@ $BODY$
 /*
  ИСТОРИЯ РАЗРАБОТКИ: ДАТА, АВТОР
                Фелонюк И.В.   Кухтин И.В.   Климентьев К.И.   Манько Д.
+ 24.07.14         * add inCurrencyDocumentId
+                        inCurrencyPartnerId
  17.04.14                                        * add восстановить/удалить Налоговую 
  10.02.14                                        * в lp-должно быть все
  04.02.14                         * add lpInsertUpdate_Movement_Sale
