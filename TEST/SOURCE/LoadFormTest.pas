@@ -97,6 +97,7 @@ type
     procedure LoadServiceFormTest;
     procedure LoadSheetWorkTimeFormTest;
     procedure LoadStaffListFormTest;
+    procedure LoadStorage_ObjectFormTest;
     procedure LoadTaxFormTest;
     procedure LoadTaxCorrectiveTest;
     procedure LoadTransportFormTest;
@@ -1053,7 +1054,13 @@ begin
   TdsdFormStorageFactory.GetStorage.Load('TProvinceCityEditForm');
 end;
 
-
+procedure TLoadFormTest.LoadStorage_ObjectFormTest;
+begin
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorage_ObjectForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectForm');
+  TdsdFormStorageFactory.GetStorage.Save(GetForm('TStorage_ObjectEditForm'));
+  TdsdFormStorageFactory.GetStorage.Load('TStorage_ObjectEditForm');
+end;
 
 procedure TLoadFormTest.LoadRoleFormTest;
 begin

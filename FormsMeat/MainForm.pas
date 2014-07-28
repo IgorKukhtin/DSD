@@ -356,6 +356,9 @@ type
     bbStreet: TdxBarButton;
     actPartnerAddress: TdsdOpenForm;
     bbPartnerAddress: TdxBarButton;
+    actStorage_Object: TdsdOpenForm;
+    bbStorage_Object: TdxBarButton;
+    Action1: TAction;
   public
     { Public declarations }
   end;
